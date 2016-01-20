@@ -8,6 +8,7 @@ from scipy.cluster.vq import * # for Clustering http://docs.scipy.org/doc/scipy/
 import numpy as np  # for arrays
 import time       # for time calculations
 from feature_extraction_try import imgCrawl, getClassLabels
+from skimage.feature import hog
 
 #in : npImages, color
 
@@ -15,38 +16,46 @@ from feature_extraction_try import imgCrawl, getClassLabels
 
 def imageSequencing(npImages, CELL_DIMENSION):
 
-  blocksList=[]
+  blocks=[]
   for k in range(len(npImages)):
     image = cv2.imread(npImages[k][1])
     resizedImage = reSize(image, CELL_DIMENSION)
     height, width, channels = resizedImage.shape
-    blocksList.append(\
+    blocks.append(\
       np.array([\
         resizedImage[\
-          j*CELL_DIMENSION:j*CELL_DIMENSION+CELL_DIMENSION-1,\
-          i*CELL_DIMENSION:i*CELL_DIMENSION+CELL_DIMENSION-1, :\
-        ] for i in range(width/CELL_DIMENSION) \
-        for j in range(height/CELL_DIMENSION)]))
-  return np.array(blocksList)  
+          j*CELL_DIMENSION:j*CELL_DIMENSION+CELL_DIMENSION,\
+          i*CELL_DIMENSION:i*CELL_DIMENSION+CELL_DIMENSION] \
+        for i in range(width/CELL_DIMENSION) \
+        for j in range(height/CELL_DIMENSION)\
+      ])\
+    )
+  return np.array(blocks)  
 
 def reSize(image, CELL_DIMENSION):
   height, width, channels = image.shape
-  if height%5==0 and width%5==0:
+  if height%CELL_DIMENSION==0 and width%CELL_DIMENSION==0:
     resizedImage = image
-  elif width%5==0:
-    missingPixels = 5-height%5
+  elif width%CELL_DIMENSION==0:
+    missingPixels = CELL_DIMENSION-height%CELL_DIMENSION
     resizedImage = cv2.copyMakeBorder(image,0,missingPixels,0,0,cv2.BORDER_REPLICATE)
-  elif height%5==0:
-    missingPixels = 5-width%5
+  elif height%CELL_DIMENSION==0:
+    missingPixels = CELL_DIMENSION-width%CELL_DIMENSION
     resizedImage = cv2.copyMakeBorder(image,0,0,0,missingPixels,cv2.BORDER_REPLICATE)
   else:
-    missingWidthPixels = 5-width%5
-    missingHeightPixels = 5-height%5
+    missingWidthPixels = CELL_DIMENSION-width%CELL_DIMENSION
+    missingHeightPixels = CELL_DIMENSION-height%CELL_DIMENSION
     resizedImage = cv2.copyMakeBorder(image,0,missingHeightPixels,0,missingWidthPixels,cv2.BORDER_REPLICATE)
-  # height, width, channels = resizedImage.shape
-  # if height%5==0 and width%5==0:
-  #   print ("My job has been done")
   return resizedImage
+
+def hogAllBlocks(blocks):
+  print blocks[0][0].shape
+  hogs = np.array([np.array([hog(cv2.cvtColor(block, cv2.COLOR_BGR2GRAY), orientations=8, pixels_per_cell=(5,5), cells_per_block=(1,1)) for block in image]) for image in blocks])
+  print hogs.shape
+  return hogs
+
+
+# Main for testing
 
 start = time.time()
 path ='../../03-jeux-de-donnees/101_ObjectCategories'
@@ -60,14 +69,18 @@ print "Fetching Images in " + path
 # Get all path from all images inclusive classLabel as Integer
 # dfImages = imgCrawl(path, sClassLabels)
 # npImages = dfImages.values
-middle = time.time()
-print "Extracted images in " + str(middle-start)
+extractedTime = time.time()
+print "Extracted images in " + str(extractedTime-start) +'sec'
 print "Sequencing Images ..."
-sequencedCorpus = imageSequencing(testNpImages, 5)
-end = time.time()
-print "Sequenced images in " + str(end-middle)
-print sequencedCorpus.shape
-print sequencedCorpus[0][0]
+blocks = imageSequencing(testNpImages, 5)
+sequencedTime = time.time()
+print "Sequenced images in " + str(sequencedTime-extractedTime) +'sec'
+print "Computing HOG on each block ..."
+hogs = hogAllBlocks(blocks)
+hogedTime = time.time()
+print "Computed HOGs in " + str(hogedTime - sequencedTime) + 'sec'
+
+
 
 
 
