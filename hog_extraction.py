@@ -17,12 +17,9 @@ def imageSequencing(npImages, CELL_DIMENSION):
 
   blocksList=[]
   for i in range(len(npImages)):
-    print npImages[i][1]
-    image = cv2.imread(npImages[i][1])
-    cv2.imshow(image)
+    image = cv2.imread(npImages[0][1])
     resizedImage = reSize(image, CELL_DIMENSION)
     height, width, channels = resizedImage.shape
-
     blocksList.append(np.array([resizedImage[j*CELL_DIMENSION:j*CELL_DIMENSION+CELL_DIMENSION-1, i*CELL_DIMENSION:i*CELL_DIMENSION+CELL_DIMENSION-1, :] for i in range(width/CELL_DIMENSION) for j in range(height/CELL_DIMENSION)]))
   return np.array(blocksList)  
 
@@ -46,8 +43,9 @@ def reSize(image, CELL_DIMENSION):
   return resizedImage
 
 start = time.time()
-testNpImages = [[1],['testImage.jpg']]
 path ='../../03-jeux-de-donnees/101_ObjectCategories'
+testNpImages = [ [1,'testImage.jpg'] ]
+print testNpImages[0][1]
 print "Fetching Images in " + path
 
 # get dictionary to link classLabels Text to Integers
@@ -63,7 +61,7 @@ sequencedCorpus = imageSequencing(testNpImages, 5)
 end = time.time()
 print "Sequenced images in " + str(end-middle)
 print sequencedCorpus.shape
-cv2.imshow(sequencedCorpus[0][0])
+print sequencedCorpus[0][0]
 
 
 
