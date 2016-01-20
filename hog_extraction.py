@@ -16,11 +16,17 @@ from feature_extraction_try import imgCrawl, getClassLabels
 def imageSequencing(npImages, CELL_DIMENSION):
 
   blocksList=[]
-  for i in range(len(npImages)):
-    image = cv2.imread(npImages[0][1])
+  for k in range(len(npImages)):
+    image = cv2.imread(npImages[k][1])
     resizedImage = reSize(image, CELL_DIMENSION)
     height, width, channels = resizedImage.shape
-    blocksList.append(np.array([resizedImage[j*CELL_DIMENSION:j*CELL_DIMENSION+CELL_DIMENSION-1, i*CELL_DIMENSION:i*CELL_DIMENSION+CELL_DIMENSION-1, :] for i in range(width/CELL_DIMENSION) for j in range(height/CELL_DIMENSION)]))
+    blocksList.append(\
+      np.array([\
+        resizedImage[\
+          j*CELL_DIMENSION:j*CELL_DIMENSION+CELL_DIMENSION-1,\
+          i*CELL_DIMENSION:i*CELL_DIMENSION+CELL_DIMENSION-1, :\
+        ] for i in range(width/CELL_DIMENSION) \
+        for j in range(height/CELL_DIMENSION)]))
   return np.array(blocksList)  
 
 def reSize(image, CELL_DIMENSION):
