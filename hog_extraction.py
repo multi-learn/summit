@@ -17,7 +17,7 @@ def imageSequencing(npImages, CELL_DIMENSION):
 
   blocksList=[]
   for i in range(1):
-    print npImages[i][1]
+    #print npImages[i][1]
     image = cv2.imread("testImage.jpg")
     cv2.imshow(image)
     resizedImage = reSize(image, CELL_DIMENSION)
@@ -55,6 +55,7 @@ print "Fetching Images in " + path
 # # Get all path from all images inclusive classLabel as Integer
 # dfImages = imgCrawl(path, sClassLabels)
 # npImages = dfImages.values
+npImages = []
 middle = time.time()
 print "Extracted images in " + str(middle-start)
 print "Sequencing Images ..."
