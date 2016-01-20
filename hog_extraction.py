@@ -16,9 +16,9 @@ from feature_extraction_try import imgCrawl, getClassLabels
 def imageSequencing(npImages, CELL_DIMENSION):
 
   blocksList=[]
-  for i in range(1):
-    #print npImages[i][1]
-    image = cv2.imread("testImage.jpg")
+  for i in range(len(npImages)):
+    print npImages[i][1]
+    image = cv2.imread(npImages[i][1])
     cv2.imshow(image)
     resizedImage = reSize(image, CELL_DIMENSION)
     height, width, channels = resizedImage.shape
@@ -46,20 +46,20 @@ def reSize(image, CELL_DIMENSION):
   return resizedImage
 
 start = time.time()
+testNpImages = [[1],['testImage.jpg']]
 path ='../../03-jeux-de-donnees/101_ObjectCategories'
 print "Fetching Images in " + path
 
-# # get dictionary to link classLabels Text to Integers
+# get dictionary to link classLabels Text to Integers
 # sClassLabels = getClassLabels(path)
 
-# # Get all path from all images inclusive classLabel as Integer
+# Get all path from all images inclusive classLabel as Integer
 # dfImages = imgCrawl(path, sClassLabels)
 # npImages = dfImages.values
-npImages = []
 middle = time.time()
 print "Extracted images in " + str(middle-start)
 print "Sequencing Images ..."
-sequencedCorpus = imageSequencing(npImages, 5)
+sequencedCorpus = imageSequencing(testNpImages, 5)
 end = time.time()
 print "Sequenced images in " + str(end-middle)
 print sequencedCorpus.shape
