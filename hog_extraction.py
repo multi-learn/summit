@@ -9,6 +9,7 @@ import numpy as np  # for arrays
 import time       # for time calculations
 from feature_extraction_try import imgCrawl, getClassLabels
 from skimage.feature import hog
+from sklearn import cluster.MiniBatchKMeans
 
 #in : npImages, color
 
@@ -54,31 +55,51 @@ def hogAllBlocks(blocks):
   print hogs.shape
   return hogs
 
+def clusterHOGs(hogs, nbClusters, maxIter):
+  sizes = np.array([len(hog) for hog in hogs])
+  nbImages =  len(hogs)
+  flattenedHogs = hogs.flatten() 
+  miniBatchKMeans = MiniBatchKMeans(n_clusters=nbClusters, max_iter=maxIter, compute_labels=True)
+  hogsLabels = miniBatchKMeans.fit_predict(flattenedHogs, y=None)
+  return clusterHOGs, sizes
+
+def makeHistogram(labels, nbClusters, sizes):
+  indiceInLabels = 0
+  hogs = []
+  for image in sizes:
+    histogram = np.zeros(nbClusters)
+    for i in range(image):
+      indiceInLabels+=i 
+      histogram[labels[indiceInLabels]]++
+    hogs.append(histogram)
+  return hogs
 
 # Main for testing
+if __name__ == '__main__':
 
-start = time.time()
-path ='../../03-jeux-de-donnees/101_ObjectCategories'
-testNpImages = [ [1,'testImage.jpg'] ]
-print testNpImages[0][1]
-print "Fetching Images in " + path
 
-# get dictionary to link classLabels Text to Integers
-# sClassLabels = getClassLabels(path)
+  start = time.time()
+  path ='../../03-jeux-de-donnees/101_ObjectCategories'
+  testNpImages = [ [1,'testImage.jpg'] ]
+  print testNpImages[0][1]
+  print "Fetching Images in " + path
 
-# Get all path from all images inclusive classLabel as Integer
-# dfImages = imgCrawl(path, sClassLabels)
-# npImages = dfImages.values
-extractedTime = time.time()
-print "Extracted images in " + str(extractedTime-start) +'sec'
-print "Sequencing Images ..."
-blocks = imageSequencing(testNpImages, 5)
-sequencedTime = time.time()
-print "Sequenced images in " + str(sequencedTime-extractedTime) +'sec'
-print "Computing HOG on each block ..."
-hogs = hogAllBlocks(blocks)
-hogedTime = time.time()
-print "Computed HOGs in " + str(hogedTime - sequencedTime) + 'sec'
+  # get dictionary to link classLabels Text to Integers
+  # sClassLabels = getClassLabels(path)
+
+  # Get all path from all images inclusive classLabel as Integer
+  # dfImages = imgCrawl(path, sClassLabels)
+  # npImages = dfImages.values
+  extractedTime = time.time()
+  print "Extracted images in " + str(extractedTime-start) +'sec'
+  print "Sequencing Images ..."
+  blocks = imageSequencing(testNpImages, 5)
+  sequencedTime = time.time()
+  print "Sequenced images in " + str(sequencedTime-extractedTime) +'sec'
+  print "Computing HOG on each block ..."
+  hogs = hogAllBlocks(blocks)
+  hogedTime = time.time()
+  print "Computed HOGs in " + str(hogedTime - sequencedTime) + 'sec'
 
 
 
