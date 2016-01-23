@@ -9,7 +9,7 @@ import numpy as np  # for arrays
 import time       # for time calculations
 from feature_extraction_try import imgCrawl, getClassLabels
 from skimage.feature import hog
-from sklearn import cluster.MiniBatchKMeans
+from sklearn.cluster import MiniBatchKMeans
 
 #in : npImages, color
 
@@ -55,12 +55,12 @@ def hogAllBlocks(blocks):
   print gradients.shape
   return gradients
 
-def clusterGradtiens(hogs, NB_CLUSTERS, maxIter):
-  sizes = np.array([len(hog) for hog in hogs])
-  nbImages =  len(hogs)
-  flattenedHogs = hogs.flatten() 
-  miniBatchKMeans = MiniBatchKMeans(n_clusters=NB_CLUSTERS, max_iter=maxIter, compute_labels=True)
-  hogsLabels = miniBatchKMeans.fit_predict(flattenedHogs, y=None)
+def clusterGradients(gradients, NB_CLUSTERS, MAXITER):
+  sizes = np.array([len(gradient) for gradient in gradients])
+  nbImages =  len(gradients)
+  flattenedHogs = np.array([block for image in gradients for block in image])
+  miniBatchKMeans = MiniBatchKMeans(n_clusters=NB_CLUSTERS, max_iter=MAXITER, compute_labels=True)
+  hogsLabels = miniBatchKMeans.fit_predict(flattenedHogs)
   return hogsLabels, sizes
 
 def makeHistograms(labels, NB_CLUSTERS, sizes):
@@ -69,10 +69,10 @@ def makeHistograms(labels, NB_CLUSTERS, sizes):
   for image in sizes:
     histogram = np.zeros(NB_CLUSTERS)
     for i in range(image):
-      indiceInLabels+=i 
-      histogram[labels[indiceInLabels]]++
+      histogram[labels[indiceInLabels+i]] += 1
     hogs.append(histogram)
-  return hogs
+    indiceInLabels+=i 
+  return np.array(hogs)
 
 # Main for testing
 if __name__ == '__main__':
@@ -82,6 +82,7 @@ if __name__ == '__main__':
   path ='../../03-jeux-de-donnees/101_ObjectCategories'
   testNpImages = [ [1,'testImage.jpg'] ]
   NB_CLUSTERS = 12
+  MAXITER = 100
   print testNpImages[0][1]
   print "Fetching Images in " + path
 
@@ -92,25 +93,25 @@ if __name__ == '__main__':
   # dfImages = imgCrawl(path, sClassLabels)
   # npImages = dfImages.values
   extractedTime = time.time()
-  print "Extracted images in " + str(int(extractedTime-start)) +'sec'
+  print "Extracted images in " + str(extractedTime-start) +'sec'
   print "Sequencing Images ..."
   blocks = imageSequencing(testNpImages, 5)
   sequencedTime = time.time()
-  print "Sequenced images in " + str(int(sequencedTime-extractedTime)) +'sec'
+  print "Sequenced images in " + str(sequencedTime-extractedTime) +'sec'
   print "Computing gradient on each block ..."
   gradients = hogAllBlocks(blocks)
   hogedTime = time.time()
-  print "Computed gradients in " + str(int(hogedTime - sequencedTime)) + 'sec'
+  print "Computed gradients in " + str(hogedTime - sequencedTime) + 'sec'
   print "Clustering gradients ..."
-  gradientLabels, sizes = clusterGradients(gradients, NB_CLUSTERS, maxIter)
+  gradientLabels, sizes = clusterGradients(gradients, NB_CLUSTERS, MAXITER)
   clusteredItme = time.time()
-  print "Clustered gradients in " + str(int(hogedTime - sequencedTime)) + 'sec'
+  print "Clustered gradients in " + str(hogedTime - sequencedTime) + 'sec'
   print "Computing histograms ..."
-  histograms = makeHistogram(labels, NB_CLUSTERS, sizes)
+  histograms = makeHistograms(gradientLabels, NB_CLUSTERS, sizes)
   end = time.time()
   print "Computed histograms in " + str(int(end - hogedTime)) + 'sec'
-  print "Total time : " str(int(end-start)) + 'sec'
-
+  print "Total time : " + str(end-start) + 'sec'
+  print "Histogram shape : " +str(histograms.shape)
 
 
 
