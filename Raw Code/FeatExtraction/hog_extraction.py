@@ -107,7 +107,7 @@ if __name__ == '__main__':
 
 
   start = time.time()
-  path ='/home/doob/Dropbox/Marseille/OMIS-Projet/03-jeux-de-donnees/101_ObjectCategories'
+  path ='/donnees/bbauvin/101_ObjectCategories'
   testNpImages = [ [1,'testImage.jpg'] ]
   CELL_DIMENSION = 5
   NB_ORIENTATIONS = 8
@@ -123,7 +123,7 @@ if __name__ == '__main__':
   extractedTime = time.time()
   print "Extracted images in " + str(extractedTime-start) +'sec'
   print "Sequencing Images ..."
-  blocks = imageSequencing(npImages, 5)
+  blocks = imageSequencing(npImages, CELL_DIMENSION)
   sequencedTime = time.time()
   print "Sequenced images in " + str(sequencedTime-extractedTime) +'sec'
   print "Computing gradient on each block ..."

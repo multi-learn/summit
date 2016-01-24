@@ -50,16 +50,16 @@ def imageSequencing(npImage, CELL_DIMENSION):
       for i in range(width/CELL_DIMENSION) \
       for j in range(height/CELL_DIMENSION)\
     ])
-  print len(cells)
   return np.array(cells)  
 
 
 def corpusSequencing(npImages, CELL_DIMENSION):
   nbImages = len(npImages)
-  pool = Pool(processes=nbImages)
+  pool = Pool(processes=25, )
   imagesCells = ["cells" for i in range(nbImages)]
   for i in range(nbImages):
     imagesCells[i] = pool.apply_async(imageSequencing, (npImages[i], CELL_DIMENSION)).get(timeout=50)
+  pool.close()
   return np.array(imagesCells)
 
 
@@ -85,10 +85,11 @@ def computeLocalHistogramsImage(imageCells,NB_ORIENTATIONS, CELL_DIMENSION, nbCe
 def computeLocalHistograms(cells, NB_ORIENTATIONS, CELL_DIMENSION):
   nbImages = len(cells)
   nbCells = [len(imageCells) for imageCells in cells]
-  imagePool = Pool(processes=nbImages)
+  imagePool = Pool(processes=25)
   localHistograms = [["histo" for j in range(nbCells[i])] for i in range(nbImages)]
   for i in range(nbImages):
     localHistograms[i] = imagePool.apply_async(computeLocalHistogramsImage, (cells[i],NB_ORIENTATIONS, CELL_DIMENSION, nbCells[i] )).get(timeout=None)
+  imagePool.close()
   return localHistograms
 
 
@@ -129,7 +130,7 @@ if __name__ == '__main__':
 
 
   start = time.time()
-  path ='/donnees/bbauvin/03-jeux-de-donnees/101_ObjectCategories'
+  path ='/donnees/bbauvin/101_ObjectCategories'
   testNpImages = [ [1,'testImage.jpg'], [1,'testImage.jpg'] ]
   CELL_DIMENSION = 5
   NB_ORIENTATIONS = 8
@@ -138,14 +139,14 @@ if __name__ == '__main__':
 
   print "Fetching Images in " + path
   # get dictionary to link classLabels Text to Integers
-  # sClassLabels = getClassLabels(path)
+  sClassLabels = getClassLabels(path)
   # # Get all path from all images inclusive classLabel as Integer
-  # dfImages = imgCrawl(path, sClassLabels)
-  # npImages = dfImages.values
+  dfImages = imgCrawl(path, sClassLabels)
+  npImages = dfImages.values
   extractedTime = time.time()
   print "Extracted images in " + str(extractedTime-start) +'sec'
   print "Sequencing Images ..."
-  cells = corpusSequencing(testNpImages, 5)
+  cells = corpusSequencing(npImages, CELL_DIMENSION)
   sequencedTime = time.time()
   print "Sequenced images in " + str(sequencedTime-extractedTime) +'sec'
   print "Computing gradient on each block ..."
@@ -164,7 +165,7 @@ if __name__ == '__main__':
   print "Total time : " + str(end-start) + 'sec'
   #hogs = extractHOGFeature(testNpImages, CELL_DIMENSION, \
   #                         NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)
-
+  
 
 
 # # Imports
