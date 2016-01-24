@@ -9,7 +9,7 @@ import time       # for time calculations
 from feature_extraction_try import imgCrawl, getClassLabels
 from skimage.feature import hog
 from sklearn.cluster import MiniBatchKMeans
-from multiprocessing import Pool #for parallelization
+from multiprocessing import Pool #for parallelization https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool
 
 
 # In order to calculate HOG, we will use a bag of word approach : cf SURF function, well documented. 
