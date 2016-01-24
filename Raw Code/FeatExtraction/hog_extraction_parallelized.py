@@ -40,12 +40,13 @@ def reSize(image, CELL_DIMENSION):
 class NpImage:
   def __init__(self, npImage):
     self.npImage=npImage
-    self.cells=None
+    self.cells = None
 
   def imageSequencing(self, CELL_DIMENSION):
     image = cv2.imread(self.npImage[1])
     resizedImage = reSize(image, CELL_DIMENSION)
     height, width, channels = resizedImage.shape
+
     self.cells = \
       np.array([\
         resizedImage[\
@@ -54,55 +55,49 @@ class NpImage:
         for i in range(width/CELL_DIMENSION) \
         for j in range(height/CELL_DIMENSION)\
       ])
-    
+    print self.cells.shape
+  
+  def computeLocalHistogramsImage(self, NB_ORIENTATIONS, CELL_DIMENSION, nbCells):
+    localHistograms = ["histo" for j in range(nbCells)]
+    for j in range(nbCells):
+      localHistograms[j] = hog(cv2.cvtColor(self.cells[j], cv2.COLOR_BGR2GRAY), \
+                              orientations=NB_ORIENTATIONS, \
+                              pixels_per_cell=(CELL_DIMENSION,\
+                                              CELL_DIMENSION),\
+                              cells_per_block=(1,1)) 
+    self.localHOGs = localHistograms
+
+
 
 
 def corpusSequencing(npImages, CELL_DIMENSION):
   nbImages = len(npImages)
   sequencing = ["cells" for i in range(nbImages)]
   images = [NpImage(npImages[i]) for i in range(nbImages)]
-  for i in range(nbImages):
+  for i in range(10):
     sequencing[i] = Process(target=NpImage.imageSequencing, args=(images[i], CELL_DIMENSION))
     sequencing[i].start()
-  for i in range(nbImages):  
+  for i in range(10):  
     sequencing[i].join()
-  sequencedCorpus = np.array([image.cells for image in images])
-  print sequencedCorpus.shape
-  return sequencedCorpus
+    print images[i].cells
+
+  corpusCells = np.array([image.cells for image in images])
+  print corpusCells.shape
+  return corpusCells, images
 
 
-
-def computeLocalHistogramsCell(cell, NB_ORIENTATIONS, CELL_DIMENSION):
-  return hog(cv2.cvtColor(cell, cv2.COLOR_BGR2GRAY), \
-                          orientations=NB_ORIENTATIONS, \
-                          pixels_per_cell=(CELL_DIMENSION,\
-                                          CELL_DIMENSION),\
-                          cells_per_block=(1,1))
-
-def computeLocalHistogramsImage(imageCells, NB_ORIENTATIONS, CELL_DIMENSION, nbCells, output, imageIndice ):
-  # cellsPool = Pool(processes=nbCells)
-  localHistograms = ["histo" for j in range(nbCells)]
-  for j in range(nbCells):
-    # localHistograms[j] = cellsPool.apply_async(computeLocalHistogramsCell, (imageCells[j],NB_ORIENTATIONS, CELL_DIMENSION)).get(timeout=100)
-    localHistograms[j] = hog(cv2.cvtColor(imageCells[j], cv2.COLOR_BGR2GRAY), \
-                            orientations=NB_ORIENTATIONS, \
-                            pixels_per_cell=(CELL_DIMENSION,\
-                                            CELL_DIMENSION),\
-                            cells_per_block=(1,1)) 
-  return output.put((imageIndice, localHistograms))
-
-def computeLocalHistograms(cells, NB_ORIENTATIONS, CELL_DIMENSION):
-  nbImages = len(cells)
-  nbCells = [len(imageCells) for imageCells in cells]
+def computeLocalHistograms(images, NB_ORIENTATIONS, CELL_DIMENSION):
+  nbImages = len(images)
+  nbCells = [len(image.cells) for image in images]
   localHistogramscomputing = [["histo" for j in range(nbCells[i])] for i in range(nbImages)]
-  for i in range(4):
-    localHistogramscomputing[i] = Process(target=computeLocalHistogramsImage, args=(cells[i],NB_ORIENTATIONS, CELL_DIMENSION, nbCells[i], output, i))
+  
+  for i in range(nbImages):
+    localHistogramscomputing[i] = Process(target=NpImage.computeLocalHistogramsImage, args=(images[i], NB_ORIENTATIONS, CELL_DIMENSION, nbCells[i]))
     localHistogramscomputing[i].start()
-  for i in range(4):
+  for i in range(nbImages):
     localHistogramscomputing[i].join()
-  localHistograms = [output.get() for process in localHistogramscomputing]
-  localHistograms.sort()
-  localHistograms = [localHistogram[1] for localHistogram in localHistograms]
+  
+  localHistograms = [image.localHOGs for image in images]
   return localHistograms
 
 
@@ -160,23 +155,23 @@ if __name__ == '__main__':
   extractedTime = time.time()
   print "Extracted images in " + str(extractedTime-start) +'sec'
   print "Sequencing Images ..."
-  cells = corpusSequencing(npImages, CELL_DIMENSION)
+  cells, images = corpusSequencing(npImages, CELL_DIMENSION)
   sequencedTime = time.time()
   print "Sequenced images in " + str(sequencedTime-extractedTime) +'sec'
-  # print "Computing gradient on each block ..."
-  # gradients = computeLocalHistograms(cells, NB_ORIENTATIONS, CELL_DIMENSION)
-  # hogedTime = time.time()
-  # print "Computed gradients in " + str(hogedTime - sequencedTime) + 'sec'
-  # print "Clustering gradients ..."
-  # gradientLabels, sizes = clusterGradients(gradients, NB_CLUSTERS, MAXITER)
-  # clusteredItme = time.time()
-  # print "Clustered gradients in " + str(hogedTime - sequencedTime) + 'sec'
-  # print "Computing histograms ..."
-  # histograms = makeHistograms(gradientLabels, NB_CLUSTERS, sizes)
-  # end = time.time()
-  # print "Computed histograms in " + str(int(end - hogedTime)) + 'sec'
-  # print "Histogram shape : " +str(histograms.shape)
-  # print "Total time : " + str(end-start) + 'sec'
+  print "Computing gradient on each block ..."
+  gradients = computeLocalHistograms(images, NB_ORIENTATIONS, CELL_DIMENSION)
+  hogedTime = time.time()
+  print "Computed gradients in " + str(hogedTime - sequencedTime) + 'sec'
+  print "Clustering gradients ..."
+  gradientLabels, sizes = clusterGradients(gradients, NB_CLUSTERS, MAXITER)
+  clusteredItme = time.time()
+  print "Clustered gradients in " + str(hogedTime - sequencedTime) + 'sec'
+  print "Computing histograms ..."
+  histograms = makeHistograms(gradientLabels, NB_CLUSTERS, sizes)
+  end = time.time()
+  print "Computed histograms in " + str(int(end - hogedTime)) + 'sec'
+  print "Histogram shape : " +str(histograms.shape)
+  print "Total time : " + str(end-start) + 'sec'
   # #hogs = extractHOGFeature(testNpImages, CELL_DIMENSION, \
   # #                         NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)
   
