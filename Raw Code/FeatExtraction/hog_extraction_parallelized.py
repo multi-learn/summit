@@ -37,58 +37,39 @@ def reSize(image, CELL_DIMENSION):
                                       missingWidthPixels,cv2.BORDER_REPLICATE)
   return resizedImage
 
+class NpImage:
+  def __init__(self, npImage):
+    self.npImage=npImage
+    self.cells=None
 
-def imageSequencing(npImage, CELL_DIMENSION, output, imageIndice):
-  image = cv2.imread(npImage[1])
-  resizedImage = reSize(image, CELL_DIMENSION)
-  height, width, channels = resizedImage.shape
-  cells = \
-    np.array([\
-      resizedImage[\
-        j*CELL_DIMENSION:j*CELL_DIMENSION+CELL_DIMENSION,\
-        i*CELL_DIMENSION:i*CELL_DIMENSION+CELL_DIMENSION] \
-      for i in range(width/CELL_DIMENSION) \
-      for j in range(height/CELL_DIMENSION)\
-    ])
-  output.put(cells)  
+  def imageSequencing(self, CELL_DIMENSION):
+    image = cv2.imread(self.npImage[1])
+    resizedImage = reSize(image, CELL_DIMENSION)
+    height, width, channels = resizedImage.shape
+    self.cells = \
+      np.array([\
+        resizedImage[\
+          j*CELL_DIMENSION:j*CELL_DIMENSION+CELL_DIMENSION,\
+          i*CELL_DIMENSION:i*CELL_DIMENSION+CELL_DIMENSION] \
+        for i in range(width/CELL_DIMENSION) \
+        for j in range(height/CELL_DIMENSION)\
+      ])
+    
 
 
 def corpusSequencing(npImages, CELL_DIMENSION):
-  output = Queue()
   nbImages = len(npImages)
   sequencing = ["cells" for i in range(nbImages)]
-  # pool = Pool(processes=2, )
-  for i in range(10):
-    sequencing[i] = Process(target=imageSequencing, args=(npImages[i], CELL_DIMENSION, output, i))
+  images = [NpImage(npImages[i]) for i in range(nbImages)]
+  for i in range(nbImages):
+    sequencing[i] = Process(target=NpImage.imageSequencing, args=(images[i], CELL_DIMENSION))
     sequencing[i].start()
-  print 'Waiting for processes to end ...'
-  sequencedCorpus = []
-  while not(output.empty()):
-    print 'emptying Queue'
-    sequencedCorpus.append(output.get())
-    print output.empty()
-
-  for i in range(10):
-    print(sequencing[i].is_alive())
-    while not(output.empty()):
-      print 'emptying Queue'
-      sequencedCorpus.append(output.get())
-  for i in range(10):  
+  for i in range(nbImages):  
     sequencing[i].join()
-  print 'processes ended'
-
-  sequencedCorpus = [output.get() for process in sequencing[0:8]]
-  print 'found output'
-  sequencedCorpus.sort()
-  print("sorted output")
-  sequencedCorpus = [image[1] for image in sequencedCorpus]
-  print ('formated output')
+  sequencedCorpus = np.array([image.cells for image in images])
+  print sequencedCorpus.shape
   return sequencedCorpus
-  # imagesCells = ["cells" for i in range(nbImages)]
-  # for i in range(nbImages):
-  #   imagesCells[i] = pool.apply(imageSequencing, (npImages[i], CELL_DIMENSION))
-  # pool.close()
-  # return np.array(imagesCells)
+
 
 
 def computeLocalHistogramsCell(cell, NB_ORIENTATIONS, CELL_DIMENSION):
@@ -111,7 +92,6 @@ def computeLocalHistogramsImage(imageCells, NB_ORIENTATIONS, CELL_DIMENSION, nbC
   return output.put((imageIndice, localHistograms))
 
 def computeLocalHistograms(cells, NB_ORIENTATIONS, CELL_DIMENSION):
-  output = Queue()
   nbImages = len(cells)
   nbCells = [len(imageCells) for imageCells in cells]
   localHistogramscomputing = [["histo" for j in range(nbCells[i])] for i in range(nbImages)]
@@ -163,8 +143,8 @@ if __name__ == '__main__':
 
 
   start = time.time()
-  path='/home/doob/Dropbox/Marseille/OMIS-Projet/03-jeux-de-donnees/101_ObjectCategories'
-  # path ='/donnees/bbauvin/101_ObjectCategories'
+  # path='/home/doob/Dropbox/Marseille/OMIS-Projet/03-jeux-de-donnees/101_ObjectCategories'
+  path ='/donnees/bbauvin/101_ObjectCategories'
   testNpImages = [ [1,'testImage.jpg'], [1,'testImage.jpg'] ]
   CELL_DIMENSION = 5
   NB_ORIENTATIONS = 8
