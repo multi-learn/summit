@@ -9,7 +9,7 @@ import time       # for time calculations
 from feature_extraction_try import imgCrawl, getClassLabels
 from skimage.feature import hog
 from sklearn.cluster import MiniBatchKMeans
-from multiprocessing import Pool #for parallelization https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool
+from multiprocessing import Pool, Queue, Process #for parallelization https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool
 
 
 # In order to calculate HOG, we will use a bag of word approach : cf SURF function, well documented. 
@@ -38,7 +38,7 @@ def reSize(image, CELL_DIMENSION):
   return resizedImage
 
 
-def imageSequencing(npImage, CELL_DIMENSION):
+def imageSequencing(npImage, CELL_DIMENSION, output, imageIndice):
   image = cv2.imread(npImage[1])
   resizedImage = reSize(image, CELL_DIMENSION)
   height, width, channels = resizedImage.shape
@@ -50,17 +50,45 @@ def imageSequencing(npImage, CELL_DIMENSION):
       for i in range(width/CELL_DIMENSION) \
       for j in range(height/CELL_DIMENSION)\
     ])
-  return np.array(cells)  
+  output.put(cells)  
 
 
 def corpusSequencing(npImages, CELL_DIMENSION):
+  output = Queue()
   nbImages = len(npImages)
-  pool = Pool(processes=25, )
-  imagesCells = ["cells" for i in range(nbImages)]
-  for i in range(nbImages):
-    imagesCells[i] = pool.apply_async(imageSequencing, (npImages[i], CELL_DIMENSION)).get(timeout=50)
-  pool.close()
-  return np.array(imagesCells)
+  sequencing = ["cells" for i in range(nbImages)]
+  # pool = Pool(processes=2, )
+  for i in range(10):
+    sequencing[i] = Process(target=imageSequencing, args=(npImages[i], CELL_DIMENSION, output, i))
+    sequencing[i].start()
+  print 'Waiting for processes to end ...'
+  sequencedCorpus = []
+  while not(output.empty()):
+    print 'emptying Queue'
+    sequencedCorpus.append(output.get())
+    print output.empty()
+
+  for i in range(10):
+    print(sequencing[i].is_alive())
+    while not(output.empty()):
+      print 'emptying Queue'
+      sequencedCorpus.append(output.get())
+  for i in range(10):  
+    sequencing[i].join()
+  print 'processes ended'
+
+  sequencedCorpus = [output.get() for process in sequencing[0:8]]
+  print 'found output'
+  sequencedCorpus.sort()
+  print("sorted output")
+  sequencedCorpus = [image[1] for image in sequencedCorpus]
+  print ('formated output')
+  return sequencedCorpus
+  # imagesCells = ["cells" for i in range(nbImages)]
+  # for i in range(nbImages):
+  #   imagesCells[i] = pool.apply(imageSequencing, (npImages[i], CELL_DIMENSION))
+  # pool.close()
+  # return np.array(imagesCells)
 
 
 def computeLocalHistogramsCell(cell, NB_ORIENTATIONS, CELL_DIMENSION):
@@ -70,7 +98,7 @@ def computeLocalHistogramsCell(cell, NB_ORIENTATIONS, CELL_DIMENSION):
                                           CELL_DIMENSION),\
                           cells_per_block=(1,1))
 
-def computeLocalHistogramsImage(imageCells,NB_ORIENTATIONS, CELL_DIMENSION, nbCells ):
+def computeLocalHistogramsImage(imageCells, NB_ORIENTATIONS, CELL_DIMENSION, nbCells, output, imageIndice ):
   # cellsPool = Pool(processes=nbCells)
   localHistograms = ["histo" for j in range(nbCells)]
   for j in range(nbCells):
@@ -80,16 +108,21 @@ def computeLocalHistogramsImage(imageCells,NB_ORIENTATIONS, CELL_DIMENSION, nbCe
                             pixels_per_cell=(CELL_DIMENSION,\
                                             CELL_DIMENSION),\
                             cells_per_block=(1,1)) 
-  return localHistograms    
+  return output.put((imageIndice, localHistograms))
 
 def computeLocalHistograms(cells, NB_ORIENTATIONS, CELL_DIMENSION):
+  output = Queue()
   nbImages = len(cells)
   nbCells = [len(imageCells) for imageCells in cells]
-  imagePool = Pool(processes=25)
-  localHistograms = [["histo" for j in range(nbCells[i])] for i in range(nbImages)]
-  for i in range(nbImages):
-    localHistograms[i] = imagePool.apply_async(computeLocalHistogramsImage, (cells[i],NB_ORIENTATIONS, CELL_DIMENSION, nbCells[i] )).get(timeout=None)
-  imagePool.close()
+  localHistogramscomputing = [["histo" for j in range(nbCells[i])] for i in range(nbImages)]
+  for i in range(4):
+    localHistogramscomputing[i] = Process(target=computeLocalHistogramsImage, args=(cells[i],NB_ORIENTATIONS, CELL_DIMENSION, nbCells[i], output, i))
+    localHistogramscomputing[i].start()
+  for i in range(4):
+    localHistogramscomputing[i].join()
+  localHistograms = [output.get() for process in localHistogramscomputing]
+  localHistograms.sort()
+  localHistograms = [localHistogram[1] for localHistogram in localHistograms]
   return localHistograms
 
 
@@ -130,7 +163,8 @@ if __name__ == '__main__':
 
 
   start = time.time()
-  path ='/donnees/bbauvin/101_ObjectCategories'
+  path='/home/doob/Dropbox/Marseille/OMIS-Projet/03-jeux-de-donnees/101_ObjectCategories'
+  # path ='/donnees/bbauvin/101_ObjectCategories'
   testNpImages = [ [1,'testImage.jpg'], [1,'testImage.jpg'] ]
   CELL_DIMENSION = 5
   NB_ORIENTATIONS = 8
@@ -149,22 +183,22 @@ if __name__ == '__main__':
   cells = corpusSequencing(npImages, CELL_DIMENSION)
   sequencedTime = time.time()
   print "Sequenced images in " + str(sequencedTime-extractedTime) +'sec'
-  print "Computing gradient on each block ..."
-  gradients = computeLocalHistograms(cells, NB_ORIENTATIONS, CELL_DIMENSION)
-  hogedTime = time.time()
-  print "Computed gradients in " + str(hogedTime - sequencedTime) + 'sec'
-  print "Clustering gradients ..."
-  gradientLabels, sizes = clusterGradients(gradients, NB_CLUSTERS, MAXITER)
-  clusteredItme = time.time()
-  print "Clustered gradients in " + str(hogedTime - sequencedTime) + 'sec'
-  print "Computing histograms ..."
-  histograms = makeHistograms(gradientLabels, NB_CLUSTERS, sizes)
-  end = time.time()
-  print "Computed histograms in " + str(int(end - hogedTime)) + 'sec'
-  print "Histogram shape : " +str(histograms.shape)
-  print "Total time : " + str(end-start) + 'sec'
-  #hogs = extractHOGFeature(testNpImages, CELL_DIMENSION, \
-  #                         NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)
+  # print "Computing gradient on each block ..."
+  # gradients = computeLocalHistograms(cells, NB_ORIENTATIONS, CELL_DIMENSION)
+  # hogedTime = time.time()
+  # print "Computed gradients in " + str(hogedTime - sequencedTime) + 'sec'
+  # print "Clustering gradients ..."
+  # gradientLabels, sizes = clusterGradients(gradients, NB_CLUSTERS, MAXITER)
+  # clusteredItme = time.time()
+  # print "Clustered gradients in " + str(hogedTime - sequencedTime) + 'sec'
+  # print "Computing histograms ..."
+  # histograms = makeHistograms(gradientLabels, NB_CLUSTERS, sizes)
+  # end = time.time()
+  # print "Computed histograms in " + str(int(end - hogedTime)) + 'sec'
+  # print "Histogram shape : " +str(histograms.shape)
+  # print "Total time : " + str(end-start) + 'sec'
+  # #hogs = extractHOGFeature(testNpImages, CELL_DIMENSION, \
+  # #                         NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)
   
 
 
