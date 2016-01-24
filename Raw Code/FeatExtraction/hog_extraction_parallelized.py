@@ -108,8 +108,8 @@ def makeHistograms(labels, NB_CLUSTERS, sizes):
   for image in sizes:
     histogram = np.zeros(NB_CLUSTERS)
     for i in range(image):
-      histogram[labels[indiceInLabels+i]] += 1
-    hogs.append(histogram)
+      histogram[labels[indiceInLabels+i]] += 1.0
+    hogs.append(histogram/image)
     indiceInLabels+=i 
   return np.array(hogs)
 
@@ -129,7 +129,7 @@ if __name__ == '__main__':
 
 
   start = time.time()
-  path ='/home/doob/Dropbox/Marseille/OMIS-Projet/03-jeux-de-donnees/101_ObjectCategories'
+  path ='/donnees/bbauvin/03-jeux-de-donnees/101_ObjectCategories'
   testNpImages = [ [1,'testImage.jpg'], [1,'testImage.jpg'] ]
   CELL_DIMENSION = 5
   NB_ORIENTATIONS = 8
