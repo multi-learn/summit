@@ -421,6 +421,13 @@ def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des
         return (description,npSurfHist)
 
 
+# For HOG : 
+# CELL_DIMENSION is the dimension of the cells on which we will compute local histograms 
+# NB_ORIENTATIONS is the number of bins of this local histograms 
+# intuitively, if CELL_DIMENSION is small it's better to have a small NB_ORIENTATIONS in order to have meaningful local histograms
+# NB_CLUSTERS is the number of bins of the global histograms (the number of clusters in the KMEANS algorithm used for the bag of word)
+# MAXITER is the maximum number of iteration for the clustering algorithm
+
 #Takes the npImages and returns a (nbImages, NB_CLUSTERS) np.array with the histograms for each image. 
 #Need to specify the number of cores needed for computing, can be set as multiprocessing.cpu_count() in order to use all cpu cores in the system
 def calcHOGParallel(nameDB, npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES):
