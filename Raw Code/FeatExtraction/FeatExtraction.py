@@ -26,10 +26,8 @@ __date__	= 2016-01-23
 
 # ### Function to calculate the RGBColorHistogram for given Images 
 
-# In[3]:
 
 #### Calculate RGBColorHistograms for all images
-
 ### Points to improve: 
 
 # nameDB: Name of the current Image DB
@@ -37,9 +35,9 @@ __date__	= 2016-01-23
 # numberOfBins_: Number of bins Histogram
 # maxColorIntensity_ : Seperates the intesity for each color from 0 to maxColorIntensity
 # boolNormMinMax_ : True -> use MinMax Norm from 0 to 1 ; False -> Distribution from 0 to 1
-def calcRGBColorHisto(nameDB, dfImages_, numberOfBins_, maxColorIntensity_, boolNormMinMax_):
+def calcRGBColorHisto(nameDB, dfImages, numberOfBins_, maxColorIntensity_, boolNormMinMax_):
         # Initialize function
-        npImages = dfImages_.values
+        npImages = dfImages.values
         numberOfBins = numberOfBins_
         maxColorIntensity = maxColorIntensity_
         boolNormMinMax = boolNormMinMax_
@@ -119,9 +117,9 @@ def calcRGBColorHisto(nameDB, dfImages_, numberOfBins_, maxColorIntensity_, bool
 # dfImages: Dataframe with paths to all images - use function imgCrawl
 # histSize: Number of bins in Histogram (differenz for each channel H,S,V)
 # boolNormMinMax_ : True -> use MinMax Norm from 0 to 1 ; False -> Distribution from 0 to 1
-def calcHSVColorHisto(nameDB, dfImages_, histSize_, boolNormMinMax_):
+def calcHSVColorHisto(nameDB, dfImages, histSize_, boolNormMinMax_):
         # Initialize function
-        npImages = dfImages_.values
+        npImages = dfImages.values
         histSize = histSize_
         boolNormMinMax = boolNormMinMax_
         npColorHist = np.zeros((len(npImages), int(histSize[0]+histSize[1]+histSize[2])), "float32")
@@ -202,9 +200,9 @@ def calcHSVColorHisto(nameDB, dfImages_, histSize_, boolNormMinMax_):
 #### Calculate the SIFT/SURF descripteurs for all images
 # dfImages: Dataframe with paths to all images - use function imgCrawl
 # boolSIFT: To determine which feature to use: True->SIFT , False->SURF
-def calcSURFSIFTDescriptors(dfImages_, boolSIFT):
+def calcSURFSIFTDescriptors(dfImagesdfImages, boolSIFT):
         # Initialize function
-        npImages = dfImages_.values
+        npImages = dfImages.values
     
         if(boolSIFT==True):
                 feat = "SIFT: "
@@ -433,12 +431,16 @@ def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des
 def calcHOGParallel(nameDB, npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES):
     param = "CellDimension_"+CELL_DIMENSION+"-"+"nbOrientaions_"+NB_ORIENTATIONS+"-"+"nbClusters_"+NB_CLUSTERS+"-"+"Maxiter_"+MAXITER
     description = nameDB + "-HOG-" + param
+    
     HOG = extractHOGFeatureParallel(npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES)
+    
     return (description, HOG)
 
 #Takes the npImages and returns a (nbImages, NB_CLUSTERS) np.array with the histograms for each image. 
 def calcHOG(nameDB, npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER):
     param = "CellDimension_"+CELL_DIMENSION+"-"+"nbOrientaions_"+NB_ORIENTATIONS+"-"+"nbClusters_"+NB_CLUSTERS+"-"+"Maxiter_"+MAXITER
     description = nameDB + "-HOG-" + param
+    
     HOG = extractHOGFeature(npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)
+    
     return (description, HOG) 
