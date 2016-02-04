@@ -103,10 +103,10 @@ def makeHistograms(labels, NB_CLUSTERS, sizes):
   return np.array(hogs)
 
 
-def extractHOGFeature(npImages, CELL_DIMENSION, NB_ORIENTATIONS, \
-                      NB_CLUSTERS, MAXITER):
-  cells = corpusSequencing(npImages, CELL_DIMENSION)
-  localHistograms = computeLocalHistograms(cells)
+def extractHOGFeatureParallel(npImages, CELL_DIMENSION, NB_ORIENTATIONS, \
+                      NB_CLUSTERS, MAXITER, NB_CORES):
+  cells = corpusSequencing(npImages, CELL_DIMENSION, NB_CORES)
+  localHistograms = computeLocalHistograms(cells, NB_ORIENTATIONS, CELL_DIMENSION, NB_CORES)
   localHistogramLabels, sizes = clusterGradients(localHistograms, \
                                                 NB_CLUSTERS, MAXITER)
   hogs = makeHistograms(localHistogramLabels, NB_CLUSTERS, sizes)
@@ -143,103 +143,16 @@ if __name__ == '__main__':
   gradients = computeLocalHistograms(cells, NB_ORIENTATIONS, CELL_DIMENSION, NB_CORES)
   hogedTime = time.time()
   print "Computed gradients in " + str(hogedTime - sequencedTime) + 'sec'
-  # print "Clustering gradients ..."
-  # gradientLabels, sizes = clusterGradients(gradients, NB_CLUSTERS, MAXITER)
-  # clusteredItme = time.time()
-  # print "Clustered gradients in " + str(hogedTime - sequencedTime) + 'sec'
-  # print "Computing histograms ..."
-  # histograms = makeHistograms(gradientLabels, NB_CLUSTERS, sizes)
-  # end = time.time()
-  # print "Computed histograms in " + str(int(end - hogedTime)) + 'sec'
-  # print "Histogram shape : " +str(histograms.shape)
-  # print "Total time : " + str(end-start) + 'sec'
-  # #hogs = extractHOGFeature(testNpImages, CELL_DIMENSION, \
-  # #                         NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)
+  print "Clustering gradients ..."
+  gradientLabels, sizes = clusterGradients(gradients, NB_CLUSTERS, MAXITER)
+  clusteredItme = time.time()
+  print "Clustered gradients in " + str(hogedTime - sequencedTime) + 'sec'
+  print "Computing histograms ..."
+  histograms = makeHistograms(gradientLabels, NB_CLUSTERS, sizes)
+  end = time.time()
+  print "Computed histograms in " + str(int(end - hogedTime)) + 'sec'
+  print "Histogram shape : " +str(histograms.shape)
+  print "Total time : " + str(end-start) + 'sec'
+  #hogs = extractHOGFeature(testNpImages, CELL_DIMENSION, \
+  #                         NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)
   
-
-
-# # Imports
-
-# import os as os        # for iteration throug directories
-# import pandas as pd # for Series and DataFrames
-# import cv2          # for OpenCV 
-# import datetime     # for TimeStamp in CSVFile
-# import numpy as np  # for arrays
-# import time       # for time calculations
-# from feature_extraction_try import imgCrawl, getClassLabels
-# from skimage.feature import hog
-# from sklearn.cluster import MiniBatchKMeans
-# from multiprocessing import Process #for parallelization
-
-# def reSize(image, CELL_DIMENSION):
-#   height, width, channels = image.shape
-  
-#   if height%CELL_DIMENSION==0 and width%CELL_DIMENSION==0:
-#     resizedImage = image
-  
-#   elif width%CELL_DIMENSION==0:
-#     missingPixels = CELL_DIMENSION-height%CELL_DIMENSION
-#     resizedImage = cv2.copyMakeBorder(image,0,missingPixels,0,\
-#                                       0,cv2.BORDER_REPLICATE)
-  
-#   elif height%CELL_DIMENSION==0:
-#     missingPixels = CELL_DIMENSION-width%CELL_DIMENSION
-#     resizedImage = cv2.copyMakeBorder(image,0,0,0,missingPixels,\
-#                                       cv2.BORDER_REPLICATE)
-  
-#   else:
-#     missingWidthPixels = CELL_DIMENSION-width%CELL_DIMENSION
-#     missingHeightPixels = CELL_DIMENSION-height%CELL_DIMENSION
-#     resizedImage = cv2.copyMakeBorder(image,0,missingHeightPixels,0,\
-#                                       missingWidthPixels,cv2.BORDER_REPLICATE)
-#   return resizedImage
-
-
-# class HOGComputer:
-#   def __init__(self, CELL_DIMENSION, NB_ORIENTATIONS, \
-#                       NB_CLUSTERS, MAXITER, npImages):
-#     self.CELL_DIMENSION  = CELL_DIMENSION
-#     self.NB_ORIENTATIONS = NB_ORIENTATIONS
-#     self.NB_CLUSTERS = NB_CLUSTERS
-#     self.MAXITER = MAXITER
-#     self.npImages = npImages
-#     self.cells = [[] for k in range(len(npImages))]
-#     self.localHistograms = np.array([])
-#     self.localHistogramLabels = np.array([])
-#     self.sizes = np.array([])
-#     self.hogs = np.array([])
-
-
-#   def imageSequencing(self, imageIndice):
-#     image = cv2.imread(self.npImages[imageIndice][1])
-#     print(image.shape)
-#     resizedImage = reSize(image, self.CELL_DIMENSION)
-#     height, width, channels = resizedImage.shape
-#     self.cells[imageIndice] = \
-#     [\
-#       resizedImage[\
-#         j*self.CELL_DIMENSION:j*self.CELL_DIMENSION+self.CELL_DIMENSION,\
-#         i*self.CELL_DIMENSION:i*self.CELL_DIMENSION+self.CELL_DIMENSION\
-#       ] for i in range(width/self.CELL_DIMENSION) \
-#       for j in range(height/self.CELL_DIMENSION)\
-#     ]
-#     print len(self.cells[imageIndice])
-
-
-#   def corpusSequencing(self):
-#     nbImages = len(self.npImages)
-#     processes = ["process" for k in range(nbImages)]
-    
-#     for imageIndice in range(nbImages):
-#       processes[imageIndice]=Process(target=HOGComputer.imageSequencing, args=(self, imageIndice))
-#       processes[imageIndice].start()
-#     for imageIndice in range(nbImages):
-#       processes[imageIndice].join()
-#     print len(self.cells[0])
-      
-# if __name__=='__main__':
-#   testNpImages = [ [1,'testImage.jpg'], [1, 'testImage.jpg'] ]
-#   hogComputer = HOGComputer(5,8,12,100,testNpImages)
-#   hogComputer.corpusSequencing()
-#   print len(hogComputer.cells)
-#   print len(hogComputer.cells[0])

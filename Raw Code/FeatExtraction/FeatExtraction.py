@@ -13,7 +13,8 @@ import cv                       # for SIFT/SURF
 from scipy.cluster.vq import *  # for Clustering http://docs.scipy.org/doc/scipy/reference/cluster.vq.html\n",
 
 # Import own modules
-
+from hog_extraction_parallelized import extractHOGFeatureParallel #For HOG
+from hog_extraction import extractHOGFeature #for HOG computation
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
@@ -420,3 +421,17 @@ def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des
         return (description,npSurfHist)
 
 
+#Takes the npImages and returns a (nbImages, NB_CLUSTERS) np.array with the histograms for each image. 
+#Need to specify the number of cores needed for computing, can be set as multiprocessing.cpu_count() in order to use all cpu cores in the system
+def calcHOGParallel(nameDB, npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES):
+    param = "CellDimension_"+CELL_DIMENSION+"-"+"nbOrientaions_"+NB_ORIENTATIONS+"-"+"nbClusters_"+NB_CLUSTERS+"-"+"Maxiter_"+MAXITER
+    description = nameDB + "-HOG-" + param
+    HOG = extractHOGFeatureParallel(npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES)
+    return (description, HOG)
+
+#Takes the npImages and returns a (nbImages, NB_CLUSTERS) np.array with the histograms for each image. 
+def calcHOG(nameDB, npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER):
+    param = "CellDimension_"+CELL_DIMENSION+"-"+"nbOrientaions_"+NB_ORIENTATIONS+"-"+"nbClusters_"+NB_CLUSTERS+"-"+"Maxiter_"+MAXITER
+    description = nameDB + "-HOG-" + param
+    HOG = extractHOGFeature(npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)
+    return (description, HOG) 
