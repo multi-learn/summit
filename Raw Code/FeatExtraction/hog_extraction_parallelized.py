@@ -6,7 +6,7 @@ import cv2          # for OpenCV
 import datetime     # for TimeStamp in CSVFile
 import numpy as np  # for arrays
 import time       # for time calculations
-from feature_extraction_try import imgCrawl, getClassLabels
+import DBCrawl	
 from skimage.feature import hog
 from sklearn.cluster import MiniBatchKMeans
 import multiprocessing as mp #to count cores https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool

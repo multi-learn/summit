@@ -35,12 +35,9 @@ __date__	= 2016-01-23
 # numberOfBins_: Number of bins Histogram
 # maxColorIntensity_ : Seperates the intesity for each color from 0 to maxColorIntensity
 # boolNormMinMax_ : True -> use MinMax Norm from 0 to 1 ; False -> Distribution from 0 to 1
-def calcRGBColorHisto(nameDB, dfImages, numberOfBins_, maxColorIntensity_, boolNormMinMax_):
+def calcRGBColorHisto(nameDB, dfImages, numberOfBins, maxColorIntensity, boolNormMinMax):
         # Initialize function
         npImages = dfImages.values
-        numberOfBins = numberOfBins_
-        maxColorIntensity = maxColorIntensity_
-        boolNormMinMax = boolNormMinMax_
         npColorHist = np.zeros((len(npImages), numberOfBins*3), "float32")
         i=0 
 	
@@ -117,11 +114,10 @@ def calcRGBColorHisto(nameDB, dfImages, numberOfBins_, maxColorIntensity_, boolN
 # dfImages: Dataframe with paths to all images - use function imgCrawl
 # histSize: Number of bins in Histogram (differenz for each channel H,S,V)
 # boolNormMinMax_ : True -> use MinMax Norm from 0 to 1 ; False -> Distribution from 0 to 1
-def calcHSVColorHisto(nameDB, dfImages, histSize_, boolNormMinMax_):
+def calcHSVColorHisto(nameDB, dfImages, histSize_, boolNormMinMax):
         # Initialize function
         npImages = dfImages.values
         histSize = histSize_
-        boolNormMinMax = boolNormMinMax_
         npColorHist = np.zeros((len(npImages), int(histSize[0]+histSize[1]+histSize[2])), "float32")
         i=0
 	
@@ -152,7 +148,7 @@ def calcHSVColorHisto(nameDB, dfImages, histSize_, boolNormMinMax_):
         ## algo
         for images in npImages:
                 image = cv2.imread(images[1])
-                hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
+                hsv = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
                 
                 
                 # Split into color chanels rgb
@@ -200,14 +196,14 @@ def calcHSVColorHisto(nameDB, dfImages, histSize_, boolNormMinMax_):
 #### Calculate the SIFT/SURF descripteurs for all images
 # dfImages: Dataframe with paths to all images - use function imgCrawl
 # boolSIFT: To determine which feature to use: True->SIFT , False->SURF
-def calcSURFSIFTDescriptors(dfImagesdfImages, boolSIFT):
+def calcSURFSIFTDescriptors(dfImages, boolSIFT):
         # Initialize function
         npImages = dfImages.values
     
         if(boolSIFT==True):
-                feat = "SIFT: "
+                feat = "SIFT:\t "
         else:
-                feat = "SURF: "
+                feat = "SURF:\t "
         
         # List where all the descriptors are stored
         des_list = []
@@ -224,13 +220,13 @@ def calcSURFSIFTDescriptors(dfImagesdfImages, boolSIFT):
         for images,i in zip(npImages,range(1,len(npImages)+1)):
                 # Read image
                 if(float(i)/float(len(npImages))>0.25 and bool_Progress==True):
-                        print feat + "25% of Images processed (Keypoints)"
+                        print feat + "25% of images processed (Keypoints)"
                         bool_Progress = False
                 elif(float(i)/float(len(npImages))>0.5 and bool_Progress==False):
-                        print feat + "50% of Images processed (Keypoints)"
+                        print feat + "50% of images processed (Keypoints)"
                         bool_Progress = None
                 elif(float(i)/float(len(npImages))>0.75 and bool_Progress==None):
-                        print feat + "75% of Images processed (Keypoints)"
+                        print feat + "75% of images processed (Keypoints)"
                         bool_Progress = NotImplemented
 
                 image = cv2.imread(images[1], cv2.CV_LOAD_IMAGE_COLOR)
@@ -244,7 +240,7 @@ def calcSURFSIFTDescriptors(dfImagesdfImages, boolSIFT):
                 kp, des = det.detectAndCompute(image,None)
                 
                 if des is None:
-                        print "SURF: No Keypoints found in: " + str(images[1])
+                        print feat + "No Keypoints found in: " + str(images[1])
                         if(boolSIFT==True):
                                 desNoKP=np.zeros(shape=(100,128)) 
                         else: 
@@ -271,7 +267,7 @@ def calcSURFSIFTDescriptors(dfImagesdfImages, boolSIFT):
             size = size + len(des_list[i])
             #print "SIFT/SURF: Actuel length:" + str(size)
         
-        print feat + "Length of Descriptors: " + str(size)
+        #print feat + "Length of Descriptors: " + str(size)
         
         merker = 0
         
@@ -280,12 +276,12 @@ def calcSURFSIFTDescriptors(dfImagesdfImages, boolSIFT):
         else:
                 descriptors = np.zeros(shape=(size,64), dtype=np.float32)
         
-        print feat + "Start filling descriptors"
+        #print feat + "Start filling descriptors"
         for i in range(0,len(des_list)):
                 descriptors[merker:(merker+len(des_list[i]))] = des_list[i]
                 merker = merker + len(des_list[i])
         
-        print feat + "Shape of Descriptors: " + str(descriptors.shape)
+        #print feat + "Shape of Descriptors: " + str(descriptors.shape)
        
         
         return (descriptors,des_list)
@@ -316,7 +312,7 @@ def calcSURFSIFTDescriptors(dfImagesdfImages, boolSIFT):
 # des_list: List is needed for Dictonary
 # boolSIFT: To determine which feature to use: True->SIFT , False->SURF
 def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des_list, boolSIFT):
-        print "Begin of SURFSIFTHisto"
+        #print "Begin of SURFSIFTHisto"
         # Initialize function
         npImages = dfImages.values
 	
@@ -342,7 +338,7 @@ def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des
     
         # Perform k-means clustering -> creates the words from all describteurs -> this is the (dic) dictionary/vocabulary/codebook
         # k: amount of different clusters to build! Will result in a feature length k
-        print feat + ": Calculation of Dictonary with " + str(int(cluster)) + " Clusters"
+        print feat + ":\t Calculation of Dictonary with " + str(int(cluster)) + " Clusters"
         dic, variance = kmeans(descriptors, int(cluster), 1) 
         
         ### 2. Step: encoding/coding/vector quantization(vq) to assign each descripteur the closest "visual word" from dictionary:
@@ -354,20 +350,20 @@ def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des
         # bool for Progressbar
         bool_Progress=True
         
-        print feat + ": Assign words from Dictonary to each Image"
+        print feat + ":\t Assign words from Dictonary to each Image"
         npSurfHist = np.zeros((len(npImages), int(cluster)), dtype=np.float32)
         for i in xrange(len(npImages)):
                 # vq: (Encoding) Assign words from the dictionary to each descripteur
                 words, distance = vq(des_list[i],dic)
                 
                 if(float(i)/float(len(npImages))>0.25 and bool_Progress==True):
-                        print feat + "25% of Images processed (Assignments)"
+                        print feat + ":\t 25% of images processed (Assignments)"
                         bool_Progress = False
                 elif(float(i)/float(len(npImages))>0.5 and bool_Progress==False):
-                        print feat + "50% of Images processed (Assignments)"
+                        print feat + ":\t 50% of images processed (Assignments)"
                         bool_Progress = None
                 elif(float(i)/float(len(npImages))>0.75 and bool_Progress==None):
-                        print feat + "75% of Images processed (Assignments)"
+                        print feat + ":\t 75% of images processed (Assignments)"
                         bool_Progress = NotImplemented
         
                 ### 3. Step: Pooling - calculate a histogram for each image
@@ -429,7 +425,7 @@ def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des
 #Takes the npImages and returns a (nbImages, NB_CLUSTERS) np.array with the histograms for each image. 
 #Need to specify the number of cores needed for computing, can be set as multiprocessing.cpu_count() in order to use all cpu cores in the system
 def calcHOGParallel(nameDB, npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES):
-    param = "CellDimension_"+CELL_DIMENSION+"-"+"nbOrientaions_"+NB_ORIENTATIONS+"-"+"nbClusters_"+NB_CLUSTERS+"-"+"Maxiter_"+MAXITER
+    param = "CellDimension_"+ str(CELL_DIMENSION) +"-"+"nbOrientaions_"+ str(NB_ORIENTATIONS) +"-"+"nbClusters_"+ str(NB_CLUSTERS) +"-"+"Maxiter_"+ str(MAXITER)
     description = nameDB + "-HOG-" + param
     
     HOG = extractHOGFeatureParallel(npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES)
@@ -438,7 +434,7 @@ def calcHOGParallel(nameDB, npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTE
 
 #Takes the npImages and returns a (nbImages, NB_CLUSTERS) np.array with the histograms for each image. 
 def calcHOG(nameDB, npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER):
-    param = "CellDimension_"+CELL_DIMENSION+"-"+"nbOrientaions_"+NB_ORIENTATIONS+"-"+"nbClusters_"+NB_CLUSTERS+"-"+"Maxiter_"+MAXITER
+    param = "CellDimension_"+ str(CELL_DIMENSION) +"-"+"nbOrientaions_"+ str(NB_ORIENTATIONS) +"-"+"nbClusters_"+ str(NB_CLUSTERS) +"-"+"Maxiter_"+ str(MAXITER)
     description = nameDB + "-HOG-" + param
     
     HOG = extractHOGFeature(npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)
