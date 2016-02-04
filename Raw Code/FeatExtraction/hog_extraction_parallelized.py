@@ -9,8 +9,8 @@ import time       # for time calculations
 from feature_extraction_try import imgCrawl, getClassLabels
 from skimage.feature import hog
 from sklearn.cluster import MiniBatchKMeans
-from multiprocessing import Pool, Queue, Process #for parallelization https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool
-
+import multiprocessing as mp #to count cores https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool
+from joblib import Parallel, delayed
 
 # In order to calculate HOG, we will use a bag of word approach : cf SURF function, well documented. 
 
@@ -67,21 +67,33 @@ class NpImage:
                               cells_per_block=(1,1)) 
     self.localHOGs = localHistograms
 
+def imageSequencing(npImage, CELL_DIMENSION):
+  image = cv2.imread(npImage[1])
+  resizedImage = reSize(image, CELL_DIMENSION)
+  height, width, channels = resizedImage.shape
+  cells = np.array([\
+      resizedImage[\
+        j*CELL_DIMENSION:j*CELL_DIMENSION+CELL_DIMENSION,\
+        i*CELL_DIMENSION:i*CELL_DIMENSION+CELL_DIMENSION] \
+      for i in range(width/CELL_DIMENSION) \
+      for j in range(height/CELL_DIMENSION)\
+    ])\
+  )
+  return np.array(cells)  
 
 
-
-def corpusSequencing(npImages, CELL_DIMENSION):
+def corpusSequencing(npImages, CELL_DIMENSION, NB_CORES):
   nbImages = len(npImages)
   sequencing = ["cells" for i in range(nbImages)]
-  images = [NpImage(npImages[i]) for i in range(nbImages)]
-  for i in range(10):
-    sequencing[i] = Process(target=NpImage.imageSequencing, args=(images[i], CELL_DIMENSION))
-    sequencing[i].start()
-  for i in range(10):  
-    sequencing[i].join()
-    print images[i].cells
+  corpusCells = Parallel(n_jobs=NB_CORES)(delayed(imageSequencing)(image, CELL_DIMENSION) for image in npImages)
+  # for i in range(10):
+  #   sequencing[i] = Process(target=NpImage.imageSequencing, args=(images[i], CELL_DIMENSION))
+  #   sequencing[i].start()
+  # for i in range(10):  
+  #   sequencing[i].join()
+  #   print images[i].cells
 
-  corpusCells = np.array([image.cells for image in images])
+  corpusCells = np.array([corpusCells])
   print corpusCells.shape
   return corpusCells, images
 
@@ -139,12 +151,13 @@ if __name__ == '__main__':
 
   start = time.time()
   # path='/home/doob/Dropbox/Marseille/OMIS-Projet/03-jeux-de-donnees/101_ObjectCategories'
-  path ='/donnees/bbauvin/101_ObjectCategories'
+  path ='/donnees/pj_bdd_bbauvin/101_ObjectCategories'
   testNpImages = [ [1,'testImage.jpg'], [1,'testImage.jpg'] ]
   CELL_DIMENSION = 5
   NB_ORIENTATIONS = 8
   NB_CLUSTERS = 12
   MAXITER = 100
+  NB_CORES = mp.cpu_count()
 
   print "Fetching Images in " + path
   # get dictionary to link classLabels Text to Integers
@@ -155,7 +168,7 @@ if __name__ == '__main__':
   extractedTime = time.time()
   print "Extracted images in " + str(extractedTime-start) +'sec'
   print "Sequencing Images ..."
-  cells, images = corpusSequencing(npImages, CELL_DIMENSION)
+  cells, images = corpusSequencing(npImages, CELL_DIMENSION, NB_CORES)
   sequencedTime = time.time()
   print "Sequenced images in " + str(sequencedTime-extractedTime) +'sec'
   print "Computing gradient on each block ..."
