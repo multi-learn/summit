@@ -115,7 +115,7 @@ MAXITER = 100
 NB_CORES = 1
 
 # Extract Feature from DB
-hog_feat_desc,hof_f_extr_res = FeatExtraction.calcHOGParallel(nameDB, dfImages.values, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES)
+hog_feat_desc,hog_f_extr_res = FeatExtraction.calcHOGParallel(nameDB, dfImages.values, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES)
 #hog_feat_desc,hog_f_extr_res = FeatExtraction.calcHOG(nameDB, dfImages.values, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)   
 t_hog = time.time() - t_sift_start
 print "SURF:\t Done in: " + str(t_hog) + "[s]"
