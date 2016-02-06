@@ -34,7 +34,7 @@ args = parser.parse_args()
 
 path = args.path
 NB_CORES = args.cores
-print NB_CORES
+
 ### Main Programm
 
 ################################ Read Images from Database
