@@ -116,7 +116,7 @@ boolNormMinMax = False
 # Extract Feature from DB
 surf_descriptors,surf_des_list = FeatExtraction.calcSURFSIFTDescriptors(dfImages, boolSIFT)
 surf_feat_desc,surf_f_extr_res = FeatExtraction.calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, surf_descriptors, surf_des_list, boolSIFT)
-t_surf = time.time() - t_sift_start 
+t_surf = time.time() - t_surf_start 
 print "SURF:\t Done in: " + str(t_surf) + "[s]"
 
 ### Setup HOG
@@ -131,8 +131,8 @@ NB_CORES = 1
 # Extract Feature from DB
 hog_feat_desc,hog_f_extr_res = FeatExtraction.calcHOGParallel(nameDB, dfImages.values, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES)
 #hog_feat_desc,hog_f_extr_res = FeatExtraction.calcHOG(nameDB, dfImages.values, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)   
-t_hog = time.time() - t_sift_start
-print "SURF:\t Done in: " + str(t_hog) + "[s]"
+t_hog = time.time() - t_hog_start
+print "HOG:\t Done in: " + str(t_hog) + "[s]"
 
 print "Done:\t Features Extraction"
 
