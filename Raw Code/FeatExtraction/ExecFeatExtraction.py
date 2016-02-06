@@ -9,6 +9,7 @@ import datetime                 # for TimeStamp in CSVFile
 from scipy.cluster.vq import *  # for Clustering http://docs.scipy.org/doc/scipy/reference/cluster.vq.html
 import numpy as np              # for arrays
 import time                     # for time calculations
+from argparse import ArgumentParser # for acommand line arguments
 
 # Import 3rd party modules
 
@@ -22,13 +23,26 @@ __author__ 	= "Nikolas Huelsmann"
 __status__ 	= "Development" #Production, Development, Prototype
 __date__	= 2016-02-04
 
+### Argument Parser
+
+parser = ArgumentParser(description='Perform feature parameter optimisation')
+
+parser.add_argument('-p', '--path', action='store', help='Path to the database', default='D:\\CaltechMini')
+parser.add_argument('-c', '--cores', action='store', type=int, help='Nb cores used for parallelization', default=1)
+
+args = parser.parse_args()
+
+path = args.path
+NB_CORES = args.cores
+print NB_CORES
 ### Main Programm
 
 ################################ Read Images from Database
 # Determine the Database to extract features
 
 print "### Main Programm for Feature Extraction ###"
-path ="D:\\CaltechMini"
+# path ="D:\\CaltechMini"
+path = args.path
 nameDB = "CT-Mini"
 
 print "Start:\t Exportation of images from DB"
