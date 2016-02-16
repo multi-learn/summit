@@ -126,7 +126,6 @@ CELL_DIMENSION = 5
 NB_ORIENTATIONS = 8
 NB_CLUSTERS = 12
 MAXITER = 100
-NB_CORES = 1
 
 # Extract Feature from DB
 hog_feat_desc,hog_f_extr_res = FeatExtraction.calcHOGParallel(nameDB, dfImages.values, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES)

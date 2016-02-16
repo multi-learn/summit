@@ -3,6 +3,7 @@
 
 import numpy as np
 
+
 # TODO :
 # Linear Weighted Fusion
 # Bayesian Inference  /!\ Statistically independant => ? 
@@ -14,14 +15,15 @@ import numpy as np
 # Kalman Filter ?
 # Particle Filter ?
 
-def linearWeightedFusion (toFuse, weights):
-	
-	# Normalize weights ?
-	# weights = weights/float(max(weights))
+def linearWeightedFusion(toFuse, weights):
+    # Normalize weights ?
+    # weights = weights/float(max(weights))
 
-	weighted = np.array([np.array([feature*weights for (feature, weight) in zip(exampleToFuse, weights)]).flatten() for exampleToFuse in toFuse])
-	return fused
+    weighted = np.array(
+            [np.array([feature * weights for (feature, weight) in zip(exampleToFuse, weights)]).flatten() for
+             exampleToFuse in toFuse])
+    return weighted
 
 
 if __name__ == '__main__':
-	
+    pass
