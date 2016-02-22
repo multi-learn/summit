@@ -6,7 +6,7 @@ import numpy as np
 
 # TODO :
 # Linear Weighted Fusion
-# Bayesian Inference  /!\ Statistically independant => ? 
+# Bayesian Inference  /!\ Statistically independant => ? Patern Classification
 # SVM ?
 # Dempster Schafer Theory  /!\ Inunderstandable
 # Dynamic Bayesian Networks ?
