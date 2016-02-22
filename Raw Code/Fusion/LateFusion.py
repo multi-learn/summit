@@ -30,6 +30,8 @@ def weightedLinear(monoViewDecisions, weights):
 
 
 # The SVMClassifier is here used to find the right weights for linear fusion
+# Here we have a function to train it, one to fuse. 
+# And one to do both.
 def SVMForLinearFusionTrain(monoViewDecisions, labels):
     SVMClassifier = SVC()
     SVMClassifier.fit(monoViewDecisions, labels)
@@ -39,6 +41,11 @@ def SVMForLinearFusionTrain(monoViewDecisions, labels):
 def SVMForLinearFusionFuse(monoViewDecisions, SVMClassifier):
     labels = SVMClassifier.predict(monoViewDecisions)
     return labels
+
+def SVMForLinearFusion(monoViewDecisions, labels):
+    SVMClassifier = SVMForLinearFusionTrain(monoViewDecisions, labels)
+    fusedLabels = SVMForLinearFusionFuse(monoViewDecisions, SVMClassifier)
+    return fusedLabels
 
 
 # For majority voting, we have a problem : we have 5 fetures and 101 classes
