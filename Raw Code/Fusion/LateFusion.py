@@ -4,6 +4,7 @@
 import numpy as np
 import sys
 from sklearn.svm import SVC
+from sklearn.multiclass import OneVsOneClassifier
 
 
 # Our method in multiclass classification will be One-vs-One or One-vs-All
@@ -33,7 +34,7 @@ def weightedLinear(monoViewDecisions, weights):
 # Here we have a function to train it, one to fuse. 
 # And one to do both.
 def SVMForLinearFusionTrain(monoViewDecisions, labels):
-    SVMClassifier = SVC()
+    SVMClassifier = OneVsOneClassifier(SVC())
     SVMClassifier.fit(monoViewDecisions, labels)
     return SVMClassifier
 
@@ -71,6 +72,21 @@ def majorityVoting(monoViewDecisions, NB_CLASS):
             # 		nbMaximum = len(np.where(votes==max(votes))[0])
     return np.array([np.argmax(exampleVotes) for exampleVotes in votes])
 
+
+
+# For probabilistic classifiers, we need to add more fusion methods
+def bayesianInference(probabilisticClassifiers):
+    nbFeatures = len(probabilisticClassifiers)
+    classifiersProbasByFeature = np.array([probabilisticClassifier.class_prior_ \
+                                        for probabilisticClassifier in probabilisticClassifiers])
+    classifiersProbasByExample = np.transpose(classifiersProbasByFeature)
+    probabilities = np.array([weightedProduct(featureProbas, weights) for featureProbas in classifiersProbas])
+    return probabilities/sum(probabilities)     
+
+def weightedProduct(featureProbas, weights):
+    weightedProbas = pow(featureProbas, weights)
+    product = np.prod(weightedProbas)
+    return product
 
 # Main for testing
 if __name__ == '__main__':
@@ -110,3 +126,4 @@ if __name__ == '__main__':
     print SVMForLinearFusionFuse(monoViewDecisionsMajority, SVMClassifier)
     print majorityVoting(monoViewDecisionsMajority, NB_CLASS)
     print majorityVoting(monoViewDecisionsMajorityFail, NB_CLASS)
+
