@@ -38,7 +38,6 @@ def SVMForLinearFusionTrain(monoViewDecisions, labels):
     SVMClassifier.fit(monoViewDecisions, labels)
     return SVMClassifier
 
-
 def SVMForLinearFusionFuse(monoViewDecisions, SVMClassifier):
     labels = SVMClassifier.predict(monoViewDecisions)
     return labels
@@ -74,7 +73,10 @@ def majorityVoting(monoViewDecisions, NB_CLASS):
 
 
 
-# For probabilistic classifiers, we need to add more fusion methods
+# For probabilistic classifiers, we need to add more late fusion methods
+# For example, the bayesian inference
+#           probabilisticClassifiers is a nbExample array of sklearn probabilistic classifiers
+#                                    (such as Naive Bayesian Gaussian http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html#sklearn.naive_bayes.GaussianNB)
 def bayesianInference(probabilisticClassifiers):
     nbFeatures = len(probabilisticClassifiers)
     classifiersProbasByFeature = np.array([probabilisticClassifier.class_prior_ \
@@ -87,6 +89,7 @@ def weightedProduct(featureProbas, weights):
     weightedProbas = pow(featureProbas, weights)
     product = np.prod(weightedProbas)
     return product
+
 
 # Main for testing
 if __name__ == '__main__':
@@ -126,4 +129,3 @@ if __name__ == '__main__':
     print SVMForLinearFusionFuse(monoViewDecisionsMajority, SVMClassifier)
     print majorityVoting(monoViewDecisionsMajority, NB_CLASS)
     print majorityVoting(monoViewDecisionsMajorityFail, NB_CLASS)
-
