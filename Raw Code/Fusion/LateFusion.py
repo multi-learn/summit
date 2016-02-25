@@ -38,9 +38,11 @@ def SVMForLinearFusionTrain(monoViewDecisions, labels):
     SVMClassifier.fit(monoViewDecisions, labels)
     return SVMClassifier
 
+
 def SVMForLinearFusionFuse(monoViewDecisions, SVMClassifier):
     labels = SVMClassifier.predict(monoViewDecisions)
     return labels
+
 
 def SVMForLinearFusion(monoViewDecisions, labels):
     SVMClassifier = SVMForLinearFusionTrain(monoViewDecisions, labels)
@@ -72,7 +74,6 @@ def majorityVoting(monoViewDecisions, NB_CLASS):
     return np.array([np.argmax(exampleVotes) for exampleVotes in votes])
 
 
-
 # For probabilistic classifiers, we need to add more late fusion methods
 # For example, the bayesian inference
 #           probabilisticClassifiers is a nbExample array of sklearn probabilistic classifiers
@@ -80,13 +81,19 @@ def majorityVoting(monoViewDecisions, NB_CLASS):
 def bayesianInference(probabilisticClassifiers):
     nbFeatures = len(probabilisticClassifiers)
     classifiersProbasByFeature = np.array([probabilisticClassifier.class_prior_ \
-                                        for probabilisticClassifier in probabilisticClassifiers])
+                                           for probabilisticClassifier in probabilisticClassifiers])
     classifiersProbasByExample = np.transpose(classifiersProbasByFeature)
-    probabilities = np.array([weightedProduct(featureProbas, weights) for featureProbas in classifiersProbas])
-    return probabilities/sum(probabilities)     
+    probabilities = np.array([weightedProduct(featureProbas, weights) / nbFeatures for featureProbas in classifiersProbasByExample])
+    return np.argmax(probabilities / sum(probabilities))
+
 
 def weightedProduct(featureProbas, weights):
-    weightedProbas = pow(featureProbas, weights)
+    try:
+        assert np.sum(weights) == 1.0
+    except:
+        print "Need to give a weight array that sums to one"
+        raise
+    weightedProbas = np.power(featureProbas, weights)
     product = np.prod(weightedProbas)
     return product
 

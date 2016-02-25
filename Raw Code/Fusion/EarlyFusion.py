@@ -5,13 +5,13 @@ import numpy as np
 
 
 # TODO :
-# Linear Weighted Fusion
-# Bayesian Inference  /!\ Statistically independant => ? Patern Classification
-# SVM ?
-# Dempster Schafer Theory  /!\ Inunderstandable
-# Dynamic Bayesian Networks ?
-# Neural Network ?
-# Maximum Entropy Model ?
+# Linear Weighted Fusion done E&L
+# Bayesian Inference  /!\ Statistically independant => ? Patern Classification done L
+# SVM ? done L
+# Dempster Schafer Theory  Need to create our own dempster schaffer function
+# Dynamic Bayesian Networks ? -> More useful for many features
+# Neural Network ???
+# Maximum Entropy Model ? -> Need to use a max entropy classifier to fuse it
 # Kalman Filter ?
 # Particle Filter ?
 
