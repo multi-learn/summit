@@ -3,11 +3,12 @@
 """ Script to perform feature parameter optimisation """
 
 # Import built-in modules
-import cv2                      # for OpenCV 
-import cv                       # for OpenCV
-import datetime                 # for TimeStamp in CSVFile
-from scipy.cluster.vq import *  # for Clustering http://docs.scipy.org/doc/scipy/reference/cluster.vq.html
-import numpy as np              # for arrays
+import cv2                              # for OpenCV 
+import cv                               # for OpenCV
+import datetime                         # for TimeStamp in CSVFile
+from scipy.cluster.vq import *          # for Clustering http://docs.scipy.org/doc/scipy/reference/cluster.vq.html
+import numpy as np                      # for arrays
+from argparse import ArgumentParser     # for acommand line arguments
 
 # Import sci-kit learn
 from sklearn.ensemble import RandomForestClassifier

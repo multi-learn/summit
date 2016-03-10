@@ -35,18 +35,18 @@ def exportPandasToCSV(pandasSorDF, filename):
                 pandasSorDF.to_csv(filename + ".csv", sep=';', decimal=',')
 
 
-def exportNumpyToCSV(numpyArray, filename):
+def exportNumpyToCSV(numpyArray, filename, format):
         path = os.getcwdu() + "\\" + filename
     
         if os.path.isfile(path + ".csv"):
                 for i in range(1,20):
                         testFileName = filename  + "-" + str(i) + ".csv"
                         if os.path.isfile(os.getcwdu() + "\\" +  testFileName)!=True:
-                                np.savetxt(testFileName, numpyArray, delimiter=",", fmt='%1.30f')
+                                np.savetxt(testFileName, numpyArray, delimiter=";", fmt=format)
                                 break
 
         else:
-                np.savetxt(filename + ".csv", numpyArray, delimiter=";", fmt='%1.30f')
+                np.savetxt(filename + ".csv", numpyArray, delimiter=";", fmt=format)
 		
 		
 #### Rendering of results
