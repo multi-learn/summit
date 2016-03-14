@@ -21,38 +21,38 @@ __status__ 	= "Development" #Production, Development, Prototype
 __date__	= 2016-01-23
 
 #### Export Features to CSV
-def exportPandasToCSV(pandasSorDF, filename):
-        path = os.getcwdu() + "\\" + filename
+def exportPandasToCSV(pandasSorDF, dir, filename):
+        file = dir + filename
     
-        if os.path.isfile(path + ".csv"):
+        if os.path.isfile(file + ".csv"):
                 for i in range(1,20):
                         testFileName = filename  + "-" + str(i) + ".csv"
-                        if os.path.isfile(os.getcwdu() + "\\" +  testFileName)!=True:
-                                pandasSorDF.to_csv(testFileName + ".csv", sep=';', decimal=',')
+                        if os.path.isfile(dir + testFileName)!=True:
+                                pandasSorDF.to_csv(dir + testFileName, sep=';', decimal=',')
                                 break
 
         else:
-                pandasSorDF.to_csv(filename + ".csv", sep=';', decimal=',')
+                pandasSorDF.to_csv(file + ".csv", sep=';', decimal=',')
 
 
-def exportNumpyToCSV(numpyArray, filename, format):
-        path = os.getcwdu() + "\\" + filename
+def exportNumpyToCSV(numpyArray, dir, filename, format):
+        file = dir + filename
     
-        if os.path.isfile(path + ".csv"):
+        if os.path.isfile(file + ".csv"):
                 for i in range(1,20):
                         testFileName = filename  + "-" + str(i) + ".csv"
-                        if os.path.isfile(os.getcwdu() + "\\" +  testFileName)!=True:
-                                np.savetxt(testFileName, numpyArray, delimiter=";", fmt=format)
+                        if os.path.isfile(dir + testFileName )!=True:
+                                np.savetxt(dir + testFileName, numpyArray, delimiter=";", fmt=format)
                                 break
 
         else:
-                np.savetxt(filename + ".csv", numpyArray, delimiter=";", fmt=format)
+                np.savetxt(file + ".csv", numpyArray, delimiter=";", fmt=format)
 		
 		
 #### Rendering of results
 
 ### Rendering of Score and Time
-def showScoreTime(resScore, resTime, rangeX, parameter, feat_desc, cl_desc, fig_desc, y_desc1, y_desc2):
+def showScoreTime(filename, resScore, resTime, rangeX, parameter, feat_desc, cl_desc, fig_desc, y_desc1, y_desc2):
         # Determine interpolated functions
         f_score_interp = interp1d(rangeX, resScore, kind='quadratic')
         f_time_interp  = interp1d(rangeX, resTime, kind='quadratic')
@@ -104,14 +104,18 @@ def showScoreTime(resScore, resTime, rangeX, parameter, feat_desc, cl_desc, fig_
                                          borderpad=1.5,
                                          )
         ax1.add_artist(anchored_box)
-        fig.subplots_adjust(top=0.8)
+        fig.subplots_adjust(top=0.7)
 
         ax1.legend(['Score Data', 'Score Interpolated'], loc='upper left')
         ax2.legend(['Time Data', 'Time Interpolated'], loc='lower right')
         
         plt.title(fig_desc, fontsize=18)
+
+        plt.savefig(filename)
         
-        plt.show()
+        # instead of saving - decomment plt.show()
+        # plt.show()
+        
         
 
 

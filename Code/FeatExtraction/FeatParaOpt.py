@@ -57,9 +57,12 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
         
         # for-loop from valueStart, step stepwidth, until valueEnde
         for valuePara, i in zip(valueArray,arr_Calc):
-                print "### Start:\t FeatureExtraction Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " with:" + parameter + "=" + str(valuePara) + " ###"
+                valuePara = int(valuePara)
+                print "### Start:\t FeatureExtraction Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " with " + parameter + "=" + str(valuePara) + " ###"
                 # TIME for Extraction
                 t_extract_start = time.time()
+                
+                
         
                 # Features extraction start
                 # Call extraction function with parameters -> returns feature
@@ -86,8 +89,6 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                         v_bins = para_HSV[2]
                         
                         boolNormMinMax = para_HSV[3]
-                        
-                        HSV_H_Bins
 			
                         # ParamaterTest
                         if(parameter=="HSV_H_Bins"):
@@ -102,23 +103,6 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                         # Extract Feature from DB
                         feat_desc,f_extr_res = FeatExtraction.calcHSVColorHisto(nameDB, dfImages, histSize, boolNormMinMax)
 		
-                elif(feature=="SURF"):
-                        # Basic Setup
-                        cluster = para_SIFT[0]
-                        boolNormMinMax = para_SIFT[1]
-                        boolSIFT = False
-                        
-                        
-                        # ParamaterTest
-                        if(parameter=="SIFT_Cluster"):
-                                cluster = valuePara
-                                
-                        if descriptors is None:
-                                descriptors,des_list = FeatExtraction.calcSURFSIFTDescriptors(dfImages, boolSIFT)
-		
-                        # Extract Feature from DB
-                        feat_desc,f_extr_res = FeatExtraction.calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors, des_list, boolSIFT)
-                        
                 elif(feature=="SIFT"):
                         # Basic Setup
                         cluster = para_SURF[0]
@@ -127,14 +111,34 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                         
                         
                         # ParamaterTest
-                        if(parameter=="SURF_Cluster"):
+                        if(parameter=="SIFT_Cluster"):
                                 cluster = valuePara
+                                
                         
                         if descriptors is None:
                                 descriptors,des_list = FeatExtraction.calcSURFSIFTDescriptors(dfImages, boolSIFT)
 		
                         # Extract Feature from DB
                         feat_desc,f_extr_res = FeatExtraction.calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors, des_list, boolSIFT)
+                
+                elif(feature=="SURF"):
+                        # Basic Setup
+                        cluster = para_SIFT[0]
+                        boolNormMinMax = para_SIFT[1]
+                        boolSIFT = False
+                        
+                        
+                        # ParamaterTest
+                        if(parameter=="SURF_Cluster"):
+                                cluster = valuePara
+                                
+                        if descriptors is None:
+                                descriptors,des_list = FeatExtraction.calcSURFSIFTDescriptors(dfImages, boolSIFT)
+		
+                        # Extract Feature from DB
+                        feat_desc,f_extr_res = FeatExtraction.calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors, des_list, boolSIFT)
+                        
+                
                 elif(feature=="HOG"):                       
                         CELL_DIMENSION = para_HOG[0]
                         NB_ORIENTATIONS = para_HOG[1]
@@ -145,9 +149,11 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                         # ParamaterTest
                         if(parameter=="HOG_Cluster"):
                                 NB_CLUSTERS = valuePara
+                                
+                        print "HOG:\t CellDim=" + str(CELL_DIMENSION) + ", NbOrientations=" + str(NB_ORIENTATIONS) +", Cluster=" + str(NB_CLUSTERS) + ", MaxIter=" + str(MAXITER)
                         
                         # Extract Feature from DB
-                        feat_desc,f_extr_res = FeatExtraction.calcHOGParallel(nameDB, npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES):
+                        feat_desc,f_extr_res = FeatExtraction.calcHOGParallel(nameDB, dfImages.values, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES)
                         
                 else:
                         print "ERROR: Selected Feature does not exist"

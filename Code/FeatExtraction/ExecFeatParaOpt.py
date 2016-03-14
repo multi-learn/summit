@@ -5,6 +5,7 @@
 # Import built-in modules
 import datetime                         # for TimeStamp in CSVFile
 import argparse                         # for acommand line arguments
+import os                               # to geth path of the running script
 
 # Import 3rd party modules
 import numpy as np                      # for arrays
@@ -63,8 +64,8 @@ groupHOG.add_argument('--HOG_Iter', metavar='INT', action='store', help='Max. nu
 groupHOG.add_argument('--HOG_cores', metavar='INT', action='store', help='Number of cores for HOG', type=int, default=1)
 
 groupClass = parser.add_argument_group('Classification arguments:')
-groupClass.add_argument('--CL_split', metavar='DOUBLE', action='store', help='Determine the the train/test split', type=double, default=0.7)
-groupClass.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='[50, 100, 150, 200]')
+groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the the train/test split', type=float, default=0.7)
+groupClass.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='50 100 150 200')
 groupClass.add_argument('--CL_RF_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=3)
 groupClass.add_argument('--CL_RF_Cores', metavar='INT', action='store', help='Number of cores', type=int, default=1)
 
@@ -81,7 +82,8 @@ para_HSV = [args.HSV_H_Bins, args.HSV_S_Bins, args.HSV_V_Bins, args.HSV_NMinMax]
 para_SIFT = [args.SIFT_Cluster, args.SIFT_NMinMax]
 para_SURF = [args.SURF_Cluster, args.SURF_NMinMax]
 para_HOG = [args.HOG_CellD, args.HOG_Orient, args.HOG_Cluster, args.HOG_Iter, args.HOG_cores]
-para_Cl = [args.CL_split, args.CL_RF_trees, args.CL_RF_CV, args.CL_RF_Cores]
+
+para_Cl = [args.CL_split, map(int, args.CL_RF_trees.split()), args.CL_RF_CV, args.CL_RF_Cores]
 
        
 ### Main Programm
@@ -89,8 +91,8 @@ para_Cl = [args.CL_split, args.CL_RF_trees, args.CL_RF_CV, args.CL_RF_Cores]
 ################################ Read Images from Database
 # Determine the Database to extract features
 
-print "### Start of Main Programm for Feature Parameter Optimisation ###"
-
+print "### Main Programm for Feature Parameter Optimisation ###"
+print '### Optimisation - Feature:' + str(args.feature) + " Parameter:" + str(args.param) + " from:" + str(args.valueStart) + " to:" + str(args.valueEnd) + " in #calc:" + str(args.nCalcs) + " ###"
 
 print "### Start:\t Exportation of images from DB ###"
 
@@ -104,18 +106,16 @@ print "### Done:\t Exportation of Images from DB ###"
 
 
 ################################ Parameter Optimisation
-# Setup
-print '### Optimisation - Feature:' + str(args.feature) + " Parameter:" + str(args.param) + " from:" + str(args.valueStart) + " to:" + str(args.valueEnd) + " in #calc:" + str(args.nCalcs) + " ###"
-
-print "### Start: Feautre Optimisation ###"
+print "### Start:\t Feautre Optimisation ###"
 df_feat_res = FeatParaOpt.perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, para_SURF, para_HOG, para_Cl)
-print "### Done: Feautre Optimisation ###"
+print "### Done:\t Feautre Optimisation ###"
 
 
 ################################ Render results
 print "### Start:\t Exporting to CSV ###"
-filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-Results-" + feature
-ExportResults.exportPandasToCSV(df_feat_res, filename)
+dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatParaOpt/"
+filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-FeatParaOpt-" + args.feature
+ExportResults.exportPandasToCSV(df_feat_res, dir, filename)
 print "### Done:\t Exporting to CSV ###"
 
 # Get data from result to show results in plot
@@ -133,12 +133,13 @@ cl_time = np.asarray(cl_time)
 score = df_feat_res.f_cl_score.values
 score = np.asarray(score)
 
+
 # Range on X-Axis
-if(nCalculations>1):
-        step = float(valueEnd-valueStart)/float(nCalculations-1)
-        rangeX = np.around(np.array(range(0,nCalculations))*step) + valueStart
+if(args.nCalcs>1):
+        step = float(args.valueEnd-args.valueStart)/float(args.nCalcs-1)
+        rangeX = np.around(np.array(range(0,args.nCalcs))*step) + args.valueStart
 else:
-        rangeX = [valueStart]
+        rangeX = [args.valueStart]
 rangeX = np.asarray(rangeX)
 
 # Description of Classification
@@ -147,10 +148,11 @@ cl_desc = df_feat_res.c_cl_desc.values
 # Description of Feature
 feat_desc = df_feat_res.a_feat_desc.values
 
+fileName = dir + datetime.datetime.now().strftime("%Y_%m_%d") + "-" + "Feature_" + args.feature + "-Parameter_" + args.param
 # Show Results for Calculation
-ExportResults.showScoreTime(score, tot_time, rangeX, parameter, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
-ExportResults.showScoreTime(score, feat_time, rangeX, parameter, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Feature Extraction Time\n [s]')
-ExportResults.showScoreTime(score, cl_time, rangeX, parameter, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Classification Time\n [s]')
+ExportResults.showScoreTime(fileName + "-TotalTime.png", score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
+ExportResults.showScoreTime(fileName + "-FeatExtTime.png", score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Feature Extraction Time\n [s]')
+ExportResults.showScoreTime(fileName + "-ClassTime.png", score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Classification Time\n [s]')
 
 
 

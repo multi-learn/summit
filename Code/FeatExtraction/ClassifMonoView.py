@@ -161,7 +161,7 @@ def calcClassifRandomForestCV(X_train, y_train, num_estimators, cv_folds, clas_c
     rf_detector = grid_rf.fit(X_train, y_train)
 
     desc_estimators = rf_detector.best_params_["classifier__n_estimators"]
-    description = "Classif_" + "RF" + "-" + "CV_" +  str(kfolds) + "-" + "Trees_" + str(desc_estimators)
+    description = "Classif_" + "RF" + "-" + "CV_" +  str(cv_folds) + "-" + "Trees_" + str(desc_estimators)
 
     return (description, rf_detector)
 
