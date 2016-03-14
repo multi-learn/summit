@@ -4,9 +4,9 @@
 
 # Import built-in modules
 import os               # for iteration throug directories
-import pandas as pd     # for Series and DataFrames
 
 # Import 3rd party modules
+import pandas as pd     # for Series and DataFrames
 
 # Import own modules
 

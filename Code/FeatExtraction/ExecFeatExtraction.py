@@ -3,13 +3,10 @@
 """ Script to perform feature parameter optimisation """
 
 # Import built-in modules
-import cv2                      # for OpenCV 
-import cv                       # for OpenCV
-import datetime                 # for TimeStamp in CSVFile
-from scipy.cluster.vq import *  # for Clustering http://docs.scipy.org/doc/scipy/reference/cluster.vq.html
-import numpy as np              # for arrays
-import time                     # for time calculations
-from argparse import ArgumentParser # for acommand line arguments
+import datetime                         # for TimeStamp in CSVFile
+import time                             # for time calculations
+import argparse                         # for acommand line arguments
+import textwrap
 
 # Import 3rd party modules
 
@@ -25,52 +22,53 @@ __date__	= 2016-03-10
 
 ### Argument Parser
 
-parser = ArgumentParser(description='Export Features')
+parser = argparse.ArgumentParser(
+description='This methods permits to export one or more features at the same time for a database of images (path, name). To extract one feature activate it by using the specific argument (e.g. -RGB). For each feature you can define the parameters by using the optional arguments (e.g. --RGB_Hist 32). The results will be exported to a CSV-File.', 
+formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument('--name', action='store', help='Name of DB, default DB', default='DB')
-parser.add_argument('--path', action='store', help='Path to the database e.g. D:\\Caltech', default='D:\\CaltechMini')
-parser.add_argument('--cores', action='store', help='Number of cores used for parallelization of HOG, default 1', type=int, default=1)
+groupStandard = parser.add_argument_group('necessary arguments:')
+groupStandard.add_argument('--name', metavar='STRING', action='store', help='Select a name of DB, e.g. Caltech (default: %(default)s)', default='DB')
+groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='D:\\CaltechMini')
 
-parser.add_argument('--RGB', action='store_true', help='Use option to activate RGB')
-parser.add_argument('--RGB_Hist', action='store', help='RGB: Number of bins for histogram, default 16', type=int, default=16)
-parser.add_argument('--RGB_CI', action='store', help='RGB: Max Color Intensity [0 to VALUE], default 256', type=int, default=256)
-parser.add_argument('--RGB_NMinMax', action='store_true', help='RGB: Use option to actvate MinMax Norm, default distribtion')
 
-parser.add_argument('--HSV', action='store_true', help='Use option to activate HSV')
-parser.add_argument('--HSV_H', action='store', help='HSV: Number of bins for Hue, default 8', type=int, default=8)
-parser.add_argument('--HSV_S', action='store', help='HSV: Number of bins for Saturation, default 3', type=int, default=3)
-parser.add_argument('--HSV_V', action='store', help='HSV: Number of bins for Value, default 3', type=int, default=3)
-parser.add_argument('--HSV_NMinMax', action='store_true', help='HSV: Use option to actvate MinMax Norm, default distribtion')
+groupRGB = parser.add_argument_group('RGB arguments:')
+groupRGB.add_argument('-RGB', action='store_true', help='Use option to activate RGB')
+groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=16)
+groupRGB.add_argument('--RGB_CI', metavar='INT', action='store', help='Max Color Intensity [0 to VALUE]', type=int, default=256)
+groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
-parser.add_argument('--SIFT', action='store_true', help='Use option to activate SIFT')
-parser.add_argument('--SIFT_Cluster', action='store', help='SIFT: Number of k-means cluster, default 50', type=int, default=50)
-parser.add_argument('--SIFT_NMinMax', action='store_true', help='SIFT: Use option to actvate MinMax Norm, default distribtion')
+groupHSV = parser.add_argument_group('HSV arguments:')
+groupHSV.add_argument('-HSV', action='store_true', help='Use option to activate HSV')
+groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=16)
+groupHSV.add_argument('--HSV_S_Bins', metavar='INT', action='store', help='Number of bins for Saturation', type=int, default=4)
+groupHSV.add_argument('--HSV_V_Bins', metavar='INT', action='store', help='Number of bins for Value', type=int, default=4)
+groupHSV.add_argument('-HSV_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+
+groupSIFT = parser.add_argument_group('SIFT arguments:')
+groupSIFT.add_argument('-SIFT', action='store_true', help='Use option to activate SIFT')
+groupSIFT.add_argument('--SIFT_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=50)
+groupSIFT.add_argument('-SIFT_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
         
-parser.add_argument('--SURF', action='store_true', help='Use option to activate SURF')
-parser.add_argument('--SURF_Cluster', action='store', help='SURF: Number of k-means cluster, default 50', type=int, default=50)
-parser.add_argument('--SURF_NMinMax', action='store_true', help='SURF: Use option to actvate MinMax Norm, default distribtion')
+groupSURF = parser.add_argument_group('SURF arguments:')
+groupSURF.add_argument('-SURF', action='store_true', help='Use option to activate SURF')
+groupSURF.add_argument('--SURF_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=50)
+groupSURF.add_argument('-SURF_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
-parser.add_argument('--HOG', action='store_true', help='Use option to activate HOG')
-parser.add_argument('--HOG_CellD', action='store', help='HOG: CellDimension for local histograms, default 5', type=int, default=5)
-parser.add_argument('--HOG_Orient', action='store', help='HOG: Number of bins of local histograms , default 8', type=int, default=8)
-parser.add_argument('--HOG_Cluster', action='store', help='HOG: Number of k-means cluster, default 12', type=int, default=12)
-parser.add_argument('--HOG_Iter', action='store', help='HOG: Max. number of iterations for clustering, default 100', type=int, default=100)
+groupHOG = parser.add_argument_group('HOG arguments:')
+groupHOG.add_argument('-HOG', action='store_true', help='Use option to activate HOG')
+groupHOG.add_argument('--HOG_CellD', metavar='INT', action='store', help='CellDimension for local histograms', type=int, default=5)
+groupHOG.add_argument('--HOG_Orient', metavar='INT', action='store', help='Number of bins of local histograms', type=int, default=8)
+groupHOG.add_argument('--HOG_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=12)
+groupHOG.add_argument('--HOG_Iter', metavar='INT', action='store', help='Max. number of iterations for clustering', type=int, default=100)
+groupHOG.add_argument('--HOG_cores', metavar='INT', action='store', help='Number of cores for HOG', type=int, default=1)
 
-
-# CELL_DIMENSION is the dimension of the cells on which we will compute local histograms 
-# NB_ORIENTATIONS is the number of bins of this local histograms 
-# intuitively, if CELL_DIMENSION is small it's better to have a small NB_ORIENTATIONS in order to have meaningful local histograms
-# NB_CLUSTERS is the number of bins of the global histograms (the number of clusters in the KMEANS algorithm used for the bag of word)
-# MAXITER is the maximum number of iteration for the clustering algorithm
-
+### Read args
 args = parser.parse_args()
-path = args.path
-NB_CORES = args.cores
+
 nameDB = args.name
+path = args.path
 
-### Helper
-
-# Function to transform the boolean deciscion of norm into a string
+### Helper-Function to transform the boolean deciscion of norm into a string
 def boolNormToStr(norm):
         if(norm):
                 return "MinMax"
@@ -92,7 +90,7 @@ if(args.SURF):
 if(args.HOG):
         features = features + "HOG"
 
-print "Infos:\t NameDB=" + nameDB + ", Path=" + path + ", Cores=" + str(NB_CORES) + ", Features=" + features
+print "Infos:\t NameDB=" + nameDB + ", Path=" + path  + ", Features=" + features
 
 ################################ Read Images from Database
 # Determine the Database to extract features
@@ -119,16 +117,12 @@ if(args.RGB):
         
         print "RGB:\t Start"
         t_rgb_start = time.time()
-        
-        numberOfBins = args.RGB_Hist
-        maxColorIntensity = args.RGB_CI
-        boolNormMinMax = args.RGB_NMinMax
-        
+                
         # Infos
-        print "RGB:\t NumberOfBins=" + str(numberOfBins) + ", MaxColorIntensity=" + str(maxColorIntensity) + ", Norm=" + boolNormToStr(boolNormMinMax)
+        print "RGB:\t NumberOfBins=" + str(args.RGB_Bins) + ", MaxColorIntensity=" + str(args.RGB_CI) + ", Norm=" + boolNormToStr(args.RGB_NMinMax)
          
         # Extract Feature from DB
-        rgb_feat_desc,rgb_f_extr_res = FeatExtraction.calcRGBColorHisto(nameDB, dfImages, numberOfBins, maxColorIntensity, boolNormMinMax)
+        rgb_feat_desc,rgb_f_extr_res = FeatExtraction.calcRGBColorHisto(nameDB, dfImages, args.RGB_Bins, args.RGB_CI, args.RGB_NMinMax)
 
         t_rgb = time.time() - t_rgb_start
         print "RGB:\t Done in: " + str(t_rgb) + "[s]"
@@ -139,17 +133,16 @@ if(args.HSV):
         print "HSV:\t Start"
         t_hsv_start = time.time()
         
-        h_bins = args.HSV_H
-        s_bins = args.HSV_S
-        v_bins = args.HSV_V
+        h_bins = args.HSV_H_Bins
+        s_bins = args.HSV_S_Bins
+        v_bins = args.HSV_V_Bins
         histSize = [h_bins, s_bins, v_bins]
-        boolNormMinMax = args.HSV_NMinMax
         
         # Infos
-        print "HSV:\t HSVBins=[" + str(h_bins) + "," + str(s_bins) + "," + str(v_bins) + "], Norm=" + boolNormToStr(boolNormMinMax)
+        print "HSV:\t HSVBins=[" + str(h_bins) + "," + str(s_bins) + "," + str(v_bins) + "], Norm=" + boolNormToStr(args.HSV_NMinMax)
 
         # Extract Feature from DB
-        hsv_feat_desc,hsv_f_extr_res = FeatExtraction.calcHSVColorHisto(nameDB, dfImages, histSize, boolNormMinMax)
+        hsv_feat_desc,hsv_f_extr_res = FeatExtraction.calcHSVColorHisto(nameDB, dfImages, histSize, args.HSV_NMinMax)
         t_hsv = time.time() - t_hsv_start
         print "HSV:\t Done in: " + str(t_hsv) + "[s]"
 
@@ -161,13 +154,11 @@ if(args.SIFT):
         t_sift_start = time.time()
         
         boolSIFT = True
-        cluster = args.SIFT_Cluster
-        boolNormMinMax = args.SIFT_NMinMax
         
-        print "SIFT:\t Cluster=" + str(cluster) + ", Norm=" + boolNormToStr(boolNormMinMax)
+        print "SIFT:\t Cluster=" + str(args.SIFT_Cluster) + ", Norm=" + boolNormToStr(args.SIFT_NMinMax)
 
         sift_descriptors,sift_des_list = FeatExtraction.calcSURFSIFTDescriptors(dfImages, boolSIFT)
-        sift_feat_desc,sift_f_extr_res = FeatExtraction.calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, sift_descriptors, sift_des_list, boolSIFT)
+        sift_feat_desc,sift_f_extr_res = FeatExtraction.calcSURFSIFTHisto(nameDB, dfImages, args.SIFT_Cluster, args.SIFT_NMinMax, sift_descriptors, sift_des_list, boolSIFT)
         t_sift = time.time() - t_sift_start 
         print "SIFT:\t Done in: " + str(t_sift) + "[s]"
 
@@ -178,14 +169,12 @@ if(args.SURF):
         t_surf_start = time.time()
         
         boolSIFT = False
-        cluster = args.SURF_Cluster
-        boolNormMinMax = args.SURF_NMinMax
         
-        print "SURF:\t Cluster=" + str(cluster) + ", Norm=" + boolNormToStr(boolNormMinMax)
+        print "SURF:\t Cluster=" + str(args.SURF_Cluster) + ", Norm=" + boolNormToStr(args.SURF_NMinMax)
 
         # Extract Feature from DB
         surf_descriptors,surf_des_list = FeatExtraction.calcSURFSIFTDescriptors(dfImages, boolSIFT)
-        surf_feat_desc,surf_f_extr_res = FeatExtraction.calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, surf_descriptors, surf_des_list, boolSIFT)
+        surf_feat_desc,surf_f_extr_res = FeatExtraction.calcSURFSIFTHisto(nameDB, dfImages, args.SURF_Cluster, args.SURF_NMinMax, surf_descriptors, surf_des_list, boolSIFT)
         t_surf = time.time() - t_surf_start 
         print "SURF:\t Done in: " + str(t_surf) + "[s]"
 
@@ -198,6 +187,7 @@ if(args.HOG):
         NB_ORIENTATIONS = args.HOG_Orient
         NB_CLUSTERS = args.HOG_Cluster
         MAXITER = args.HOG_Iter
+        NB_CORES = args.HOG_cores
         
         print "HOG:\t CellDim=" + str(CELL_DIMENSION) + ", NbOrientations=" + str(NB_ORIENTATIONS) +", Cluster=" + str(NB_CLUSTERS) + ", MaxIter=" + str(MAXITER)
 

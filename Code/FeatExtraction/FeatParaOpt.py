@@ -3,11 +3,11 @@
 """ Function to optimise feature parameters """
 
 # Import built-in modules
-import time       # for time calculations
-import numpy as np# for numpy arrays
-import pandas as pd # for Series and DataFrames
+import time             # for time calculations
 
 # Import 3rd party modules
+import numpy as np      # for numpy arrays
+import pandas as pd     # for Series and DataFrames
 
 # Import own modules
 import FeatExtraction	# Functions for Feature Extractions#
@@ -16,22 +16,28 @@ import ClassifMonoView	# Functions for classification
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
 __status__ 	= "Development" #Production, Development, Prototype
-__date__	= 2016-01-23
+__date__	= 2016-03-14
 
 
-
-# dfImages: Database with all images
-# feature: which feature? e.g. ColorHistogram
-# paramter: which parameter should be tested? e.g. bins of histogram
-# valueStart: Value for paramter to start with
-# valueEnd: Value for paramter to end with
-# nCalculations: How many calculations between valueStart and valueEnd? e.g. vS=0,VE=9,nCalc=10 -> test:0,1,2,3,4,5,6,7,8,9
-# boolCV: Boolian if CrossValidation should be used
-def perfFeatMonoV(nameDB, dfImages,feature, parameter, valueStart, valueEnd, nCalculations, boolCV):
+# dfImages:     Database with all images
+# feature:      which feature? e.g. ColorHistogram
+# para_opt:     optimisation parameters
+# para_RGB:     RGB parameters
+# para_HSV:     HSV paramters
+# para_SIFT:    SIFT parameters
+# para_SURF:    SURF parameters
+# para_HOG:     HOG paramters
+# para_Cl:      Classification parameters
+def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, para_SURF, para_HOG, para_Cl):
         # TIME for total calculation
         t_tot_start = time.time()
 	
-        # Value check - are the given values possible: e.g. bins valueStart = -1 -> error
+        # Values from Array into variables - easier to read the code
+        feature = para_opt[0]
+        parameter = para_opt[1]
+        valueStart = para_opt[2]
+        valueEnd = para_opt[3]
+        nCalculations = para_opt[4]
     
         # Calculate Stepwidth
         if(nCalculations>1):
@@ -39,6 +45,7 @@ def perfFeatMonoV(nameDB, dfImages,feature, parameter, valueStart, valueEnd, nCa
                 valueArray = np.around(np.array(range(0,nCalculations))*step) + valueStart
 	else:
                 valueArray = [valueStart]
+        
         # FeatExtraction Results DataFrame
         df_feat_res = pd.DataFrame()
         
@@ -58,49 +65,53 @@ def perfFeatMonoV(nameDB, dfImages,feature, parameter, valueStart, valueEnd, nCa
                 # Call extraction function with parameters -> returns feature
                 if(feature=="RGB"):
                         # Basic Setup
-                        numberOfBins = 16
-                        maxColorIntensity = 256
-                        boolNormMinMax = False
+                        numberOfBins = para_RGB[0]
+                        maxColorIntensity = para_RGB[1]
+                        boolNormMinMax = para_RGB[2]
+                        
 			
                         # ParamaterTest
-                        if(parameter=="Bins"):
+                        if(parameter=="RGB_Bins"):
                                 numberOfBins = valuePara
-                        elif(parameter=="MaxCI"):
+                        elif(parameter=="RGB_MaxCI"):
                                 maxColorIntensity = valuePara
-                        elif(parameter=="Norm"):
-                                boolNormMinMax = valuePara
 		
                         # Extract Feature from DB
                         feat_desc,f_extr_res = FeatExtraction.calcRGBColorHisto(nameDB, dfImages, numberOfBins, maxColorIntensity, boolNormMinMax)
 			
                 elif(feature=="HSV"):
                         # Basic Setup
-                        h_bins = 8 
-                        s_bins = 3
-                        v_bins = 3
-                        histSize = [h_bins, s_bins, v_bins]
-                        boolNormMinMax = False
+                        h_bins = para_HSV[0]
+                        s_bins = para_HSV[1]
+                        v_bins = para_HSV[2]
+                        
+                        boolNormMinMax = para_HSV[3]
+                        
+                        HSV_H_Bins
 			
                         # ParamaterTest
-                        if(parameter=="Bins"):
-                                histSize = valuePara
-                        elif(parameter=="Norm"):
-                                boolNormMinMax = valuePara
-		
+                        if(parameter=="HSV_H_Bins"):
+                                h_bins = valuePara
+                        elif(parameter=="HSV_S_Bins"):
+                                s_bins = valuePara
+                        elif(parameter=="HSV_V_Bins"):
+                                v_bins = valuePara
+                        
+                        histSize = [h_bins, s_bins, v_bins]
+                        
                         # Extract Feature from DB
                         feat_desc,f_extr_res = FeatExtraction.calcHSVColorHisto(nameDB, dfImages, histSize, boolNormMinMax)
 		
                 elif(feature=="SURF"):
                         # Basic Setup
-                        cluster = 50
-                        boolNormMinMax = False
+                        cluster = para_SIFT[0]
+                        boolNormMinMax = para_SIFT[1]
                         boolSIFT = False
                         
+                        
                         # ParamaterTest
-                        if(parameter=="Cluster"):
+                        if(parameter=="SIFT_Cluster"):
                                 cluster = valuePara
-                        elif(parameter=="Norm"):
-                                boolNormMinMax = valuePara
                                 
                         if descriptors is None:
                                 descriptors,des_list = FeatExtraction.calcSURFSIFTDescriptors(dfImages, boolSIFT)
@@ -110,21 +121,34 @@ def perfFeatMonoV(nameDB, dfImages,feature, parameter, valueStart, valueEnd, nCa
                         
                 elif(feature=="SIFT"):
                         # Basic Setup
-                        cluster = 50
-                        boolNormMinMax = False
+                        cluster = para_SURF[0]
+                        boolNormMinMax = para_SURF[1]
                         boolSIFT = True
                         
+                        
                         # ParamaterTest
-                        if(parameter=="Cluster"):
+                        if(parameter=="SURF_Cluster"):
                                 cluster = valuePara
-                        elif(parameter=="Norm"):
-                                boolNormMinMax = valuePara
                         
                         if descriptors is None:
                                 descriptors,des_list = FeatExtraction.calcSURFSIFTDescriptors(dfImages, boolSIFT)
 		
                         # Extract Feature from DB
                         feat_desc,f_extr_res = FeatExtraction.calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors, des_list, boolSIFT)
+                elif(feature=="HOG"):                       
+                        CELL_DIMENSION = para_HOG[0]
+                        NB_ORIENTATIONS = para_HOG[1]
+                        NB_CLUSTERS = para_HOG[2]
+                        MAXITER = para_HOG[3]
+                        NB_CORES = para_HOG[4]
+                        
+                        # ParamaterTest
+                        if(parameter=="HOG_Cluster"):
+                                NB_CLUSTERS = valuePara
+                        
+                        # Extract Feature from DB
+                        feat_desc,f_extr_res = FeatExtraction.calcHOGParallel(nameDB, npImages, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES):
+                        
                 else:
                         print "ERROR: Selected Feature does not exist"
                         print "Feature: " + str(feature)
@@ -137,26 +161,23 @@ def perfFeatMonoV(nameDB, dfImages,feature, parameter, valueStart, valueEnd, nCa
                 # TIME for CLASSIFICATION
                 t_classif_start = time.time()
 		
-                # Calculate Train/Test data
-                #Basic Setup
-                split = 0.7
-                X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(f_extr_res, dfImages.classLabel, split)
+                # Values from Array into variables - easier to read the code
+                split = para_Cl[0]
+                num_estimators = para_Cl[1]
+                cv_folds = para_Cl[2]
+                clas_cores = para_Cl[3]                
                 
+                # Calculate Train/Test data
+                X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(f_extr_res, dfImages.classLabel, split)
                 # Own Function for split: ClassifMonoView.calcTrainTestOwn
 		       
                 # Begin Classification RandomForest
                 # call function: return fitted model
                 
                 print "### Start:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " ###"
-        
-                # Basic Setup
-                num_estimators = [50, 101, 150, 200]
-		
-                if(boolCV==True):
-                        cl_desc, cl_res = ClassifMonoView.calcClassifRandomForestCV(X_train, y_train, num_estimators)
-                else:
-                        cl_desc, cl_res = ClassifMonoView.calcClassifRandomForest(X_train, X_test, y_test, y_train, num_estimators)
-                        
+                
+                cl_desc, cl_res = ClassifMonoView.calcClassifRandomForestCV(X_train, y_train, num_estimators, cv_folds, clas_cores)
+                    
                 print "### Done:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " ###"
 		
                 # TIME for CLASSIFICATION END

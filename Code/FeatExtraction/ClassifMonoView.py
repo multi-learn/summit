@@ -135,7 +135,7 @@ def calcTrainTest(X,y,split):
 # X_test: Test Data
 # y_test: Test Labels
 # num_estimators: number of trees
-def calcClassifRandomForestCV(X_train, y_train, num_estimators):
+def calcClassifRandomForestCV(X_train, y_train, num_estimators, cv_folds, clas_cores):
     # PipeLine with RandomForest classifier
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
 
@@ -143,7 +143,6 @@ def calcClassifRandomForestCV(X_train, y_train, num_estimators):
     # can be extended with: oob_score, min_samples_leaf, max_features
     param_rf = { 'classifier__n_estimators': num_estimators}
 
-    kfolds = 5
     # pipeline: Gridsearch avec le pipeline comme estimator
     # param: pour obtenir le meilleur model il va essayer tous les possiblites
     # refit: pour utiliser le meilleur model apres girdsearch
@@ -154,9 +153,9 @@ def calcClassifRandomForestCV(X_train, y_train, num_estimators):
             pipeline_rf,
             param_grid=param_rf,
             refit=True,
-            n_jobs=1,
+            n_jobs=clas_cores,
             scoring='accuracy',
-            cv=kfolds,
+            cv=cv_folds,
     )
 
     rf_detector = grid_rf.fit(X_train, y_train)
@@ -167,26 +166,26 @@ def calcClassifRandomForestCV(X_train, y_train, num_estimators):
     return (description, rf_detector)
 
 
-def calcClassifRandomForest(X_train, X_test, y_test, y_train, num_estimators):
-    from sklearn.grid_search import ParameterGrid
-    param_rf = { 'classifier__n_estimators': num_estimators}
-    forest = RandomForestClassifier()
+#def calcClassifRandomForest(X_train, X_test, y_test, y_train, num_estimators):
+#    from sklearn.grid_search import ParameterGrid
+#    param_rf = { 'classifier__n_estimators': num_estimators}
+#    forest = RandomForestClassifier()
+#
+#    bestgrid=0;
+#    for g in ParameterGrid(grid):
+#        forest.set_params(**g)
+#        forest.fit(X_train,y_train)
+#        score = forest.score(X_test, y_test)
+#
+#        if score > best_score:
+#            best_score = score
+#            best_grid = g
+#
+#    rf_detector = RandomForestClassifier()
+#    rf_detector.set_params(**best_grid)
+#    rf_detector.fit(X_train,y_train)
 
-    bestgrid=0;
-    for g in ParameterGrid(grid):
-        forest.set_params(**g)
-        forest.fit(X_train,y_train)
-        score = forest.score(X_test, y_test)
+#    #desc_estimators = best_grid
+#    description = "Classif_" + "RF" + "-" + "CV_" +  "NO" + "-" + "Trees_" + str(best_grid)
 
-        if score > best_score:
-            best_score = score
-            best_grid = g
-
-    rf_detector = RandomForestClassifier()
-    rf_detector.set_params(**best_grid)
-    rf_detector.fit(X_train,y_train)
-
-    #desc_estimators = best_grid
-    description = "Classif_" + "RF" + "-" + "CV_" +  "NO" + "-" + "Trees_" + str(best_grid)
-
-    return (description, rf_detector)
+#    return (description, rf_detector)

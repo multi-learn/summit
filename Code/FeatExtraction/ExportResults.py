@@ -4,14 +4,14 @@
 
 # Import built-in modules
 import os                               # for iteration throug directories
+import string                           # to generate a range of letters
+
+# Import 3rd party modules
 import pandas as pd                     # for Series and DataFrames
 import numpy as np                      # for Numpy Arrays
 import matplotlib.pyplot as plt         # for Plots
 from scipy.interpolate import interp1d  # to Interpolate Data
-import string                           # to generate a range of letters
-from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, DrawingArea, HPacker # to generate the Annotations in plot
-
-# Import 3rd party modules
+from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker # to generate the Annotations in plot
 
 # Import own modules
 

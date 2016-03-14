@@ -3,13 +3,11 @@
 """ Code to Extract all Features from Database """
 
 # Import built-in modules
-import numpy as np              # for numpy arrays
-import pandas as pd             # for panda DataFrame        
-import datetime                 # for time calculations
-
-# Import OpenCV
+  
+  
+# Import 3rd party modules
+import numpy as np              # for numpy arrays  
 import cv2                      # for OpenCV 
-import cv                       # for SIFT/SURF
 from scipy.cluster.vq import *  # for Clustering http://docs.scipy.org/doc/scipy/reference/cluster.vq.html\n",
 
 # Import own modules
@@ -48,7 +46,6 @@ def calcRGBColorHisto(nameDB, dfImages, numberOfBins, maxColorIntensity, boolNor
                 norm = "Distr"
                 param = "Bins_" +  str(int(numberOfBins)) + "-" + "MaxCI_" + str(maxColorIntensity) + "-" + "Norm_" + norm
                 description = nameDB + "-RGB-" + param
-	
 	
     
         ## algo

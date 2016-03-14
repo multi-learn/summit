@@ -3,34 +3,94 @@
 """ Script to perform feature parameter optimisation """
 
 # Import built-in modules
-import cv2                              # for OpenCV 
-import cv                               # for OpenCV
 import datetime                         # for TimeStamp in CSVFile
-from scipy.cluster.vq import *          # for Clustering http://docs.scipy.org/doc/scipy/reference/cluster.vq.html
-import numpy as np                      # for arrays
-from argparse import ArgumentParser     # for acommand line arguments
+import argparse                         # for acommand line arguments
 
-# Import sci-kit learn
-from sklearn.ensemble import RandomForestClassifier
+# Import 3rd party modules
+import numpy as np                      # for arrays
 
 # Import own modules
-import DBCrawl			# Functions to read Images from Database
-import FeatParaOpt		# Functions to perform parameter optimisation
-import ExportResults            # Functions to render results
+import DBCrawl			        # Functions to read Images from Database
+import FeatParaOpt		        # Functions to perform parameter optimisation
+import ExportResults                    # Functions to render results
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
-__status__ 	= "Development" #Production, Development, Prototype
+__status__ 	= "Development"         #Production, Development, Prototype
 __date__	= 2016-01-23
 
+### Argument Parser
+
+parser = argparse.ArgumentParser(
+description='This methods permits to perform an optimisation of the parameter of one feature. Therefore you have so specify which feature to use (e.g. --feature RGB) and which of his parameters (the parameters depend on the feature chosen, e.g. for RGB: --parameter Bins). The method will calculate the results in your given range and export the results to a CSV-File.',
+formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+groupStandard = parser.add_argument_group('necessary arguments:')
+groupStandard.add_argument('--name', metavar='STRING', action='store', help='Select a name of DB, e.g. Caltech (default: %(default)s)', default='DB')
+groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='D:\\CaltechMini')
+
+groupOpt = parser.add_argument_group('Optimisation arguments:')
+groupOpt.add_argument('--feature', choices=['RGB', 'HSV', 'SURF', 'SIFT', 'HOG'], help='Set feature from list (RGB, HSV, ..)', default='RGB')
+groupOpt.add_argument('--param', choices=['RGB_Bins', 'RGB_MaxCI', 'HSV_H_Bins', 'HSV_S_Bins', 'HSV_V_Bins', 'SIFT_Cluster', 'SURF_Cluster', 'HOG_Cluster'], help='Parameter to optimise (remember depends on feature)', default='RGB_Bins')
+groupOpt.add_argument('--valueStart', metavar='INT', action='store', help='Start-Value for optimisation range', type=int)
+groupOpt.add_argument('--valueEnd', metavar='INT', action='store', help='End-Value for optimisation range', type=int)
+groupOpt.add_argument('--nCalcs', metavar='INT', action='store', help='Number of calculations between Start and End-Value', type=int)
+
+groupRGB = parser.add_argument_group('RGB arguments:')
+groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=16)
+groupRGB.add_argument('--RGB_CI', metavar='INT', action='store', help='Max Color Intensity [0 to VALUE]', type=int, default=256)
+groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+
+groupHSV = parser.add_argument_group('HSV arguments:')
+groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=16)
+groupHSV.add_argument('--HSV_S_Bins', metavar='INT', action='store', help='Number of bins for Saturation', type=int, default=4)
+groupHSV.add_argument('--HSV_V_Bins', metavar='INT', action='store', help='Number of bins for Value', type=int, default=4)
+groupHSV.add_argument('-HSV_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+
+groupSIFT = parser.add_argument_group('SIFT arguments:')
+groupSIFT.add_argument('--SIFT_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=50)
+groupSIFT.add_argument('-SIFT_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+        
+groupSURF = parser.add_argument_group('SURF arguments:')
+groupSURF.add_argument('--SURF_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=50)
+groupSURF.add_argument('-SURF_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+
+groupHOG = parser.add_argument_group('HOG arguments:')
+groupHOG.add_argument('--HOG_CellD', metavar='INT', action='store', help='CellDimension for local histograms', type=int, default=5)
+groupHOG.add_argument('--HOG_Orient', metavar='INT', action='store', help='Number of bins of local histograms', type=int, default=8)
+groupHOG.add_argument('--HOG_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=12)
+groupHOG.add_argument('--HOG_Iter', metavar='INT', action='store', help='Max. number of iterations for clustering', type=int, default=100)
+groupHOG.add_argument('--HOG_cores', metavar='INT', action='store', help='Number of cores for HOG', type=int, default=1)
+
+groupClass = parser.add_argument_group('Classification arguments:')
+groupClass.add_argument('--CL_split', metavar='DOUBLE', action='store', help='Determine the the train/test split', type=double, default=0.7)
+groupClass.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='[50, 100, 150, 200]')
+groupClass.add_argument('--CL_RF_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=3)
+groupClass.add_argument('--CL_RF_Cores', metavar='INT', action='store', help='Number of cores', type=int, default=1)
+
+
+
+### Read args - transform in Arrays for function calls
+args = parser.parse_args()
+path = args.path
+nameDB = args.name
+
+para_opt = [args.feature, args.param, args.valueStart, args.valueEnd, args.nCalcs]
+para_RGB = [args.RGB_Bins, args.RGB_CI, args.RGB_NMinMax]
+para_HSV = [args.HSV_H_Bins, args.HSV_S_Bins, args.HSV_V_Bins, args.HSV_NMinMax]
+para_SIFT = [args.SIFT_Cluster, args.SIFT_NMinMax]
+para_SURF = [args.SURF_Cluster, args.SURF_NMinMax]
+para_HOG = [args.HOG_CellD, args.HOG_Orient, args.HOG_Cluster, args.HOG_Iter, args.HOG_cores]
+para_Cl = [args.CL_split, args.CL_RF_trees, args.CL_RF_CV, args.CL_RF_Cores]
+
+       
 ### Main Programm
 
 ################################ Read Images from Database
 # Determine the Database to extract features
 
 print "### Start of Main Programm for Feature Parameter Optimisation ###"
-path ="D:\\Caltech"
-nameDB = "CT"
+
 
 print "### Start:\t Exportation of images from DB ###"
 
@@ -45,32 +105,12 @@ print "### Done:\t Exportation of Images from DB ###"
 
 ################################ Parameter Optimisation
 # Setup
-#feature = "RGB"
-#parameter = "Bins"
-#valueStart = int(8)
-#valueEnd = int(64)
-#nCalculations = int(8)
-#boolCV = True
+print '### Optimisation - Feature:' + str(args.feature) + " Parameter:" + str(args.param) + " from:" + str(args.valueStart) + " to:" + str(args.valueEnd) + " in #calc:" + str(args.nCalcs) + " ###"
 
-#print '### Optimisation - Feature:' + str(feature) + " Parameter:" + str(parameter) + " from:" + str(valueStart) + " to:" + str(valueEnd) + " in #calc:" + str(nCalculations) + " withCV:" + str(boolCV) + " ###"
+print "### Start: Feautre Optimisation ###"
+df_feat_res = FeatParaOpt.perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, para_SURF, para_HOG, para_Cl)
+print "### Done: Feautre Optimisation ###"
 
-#print "### Start: Feautre Optimisation ###"
-#df_feat_res = FeatParaOpt.perfFeatMonoV(nameDB, dfImages,feature, parameter, valueStart, valueEnd, nCalculations, boolCV)
-#print "### Done: Feautre Optimisation ###"
-
-# Setup SURF
-feature = "SURF"
-parameter = "Cluster"
-valueStart = 50
-valueEnd  = 200
-nCalculations = 4
-boolCV = True
-
-print '### Optimisation - Feature:' + str(feature) + " Parameter:" + str(parameter) + " from:" + str(valueStart) + " to:" + str(valueEnd) + " in #calc:" + str(nCalculations) + " withCV:" + str(boolCV) + " ###"                 
-
-print "### Start:\t Feautre Optimisation ###"
-df_feat_res = FeatParaOpt.perfFeatMonoV(nameDB, dfImages,feature, parameter, valueStart, valueEnd, nCalculations, boolCV)
-print "### Done:\t Feautre Optimisation ###"
 
 ################################ Render results
 print "### Start:\t Exporting to CSV ###"
