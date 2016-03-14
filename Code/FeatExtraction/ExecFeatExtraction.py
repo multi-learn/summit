@@ -6,7 +6,7 @@
 import datetime                         # for TimeStamp in CSVFile
 import time                             # for time calculations
 import argparse                         # for acommand line arguments
-import textwrap
+import os                               # to geth path of the running script
 
 # Import 3rd party modules
 
@@ -203,38 +203,40 @@ print "Done:\t Features Extraction"
 ################################ SAVE TO FEATURES DATABASES
 print "Start:\t Save Features to CSV Databases"
 
+dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatExtr/"
+
 ### Classlabels and Description
 OutputfileNameClassLabels = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + nameDB + "-ClassLabels"
-ExportResults.exportNumpyToCSV(dfImages.classLabel, OutputfileNameClassLabels, '%i')
+ExportResults.exportNumpyToCSV(dfImages.classLabel, dir, OutputfileNameClassLabels, '%i')
 
 fileNameClassLabels = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + nameDB + "-ClassLabels-Description"
-ExportResults.exportPandasToCSV(sClassLabels, fileNameClassLabels)
+ExportResults.exportPandasToCSV(sClassLabels, dir, fileNameClassLabels)
 
 format = '%1.30f'
 ### RGB
 if(args.RGB):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + rgb_feat_desc
-        ExportResults.exportNumpyToCSV(rgb_f_extr_res, fileName, format)
+        ExportResults.exportNumpyToCSV(rgb_f_extr_res, dir, fileName, format)
         
 
 ### HSV
 if(args.HSV):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + hsv_feat_desc
-        ExportResults.exportNumpyToCSV(hsv_f_extr_res, fileName, format)
+        ExportResults.exportNumpyToCSV(hsv_f_extr_res, dir, fileName, format)
 
 ### SIFT
 if(args.SIFT):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + sift_feat_desc
-        ExportResults.exportNumpyToCSV(sift_f_extr_res, fileName, format)
+        ExportResults.exportNumpyToCSV(sift_f_extr_res, dir, fileName, format)
 
 ### SURF
 if(args.SURF):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + surf_feat_desc
-        ExportResults.exportNumpyToCSV(surf_f_extr_res, fileName, format)
+        ExportResults.exportNumpyToCSV(surf_f_extr_res, dir, fileName, format)
 
 ### HOG
 if(args.HOG):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + hog_feat_desc
-        ExportResults.exportNumpyToCSV(hog_f_extr_res, fileName, format)
+        ExportResults.exportNumpyToCSV(hog_f_extr_res, dir, fileName, format)
 
 print "Done:\t Save Features to CSV Databases"
