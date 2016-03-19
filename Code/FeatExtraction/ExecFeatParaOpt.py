@@ -64,9 +64,9 @@ groupHOG.add_argument('--HOG_Iter', metavar='INT', action='store', help='Max. nu
 groupHOG.add_argument('--HOG_cores', metavar='INT', action='store', help='Number of cores for HOG', type=int, default=1)
 
 groupClass = parser.add_argument_group('Classification arguments:')
-groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the the train/test split', type=float, default=0.7)
+groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the train size', type=float, default=0.8)
 groupClass.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='50 100 150 200')
-groupClass.add_argument('--CL_RF_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=3)
+groupClass.add_argument('--CL_RF_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=8)
 groupClass.add_argument('--CL_RF_Cores', metavar='INT', action='store', help='Number of cores', type=int, default=1)
 
 
@@ -91,10 +91,10 @@ para_Cl = [args.CL_split, map(int, args.CL_RF_trees.split()), args.CL_RF_CV, arg
 ################################ Read Images from Database
 # Determine the Database to extract features
 
-print "### Main Programm for Feature Parameter Optimisation ###"
-print '### Optimisation - Feature:' + str(args.feature) + " Parameter:" + str(args.param) + " from:" + str(args.valueStart) + " to:" + str(args.valueEnd) + " in #calc:" + str(args.nCalcs) + " ###"
+print "### Main Programm for Feature Parameter Optimisation "
+print '### Optimisation - Feature:' + str(args.feature) + " Parameter:" + str(args.param) + " from:" + str(args.valueStart) + " to:" + str(args.valueEnd) + " in #calc:" + str(args.nCalcs)
 
-print "### Start:\t Exportation of images from DB ###"
+print "### Start:\t Exportation of images from DB"
 
 # get dictionary to link classLabels Text to Integers
 sClassLabels = DBCrawl.getClassLabels(path)
@@ -102,21 +102,21 @@ sClassLabels = DBCrawl.getClassLabels(path)
 # Get all path from all images inclusive classLabel as Integer
 dfImages,nameDB = DBCrawl.imgCrawl(path, sClassLabels, nameDB)
 
-print "### Done:\t Exportation of Images from DB ###"
+print "### Done:\t Exportation of Images from DB "
 
 
 ################################ Parameter Optimisation
-print "### Start:\t Feautre Optimisation ###"
+print "### Start:\t Feautre Optimisation"
 df_feat_res = FeatParaOpt.perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, para_SURF, para_HOG, para_Cl)
-print "### Done:\t Feautre Optimisation ###"
+print "### Done:\t Feautre Optimisation "
 
 
 ################################ Render results
-print "### Start:\t Exporting to CSV ###"
+print "### Start:\t Exporting to CSV "
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatParaOpt/"
 filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-FeatParaOpt-" + args.feature
 ExportResults.exportPandasToCSV(df_feat_res, dir, filename)
-print "### Done:\t Exporting to CSV ###"
+print "### Done:\t Exporting to CSV "
 
 # Get data from result to show results in plot
 # Total time for feature extraction and classification

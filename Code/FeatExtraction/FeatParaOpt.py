@@ -149,8 +149,6 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                         # ParamaterTest
                         if(parameter=="HOG_Cluster"):
                                 NB_CLUSTERS = valuePara
-                                
-                        print "HOG:\t CellDim=" + str(CELL_DIMENSION) + ", NbOrientations=" + str(NB_ORIENTATIONS) +", Cluster=" + str(NB_CLUSTERS) + ", MaxIter=" + str(MAXITER)
                         
                         # Extract Feature from DB
                         feat_desc,f_extr_res = FeatExtraction.calcHOGParallel(nameDB, dfImages.values, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES)
@@ -180,16 +178,16 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                 # Begin Classification RandomForest
                 # call function: return fitted model
                 
-                print "### Start:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " ###"
+                print "### Start:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc))
                 
                 cl_desc, cl_res = ClassifMonoView.calcClassifRandomForestCV(X_train, y_train, num_estimators, cv_folds, clas_cores)
                     
-                print "### Done:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " ###"
+                print "### Done:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc))
 		
                 # TIME for CLASSIFICATION END
                 t_classif = time.time() - t_classif_start
         
-                # Add result for to Results DF
+                # Add result to Results DF
                 df_feat_res = df_feat_res.append({'a_feat_desc': feat_desc, 'b_feat_extr_time':t_extract, 'c_cl_desc': cl_desc, 'd_cl_res': cl_res, 
                                                 'e_cl_time': t_classif, 'f_cl_score': cl_res.best_score_}, ignore_index=True)
 

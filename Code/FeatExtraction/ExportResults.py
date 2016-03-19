@@ -28,11 +28,11 @@ def exportPandasToCSV(pandasSorDF, dir, filename):
                 for i in range(1,20):
                         testFileName = filename  + "-" + str(i) + ".csv"
                         if os.path.isfile(dir + testFileName)!=True:
-                                pandasSorDF.to_csv(dir + testFileName, sep=';', decimal=',')
+                                pandasSorDF.to_csv(dir + testFileName, sep=',')
                                 break
 
         else:
-                pandasSorDF.to_csv(file + ".csv", sep=';', decimal=',')
+                pandasSorDF.to_csv(file + ".csv", sep=',')
 
 
 def exportNumpyToCSV(numpyArray, dir, filename, format):
@@ -42,11 +42,11 @@ def exportNumpyToCSV(numpyArray, dir, filename, format):
                 for i in range(1,20):
                         testFileName = filename  + "-" + str(i) + ".csv"
                         if os.path.isfile(dir + testFileName )!=True:
-                                np.savetxt(dir + testFileName, numpyArray, delimiter=";", fmt=format)
+                                np.savetxt(dir + testFileName, numpyArray, delimiter=",", fmt=format)
                                 break
 
         else:
-                np.savetxt(file + ".csv", numpyArray, delimiter=";", fmt=format)
+                np.savetxt(file + ".csv", numpyArray, delimiter=",", fmt=format)
 		
 		
 #### Rendering of results
@@ -136,11 +136,15 @@ def calcScorePerClass(np_labels, np_output):
 	
 ### Bar-Plot for score
 
-def showResults(np_score):
+def showResults(filename, score):
         plt.bar(range(0,len(score)), score*100,1)
         plt.xlabel('ClassLabels')
         plt.ylabel('Score in %')
         plt.title('Resuls of Classification\nCaltech Database')
         plt.axis([0, len(score), 0, 100])
         plt.xticks(range(0,len(score),5))
-        plt.show()
+        
+        plt.savefig(filename)
+        
+        #instead of saving - decomment plt.show()
+        #plt.show()

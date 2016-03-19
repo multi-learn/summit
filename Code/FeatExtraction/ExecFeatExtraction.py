@@ -104,10 +104,9 @@ sClassLabels = DBCrawl.getClassLabels(path)
 
 # Get all path from all images inclusive classLabel as Integer
 dfImages,nameDB = DBCrawl.imgCrawl(path, sClassLabels, nameDB)
+t_db  = time.time() - t_db_start
+print "Done:\t Exportation of images from DB in:" + str(t_db) +"[s]"
 
-print "Done:\t Exportation of images from DB"
-
-t_db  = t_db_start - time.time()
 
 ################################ Feature Extraction
 print "Start:\t Features Extraction"
@@ -189,7 +188,7 @@ if(args.HOG):
         MAXITER = args.HOG_Iter
         NB_CORES = args.HOG_cores
         
-        print "HOG:\t CellDim=" + str(CELL_DIMENSION) + ", NbOrientations=" + str(NB_ORIENTATIONS) +", Cluster=" + str(NB_CLUSTERS) + ", MaxIter=" + str(MAXITER)
+        print "HOG:\t CellDim=" + str(CELL_DIMENSION) + ", NbOrientations=" + str(NB_ORIENTATIONS) +", Cluster=" + str(NB_CLUSTERS) + ", MaxIter=" + str(MAXITER) + ", NbCores=" + str(NB_CORES)
 
         # Extract Feature from DB
         hog_feat_desc,hog_f_extr_res = FeatExtraction.calcHOGParallel(nameDB, dfImages.values, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES)

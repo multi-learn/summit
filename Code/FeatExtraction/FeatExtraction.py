@@ -79,8 +79,8 @@ def calcRGBColorHisto(nameDB, dfImages, numberOfBins, maxColorIntensity, boolNor
                         sumHist = sum(hist) # Calculates the pixels of each image (images of different resolutions)
 			
                         if(sumHist==0):
-                                print "WARNING NORMELIZATION: sumHIST is zero (0)", 'red'
-                                print "image: " + images[1] + "\n", 'red'
+                                print "WARNING NORMALIZATION: sumHIST is zero"
+                                print "image: " + images[1] + "\n"
             
                         # Normalization
                         if(boolNormMinMax == False):			
@@ -165,8 +165,8 @@ def calcHSVColorHisto(nameDB, dfImages, histSize_, boolNormMinMax):
                         sumHist = sum(hist) # Calculates the pixels of each image (images of different resolutions)
 			
                         if(sumHist==0):
-                                print "WARNING NORMELIZATION: sumHIST is zero (0)", 'red'
-                                print "image: " + images[1] + "\n", 'red'
+                                print "WARNING NORMALIZATION: sumHIST is zero"
+                                print "image: " + images[1] + "\n"
             
                         # Normalization
                         if(boolNormMinMax == False):			
@@ -394,8 +394,8 @@ def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des
                 sumHist = sum(npSurfHist[i]) # Calculates the pixels of each image (images of different resolutions)
 		
                 if(sumHist==0):
-                        print "WARNING NORMELIZATION: sumHIST is zero (0)", 'red'
-                        print "image: " + images[1] + "\n", 'red'
+                        print "WARNING NORMALIZATION: sumHIST is zero"
+                        print "image: " + images[1] + "\n"
 		
 		# Normalization
                 if(boolNormMinMax == False):			
