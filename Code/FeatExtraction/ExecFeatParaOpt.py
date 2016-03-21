@@ -147,12 +147,13 @@ cl_desc = df_feat_res.c_cl_desc.values
 
 # Description of Feature
 feat_desc = df_feat_res.a_feat_desc.values
+store = True
 
 fileName = dir + datetime.datetime.now().strftime("%Y_%m_%d") + "-" + "Feature_" + args.feature + "-Parameter_" + args.param
 # Show Results for Calculation
-ExportResults.showScoreTime(fileName + "-TotalTime.png", score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
-ExportResults.showScoreTime(fileName + "-FeatExtTime.png", score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Feature Extraction Time\n [s]')
-ExportResults.showScoreTime(fileName + "-ClassTime.png", score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Classification Time\n [s]')
+ExportResults.showScoreTime(fileName + "-TotalTime.png", store, score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
+ExportResults.showScoreTime(fileName + "-FeatExtTime.png", store, score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Feature Extraction Time\n [s]')
+ExportResults.showScoreTime(fileName + "-ClassTime.png", store, score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Classification Time\n [s]')
 
 
 

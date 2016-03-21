@@ -28,11 +28,11 @@ def exportPandasToCSV(pandasSorDF, dir, filename):
                 for i in range(1,20):
                         testFileName = filename  + "-" + str(i) + ".csv"
                         if os.path.isfile(dir + testFileName)!=True:
-                                pandasSorDF.to_csv(dir + testFileName, sep=',')
+                                pandasSorDF.to_csv(dir + testFileName, sep=';')
                                 break
 
         else:
-                pandasSorDF.to_csv(file + ".csv", sep=',')
+                pandasSorDF.to_csv(file + ".csv", sep=';')
 
 
 def exportNumpyToCSV(numpyArray, dir, filename, format):
@@ -42,17 +42,17 @@ def exportNumpyToCSV(numpyArray, dir, filename, format):
                 for i in range(1,20):
                         testFileName = filename  + "-" + str(i) + ".csv"
                         if os.path.isfile(dir + testFileName )!=True:
-                                np.savetxt(dir + testFileName, numpyArray, delimiter=",", fmt=format)
+                                np.savetxt(dir + testFileName, numpyArray, delimiter=";", fmt=format)
                                 break
 
         else:
-                np.savetxt(file + ".csv", numpyArray, delimiter=",", fmt=format)
+                np.savetxt(file + ".csv", numpyArray, delimiter=";", fmt=format)
 		
 		
 #### Rendering of results
 
 ### Rendering of Score and Time
-def showScoreTime(filename, resScore, resTime, rangeX, parameter, feat_desc, cl_desc, fig_desc, y_desc1, y_desc2):
+def showScoreTime(filename, store, resScore, resTime, rangeX, parameter, feat_desc, cl_desc, fig_desc, y_desc1, y_desc2):
         # Determine interpolated functions
         f_score_interp = interp1d(rangeX, resScore, kind='quadratic')
         f_time_interp  = interp1d(rangeX, resTime, kind='quadratic')
@@ -110,14 +110,12 @@ def showScoreTime(filename, resScore, resTime, rangeX, parameter, feat_desc, cl_
         ax2.legend(['Time Data', 'Time Interpolated'], loc='lower right')
         
         plt.title(fig_desc, fontsize=18)
-
-        plt.savefig(filename)
         
-        # instead of saving - decomment plt.show()
-        # plt.show()
-        
-        
-
+        if(store):
+                plt.savefig(filename)
+        else: 
+                plt.show()
+            
 
 ### Result comparision per class
 def calcScorePerClass(np_labels, np_output):
