@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" Script to perform feature parameter optimisation """
+""" Execution: Script to perform feature parameter optimisation """
 
 # Import built-in modules
 import datetime                         # for TimeStamp in CSVFile
@@ -9,6 +9,7 @@ import os                               # to geth path of the running script
 
 # Import 3rd party modules
 import numpy as np                      # for arrays
+import logging                          # To create Log-Files  
 
 # Import own modules
 import DBCrawl			        # Functions to read Images from Database
@@ -17,8 +18,8 @@ import ExportResults                    # Functions to render results
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
-__status__ 	= "Development"         #Production, Development, Prototype
-__date__	= 2016-01-23
+__status__ 	= "Prototype"           # Production, Development, Prototype
+__date__	= 2016-03-25
 
 ### Argument Parser
 
@@ -29,6 +30,7 @@ formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 groupStandard = parser.add_argument_group('necessary arguments:')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Select a name of DB, e.g. Caltech (default: %(default)s)', default='DB')
 groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='D:\\CaltechMini')
+groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 
 groupOpt = parser.add_argument_group('Optimisation arguments:')
 groupOpt.add_argument('--feature', choices=['RGB', 'HSV', 'SURF', 'SIFT', 'HOG'], help='Set feature from list (RGB, HSV, ..)', default='RGB')
@@ -88,13 +90,31 @@ para_Cl = [args.CL_split, map(int, args.CL_RF_trees.split()), args.CL_RF_CV, arg
        
 ### Main Programm
 
+# Configure Logger
+dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatParaOpt/"
+logfilename= datetime.datetime.now().strftime("%Y_%m_%d") + "-LOG-FPO-" + args.name + "-" + args.feat + "-" + args.param
+logfile = dir + logfilename
+if os.path.isfile(logfile + ".log"):
+        for i in range(1,20):
+                testFileName = logfilename  + "-" + str(i) + ".log"
+                if os.path.isfile(dir + testFileName )!=True:
+                        logfile = dir + testFileName
+                        break
+else:
+        logfile = logfile + ".log"
+
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename=logfile, level=logging.DEBUG, filemode='w')
+
+if(args.log):     
+        logging.getLogger().addHandler(logging.StreamHandler())  
+
 ################################ Read Images from Database
 # Determine the Database to extract features
 
-print "### Main Programm for Feature Parameter Optimisation "
-print '### Optimisation - Feature:' + str(args.feature) + " Parameter:" + str(args.param) + " from:" + str(args.valueStart) + " to:" + str(args.valueEnd) + " in #calc:" + str(args.nCalcs)
+logging.debug("### Main Programm for Feature Parameter Optimisation ")
+logging.debug('### Optimisation - Feature:' + str(args.feature) + " Parameter:" + str(args.param) + " from:" + str(args.valueStart) + " to:" + str(args.valueEnd) + " in #calc:" + str(args.nCalcs))
 
-print "### Start:\t Exportation of images from DB"
+logging.debug("### Start:\t Exportation of images from DB")
 
 # get dictionary to link classLabels Text to Integers
 sClassLabels = DBCrawl.getClassLabels(path)
@@ -102,23 +122,24 @@ sClassLabels = DBCrawl.getClassLabels(path)
 # Get all path from all images inclusive classLabel as Integer
 dfImages,nameDB = DBCrawl.imgCrawl(path, sClassLabels, nameDB)
 
-print "### Done:\t Exportation of Images from DB "
+logging.debug("### Done:\t Exportation of Images from DB ")
 
 
 ################################ Parameter Optimisation
-print "### Start:\t Feautre Optimisation"
+logging.debug("### Start:\t Feautre Optimisation")
 df_feat_res = FeatParaOpt.perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, para_SURF, para_HOG, para_Cl)
-print "### Done:\t Feautre Optimisation "
+logging.debug("### Done:\t Feautre Optimisation ")
 
 
 ################################ Render results
-print "### Start:\t Exporting to CSV "
+logging.debug("### Start:\t Exporting to CSV ")
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatParaOpt/"
 filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-FeatParaOpt-" + args.feature
 ExportResults.exportPandasToCSV(df_feat_res, dir, filename)
-print "### Done:\t Exporting to CSV "
+logging.debug("### Done:\t Exporting to CSV ")
 
 # Get data from result to show results in plot
+logging.debug("### Start:\t Plot Result")
 # Total time for feature extraction and classification
 tot_time = df_feat_res.b_feat_extr_time.values + df_feat_res.e_cl_time.values
 tot_time = np.asarray(tot_time)
@@ -149,12 +170,13 @@ cl_desc = df_feat_res.c_cl_desc.values
 feat_desc = df_feat_res.a_feat_desc.values
 store = True
 
-fileName = dir + datetime.datetime.now().strftime("%Y_%m_%d") + "-" + "Feature_" + args.feature + "-Parameter_" + args.param
+fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + "-FPO-" + args.name + "-" + args.feature + "-" + args.param
 # Show Results for Calculation
-ExportResults.showScoreTime(fileName + "-TotalTime.png", store, score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
-ExportResults.showScoreTime(fileName + "-FeatExtTime.png", store, score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Feature Extraction Time\n [s]')
-ExportResults.showScoreTime(fileName + "-ClassTime.png", store, score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Classification Time\n [s]')
+ExportResults.showScoreTime(dir, fileName + "-TotalTime.png", store, score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation \n DB: ' + args.name + 'Feat: ' + args.feature, 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
+ExportResults.showScoreTime(dir, fileName + "-FeatExtTime.png", store, score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation \n DB: ' + args.name + 'Feat: ' + args.feature, 'Precision', 'Feature Extraction Time\n [s]')
+ExportResults.showScoreTime(dir, fileName + "-ClassTime.png", store, score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation \n DB: ' + args.name + 'Feat: ' + args.feature, 'Precision', 'Classification Time\n [s]')
 
+logging.debug("### Done:\t Plot Result")
 
 
 #print 'Les meilleurs parametres sont: ' + str(rf_detector.best_params_)

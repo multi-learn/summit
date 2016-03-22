@@ -1,22 +1,23 @@
 #!/usr/bin/env python
 
-""" Function to optimise feature parameters """
+""" Library: Function to optimise feature parameters """
 
 # Import built-in modules
-import time             # for time calculations
+import time                             # for time calculations
 
 # Import 3rd party modules
-import numpy as np      # for numpy arrays
-import pandas as pd     # for Series and DataFrames
+import numpy as np                      # for numpy arrays
+import pandas as pd                     # for Series and DataFrames
+import logging                          # To create Log-Files  
 
 # Import own modules
-import FeatExtraction	# Functions for Feature Extractions#
-import ClassifMonoView	# Functions for classification
+import FeatExtraction	                # Functions for Feature Extractions#
+import ClassifMonoView	                # Functions for classification
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
-__status__ 	= "Development" #Production, Development, Prototype
-__date__	= 2016-03-14
+__status__ 	= "Prototype"           # Production, Development, Prototype
+__date__	= 2016-03-25
 
 
 # dfImages:     Database with all images
@@ -58,7 +59,7 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
         # for-loop from valueStart, step stepwidth, until valueEnde
         for valuePara, i in zip(valueArray,arr_Calc):
                 valuePara = int(valuePara)
-                print "### Start:\t FeatureExtraction Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " with " + parameter + "=" + str(valuePara) + " ###"
+                logging.debug("### Start:\t FeatureExtraction Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " with " + parameter + "=" + str(valuePara) + " ###")
                 # TIME for Extraction
                 t_extract_start = time.time()
                 
@@ -160,7 +161,7 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                 # TIME for Extraction END
                 t_extract = time.time() - t_extract_start
                 
-                print "### Done:\t FeatureExtraction Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " ###"
+                logging.debug("### Done:\t FeatureExtraction Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " ###")
 
                 # TIME for CLASSIFICATION
                 t_classif_start = time.time()
@@ -178,11 +179,11 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                 # Begin Classification RandomForest
                 # call function: return fitted model
                 
-                print "### Start:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc))
+                logging.debug("### Start:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)))
                 
                 cl_desc, cl_res = ClassifMonoView.calcClassifRandomForestCV(X_train, y_train, num_estimators, cv_folds, clas_cores)
                     
-                print "### Done:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc))
+                logging.debug("### Done:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)))
 		
                 # TIME for CLASSIFICATION END
                 t_classif = time.time() - t_classif_start

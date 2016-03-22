@@ -1,22 +1,22 @@
 #!/usr/bin/env python
 
-""" MultiClass Classification with MonoView """
+""" Library: MultiClass Classification with MonoView """
 
 # Import built-in modules
-import pandas as pd
+import pandas as pd                                     # For DataFrames
 
 # Import sci-kit learn party modules
-from sklearn.cross_validation import train_test_split
-from sklearn.pipeline import Pipeline
-from sklearn.grid_search import GridSearchCV
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.cross_validation import train_test_split   # For calculating the train/test split
+from sklearn.pipeline import Pipeline                   # Pipelining in classification
+from sklearn.grid_search import GridSearchCV            # GridSearch for parameters of classification
+from sklearn.ensemble import RandomForestClassifier     # RandomForest-Classifier
 
 # Import own modules
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
-__status__ 	= "Development" #Production, Development, Prototype
-__date__	= 2016-01-23
+__status__ 	= "Prototype"                           # Production, Development, Prototype
+__date__	= 2016-03-25
 
 ##### Generating Test and Train Data
 def calcTrainTestOwn(X,y,split):

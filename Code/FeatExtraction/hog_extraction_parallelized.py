@@ -1,16 +1,29 @@
-# Imports
+#!/usr/bin/env python
 
-import os as os        # for iteration throug directories
-import pandas as pd # for Series and DataFrames
-import cv2          # for OpenCV 
-import datetime     # for TimeStamp in CSVFile
-import numpy as np  # for arrays
-import time       # for time calculations
-import DBCrawl	
+""" Library: Caclulates the HOG Feature - parallelized """
+
+# Import built-in modules
+import os as os                                 # for iteration throug directories
+import datetime                                 # for TimeStamp in CSVFile
+import time                                     # for time calculations
+
+# Import 3rd party modules
+import numpy as np                              # for arrays
+import pandas as pd                             # for Series and DataFrames
+import cv2                                      # for OpenCV
 from skimage.feature import hog
 from sklearn.cluster import MiniBatchKMeans
-import multiprocessing as mp #to count cores https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool
+import multiprocessing as mp                    #to count cores https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool
 from joblib import Parallel, delayed
+
+# Import own modules
+import DBCrawl
+
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "?"                           # Production, Development, Prototype
+__date__	= "?"
+
 
 # In order to calculate HOG, we will use a bag of word approach : cf SURF function, well documented. 
 

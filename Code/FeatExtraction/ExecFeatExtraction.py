@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" Script to perform feature parameter optimisation """
+""" Execution: Script to perform feature extraction """
 
 # Import built-in modules
 import datetime                         # for TimeStamp in CSVFile
@@ -9,16 +9,17 @@ import argparse                         # for acommand line arguments
 import os                               # to geth path of the running script
 
 # Import 3rd party modules
+import logging                          # To create Log-Files   
 
 # Import own modules
-import DBCrawl			# Functions to read Images from Database
-import ExportResults            # Functions to render results
-import FeatExtraction           # Functions to extract the features from Database   
+import DBCrawl			        # Functions to read Images from Database
+import ExportResults                    # Functions to render results
+import FeatExtraction                   # Functions to extract the features from Database   
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
-__status__ 	= "Development" #Production, Development, Prototype
-__date__	= 2016-03-10
+__status__ 	= "Prototype"           # Production, Development, Prototype
+__date__	= 2016-03-25
 
 ### Argument Parser
 
@@ -29,7 +30,7 @@ formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 groupStandard = parser.add_argument_group('necessary arguments:')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Select a name of DB, e.g. Caltech (default: %(default)s)', default='DB')
 groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='D:\\CaltechMini')
-
+groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 
 groupRGB = parser.add_argument_group('RGB arguments:')
 groupRGB.add_argument('-RGB', action='store_true', help='Use option to activate RGB')
@@ -77,7 +78,6 @@ def boolNormToStr(norm):
 
 ### Main Programm
 
-print "### Main Programm for Feature Extraction ###"
 features = ""
 if(args.RGB):
         features = features + "RGB "
@@ -90,12 +90,32 @@ if(args.SURF):
 if(args.HOG):
         features = features + "HOG"
 
-print "Infos:\t NameDB=" + nameDB + ", Path=" + path  + ", Features=" + features
+
+# Configure Logger
+dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatExtr/"
+logfilename= datetime.datetime.now().strftime("%Y_%m_%d") + "-LOG-FE-" + args.name + "-" + features.replace(" ", "_").rstrip("_")
+logfile = dir + logfilename
+if os.path.isfile(logfile + ".log"):
+        for i in range(1,20):
+                testFileName = logfilename  + "-" + str(i) + ".log"
+                if os.path.isfile(dir + testFileName )!=True:
+                        logfile = dir + testFileName
+                        break
+else:
+        logfile = logfile + ".log"
+
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename=logfile, level=logging.DEBUG, filemode='w')
+
+if(args.log):     
+        logging.getLogger().addHandler(logging.StreamHandler())  
+        
+logging.debug("### Main Programm for Feature Extraction ###")
+logging.debug("Infos:\t NameDB=" + nameDB + ", Path=" + path  + ", Features=" + features)
 
 ################################ Read Images from Database
 # Determine the Database to extract features
 
-print "Start:\t Exportation of images from DB"
+logging.debug("Start:\t Exportation of images from DB")
 
 t_db_start = time.time()
 
@@ -105,31 +125,31 @@ sClassLabels = DBCrawl.getClassLabels(path)
 # Get all path from all images inclusive classLabel as Integer
 dfImages,nameDB = DBCrawl.imgCrawl(path, sClassLabels, nameDB)
 t_db  = time.time() - t_db_start
-print "Done:\t Exportation of images from DB in:" + str(t_db) +"[s]"
+logging.debug("Done:\t Exportation of images from DB in:" + str(t_db) +"[s]")
 
 
 ################################ Feature Extraction
-print "Start:\t Features Extraction"
+logging.debug("Start:\t Features Extraction")
 
 ### Setup RGB
 if(args.RGB):
         
-        print "RGB:\t Start"
+        logging.debug("RGB:\t Start")
         t_rgb_start = time.time()
                 
         # Infos
-        print "RGB:\t NumberOfBins=" + str(args.RGB_Bins) + ", MaxColorIntensity=" + str(args.RGB_CI) + ", Norm=" + boolNormToStr(args.RGB_NMinMax)
+        logging.debug("RGB:\t NumberOfBins=" + str(args.RGB_Bins) + ", MaxColorIntensity=" + str(args.RGB_CI) + ", Norm=" + boolNormToStr(args.RGB_NMinMax))
          
         # Extract Feature from DB
         rgb_feat_desc,rgb_f_extr_res = FeatExtraction.calcRGBColorHisto(nameDB, dfImages, args.RGB_Bins, args.RGB_CI, args.RGB_NMinMax)
 
         t_rgb = time.time() - t_rgb_start
-        print "RGB:\t Done in: " + str(t_rgb) + "[s]"
+        logging.debug("RGB:\t Done in: " + str(t_rgb) + "[s]")
 
 
 ### Setup HSV
 if(args.HSV):
-        print "HSV:\t Start"
+        logging.debug("HSV:\t Start")
         t_hsv_start = time.time()
         
         h_bins = args.HSV_H_Bins
@@ -138,48 +158,48 @@ if(args.HSV):
         histSize = [h_bins, s_bins, v_bins]
         
         # Infos
-        print "HSV:\t HSVBins=[" + str(h_bins) + "," + str(s_bins) + "," + str(v_bins) + "], Norm=" + boolNormToStr(args.HSV_NMinMax)
+        logging.debug("HSV:\t HSVBins=[" + str(h_bins) + "," + str(s_bins) + "," + str(v_bins) + "], Norm=" + boolNormToStr(args.HSV_NMinMax))
 
         # Extract Feature from DB
         hsv_feat_desc,hsv_f_extr_res = FeatExtraction.calcHSVColorHisto(nameDB, dfImages, histSize, args.HSV_NMinMax)
         t_hsv = time.time() - t_hsv_start
-        print "HSV:\t Done in: " + str(t_hsv) + "[s]"
+        logging.debug("HSV:\t Done in: " + str(t_hsv) + "[s]")
 
 
 
 ### Setup SIFT
 if(args.SIFT):
-        print "SIFT:\t Start"
+        logging.debug("SIFT:\t Start")
         t_sift_start = time.time()
         
         boolSIFT = True
         
-        print "SIFT:\t Cluster=" + str(args.SIFT_Cluster) + ", Norm=" + boolNormToStr(args.SIFT_NMinMax)
+        logging.debug("SIFT:\t Cluster=" + str(args.SIFT_Cluster) + ", Norm=" + boolNormToStr(args.SIFT_NMinMax))
 
         sift_descriptors,sift_des_list = FeatExtraction.calcSURFSIFTDescriptors(dfImages, boolSIFT)
         sift_feat_desc,sift_f_extr_res = FeatExtraction.calcSURFSIFTHisto(nameDB, dfImages, args.SIFT_Cluster, args.SIFT_NMinMax, sift_descriptors, sift_des_list, boolSIFT)
         t_sift = time.time() - t_sift_start 
-        print "SIFT:\t Done in: " + str(t_sift) + "[s]"
+        logging.debug("SIFT:\t Done in: " + str(t_sift) + "[s]")
 
 
 ### Setup SURF
 if(args.SURF):
-        print "SURF:\t Start"
+        logging.debug("SURF:\t Start")
         t_surf_start = time.time()
         
         boolSIFT = False
         
-        print "SURF:\t Cluster=" + str(args.SURF_Cluster) + ", Norm=" + boolNormToStr(args.SURF_NMinMax)
+        logging.debug("SURF:\t Cluster=" + str(args.SURF_Cluster) + ", Norm=" + boolNormToStr(args.SURF_NMinMax))
 
         # Extract Feature from DB
         surf_descriptors,surf_des_list = FeatExtraction.calcSURFSIFTDescriptors(dfImages, boolSIFT)
         surf_feat_desc,surf_f_extr_res = FeatExtraction.calcSURFSIFTHisto(nameDB, dfImages, args.SURF_Cluster, args.SURF_NMinMax, surf_descriptors, surf_des_list, boolSIFT)
         t_surf = time.time() - t_surf_start 
-        print "SURF:\t Done in: " + str(t_surf) + "[s]"
+        logging.debug("SURF:\t Done in: " + str(t_surf) + "[s]")
 
 ### Setup HOG
 if(args.HOG):
-        print "HOG:\t Start"
+        logging.debug("HOG:\t Start")
         t_hog_start = time.time()
         
         CELL_DIMENSION = args.HOG_CellD
@@ -188,54 +208,54 @@ if(args.HOG):
         MAXITER = args.HOG_Iter
         NB_CORES = args.HOG_cores
         
-        print "HOG:\t CellDim=" + str(CELL_DIMENSION) + ", NbOrientations=" + str(NB_ORIENTATIONS) +", Cluster=" + str(NB_CLUSTERS) + ", MaxIter=" + str(MAXITER) + ", NbCores=" + str(NB_CORES)
+        logging.debug("HOG:\t CellDim=" + str(CELL_DIMENSION) + ", NbOrientations=" + str(NB_ORIENTATIONS) +", Cluster=" + str(NB_CLUSTERS) + ", MaxIter=" + str(MAXITER) + ", NbCores=" + str(NB_CORES))
 
         # Extract Feature from DB
         hog_feat_desc,hog_f_extr_res = FeatExtraction.calcHOGParallel(nameDB, dfImages.values, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER, NB_CORES)
         #hog_feat_desc,hog_f_extr_res = FeatExtraction.calcHOG(nameDB, dfImages.values, CELL_DIMENSION, NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)   
         t_hog = time.time() - t_hog_start
-        print "HOG:\t Done in: " + str(t_hog) + "[s]"
+        logging.debug("HOG:\t Done in: " + str(t_hog) + "[s]")
 
-print "Done:\t Features Extraction"
+logging.debug("Done:\t Features Extraction")
 
 
-################################ SAVE TO FEATURES DATABASES
-print "Start:\t Save Features to CSV Databases"
+################################ SAVE FEATURES TO CSV DATABASE
+logging.debug("Start:\t Save Features to CSV Databases")
 
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatExtr/"
 
 ### Classlabels and Description
-OutputfileNameClassLabels = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + nameDB + "-ClassLabels"
+OutputfileNameClassLabels = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + nameDB + "-ClassLabels"
 ExportResults.exportNumpyToCSV(dfImages.classLabel, dir, OutputfileNameClassLabels, '%i')
 
-fileNameClassLabels = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + nameDB + "-ClassLabels-Description"
+fileNameClassLabels = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + nameDB + "-ClassLabels-Description"
 ExportResults.exportPandasToCSV(sClassLabels, dir, fileNameClassLabels)
 
 format = '%1.30f'
 ### RGB
 if(args.RGB):
-        fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + rgb_feat_desc
+        fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + rgb_feat_desc
         ExportResults.exportNumpyToCSV(rgb_f_extr_res, dir, fileName, format)
         
 
 ### HSV
 if(args.HSV):
-        fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + hsv_feat_desc
+        fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + hsv_feat_desc
         ExportResults.exportNumpyToCSV(hsv_f_extr_res, dir, fileName, format)
 
 ### SIFT
 if(args.SIFT):
-        fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + sift_feat_desc
+        fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + sift_feat_desc
         ExportResults.exportNumpyToCSV(sift_f_extr_res, dir, fileName, format)
 
 ### SURF
 if(args.SURF):
-        fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + surf_feat_desc
+        fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + surf_feat_desc
         ExportResults.exportNumpyToCSV(surf_f_extr_res, dir, fileName, format)
 
 ### HOG
 if(args.HOG):
-        fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-" + hog_feat_desc
+        fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + hog_feat_desc
         ExportResults.exportNumpyToCSV(hog_f_extr_res, dir, fileName, format)
 
-print "Done:\t Save Features to CSV Databases"
+logging.debug("Done:\t Save Features to CSV Databases")

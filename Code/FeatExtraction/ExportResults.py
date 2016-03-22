@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" Functions to generate DB """
+""" Library: Functions to export results to CSV or plots """
 
 # Import built-in modules
 import os                               # for iteration throug directories
@@ -17,8 +17,8 @@ from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker # to gener
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
-__status__ 	= "Development" #Production, Development, Prototype
-__date__	= 2016-01-23
+__status__ 	= "Prototype"           # Production, Development, Prototype
+__date__	= 2016-03-25
 
 #### Export Features to CSV
 def exportPandasToCSV(pandasSorDF, dir, filename):
@@ -52,7 +52,7 @@ def exportNumpyToCSV(numpyArray, dir, filename, format):
 #### Rendering of results
 
 ### Rendering of Score and Time
-def showScoreTime(filename, store, resScore, resTime, rangeX, parameter, feat_desc, cl_desc, fig_desc, y_desc1, y_desc2):
+def showScoreTime(dir, filename, store, resScore, resTime, rangeX, parameter, feat_desc, cl_desc, fig_desc, y_desc1, y_desc2):
         # Determine interpolated functions
         f_score_interp = interp1d(rangeX, resScore, kind='quadratic')
         f_time_interp  = interp1d(rangeX, resTime, kind='quadratic')
@@ -112,7 +112,17 @@ def showScoreTime(filename, store, resScore, resTime, rangeX, parameter, feat_de
         plt.title(fig_desc, fontsize=18)
         
         if(store):
-                plt.savefig(filename)
+                file = dir + filename
+                
+                if os.path.isfile(file + ".png"):
+                        for i in range(1,20):
+                                testFileName = filename  + "-" + str(i) + ".png"
+                                if os.path.isfile(dir + testFileName )!=True:
+                                        plt.savefig(dir + testFileName)
+                                        break
+
+                else:
+                        plt.savefig(file)
         else: 
                 plt.show()
             
@@ -134,15 +144,29 @@ def calcScorePerClass(np_labels, np_output):
 	
 ### Bar-Plot for score
 
-def showResults(filename, score):
+def showResults(dir, filename, db, feat, score):
         plt.bar(range(0,len(score)), score*100,1)
         plt.xlabel('ClassLabels')
         plt.ylabel('Score in %')
-        plt.title('Resuls of Classification\nCaltech Database')
+        plt.title('Results of ' + feat + '-Classification\n for ' + db + ' Database')
         plt.axis([0, len(score), 0, 100])
         plt.xticks(range(0,len(score),5))
         
-        plt.savefig(filename)
+        file = dir + filename
+    
+        if os.path.isfile(file + ".png"):
+                for i in range(1,20):
+                        testFileName = filename  + "-" + str(i) + ".png"
+                        if os.path.isfile(dir + testFileName )!=True:
+                                plt.savefig(dir + testFileName)
+                                break
+
+        else:
+                plt.savefig(file)
+        
+        
+        
+        
         
         #instead of saving - decomment plt.show()
         #plt.show()

@@ -11,8 +11,8 @@
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
-__status__ 	= "Development" #Production, Development, Prototype
-__date__	= 2016-03-14
+__status__ 	= "Prototype"           # Production, Development, Prototype
+__date__	= 2016-03-25
 
 import sys
 print("Python-V.: " + sys.version)
@@ -36,3 +36,5 @@ import sklearn
 print("Sklearn-V.: " + sklearn.__version__)
 
 
+import logging                          # To create Log-Files  
+print("Logging: " + logging.__version__)

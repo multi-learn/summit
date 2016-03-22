@@ -1,32 +1,27 @@
 #!/usr/bin/env python
 
-""" Code to Extract all Features from Database """
+""" Library: Code to extract all Features from a Database """
 
 # Import built-in modules
   
   
 # Import 3rd party modules
-import numpy as np              # for numpy arrays  
-import cv2                      # for OpenCV 
-from scipy.cluster.vq import *  # for Clustering http://docs.scipy.org/doc/scipy/reference/cluster.vq.html\n",
+import numpy as np                                                      # for numpy arrays  
+import cv2                                                              # for OpenCV 
+from scipy.cluster.vq import *                                          # for Clustering http://docs.scipy.org/doc/scipy/reference/cluster.vq.html\n",
+import logging                                                          # To create Log-Files  
 
 # Import own modules
-from hog_extraction_parallelized import extractHOGFeatureParallel #For HOG
-from hog_extraction import extractHOGFeature #for HOG computation
+from hog_extraction_parallelized import extractHOGFeatureParallel       #For HOG
+from hog_extraction import extractHOGFeature                            #for HOG computation
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
-__status__ 	= "Development" #Production, Development, Prototype
-__date__	= 2016-01-23
-
-# ## Functions for Extract Data
-# 
-
-# ### Function to calculate the RGBColorHistogram for given Images 
+__status__ 	= "Prototype"                                           # Production, Development, Prototype
+__date__	= 2016-03-25
 
 
 #### Calculate RGBColorHistograms for all images
-### Points to improve: 
 
 # nameDB: Name of the current Image DB
 # dfImages: Dataframe with paths to all images - use function imgCrawl
@@ -79,8 +74,8 @@ def calcRGBColorHisto(nameDB, dfImages, numberOfBins, maxColorIntensity, boolNor
                         sumHist = sum(hist) # Calculates the pixels of each image (images of different resolutions)
 			
                         if(sumHist==0):
-                                print "WARNING NORMALIZATION: sumHIST is zero"
-                                print "image: " + images[1] + "\n"
+                                logging.warning("WARNING NORMALIZATION: sumHIST is zero")
+                                logging.warning("image: " + images[1] + "\n")
             
                         # Normalization
                         if(boolNormMinMax == False):			
@@ -165,8 +160,8 @@ def calcHSVColorHisto(nameDB, dfImages, histSize_, boolNormMinMax):
                         sumHist = sum(hist) # Calculates the pixels of each image (images of different resolutions)
 			
                         if(sumHist==0):
-                                print "WARNING NORMALIZATION: sumHIST is zero"
-                                print "image: " + images[1] + "\n"
+                                logging.warning("WARNING NORMALIZATION: sumHIST is zero")
+                                logging.warning("image: " + images[1] + "\n")
             
                         # Normalization
                         if(boolNormMinMax == False):			
@@ -206,7 +201,7 @@ def calcSURFSIFTDescriptors(dfImages, boolSIFT):
         des_list = []
         
        
-        print feat + "Keypoints Calculation"
+        logging.debug(feat + "Keypoints Calculation")
         #### Feature Detection and Description (Surf): 
         # Detect (localize) for each image the keypoints (Points of Interest in an image - Surf uses therefore like SIFT corners)
         # Pro: SIFT/SURF are scale and rotation invariant!
@@ -217,13 +212,13 @@ def calcSURFSIFTDescriptors(dfImages, boolSIFT):
         for images,i in zip(npImages,range(1,len(npImages)+1)):
                 # Read image
                 if(float(i)/float(len(npImages))>0.25 and bool_Progress==True):
-                        print feat + "25% of images processed (Keypoints)"
+                        logging.debug(feat + "25% of images processed (Keypoints)")
                         bool_Progress = False
                 elif(float(i)/float(len(npImages))>0.5 and bool_Progress==False):
-                        print feat + "50% of images processed (Keypoints)"
+                        logging.debug(feat + "50% of images processed (Keypoints)")
                         bool_Progress = None
                 elif(float(i)/float(len(npImages))>0.75 and bool_Progress==None):
-                        print feat + "75% of images processed (Keypoints)"
+                        logging.debug(feat + "75% of images processed (Keypoints)")
                         bool_Progress = NotImplemented
 
                 image = cv2.imread(images[1], cv2.CV_LOAD_IMAGE_COLOR)
@@ -237,7 +232,7 @@ def calcSURFSIFTDescriptors(dfImages, boolSIFT):
                 kp, des = det.detectAndCompute(image,None)
                 
                 if des is None:
-                        print feat + "No Keypoints found in: " + str(images[1])
+                        logging.debug(feat + "No Keypoints found in: " + str(images[1]))
                         if(boolSIFT==True):
                                 desNoKP=np.zeros(shape=(100,128)) 
                         else: 
@@ -273,12 +268,12 @@ def calcSURFSIFTDescriptors(dfImages, boolSIFT):
         else:
                 descriptors = np.zeros(shape=(size,64), dtype=np.float32)
         
-        #print feat + "Start filling descriptors"
+        #logging.debug(feat + "Start filling descriptors")
         for i in range(0,len(des_list)):
                 descriptors[merker:(merker+len(des_list[i]))] = des_list[i]
                 merker = merker + len(des_list[i])
         
-        #print feat + "Shape of Descriptors: " + str(descriptors.shape)
+        #logging.debug(feat + "Shape of Descriptors: " + str(descriptors.shape))
        
         
         return (descriptors,des_list)
@@ -335,7 +330,7 @@ def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des
     
         # Perform k-means clustering -> creates the words from all describteurs -> this is the (dic) dictionary/vocabulary/codebook
         # k: amount of different clusters to build! Will result in a feature length k
-        print feat + ":\t Calculation of Dictonary with " + str(int(cluster)) + " Clusters"
+        logging.debug(feat + ":\t Calculation of Dictonary with " + str(int(cluster)) + " Clusters")
         dic, variance = kmeans(descriptors, int(cluster), 1) 
         
         ### 2. Step: encoding/coding/vector quantization(vq) to assign each descripteur the closest "visual word" from dictionary:
@@ -347,20 +342,20 @@ def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des
         # bool for Progressbar
         bool_Progress=True
         
-        print feat + ":\t Assign words from Dictonary to each Image"
+        logging.debug(feat + ":\t Assign words from Dictonary to each Image")
         npSurfHist = np.zeros((len(npImages), int(cluster)), dtype=np.float32)
         for i in xrange(len(npImages)):
                 # vq: (Encoding) Assign words from the dictionary to each descripteur
                 words, distance = vq(des_list[i],dic)
                 
                 if(float(i)/float(len(npImages))>0.25 and bool_Progress==True):
-                        print feat + ":\t 25% of images processed (Assignments)"
+                        logging.debug(feat + ":\t 25% of images processed (Assignments)")
                         bool_Progress = False
                 elif(float(i)/float(len(npImages))>0.5 and bool_Progress==False):
-                        print feat + ":\t 50% of images processed (Assignments)"
+                        logging.debug(feat + ":\t 50% of images processed (Assignments)")
                         bool_Progress = None
                 elif(float(i)/float(len(npImages))>0.75 and bool_Progress==None):
-                        print feat + ":\t 75% of images processed (Assignments)"
+                        logging.debug(feat + ":\t 75% of images processed (Assignments)")
                         bool_Progress = NotImplemented
         
                 ### 3. Step: Pooling - calculate a histogram for each image
@@ -394,8 +389,8 @@ def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des
                 sumHist = sum(npSurfHist[i]) # Calculates the pixels of each image (images of different resolutions)
 		
                 if(sumHist==0):
-                        print "WARNING NORMALIZATION: sumHIST is zero"
-                        print "image: " + images[1] + "\n"
+                        logging.warning("WARNING NORMALIZATION: sumHIST is zero")
+                        logging.warning( "image: " + images[1] + "\n")
 		
 		# Normalization
                 if(boolNormMinMax == False):			

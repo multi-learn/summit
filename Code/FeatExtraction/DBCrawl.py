@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 
-""" Functions to generate DB """
+""" Library: Functions to generate databases of images """
 
 # Import built-in modules
-import os               # for iteration throug directories
+import os                               # for iteration throug directories
 
 # Import 3rd party modules
-import pandas as pd     # for Series and DataFrames
+import pandas as pd                     # for Series and DataFrames
 
 # Import own modules
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
-__status__ 	= "Development" #Production, Development, Prototype
-__date__	= 2016-01-23
+__status__ 	= "Prototype"           # Production, Development, Prototype
+__date__	= 2016-03-25
 
 
 # ### Function to iterate through given directory and return images paths and classLabels
