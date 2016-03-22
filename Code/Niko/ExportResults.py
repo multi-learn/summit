@@ -3,21 +3,22 @@
 """ Library: Functions to export results to CSV or plots """
 
 # Import built-in modules
-import os                               # for iteration throug directories
-import string                           # to generate a range of letters
+import os                                                               # for iteration throug directories
+import string                                                           # to generate a range of letters
 
 # Import 3rd party modules
-import pandas as pd                     # for Series and DataFrames
-import numpy as np                      # for Numpy Arrays
-import matplotlib.pyplot as plt         # for Plots
-from scipy.interpolate import interp1d  # to Interpolate Data
-from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker # to generate the Annotations in plot
+import pandas as pd                                                     # for Series and DataFrames
+import numpy as np                                                      # for Numpy Arrays
+import matplotlib.pyplot as plt                                         # for Plots
+from scipy.interpolate import interp1d                                  # to Interpolate Data
+from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker   # to generate the Annotations in plot
+from pylab import rcParams                                              # to change size of plot
 
 # Import own modules
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
-__status__ 	= "Prototype"           # Production, Development, Prototype
+__status__ 	= "Prototype"                                           # Production, Development, Prototype
 __date__	= 2016-03-25
 
 #### Export Features to CSV
@@ -57,8 +58,12 @@ def showScoreTime(dir, filename, store, resScore, resTime, rangeX, parameter, fe
         f_score_interp = interp1d(rangeX, resScore, kind='quadratic')
         f_time_interp  = interp1d(rangeX, resTime, kind='quadratic')
         
+        # Change size of plot
+        rcParams['figure.figsize'] =20, 10
+        
         # Figure1 with subplot
         fig, ax1 = plt.subplots()
+        
         
         #plt.plot(x, y, type of line)
         # Generating X-Axis
@@ -86,7 +91,7 @@ def showScoreTime(dir, filename, store, resScore, resTime, rangeX, parameter, fe
                 ax1.annotate(letter, xy=(act_x, act_score), xytext=(act_x, act_score))
                 ax2.annotate(letter, xy=(act_x, act_time), xytext=(act_x, act_time))
                 # Creates a legend with description of feature and classificator of each datapoint
-                legend = legend + letter + ": " + act_feat_desc + " Classf: " + act_cl_desc + "\n"
+                legend = legend + letter + ") Feature: " + act_feat_desc + "; Classifier: " + act_cl_desc + "\n"
                 
         # Remove last \n
         legend = legend[:-1]
@@ -99,9 +104,9 @@ def showScoreTime(dir, filename, store, resScore, resTime, rangeX, parameter, fe
         anchored_box = AnchoredOffsetbox(loc=3,
                                          child=box, pad=0.2,
                                          frameon=True,
-                                         bbox_to_anchor=(0., 1.02),
+                                         bbox_to_anchor=(0, 1.04), #to change the place of the legend (text above of figure)
                                          bbox_transform=ax1.transAxes,
-                                         borderpad=1.5,
+                                         borderpad=1.0,
                                          )
         ax1.add_artist(anchored_box)
         fig.subplots_adjust(top=0.7)

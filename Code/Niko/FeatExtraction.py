@@ -193,9 +193,9 @@ def calcSURFSIFTDescriptors(dfImages, boolSIFT):
         npImages = dfImages.values
     
         if(boolSIFT==True):
-                feat = "SIFT:\t "
+                feat = "### SIFT:\t "
         else:
-                feat = "SURF:\t "
+                feat = "### SURF:\t "
         
         # List where all the descriptors are stored
         des_list = []
@@ -316,9 +316,9 @@ def calcSURFSIFTHisto(nameDB, dfImages, cluster, boolNormMinMax, descriptors,des
 	
         param = "Cluster_" +  str(cluster) + "-" + "Norm_" + norm
         if(boolSIFT==True):
-                feat="SIFT"
+                feat="### SIFT"
         else:
-                feat="SURF"
+                feat="### SURF"
         description = nameDB + "-" + feat + "-" + param
         
         #### Bag of Words Approach

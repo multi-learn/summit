@@ -27,35 +27,35 @@ parser = argparse.ArgumentParser(
 description='This methods permits to export one or more features at the same time for a database of images (path, name). To extract one feature activate it by using the specific argument (e.g. -RGB). For each feature you can define the parameters by using the optional arguments (e.g. --RGB_Hist 32). The results will be exported to a CSV-File.', 
 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-groupStandard = parser.add_argument_group('necessary arguments:')
+groupStandard = parser.add_argument_group('necessary arguments')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Select a name of DB, e.g. Caltech (default: %(default)s)', default='DB')
 groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='D:\\CaltechMini')
 groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 
-groupRGB = parser.add_argument_group('RGB arguments:')
+groupRGB = parser.add_argument_group('RGB arguments')
 groupRGB.add_argument('-RGB', action='store_true', help='Use option to activate RGB')
 groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=16)
 groupRGB.add_argument('--RGB_CI', metavar='INT', action='store', help='Max Color Intensity [0 to VALUE]', type=int, default=256)
 groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
-groupHSV = parser.add_argument_group('HSV arguments:')
+groupHSV = parser.add_argument_group('HSV arguments')
 groupHSV.add_argument('-HSV', action='store_true', help='Use option to activate HSV')
 groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=16)
 groupHSV.add_argument('--HSV_S_Bins', metavar='INT', action='store', help='Number of bins for Saturation', type=int, default=4)
 groupHSV.add_argument('--HSV_V_Bins', metavar='INT', action='store', help='Number of bins for Value', type=int, default=4)
 groupHSV.add_argument('-HSV_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
-groupSIFT = parser.add_argument_group('SIFT arguments:')
+groupSIFT = parser.add_argument_group('SIFT arguments')
 groupSIFT.add_argument('-SIFT', action='store_true', help='Use option to activate SIFT')
 groupSIFT.add_argument('--SIFT_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=50)
 groupSIFT.add_argument('-SIFT_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
         
-groupSURF = parser.add_argument_group('SURF arguments:')
+groupSURF = parser.add_argument_group('SURF arguments')
 groupSURF.add_argument('-SURF', action='store_true', help='Use option to activate SURF')
 groupSURF.add_argument('--SURF_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=50)
 groupSURF.add_argument('-SURF_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
-groupHOG = parser.add_argument_group('HOG arguments:')
+groupHOG = parser.add_argument_group('HOG arguments')
 groupHOG.add_argument('-HOG', action='store_true', help='Use option to activate HOG')
 groupHOG.add_argument('--HOG_CellD', metavar='INT', action='store', help='CellDimension for local histograms', type=int, default=5)
 groupHOG.add_argument('--HOG_Orient', metavar='INT', action='store', help='Number of bins of local histograms', type=int, default=8)
@@ -93,7 +93,7 @@ if(args.HOG):
 
 # Configure Logger
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatExtr/"
-logfilename= datetime.datetime.now().strftime("%Y_%m_%d") + "-LOG-FE-" + args.name + "-" + features.replace(" ", "_").rstrip("_")
+logfilename= datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + args.name + "-" + features.replace(" ", "_").rstrip("_") + "-LOG"
 logfile = dir + logfilename
 if os.path.isfile(logfile + ".log"):
         for i in range(1,20):

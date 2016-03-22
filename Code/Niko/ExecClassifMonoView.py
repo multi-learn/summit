@@ -25,18 +25,18 @@ __date__	= 2016-03-25
 
 ### Argument Parser
 parser = argparse.ArgumentParser(
-description='This methods permits to execute a multiclass classification with one single view. At this point the used classifier is a RandomForest. The GridSearch permits to vary the number of trees and CrossValidation with k-folds.', 
+description='This methods permits to execute a multiclass classification with one single view. At this point the used classifier is a RandomForest. The GridSearch permits to vary the number of trees and CrossValidation with k-folds. The result will be a plot of the score per class and a CSV with the best classifier found by the GridSearch.', 
 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-groupStandard = parser.add_argument_group('necessary arguments:')
+groupStandard = parser.add_argument_group('necessary arguments')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Name of Database (default: %(default)s)', default='Caltech')
 groupStandard.add_argument('--feat', metavar='STRING', action='store', help='Name of Feature for Classification (default: %(default)s)', default='RGB')
-groupStandard.add_argument('--pathF', metavar='STRING', action='store', help='Path to the features (default: %(default)s)', default='Results-FeatExtr\\')
+groupStandard.add_argument('--pathF', metavar='STRING', action='store', help='Path to the features (default: %(default)s)', default='Results-FeatExtr/')
 groupStandard.add_argument('--fileCL', metavar='STRING', action='store', help='Name of classLabels CSV-file  (default: %(default)s)', default='classLabels.csv')
 groupStandard.add_argument('--fileFeat', metavar='STRING', action='store', help='Name of feature CSV-file  (default: %(default)s)', default='feature.csv')
 groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 
-groupClass = parser.add_argument_group('Classification arguments:')
+groupClass = parser.add_argument_group('Classification arguments')
 groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the the train size', type=float, default=0.8)
 groupClass.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='50 100 150 200')
 groupClass.add_argument('--CL_RF_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=8)
@@ -50,7 +50,7 @@ t_start = time.time()
 
 # Configure Logger
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
-logfilename= datetime.datetime.now().strftime("%Y_%m_%d") + "-LOG-CMV-" + args.name + "-" + args.feat
+logfilename= datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-LOG"
 logfile = dir + logfilename
 if os.path.isfile(logfile + ".log"):
         for i in range(1,20):
