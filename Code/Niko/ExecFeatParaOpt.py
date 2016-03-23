@@ -46,30 +46,30 @@ groupRGB.add_argument('--RGB_CI', metavar='INT', action='store', help='Max Color
 groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
 groupHSV = parser.add_argument_group('HSV arguments')
-groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=16)
+groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=14)
 groupHSV.add_argument('--HSV_S_Bins', metavar='INT', action='store', help='Number of bins for Saturation', type=int, default=4)
 groupHSV.add_argument('--HSV_V_Bins', metavar='INT', action='store', help='Number of bins for Value', type=int, default=4)
 groupHSV.add_argument('-HSV_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
 groupSIFT = parser.add_argument_group('SIFT arguments')
-groupSIFT.add_argument('--SIFT_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=50)
+groupSIFT.add_argument('--SIFT_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=35)
 groupSIFT.add_argument('-SIFT_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
         
 groupSURF = parser.add_argument_group('SURF arguments')
-groupSURF.add_argument('--SURF_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=50)
+groupSURF.add_argument('--SURF_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=30)
 groupSURF.add_argument('-SURF_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
 groupHOG = parser.add_argument_group('HOG arguments')
 groupHOG.add_argument('--HOG_CellD', metavar='INT', action='store', help='CellDimension for local histograms', type=int, default=5)
 groupHOG.add_argument('--HOG_Orient', metavar='INT', action='store', help='Number of bins of local histograms', type=int, default=8)
-groupHOG.add_argument('--HOG_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=12)
+groupHOG.add_argument('--HOG_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=20)
 groupHOG.add_argument('--HOG_Iter', metavar='INT', action='store', help='Max. number of iterations for clustering', type=int, default=100)
 groupHOG.add_argument('--HOG_cores', metavar='INT', action='store', help='Number of cores for HOG', type=int, default=1)
 
 groupClass = parser.add_argument_group('Classification arguments')
 groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the train size', type=float, default=0.8)
-groupClass.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='50 100 150 200')
-groupClass.add_argument('--CL_RF_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=8)
+groupClass.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='25 75 125 175')
+groupClass.add_argument('--CL_RF_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=10)
 groupClass.add_argument('--CL_RF_Cores', metavar='INT', action='store', help='Number of cores', type=int, default=1)
 
 
@@ -104,7 +104,7 @@ if os.path.isfile(logfile + ".log"):
 else:
         logfile = logfile + ".log"
 
-logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename=logfile, level=logging.DEBUG, filemode='w')
+logging.basicConfig(format='%(asctime)s %(levelname)s: % (message)s', filename=logfile, level=logging.DEBUG, filemode='w')
 
 if(args.log):     
         logging.getLogger().addHandler(logging.StreamHandler())  
@@ -115,7 +115,7 @@ if(args.log):
 logging.debug("### Main Programm for Feature Parameter Optimisation ")
 logging.debug('### Optimisation - Feature:' + str(args.feature) + " Parameter:" + str(args.param) + " from:" + str(args.valueStart) + " to:" + str(args.valueEnd) + " in #calc:" + str(args.nCalcs))
 
-logging.debug("### Start:\t Exportation of images from DB")
+logging.debug("Start:\t Exportation of images from DB")
 
 # get dictionary to link classLabels Text to Integers
 sClassLabels = DBCrawl.getClassLabels(path)
@@ -123,24 +123,24 @@ sClassLabels = DBCrawl.getClassLabels(path)
 # Get all path from all images inclusive classLabel as Integer
 dfImages,nameDB = DBCrawl.imgCrawl(path, sClassLabels, nameDB)
 
-logging.debug("### Done:\t Exportation of Images from DB ")
+logging.debug("Done:\t Exportation of Images from DB ")
 
 
 ################################ Parameter Optimisation
-logging.debug("### Start:\t Feautre Optimisation")
+logging.debug("Start:\t Feautre Optimisation")
 df_feat_res = FeatParaOpt.perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, para_SURF, para_HOG, para_Cl)
-logging.debug("### Done:\t Feautre Optimisation ")
+logging.debug("Done:\t Feautre Optimisation ")
 
 
 ################################ Render results
-logging.debug("### Start:\t Exporting to CSV ")
+logging.debug("Start:\t Exporting to CSV ")
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatParaOpt/"
 filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-FPO-" + args.name + "-" + args.feature + "-" + args.param
 ExportResults.exportPandasToCSV(df_feat_res, dir, filename)
-logging.debug("### Done:\t Exporting to CSV ")
+logging.debug("Done:\t Exporting to CSV ")
 
 # Get data from result to show results in plot
-logging.debug("### Start:\t Plot Result")
+logging.debug("Start:\t Plot Result")
 # Total time for feature extraction and classification
 tot_time = df_feat_res.b_feat_extr_time.values + df_feat_res.e_cl_time.values
 tot_time = np.asarray(tot_time)
@@ -182,7 +182,7 @@ ExportResults.showScoreTime(dir, fileName + "-TotalTime", store, score, tot_time
 ExportResults.showScoreTime(dir, fileName + "-FeatExtTime", store, score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feature, 'Precision', 'Feature Extraction Time\n [s]')
 ExportResults.showScoreTime(dir, fileName + "-ClassTime", store, score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feature, 'Precision', 'Classification Time\n [s]')
 
-logging.debug("### Done:\t Plot Result")
+logging.debug("Done:\t Plot Result")
 
 
 #print 'Les meilleurs parametres sont: ' + str(rf_detector.best_params_)

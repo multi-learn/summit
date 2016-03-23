@@ -33,6 +33,48 @@ df_feat_res = pd.DataFrame.from_csv(path="D:\\BitBucket\\multiview-machine-learn
 
 # Get data from result to show results in plot
 # Total time for feature extraction and classification
+#tot_time = df_feat_res.b_feat_extr_time.values + df_feat_res.e_cl_time.values
+#tot_time = np.asarray(tot_time)
+# Time for feature extraction
+#feat_time = df_feat_res.b_feat_extr_time.values
+#feat_time = np.asarray(feat_time)
+# Time for classification
+#cl_time = df_feat_res.e_cl_time.values
+#cl_time = np.asarray(cl_time)
+
+# Mean Score of all classes
+#score = df_feat_res.f_cl_score.values
+#score = np.asarray(score)
+
+
+# Range on X-Axis
+#if(args.nCalcs>1):
+#       step = float(args.valueEnd-args.valueStart)/float(args.nCalcs-1)
+#       rangeX = np.around(np.array(range(0,args.nCalcs))*step) + args.valueStart
+#else:
+#        rangeX = [args.valueStart]
+#rangeX = np.asarray(rangeX)
+
+# Description of Classification
+#cl_desc = df_feat_res.c_cl_desc.values
+
+# Description of Feature
+#feat_desc = df_feat_res.a_feat_desc.values
+
+#dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatParaOpt/"
+
+#fileName = dir + datetime.datetime.now().strftime("%Y_%m_%d") + "-" + "Feature_" + args.feature + "-Parameter_" + args.param
+#store = False
+
+# Show Results for Calculation
+#ExportResults.showScoreTime(fileName + "-TotalTime.png", store, score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
+#ExportResults.showScoreTime(fileName + "-FeatExtTime.png", store, score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Feature Extraction Time\n [s]')
+#ExportResults.showScoreTime(fileName + "-ClassTime.png", store, score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Classification Time\n [s]')
+
+
+# Get data from result to show results in plot
+#logging.debug("Start:\t Plot Result")
+# Total time for feature extraction and classification
 tot_time = df_feat_res.b_feat_extr_time.values + df_feat_res.e_cl_time.values
 tot_time = np.asarray(tot_time)
 # Time for feature extraction
@@ -61,12 +103,14 @@ cl_desc = df_feat_res.c_cl_desc.values
 # Description of Feature
 feat_desc = df_feat_res.a_feat_desc.values
 
-dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatParaOpt/"
+# Store or Show plot
+if(args.show):
+        store = False
+else:
+        store = True
 
-fileName = dir + datetime.datetime.now().strftime("%Y_%m_%d") + "-" + "Feature_" + args.feature + "-Parameter_" + args.param
-store = False
-
+fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FPO-" + args.name + "-" + args.feature + "-" + args.param
 # Show Results for Calculation
-ExportResults.showScoreTime(fileName + "-TotalTime.png", store, score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
-ExportResults.showScoreTime(fileName + "-FeatExtTime.png", store, score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Feature Extraction Time\n [s]')
-ExportResults.showScoreTime(fileName + "-ClassTime.png", store, score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation', 'Precision', 'Classification Time\n [s]')
+ExportResults.showScoreTime(dir, fileName + "-TotalTime", store, score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feature, 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
+ExportResults.showScoreTime(dir, fileName + "-FeatExtTime", store, score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feature, 'Precision', 'Feature Extraction Time\n [s]')
+ExportResults.showScoreTime(dir, fileName + "-ClassTime", store, score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feature, 'Precision', 'Classification Time\n [s]')

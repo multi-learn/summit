@@ -40,26 +40,26 @@ groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to a
 
 groupHSV = parser.add_argument_group('HSV arguments')
 groupHSV.add_argument('-HSV', action='store_true', help='Use option to activate HSV')
-groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=16)
+groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=14)
 groupHSV.add_argument('--HSV_S_Bins', metavar='INT', action='store', help='Number of bins for Saturation', type=int, default=4)
 groupHSV.add_argument('--HSV_V_Bins', metavar='INT', action='store', help='Number of bins for Value', type=int, default=4)
 groupHSV.add_argument('-HSV_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
 groupSIFT = parser.add_argument_group('SIFT arguments')
 groupSIFT.add_argument('-SIFT', action='store_true', help='Use option to activate SIFT')
-groupSIFT.add_argument('--SIFT_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=50)
+groupSIFT.add_argument('--SIFT_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=35)
 groupSIFT.add_argument('-SIFT_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
         
 groupSURF = parser.add_argument_group('SURF arguments')
 groupSURF.add_argument('-SURF', action='store_true', help='Use option to activate SURF')
-groupSURF.add_argument('--SURF_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=50)
+groupSURF.add_argument('--SURF_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=30)
 groupSURF.add_argument('-SURF_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
 groupHOG = parser.add_argument_group('HOG arguments')
 groupHOG.add_argument('-HOG', action='store_true', help='Use option to activate HOG')
 groupHOG.add_argument('--HOG_CellD', metavar='INT', action='store', help='CellDimension for local histograms', type=int, default=5)
 groupHOG.add_argument('--HOG_Orient', metavar='INT', action='store', help='Number of bins of local histograms', type=int, default=8)
-groupHOG.add_argument('--HOG_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=12)
+groupHOG.add_argument('--HOG_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=20)
 groupHOG.add_argument('--HOG_Iter', metavar='INT', action='store', help='Max. number of iterations for clustering', type=int, default=100)
 groupHOG.add_argument('--HOG_cores', metavar='INT', action='store', help='Number of cores for HOG', type=int, default=1)
 
@@ -104,13 +104,13 @@ if os.path.isfile(logfile + ".log"):
 else:
         logfile = logfile + ".log"
 
-logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename=logfile, level=logging.DEBUG, filemode='w')
+logging.basicConfig(format='%(asctime)s %(levelname)s: % (message)s', filename=logfile, level=logging.DEBUG, filemode='w')
 
 if(args.log):     
         logging.getLogger().addHandler(logging.StreamHandler())  
         
 logging.debug("### Main Programm for Feature Extraction ###")
-logging.debug("Infos:\t NameDB=" + nameDB + ", Path=" + path  + ", Features=" + features)
+logging.debug("### Extraction - NameDB=" + nameDB + ", Path=" + path  + ", Features=" + features)
 
 ################################ Read Images from Database
 # Determine the Database to extract features

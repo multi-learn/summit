@@ -11,7 +11,7 @@ import pandas as pd                     # for Series and DataFrames
 import logging                          # To create Log-Files  
 
 # Import own modules
-import FeatExtraction	                # Functions for Feature Extractions#
+import FeatExtraction	                # Functions for Feature Extractions
 import ClassifMonoView	                # Functions for classification
 
 # Author-Info
@@ -59,7 +59,7 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
         # for-loop from valueStart, step stepwidth, until valueEnde
         for valuePara, i in zip(valueArray,arr_Calc):
                 valuePara = int(valuePara)
-                logging.debug("### Start:\t FeatureExtraction Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " with " + parameter + "=" + str(valuePara) + " ###")
+                logging.debug("Start:\t FeatureExtraction Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " with " + parameter + "=" + str(valuePara) + " ###")
                 # TIME for Extraction
                 t_extract_start = time.time()
                 
@@ -161,7 +161,7 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                 # TIME for Extraction END
                 t_extract = time.time() - t_extract_start
                 
-                logging.debug("### Done:\t FeatureExtraction Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " ###")
+                logging.debug("Done:\t FeatureExtraction Nr:" + str(i) + " from:" + str(max(arr_Calc)) + " ###")
 
                 # TIME for CLASSIFICATION
                 t_classif_start = time.time()
@@ -179,11 +179,11 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                 # Begin Classification RandomForest
                 # call function: return fitted model
                 
-                logging.debug("### Start:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)))
+                logging.debug("Start:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)))
                 
                 cl_desc, cl_res = ClassifMonoView.calcClassifRandomForestCV(X_train, y_train, num_estimators, cv_folds, clas_cores)
                     
-                logging.debug("### Done:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)))
+                logging.debug("Done:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)))
 		
                 # TIME for CLASSIFICATION END
                 t_classif = time.time() - t_classif_start

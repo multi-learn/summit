@@ -3,7 +3,7 @@
 """ Execution: Script to perform a MonoView classification """
 
 # Import built-in modules
-import argparse                         # for acommand line arguments
+import argparse                         # for command line arguments
 import time                             # for time calculations
 import datetime                         # for TimeStamp in CSVFile
 import os                               # to geth path of the running script
@@ -38,8 +38,8 @@ groupStandard.add_argument('-log', action='store_true', help='Use option to acti
 
 groupClass = parser.add_argument_group('Classification arguments')
 groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the the train size', type=float, default=0.8)
-groupClass.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='50 100 150 200')
-groupClass.add_argument('--CL_RF_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=8)
+groupClass.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='25 75 125 175')
+groupClass.add_argument('--CL_RF_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=10)
 groupClass.add_argument('--CL_RF_Cores', metavar='INT', action='store', help='Number of cores', type=int, default=1)
 
 args = parser.parse_args()
@@ -61,35 +61,35 @@ if os.path.isfile(logfile + ".log"):
 else:
         logfile = logfile + ".log"
 
-logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename=logfile, level=logging.DEBUG, filemode='w')
+logging.basicConfig(format='%(asctime)s %(levelname)s: % (message)s', filename=logfile, level=logging.DEBUG, filemode='w')
 
 if(args.log):     
         logging.getLogger().addHandler(logging.StreamHandler())  
 
 # Determine the Database to extract features
 logging.debug("### Main Programm for Classification MonoView")
-logging.debug("### Info: Database:" + str(args.name) + " Feature:" + str(args.feat) + " train_size:" + str(args.CL_split) + ", GridSearch of Trees:" + args.CL_RF_trees + ", CrossValidation k-folds:" + str(args.CL_RF_CV) + ", cores:" + str(args.CL_RF_Cores))
+logging.debug("### Classification - Database:" + str(args.name) + " Feature:" + str(args.feat) + " train_size:" + str(args.CL_split) + ", GridSearch of Trees:" + args.CL_RF_trees + ", CrossValidation k-folds:" + str(args.CL_RF_CV) + ", cores:" + str(args.CL_RF_Cores))
 
 # Einlesen von Features
-logging.debug("### Start:\t Read CSV Files")
+logging.debug("Start:\t Read CSV Files")
 
 X = np.genfromtxt(args.pathF + args.fileFeat, delimiter=';')
 Y = np.genfromtxt(args.pathF + args.fileCL, delimiter=';')
 
-logging.debug("### Info:\t Shape of Feature:" + str(X.shape) + ", Length of classLabels vector:" + str(Y.shape))
-logging.debug("### Done:\t Read CSV Files")
+logging.debug("Info:\t Shape of Feature:" + str(X.shape) + ", Length of classLabels vector:" + str(Y.shape))
+logging.debug("Done:\t Read CSV Files")
 
 # Calculate Train/Test data
-logging.debug("### Start:\t Determine Train/Test split")
+logging.debug("Start:\t Determine Train/Test split")
 
 X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(X, Y, args.CL_split)
 
-logging.debug("### Info:\t Shape X_train:" + str(X_train.shape) + ", Length of y_train:" + str(len(y_train)))
-logging.debug("### Info:\t Shape X_test:" + str(X_test.shape) + ", Length of y_test:" + str(len(y_test)))
-logging.debug("### Done:\t Determine Train/Test split")
+logging.debug("Info:\t Shape X_train:" + str(X_train.shape) + ", Length of y_train:" + str(len(y_train)))
+logging.debug("Info:\t Shape X_test:" + str(X_test.shape) + ", Length of y_test:" + str(len(y_test)))
+logging.debug("Done:\t Determine Train/Test split")
 
 # Begin Classification RandomForest
-logging.debug("### Start:\t Classification")
+logging.debug("Start:\t Classification")
 
 cl_desc, cl_res = ClassifMonoView.calcClassifRandomForestCV(X_train, y_train, num_estimators, args.CL_RF_CV, args.CL_RF_Cores)
 t_end  = time.time() - t_start
@@ -99,22 +99,22 @@ df_class_res = pd.DataFrame()
 df_class_res = df_class_res.append({'a_class_time':t_end, 'b_cl_desc': cl_desc, 'c_cl_res': cl_res, 
                                                 'd_cl_score': cl_res.best_score_}, ignore_index=True)
 
-logging.debug("### Info:\t Time for Classification: " + str(t_end) + "[s]")
-logging.debug("### End:\t Classification")
+logging.debug("Info:\t Time for Classification: " + str(t_end) + "[s]")
+logging.debug("End:\t Classification")
 
 # CSV Export
-logging.debug("### Start:\t Exporting to CSV")
+logging.debug("Start:\t Exporting to CSV")
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
 filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat
 ExportResults.exportPandasToCSV(df_class_res, dir, filename)
-logging.debug("### Done:\t Exporting to CSV")
+logging.debug("Done:\t Exporting to CSV")
 
 # Plot Result
-logging.debug("### Start:\t Plot Result")
+logging.debug("Start:\t Plot Result")
 np_score = ExportResults.calcScorePerClass(y_test, cl_res.predict(X_test).astype(int))
 ### dir and filename the same as CSV Export
 ExportResults.showResults(dir, filename, args.name, args.feat, np_score)
-logging.debug("### Done:\t Plot Result")
+logging.debug("Done:\t Plot Result")
 
 
 
