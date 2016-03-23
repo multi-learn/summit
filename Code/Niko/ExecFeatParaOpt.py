@@ -34,21 +34,21 @@ groupStandard.add_argument('-log', action='store_true', help='Use option to acti
 groupStandard.add_argument('-show', action='store_true', help='Use option to show results instead of saving it')
 
 groupOpt = parser.add_argument_group('Optimisation arguments')
-groupOpt.add_argument('--feature', choices=['RGB', 'HSV', 'SURF', 'SIFT', 'HOG'], help='Set feature from list (RGB, HSV, ..)', default='RGB')
-groupOpt.add_argument('--param', choices=['RGB_Bins', 'RGB_MaxCI', 'HSV_H_Bins', 'HSV_S_Bins', 'HSV_V_Bins', 'SIFT_Cluster', 'SURF_Cluster', 'HOG_Cluster'], help='Parameter to optimise (remember depends on feature)', default='RGB_Bins')
+groupOpt.add_argument('--feat', choices=['RGB', 'HSV', 'SURF', 'SIFT', 'HOG'], help='Set feature from list (RGB, HSV, ..)', default='RGB')
+groupOpt.add_argument('--param', choices=['RGB_Bins', 'RGB_CI', 'HSV_H_Bins', 'HSV_S_Bins', 'HSV_V_Bins', 'SIFT_Cluster', 'SURF_Cluster', 'HOG_Cluster'], help='Parameter to optimise (remember depends on feature)', default='RGB_Bins')
 groupOpt.add_argument('--valueStart', metavar='INT', action='store', help='Start-Value for optimisation range', type=int)
 groupOpt.add_argument('--valueEnd', metavar='INT', action='store', help='End-Value for optimisation range', type=int)
 groupOpt.add_argument('--nCalcs', metavar='INT', action='store', help='Number of calculations between Start and End-Value', type=int)
 
 groupRGB = parser.add_argument_group('RGB arguments')
-groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=25)
+groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=16)
 groupRGB.add_argument('--RGB_CI', metavar='INT', action='store', help='Max Color Intensity [0 to VALUE]', type=int, default=256)
 groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
 groupHSV = parser.add_argument_group('HSV arguments')
-groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=14)
-groupHSV.add_argument('--HSV_S_Bins', metavar='INT', action='store', help='Number of bins for Saturation', type=int, default=4)
-groupHSV.add_argument('--HSV_V_Bins', metavar='INT', action='store', help='Number of bins for Value', type=int, default=4)
+groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=16)
+groupHSV.add_argument('--HSV_S_Bins', metavar='INT', action='store', help='Number of bins for Saturation', type=int, default=16)
+groupHSV.add_argument('--HSV_V_Bins', metavar='INT', action='store', help='Number of bins for Value', type=int, default=16)
 groupHSV.add_argument('-HSV_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
 groupSIFT = parser.add_argument_group('SIFT arguments')
@@ -79,7 +79,7 @@ args = parser.parse_args()
 path = args.path
 nameDB = args.name
 
-para_opt = [args.feature, args.param, args.valueStart, args.valueEnd, args.nCalcs]
+para_opt = [args.feat, args.param, args.valueStart, args.valueEnd, args.nCalcs]
 para_RGB = [args.RGB_Bins, args.RGB_CI, args.RGB_NMinMax]
 para_HSV = [args.HSV_H_Bins, args.HSV_S_Bins, args.HSV_V_Bins, args.HSV_NMinMax]
 para_SIFT = [args.SIFT_Cluster, args.SIFT_NMinMax]
@@ -93,7 +93,7 @@ para_Cl = [args.CL_split, map(int, args.CL_RF_trees.split()), args.CL_RF_CV, arg
 
 # Configure Logger
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatParaOpt/"
-logfilename= datetime.datetime.now().strftime("%Y_%m_%d") + "-FPO-" + args.name + "-" + args.feature + "-" + args.param + "-LOG"
+logfilename= datetime.datetime.now().strftime("%Y_%m_%d") + "-FPO-" + args.name + "-" + args.feat + "-" + args.param + "-LOG"
 logfile = dir + logfilename
 if os.path.isfile(logfile + ".log"):
         for i in range(1,20):
@@ -104,7 +104,7 @@ if os.path.isfile(logfile + ".log"):
 else:
         logfile = logfile + ".log"
 
-logging.basicConfig(format='%(asctime)s %(levelname)s: % (message)s', filename=logfile, level=logging.DEBUG, filemode='w')
+logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logfile, level=logging.DEBUG, filemode='w')
 
 if(args.log):     
         logging.getLogger().addHandler(logging.StreamHandler())  
@@ -113,7 +113,7 @@ if(args.log):
 # Determine the Database to extract features
 
 logging.debug("### Main Programm for Feature Parameter Optimisation ")
-logging.debug('### Optimisation - Feature:' + str(args.feature) + " Parameter:" + str(args.param) + " from:" + str(args.valueStart) + " to:" + str(args.valueEnd) + " in #calc:" + str(args.nCalcs))
+logging.debug('### Optimisation - Feature:' + str(args.feat) + " Parameter:" + str(args.param) + " from:" + str(args.valueStart) + " to:" + str(args.valueEnd) + " in #calc:" + str(args.nCalcs))
 
 logging.debug("Start:\t Exportation of images from DB")
 
@@ -135,7 +135,7 @@ logging.debug("Done:\t Feautre Optimisation ")
 ################################ Render results
 logging.debug("Start:\t Exporting to CSV ")
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatParaOpt/"
-filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-FPO-" + args.name + "-" + args.feature + "-" + args.param
+filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-FPO-" + args.name + "-" + args.feat + "-" + args.param
 ExportResults.exportPandasToCSV(df_feat_res, dir, filename)
 logging.debug("Done:\t Exporting to CSV ")
 
@@ -176,11 +176,11 @@ if(args.show):
 else:
         store = True
 
-fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FPO-" + args.name + "-" + args.feature + "-" + args.param
+fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FPO-" + args.name + "-" + args.feat + "-" + args.param
 # Show Results for Calculation
-ExportResults.showScoreTime(dir, fileName + "-TotalTime", store, score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feature, 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
-ExportResults.showScoreTime(dir, fileName + "-FeatExtTime", store, score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feature, 'Precision', 'Feature Extraction Time\n [s]')
-ExportResults.showScoreTime(dir, fileName + "-ClassTime", store, score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feature, 'Precision', 'Classification Time\n [s]')
+ExportResults.showScoreTime(dir, fileName + "-TotalTime", store, score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feat, 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
+ExportResults.showScoreTime(dir, fileName + "-FeatExtTime", store, score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feat, 'Precision', 'Feature Extraction Time\n [s]')
+ExportResults.showScoreTime(dir, fileName + "-ClassTime", store, score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feat, 'Precision', 'Classification Time\n [s]')
 
 logging.debug("Done:\t Plot Result")
 

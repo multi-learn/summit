@@ -34,15 +34,15 @@ groupStandard.add_argument('-log', action='store_true', help='Use option to acti
 
 groupRGB = parser.add_argument_group('RGB arguments')
 groupRGB.add_argument('-RGB', action='store_true', help='Use option to activate RGB')
-groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=25)
+groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=16)
 groupRGB.add_argument('--RGB_CI', metavar='INT', action='store', help='Max Color Intensity [0 to VALUE]', type=int, default=256)
 groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
 groupHSV = parser.add_argument_group('HSV arguments')
 groupHSV.add_argument('-HSV', action='store_true', help='Use option to activate HSV')
-groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=14)
-groupHSV.add_argument('--HSV_S_Bins', metavar='INT', action='store', help='Number of bins for Saturation', type=int, default=4)
-groupHSV.add_argument('--HSV_V_Bins', metavar='INT', action='store', help='Number of bins for Value', type=int, default=4)
+groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=16)
+groupHSV.add_argument('--HSV_S_Bins', metavar='INT', action='store', help='Number of bins for Saturation', type=int, default=16)
+groupHSV.add_argument('--HSV_V_Bins', metavar='INT', action='store', help='Number of bins for Value', type=int, default=16)
 groupHSV.add_argument('-HSV_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 
 groupSIFT = parser.add_argument_group('SIFT arguments')
@@ -104,7 +104,7 @@ if os.path.isfile(logfile + ".log"):
 else:
         logfile = logfile + ".log"
 
-logging.basicConfig(format='%(asctime)s %(levelname)s: % (message)s', filename=logfile, level=logging.DEBUG, filemode='w')
+logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logfile, level=logging.DEBUG, filemode='w')
 
 if(args.log):     
         logging.getLogger().addHandler(logging.StreamHandler())  
@@ -138,7 +138,7 @@ if(args.RGB):
         t_rgb_start = time.time()
                 
         # Infos
-        logging.debug("RGB:\t NumberOfBins=" + str(args.RGB_Bins) + ", MaxColorIntensity=" + str(args.RGB_CI) + ", Norm=" + boolNormToStr(args.RGB_NMinMax))
+        logging.debug("RGB:\t NumberOfBins=" + str(args.RGB_Bins) + ", ColorIntensity=" + str(args.RGB_CI) + ", Norm=" + boolNormToStr(args.RGB_NMinMax))
          
         # Extract Feature from DB
         rgb_feat_desc,rgb_f_extr_res = FeatExtraction.calcRGBColorHisto(nameDB, dfImages, args.RGB_Bins, args.RGB_CI, args.RGB_NMinMax)

@@ -77,7 +77,7 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                         # ParamaterTest
                         if(parameter=="RGB_Bins"):
                                 numberOfBins = valuePara
-                        elif(parameter=="RGB_MaxCI"):
+                        elif(parameter=="RGB_CI"):
                                 maxColorIntensity = valuePara
 		
                         # Extract Feature from DB

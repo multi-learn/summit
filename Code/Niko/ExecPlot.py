@@ -28,10 +28,10 @@ args.name = "Caltech"
 args.valueStart = 2
 args.valueEnd = 25
 args.nCalcs = 5
-args.feature = "HOG"
-args.param = "HOG_Cluster"
+args.feature = "HSV"
+args.param = "HSV_V_Bins"
 args.show = False
-df_feat_res = pd.DataFrame.from_csv(path="D:\\BitBucket\\multiview-machine-learning-omis\\Results\\Hydra\\2016_03_22-FPO-Caltech-HOG-HOG_Cluster.csv", sep=';')
+df_feat_res = pd.DataFrame.from_csv(path="D:\\BitBucket\\multiview-machine-learning-omis\\Results\\Hydra\\2016_03_23-FPO-Caltech-HSV-HSV_V_Bins.csv", sep=';')
 
 
 # Get data from result to show results in plot
