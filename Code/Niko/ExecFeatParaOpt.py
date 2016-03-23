@@ -41,7 +41,7 @@ groupOpt.add_argument('--valueEnd', metavar='INT', action='store', help='End-Val
 groupOpt.add_argument('--nCalcs', metavar='INT', action='store', help='Number of calculations between Start and End-Value', type=int)
 
 groupRGB = parser.add_argument_group('RGB arguments')
-groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=16)
+groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=25)
 groupRGB.add_argument('--RGB_CI', metavar='INT', action='store', help='Max Color Intensity [0 to VALUE]', type=int, default=256)
 groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 

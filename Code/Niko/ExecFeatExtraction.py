@@ -34,7 +34,7 @@ groupStandard.add_argument('-log', action='store_true', help='Use option to acti
 
 groupRGB = parser.add_argument_group('RGB arguments')
 groupRGB.add_argument('-RGB', action='store_true', help='Use option to activate RGB')
-groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=16)
+groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=25)
 groupRGB.add_argument('--RGB_CI', metavar='INT', action='store', help='Max Color Intensity [0 to VALUE]', type=int, default=256)
 groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 

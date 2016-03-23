@@ -15,12 +15,13 @@ from skimage.feature import hog
 from sklearn.cluster import MiniBatchKMeans
 import multiprocessing as mp                    #to count cores https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool
 from joblib import Parallel, delayed
+import logging                                  # To create Log-Files  
 
 # Import own modules
 import DBCrawl
 
 # Author-Info
-__author__ 	= "Baptiste Bauvin"
+__author__ 	= "Baptiste Bauvin and co-author Nikolas Huelsmann"
 __status__ 	= "?"                           # Production, Development, Prototype
 __date__	= "?"
 
@@ -140,32 +141,32 @@ if __name__ == '__main__':
   MAXITER = 100
   NB_CORES = mp.cpu_count()
 
-  print "Fetching Images in " + path
+  logging.debug("Fetching Images in " + path)
   # get dictionary to link classLabels Text to Integers
   sClassLabels = getClassLabels(path)
   # # Get all path from all images inclusive classLabel as Integer
   dfImages = imgCrawl(path, sClassLabels)
   npImages = dfImages.values
   extractedTime = time.time()
-  print "Extracted images in " + str(extractedTime-start) +'sec'
-  print "Sequencing Images ..."
+  logging.debug("Extracted images in " + str(extractedTime-start) +'sec')
+  logging.debug("Sequencing Images ...")
   cells = corpusSequencing(npImages, CELL_DIMENSION, NB_CORES)
   sequencedTime = time.time()
-  print "Sequenced images in " + str(sequencedTime-extractedTime) +'sec'
-  print "Computing gradient on each block ..."
+  logging.debug("Sequenced images in " + str(sequencedTime-extractedTime) +'sec')
+  logging.debug("Computing gradient on each block ...")
   gradients = computeLocalHistograms(cells, NB_ORIENTATIONS, CELL_DIMENSION, NB_CORES)
   hogedTime = time.time()
-  print "Computed gradients in " + str(hogedTime - sequencedTime) + 'sec'
-  print "Clustering gradients ..."
+  logging.debug("Computed gradients in " + str(hogedTime - sequencedTime) + 'sec')
+  logging.debug("Clustering gradients ...")
   gradientLabels, sizes = clusterGradients(gradients, NB_CLUSTERS, MAXITER)
   clusteredItme = time.time()
-  print "Clustered gradients in " + str(hogedTime - sequencedTime) + 'sec'
-  print "Computing histograms ..."
+  logging.debug("Clustered gradients in " + str(hogedTime - sequencedTime) + 'sec')
+  logging.debug("Computing histograms ...")
   histograms = makeHistograms(gradientLabels, NB_CLUSTERS, sizes)
   end = time.time()
-  print "Computed histograms in " + str(int(end - hogedTime)) + 'sec'
-  print "Histogram shape : " +str(histograms.shape)
-  print "Total time : " + str(end-start) + 'sec'
+  logging.debug("Computed histograms in " + str(int(end - hogedTime)) + 'sec')
+  logging.debug("Histogram shape : " +str(histograms.shape))
+  logging.debug("Total time : " + str(end-start) + 'sec')
   #hogs = extractHOGFeature(testNpImages, CELL_DIMENSION, \
   #                         NB_ORIENTATIONS, NB_CLUSTERS, MAXITER)
   
