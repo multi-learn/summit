@@ -1,0 +1,138 @@
+2016-03-24 21:12:30,552 DEBUG: ### Main Programm for Classification MonoView
+2016-03-24 21:12:30,552 DEBUG: ### Classification - Database:Caltech Feature:HSV train_size:0.8, GridSearch of Trees:25 75 125 175, CrossValidation k-folds:10, cores:1
+2016-03-24 21:12:30,552 DEBUG: Start:	 Read CSV Files
+2016-03-24 21:12:31,628 DEBUG: Info:	 Shape of Feature:(9144L, 48L), Length of classLabels vector:(9144L,)
+2016-03-24 21:12:31,630 DEBUG: Done:	 Read CSV Files
+2016-03-24 21:12:31,630 DEBUG: Start:	 Determine Train/Test split
+2016-03-24 21:12:31,634 DEBUG: Info:	 Shape X_train:(7315L, 48L), Length of y_train:7315
+2016-03-24 21:12:31,634 DEBUG: Info:	 Shape X_test:(1829L, 48L), Length of y_test:1829
+2016-03-24 21:12:31,634 DEBUG: Done:	 Determine Train/Test split
+2016-03-24 21:12:31,634 DEBUG: Start:	 Classification
+2016-03-24 21:18:27,650 DEBUG: Info:	 Time for Classification: 357.092999935[s]
+2016-03-24 21:18:27,650 DEBUG: Done:	 Classification
+2016-03-24 21:18:27,650 DEBUG: Start:	 Exporting to CSV
+2016-03-24 21:18:27,671 DEBUG: Done:	 Exporting to CSV
+2016-03-24 21:18:27,948 DEBUG: Start:	 Statistic Results
+2016-03-24 21:18:27,950 DEBUG: Info:	 Classification report:
+2016-03-24 21:18:27,980 DEBUG: 
+                   precision    recall  f1-score   support
+
+        accordion       0.17      0.50      0.25         8
+        airplanes       0.43      0.88      0.57       160
+           anchor       0.50      0.18      0.27        11
+              ant       0.00      0.00      0.00         4
+BACKGROUND_Google       0.11      0.31      0.16        75
+           barrel       0.00      0.00      0.00        13
+             bass       0.00      0.00      0.00        11
+           beaver       0.00      0.00      0.00         7
+        binocular       1.00      0.14      0.25         7
+           bonsai       0.36      0.15      0.21        27
+            brain       0.40      0.30      0.34        20
+     brontosaurus       0.00      0.00      0.00        10
+           buddha       0.17      0.06      0.09        16
+        butterfly       0.25      0.05      0.08        22
+           camera       0.00      0.00      0.00         7
+           cannon       0.00      0.00      0.00        10
+         car_side       0.50      0.77      0.61        22
+      ceiling_fan       0.50      0.09      0.15        11
+        cellphone       0.00      0.00      0.00        17
+            chair       0.00      0.00      0.00         7
+       chandelier       0.10      0.04      0.06        23
+      cougar_body       0.00      0.00      0.00        11
+      cougar_face       0.00      0.00      0.00        16
+             crab       0.20      0.07      0.11        14
+         crayfish       0.33      0.05      0.08        21
+        crocodile       0.00      0.00      0.00         7
+   crocodile_head       0.00      0.00      0.00         8
+              cup       0.00      0.00      0.00        11
+        dalmatian       0.17      0.07      0.10        15
+      dollar_bill       0.25      0.19      0.21        16
+          dolphin       0.25      0.12      0.16        17
+        dragonfly       0.00      0.00      0.00        14
+  electric_guitar       1.00      0.07      0.13        14
+         elephant       0.33      0.15      0.21        13
+              emu       0.00      0.00      0.00        13
+        euphonium       0.25      0.14      0.18        14
+             ewer       0.00      0.00      0.00        21
+            Faces       0.29      0.57      0.38        95
+       Faces_easy       0.37      0.85      0.52        87
+            ferry       0.50      0.09      0.15        11
+         flamingo       0.50      0.20      0.29        10
+    flamingo_head       0.00      0.00      0.00         4
+         garfield       0.50      0.12      0.20         8
+          gerenuk       0.50      0.20      0.29         5
+       gramophone       0.00      0.00      0.00        11
+      grand_piano       0.31      0.19      0.24        26
+        hawksbill       0.36      0.23      0.28        22
+        headphone       0.00      0.00      0.00         6
+         hedgehog       0.00      0.00      0.00        12
+       helicopter       0.00      0.00      0.00        13
+             ibis       0.00      0.00      0.00        15
+     inline_skate       1.00      0.12      0.22         8
+      joshua_tree       0.00      0.00      0.00        11
+         kangaroo       0.00      0.00      0.00        12
+            ketch       0.29      0.30      0.29        20
+             lamp       0.00      0.00      0.00        13
+           laptop       0.00      0.00      0.00        13
+         Leopards       0.63      1.00      0.77        46
+            llama       0.00      0.00      0.00        18
+          lobster       0.00      0.00      0.00         7
+            lotus       0.67      0.17      0.27        12
+         mandolin       0.00      0.00      0.00         8
+           mayfly       1.00      0.14      0.25         7
+          menorah       0.20      0.06      0.09        18
+        metronome       1.00      0.29      0.44         7
+          minaret       0.39      0.47      0.42        15
+       Motorbikes       0.50      0.92      0.65       154
+         nautilus       1.00      0.14      0.25        14
+          octopus       0.75      0.33      0.46         9
+            okapi       0.00      0.00      0.00         7
+           pagoda       0.33      0.07      0.12        14
+            panda       0.00      0.00      0.00        10
+           pigeon       0.00      0.00      0.00         7
+            pizza       0.00      0.00      0.00        12
+         platypus       0.00      0.00      0.00         6
+          pyramid       0.00      0.00      0.00        13
+         revolver       0.00      0.00      0.00        13
+            rhino       0.00      0.00      0.00        12
+          rooster       0.00      0.00      0.00         8
+        saxophone       0.00      0.00      0.00        11
+         schooner       0.33      0.08      0.13        12
+         scissors       0.00      0.00      0.00         7
+         scorpion       0.33      0.14      0.19        22
+        sea_horse       0.00      0.00      0.00        12
+           snoopy       0.40      0.50      0.44         4
+      soccer_ball       0.12      0.20      0.15         5
+          stapler       0.00      0.00      0.00        14
+         starfish       0.08      0.06      0.07        17
+      stegosaurus       0.17      0.12      0.14         8
+        stop_sign       0.57      0.27      0.36        15
+       strawberry       1.00      0.12      0.22         8
+        sunflower       0.38      0.33      0.35        18
+             tick       0.17      0.12      0.14         8
+        trilobite       0.36      0.60      0.45        20
+         umbrella       0.14      0.06      0.09        16
+            watch       0.22      0.25      0.24        40
+      water_lilly       1.00      0.12      0.22         8
+       wheelchair       0.00      0.00      0.00        12
+         wild_cat       0.00      0.00      0.00         7
+    windsor_chair       0.00      0.00      0.00        13
+           wrench       0.00      0.00      0.00         8
+         yin_yang       0.50      0.42      0.45        12
+
+      avg / total       0.28      0.34      0.26      1829
+
+2016-03-24 21:18:27,992 DEBUG: Info:	 Statistics:
+2016-03-24 21:18:28,009 DEBUG: 
+                                          Statistic                                             Values
+0                            Accuracy score on test                                     0.338983050847
+1                        Top 10 classes by F1-Score  [Leopards, Motorbikes, car_side, airplanes, Fa...
+2                      Worst 10 classes by F1-Score  [ibis, ewer, pyramid, flamingo_head, gramophon...
+3  Ratio of classes with F1-Score==0 of all classes                                           0.460784
+4    Mean of F1-Score of top 10 classes by F1-Score                                           0.537674
+5    Mean of F1-Score of top 20 classes by F1-Score                                           0.432666
+6    Mean of F1-Score of top 30 classes by F1-Score                                           0.368668
+2016-03-24 21:18:28,009 DEBUG: Info:	 Calculate Confusionmatrix
+2016-03-24 21:18:29,839 DEBUG: Done:	 Statistic Results
+2016-03-24 21:18:29,841 DEBUG: Start:	 Plot Result
+2016-03-24 21:18:30,710 DEBUG: Done:	 Plot Result

@@ -26,6 +26,7 @@ __date__	= 2016-03-25
 def exportPandasToCSV(pandasSorDF, dir, filename):
         file = dir + filename
     
+        # Makes sure that the file does not yet exist 
         if os.path.isfile(file + ".csv"):
                 for i in range(1,20):
                         testFileName = filename  + "-" + str(i) + ".csv"
@@ -40,6 +41,7 @@ def exportPandasToCSV(pandasSorDF, dir, filename):
 def exportNumpyToCSV(numpyArray, dir, filename, format):
         file = dir + filename
     
+        # Makes sure that the file does not yet exist 
         if os.path.isfile(file + ".csv"):
                 for i in range(1,20):
                         testFileName = filename  + "-" + str(i) + ".csv"
@@ -118,6 +120,7 @@ def showScoreTime(dir, filename, store, resScore, resTime, rangeX, parameter, fe
         plt.title(fig_desc, fontsize=18)
         
         if(store):
+                # Makes sure that the file does not yet exist 
                 file = dir + filename
                 
                 if os.path.isfile(file + ".png"):
@@ -131,6 +134,8 @@ def showScoreTime(dir, filename, store, resScore, resTime, rangeX, parameter, fe
                         plt.savefig(file)
         else: 
                 plt.show()
+                
+        plt.close()
             
 
 ### Result comparision per class
@@ -153,11 +158,12 @@ def calcScorePerClass(np_labels, np_output):
 def showResults(dir, filename, db, feat, score):
         plt.bar(range(0,len(score)), score*100,1)
         plt.xlabel('ClassLabels')
-        plt.ylabel('Score in %')
+        plt.ylabel('Precision in %')
         plt.title('Results of ' + feat + '-Classification\n for ' + db + ' Database')
         plt.axis([0, len(score), 0, 100])
         plt.xticks(range(0,len(score),5))
         
+        # Makes sure that the file does not yet exist 
         file = dir + filename
     
         if os.path.isfile(file + ".png"):
@@ -169,9 +175,9 @@ def showResults(dir, filename, db, feat, score):
 
         else:
                 plt.savefig(file)
-        
-        
-        
+                
+                
+        plt.close()
         
         
         #instead of saving - decomment plt.show()
@@ -234,6 +240,10 @@ def plot_confusion_matrix(dir, filename, df_confusion, title='Confusion matrix',
     	plt.ylabel(df_confusion.index.name)
     	plt.xlabel(df_confusion.columns.name)
         
+        # Makes sure that the file does not yet exist 
+        
+        file = dir + filename
+        
         if os.path.isfile(file + ".png"):
                 for i in range(1,20):
                         testFileName = filename  + "-" + str(i) + ".png"
@@ -243,29 +253,36 @@ def plot_confusion_matrix(dir, filename, df_confusion, title='Confusion matrix',
 
         else:
                 plt.savefig(file)
+               
+        plt.close()
         
 
-def classification_stats(dir,filename,scores_df):   
+def classification_stats(dir,filename,scores_df,acc):   
+        # Accuracy on test over all classes
+        acc = acc
+        
         # Top 10 classes by F1-Score
-        top10 =  scores_df.sort(columns="F1", ascending=False).head(10).ix[:,0]
+        top10 =  scores_df.sort_values(["F1"], ascending=False).head(10)
+        top10 = list(top10.index)
 
         # Worst 10 classes by F1-Score
-        worst10 = scores_df.sort(columns="F1", ascending=True).head(10).ix[:,0]
+        worst10 = scores_df.sort_values(["F1"], ascending=True).head(10)
+        worst10 = list(worst10.index)
 
         # Ratio of classes with F1-Score==0 of all classes
         ratio_zero = float(float(len(scores_df[scores_df.F1 == 0]))/float(len(scores_df)))
 
         # Mean of F1-Score of top 10 classes by F1-Score
-        mean_10 = np.mean(scores_df.sort(columns="F1", ascending=False).head(10).F1)
+        mean_10 = np.mean(scores_df.sort_values(["F1"], ascending=False).head(10).F1)
 
         # Mean of F1-Score of top 20 classes by F1-Score
-        mean_20 = np.mean(scores_df.sort(columns="F1", ascending=False).head(20).F1)
+        mean_20 = np.mean(scores_df.sort_values(["F1"], ascending=False).head(20).F1)
 
         # Mean of F1-Score of top 30 classes by F1-Score
-        mean_30 = np.mean(scores_df.sort(columns="F1", ascending=False).head(30).F1)
+        mean_30 = np.mean(scores_df.sort_values(["F1"], ascending=False).head(30).F1)
 
         # Create DataFrame with stats
-        d = {'Statistic' : ['Top 10 classes by F1-Score', 'Worst 10 classes by F1-Score', 'Ratio of classes with F1-Score==0 of all classes', 'Mean of F1-Score of top 10 classes by F1-Score', 'Mean of F1-Score of top 20 classes by F1-Score', 'Mean of F1-Score of top 30 classes by F1-Score'], 'Values' : [top10, worst10, ratio_zero, mean_10, mean_20, mean_30]}
+        d = {'Statistic' : ['Accuracy score on test', 'Top 10 classes by F1-Score', 'Worst 10 classes by F1-Score', 'Ratio of classes with F1-Score==0 of all classes', 'Mean of F1-Score of top 10 classes by F1-Score', 'Mean of F1-Score of top 20 classes by F1-Score', 'Mean of F1-Score of top 30 classes by F1-Score'], 'Values' : [acc,top10, worst10, ratio_zero, mean_10, mean_20, mean_30]}
         df_stats = pd.DataFrame(d)
         
         # Store result as CSV

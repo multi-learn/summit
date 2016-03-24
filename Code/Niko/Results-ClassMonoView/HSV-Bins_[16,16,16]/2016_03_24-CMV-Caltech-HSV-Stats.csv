@@ -1,0 +1,8 @@
+;Statistic;Values
+0;Accuracy score on test;0.338983050847
+1;Top 10 classes by F1-Score;['Leopards', 'Motorbikes', 'car_side', 'airplanes', 'Faces_easy', 'octopus', 'yin_yang', 'trilobite', 'snoopy', 'metronome']
+2;Worst 10 classes by F1-Score;['ibis', 'ewer', 'pyramid', 'flamingo_head', 'gramophone', 'headphone', 'hedgehog', 'helicopter', 'wrench', 'joshua_tree']
+3;Ratio of classes with F1-Score==0 of all classes;0.46078431372549017
+4;Mean of F1-Score of top 10 classes by F1-Score;0.5376739467946424
+5;Mean of F1-Score of top 20 classes by F1-Score;0.43266570774329527
+6;Mean of F1-Score of top 30 classes by F1-Score;0.36866789479805107

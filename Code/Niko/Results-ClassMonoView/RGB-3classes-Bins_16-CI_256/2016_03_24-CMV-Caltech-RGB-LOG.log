@@ -1,0 +1,39 @@
+2016-03-24 20:48:30,572 DEBUG: ### Main Programm for Classification MonoView
+2016-03-24 20:48:30,572 DEBUG: ### Classification - Database:Caltech Feature:RGB train_size:0.8, GridSearch of Trees:25 75 125 175, CrossValidation k-folds:10, cores:1
+2016-03-24 20:48:30,573 DEBUG: Start:	 Read CSV Files
+2016-03-24 20:48:30,641 DEBUG: Info:	 Shape of Feature:(896L, 48L), Length of classLabels vector:(896L,)
+2016-03-24 20:48:30,641 DEBUG: Done:	 Read CSV Files
+2016-03-24 20:48:30,641 DEBUG: Start:	 Determine Train/Test split
+2016-03-24 20:48:30,642 DEBUG: Info:	 Shape X_train:(716L, 48L), Length of y_train:716
+2016-03-24 20:48:30,642 DEBUG: Info:	 Shape X_test:(180L, 48L), Length of y_test:180
+2016-03-24 20:48:30,642 DEBUG: Done:	 Determine Train/Test split
+2016-03-24 20:48:30,644 DEBUG: Start:	 Classification
+2016-03-24 20:48:40,447 DEBUG: Info:	 Time for Classification: 9.86699986458[s]
+2016-03-24 20:48:40,447 DEBUG: Done:	 Classification
+2016-03-24 20:48:40,447 DEBUG: Start:	 Exporting to CSV
+2016-03-24 20:48:40,453 DEBUG: Done:	 Exporting to CSV
+2016-03-24 20:48:40,464 DEBUG: Start:	 Statistic Results
+2016-03-24 20:48:40,466 DEBUG: Info:	 Classification report:
+2016-03-24 20:48:40,467 DEBUG: 
+             precision    recall  f1-score   support
+
+  accordion       1.00      1.00      1.00         6
+  airplanes       0.96      1.00      0.98       165
+     anchor       1.00      0.22      0.36         9
+
+avg / total       0.96      0.96      0.95       180
+
+2016-03-24 20:48:40,471 DEBUG: Info:	 Statistics:
+2016-03-24 20:48:40,483 DEBUG: 
+                                          Statistic                          Values
+0                            Accuracy score on test                  0.961111111111
+1                        Top 10 classes by F1-Score  [accordion, airplanes, anchor]
+2                      Worst 10 classes by F1-Score  [anchor, airplanes, accordion]
+3  Ratio of classes with F1-Score==0 of all classes                               0
+4    Mean of F1-Score of top 10 classes by F1-Score                        0.780955
+5    Mean of F1-Score of top 20 classes by F1-Score                        0.780955
+6    Mean of F1-Score of top 30 classes by F1-Score                        0.780955
+2016-03-24 20:48:40,483 DEBUG: Info:	 Calculate Confusionmatrix
+2016-03-24 20:48:40,789 DEBUG: Done:	 Statistic Results
+2016-03-24 20:48:40,789 DEBUG: Start:	 Plot Result
+2016-03-24 20:48:40,943 DEBUG: Done:	 Plot Result

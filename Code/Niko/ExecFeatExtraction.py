@@ -30,6 +30,7 @@ formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 groupStandard = parser.add_argument_group('necessary arguments')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Select a name of DB, e.g. Caltech (default: %(default)s)', default='DB')
 groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='../DB/Caltech')
+groupStandard.add_argument('--nbClasses', metavar='INT', action='store', help='To limit the number of classes evaluated (default: %(default)s)', default=1000)
 groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 
 groupRGB = parser.add_argument_group('RGB arguments')
@@ -68,6 +69,7 @@ args = parser.parse_args()
 
 nameDB = args.name
 path = args.path
+nbClasses = int(args.nbClasses)
 
 ### Helper-Function to transform the boolean deciscion of norm into a string
 def boolNormToStr(norm):
@@ -120,10 +122,12 @@ logging.debug("Start:\t Exportation of images from DB")
 t_db_start = time.time()
 
 # get dictionary to link classLabels Text to Integers
-sClassLabels = DBCrawl.getClassLabels(path)
+sClassLabels = DBCrawl.getClassLabels(path, nbClasses)
 
 # Get all path from all images inclusive classLabel as Integer
-dfImages,nameDB = DBCrawl.imgCrawl(path, sClassLabels, nameDB)
+dfImages,nameDB = DBCrawl.imgCrawl(path, sClassLabels, nameDB, nbClasses)
+
+
 t_db  = time.time() - t_db_start
 logging.debug("Done:\t Exportation of images from DB in:" + str(t_db) +"[s]")
 

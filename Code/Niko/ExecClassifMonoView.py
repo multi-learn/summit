@@ -120,21 +120,29 @@ classLabelsNamesList = classLabelsNames.values.tolist()
 #logging.debug(""+ str(classLabelsNamesList))
 
 logging.debug("Start:\t Statistic Results")
-logging.debug("Info:\t Accuracy classification score:" + ExportResults.accuracy_score(y_test, y_test_pred))
+
+#Accuracy classification score
+accuracy_score = ExportResults.accuracy_score(y_test, y_test_pred)
+
+# Classification Report with Precision, Recall, F1 , Support
 logging.debug("Info:\t Classification report:")
 filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Report"
 logging.debug("\n" + str(metrics.classification_report(y_test, y_test_pred, labels = range(0,len(classLabelsDesc.name)), target_names=classLabelsNamesList)))
 scores_df = ExportResults.classification_report_df(dir, filename, y_test, y_test_pred, range(0,len(classLabelsDesc.name)), classLabelsNamesList)
+
+# Create some useful statistcs
 logging.debug("Info:\t Statistics:")
 filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Stats"
-stats_df = ExportResults.classification_stats(dir,filename,scores_df)
+stats_df = ExportResults.classification_stats(dir,filename,scores_df,accuracy_score)
 logging.debug("\n" + stats_df.to_string())
+
+# Confusion Matrix
 logging.debug("Info:\t Calculate Confusionmatrix")
 filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-ConfMatrix"
 df_conf_norm = ExportResults.confusion_matrix_df(dir, filename, y_test, y_test_pred, classLabelsNamesList)
 filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-ConfMatrixImg"
 ExportResults.plot_confusion_matrix(dir, filename, df_conf_norm)
-#logging.debug("\n" + str(metrics.confusion_matrix(y_test, y_test_pred, labels=classLabelsNamesList)))
+
 logging.debug("Done:\t Statistic Results")
 
 
@@ -142,6 +150,7 @@ logging.debug("Done:\t Statistic Results")
 logging.debug("Start:\t Plot Result")
 np_score = ExportResults.calcScorePerClass(y_test, cl_res.predict(X_test).astype(int))
 ### dir and filename the same as CSV Export
+filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Score"
 ExportResults.showResults(dir, filename, args.name, args.feat, np_score)
 logging.debug("Done:\t Plot Result")
 

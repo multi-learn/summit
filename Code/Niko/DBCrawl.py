@@ -28,7 +28,8 @@ def imgCrawl(path, sClassLabels, nameDB, nbClasses):
     		files.sort(key=lambda y: y.lower())
                 
                 # if the amount of classes to be evalauated is limited
-                if(i>=nbClasses):
+                if(i>nbClasses):
+                        print i
                         break
                         
                 # loop througe files and create df        
@@ -54,6 +55,7 @@ def getClassLabels(path, nbClasses):
         data = os.listdir(path) # listdir returns all subdirectories
         data.sort(key=lambda y: y.lower())
 	
+        # if the amount of classes to be evalauated is limited
         if(len(data)>nbClasses):
                 data = data[0:nbClasses]
                 index = range(0,nbClasses)

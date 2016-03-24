@@ -34,7 +34,6 @@ groupStandard.add_argument('--nbClasses', metavar='INT', action='store', help='T
 groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 groupStandard.add_argument('-show', action='store_true', help='Use option to show results instead of saving it')
 
-
 groupOpt = parser.add_argument_group('Optimisation arguments')
 groupOpt.add_argument('--feat', choices=['RGB', 'HSV', 'SURF', 'SIFT', 'HOG'], help='Set feature from list (RGB, HSV, ..)', default='RGB')
 groupOpt.add_argument('--param', choices=['RGB_Bins', 'RGB_CI', 'HSV_H_Bins', 'HSV_S_Bins', 'HSV_V_Bins', 'SIFT_Cluster', 'SURF_Cluster', 'HOG_Cluster'], help='Parameter to optimise (remember depends on feature)', default='RGB_Bins')
@@ -80,6 +79,7 @@ groupClass.add_argument('--CL_RF_Cores', metavar='INT', action='store', help='Nu
 args = parser.parse_args()
 path = args.path
 nameDB = args.name
+nbClasses = int(args.nbClasses)
 
 para_opt = [args.feat, args.param, args.valueStart, args.valueEnd, args.nCalcs]
 para_RGB = [args.RGB_Bins, args.RGB_CI, args.RGB_NMinMax]
@@ -120,7 +120,7 @@ logging.debug('### Optimisation - Feature:' + str(args.feat) + " Parameter:" + s
 logging.debug("Start:\t Exportation of images from DB")
 
 # get dictionary to link classLabels Text to Integers
-sClassLabels = DBCrawl.getClassLabels(path, args.nbClasses)
+sClassLabels = DBCrawl.getClassLabels(path, nbClasses)
 
 # Get all path from all images inclusive classLabel as Integer
 dfImages,nameDB = DBCrawl.imgCrawl(path, sClassLabels, nameDB, nbClasses)

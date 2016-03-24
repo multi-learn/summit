@@ -1,0 +1,48 @@
+2016-03-24 16:46:39,161 DEBUG: ### Main Programm for Feature Extraction ###
+2016-03-24 16:46:39,161 DEBUG: ### Extraction - NameDB=Caltech, Path=../DB/Caltech, Features=RGB HSV SIFT SURF HOG
+2016-03-24 16:46:39,161 DEBUG: Start:	 Exportation of images from DB
+2016-03-24 16:47:07,600 DEBUG: Done:	 Exportation of images from DB in:28.4388179779[s]
+2016-03-24 16:47:07,600 DEBUG: Start:	 Features Extraction
+2016-03-24 16:47:07,600 DEBUG: RGB:	 Start
+2016-03-24 16:47:07,600 DEBUG: RGB:	 NumberOfBins=16, ColorIntensity=256, Norm=Distr
+2016-03-24 16:47:23,865 DEBUG: RGB:	 Done in: 16.2649419308[s]
+2016-03-24 16:47:23,865 DEBUG: HSV:	 Start
+2016-03-24 16:47:23,865 DEBUG: HSV:	 HSVBins=[16,16,16], Norm=Distr
+2016-03-24 16:47:25,960 WARNING: WARNING NORMALIZATION: sumHIST is zero
+2016-03-24 16:47:25,960 WARNING: image: ../DB/Caltech/BACKGROUND_Google/image_0031.jpg
+
+2016-03-24 16:47:40,064 WARNING: WARNING NORMALIZATION: sumHIST is zero
+2016-03-24 16:47:40,064 WARNING: image: ../DB/Caltech/menorah/image_0022.jpg
+
+2016-03-24 16:47:46,207 DEBUG: HSV:	 Done in: 22.3421180248[s]
+2016-03-24 16:47:46,208 DEBUG: SIFT:	 Start
+2016-03-24 16:47:46,208 DEBUG: SIFT:	 Cluster=35, Norm=Distr
+2016-03-24 16:47:46,208 DEBUG: SIFT:	 Keypoints Calculation
+2016-03-24 16:48:26,542 DEBUG: SIFT:	 No Keypoints found in: ../DB/Caltech/BACKGROUND_Google/image_0031.jpg
+2016-03-24 16:50:07,760 DEBUG: SIFT:	 25% of images processed (Keypoints)
+2016-03-24 16:52:26,603 DEBUG: SIFT:	 50% of images processed (Keypoints)
+2016-03-24 16:54:08,044 DEBUG: SIFT:	 75% of images processed (Keypoints)
+2016-03-24 16:55:57,291 DEBUG: SIFT:	 Calculation of Dictonary with 35 Clusters
+2016-03-24 17:01:54,153 DEBUG: SIFT:	 Assign words from Dictonary to each Image
+2016-03-24 17:01:59,885 DEBUG: SIFT:	 25% of images processed (Assignments)
+2016-03-24 17:02:06,315 DEBUG: SIFT:	 50% of images processed (Assignments)
+2016-03-24 17:02:11,404 DEBUG: SIFT:	 75% of images processed (Assignments)
+2016-03-24 17:02:17,167 DEBUG: SIFT:	 Done in: 870.959306002[s]
+2016-03-24 17:02:17,167 DEBUG: SURF:	 Start
+2016-03-24 17:02:17,167 DEBUG: SURF:	 Cluster=30, Norm=Distr
+2016-03-24 17:02:17,168 DEBUG: SURF:	 Keypoints Calculation
+2016-03-24 17:08:17,944 DEBUG: SURF:	 25% of images processed (Keypoints)
+2016-03-24 17:12:52,320 DEBUG: SURF:	 50% of images processed (Keypoints)
+2016-03-24 17:15:50,200 DEBUG: SURF:	 75% of images processed (Keypoints)
+2016-03-24 17:19:14,870 DEBUG: SURF:	 Calculation of Dictonary with 30 Clusters
+2016-03-24 17:21:14,507 DEBUG: SURF:	 Assign words from Dictonary to each Image
+2016-03-24 17:21:21,693 DEBUG: SURF:	 25% of images processed (Assignments)
+2016-03-24 17:21:27,010 DEBUG: SURF:	 50% of images processed (Assignments)
+2016-03-24 17:21:31,114 DEBUG: SURF:	 75% of images processed (Assignments)
+2016-03-24 17:21:37,453 DEBUG: SURF:	 Done in: 1160.28564095[s]
+2016-03-24 17:21:37,453 DEBUG: HOG:	 Start
+2016-03-24 17:21:37,453 DEBUG: HOG:	 CellDim=5, NbOrientations=8, Cluster=20, MaxIter=100, NbCores=1
+2016-03-24 17:57:50,572 DEBUG: HOG:	 Done in: 2173.1190269[s]
+2016-03-24 17:57:50,573 DEBUG: Done:	 Features Extraction
+2016-03-24 17:57:50,573 DEBUG: Start:	 Save Features to CSV Databases
+2016-03-24 17:57:51,885 DEBUG: Done:	 Save Features to CSV Databases
