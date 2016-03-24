@@ -29,7 +29,7 @@ formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 groupStandard = parser.add_argument_group('necessary arguments')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Select a name of DB, e.g. Caltech (default: %(default)s)', default='DB')
-groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='D:\\CaltechMini')
+groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='../DB/Caltech')
 groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 
 groupRGB = parser.add_argument_group('RGB arguments')
@@ -155,7 +155,7 @@ if(args.HSV):
         h_bins = args.HSV_H_Bins
         s_bins = args.HSV_S_Bins
         v_bins = args.HSV_V_Bins
-        histSize = [h_bins, s_bins, v_bins]
+        histSize = [h_bins,s_bins,v_bins]
         
         # Infos
         logging.debug("HSV:\t HSVBins=[" + str(h_bins) + "," + str(s_bins) + "," + str(v_bins) + "], Norm=" + boolNormToStr(args.HSV_NMinMax))

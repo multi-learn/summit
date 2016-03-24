@@ -1,0 +1,117 @@
+### Start of Main Programm for Feature Parameter Optimisation ###
+### Start:       Exportation of images from DB ###
+### Done:        Exportation of Images from DB ###
+### Optimisation - Feature:RGB Parameter:Bins from:2 to:64 in #calc:12 withCV:True ###
+### Start: Feautre Optimisation ###
+### Start:       FeatureExtraction Nr:1 from:12 with:Bins=2.0 ###
+### Done:        FeatureExtraction Nr:1 from:12 ###
+### Start:       Classification Nr:1 from:12 ###
+### Done:        Classification Nr:1 from:12 ###
+### Start:       FeatureExtraction Nr:2 from:12 with:Bins=8.0 ###
+### Done:        FeatureExtraction Nr:2 from:12 ###
+### Start:       Classification Nr:2 from:12 ###
+### Done:        Classification Nr:2 from:12 ###
+### Start:       FeatureExtraction Nr:3 from:12 with:Bins=13.0 ###
+### Done:        FeatureExtraction Nr:3 from:12 ###
+### Start:       Classification Nr:3 from:12 ###
+### Done:        Classification Nr:3 from:12 ###
+### Start:       FeatureExtraction Nr:4 from:12 with:Bins=19.0 ###
+### Done:        FeatureExtraction Nr:4 from:12 ###
+### Start:       Classification Nr:4 from:12 ###
+### Done:        Classification Nr:4 from:12 ###
+### Start:       FeatureExtraction Nr:5 from:12 with:Bins=25.0 ###
+### Done:        FeatureExtraction Nr:5 from:12 ###
+### Start:       Classification Nr:5 from:12 ###
+### Done:        Classification Nr:5 from:12 ###
+### Start:       FeatureExtraction Nr:6 from:12 with:Bins=30.0 ###
+### Done:        FeatureExtraction Nr:6 from:12 ###
+### Start:       Classification Nr:6 from:12 ###
+### Done:        Classification Nr:6 from:12 ###
+### Start:       FeatureExtraction Nr:7 from:12 with:Bins=36.0 ###
+### Done:        FeatureExtraction Nr:7 from:12 ###
+### Start:       Classification Nr:7 from:12 ###
+### Done:        Classification Nr:7 from:12 ###
+### Start:       FeatureExtraction Nr:8 from:12 with:Bins=41.0 ###
+### Done:        FeatureExtraction Nr:8 from:12 ###
+### Start:       Classification Nr:8 from:12 ###
+### Done:        Classification Nr:8 from:12 ###
+### Start:       FeatureExtraction Nr:9 from:12 with:Bins=47.0 ###
+### Done:        FeatureExtraction Nr:9 from:12 ###
+### Start:       Classification Nr:9 from:12 ###
+### Done:        Classification Nr:9 from:12 ###
+### Start:       FeatureExtraction Nr:10 from:12 with:Bins=53.0 ###
+### Done:        FeatureExtraction Nr:10 from:12 ###
+### Start:       Classification Nr:10 from:12 ###
+### Done:        Classification Nr:10 from:12 ###
+### Start:       FeatureExtraction Nr:11 from:12 with:Bins=58.0 ###
+### Done:        FeatureExtraction Nr:11 from:12 ###
+### Start:       Classification Nr:11 from:12 ###
+### Done:        Classification Nr:11 from:12 ###
+### Start:       FeatureExtraction Nr:12 from:12 with:Bins=64.0 ###
+### Done:        FeatureExtraction Nr:12 from:12 ###
+### Start:       Classification Nr:12 from:12 ###
+### Done:        Classification Nr:12 from:12 ###
+### Done: Feautre Optimisation ###
+### Start:       Exporting to CSV ###
+### Done:        Exporting to CSV ###
+
+D:\Programme\Anaconda>python.exe D:\BitBucket\multiview-machine-learning-omis\Code\FeatExtraction\ExecFeatParaOpt.py
+### Start of Main Programm for Feature Parameter Optimisation ###
+### Start:       Exportation of images from DB ###
+### Done:        Exportation of Images from DB ###
+### Optimisation - Feature:RGB Parameter:Bins from:2 to:64 in #calc:12 withCV:True ###
+### Start: Feautre Optimisation ###
+### Start:       FeatureExtraction Nr:1 from:12 with:Bins=2.0 ###
+### Done:        FeatureExtraction Nr:1 from:12 ###
+### Start:       Classification Nr:1 from:12 ###
+D:\Programme\Anaconda\lib\site-packages\sklearn\cross_validation.py:417: Warning: The least populated class in y has only 4 member
+s, which is too few. The minimum number of labels for any class cannot be less than n_folds=5.
+  % (min_labels, self.n_folds)), Warning)
+### Done:        Classification Nr:1 from:12 ###
+### Start:       FeatureExtraction Nr:2 from:12 with:Bins=8.0 ###
+### Done:        FeatureExtraction Nr:2 from:12 ###
+### Start:       Classification Nr:2 from:12 ###
+### Done:        Classification Nr:2 from:12 ###
+### Start:       FeatureExtraction Nr:3 from:12 with:Bins=13.0 ###
+### Done:        FeatureExtraction Nr:3 from:12 ###
+### Start:       Classification Nr:3 from:12 ###
+### Done:        Classification Nr:3 from:12 ###
+### Start:       FeatureExtraction Nr:4 from:12 with:Bins=19.0 ###
+### Done:        FeatureExtraction Nr:4 from:12 ###
+### Start:       Classification Nr:4 from:12 ###
+### Done:        Classification Nr:4 from:12 ###
+### Start:       FeatureExtraction Nr:5 from:12 with:Bins=25.0 ###
+### Done:        FeatureExtraction Nr:5 from:12 ###
+### Start:       Classification Nr:5 from:12 ###
+### Done:        Classification Nr:5 from:12 ###
+### Start:       FeatureExtraction Nr:6 from:12 with:Bins=30.0 ###
+### Done:        FeatureExtraction Nr:6 from:12 ###
+### Start:       Classification Nr:6 from:12 ###
+### Done:        Classification Nr:6 from:12 ###
+### Start:       FeatureExtraction Nr:7 from:12 with:Bins=36.0 ###
+### Done:        FeatureExtraction Nr:7 from:12 ###
+### Start:       Classification Nr:7 from:12 ###
+### Done:        Classification Nr:7 from:12 ###
+### Start:       FeatureExtraction Nr:8 from:12 with:Bins=41.0 ###
+### Done:        FeatureExtraction Nr:8 from:12 ###
+### Start:       Classification Nr:8 from:12 ###
+### Done:        Classification Nr:8 from:12 ###
+### Start:       FeatureExtraction Nr:9 from:12 with:Bins=47.0 ###
+### Done:        FeatureExtraction Nr:9 from:12 ###
+### Start:       Classification Nr:9 from:12 ###
+### Done:        Classification Nr:9 from:12 ###
+### Start:       FeatureExtraction Nr:10 from:12 with:Bins=53.0 ###
+### Done:        FeatureExtraction Nr:10 from:12 ###
+### Start:       Classification Nr:10 from:12 ###
+### Done:        Classification Nr:10 from:12 ###
+### Start:       FeatureExtraction Nr:11 from:12 with:Bins=58.0 ###
+### Done:        FeatureExtraction Nr:11 from:12 ###
+### Start:       Classification Nr:11 from:12 ###
+### Done:        Classification Nr:11 from:12 ###
+### Start:       FeatureExtraction Nr:12 from:12 with:Bins=64.0 ###
+### Done:        FeatureExtraction Nr:12 from:12 ###
+### Start:       Classification Nr:12 from:12 ###
+### Done:        Classification Nr:12 from:12 ###
+### Done: Feautre Optimisation ###
+### Start:       Exporting to CSV ###
+### Done:        Exporting to CSV ###

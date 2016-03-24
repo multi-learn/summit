@@ -29,9 +29,11 @@ formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 groupStandard = parser.add_argument_group('necessary arguments')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Select a name of DB, e.g. Caltech (default: %(default)s)', default='DB')
-groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='D:\\CaltechMini')
+groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='../DB/Caltech')
+groupStandard.add_argument('--nbClasses', metavar='INT', action='store', help='To limit the number of classes evaluated (default: %(default)s)', default=1000)
 groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 groupStandard.add_argument('-show', action='store_true', help='Use option to show results instead of saving it')
+
 
 groupOpt = parser.add_argument_group('Optimisation arguments')
 groupOpt.add_argument('--feat', choices=['RGB', 'HSV', 'SURF', 'SIFT', 'HOG'], help='Set feature from list (RGB, HSV, ..)', default='RGB')
@@ -70,7 +72,7 @@ groupClass = parser.add_argument_group('Classification arguments')
 groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the train size', type=float, default=0.8)
 groupClass.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='25 75 125 175')
 groupClass.add_argument('--CL_RF_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=10)
-groupClass.add_argument('--CL_RF_Cores', metavar='INT', action='store', help='Number of cores', type=int, default=1)
+groupClass.add_argument('--CL_RF_Cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int, default=1)
 
 
 
@@ -118,10 +120,10 @@ logging.debug('### Optimisation - Feature:' + str(args.feat) + " Parameter:" + s
 logging.debug("Start:\t Exportation of images from DB")
 
 # get dictionary to link classLabels Text to Integers
-sClassLabels = DBCrawl.getClassLabels(path)
+sClassLabels = DBCrawl.getClassLabels(path, args.nbClasses)
 
 # Get all path from all images inclusive classLabel as Integer
-dfImages,nameDB = DBCrawl.imgCrawl(path, sClassLabels, nameDB)
+dfImages,nameDB = DBCrawl.imgCrawl(path, sClassLabels, nameDB, nbClasses)
 
 logging.debug("Done:\t Exportation of Images from DB ")
 

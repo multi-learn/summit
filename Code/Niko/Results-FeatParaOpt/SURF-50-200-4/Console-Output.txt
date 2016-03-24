@@ -1,0 +1,61 @@
+D:\Programme\Anaconda\Scripts>ipython.exe D:\09-Py\ExecFeatParaOpt.py
+### Start of Main Programm for Feature Parameter Optimisation ###
+### Start:       Exportation of images from DB ###
+### Done:        Exportation of Images from DB ###
+### Optimisation - Feature:SURF Parameter:Cluster from:50 to:200 in #calc:4 with
+CV:True ###
+### Start:       Feautre Optimisation ###
+### Start:       FeatureExtraction Nr:1 from:4 with:Cluster=50.0 ###
+SURF: Keypoints Calculation
+SURF: 25% of Images processed (Keypoints)
+SURF: 50% of Images processed (Keypoints)
+SURF: 75% of Images processed (Keypoints)
+SURF: Length of Descriptors: 5546033
+SURF: Start filling descriptors
+SURF: Shape of Descriptors: (5546033L, 64L)
+Begin of SURFSIFTHisto
+SURF: Calculation of Dictonary with 50 Clusters
+SURF: Assign words from Dictonary to each Image
+SURF25% of Images processed (Assignments)
+SURF50% of Images processed (Assignments)
+SURF75% of Images processed (Assignments)
+### Done:        FeatureExtraction Nr:1 from:4 ###
+### Start:       Classification Nr:1 from:4 ###
+D:\Programme\Anaconda\lib\site-packages\sklearn\cross_validation.py:417: Warning
+: The least populated class in y has only 4 members, which is too few. The minim
+um number of labels for any class cannot be less than n_folds=5.
+  % (min_labels, self.n_folds)), Warning)
+### Done:        Classification Nr:1 from:4 ###
+### Start:       FeatureExtraction Nr:2 from:4 with:Cluster=100.0 ###
+Begin of SURFSIFTHisto
+SURF: Calculation of Dictonary with 100 Clusters
+SURF: Assign words from Dictonary to each Image
+SURF25% of Images processed (Assignments)
+SURF50% of Images processed (Assignments)
+SURF75% of Images processed (Assignments)
+### Done:        FeatureExtraction Nr:2 from:4 ###
+### Start:       Classification Nr:2 from:4 ###
+### Done:        Classification Nr:2 from:4 ###
+### Start:       FeatureExtraction Nr:3 from:4 with:Cluster=150.0 ###
+Begin of SURFSIFTHisto
+SURF: Calculation of Dictonary with 150 Clusters
+SURF: Assign words from Dictonary to each Image
+SURF25% of Images processed (Assignments)
+SURF50% of Images processed (Assignments)
+SURF75% of Images processed (Assignments)
+### Done:        FeatureExtraction Nr:3 from:4 ###
+### Start:       Classification Nr:3 from:4 ###
+### Done:        Classification Nr:3 from:4 ###
+### Start:       FeatureExtraction Nr:4 from:4 with:Cluster=200.0 ###
+Begin of SURFSIFTHisto
+SURF: Calculation of Dictonary with 200 Clusters
+SURF: Assign words from Dictonary to each Image
+SURF25% of Images processed (Assignments)
+SURF50% of Images processed (Assignments)
+SURF75% of Images processed (Assignments)
+### Done:        FeatureExtraction Nr:4 from:4 ###
+### Start:       Classification Nr:4 from:4 ###
+### Done:        Classification Nr:4 from:4 ###
+### Done:        Feautre Optimisation ###
+### Start:       Exporting to CSV ###
+### Done:        Exporting to CSV ###

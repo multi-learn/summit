@@ -1,0 +1,58 @@
+2016-03-23 15:10:18,358 DEBUG:### Main Programm for Feature Parameter Optimisation 
+2016-03-23 15:10:18,358 DEBUG:### Optimisation - Feature:SURF Parameter:SURF_Cluster from:2 to:25 in #calc:5
+2016-03-23 15:10:18,358 DEBUG:Start:	 Exportation of images from DB
+2016-03-23 15:10:58,714 DEBUG:Done:	 Exportation of Images from DB 
+2016-03-23 15:10:58,715 DEBUG:Start:	 Feautre Optimisation
+2016-03-23 15:10:58,715 DEBUG:Start:	 FeatureExtraction Nr:1 from:5 with SURF_Cluster=2 ###
+2016-03-23 15:10:58,715 DEBUG:SURF:	 Keypoints Calculation
+2016-03-23 15:18:59,438 DEBUG:SURF:	 25% of images processed (Keypoints)
+2016-03-23 15:23:38,321 DEBUG:SURF:	 50% of images processed (Keypoints)
+2016-03-23 15:27:43,729 DEBUG:SURF:	 75% of images processed (Keypoints)
+2016-03-23 15:30:34,760 DEBUG:SURF:	 Calculation of Dictonary with 2 Clusters
+2016-03-23 15:30:47,465 DEBUG:SURF:	 Assign words from Dictonary to each Image
+2016-03-23 15:30:56,395 DEBUG:SURF:	 25% of images processed (Assignments)
+2016-03-23 15:31:02,078 DEBUG:SURF:	 50% of images processed (Assignments)
+2016-03-23 15:31:06,608 DEBUG:SURF:	 75% of images processed (Assignments)
+2016-03-23 15:31:09,705 DEBUG:Done:	 FeatureExtraction Nr:1 from:5 ###
+2016-03-23 15:31:09,709 DEBUG:Start:	 Classification Nr:1 from:5
+2016-03-23 15:33:31,117 DEBUG:Done:	 Classification Nr:1 from:5
+2016-03-23 15:33:31,123 DEBUG:Start:	 FeatureExtraction Nr:2 from:5 with SURF_Cluster=8 ###
+2016-03-23 15:33:31,124 DEBUG:SURF:	 Calculation of Dictonary with 8 Clusters
+2016-03-23 15:34:11,987 DEBUG:SURF:	 Assign words from Dictonary to each Image
+2016-03-23 15:34:22,208 DEBUG:SURF:	 25% of images processed (Assignments)
+2016-03-23 15:34:29,794 DEBUG:SURF:	 50% of images processed (Assignments)
+2016-03-23 15:34:36,441 DEBUG:SURF:	 75% of images processed (Assignments)
+2016-03-23 15:34:41,772 DEBUG:Done:	 FeatureExtraction Nr:2 from:5 ###
+2016-03-23 15:34:41,780 DEBUG:Start:	 Classification Nr:2 from:5
+2016-03-23 15:37:54,241 DEBUG:Done:	 Classification Nr:2 from:5
+2016-03-23 15:37:54,248 DEBUG:Start:	 FeatureExtraction Nr:3 from:5 with SURF_Cluster=14 ###
+2016-03-23 15:37:54,249 DEBUG:SURF:	 Calculation of Dictonary with 14 Clusters
+2016-03-23 15:38:33,558 DEBUG:SURF:	 Assign words from Dictonary to each Image
+2016-03-23 15:38:45,967 DEBUG:SURF:	 25% of images processed (Assignments)
+2016-03-23 15:38:54,345 DEBUG:SURF:	 50% of images processed (Assignments)
+2016-03-23 15:39:01,626 DEBUG:SURF:	 75% of images processed (Assignments)
+2016-03-23 15:39:07,371 DEBUG:Done:	 FeatureExtraction Nr:3 from:5 ###
+2016-03-23 15:39:07,378 DEBUG:Start:	 Classification Nr:3 from:5
+2016-03-23 15:43:27,485 DEBUG:Done:	 Classification Nr:3 from:5
+2016-03-23 15:43:27,489 DEBUG:Start:	 FeatureExtraction Nr:4 from:5 with SURF_Cluster=19 ###
+2016-03-23 15:43:27,489 DEBUG:SURF:	 Calculation of Dictonary with 19 Clusters
+2016-03-23 15:44:12,631 DEBUG:SURF:	 Assign words from Dictonary to each Image
+2016-03-23 15:44:22,057 DEBUG:SURF:	 25% of images processed (Assignments)
+2016-03-23 15:44:28,693 DEBUG:SURF:	 50% of images processed (Assignments)
+2016-03-23 15:44:34,804 DEBUG:SURF:	 75% of images processed (Assignments)
+2016-03-23 15:44:39,540 DEBUG:Done:	 FeatureExtraction Nr:4 from:5 ###
+2016-03-23 15:44:39,548 DEBUG:Start:	 Classification Nr:4 from:5
+2016-03-23 15:49:58,533 DEBUG:Done:	 Classification Nr:4 from:5
+2016-03-23 15:49:58,539 DEBUG:Start:	 FeatureExtraction Nr:5 from:5 with SURF_Cluster=25 ###
+2016-03-23 15:49:58,540 DEBUG:SURF:	 Calculation of Dictonary with 25 Clusters
+2016-03-23 15:51:47,679 DEBUG:SURF:	 Assign words from Dictonary to each Image
+2016-03-23 15:51:59,992 DEBUG:SURF:	 25% of images processed (Assignments)
+2016-03-23 15:52:07,963 DEBUG:SURF:	 50% of images processed (Assignments)
+2016-03-23 15:52:14,296 DEBUG:SURF:	 75% of images processed (Assignments)
+2016-03-23 15:52:19,282 DEBUG:Done:	 FeatureExtraction Nr:5 from:5 ###
+2016-03-23 15:52:19,290 DEBUG:Start:	 Classification Nr:5 from:5
+2016-03-23 15:58:03,431 DEBUG:Done:	 Classification Nr:5 from:5
+2016-03-23 15:58:03,502 DEBUG:Done:	 Feautre Optimisation 
+2016-03-23 15:58:03,503 DEBUG:Start:	 Exporting to CSV 
+2016-03-23 15:58:03,511 DEBUG:Done:	 Exporting to CSV 
+2016-03-23 15:58:03,512 DEBUG:Start:	 Plot Result

@@ -11,11 +11,9 @@ import pandas as pd                                                     # for Se
 import numpy as np                                                      # for Numpy Arrays
 import matplotlib.pyplot as plt                                         # for Plots
 from scipy.interpolate import interp1d                                  # to Interpolate Data
-import matplotlib
-# Force matplotlib to not use any Xwindows backend.
-matplotlib.use('Agg')
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker   # to generate the Annotations in plot
 from pylab import rcParams                                              # to change size of plot
+from sklearn import metrics						# For stastics on classification
 
 # Import own modules
 
@@ -178,3 +176,109 @@ def showResults(dir, filename, db, feat, score):
         
         #instead of saving - decomment plt.show()
         #plt.show()
+
+# Function to calculate the accuracy score for test data
+def accuracy_score(y_test, y_test_pred):
+	return str(metrics.accuracy_score(y_test, y_test_pred))
+
+# Function to calculate a report of classifiaction and store it
+def classification_report_df(dir, filename, y_test, y_test_pred, labels, target_names):
+	
+	# Calculate the metrics
+	precision, recall, f1score, support = metrics.precision_recall_fscore_support(y_test, y_test_pred, beta=1.0, labels=labels, pos_label=None, average=None)
+	
+	# turn result into DataFrame
+	scores_df = pd.DataFrame(data = [precision, recall, f1score, support])
+	scores_df.index =  ["Precision", "Recall", "F1", "Support"]
+	scores_df.columns = target_names
+	scores_df = scores_df.transpose()
+
+	# Store result as CSV
+	exportPandasToCSV(scores_df, dir, filename)
+        
+        # return the results
+        return scores_df
+
+
+# Function to calculate a report of classifiaction and store it
+def confusion_matrix_df(dir, filename, y_test, y_test_pred, target_names):
+	
+	# Transform into pd Series
+	y_actu = pd.Series(y_test, name='Actual')
+	y_pred = pd.Series(y_test_pred, name='Predicted')
+
+	# Calculate confusion matrix
+	df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'], margins=True)
+	
+	# Normalization of confusion matrix
+	df_conf_norm = df_confusion / df_confusion.sum(axis=1)
+	df_conf_norm.index = target_names + ['All']
+	df_conf_norm.columns = target_names + ['All']
+
+	# Add Row: Actual / Column: Predicted into first cell [0,0]
+
+
+	# Store result as CSV
+	exportPandasToCSV(df_conf_norm, dir, filename)
+        
+        return df_conf_norm
+
+def plot_confusion_matrix(dir, filename, df_confusion, title='Confusion matrix', cmap=plt.cm.gray_r):
+	plt.matshow(df_confusion, cmap=cmap) # imshow
+	#plt.title(title)
+    	plt.colorbar()
+    	tick_marks = np.arange(len(df_confusion.columns))
+    	plt.xticks(tick_marks, df_confusion.columns, rotation=45)
+    	plt.yticks(tick_marks, df_confusion.index)
+    	#plt.tight_layout()
+    	plt.ylabel(df_confusion.index.name)
+    	plt.xlabel(df_confusion.columns.name)
+        
+        if os.path.isfile(file + ".png"):
+                for i in range(1,20):
+                        testFileName = filename  + "-" + str(i) + ".png"
+                        if os.path.isfile(dir + testFileName )!=True:
+                                plt.savefig(dir + testFileName)
+                                break
+
+        else:
+                plt.savefig(file)
+        
+
+def classification_stats(dir,filename,scores_df):   
+        # Top 10 classes by F1-Score
+        top10 =  scores_df.sort(columns="F1", ascending=False).head(10).ix[:,0]
+
+        # Worst 10 classes by F1-Score
+        worst10 = scores_df.sort(columns="F1", ascending=True).head(10).ix[:,0]
+
+        # Ratio of classes with F1-Score==0 of all classes
+        ratio_zero = float(float(len(scores_df[scores_df.F1 == 0]))/float(len(scores_df)))
+
+        # Mean of F1-Score of top 10 classes by F1-Score
+        mean_10 = np.mean(scores_df.sort(columns="F1", ascending=False).head(10).F1)
+
+        # Mean of F1-Score of top 20 classes by F1-Score
+        mean_20 = np.mean(scores_df.sort(columns="F1", ascending=False).head(20).F1)
+
+        # Mean of F1-Score of top 30 classes by F1-Score
+        mean_30 = np.mean(scores_df.sort(columns="F1", ascending=False).head(30).F1)
+
+        # Create DataFrame with stats
+        d = {'Statistic' : ['Top 10 classes by F1-Score', 'Worst 10 classes by F1-Score', 'Ratio of classes with F1-Score==0 of all classes', 'Mean of F1-Score of top 10 classes by F1-Score', 'Mean of F1-Score of top 20 classes by F1-Score', 'Mean of F1-Score of top 30 classes by F1-Score'], 'Values' : [top10, worst10, ratio_zero, mean_10, mean_20, mean_30]}
+        df_stats = pd.DataFrame(d)
+        
+        # Store result as CSV
+	exportPandasToCSV(df_stats, dir, filename)
+        
+        # return pandas
+        return df_stats
+
+
+
+
+
+
+
+
+

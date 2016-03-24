@@ -1,0 +1,41 @@
+2016-03-23 16:09:53,473 DEBUG:### Main Programm for Feature Parameter Optimisation 
+2016-03-23 16:09:53,473 DEBUG:### Optimisation - Feature:RGB Parameter:RGB_Bins from:2 to:40 in #calc:8
+2016-03-23 16:09:53,473 DEBUG:Start:	 Exportation of images from DB
+2016-03-23 16:10:27,964 DEBUG:Done:	 Exportation of Images from DB 
+2016-03-23 16:10:27,964 DEBUG:Start:	 Feautre Optimisation
+2016-03-23 16:10:27,965 DEBUG:Start:	 FeatureExtraction Nr:1 from:8 with RGB_Bins=2 ###
+2016-03-23 16:10:46,123 DEBUG:Done:	 FeatureExtraction Nr:1 from:8 ###
+2016-03-23 16:10:46,130 DEBUG:Start:	 Classification Nr:1 from:8
+2016-03-23 16:14:12,907 DEBUG:Done:	 Classification Nr:1 from:8
+2016-03-23 16:14:12,911 DEBUG:Start:	 FeatureExtraction Nr:2 from:8 with RGB_Bins=7 ###
+2016-03-23 16:14:31,046 DEBUG:Done:	 FeatureExtraction Nr:2 from:8 ###
+2016-03-23 16:14:31,050 DEBUG:Start:	 Classification Nr:2 from:8
+2016-03-23 16:20:30,773 DEBUG:Done:	 Classification Nr:2 from:8
+2016-03-23 16:20:30,780 DEBUG:Start:	 FeatureExtraction Nr:3 from:8 with RGB_Bins=13 ###
+2016-03-23 16:20:57,632 DEBUG:Done:	 FeatureExtraction Nr:3 from:8 ###
+2016-03-23 16:20:57,640 DEBUG:Start:	 Classification Nr:3 from:8
+2016-03-23 16:28:56,364 DEBUG:Done:	 Classification Nr:3 from:8
+2016-03-23 16:28:56,370 DEBUG:Start:	 FeatureExtraction Nr:4 from:8 with RGB_Bins=18 ###
+2016-03-23 16:29:17,970 DEBUG:Done:	 FeatureExtraction Nr:4 from:8 ###
+2016-03-23 16:29:17,978 DEBUG:Start:	 Classification Nr:4 from:8
+2016-03-23 16:38:48,849 DEBUG:Done:	 Classification Nr:4 from:8
+2016-03-23 16:38:48,853 DEBUG:Start:	 FeatureExtraction Nr:5 from:8 with RGB_Bins=24 ###
+2016-03-23 16:39:06,044 DEBUG:Done:	 FeatureExtraction Nr:5 from:8 ###
+2016-03-23 16:39:06,049 DEBUG:Start:	 Classification Nr:5 from:8
+2016-03-23 16:49:16,831 DEBUG:Done:	 Classification Nr:5 from:8
+2016-03-23 16:49:16,835 DEBUG:Start:	 FeatureExtraction Nr:6 from:8 with RGB_Bins=29 ###
+2016-03-23 16:49:34,161 DEBUG:Done:	 FeatureExtraction Nr:6 from:8 ###
+2016-03-23 16:49:34,166 DEBUG:Start:	 Classification Nr:6 from:8
+2016-03-23 17:01:43,341 DEBUG:Done:	 Classification Nr:6 from:8
+2016-03-23 17:01:43,345 DEBUG:Start:	 FeatureExtraction Nr:7 from:8 with RGB_Bins=35 ###
+2016-03-23 17:02:01,491 DEBUG:Done:	 FeatureExtraction Nr:7 from:8 ###
+2016-03-23 17:02:01,497 DEBUG:Start:	 Classification Nr:7 from:8
+2016-03-23 17:15:22,280 DEBUG:Done:	 Classification Nr:7 from:8
+2016-03-23 17:15:22,286 DEBUG:Start:	 FeatureExtraction Nr:8 from:8 with RGB_Bins=40 ###
+2016-03-23 17:15:50,740 DEBUG:Done:	 FeatureExtraction Nr:8 from:8 ###
+2016-03-23 17:15:50,746 DEBUG:Start:	 Classification Nr:8 from:8
+2016-03-23 17:30:20,000 DEBUG:Done:	 Classification Nr:8 from:8
+2016-03-23 17:30:20,004 DEBUG:Done:	 Feautre Optimisation 
+2016-03-23 17:30:20,004 DEBUG:Start:	 Exporting to CSV 
+2016-03-23 17:30:20,012 DEBUG:Done:	 Exporting to CSV 
+2016-03-23 17:30:20,012 DEBUG:Start:	 Plot Result

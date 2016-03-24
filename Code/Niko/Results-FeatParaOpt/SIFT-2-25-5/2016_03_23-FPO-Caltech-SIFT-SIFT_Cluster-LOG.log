@@ -1,0 +1,59 @@
+2016-03-23 14:59:27,761 DEBUG:### Main Programm for Feature Parameter Optimisation 
+2016-03-23 14:59:27,761 DEBUG:### Optimisation - Feature:SIFT Parameter:SIFT_Cluster from:2 to:25 in #calc:5
+2016-03-23 14:59:27,762 DEBUG:Start:	 Exportation of images from DB
+2016-03-23 14:59:55,860 DEBUG:Done:	 Exportation of Images from DB 
+2016-03-23 14:59:55,860 DEBUG:Start:	 Feautre Optimisation
+2016-03-23 14:59:55,860 DEBUG:Start:	 FeatureExtraction Nr:1 from:5 with SIFT_Cluster=2 ###
+2016-03-23 14:59:55,860 DEBUG:SIFT:	 Keypoints Calculation
+2016-03-23 15:01:09,246 DEBUG:SIFT:	 No Keypoints found in: ../../Caltech/BACKGROUND_Google/image_0031.jpg
+2016-03-23 15:02:36,282 DEBUG:SIFT:	 25% of images processed (Keypoints)
+2016-03-23 15:04:43,861 DEBUG:SIFT:	 50% of images processed (Keypoints)
+2016-03-23 15:06:32,386 DEBUG:SIFT:	 75% of images processed (Keypoints)
+2016-03-23 15:08:02,679 DEBUG:SIFT:	 Calculation of Dictonary with 2 Clusters
+2016-03-23 15:08:36,126 DEBUG:SIFT:	 Assign words from Dictonary to each Image
+2016-03-23 15:08:41,977 DEBUG:SIFT:	 25% of images processed (Assignments)
+2016-03-23 15:08:46,955 DEBUG:SIFT:	 50% of images processed (Assignments)
+2016-03-23 15:08:51,125 DEBUG:SIFT:	 75% of images processed (Assignments)
+2016-03-23 15:08:54,827 DEBUG:Done:	 FeatureExtraction Nr:1 from:5 ###
+2016-03-23 15:08:54,834 DEBUG:Start:	 Classification Nr:1 from:5
+2016-03-23 15:10:43,031 DEBUG:Done:	 Classification Nr:1 from:5
+2016-03-23 15:10:43,036 DEBUG:Start:	 FeatureExtraction Nr:2 from:5 with SIFT_Cluster=8 ###
+2016-03-23 15:10:43,037 DEBUG:SIFT:	 Calculation of Dictonary with 8 Clusters
+2016-03-23 15:12:45,164 DEBUG:SIFT:	 Assign words from Dictonary to each Image
+2016-03-23 15:12:53,923 DEBUG:SIFT:	 25% of images processed (Assignments)
+2016-03-23 15:13:01,967 DEBUG:SIFT:	 50% of images processed (Assignments)
+2016-03-23 15:13:09,481 DEBUG:SIFT:	 75% of images processed (Assignments)
+2016-03-23 15:13:16,397 DEBUG:Done:	 FeatureExtraction Nr:2 from:5 ###
+2016-03-23 15:13:16,405 DEBUG:Start:	 Classification Nr:2 from:5
+2016-03-23 15:16:11,281 DEBUG:Done:	 Classification Nr:2 from:5
+2016-03-23 15:16:11,285 DEBUG:Start:	 FeatureExtraction Nr:3 from:5 with SIFT_Cluster=14 ###
+2016-03-23 15:16:11,285 DEBUG:SIFT:	 Calculation of Dictonary with 14 Clusters
+2016-03-23 15:21:47,454 DEBUG:SIFT:	 Assign words from Dictonary to each Image
+2016-03-23 15:21:56,827 DEBUG:SIFT:	 25% of images processed (Assignments)
+2016-03-23 15:22:05,518 DEBUG:SIFT:	 50% of images processed (Assignments)
+2016-03-23 15:22:13,711 DEBUG:SIFT:	 75% of images processed (Assignments)
+2016-03-23 15:22:20,377 DEBUG:Done:	 FeatureExtraction Nr:3 from:5 ###
+2016-03-23 15:22:20,384 DEBUG:Start:	 Classification Nr:3 from:5
+2016-03-23 15:26:24,177 DEBUG:Done:	 Classification Nr:3 from:5
+2016-03-23 15:26:24,180 DEBUG:Start:	 FeatureExtraction Nr:4 from:5 with SIFT_Cluster=19 ###
+2016-03-23 15:26:24,181 DEBUG:SIFT:	 Calculation of Dictonary with 19 Clusters
+2016-03-23 15:28:13,942 DEBUG:SIFT:	 Assign words from Dictonary to each Image
+2016-03-23 15:28:22,838 DEBUG:SIFT:	 25% of images processed (Assignments)
+2016-03-23 15:28:29,902 DEBUG:SIFT:	 50% of images processed (Assignments)
+2016-03-23 15:28:35,939 DEBUG:SIFT:	 75% of images processed (Assignments)
+2016-03-23 15:28:41,850 DEBUG:Done:	 FeatureExtraction Nr:4 from:5 ###
+2016-03-23 15:28:41,858 DEBUG:Start:	 Classification Nr:4 from:5
+2016-03-23 15:33:42,570 DEBUG:Done:	 Classification Nr:4 from:5
+2016-03-23 15:33:42,577 DEBUG:Start:	 FeatureExtraction Nr:5 from:5 with SIFT_Cluster=25 ###
+2016-03-23 15:33:42,577 DEBUG:SIFT:	 Calculation of Dictonary with 25 Clusters
+2016-03-23 15:37:41,038 DEBUG:SIFT:	 Assign words from Dictonary to each Image
+2016-03-23 15:37:48,800 DEBUG:SIFT:	 25% of images processed (Assignments)
+2016-03-23 15:37:54,935 DEBUG:SIFT:	 50% of images processed (Assignments)
+2016-03-23 15:38:01,685 DEBUG:SIFT:	 75% of images processed (Assignments)
+2016-03-23 15:38:07,419 DEBUG:Done:	 FeatureExtraction Nr:5 from:5 ###
+2016-03-23 15:38:07,426 DEBUG:Start:	 Classification Nr:5 from:5
+2016-03-23 15:44:11,014 DEBUG:Done:	 Classification Nr:5 from:5
+2016-03-23 15:44:11,095 DEBUG:Done:	 Feautre Optimisation 
+2016-03-23 15:44:11,098 DEBUG:Start:	 Exporting to CSV 
+2016-03-23 15:44:11,103 DEBUG:Done:	 Exporting to CSV 
+2016-03-23 15:44:11,104 DEBUG:Start:	 Plot Result

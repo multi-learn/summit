@@ -120,6 +120,7 @@ def calcHSVColorHisto(nameDB, dfImages, histSize_, boolNormMinMax):
                 norm = "Distr"
         
         param = "Bins_" +  str(histSize) + "-" + "Norm_" + norm
+        param = param.replace(" ", "")
         description = nameDB + "-HSV-" + param
 	
 

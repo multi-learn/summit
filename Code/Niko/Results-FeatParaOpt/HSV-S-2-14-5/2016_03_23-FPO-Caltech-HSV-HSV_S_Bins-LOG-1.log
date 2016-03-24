@@ -1,0 +1,59 @@
+2016-03-23 18:10:26,691 DEBUG:### Main Programm for Feature Parameter Optimisation 
+2016-03-23 18:10:26,691 DEBUG:### Optimisation - Feature:HSV Parameter:HSV_S_Bins from:2 to:14 in #calc:5
+2016-03-23 18:10:26,691 DEBUG:Start:	 Exportation of images from DB
+2016-03-23 18:10:57,734 DEBUG:Done:	 Exportation of Images from DB 
+2016-03-23 18:10:57,734 DEBUG:Start:	 Feautre Optimisation
+2016-03-23 18:10:57,734 DEBUG:Start:	 FeatureExtraction Nr:1 from:5 with HSV_S_Bins=2 ###
+2016-03-23 18:11:02,339 WARNING:WARNING NORMALIZATION: sumHIST is zero
+2016-03-23 18:11:02,339 WARNING:image: ../../Caltech/BACKGROUND_Google/image_0031.jpg
+
+2016-03-23 18:11:11,229 WARNING:WARNING NORMALIZATION: sumHIST is zero
+2016-03-23 18:11:11,229 WARNING:image: ../../Caltech/menorah/image_0022.jpg
+
+2016-03-23 18:11:23,134 DEBUG:Done:	 FeatureExtraction Nr:1 from:5 ###
+2016-03-23 18:11:23,139 DEBUG:Start:	 Classification Nr:1 from:5
+2016-03-23 18:17:20,868 DEBUG:Done:	 Classification Nr:1 from:5
+2016-03-23 18:17:20,872 DEBUG:Start:	 FeatureExtraction Nr:2 from:5 with HSV_S_Bins=5 ###
+2016-03-23 18:17:24,608 WARNING:WARNING NORMALIZATION: sumHIST is zero
+2016-03-23 18:17:24,608 WARNING:image: ../../Caltech/BACKGROUND_Google/image_0031.jpg
+
+2016-03-23 18:17:32,739 WARNING:WARNING NORMALIZATION: sumHIST is zero
+2016-03-23 18:17:32,739 WARNING:image: ../../Caltech/menorah/image_0022.jpg
+
+2016-03-23 18:17:47,147 DEBUG:Done:	 FeatureExtraction Nr:2 from:5 ###
+2016-03-23 18:17:47,155 DEBUG:Start:	 Classification Nr:2 from:5
+2016-03-23 18:23:20,531 DEBUG:Done:	 Classification Nr:2 from:5
+2016-03-23 18:23:20,537 DEBUG:Start:	 FeatureExtraction Nr:3 from:5 with HSV_S_Bins=8 ###
+2016-03-23 18:23:25,701 WARNING:WARNING NORMALIZATION: sumHIST is zero
+2016-03-23 18:23:25,701 WARNING:image: ../../Caltech/BACKGROUND_Google/image_0031.jpg
+
+2016-03-23 18:23:34,169 WARNING:WARNING NORMALIZATION: sumHIST is zero
+2016-03-23 18:23:34,169 WARNING:image: ../../Caltech/menorah/image_0022.jpg
+
+2016-03-23 18:23:46,529 DEBUG:Done:	 FeatureExtraction Nr:3 from:5 ###
+2016-03-23 18:23:46,537 DEBUG:Start:	 Classification Nr:3 from:5
+2016-03-23 18:29:41,055 DEBUG:Done:	 Classification Nr:3 from:5
+2016-03-23 18:29:41,059 DEBUG:Start:	 FeatureExtraction Nr:4 from:5 with HSV_S_Bins=11 ###
+2016-03-23 18:29:44,654 WARNING:WARNING NORMALIZATION: sumHIST is zero
+2016-03-23 18:29:44,654 WARNING:image: ../../Caltech/BACKGROUND_Google/image_0031.jpg
+
+2016-03-23 18:29:52,539 WARNING:WARNING NORMALIZATION: sumHIST is zero
+2016-03-23 18:29:52,539 WARNING:image: ../../Caltech/menorah/image_0022.jpg
+
+2016-03-23 18:30:03,838 DEBUG:Done:	 FeatureExtraction Nr:4 from:5 ###
+2016-03-23 18:30:03,842 DEBUG:Start:	 Classification Nr:4 from:5
+2016-03-23 18:36:10,152 DEBUG:Done:	 Classification Nr:4 from:5
+2016-03-23 18:36:10,158 DEBUG:Start:	 FeatureExtraction Nr:5 from:5 with HSV_S_Bins=14 ###
+2016-03-23 18:36:15,442 WARNING:WARNING NORMALIZATION: sumHIST is zero
+2016-03-23 18:36:15,443 WARNING:image: ../../Caltech/BACKGROUND_Google/image_0031.jpg
+
+2016-03-23 18:36:26,853 WARNING:WARNING NORMALIZATION: sumHIST is zero
+2016-03-23 18:36:26,853 WARNING:image: ../../Caltech/menorah/image_0022.jpg
+
+2016-03-23 18:36:42,094 DEBUG:Done:	 FeatureExtraction Nr:5 from:5 ###
+2016-03-23 18:36:42,101 DEBUG:Start:	 Classification Nr:5 from:5
+2016-03-23 18:43:10,035 DEBUG:Done:	 Classification Nr:5 from:5
+2016-03-23 18:43:10,039 DEBUG:Done:	 Feautre Optimisation 
+2016-03-23 18:43:10,039 DEBUG:Start:	 Exporting to CSV 
+2016-03-23 18:43:10,044 DEBUG:Done:	 Exporting to CSV 
+2016-03-23 18:43:10,044 DEBUG:Start:	 Plot Result

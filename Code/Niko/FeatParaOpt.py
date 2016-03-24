@@ -99,7 +99,7 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                         elif(parameter=="HSV_V_Bins"):
                                 v_bins = valuePara
                         
-                        histSize = [h_bins, s_bins, v_bins]
+                        histSize = [h_bins,s_bins,v_bins]
                         
                         # Extract Feature from DB
                         feat_desc,f_extr_res = FeatExtraction.calcHSVColorHisto(nameDB, dfImages, histSize, boolNormMinMax)

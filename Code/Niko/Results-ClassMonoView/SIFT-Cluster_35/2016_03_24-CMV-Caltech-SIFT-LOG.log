@@ -1,0 +1,136 @@
+2016-03-24 14:17:21,746 DEBUG: ### Main Programm for Classification MonoView
+2016-03-24 14:17:21,746 DEBUG: ### Classification - Database:Caltech Feature:SIFT train_size:0.8, GridSearch of Trees:25 75 125 175, CrossValidation k-folds:10, cores:-1
+2016-03-24 14:17:21,747 DEBUG: Start:	 Read CSV Files
+2016-03-24 14:17:22,359 DEBUG: Info:	 Shape of Feature:(9144, 35), Length of classLabels vector:(9144,)
+2016-03-24 14:17:22,360 DEBUG: Done:	 Read CSV Files
+2016-03-24 14:17:22,360 DEBUG: Start:	 Determine Train/Test split
+2016-03-24 14:17:22,365 DEBUG: Info:	 Shape X_train:(7315, 35), Length of y_train:7315
+2016-03-24 14:17:22,365 DEBUG: Info:	 Shape X_test:(1829, 35), Length of y_test:1829
+2016-03-24 14:17:22,365 DEBUG: Done:	 Determine Train/Test split
+2016-03-24 14:17:22,365 DEBUG: Start:	 Classification
+2016-03-24 14:18:00,811 DEBUG: Info:	 Time for Classification: 39.0608248711[s]
+2016-03-24 14:18:00,811 DEBUG: Done:	 Classification
+2016-03-24 14:18:00,812 DEBUG: Start:	 Exporting to CSV
+2016-03-24 14:18:00,813 DEBUG: Done:	 Exporting to CSV
+2016-03-24 14:18:01,264 DEBUG: Start:	 Statistic Results
+2016-03-24 14:18:01,265 DEBUG: Info:	 Accuracy classification score:0.312192454893
+2016-03-24 14:18:01,265 DEBUG: Info:	 Classification report:
+2016-03-24 14:18:01,267 DEBUG: 
+                   precision    recall  f1-score   support
+
+        accordion       0.00      0.00      0.00         7
+        airplanes       0.32      0.81      0.46       172
+           anchor       0.00      0.00      0.00         8
+              ant       0.00      0.00      0.00        10
+BACKGROUND_Google       0.29      0.40      0.33       113
+           barrel       0.00      0.00      0.00         4
+             bass       0.00      0.00      0.00        14
+           beaver       0.00      0.00      0.00        12
+        binocular       0.00      0.00      0.00         8
+           bonsai       0.14      0.33      0.19        21
+            brain       0.54      0.54      0.54        26
+     brontosaurus       0.00      0.00      0.00         9
+           buddha       0.00      0.00      0.00        16
+        butterfly       0.00      0.00      0.00        24
+           camera       0.00      0.00      0.00        12
+           cannon       0.00      0.00      0.00         8
+         car_side       0.26      0.24      0.25        25
+      ceiling_fan       0.00      0.00      0.00        10
+        cellphone       0.00      0.00      0.00         8
+            chair       0.00      0.00      0.00        13
+       chandelier       0.00      0.00      0.00        16
+      cougar_body       0.00      0.00      0.00         6
+      cougar_face       0.00      0.00      0.00        13
+             crab       0.00      0.00      0.00        16
+         crayfish       0.00      0.00      0.00        14
+        crocodile       0.33      0.22      0.27         9
+   crocodile_head       0.25      0.14      0.18         7
+              cup       0.00      0.00      0.00        16
+        dalmatian       0.50      0.20      0.29        10
+      dollar_bill       1.00      0.33      0.50         9
+          dolphin       0.00      0.00      0.00        12
+        dragonfly       0.00      0.00      0.00        16
+  electric_guitar       0.00      0.00      0.00        19
+         elephant       0.00      0.00      0.00        10
+              emu       0.00      0.00      0.00        11
+        euphonium       0.38      0.21      0.27        14
+             ewer       0.00      0.00      0.00        14
+            Faces       0.25      0.39      0.31        80
+       Faces_easy       0.26      0.55      0.35        87
+            ferry       0.00      0.00      0.00         8
+         flamingo       0.00      0.00      0.00        18
+    flamingo_head       0.00      0.00      0.00         7
+         garfield       0.67      0.29      0.40         7
+          gerenuk       0.25      1.00      0.40         2
+       gramophone       0.00      0.00      0.00         9
+      grand_piano       0.75      0.21      0.33        14
+        hawksbill       0.23      0.38      0.28        24
+        headphone       0.00      0.00      0.00         6
+         hedgehog       0.15      0.11      0.13        18
+       helicopter       0.00      0.00      0.00        11
+             ibis       0.00      0.00      0.00        12
+     inline_skate       0.00      0.00      0.00         9
+      joshua_tree       0.33      0.23      0.27        13
+         kangaroo       0.13      0.18      0.15        11
+            ketch       0.00      0.00      0.00        25
+             lamp       0.00      0.00      0.00        16
+           laptop       0.00      0.00      0.00        18
+         Leopards       0.56      0.95      0.71        37
+            llama       0.50      0.05      0.08        22
+          lobster       0.00      0.00      0.00         6
+            lotus       0.00      0.00      0.00        15
+         mandolin       0.00      0.00      0.00        10
+           mayfly       0.00      0.00      0.00         7
+          menorah       0.00      0.00      0.00        20
+        metronome       1.00      0.20      0.33         5
+          minaret       0.00      0.00      0.00        16
+       Motorbikes       0.37      0.90      0.53       172
+         nautilus       0.00      0.00      0.00         9
+          octopus       1.00      0.40      0.57         5
+            okapi       0.00      0.00      0.00         6
+           pagoda       0.00      0.00      0.00         4
+            panda       0.00      0.00      0.00         5
+           pigeon       0.00      0.00      0.00        14
+            pizza       0.00      0.00      0.00        13
+         platypus       0.00      0.00      0.00         9
+          pyramid       0.50      0.14      0.22         7
+         revolver       0.00      0.00      0.00        11
+            rhino       0.00      0.00      0.00        11
+          rooster       0.00      0.00      0.00         9
+        saxophone       0.00      0.00      0.00         8
+         schooner       0.00      0.00      0.00        14
+         scissors       0.20      0.20      0.20         5
+         scorpion       0.50      0.20      0.29        15
+        sea_horse       0.33      0.06      0.11        16
+           snoopy       0.67      0.57      0.62         7
+      soccer_ball       0.71      0.31      0.43        16
+          stapler       0.00      0.00      0.00         8
+         starfish       0.18      0.17      0.17        18
+      stegosaurus       0.00      0.00      0.00         8
+        stop_sign       0.60      0.23      0.33        13
+       strawberry       0.67      0.18      0.29        11
+        sunflower       0.14      0.07      0.10        14
+             tick       0.00      0.00      0.00         9
+        trilobite       0.37      0.67      0.48        15
+         umbrella       0.10      0.08      0.09        12
+            watch       0.22      0.17      0.19        42
+      water_lilly       0.00      0.00      0.00         7
+       wheelchair       0.00      0.00      0.00        16
+         wild_cat       0.00      0.00      0.00         8
+    windsor_chair       0.55      0.75      0.63         8
+           wrench       0.00      0.00      0.00         8
+         yin_yang       0.29      0.36      0.32        11
+
+      avg / total       0.21      0.31      0.23      1829
+
+2016-03-24 14:18:01,273 DEBUG: Info:	 Confusion matrix:
+2016-03-24 14:18:01,323 DEBUG: 
+[[0 0 0 ..., 0 0 0]
+ [0 0 0 ..., 0 0 0]
+ [0 0 0 ..., 0 0 0]
+ ..., 
+ [0 0 0 ..., 0 0 0]
+ [0 0 0 ..., 0 0 0]
+ [0 0 0 ..., 0 0 0]]
+2016-03-24 14:18:01,323 DEBUG: Done:	 Statistic Results
+2016-03-24 14:18:01,323 DEBUG: Start:	 Plot Result
