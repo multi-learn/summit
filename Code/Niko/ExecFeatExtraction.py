@@ -24,37 +24,42 @@ __date__	= 2016-03-25
 ### Argument Parser
 
 parser = argparse.ArgumentParser(
-description='This methods permits to export one or more features at the same time for a database of images (path, name). To extract one feature activate it by using the specific argument (e.g. -RGB). For each feature you can define the parameters by using the optional arguments (e.g. --RGB_Hist 32). The results will be exported to a CSV-File.', 
+description='This method permits to export one or more features at the same time for a database of images (path, name). To extract one feature activate it by using the specific argument (e.g. -RGB). For each feature you can define the parameters by using the optional arguments (e.g. --RGB_Hist 32). The results will be exported to a CSV-File.', 
 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-groupStandard = parser.add_argument_group('necessary arguments')
+groupStandard = parser.add_argument_group('Standard arguments')
+groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Select a name of DB, e.g. Caltech (default: %(default)s)', default='DB')
 groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='../DB/Caltech')
 groupStandard.add_argument('--nbClasses', metavar='INT', action='store', help='To limit the number of classes evaluated (default: %(default)s)', default=1000)
-groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
+
 
 groupRGB = parser.add_argument_group('RGB arguments')
 groupRGB.add_argument('-RGB', action='store_true', help='Use option to activate RGB')
+groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=16)
 groupRGB.add_argument('--RGB_CI', metavar='INT', action='store', help='Max Color Intensity [0 to VALUE]', type=int, default=256)
-groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+
 
 groupHSV = parser.add_argument_group('HSV arguments')
 groupHSV.add_argument('-HSV', action='store_true', help='Use option to activate HSV')
+groupHSV.add_argument('-HSV_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=16)
 groupHSV.add_argument('--HSV_S_Bins', metavar='INT', action='store', help='Number of bins for Saturation', type=int, default=16)
 groupHSV.add_argument('--HSV_V_Bins', metavar='INT', action='store', help='Number of bins for Value', type=int, default=16)
-groupHSV.add_argument('-HSV_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+
 
 groupSIFT = parser.add_argument_group('SIFT arguments')
 groupSIFT.add_argument('-SIFT', action='store_true', help='Use option to activate SIFT')
-groupSIFT.add_argument('--SIFT_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=35)
 groupSIFT.add_argument('-SIFT_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+groupSIFT.add_argument('--SIFT_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=35)
+
         
 groupSURF = parser.add_argument_group('SURF arguments')
 groupSURF.add_argument('-SURF', action='store_true', help='Use option to activate SURF')
-groupSURF.add_argument('--SURF_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=30)
 groupSURF.add_argument('-SURF_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+groupSURF.add_argument('--SURF_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=30)
+
 
 groupHOG = parser.add_argument_group('HOG arguments')
 groupHOG.add_argument('-HOG', action='store_true', help='Use option to activate HOG')

@@ -29,14 +29,15 @@ parser = argparse.ArgumentParser(
 description='This methods permits to execute a multiclass classification with one single view. At this point the used classifier is a RandomForest. The GridSearch permits to vary the number of trees and CrossValidation with k-folds. The result will be a plot of the score per class and a CSV with the best classifier found by the GridSearch.', 
 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-groupStandard = parser.add_argument_group('necessary arguments')
+groupStandard = parser.add_argument_group('Standard arguments')
+groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Name of Database (default: %(default)s)', default='DB')
 groupStandard.add_argument('--feat', metavar='STRING', action='store', help='Name of Feature for Classification (default: %(default)s)', default='RGB')
 groupStandard.add_argument('--pathF', metavar='STRING', action='store', help='Path to the features (default: %(default)s)', default='Results-FeatExtr/')
 groupStandard.add_argument('--fileCL', metavar='STRING', action='store', help='Name of classLabels CSV-file  (default: %(default)s)', default='classLabels.csv')
 groupStandard.add_argument('--fileCLD', metavar='STRING', action='store', help='Name of classLabels-Description CSV-file  (default: %(default)s)', default='classLabels-Description.csv')
 groupStandard.add_argument('--fileFeat', metavar='STRING', action='store', help='Name of feature CSV-file  (default: %(default)s)', default='feature.csv')
-groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
+
 
 groupClass = parser.add_argument_group('Classification arguments')
 groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the the train size', type=float, default=0.8)

@@ -39,7 +39,7 @@ def calcRGBColorHisto(nameDB, dfImages, numberOfBins, maxColorIntensity, boolNor
                 norm = "MinMax"
         else:
                 norm = "Distr"
-                param = "Bins_" +  str(int(numberOfBins)) + "-" + "MaxCI_" + str(maxColorIntensity) + "-" + "Norm_" + norm
+                param = "Bins_" +  str(int(numberOfBins)) + "-" + "CI_" + str(maxColorIntensity) + "-" + "Norm_" + norm
                 description = nameDB + "-RGB-" + param
 	
     

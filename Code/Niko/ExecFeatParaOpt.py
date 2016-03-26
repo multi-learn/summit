@@ -27,12 +27,13 @@ parser = argparse.ArgumentParser(
 description='This methods permits to perform an optimisation of the parameter of one feature. Therefore you have so specify which feature to use (e.g. --feature RGB) and which of his parameters (the parameters depend on the feature chosen, e.g. for RGB: --parameter Bins). The method will calculate the results in your given range and export the results to a CSV-File.',
 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-groupStandard = parser.add_argument_group('necessary arguments')
+groupStandard = parser.add_argument_group('Standard arguments')
+groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
+groupStandard.add_argument('-show', action='store_true', help='Use option to show results instead of saving it')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Select a name of DB, e.g. Caltech (default: %(default)s)', default='DB')
 groupStandard.add_argument('--path', metavar='STRING', action='store', help='Path to the database (default: %(default)s)', default='../DB/Caltech')
 groupStandard.add_argument('--nbClasses', metavar='INT', action='store', help='To limit the number of classes evaluated (default: %(default)s)', default=1000)
-groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
-groupStandard.add_argument('-show', action='store_true', help='Use option to show results instead of saving it')
+
 
 groupOpt = parser.add_argument_group('Optimisation arguments')
 groupOpt.add_argument('--feat', choices=['RGB', 'HSV', 'SURF', 'SIFT', 'HOG'], help='Set feature from list (RGB, HSV, ..)', default='RGB')
@@ -42,23 +43,27 @@ groupOpt.add_argument('--valueEnd', metavar='INT', action='store', help='End-Val
 groupOpt.add_argument('--nCalcs', metavar='INT', action='store', help='Number of calculations between Start and End-Value', type=int)
 
 groupRGB = parser.add_argument_group('RGB arguments')
+groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 groupRGB.add_argument('--RGB_Bins', metavar='INT', action='store', help='Number of bins for histogram', type=int, default=16)
 groupRGB.add_argument('--RGB_CI', metavar='INT', action='store', help='Max Color Intensity [0 to VALUE]', type=int, default=256)
-groupRGB.add_argument('-RGB_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+
 
 groupHSV = parser.add_argument_group('HSV arguments')
+groupHSV.add_argument('-HSV_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
 groupHSV.add_argument('--HSV_H_Bins', metavar='INT', action='store', help='Number of bins for Hue', type=int, default=16)
 groupHSV.add_argument('--HSV_S_Bins', metavar='INT', action='store', help='Number of bins for Saturation', type=int, default=16)
 groupHSV.add_argument('--HSV_V_Bins', metavar='INT', action='store', help='Number of bins for Value', type=int, default=16)
-groupHSV.add_argument('-HSV_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+
 
 groupSIFT = parser.add_argument_group('SIFT arguments')
-groupSIFT.add_argument('--SIFT_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=35)
 groupSIFT.add_argument('-SIFT_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+groupSIFT.add_argument('--SIFT_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=35)
+
         
 groupSURF = parser.add_argument_group('SURF arguments')
-groupSURF.add_argument('--SURF_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=30)
 groupSURF.add_argument('-SURF_NMinMax', action='store_true', help='Use option to actvate MinMax Norm instead of Distribution')
+groupSURF.add_argument('--SURF_Cluster', metavar='INT', action='store', help='Number of k-means cluster', type=int, default=30)
+
 
 groupHOG = parser.add_argument_group('HOG arguments')
 groupHOG.add_argument('--HOG_CellD', metavar='INT', action='store', help='CellDimension for local histograms', type=int, default=5)
