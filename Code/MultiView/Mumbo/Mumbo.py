@@ -9,7 +9,7 @@ def initialize(NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH, CLASS_LABELS):
                                        else -(NB_CLASS-1)
                                        for classe in range(NB_CLASS)
                                     ]) for exampleIndice in range(DATASET_LENGTH)
-                            ]) for viewIndice in range(NB_VIEW)]) for iteration in range(NB_ITER+1)
+                            ]) for viewIndice in range(NB_VIEW)]) if iteration==0 else np.zeros((NB_VIEW, DATASET_LENGTH, NB_CLASS)) for iteration in range(NB_ITER+1)
                     ])
     generalCostMatrix = np.array([
                             np.array([
@@ -85,10 +85,10 @@ def chooseView(predictions, generalCostMatrix, iterIndice, NB_VIEW):
     return bestView, edges[bestView]
 
 
-def updateGeneralFs(generalFs, iterIndice, predictions, alphas, DATASET_LENGTH, NB_CLASS, bestView, generalAlpha, CLASS_LABELS):
+def updateGeneralFs(generalFs, iterIndice, predictions, alphas, DATASET_LENGTH, NB_CLASS, bestView, generalAlphas, CLASS_LABELS):
     for exampleIndice in range(DATASET_LENGTH):
         for classe in range(NB_CLASS):
-            generalFs[iterIndice, exampleIndice, classe]=np.sum(np.array([generalAlpha[pastIterIndice] if  predictions[pastIterIndice, bestView, exampleIndice]==CLASS_LABELS[exampleIndice] else 0 for pastIterIndice in range(iterIndice)]))
+            generalFs[iterIndice, exampleIndice, classe]=np.sum(np.array([generalAlphas[pastIterIndice] if  predictions[pastIterIndice, bestView, exampleIndice]==CLASS_LABELS[exampleIndice] else 0 for pastIterIndice in range(iterIndice)]))
         return generalFs
 
 
@@ -101,9 +101,18 @@ def updateGeneralCostMatrix(generalCostMatrix, generalFs, iterIndice, DATASET_LE
                 generalCostMatrix[iterIndice, exampleIndice, classe]= -1 * np.sum(np.exp(generalFs[iterIndice, exampleIndice] - generalFs[iterIndice, exampleIndice, classe]))
     return generalCostMatrix
 
-def mumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH):
+def mumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH, classifier):
     costMatrices, generalCostMatrix, fs, ds, edges, alphas, predictions, generalAlphas, generalFs = initialize(NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH, CLASS_LABELS)
     for iterIndice in range(NB_ITER):
-        poulet = trainWeakClassifers(classifer, costMatrices)
+        poulet = trainWeakClassifers(classifier, costMatrices)
         for viewIndice in range(NB_VIEW):
-            edges[iterIndice, viewIndice] = computeEdge(predictions[iterIndice, viewIndice], costMatrices[])
+            edges[iterIndice, viewIndice] = computeEdge(predictions[iterIndice, viewIndice], costMatrices[iterIndice+1, viewIndice])
+            alphas[iterIndice, viewIndice] = computeAlpha(edges[iterIndice, viewIndice])
+        ds = updateDs(ds, predictions, CLASS_LABELS, NB_VIEW, DATASET_LENGTH, NB_CLASS, iterIndice)
+        fs = updateFs(predictions, ds, alphas, fs, iterIndice, NB_VIEW, DATASET_LENGTH, NB_CLASS, CLASS_LABELS)
+        costMatrices = updateCostmatrices(costMatrices, fs, iterIndice, NB_VIEW, DATASET_LENGTH, NB_CLASS, CLASS_LABELS)
+        bestView, edge = chooseView(predictions, generalCostMatrix, iterIndice, NB_VIEW)
+        generalAlphas[iterIndice] = computeAlpha(edge)
+        generalFs = updateGeneralFs(generalFs, iterIndice, predictions, alphas, DATASET_LENGTH, NB_CLASS, bestView, generalAlphas, CLASS_LABELS)
+        generalCostMatrix = updateGeneralCostMatrix(generalCostMatrix, generalFs, iterIndice, DATASET_LENGTH, NB_CLASS, CLASS_LABELS)
+    return
