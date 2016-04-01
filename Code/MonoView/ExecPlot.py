@@ -3,8 +3,8 @@
 """ Script whichs helps to replot results from Feature Parameter Optimisation """
 
 # Import built-in modules
-import datetime                         # for TimeStamp in CSVFile
 import argparse                         # for acommand line arguments
+import datetime                         # for TimeStamp in CSVFile
 import os                               # to geth path of the running script
 
 # Import 3rd party modules

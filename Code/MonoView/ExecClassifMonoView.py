@@ -4,9 +4,9 @@
 
 # Import built-in modules
 import argparse                         # for command line arguments
-import time                             # for time calculations
 import datetime                         # for TimeStamp in CSVFile
 import os                               # to geth path of the running script
+import time                             # for time calculations
 
 # Import 3rd party modules
 import numpy as np                      # for reading CSV-files and Series
@@ -129,12 +129,12 @@ accuracy_score = ExportResults.accuracy_score(y_test, y_test_pred)
 logging.debug("Info:\t Classification report:")
 filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Report"
 logging.debug("\n" + str(metrics.classification_report(y_test, y_test_pred, labels = range(0,len(classLabelsDesc.name)), target_names=classLabelsNamesList)))
-scores_df = ExportResults.classification_report_df(dir, filename, y_test, y_test_pred, range(0,len(classLabelsDesc.name)), classLabelsNamesList)
+scores_df = ExportResults.classification_report_df(dir, filename, y_test, y_test_pred, range(0, len(classLabelsDesc.name)), classLabelsNamesList)
 
 # Create some useful statistcs
 logging.debug("Info:\t Statistics:")
 filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Stats"
-stats_df = ExportResults.classification_stats(dir,filename,scores_df,accuracy_score)
+stats_df = ExportResults.classification_stats(dir, filename, scores_df, accuracy_score)
 logging.debug("\n" + stats_df.to_string())
 
 # Confusion Matrix

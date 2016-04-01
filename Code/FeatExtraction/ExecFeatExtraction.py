@@ -3,17 +3,17 @@
 """ Execution: Script to perform feature extraction """
 
 # Import built-in modules
-import datetime                         # for TimeStamp in CSVFile
-import time                             # for time calculations
 import argparse                         # for acommand line arguments
+import datetime                         # for TimeStamp in CSVFile
 import os                               # to geth path of the running script
+import time                             # for time calculations
 
 # Import 3rd party modules
 import logging                          # To create Log-Files   
 
 # Import own modules
 import DBCrawl			        # Functions to read Images from Database
-import ExportResults                    # Functions to render results
+import Code.Niko.ExportResults  # Functions to render results
 import FeatExtraction                   # Functions to extract the features from Database   
 
 # Author-Info
@@ -235,36 +235,36 @@ dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatExtr/"
 
 ### Classlabels and Description
 OutputfileNameClassLabels = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + nameDB + "-ClassLabels"
-ExportResults.exportNumpyToCSV(dfImages.classLabel, dir, OutputfileNameClassLabels, '%i')
+Code.Niko.ExportResults.exportNumpyToCSV(dfImages.classLabel, dir, OutputfileNameClassLabels, '%i')
 
 fileNameClassLabels = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + nameDB + "-ClassLabels-Description"
-ExportResults.exportPandasToCSV(sClassLabels, dir, fileNameClassLabels)
+Code.Niko.ExportResults.exportPandasToCSV(sClassLabels, dir, fileNameClassLabels)
 
 format = '%1.30f'
 ### RGB
 if(args.RGB):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + rgb_feat_desc
-        ExportResults.exportNumpyToCSV(rgb_f_extr_res, dir, fileName, format)
+        Code.Niko.ExportResults.exportNumpyToCSV(rgb_f_extr_res, dir, fileName, format)
         
 
 ### HSV
 if(args.HSV):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + hsv_feat_desc
-        ExportResults.exportNumpyToCSV(hsv_f_extr_res, dir, fileName, format)
+        Code.Niko.ExportResults.exportNumpyToCSV(hsv_f_extr_res, dir, fileName, format)
 
 ### SIFT
 if(args.SIFT):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + sift_feat_desc
-        ExportResults.exportNumpyToCSV(sift_f_extr_res, dir, fileName, format)
+        Code.Niko.ExportResults.exportNumpyToCSV(sift_f_extr_res, dir, fileName, format)
 
 ### SURF
 if(args.SURF):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + surf_feat_desc
-        ExportResults.exportNumpyToCSV(surf_f_extr_res, dir, fileName, format)
+        Code.Niko.ExportResults.exportNumpyToCSV(surf_f_extr_res, dir, fileName, format)
 
 ### HOG
 if(args.HOG):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + hog_feat_desc
-        ExportResults.exportNumpyToCSV(hog_f_extr_res, dir, fileName, format)
+        Code.Niko.ExportResults.exportNumpyToCSV(hog_f_extr_res, dir, fileName, format)
 
 logging.debug("Done:\t Save Features to CSV Databases")

@@ -3,8 +3,8 @@
 """ Execution: Script to perform feature parameter optimisation """
 
 # Import built-in modules
-import datetime                         # for TimeStamp in CSVFile
 import argparse                         # for acommand line arguments
+import datetime                         # for TimeStamp in CSVFile
 import os                               # to geth path of the running script
 
 # Import 3rd party modules
@@ -14,7 +14,7 @@ import logging                          # To create Log-Files
 # Import own modules
 import DBCrawl			        # Functions to read Images from Database
 import FeatParaOpt		        # Functions to perform parameter optimisation
-import ExportResults                    # Functions to render results
+import Code.Niko.ExportResults  # Functions to render results
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
@@ -143,7 +143,7 @@ logging.debug("Done:\t Feautre Optimisation ")
 logging.debug("Start:\t Exporting to CSV ")
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatParaOpt/"
 filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-FPO-" + args.name + "-" + args.feat + "-" + args.param
-ExportResults.exportPandasToCSV(df_feat_res, dir, filename)
+Code.Niko.ExportResults.exportPandasToCSV(df_feat_res, dir, filename)
 logging.debug("Done:\t Exporting to CSV ")
 
 # Get data from result to show results in plot
@@ -185,9 +185,9 @@ else:
 
 fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FPO-" + args.name + "-" + args.feat + "-" + args.param
 # Show Results for Calculation
-ExportResults.showScoreTime(dir, fileName + "-TotalTime", store, score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feat, 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
-ExportResults.showScoreTime(dir, fileName + "-FeatExtTime", store, score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feat, 'Precision', 'Feature Extraction Time\n [s]')
-ExportResults.showScoreTime(dir, fileName + "-ClassTime", store, score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feat, 'Precision', 'Classification Time\n [s]')
+Code.Niko.ExportResults.showScoreTime(dir, fileName + "-TotalTime", store, score, tot_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feat, 'Precision', 'Total Time (Feature Extraction+Classification)\n [s]')
+Code.Niko.ExportResults.showScoreTime(dir, fileName + "-FeatExtTime", store, score, feat_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feat, 'Precision', 'Feature Extraction Time\n [s]')
+Code.Niko.ExportResults.showScoreTime(dir, fileName + "-ClassTime", store, score, cl_time, rangeX, args.param, feat_desc, cl_desc, 'Results for Parameter Optimisation - DB:' + args.name + ' Feat:' + args.feat, 'Precision', 'Classification Time\n [s]')
 
 logging.debug("Done:\t Plot Result")
 

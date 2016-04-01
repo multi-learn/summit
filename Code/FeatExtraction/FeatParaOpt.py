@@ -12,7 +12,7 @@ import logging                          # To create Log-Files
 
 # Import own modules
 import FeatExtraction	                # Functions for Feature Extractions
-import ClassifMonoView	                # Functions for classification
+import Code.Niko.ClassifMonoView  # Functions for classification
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
@@ -173,7 +173,7 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                 clas_cores = para_Cl[3]                
                 
                 # Calculate Train/Test data
-                X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(f_extr_res, dfImages.classLabel, split)
+                X_train, X_test, y_train, y_test = Code.Niko.ClassifMonoView.calcTrainTest(f_extr_res, dfImages.classLabel, split)
                 # Own Function for split: ClassifMonoView.calcTrainTestOwn
 		       
                 # Begin Classification RandomForest
@@ -181,7 +181,7 @@ def perfFeatMonoV(nameDB, dfImages, para_opt, para_RGB, para_HSV, para_SIFT, par
                 
                 logging.debug("Start:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)))
                 
-                cl_desc, cl_res = ClassifMonoView.calcClassifRandomForestCV(X_train, y_train, num_estimators, cv_folds, clas_cores)
+                cl_desc, cl_res = Code.Niko.ClassifMonoView.calcClassifRandomForestCV(X_train, y_train, num_estimators, cv_folds, clas_cores)
                     
                 logging.debug("Done:\t Classification Nr:" + str(i) + " from:" + str(max(arr_Calc)))
 		
