@@ -3,6 +3,8 @@ import math
 from joblib import Parallel, delayed
 import Classifers
 
+# Data shape : ((Views, Examples, Corrdinates))
+
 
 def initialize(NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH, CLASS_LABELS):
     costMatrices = np.array([
@@ -45,7 +47,7 @@ def computeWeights(costMatrices, NB_CLASS, DATASET_LENGTH, iterIndice,
     return weights
 
 
-def trainWeakClassifier(classifierName, DATASET, CLASS_LABELS, costMatrices, 
+def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS, costMatrices, 
                         NB_CLASS, DATASET_LENGTH, iterIndice, viewIndice, 
                         classifier_config):
     weights = computeWeights(costMatrices, NB_CLASS, DATASET_LENGTH, 
@@ -64,7 +66,7 @@ def trainWeakClassifers(classifierName, DATASET, CLASS_LABELS, costMatrices,
         NB_JOBS = NB_CORES
 
     trainedClassifiers, classesMatrix = Parallel(n_jobs=NB_JOBS)(
-        delayed(trainWeakClassifier)(classifierName, DATASET, CLASS_LABELS, 
+        delayed(trainWeakClassifier)(classifierName, DATASET[viewIndice], CLASS_LABELS, 
                                     costMatrices, NB_CLASS, DATASET_LENGTH, 
                                     iterIndice, viewIndice, classifier_config) 
         for viewIndice in range(NB_VIEW))
