@@ -245,26 +245,31 @@ format = '%1.30f'
 if(args.RGB):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + rgb_feat_desc
         Code.Niko.ExportResults.exportNumpyToCSV(rgb_f_extr_res, dir, fileName, format)
+        Code.Niko.ExportResults.exportNumpyToCSV(rgb_f_extr_res, dir, nameDB+"-RGB", format)
         
 
 ### HSV
 if(args.HSV):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + hsv_feat_desc
         Code.Niko.ExportResults.exportNumpyToCSV(hsv_f_extr_res, dir, fileName, format)
+        Code.Niko.ExportResults.exportNumpyToCSV(hsv_f_extr_res, dir, nameDB+"-HSV", format)
 
 ### SIFT
 if(args.SIFT):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + sift_feat_desc
         Code.Niko.ExportResults.exportNumpyToCSV(sift_f_extr_res, dir, fileName, format)
+        Code.Niko.ExportResults.exportNumpyToCSV(sift_f_extr_res, dir, nameDB+"-SIFT", format)
 
 ### SURF
 if(args.SURF):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + surf_feat_desc
         Code.Niko.ExportResults.exportNumpyToCSV(surf_f_extr_res, dir, fileName, format)
+        Code.Niko.ExportResults.exportNumpyToCSV(surf_f_extr_res, dir, nameDB+"-SURF", format)
 
 ### HOG
 if(args.HOG):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + hog_feat_desc
         Code.Niko.ExportResults.exportNumpyToCSV(hog_f_extr_res, dir, fileName, format)
-
+        Code.Niko.ExportResults.exportNumpyToCSV(hog_f_extr_res, dir, nameDB+"-HOG", format)
+        
 logging.debug("Done:\t Save Features to CSV Databases")
