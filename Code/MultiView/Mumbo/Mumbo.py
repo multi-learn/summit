@@ -40,7 +40,9 @@ def initialize(NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH, CLASS_LABELS):
 
 def computeWeights(costMatrices, NB_CLASS, DATASET_LENGTH, iterIndice, 
                     viewIndice, CLASS_LABELS):
-    dist = np.sum(costMatrices[iterIndice, viewIndice]) # ATTENTION
+    dist = np.sum(costMatrices[iterIndice, viewIndice])
+    dist = dist - np.sum(np.array([costMatrices[iterIndice, viewIndice, exampleIndice, CLASS_LABELS[exampleIndice]] for exampleIndice in range(DATASET_LENGTH)]))
+
     weights = np.array([costMatrices[iterIndice, viewIndice,
                                     exampleIndice, CLASS_LABELS[exampleIndice]]/dist\
                          for exampleIndice in range(DATASET_LENGTH)])
@@ -52,7 +54,7 @@ def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS, costMatri
                         classifier_config):
     weights = computeWeights(costMatrices, NB_CLASS, DATASET_LENGTH, 
                             iterIndice, viewIndice, CLASS_LABELS)
-    classifierMethod=globals()["DecisionTree"].DecisionTree #Permet d'appeler une fonction avec une string
+    classifierMethod = globals()["DecisionTree"].DecisionTree  # Permet d'appeler une fonction avec une string
     classifier, classes = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
     return classifier, classes
 
@@ -81,8 +83,13 @@ def trainWeakClassifers(classifierName, DATASET, CLASS_LABELS, costMatrices,
     return np.array(trainedClassifiers), np.array(labelsMatrix)
 
 
-def computeEdge(predictionMatrix, costMatrix, NB_CLASS):
-    return np.sum(np.array([np.sum(predictionMatrix*costMatrix[:,classIndice]) for classIndice in range(NB_CLASS)]))
+def computeEdge(predictionMatrix, costMatrix, NB_CLASS, DATASET_LENGTH, CLASS_LABELS):
+    # return np.sum(np.array([np.sum(predictionMatrix*costMatrix[:,classIndice]) for classIndice in range(NB_CLASS)]))
+    cCost = np.sum(np.array([costMatrix[exampleIndice, predictionMatrix[exampleIndice]] for exampleIndice in range(DATASET_LENGTH)]))
+    tCost = np.sum(np.array([-costMatrix[exampleIndice, CLASS_LABELS[exampleIndice]] for exampleIndice in range(DATASET_LENGTH)]))
+    edge = -cCost/tCost
+    print edge
+    return edge
 
 
 def computeAlpha(edge):
@@ -144,15 +151,15 @@ def updateCostmatrices(costMatrices, fs, iterIndice, NB_VIEW, DATASET_LENGTH,
                       fs[iterIndice, viewIndice, 
                         exampleIndice, CLASS_LABELS[exampleIndice]])
                 else:
-                    costMatrices[iterIndice, viewIndice, exampleIndice, classe] \
+                    costMatrices[iterIndice+1, viewIndice, exampleIndice, classe] \
                     = -1*np.sum(np.exp(fs[iterIndice, viewIndice, exampleIndice] - \
                         fs[iterIndice, viewIndice, exampleIndice, classe]))
     return costMatrices
 
 
-def chooseView(predictions, generalCostMatrix, iterIndice, NB_VIEW, NB_CLASS):
+def chooseView(predictions, generalCostMatrix, iterIndice, NB_VIEW, NB_CLASS, DATASET_LENGTH, CLASS_LABELS):
     edges = np.array([computeEdge(predictions[iterIndice, viewIndice], 
-                                    generalCostMatrix[iterIndice], NB_CLASS) \
+                                    generalCostMatrix[iterIndice], NB_CLASS, DATASET_LENGTH, CLASS_LABELS)
                       for viewIndice in range(NB_VIEW)])
     bestView = np.argmax(edges)
     return bestView, edges[bestView]
@@ -164,15 +171,15 @@ def updateGeneralFs(generalFs, iterIndice, predictions, alphas,
     for exampleIndice in range(DATASET_LENGTH):
         for classe in range(NB_CLASS):
             generalFs[iterIndice, exampleIndice, classe]\
-            = np.sum(np.array([generalAlphas[pastIterIndice] \
+            = np.sum(np.array([generalAlphas[pastIterIndice]
                                 if predictions[pastIterIndice, 
                                                 bestView, 
-                                                exampleIndice]\
-                                    ==\
-                                    CLASS_LABELS[exampleIndice]\
-                                 else 0 \
-                                 for pastIterIndice in range(iterIndice)\
-                            ])\
+                                                exampleIndice]
+                                    ==
+                                    CLASS_LABELS[exampleIndice]
+                                 else 0
+                                 for pastIterIndice in range(iterIndice)
+                            ])
                     )
         return generalFs
 
@@ -244,7 +251,7 @@ def trainMumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH
             edges[iterIndice, viewIndice] = computeEdge(predictions[iterIndice,
                                                                     viewIndice],
                                                         costMatrices[iterIndice+1,
-                                                                     viewIndice], NB_CLASS)
+                                                                     viewIndice], NB_CLASS, DATASET_LENGTH, CLASS_LABELS)
 
             alphas[iterIndice, viewIndice] = computeAlpha(edges[iterIndice,
                                                                 viewIndice])
@@ -258,7 +265,7 @@ def trainMumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH
                                           NB_CLASS, CLASS_LABELS)
 
         bestView, edge = chooseView(predictions, generalCostMatrix,
-                                    iterIndice, NB_VIEW, NB_CLASS)
+                                    iterIndice, NB_VIEW, NB_CLASS, DATASET_LENGTH, CLASS_LABELS)
 
         bestViews[iterIndice] = bestView
         generalAlphas[iterIndice] = computeAlpha(edge)
