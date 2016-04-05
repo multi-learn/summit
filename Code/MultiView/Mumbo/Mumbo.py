@@ -87,8 +87,10 @@ def computeEdge(predictionMatrix, costMatrix, NB_CLASS, DATASET_LENGTH, CLASS_LA
     # return np.sum(np.array([np.sum(predictionMatrix*costMatrix[:,classIndice]) for classIndice in range(NB_CLASS)]))
     cCost = np.sum(np.array([costMatrix[exampleIndice, predictionMatrix[exampleIndice]] for exampleIndice in range(DATASET_LENGTH)]))
     tCost = np.sum(np.array([-costMatrix[exampleIndice, CLASS_LABELS[exampleIndice]] for exampleIndice in range(DATASET_LENGTH)]))
-    edge = -cCost/tCost
-    print edge
+    if tCost == 0:
+        edge = 0.
+    else:
+        edge = -cCost/tCost
     return edge
 
 
