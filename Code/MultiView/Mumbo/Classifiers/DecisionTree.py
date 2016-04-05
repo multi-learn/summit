@@ -1,10 +1,11 @@
 from sklearn import tree
-from sklearn.multiclass import OneVsRestClassifier
-
+# from sklearn.multiclass import OneVsRestClassifier
+from ModifiedMulticlass import OneVsRestClassifier
 
 # Add weights 
 
-def decisionTree(data, labels, arg):
+def DecisionTree(data, labels, arg, weights):
     classifier = OneVsRestClassifier(tree.DecisionTreeClassifier(max_depth=arg))
-    classifier.fit(data, labels)
+    classifier.fit(data, labels, sample_weight=weights)
     return classifier, classifier.predict(data)
+
