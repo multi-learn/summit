@@ -71,3 +71,49 @@ def getAwaData(pathToAwa, nbLabels, views):
     #         # data[exampleIndice, viewIdice] = {i:rawData[viewIdice][exampleIndice][i] for i in np.arange(len(rawData[viewIdice][exampleIndice]))}
 
     return data, labels, viewDictionnary, labelDictionnary
+
+def splitData(data, labels, ratioForTrain):
+    trainData = []
+    testData = []
+    trainLabels = []
+    testLabels = []
+    for viewIndice in range(len(data)):
+        a = 1
+    return
+
+def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_VIEW):
+    nbTrainingExamples = int(DATASET_LENGTH * LEARNING_RATE)
+    trainingExamplesIndices = np.random.random_integers(0, DATASET_LENGTH, nbTrainingExamples)
+    trainData, trainLabels = [], []
+    testData, testLabels = [], []
+    for viewIndice in range(NB_VIEW):
+        trainD, testD = [], []
+        trainL, testL = [], []
+        for i in np.arange(DATASET_LENGTH):
+            if i in trainingExamplesIndices:
+                trainD.append(DATA[viewIndice][i])
+                trainL.append(CLASS_LABELS[i])
+            else:
+                testD.append(DATA[viewIndice][i])
+                testL.append(CLASS_LABELS[i])
+        trainData.append(np.array(trainD))
+        testData.append(np.array(testD))
+    trainLabels.append(np.array(trainL))
+    testLabels.append(np.array(testL))
+    return trainData, np.array(trainLabels[0]), testData, np.array(testLabels[0])
+
+# def equilibrateDataset(trainDataSet, trainLabels, pointedLabelIndice):
+#     pointedClassIndices, notPointedClassesIndices, nbPointedExamples, nbNotPointedExamples = separateData(trainDataSet,
+#                                                                                                           trainLabels,
+#                                                                                                           pointedLabelIndice)
+#     trainDataSet, trainLabels = selectData(trainDataSet, trainLabels, pointedClassIndices, notPointedClassesIndices,
+#                                            nbPointedExamples, nbNotPointedExamples)
+#     trainDataSetLength = len(trainDataSet)
+#     shuffledIndices = np.arange(trainDataSetLength)
+#     np.random.shuffle(shuffledIndices)
+#     shuffledTrainDataSet = []
+#     shuffledTrainLabels = []
+#     for i in np.arange(trainDataSetLength):
+#         shuffledTrainDataSet.append(trainDataSet[shuffledIndices[i]])
+#         shuffledTrainLabels.append(trainLabels[shuffledIndices[i]])
+#     return np.array(shuffledTrainDataSet), np.array(shuffledTrainLabels)
