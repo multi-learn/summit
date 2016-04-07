@@ -3,20 +3,20 @@ import GetMutliviewDb as DB
 import numpy as np
 import operator
 import matplotlib.pyplot as plt
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, accuracy_score
 
 
 NB_VIEW = 3
 DATASET_LENGTH = 300
 NB_CLASS = 5
-NB_ITER = 30
+NB_ITER = 10
 classifierName="DecisionTree"
 NB_CORES = 3
-classifierConfig = 5
+classifierConfig = 3
 pathToAwa = "/home/doob/"
 views = ['phog-hist', 'cq-hist', 'decaf']
 NB_VIEW = len(views)
-LEARNING_RATE = 0.7
+LEARNING_RATE = 0.5
 
 
 DATASET, CLASS_LABELS, viewDictionnary, labelDictionnary = DB.getAwaData(pathToAwa, NB_CLASS, views)
@@ -47,14 +47,13 @@ def error(computedLabels, testLabels):
     error = sum(map(operator.ne, computedLabels, testLabels))
     return float(error) * 100 / len(computedLabels)
 
-print np.transpose(predictedTestLabelsByIter)
+
 x = range(NB_ITER)
 trainErrors = []
 testErrors = []
-for iterTest, iterTrain in zip(np.transpose(predictedTrainLabelsByIter), np.transpose(predictedTestLabelsByIter)):
-    trainErrors.append(error(iterTrain, trainLabels))
-    testErrors.append(error(iterTest, testLabels))
-# print x, trainErrors, testErrors
+for iterTrain, iterTest in zip(np.transpose(predictedTrainLabelsByIter), np.transpose(predictedTestLabelsByIter)):
+    trainErrors.append(error(trainLabels, iterTrain))
+    testErrors.append(error(testLabels, iterTest))
 
 
 figure = plt.figure()

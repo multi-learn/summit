@@ -15,9 +15,9 @@ def initialize(NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH, CLASS_LABELS):
                                                                     else -(NB_CLASS - 1)
                                                                     for classe in range(NB_CLASS)
                                                                     ]) for exampleIndice in range(DATASET_LENGTH)
-                                                          ]) for viewIndice in range(NB_VIEW)]) \
-                                    if iteration == 0 \
-                                    else np.zeros((NB_VIEW, DATASET_LENGTH, NB_CLASS)) \
+                                                          ]) for viewIndice in range(NB_VIEW)])
+                                    if iteration == 0
+                                    else np.zeros((NB_VIEW, DATASET_LENGTH, NB_CLASS))
                                 for iteration in range(NB_ITER + 1)
                                 ])
     generalCostMatrix = np.array([
@@ -41,12 +41,12 @@ def initialize(NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH, CLASS_LABELS):
 
 def computeWeights(costMatrices, NB_CLASS, DATASET_LENGTH, iterIndice,
                    viewIndice, CLASS_LABELS):
-    dist = np.sum(costMatrices[iterIndice, viewIndice])
+    dist = np.sum(costMatrices[iterIndice+1, viewIndice])
     dist = dist - np.sum(np.array(
-            [costMatrices[iterIndice, viewIndice, exampleIndice, CLASS_LABELS[exampleIndice]] for exampleIndice in
+            [costMatrices[iterIndice+1, viewIndice, exampleIndice, CLASS_LABELS[exampleIndice]] for exampleIndice in
              range(DATASET_LENGTH)]))
 
-    weights = np.array([-costMatrices[iterIndice, viewIndice,
+    weights = np.array([-costMatrices[iterIndice+1, viewIndice,
                                       exampleIndice, CLASS_LABELS[exampleIndice]] / dist
                         for exampleIndice in range(DATASET_LENGTH)])
     return weights
@@ -154,13 +154,14 @@ def updateCostmatrices(costMatrices, fs, iterIndice, NB_VIEW, DATASET_LENGTH,
             for classe in range(NB_CLASS):
                 if classe != CLASS_LABELS[exampleIndice]:
                     costMatrices[iterIndice + 1, viewIndice, exampleIndice, classe] \
-                        = math.exp(fs[iterIndice, viewIndice, exampleIndice, classe] -
+                        = 1.0*math.exp(fs[iterIndice, viewIndice, exampleIndice, classe] -
                                    fs[iterIndice, viewIndice,
                                       exampleIndice, CLASS_LABELS[exampleIndice]])
                 else:
                     costMatrices[iterIndice + 1, viewIndice, exampleIndice, classe] \
-                        = -1 * np.sum(np.exp(fs[iterIndice, viewIndice, exampleIndice] -
+                        = -1. * np.sum(np.exp(fs[iterIndice, viewIndice, exampleIndice] -
                                              fs[iterIndice, viewIndice, exampleIndice, classe]))
+    costMatrices = costMatrices/np.amax(np.absolute(costMatrices))
     return costMatrices
 
 
@@ -168,6 +169,7 @@ def chooseView(predictions, generalCostMatrix, iterIndice, NB_VIEW, NB_CLASS, DA
     edges = np.array([computeEdge(predictions[iterIndice, viewIndice],
                                   generalCostMatrix[iterIndice], NB_CLASS, DATASET_LENGTH, CLASS_LABELS)
                       for viewIndice in range(NB_VIEW)])
+    print edges
     bestView = np.argmax(edges)
     return bestView, edges[bestView]
 
@@ -241,15 +243,14 @@ def trainMumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH
 
             alphas[iterIndice, viewIndice] = computeAlpha(edges[iterIndice,
                                                                 viewIndice])
-
         ds = updateDs(ds, predictions, CLASS_LABELS, NB_VIEW, DATASET_LENGTH,
                       NB_CLASS, iterIndice)
         fs = updateFs(predictions, ds, alphas, fs, iterIndice, NB_VIEW,
                       DATASET_LENGTH, NB_CLASS, CLASS_LABELS)
+
         costMatrices = updateCostmatrices(costMatrices, fs, iterIndice,
                                           NB_VIEW, DATASET_LENGTH,
                                           NB_CLASS, CLASS_LABELS)
-
         bestView, edge = chooseView(predictions, generalCostMatrix,
                                     iterIndice, NB_VIEW, NB_CLASS, DATASET_LENGTH, CLASS_LABELS)
         bestViews[iterIndice] = bestView
@@ -282,13 +283,18 @@ def classifyMumbo(DATASET, classifiers, alphas, views, NB_CLASS):
 
 def classifyMumbobyIter(DATASET, classifiers, alphas, views, NB_CLASS):
     DATASET_LENGTH = len(DATASET[0])
-    predictedLabels = np.zeros((DATASET_LENGTH, len(classifiers)))
+    print views
+    NB_ITER = len(classifiers)
+    predictedLabels = np.zeros((DATASET_LENGTH, NB_ITER))
     votes = np.zeros((DATASET_LENGTH, NB_CLASS))
-    for classifier, alpha, view, iterIndice in zip(classifiers, alphas, views, range(len(classifiers))):
+    for classifier, alpha, view, iterIndice in zip(classifiers, alphas, views, range(NB_ITER)):
         votesByIter = np.zeros(NB_CLASS)
         for exampleIndice in range(DATASET_LENGTH):
             data = np.array([np.array(DATASET[int(view)][exampleIndice])])
             votesByIter[int(classifier.predict(data))] += alpha
             votes[exampleIndice] = votes[exampleIndice] + np.array(votesByIter)
             predictedLabels[exampleIndice, iterIndice] = np.argmax(votes[exampleIndice])
+            if iterIndice>=1 and predictedLabels[exampleIndice, iterIndice-1]!=predictedLabels[exampleIndice, iterIndice]:
+                print "Different"
+        print votesByIter
     return predictedLabels
