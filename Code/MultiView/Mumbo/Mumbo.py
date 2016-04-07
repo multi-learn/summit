@@ -206,25 +206,6 @@ def updateGeneralCostMatrix(generalCostMatrix, generalFs, iterIndice,
     return generalCostMatrix
 
 
-# def computeFinalFs(DATASET_LENGTH, NB_CLASS, generalAlphas, predictions,
-#                    bestViews, CLASS_LABELS, NB_ITER):
-#     finalFs = np.zeros((DATASET_LENGTH, NB_CLASS))
-#     for exampleIndice in range(DATASET_LENGTH):
-#         for classe in range(NB_CLASS):
-#             finalFs[exampleIndice, classe] = np.sum(np.array([
-#                                                                  generalAlphas[iterIndice]
-#                                                                      if predictions[iterIndice,
-#                                                                                     bestViews[iterIndice],
-#                                                                                     exampleIndice]
-#                                                                         ==
-#                                                                         CLASS_LABELS[exampleIndice]
-#                                                                      else 0
-#                                                                  for iterIndice in range(NB_ITER)
-#                                                                  ])
-#                                                     )
-#     return finalFs
-
-
 def trainMumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH,
                classifierName, NB_CORES, classifierConfig):
     # Initialization
