@@ -102,6 +102,47 @@ def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, 
     testLabels.append(np.array(testL))
     return trainData, np.array(trainLabels[0]), testData, np.array(testLabels[0])
 
+def getDbfromCSV(path):
+    files = os.listdir(path)
+    DATA = np.zeros((3,40,2))
+    for file in files:
+        if file[-9:]=='moins.csv' and file[:7]=='sample1':
+            X = open(path+file)
+            for x, i in zip(X, range(20)):
+                DATA[0, i] = np.array([float(coord) for coord in x.strip().split('\t')])
+        if file[-9:]=='moins.csv' and file[:7]=='sample2':
+            X = open(path+file)
+            for x, i in zip(X, range(20)):
+                DATA[1, i] = np.array([float(coord) for coord in x.strip().split('\t')])
+        if file[-9:]=='moins.csv' and file[:7]=='sample3':
+            X = open(path+file)
+            for x, i in zip(X, range(20)):
+                DATA[2, i] = np.array([float(coord) for coord in x.strip().split('\t')])
+
+    for file in files:
+        if file[-8:]=='plus.csv' and file[:7]=='sample1':
+            print 'poulet'
+            X = open(path+file)
+            for x, i in zip(X, range(20)):
+                DATA[0, i+20] = np.array([float(coord) for coord in x.strip().split('\t')])
+        if file[-8:]=='plus.csv' and file[:7]=='sample2':
+            X = open(path+file)
+            for x, i in zip(X, range(20)):
+                DATA[1, i+20] = np.array([float(coord) for coord in x.strip().split('\t')])
+        if file[-8:]=='plus.csv' and file[:7]=='sample3':
+            X = open(path+file)
+            for x, i in zip(X, range(20)):
+                DATA[2, i+20] = np.array([float(coord) for coord in x.strip().split('\t')])
+    print DATA
+    LABELS = np.zeros(40)
+    LABELS[:20]=LABELS[:20]+1
+    print LABELS
+    # Y = np.genfromtxt(args.pathF + args.fileCL, delimiter=';')
+    return DATA, LABELS
+
+if __name__=='__main__':
+    getDbfromCSV("/home/doob/OriginalData/")
+
 # def equilibrateDataset(trainDataSet, trainLabels, pointedLabelIndice):
 #     pointedClassIndices, notPointedClassesIndices, nbPointedExamples, nbNotPointedExamples = separateData(trainDataSet,
 #                                                                                                           trainLabels,

@@ -41,12 +41,12 @@ def initialize(NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH, CLASS_LABELS):
 
 def computeWeights(costMatrices, NB_CLASS, DATASET_LENGTH, iterIndice,
                    viewIndice, CLASS_LABELS):
-    dist = np.sum(costMatrices[iterIndice+1, viewIndice])
+    dist = np.sum(costMatrices[iterIndice, viewIndice])
     dist = dist - np.sum(np.array(
-            [costMatrices[iterIndice+1, viewIndice, exampleIndice, CLASS_LABELS[exampleIndice]] for exampleIndice in
+            [costMatrices[iterIndice, viewIndice, exampleIndice, CLASS_LABELS[exampleIndice]] for exampleIndice in
              range(DATASET_LENGTH)]))
 
-    weights = np.array([-costMatrices[iterIndice+1, viewIndice,
+    weights = np.array([-costMatrices[iterIndice, viewIndice,
                                       exampleIndice, CLASS_LABELS[exampleIndice]] / dist
                         for exampleIndice in range(DATASET_LENGTH)])
     return weights
@@ -58,8 +58,8 @@ def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS, costMatri
     weights = computeWeights(costMatrices, NB_CLASS, DATASET_LENGTH,
                              iterIndice, viewIndice, CLASS_LABELS)
     classifierMethod = globals()["DecisionTree"].DecisionTree  # Permet d'appeler une fonction avec une string
-    classifier, classes = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
-    return classifier, classes
+    classifier, classes, isBad = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights, CLASS_LABELS)
+    return classifier, classes, isBad
 
 
 def trainWeakClassifers(classifierName, DATASET, CLASS_LABELS, costMatrices,
@@ -67,6 +67,7 @@ def trainWeakClassifers(classifierName, DATASET, CLASS_LABELS, costMatrices,
                         NB_CORES, NB_VIEW):
     trainedClassifiers = []
     labelsMatrix = []
+    areBad = []
     if NB_CORES > NB_VIEW:
         NB_JOBS = NB_VIEW
     else:
@@ -78,11 +79,16 @@ def trainWeakClassifers(classifierName, DATASET, CLASS_LABELS, costMatrices,
                                          iterIndice, viewIndice, classifier_config)
             for viewIndice in range(NB_VIEW))
 
-    for (classifier, labelsArray) in trainedClassifiersAndLabels:
+    for (classifier, labelsArray, isBad) in trainedClassifiersAndLabels:
         trainedClassifiers.append(classifier)
         labelsMatrix.append(labelsArray)
-
-    return np.array(trainedClassifiers), np.array(labelsMatrix)
+        print labelsArray
+        areBad.append(isBad)
+    # print "0/1 : "+str(np.sum(labelsMatrix[0]==CLASS_LABELS))
+    # print "0/2 : "+str(np.sum(labelsMatrix[1]==CLASS_LABELS))
+    # print "2/1 : "+str(np.sum(labelsMatrix[2]==CLASS_LABELS))
+    # print "__________________________"
+    return np.array(trainedClassifiers), np.array(labelsMatrix), np.array(areBad)
 
 
 def computeEdge(predictionMatrix, costMatrix, NB_CLASS, DATASET_LENGTH, CLASS_LABELS):
@@ -144,6 +150,8 @@ def updateFs(predictions, ds, alphas, fs, iterIndice, NB_VIEW, DATASET_LENGTH,
                                               classe
                                            else 0
                                        for pastIterIndice in range(iterIndice)]))
+    if np.amax(np.absolute(fs)) != 0:
+        fs = fs/np.amax(np.absolute(fs))
     return fs
 
 
@@ -155,8 +163,7 @@ def updateCostmatrices(costMatrices, fs, iterIndice, NB_VIEW, DATASET_LENGTH,
                 if classe != CLASS_LABELS[exampleIndice]:
                     costMatrices[iterIndice + 1, viewIndice, exampleIndice, classe] \
                         = 1.0*math.exp(fs[iterIndice, viewIndice, exampleIndice, classe] -
-                                   fs[iterIndice, viewIndice,
-                                      exampleIndice, CLASS_LABELS[exampleIndice]])
+                                        fs[iterIndice, viewIndice, exampleIndice, CLASS_LABELS[exampleIndice]])
                 else:
                     costMatrices[iterIndice + 1, viewIndice, exampleIndice, classe] \
                         = -1. * np.sum(np.exp(fs[iterIndice, viewIndice, exampleIndice] -
@@ -190,7 +197,9 @@ def updateGeneralFs(generalFs, iterIndice, predictions, alphas,
                                    for pastIterIndice in range(iterIndice)
                                    ])
                          )
-        return generalFs
+    if np.amax(np.absolute(generalFs)) != 0:
+        generalFs = generalFs/np.amax(np.absolute(generalFs))
+    return generalFs
 
 
 def updateGeneralCostMatrix(generalCostMatrix, generalFs, iterIndice,
@@ -205,6 +214,8 @@ def updateGeneralCostMatrix(generalCostMatrix, generalFs, iterIndice,
                 generalCostMatrix[iterIndice, exampleIndice, classe] \
                     = -1 * np.sum(np.exp(generalFs[iterIndice, exampleIndice] -
                                          generalFs[iterIndice, exampleIndice, classe]))
+    # if np.amax(np.absolute(generalCostMatrix)) != 0:
+    #     generalCostMatrix = generalCostMatrix/np.amax(np.absolute(generalCostMatrix))
     return generalCostMatrix
 
 
@@ -222,7 +233,7 @@ def trainMumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH
     # Learning
     for iterIndice in range(NB_ITER):
 
-        classifiers, predictedLabels = trainWeakClassifers(classifierName,
+        classifiers, predictedLabels, areBad = trainWeakClassifers(classifierName,
                                                            DATASET,
                                                            CLASS_LABELS,
                                                            costMatrices,
@@ -231,18 +242,21 @@ def trainMumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH
                                                            iterIndice,
                                                            classifierConfig,
                                                            NB_CORES, NB_VIEW)
-
+        if areBad.all():
+            print "All bad"
         predictions[iterIndice] = predictedLabels
 
         for viewIndice in range(NB_VIEW):
             edges[iterIndice, viewIndice] = computeEdge(predictions[iterIndice,
                                                                     viewIndice],
-                                                        costMatrices[iterIndice + 1,
+                                                        costMatrices[iterIndice,
                                                                      viewIndice], NB_CLASS, DATASET_LENGTH,
                                                         CLASS_LABELS)
-
-            alphas[iterIndice, viewIndice] = computeAlpha(edges[iterIndice,
-                                                                viewIndice])
+            if areBad[viewIndice]:
+                alphas[iterIndice, viewIndice] = 0.
+            else:
+                alphas[iterIndice, viewIndice] = computeAlpha(edges[iterIndice,
+                                                                    viewIndice])
         ds = updateDs(ds, predictions, CLASS_LABELS, NB_VIEW, DATASET_LENGTH,
                       NB_CLASS, iterIndice)
         fs = updateFs(predictions, ds, alphas, fs, iterIndice, NB_VIEW,
@@ -254,7 +268,10 @@ def trainMumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH
         bestView, edge = chooseView(predictions, generalCostMatrix,
                                     iterIndice, NB_VIEW, NB_CLASS, DATASET_LENGTH, CLASS_LABELS)
         bestViews[iterIndice] = bestView
-        generalAlphas[iterIndice] = computeAlpha(edge)
+        if areBad.all():
+            generalAlphas[iterIndice] = 0.
+        else:
+            generalAlphas[iterIndice] = computeAlpha(edge)
         bestClassifiers.append(classifiers[bestView])
         generalFs = updateGeneralFs(generalFs, iterIndice, predictions, alphas,
                                     DATASET_LENGTH, NB_CLASS, bestView,
@@ -275,26 +292,25 @@ def classifyMumbo(DATASET, classifiers, alphas, views, NB_CLASS):
     for exampleIndice in range(DATASET_LENGTH):
         votes = np.zeros(NB_CLASS)
         for classifier, alpha, view in zip(classifiers, alphas, views):
-            data = np.array([np.array(DATASET[int(view)][exampleIndice])])
-            votes[int(classifier.predict(data))] += alpha
+            data = DATASET[int(view)][exampleIndice]
+            votes[int(classifier.predict(np.array([data])))] += alpha
         predictedLabels[exampleIndice] = np.argmax(votes)
     return predictedLabels
 
 
 def classifyMumbobyIter(DATASET, classifiers, alphas, views, NB_CLASS):
     DATASET_LENGTH = len(DATASET[0])
-    print views
     NB_ITER = len(classifiers)
     predictedLabels = np.zeros((DATASET_LENGTH, NB_ITER))
     votes = np.zeros((DATASET_LENGTH, NB_CLASS))
+
     for classifier, alpha, view, iterIndice in zip(classifiers, alphas, views, range(NB_ITER)):
-        votesByIter = np.zeros(NB_CLASS)
+        votesByIter = np.zeros((DATASET_LENGTH, NB_CLASS))
+
         for exampleIndice in range(DATASET_LENGTH):
             data = np.array([np.array(DATASET[int(view)][exampleIndice])])
-            votesByIter[int(classifier.predict(data))] += alpha
-            votes[exampleIndice] = votes[exampleIndice] + np.array(votesByIter)
+            votesByIter[exampleIndice, int(classifier.predict(data))] += alpha
+            votes[exampleIndice] = votes[exampleIndice] + np.array(votesByIter[exampleIndice])
             predictedLabels[exampleIndice, iterIndice] = np.argmax(votes[exampleIndice])
-            if iterIndice>=1 and predictedLabels[exampleIndice, iterIndice-1]!=predictedLabels[exampleIndice, iterIndice]:
-                print "Different"
-        print votesByIter
-    return predictedLabels
+
+    return np.transpose(predictedLabels)
