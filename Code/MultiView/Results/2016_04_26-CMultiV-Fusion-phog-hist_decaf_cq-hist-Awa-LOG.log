@@ -1,0 +1,13 @@
+2016-04-26 20:54:07,102 DEBUG: ### Main Programm for Multiview Classification
+2016-04-26 20:54:07,102 DEBUG: ### Classification - Database : Awa ; Features : phog-hist, decaf, cq-hist ; Algorithm : Fusion ; Cores : 1
+2016-04-26 20:54:07,102 DEBUG: Start:	 Read CSV Database Files for Awa
+2016-04-26 20:54:32,341 DEBUG: Info:	 Labels used: chihuahua, sheep, elephant, mouse, raccoon
+2016-04-26 20:54:32,341 DEBUG: Info:	 Length of dataset:2912
+2016-04-26 20:54:32,341 DEBUG: Info:	 Shape of phog-hist :(2912, 252)
+2016-04-26 20:54:32,341 DEBUG: Info:	 Shape of decaf :(2912, 4096)
+2016-04-26 20:54:32,341 DEBUG: Info:	 Shape of cq-hist :(2912, 2688)
+2016-04-26 20:54:32,341 DEBUG: Done:	 Read CSV Files
+2016-04-26 20:54:32,342 DEBUG: Start:	 Determine Train/Test split for ratio 0.5
+2016-04-26 20:54:32,606 DEBUG: Info:	 Length of Learning Set: 1136
+2016-04-26 20:54:32,607 DEBUG: Info:	 Length of Testing Set: 1136
+2016-04-26 20:54:32,607 DEBUG: Done:	 Determine Train/Test split

@@ -6,13 +6,20 @@ from ModifiedMulticlass import OneVsRestClassifier
 
 # Add weights 
 
-def DecisionTree(data, labels, arg, weights, CLASS_LABELS):
+def DecisionTree(data, labels, arg, weights):
+    depth = int(arg[0])
     isBad = False
-    classifier = OneVsRestClassifier(tree.DecisionTreeClassifier(max_depth=arg))
-    classifier.fit(data, labels, weights/np.sum(weights))
+    classifier = tree.DecisionTreeClassifier(max_depth=depth)
+    #classifier = OneVsRestClassifier(tree.DecisionTreeClassifier(max_depth=depth))
+    classifier.fit(data, labels, weights)
     prediction = classifier.predict(data)
-    pTr, r, f1, s = precision_recall_fscore_support(CLASS_LABELS, prediction, sample_weight=weights)
-    if np.mean(pTr)<0.5:
+    pTr, r, f1, s = precision_recall_fscore_support(labels, prediction, sample_weight=weights)
+    if np.mean(pTr) < 0.5:
         isBad = True
-    return classifier, prediction, isBad
+
+    return classifier, prediction, isBad, pTr
+
+def getConfig(classifierConfig):
+    depth = classifierConfig[0]
+    return 'with depth ' + depth + '.'
 

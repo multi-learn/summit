@@ -1,0 +1,254 @@
+
+Mumbo classification using DecisionTreeas weak classifier with depth 3.
+
+ Learning on 
+	- phog-hist cq-hist surf-hist as features
+	- german+shepherd otter blue+whale antelope rhinoceros humpback+whale elephant grizzly+bear dolphin gorilla as labels
+	- 1849 training examples, 5267 testing examples (0.3 rate)
+
+ With configuration :
+	- 50 iterations on Mumbo
+	- 3 cores used for computing.
+
+The algorithm took : 
+	- 0:00:39.171985 to extract the database,
+	- 0:09:52.985034 to learn on 1849 examples and 3 views,
+	- 0:04:25.466632 to predict on 7116 examples
+So a total classification time of 0:14:57.623657.
+
+Total accuracy 
+	- On train : 60.248783126%
+                 precision    recall  f1-score   support
+
+german+shepherd       0.49      0.77      0.60       279
+          otter       0.63      0.33      0.43       170
+     blue+whale       0.77      0.33      0.46        61
+       antelope       0.84      0.53      0.65       144
+     rhinoceros       0.64      0.38      0.48       190
+ humpback+whale       0.63      0.92      0.75       193
+       elephant       0.73      0.44      0.55       185
+   grizzly+bear       0.57      0.55      0.56       216
+        dolphin       0.63      0.65      0.64       185
+        gorilla       0.60      0.77      0.67       226
+
+    avg / total       0.63      0.60      0.59      1849
+
+	- On test : 35.0484146573% 
+                 precision    recall  f1-score   support
+
+german+shepherd       0.31      0.57      0.40       779
+          otter       0.31      0.14      0.20       556
+     blue+whale       0.20      0.07      0.10       200
+       antelope       0.39      0.23      0.29       402
+     rhinoceros       0.31      0.20      0.24       509
+ humpback+whale       0.44      0.64      0.52       523
+       elephant       0.39      0.19      0.26       562
+   grizzly+bear       0.32      0.30      0.31       663
+        dolphin       0.34      0.35      0.34       496
+        gorilla       0.39      0.53      0.45       577
+
+    avg / total       0.35      0.35      0.33      5267
+
+
+
+ Analysis for each Mumbo iteration : 
+	- Iteration 1
+		 Accuracy on train : 0.502974580855
+		 Accuracy on test : 0.3064363015
+		 Selected View : surf-hist
+	- Iteration 2
+		 Accuracy on train : 0.502974580855
+		 Accuracy on test : 0.306626162901
+		 Selected View : surf-hist
+	- Iteration 3
+		 Accuracy on train : 0.502974580855
+		 Accuracy on test : 0.3064363015
+		 Selected View : surf-hist
+	- Iteration 4
+		 Accuracy on train : 0.502974580855
+		 Accuracy on test : 0.306626162901
+		 Selected View : cq-hist
+	- Iteration 5
+		 Accuracy on train : 0.564088696593
+		 Accuracy on test : 0.321055629391
+		 Selected View : cq-hist
+	- Iteration 6
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : cq-hist
+	- Iteration 7
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 8
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 9
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 10
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 11
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 12
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 13
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 14
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 15
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 16
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 17
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 18
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 19
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 20
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 21
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 22
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 23
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 24
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 25
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 26
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 27
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 28
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 29
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 30
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 31
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 32
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 33
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 34
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 35
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 36
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 37
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 38
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 39
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 40
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 41
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 42
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 43
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 44
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 45
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 46
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 47
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 48
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 49
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist
+	- Iteration 50
+		 Accuracy on train : 0.60248783126
+		 Accuracy on test : 0.350484146573
+		 Selected View : surf-hist

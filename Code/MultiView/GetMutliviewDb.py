@@ -1,6 +1,7 @@
 import numpy as np
 from string import digits
 import os
+import random
 
 
 def getOneViewFromDB(viewName, pathToDB, DBName):
@@ -36,14 +37,34 @@ def createFakeData(NB_VIEW, DATASET_LENGTH, NB_CLASS):
 def getAwaLabels(nbLabels, pathToAwa):
     file = open(pathToAwa + 'Animals_with_Attributes/classes.txt', 'U')
     linesFile = [''.join(line.strip().split()).translate(None, digits) for line in file.readlines()]
-    awaLabels = [linesFile[label] for label in np.arange(nbLabels)]
-    return awaLabels
+    return linesFile
 
 
-def getAwaData(pathToAwa, nbLabels, views):
+def getAwaDB(views, pathToAwa, nameDB, nbLabels, LABELS_NAMES):
     awaLabels = getAwaLabels(nbLabels, pathToAwa)
     nbView = len(views)
-    labelDictionnary = {i: awaLabels[i] for i in np.arange(nbLabels)}
+    nbMaxLabels = len(awaLabels)
+    if nbLabels == -1:
+        nbLabels = nbMaxLabels
+    nbNamesGiven = len(LABELS_NAMES)
+    if nbNamesGiven > nbLabels:
+        labelDictionnary = {i:LABELS_NAMES[i] for i in np.arange(nbLabels)}
+    elif nbNamesGiven < nbLabels and nbLabels <= nbMaxLabels:
+        if LABELS_NAMES != ['']:
+            labelDictionnary = {i:LABELS_NAMES[i] for i in np.arange(nbNamesGiven)}
+        else:
+            labelDictionnary = {}
+            nbNamesGiven = 0
+        nbLabelsToAdd = nbLabels-nbNamesGiven
+        while nbLabelsToAdd > 0:
+            currentLabel = random.choice(awaLabels)
+            if currentLabel not in labelDictionnary.values():
+                labelDictionnary[nbLabels-nbLabelsToAdd]=currentLabel
+                nbLabelsToAdd -= 1
+            else:
+                pass
+    else:
+        labelDictionnary = {i: LABELS_NAMES[i] for i in np.arange(nbNamesGiven)}
     viewDictionnary = {i: views[i] for i in np.arange(nbView)}
     rawData = []
     labels = []
@@ -51,17 +72,22 @@ def getAwaData(pathToAwa, nbLabels, views):
     # ij = []
     for view in np.arange(nbView):
         viewData = []
-        for label in np.arange(nbLabels):
+        for labelIndex in np.arange(nbLabels):
             pathToExamples = pathToAwa + 'Animals_with_Attributes/Features/' + viewDictionnary[view] + '/' + \
-                             labelDictionnary[label] + '/'
+                             labelDictionnary[labelIndex] + '/'
             examples = os.listdir(pathToExamples)
             if view == 0:
                 nbExample += len(examples)
             for example in examples:
-                exampleFile = open(pathToExamples + example)
-                viewData.append([[float(coordinate) for coordinate in raw.split()] for raw in exampleFile][0])
+                if viewDictionnary[view]=='decaf':
+                    exampleFile = open(pathToExamples + example)
+                    viewData.append([float(line.strip()) for line in exampleFile])
+                else:
+                    exampleFile = open(pathToExamples + example)
+                    viewData.append([[float(coordinate) for coordinate in raw.split()] for raw in exampleFile][0])
                 if view == 0:
-                    labels.append(label)
+                    labels.append(labelIndex)
+
         rawData.append(np.array(viewData))
     data = rawData
     # data = np.empty((nbExample, nbView), dtype=list)
@@ -69,17 +95,17 @@ def getAwaData(pathToAwa, nbLabels, views):
     #     for exampleIndice in np.arange(nbExample):
     #         data[exampleIndice, viewIdice] = rawData[viewIdice][exampleIndice]
     #         # data[exampleIndice, viewIdice] = {i:rawData[viewIdice][exampleIndice][i] for i in np.arange(len(rawData[viewIdice][exampleIndice]))}
+    DATASET_LENGTH = len(labels)
+    return data, labels, labelDictionnary, DATASET_LENGTH
 
-    return data, labels, viewDictionnary, labelDictionnary
-
-def splitData(data, labels, ratioForTrain):
-    trainData = []
-    testData = []
-    trainLabels = []
-    testLabels = []
-    for viewIndice in range(len(data)):
-        a = 1
-    return
+# def splitData(data, labels, ratioForTrain):
+#     trainData = []
+#     testData = []
+#     trainLabels = []
+#     testLabels = []
+#     for viewIndice in range(len(data)):
+#         a = 1
+#    return
 
 def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_VIEW):
     nbTrainingExamples = int(DATASET_LENGTH * LEARNING_RATE)
@@ -101,6 +127,7 @@ def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, 
     trainLabels.append(np.array(trainL))
     testLabels.append(np.array(testL))
     return trainData, np.array(trainLabels[0]), testData, np.array(testLabels[0])
+
 
 def getDbfromCSV(path):
     files = os.listdir(path)
@@ -139,6 +166,61 @@ def getDbfromCSV(path):
     print LABELS
     # Y = np.genfromtxt(args.pathF + args.fileCL, delimiter=';')
     return DATA, LABELS
+
+
+def getCaltechDB(features, pathF, nameDB, NB_CLASS, LABELS_NAMES):
+    fullDataset = []
+    for feature in features:
+        featureFile = pathF + nameDB + "-" + feature + '.csv'
+        fullDataset.append(np.genfromtxt(featureFile, delimiter=';'))
+
+    fullClasslabels = np.genfromtxt(pathF + nameDB + '-ClassLabels.csv', delimiter=';').astype(int)
+
+    labelsNamesFile = open(pathF+nameDB+'-ClassLabels-Description.csv')
+    labelsDictionary = dict((classIndice, labelName) for (classIndice, labelName) in [(int(line.split().strip(";")[0]), line.split().strip(";")[1]) for line in labelsNamesFile])
+
+    datasetLength = len(fullClasslabels)
+
+    keptLabelsIndices = [labelIndice for labelIndice, labelName in labelsDictionary.items() if labelName in LABELS_NAMES]
+    maxNumbreOfClasses = len(labelsDictionary)
+
+    if len(LABELS_NAMES) < NB_CLASS:
+        classIndice = 0
+        while classIndice < maxNumbreOfClasses:
+            if classIndice not in keptLabelsIndices:
+                keptLabelsIndices.append(classIndice)
+            classIndice+=1
+
+    elif len(LABELS_NAMES) > NB_CLASS:
+        keptLabelsIndices = keptLabelsIndices[:NB_CLASS]
+
+    DATASET = {}
+
+    for featureIndice in range(len(fullDataset)):
+        DATASET[featureIndice]=np.array([fullDataset[exampleIndice] for exampleIndice in range(datasetLength) if fullClasslabels[exampleIndice] in keptLabelsIndices])
+
+    CLASS_LABELS = np.array([keptLabelsIndices.index(classLabel) for classLabel in fullClasslabels if classLabel in keptLabelsIndices])
+    DATASET_LENGTH = len(CLASS_LABELS)
+
+    LABELS_DICTIONARY = dict((keptLabelsIndices.index(classLabel), labelsDictionary[classLabel]) for classLabel in keptLabelsIndices)
+
+    return DATASET, CLASS_LABELS, LABELS_DICTIONARY, DATASET_LENGTH
+
+def getMultiOmicDB(features, path, name, NB_CLASS, LABELS_NAMES):
+    methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
+    mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
+    rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
+    DATASET = {0:methylData, 1:mirnaData, 2:rnaseqData}
+    DATASET_LENGTH = len(methylData)
+    labelFile = open(path+'brca_labels_triple-negatif.csv')
+    CLASS_LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
+    labelDictionnary = {0:"No", 1:"Yes"}
+    return DATASET, CLASS_LABELS, labelDictionnary, DATASET_LENGTH
+
+
+
+
+
 
 if __name__=='__main__':
     getDbfromCSV("/home/doob/OriginalData/")

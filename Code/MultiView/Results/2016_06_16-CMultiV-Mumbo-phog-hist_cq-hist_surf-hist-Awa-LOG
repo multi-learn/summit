@@ -1,0 +1,275 @@
+2016-06-16 18:59:52,207 DEBUG: ### Main Programm for Multiview Classification
+2016-06-16 18:59:52,207 DEBUG: ### Classification - Database : Awa ; Features : phog-hist, cq-hist, surf-hist ; Algorithm : Mumbo ; Cores : 3
+2016-06-16 18:59:52,207 DEBUG: Start:	 Read CSV Database Files for Awa
+2016-06-16 19:00:05,052 DEBUG: Info:	 Labels used: mole, antelope, moose, polar+bear, skunk, blue+whale, dalmatian, killer+whale, wolf, walrus
+2016-06-16 19:00:05,053 DEBUG: Info:	 Length of dataset:4735
+2016-06-16 19:00:05,053 DEBUG: Info:	 Shape of phog-hist :(4735, 252)
+2016-06-16 19:00:05,053 DEBUG: Info:	 Shape of cq-hist :(4735, 2688)
+2016-06-16 19:00:05,053 DEBUG: Info:	 Shape of surf-hist :(4735, 2000)
+2016-06-16 19:00:05,053 DEBUG: Done:	 Read CSV Files
+2016-06-16 19:00:05,053 DEBUG: Start:	 Determine Train/Test split for ratio 0.3
+2016-06-16 19:00:05,253 DEBUG: Info:	 Length of Learning Set: 1227
+2016-06-16 19:00:05,254 DEBUG: Info:	 Length of Testing Set: 3508
+2016-06-16 19:00:05,254 DEBUG: Done:	 Determine Train/Test split
+2016-06-16 19:00:05,254 DEBUG: Start:	 Learning with Mumbo
+2016-06-16 19:06:39,798 DEBUG: Done: 	 Learning
+2016-06-16 19:06:39,799 DEBUG: Start: 	 Classification
+2016-06-16 19:09:49,779 DEBUG: Done:	 Classification
+2016-06-16 19:09:49,779 DEBUG: Info:	 Time for Classification: 597[s]
+2016-06-16 19:09:49,779 DEBUG: Start:	 Result Analysis for Mumbo
+2016-06-16 19:13:04,687 DEBUG: 
+Mumbo classification using DecisionTreeas weak classifier with depth 3.
+
+ Learning on 
+	- phog-hist cq-hist surf-hist as features
+	- mole antelope moose polar+bear skunk blue+whale dalmatian killer+whale wolf walrus as labels
+	- 1227 training examples, 3508 testing examples (0.3 rate)
+
+ With configuration :
+	- 50 iterations on Mumbo
+	- 3 cores used for computing.
+
+The algorithm took : 
+	- 0:00:13.046826 to extract the database,
+	- 0:06:34.544690 to learn on 1227 examples and 3 views,
+	- 0:03:09.980261 to predict on 4735 examples
+So a total classification time of 0:09:57.571779.
+
+Total accuracy 
+	- On train : 74.6536267319%
+              precision    recall  f1-score   support
+
+        mole       1.00      0.32      0.48        22
+    antelope       0.91      0.67      0.77       139
+       moose       0.72      0.84      0.77       202
+  polar+bear       0.71      0.89      0.79       209
+       skunk       0.95      0.51      0.67        72
+  blue+whale       0.84      0.83      0.84        71
+   dalmatian       0.61      0.75      0.67       145
+killer+whale       0.86      0.84      0.85       128
+        wolf       0.68      0.71      0.70       142
+      walrus       0.80      0.48      0.60        97
+
+ avg / total       0.77      0.75      0.74      1227
+
+	- On test : 44.897377423% 
+              precision    recall  f1-score   support
+
+        mole       0.00      0.00      0.00        70
+    antelope       0.52      0.33      0.40       407
+       moose       0.43      0.63      0.51       520
+  polar+bear       0.48      0.69      0.56       607
+       skunk       0.23      0.06      0.09       212
+  blue+whale       0.50      0.45      0.48       190
+   dalmatian       0.40      0.41      0.41       444
+killer+whale       0.56      0.63      0.59       414
+        wolf       0.35      0.28      0.31       404
+      walrus       0.30      0.16      0.21       240
+
+ avg / total       0.43      0.45      0.42      3508
+
+
+
+ Analysis for each Mumbo iteration : 
+	- Iteration 1
+		 Accuracy on train : 0.579462102689
+		 Accuracy on test : 0.344355758267
+		 Selected View : cq-hist
+	- Iteration 2
+		 Accuracy on train : 0.579462102689
+		 Accuracy on test : 0.345210946408
+		 Selected View : cq-hist
+	- Iteration 3
+		 Accuracy on train : 0.579462102689
+		 Accuracy on test : 0.345210946408
+		 Selected View : surf-hist
+	- Iteration 4
+		 Accuracy on train : 0.579462102689
+		 Accuracy on test : 0.344640820981
+		 Selected View : surf-hist
+	- Iteration 5
+		 Accuracy on train : 0.658516707416
+		 Accuracy on test : 0.380843785633
+		 Selected View : cq-hist
+	- Iteration 6
+		 Accuracy on train : 0.686226568867
+		 Accuracy on test : 0.39937286203
+		 Selected View : surf-hist
+	- Iteration 7
+		 Accuracy on train : 0.696821515892
+		 Accuracy on test : 0.405929304447
+		 Selected View : cq-hist
+	- Iteration 8
+		 Accuracy on train : 0.730236348818
+		 Accuracy on test : 0.425313568985
+		 Selected View : surf-hist
+	- Iteration 9
+		 Accuracy on train : 0.725346373268
+		 Accuracy on test : 0.419042189282
+		 Selected View : cq-hist
+	- Iteration 10
+		 Accuracy on train : 0.729421352893
+		 Accuracy on test : 0.420467502851
+		 Selected View : cq-hist
+	- Iteration 11
+		 Accuracy on train : 0.729421352893
+		 Accuracy on test : 0.418472063854
+		 Selected View : cq-hist
+	- Iteration 12
+		 Accuracy on train : 0.711491442543
+		 Accuracy on test : 0.423603192702
+		 Selected View : cq-hist
+	- Iteration 13
+		 Accuracy on train : 0.716381418093
+		 Accuracy on test : 0.423603192702
+		 Selected View : cq-hist
+	- Iteration 14
+		 Accuracy on train : 0.725346373268
+		 Accuracy on test : 0.427023945268
+		 Selected View : cq-hist
+	- Iteration 15
+		 Accuracy on train : 0.725346373268
+		 Accuracy on test : 0.428164196123
+		 Selected View : cq-hist
+	- Iteration 16
+		 Accuracy on train : 0.721271393643
+		 Accuracy on test : 0.42417331813
+		 Selected View : cq-hist
+	- Iteration 17
+		 Accuracy on train : 0.717196414018
+		 Accuracy on test : 0.424458380844
+		 Selected View : cq-hist
+	- Iteration 18
+		 Accuracy on train : 0.715566422168
+		 Accuracy on test : 0.421322690992
+		 Selected View : cq-hist
+	- Iteration 19
+		 Accuracy on train : 0.724531377343
+		 Accuracy on test : 0.426168757127
+		 Selected View : surf-hist
+	- Iteration 20
+		 Accuracy on train : 0.722086389568
+		 Accuracy on test : 0.421322690992
+		 Selected View : cq-hist
+	- Iteration 21
+		 Accuracy on train : 0.722086389568
+		 Accuracy on test : 0.419327251995
+		 Selected View : cq-hist
+	- Iteration 22
+		 Accuracy on train : 0.718011409943
+		 Accuracy on test : 0.418757126568
+		 Selected View : cq-hist
+	- Iteration 23
+		 Accuracy on train : 0.718826405868
+		 Accuracy on test : 0.416191562144
+		 Selected View : cq-hist
+	- Iteration 24
+		 Accuracy on train : 0.728606356968
+		 Accuracy on test : 0.419897377423
+		 Selected View : surf-hist
+	- Iteration 25
+		 Accuracy on train : 0.725346373268
+		 Accuracy on test : 0.420467502851
+		 Selected View : cq-hist
+	- Iteration 26
+		 Accuracy on train : 0.717196414018
+		 Accuracy on test : 0.422748004561
+		 Selected View : cq-hist
+	- Iteration 27
+		 Accuracy on train : 0.718011409943
+		 Accuracy on test : 0.420182440137
+		 Selected View : cq-hist
+	- Iteration 28
+		 Accuracy on train : 0.720456397718
+		 Accuracy on test : 0.419042189282
+		 Selected View : cq-hist
+	- Iteration 29
+		 Accuracy on train : 0.727791361043
+		 Accuracy on test : 0.423888255416
+		 Selected View : surf-hist
+	- Iteration 30
+		 Accuracy on train : 0.722901385493
+		 Accuracy on test : 0.426168757127
+		 Selected View : cq-hist
+	- Iteration 31
+		 Accuracy on train : 0.726161369193
+		 Accuracy on test : 0.425028506271
+		 Selected View : cq-hist
+	- Iteration 32
+		 Accuracy on train : 0.720456397718
+		 Accuracy on test : 0.42645381984
+		 Selected View : cq-hist
+	- Iteration 33
+		 Accuracy on train : 0.724531377343
+		 Accuracy on test : 0.428164196123
+		 Selected View : surf-hist
+	- Iteration 34
+		 Accuracy on train : 0.727791361043
+		 Accuracy on test : 0.432725199544
+		 Selected View : surf-hist
+	- Iteration 35
+		 Accuracy on train : 0.731051344743
+		 Accuracy on test : 0.437001140251
+		 Selected View : cq-hist
+	- Iteration 36
+		 Accuracy on train : 0.742461287694
+		 Accuracy on test : 0.438711516534
+		 Selected View : surf-hist
+	- Iteration 37
+		 Accuracy on train : 0.748166259169
+		 Accuracy on test : 0.441562143672
+		 Selected View : surf-hist
+	- Iteration 38
+		 Accuracy on train : 0.747351263244
+		 Accuracy on test : 0.441277080958
+		 Selected View : cq-hist
+	- Iteration 39
+		 Accuracy on train : 0.742461287694
+		 Accuracy on test : 0.437571265678
+		 Selected View : cq-hist
+	- Iteration 40
+		 Accuracy on train : 0.739201303993
+		 Accuracy on test : 0.437571265678
+		 Selected View : cq-hist
+	- Iteration 41
+		 Accuracy on train : 0.738386308068
+		 Accuracy on test : 0.437286202965
+		 Selected View : cq-hist
+	- Iteration 42
+		 Accuracy on train : 0.743276283619
+		 Accuracy on test : 0.436145952109
+		 Selected View : cq-hist
+	- Iteration 43
+		 Accuracy on train : 0.745721271394
+		 Accuracy on test : 0.442702394527
+		 Selected View : surf-hist
+	- Iteration 44
+		 Accuracy on train : 0.744091279544
+		 Accuracy on test : 0.444127708096
+		 Selected View : surf-hist
+	- Iteration 45
+		 Accuracy on train : 0.747351263244
+		 Accuracy on test : 0.447548460661
+		 Selected View : surf-hist
+	- Iteration 46
+		 Accuracy on train : 0.755501222494
+		 Accuracy on test : 0.448403648803
+		 Selected View : surf-hist
+	- Iteration 47
+		 Accuracy on train : 0.748981255094
+		 Accuracy on test : 0.446123147092
+		 Selected View : cq-hist
+	- Iteration 48
+		 Accuracy on train : 0.747351263244
+		 Accuracy on test : 0.443557582668
+		 Selected View : cq-hist
+	- Iteration 49
+		 Accuracy on train : 0.741646291769
+		 Accuracy on test : 0.447263397948
+		 Selected View : cq-hist
+	- Iteration 50
+		 Accuracy on train : 0.746536267319
+		 Accuracy on test : 0.44897377423
+		 Selected View : surf-hist
+
+2016-06-16 19:13:04,848 DEBUG: Done:	 Result Analysis

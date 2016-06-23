@@ -13,7 +13,7 @@ import logging                          # To create Log-Files
 
 # Import own modules
 import DBCrawl			        # Functions to read Images from Database
-import Code.Niko.ExportResults  # Functions to render results
+import Code.MonoView.ExportResults  # Functions to render results
 import FeatExtraction                   # Functions to extract the features from Database   
 
 # Author-Info
@@ -235,41 +235,44 @@ dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatExtr/"
 
 ### Classlabels and Description
 OutputfileNameClassLabels = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + nameDB + "-ClassLabels"
-Code.Niko.ExportResults.exportNumpyToCSV(dfImages.classLabel, dir, OutputfileNameClassLabels, '%i')
+Code.MonoView.ExportResults.exportNumpyToCSV(dfImages.classLabel, dir, OutputfileNameClassLabels, '%i')
+Code.MonoView.ExportResults.exportNumpyToCSV(dfImages.classLabel, dir, nameDB+'-ClassLabels', '%i')
 
 fileNameClassLabels = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + nameDB + "-ClassLabels-Description"
-Code.Niko.ExportResults.exportPandasToCSV(sClassLabels, dir, fileNameClassLabels)
+Code.MonoView.ExportResults.exportPandasToCSV(sClassLabels, dir, fileNameClassLabels)
+Code.MonoView.ExportResults.exportPandasToCSV(sClassLabels, dir, nameDB+'-ClassLabels-Description')
+
 
 format = '%1.30f'
 ### RGB
 if(args.RGB):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + rgb_feat_desc
-        Code.Niko.ExportResults.exportNumpyToCSV(rgb_f_extr_res, dir, fileName, format)
-        Code.Niko.ExportResults.exportNumpyToCSV(rgb_f_extr_res, dir, nameDB+"-RGB", format)
+        Code.MonoView.ExportResults.exportNumpyToCSV(rgb_f_extr_res, dir, fileName, format)
+        Code.MonoView.ExportResults.exportNumpyToCSV(rgb_f_extr_res, dir, nameDB+"-RGB", format)
         
 
 ### HSV
 if(args.HSV):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + hsv_feat_desc
-        Code.Niko.ExportResults.exportNumpyToCSV(hsv_f_extr_res, dir, fileName, format)
-        Code.Niko.ExportResults.exportNumpyToCSV(hsv_f_extr_res, dir, nameDB+"-HSV", format)
+        Code.MonoView.ExportResults.exportNumpyToCSV(hsv_f_extr_res, dir, fileName, format)
+        Code.MonoView.ExportResults.exportNumpyToCSV(hsv_f_extr_res, dir, nameDB+"-HSV", format)
 
 ### SIFT
 if(args.SIFT):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + sift_feat_desc
-        Code.Niko.ExportResults.exportNumpyToCSV(sift_f_extr_res, dir, fileName, format)
-        Code.Niko.ExportResults.exportNumpyToCSV(sift_f_extr_res, dir, nameDB+"-SIFT", format)
+        Code.MonoView.ExportResults.exportNumpyToCSV(sift_f_extr_res, dir, fileName, format)
+        Code.MonoView.ExportResults.exportNumpyToCSV(sift_f_extr_res, dir, nameDB+"-SIFT", format)
 
 ### SURF
 if(args.SURF):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + surf_feat_desc
-        Code.Niko.ExportResults.exportNumpyToCSV(surf_f_extr_res, dir, fileName, format)
-        Code.Niko.ExportResults.exportNumpyToCSV(surf_f_extr_res, dir, nameDB+"-SURF", format)
+        Code.MonoView.ExportResults.exportNumpyToCSV(surf_f_extr_res, dir, fileName, format)
+        Code.MonoView.ExportResults.exportNumpyToCSV(surf_f_extr_res, dir, nameDB+"-SURF", format)
 
 ### HOG
 if(args.HOG):
         fileName = datetime.datetime.now().strftime("%Y_%m_%d") + "-FE-" + hog_feat_desc
-        Code.Niko.ExportResults.exportNumpyToCSV(hog_f_extr_res, dir, fileName, format)
-        Code.Niko.ExportResults.exportNumpyToCSV(hog_f_extr_res, dir, nameDB+"-HOG", format)
+        Code.MonoView.ExportResults.exportNumpyToCSV(hog_f_extr_res, dir, fileName, format)
+        Code.MonoView.ExportResults.exportNumpyToCSV(hog_f_extr_res, dir, nameDB+"-HOG", format)
         
 logging.debug("Done:\t Save Features to CSV Databases")

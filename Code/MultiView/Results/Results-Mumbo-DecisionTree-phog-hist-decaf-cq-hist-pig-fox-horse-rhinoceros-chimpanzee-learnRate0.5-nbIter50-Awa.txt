@@ -1,0 +1,36 @@
+
+EarlyFusion classification using RandomForestas monoview classifier Learning on 
+	- phog-hist decaf cq-hist as features
+	- pig fox horse rhinoceros chimpanzee as labels
+	- 1192 training examples, 1786 testing examples (0.5 rate)
+
+ With 1 cores used for computing.
+
+The algorithm took : 
+	- 0:00:20.830008 to extract the database,
+	- 0:00:01.240779 to learn on 1192 examples and 3 views,
+	- 0:00:00.680301 to predict on 2978 examples
+So a total classification time of 0:00:22.751091.
+
+Total accuracy 
+	- On train : 100.0%
+             precision    recall  f1-score   support
+
+        pig       1.00      1.00      1.00       130
+        fox       1.00      1.00      1.00       163
+      horse       1.00      1.00      1.00       351
+ rhinoceros       1.00      1.00      1.00       280
+ chimpanzee       1.00      1.00      1.00       268
+
+avg / total       1.00      1.00      1.00      1192
+
+	- On test : 78.2194848824% 
+             precision    recall  f1-score   support
+
+        pig       0.98      0.20      0.33       201
+        fox       0.85      0.68      0.75       263
+      horse       0.73      0.88      0.80       470
+ rhinoceros       0.74      0.90      0.82       419
+ chimpanzee       0.84      0.89      0.87       433
+
+avg / total       0.81      0.78      0.76      1786

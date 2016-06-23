@@ -15,6 +15,15 @@
           <option value="Code.MultiView.Mumbo.Mumbo.attr" />
           <option value="Code.MultiView.Mumbo.Mumbo.getattr" />
           <option value="Code.MultiView.Mumbo.Mumbo.globals" />
+          <option value="Code.MultiView.ExecMultiview.str" />
+          <option value="Code.MultiView.ExecMultiview.range" />
+          <option value="Code.MultiView.ExecMultiview.len" />
+          <option value="Code.MultiView.ExecMultiview.float" />
+          <option value="Code.MultiView.ExecMultiview.int" />
+          <option value="Code.MultiView.ExecMultiview.open" />
+          <option value="Code.MultiView.ExecMultiview.dict" />
+          <option value="Code.MultiView.ExecMultiview.globals" />
+          <option value="Code.MultiView.Mumbo.analyzeResults.str" />
         </list>
       </option>
     </inspection_tool>

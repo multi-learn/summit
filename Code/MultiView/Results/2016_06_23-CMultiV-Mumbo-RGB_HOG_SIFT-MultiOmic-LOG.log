@@ -1,0 +1,3 @@
+2016-06-23 16:40:42,321 DEBUG: ### Main Programm for Multiview Classification
+2016-06-23 16:40:42,322 DEBUG: ### Classification - Database : MultiOmic ; Features : RGB, HOG, SIFT ; Algorithm : Mumbo ; Cores : 3
+2016-06-23 16:40:42,322 DEBUG: Start:	 Read CSV Database Files for MultiOmic

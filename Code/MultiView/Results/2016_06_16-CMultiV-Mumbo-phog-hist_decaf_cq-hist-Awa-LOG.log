@@ -1,0 +1,14 @@
+2016-06-16 17:47:28,170 DEBUG: ### Main Programm for Multiview Classification
+2016-06-16 17:47:28,170 DEBUG: ### Classification - Database : Awa ; Features : phog-hist, decaf, cq-hist ; Algorithm : Mumbo ; Cores : 1
+2016-06-16 17:47:28,170 DEBUG: Start:	 Read CSV Database Files for Awa
+2016-06-16 17:48:25,514 DEBUG: Info:	 Labels used: sheep, giant+panda, rabbit, moose, pig, lion, bobcat, bat, zebra, grizzly+bear
+2016-06-16 17:48:25,515 DEBUG: Info:	 Length of dataset:6369
+2016-06-16 17:48:25,515 DEBUG: Info:	 Shape of phog-hist :(6369, 252)
+2016-06-16 17:48:25,515 DEBUG: Info:	 Shape of decaf :(6369, 4096)
+2016-06-16 17:48:25,515 DEBUG: Info:	 Shape of cq-hist :(6369, 2688)
+2016-06-16 17:48:25,515 DEBUG: Done:	 Read CSV Files
+2016-06-16 17:48:25,516 DEBUG: Start:	 Determine Train/Test split for ratio 0.3
+2016-06-16 17:48:26,030 DEBUG: Info:	 Length of Learning Set: 1649
+2016-06-16 17:48:26,030 DEBUG: Info:	 Length of Testing Set: 1649
+2016-06-16 17:48:26,030 DEBUG: Done:	 Determine Train/Test split
+2016-06-16 17:48:26,030 DEBUG: Start:	 Learning with Mumbo

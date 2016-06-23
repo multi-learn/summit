@@ -57,8 +57,10 @@ def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS, costMatri
                         classifier_config):
     weights = computeWeights(costMatrices, NB_CLASS, DATASET_LENGTH,
                              iterIndice, viewIndice, CLASS_LABELS)
-    classifierMethod = globals()["DecisionTree"].DecisionTree  # Permet d'appeler une fonction avec une string
-    classifier, classes, isBad = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights, CLASS_LABELS)
+    classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
+    classifierMethod = getattr(classifierModule, classifierName)
+    classifier, classes, isBad, pTr = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
+    print "View : "+str(viewIndice)+" : "+str(np.mean(pTr))
     return classifier, classes, isBad
 
 
@@ -72,7 +74,6 @@ def trainWeakClassifers(classifierName, DATASET, CLASS_LABELS, costMatrices,
         NB_JOBS = NB_VIEW
     else:
         NB_JOBS = NB_CORES
-
     trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
             delayed(trainWeakClassifier)(classifierName, DATASET[viewIndice], CLASS_LABELS,
                                          costMatrices, NB_CLASS, DATASET_LENGTH,
@@ -82,12 +83,7 @@ def trainWeakClassifers(classifierName, DATASET, CLASS_LABELS, costMatrices,
     for (classifier, labelsArray, isBad) in trainedClassifiersAndLabels:
         trainedClassifiers.append(classifier)
         labelsMatrix.append(labelsArray)
-        print labelsArray
         areBad.append(isBad)
-    # print "0/1 : "+str(np.sum(labelsMatrix[0]==CLASS_LABELS))
-    # print "0/2 : "+str(np.sum(labelsMatrix[1]==CLASS_LABELS))
-    # print "2/1 : "+str(np.sum(labelsMatrix[2]==CLASS_LABELS))
-    # print "__________________________"
     return np.array(trainedClassifiers), np.array(labelsMatrix), np.array(areBad)
 
 
@@ -176,7 +172,6 @@ def chooseView(predictions, generalCostMatrix, iterIndice, NB_VIEW, NB_CLASS, DA
     edges = np.array([computeEdge(predictions[iterIndice, viewIndice],
                                   generalCostMatrix[iterIndice], NB_CLASS, DATASET_LENGTH, CLASS_LABELS)
                       for viewIndice in range(NB_VIEW)])
-    print edges
     bestView = np.argmax(edges)
     return bestView, edges[bestView]
 
@@ -219,9 +214,10 @@ def updateGeneralCostMatrix(generalCostMatrix, generalFs, iterIndice,
     return generalCostMatrix
 
 
-def trainMumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH,
-               classifierName, NB_CORES, classifierConfig):
+def train(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
+          trainArguments):
     # Initialization
+    classifierConfig, NB_ITER, classifierName = trainArguments
     costMatrices, \
     generalCostMatrix, fs, ds, edges, alphas, \
     predictions, generalAlphas, generalFs = initialize(NB_CLASS, NB_VIEW,
@@ -232,7 +228,7 @@ def trainMumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH
 
     # Learning
     for iterIndice in range(NB_ITER):
-
+        print '_________________________________________________'
         classifiers, predictedLabels, areBad = trainWeakClassifers(classifierName,
                                                            DATASET,
                                                            CLASS_LABELS,
@@ -243,7 +239,8 @@ def trainMumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH
                                                            classifierConfig,
                                                            NB_CORES, NB_VIEW)
         if areBad.all():
-            print "All bad"
+            print "All bad for iteration " + str(iterIndice)
+
         predictions[iterIndice] = predictedLabels
 
         for viewIndice in range(NB_VIEW):
@@ -282,10 +279,11 @@ def trainMumbo(DATASET, CLASS_LABELS, NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH
                                                     CLASS_LABELS)
 
     # finalFs = computeFinalFs(DATASET_LENGTH, NB_CLASS, generalAlphas, predictions, bestViews, CLASS_LABELS, NB_ITER)
-    return bestClassifiers, generalAlphas, bestViews
+    return (bestClassifiers, generalAlphas, bestViews)
 
 
-def classifyMumbo(DATASET, classifiers, alphas, views, NB_CLASS):
+def predict(DATASET, classifier, NB_CLASS):
+    classifiers, alphas, views = classifier
     DATASET_LENGTH = len(DATASET[0])
     predictedLabels = np.zeros(DATASET_LENGTH)
 
@@ -314,3 +312,122 @@ def classifyMumbobyIter(DATASET, classifiers, alphas, views, NB_CLASS):
             predictedLabels[exampleIndice, iterIndice] = np.argmax(votes[exampleIndice])
 
     return np.transpose(predictedLabels)
+
+
+
+
+if __name__ == '__main__':
+    from sklearn.metrics import classification_report
+    from string import digits
+    import os
+
+
+    def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_VIEW):
+        nbTrainingExamples = int(DATASET_LENGTH * LEARNING_RATE)
+        trainingExamplesIndices = np.random.random_integers(0, DATASET_LENGTH, nbTrainingExamples)
+        trainData, trainLabels = [], []
+        testData, testLabels = [], []
+        for viewIndice in range(NB_VIEW):
+            trainD, testD = [], []
+            trainL, testL = [], []
+            for i in np.arange(DATASET_LENGTH):
+                if i in trainingExamplesIndices:
+                    trainD.append(DATA[viewIndice][i])
+                    trainL.append(CLASS_LABELS[i])
+                else:
+                    testD.append(DATA[viewIndice][i])
+                    testL.append(CLASS_LABELS[i])
+            trainData.append(np.array(trainD))
+            testData.append(np.array(testD))
+        trainLabels.append(np.array(trainL))
+        testLabels.append(np.array(testL))
+        return trainData, np.array(trainLabels[0]), testData, np.array(testLabels[0])
+
+    def getAwaLabels(nbLabels, pathToAwa):
+        file = open(pathToAwa + 'Animals_with_Attributes/classes.txt', 'U')
+        linesFile = [''.join(line.strip().split()).translate(None, digits) for line in file.readlines()]
+        awaLabels = [linesFile[label] for label in np.arange(nbLabels)]
+        return awaLabels
+
+
+    def getAwaData(pathToAwa, nbLabels, views):
+        awaLabels = getAwaLabels(nbLabels, pathToAwa)
+        nbView = len(views)
+        labelDictionnary = {i: awaLabels[i] for i in np.arange(nbLabels)}
+        viewDictionnary = {i: views[i] for i in np.arange(nbView)}
+        rawData = []
+        labels = []
+        nbExample = 0
+        # ij = []
+        for view in np.arange(nbView):
+            viewData = []
+            for label in np.arange(nbLabels):
+                pathToExamples = pathToAwa + 'Animals_with_Attributes/Features/' + viewDictionnary[view] + '/' + \
+                                 labelDictionnary[label] + '/'
+                examples = os.listdir(pathToExamples)
+                if view == 0:
+                    nbExample += len(examples)
+                for example in examples:
+                    exampleFile = open(pathToExamples + example)
+                    viewData.append([[float(coordinate) for coordinate in raw.split()] for raw in exampleFile][0])
+                    if view == 0:
+                        labels.append(label)
+            rawData.append(np.array(viewData))
+        data = rawData
+        # data = np.empty((nbExample, nbView), dtype=list)
+        # for viewIdice in np.arange(nbView):
+        #     for exampleIndice in np.arange(nbExample):
+        #         data[exampleIndice, viewIdice] = rawData[viewIdice][exampleIndice]
+        #         # data[exampleIndice, viewIdice] = {i:rawData[viewIdice][exampleIndice][i] for i in np.arange(len(rawData[viewIdice][exampleIndice]))}
+
+        return data, labels, viewDictionnary, labelDictionnary
+
+    NB_CLASS = 5
+    NB_ITER = 3
+    classifierName="DecisionTree"
+    NB_CORES = 3
+    pathToAwa = "/home/doob/"
+    views = ['phog-hist', 'decaf', 'cq-hist']
+    NB_VIEW = len(views)
+    LEARNING_RATE = 0.5
+    classifierConfig = ['3']
+
+    print "Getting db ..."
+    DATASET, CLASS_LABELS, viewDictionnary, labelDictionnary = getAwaData(pathToAwa, NB_CLASS, views)
+    target_names = labelDictionnary.values()
+    # DATASET, CLASS_LABELS = DB.getDbfromCSV('/home/doob/OriginalData/')
+    # NB_VIEW = 3
+    CLASS_LABELS = np.array([int(label) for label in CLASS_LABELS])
+    # print target_names
+    # print labelDictionnary
+    fullDatasetLength = len(CLASS_LABELS)
+
+    trainData, trainLabels, testData, testLabels = extractRandomTrainingSet(DATASET, CLASS_LABELS, LEARNING_RATE,
+                                                                               fullDatasetLength, NB_VIEW)
+    DATASET_LENGTH = len(trainLabels)
+    # print len(trainData), trainData[0].shape, len(trainLabels)
+    print "Done."
+
+    print 'Training Mumbo ...'
+    trainArguments = classifierConfig, NB_ITER, classifierName
+
+    bestClassifiers, generalAlphas, bestViews = train(trainData, trainLabels, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
+                                                      trainArguments)
+    # DATASET, VIEW_DIMENSIONS, CLASS_LABELS = DB.createFakeData(NB_VIEW, DATASET_LENGTH, NB_CLASS)
+    print "Trained."
+
+    print "Predicting ..."
+    predictedTrainLabels = predict(trainData, (bestClassifiers, generalAlphas, bestViews), NB_CLASS)
+    predictedTestLabels = predict(testData, (bestClassifiers, generalAlphas, bestViews), NB_CLASS)
+    print 'Done.'
+    print 'Reporting ...'
+    predictedTrainLabelsByIter = classifyMumbobyIter(trainData, bestClassifiers, generalAlphas, bestViews, NB_CLASS)
+    predictedTestLabelsByIter = classifyMumbobyIter(testData, bestClassifiers, generalAlphas, bestViews, NB_CLASS)
+    print str(NB_VIEW)+" views, "+str(NB_CLASS)+" classes, "+str(classifierConfig)+" depth trees"
+    print "Best views = "+str(bestViews)
+    print "Is equal : "+str((predictedTrainLabels==predictedTrainLabelsByIter[NB_ITER-1]).all())
+
+    print "On train : "
+    print classification_report(trainLabels, predictedTrainLabels, target_names=target_names)
+    print "On test : "
+    print classification_report(testLabels, predictedTestLabels, target_names=target_names)

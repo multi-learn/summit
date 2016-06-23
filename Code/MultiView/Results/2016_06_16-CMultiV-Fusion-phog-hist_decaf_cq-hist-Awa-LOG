@@ -1,0 +1,67 @@
+2016-06-16 17:45:30,463 DEBUG: ### Main Programm for Multiview Classification
+2016-06-16 17:45:30,463 DEBUG: ### Classification - Database : Awa ; Features : phog-hist, decaf, cq-hist ; Algorithm : Fusion ; Cores : 1
+2016-06-16 17:45:30,464 DEBUG: Start:	 Read CSV Database Files for Awa
+2016-06-16 17:46:35,474 DEBUG: Info:	 Labels used: siamese+cat, hamster, tiger, collie, antelope, chihuahua, polar+bear, hippopotamus, elephant, skunk
+2016-06-16 17:46:35,475 DEBUG: Info:	 Length of dataset:6850
+2016-06-16 17:46:35,475 DEBUG: Info:	 Shape of phog-hist :(6850, 252)
+2016-06-16 17:46:35,475 DEBUG: Info:	 Shape of decaf :(6850, 4096)
+2016-06-16 17:46:35,475 DEBUG: Info:	 Shape of cq-hist :(6850, 2688)
+2016-06-16 17:46:35,475 DEBUG: Done:	 Read CSV Files
+2016-06-16 17:46:35,476 DEBUG: Start:	 Determine Train/Test split for ratio 0.3
+2016-06-16 17:46:36,186 DEBUG: Info:	 Length of Learning Set: 1774
+2016-06-16 17:46:36,186 DEBUG: Info:	 Length of Testing Set: 1774
+2016-06-16 17:46:36,186 DEBUG: Done:	 Determine Train/Test split
+2016-06-16 17:46:36,186 DEBUG: Start:	 Learning with Fusion
+2016-06-16 17:46:37,984 DEBUG: Done: 	 Learning
+2016-06-16 17:46:37,984 DEBUG: Start: 	 Classification
+2016-06-16 17:46:39,372 DEBUG: Done:	 Classification
+2016-06-16 17:46:39,373 DEBUG: Info:	 Time for Classification: 68[s]
+2016-06-16 17:46:39,373 DEBUG: Start:	 Result Analysis for Fusion
+2016-06-16 17:46:39,377 DEBUG: 
+EarlyFusion classification using RandomForestas monoview classifier Learning on 
+	- phog-hist, decaf, cq-hist as features
+	- siamese+cat, hamster, tiger, collie, antelope, chihuahua, polar+bear, hippopotamus, elephant, skunk as labels
+	- 1774 training examples, 5076 testing examples (0.3 rate)
+
+ With 1 cores used for computing.
+
+The algorithm took : 
+	- 0:01:05.722532 to extract the database,
+	- 0:00:01.798077 to learn on 1774 examples and 3 views,
+	- 0:00:01.388217 to predict on 6850 examples
+So a total classification time of 0:01:08.908829.
+
+Total accuracy 
+	- On train : 99.9436302142%
+              precision    recall  f1-score   support
+
+ siamese+cat       1.00      1.00      1.00       117
+     hamster       1.00      1.00      1.00       229
+       tiger       1.00      1.00      1.00       139
+      collie       1.00      1.00      1.00       329
+    antelope       1.00      1.00      1.00       132
+   chihuahua       1.00      1.00      1.00       179
+  polar+bear       1.00      1.00      1.00       203
+hippopotamus       1.00      1.00      1.00       183
+    elephant       1.00      1.00      1.00       181
+       skunk       1.00      0.99      0.99        82
+
+ avg / total       1.00      1.00      1.00      1774
+
+	- On test : 69.7399527187% 
+              precision    recall  f1-score   support
+
+ siamese+cat       0.73      0.07      0.13       368
+     hamster       0.70      0.84      0.76       613
+       tiger       0.92      0.89      0.91       407
+      collie       0.53      0.90      0.66       839
+    antelope       0.84      0.61      0.71       414
+   chihuahua       0.59      0.44      0.50       514
+  polar+bear       0.80      0.84      0.82       613
+hippopotamus       0.78      0.77      0.77       540
+    elephant       0.77      0.81      0.79       566
+       skunk       0.94      0.08      0.15       202
+
+ avg / total       0.73      0.70      0.67      5076
+
+2016-06-16 17:46:39,377 DEBUG: Done:	 Result Analysis

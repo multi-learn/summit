@@ -1,0 +1,46 @@
+
+EarlyFusion classification using RandomForestas monoview classifier Learning on 
+	- phog-hist, decaf, cq-hist as features
+	- beaver, moose, squirrel, seal, cow, bobcat, rat, gorilla, elephant, walrus as labels
+	- 1514 training examples, 4299 testing examples (0.3 rate)
+
+ With 1 cores used for computing.
+
+The algorithm took : 
+	- 0:00:28.623464 to extract the database,
+	- 0:00:01.576182 to learn on 1514 examples and 3 views,
+	- 0:00:01.195592 to predict on 5813 examples
+So a total classification time of 0:00:31.395241.
+
+Total accuracy 
+	- On train : 100.0%
+             precision    recall  f1-score   support
+
+     beaver       1.00      1.00      1.00        53
+      moose       1.00      1.00      1.00       195
+   squirrel       1.00      1.00      1.00       215
+       seal       1.00      1.00      1.00       135
+        cow       1.00      1.00      1.00       163
+     bobcat       1.00      1.00      1.00       168
+        rat       1.00      1.00      1.00        93
+    gorilla       1.00      1.00      1.00       202
+   elephant       1.00      1.00      1.00       212
+     walrus       1.00      1.00      1.00        78
+
+avg / total       1.00      1.00      1.00      1514
+
+	- On test : 64.4103279833% 
+             precision    recall  f1-score   support
+
+     beaver       0.86      0.05      0.09       132
+      moose       0.58      0.69      0.63       527
+   squirrel       0.62      0.79      0.69       693
+       seal       0.57      0.60      0.59       374
+        cow       0.68      0.47      0.56       495
+     bobcat       0.72      0.71      0.72       473
+        rat       0.89      0.38      0.53       210
+    gorilla       0.76      0.88      0.81       601
+   elephant       0.55      0.75      0.63       535
+     walrus       0.84      0.20      0.32       259
+
+avg / total       0.67      0.64      0.62      4299

@@ -1,0 +1,158 @@
+
+Mumbo classification using DecisionTreeas weak classifier with depth 1.
+
+ Learning on 
+	- Methylation RNA-seq miRNA as features
+	- No Yes as labels
+	- 195 training examples, 152 testing examples (0.8 rate)
+
+ With configuration :
+	- 30 iterations on Mumbo
+	- 3 cores used for computing.
+
+The algorithm took : 
+	- 0:01:01.354375 to extract the database,
+	- 0:00:54.979541 to learn on 195 examples and 3 views,
+	- 0:00:00.835278 to predict on 347 examples
+So a total classification time of 0:01:57.169196.
+
+Total accuracy 
+	- On train : 92.3076923077%
+             precision    recall  f1-score   support
+
+         No       0.98      0.92      0.95       148
+        Yes       0.79      0.94      0.85        47
+
+avg / total       0.93      0.92      0.93       195
+
+	- On test : 82.8947368421% 
+             precision    recall  f1-score   support
+
+         No       0.87      0.89      0.88       106
+        Yes       0.73      0.70      0.71        46
+
+avg / total       0.83      0.83      0.83       152
+
+
+
+ Analysis for each Mumbo iteration : 
+	- Iteration 1
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 2
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 3
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 4
+		 Accuracy on train : 0.938461538462
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 5
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 6
+		 Accuracy on train : 0.938461538462
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 7
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 8
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 9
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 10
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 11
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 12
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 13
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 14
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 15
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 16
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 17
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 18
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 19
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 20
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 21
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 22
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 23
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 24
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 25
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 26
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 27
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 28
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 29
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation
+	- Iteration 30
+		 Accuracy on train : 0.923076923077
+		 Accuracy on test : 0.828947368421
+		 Selected View : Methylation

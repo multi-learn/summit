@@ -1,0 +1,36 @@
+
+EarlyFusion classification using RandomForestas monoview classifier Learning on 
+	- phog-hist, decaf, cq-hist as features
+	- dalmatian, tiger, rhinoceros, bat, killer+whale as labels
+	- 264 training examples, 2513 testing examples (0.1 rate)
+
+ With 1 cores used for computing.
+
+The algorithm took : 
+	- 0:00:10.463819 to extract the database,
+	- 0:00:00.505865 to learn on 264 examples and 3 views,
+	- 0:00:00.666069 to predict on 2777 examples
+So a total classification time of 0:00:11.635755.
+
+Total accuracy 
+	- On train : 100.0%
+              precision    recall  f1-score   support
+
+   dalmatian       1.00      1.00      1.00        54
+       tiger       1.00      1.00      1.00        62
+  rhinoceros       1.00      1.00      1.00        66
+         bat       1.00      1.00      1.00        31
+killer+whale       1.00      1.00      1.00        51
+
+ avg / total       1.00      1.00      1.00       264
+
+	- On test : 85.8336649423% 
+              precision    recall  f1-score   support
+
+   dalmatian       0.93      0.90      0.92       535
+       tiger       0.89      0.92      0.91       484
+  rhinoceros       0.77      0.97      0.86       633
+         bat       0.91      0.38      0.53       370
+killer+whale       0.86      0.96      0.91       491
+
+ avg / total       0.87      0.86      0.84      2513

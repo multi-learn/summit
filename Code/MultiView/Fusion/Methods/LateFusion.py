@@ -14,10 +14,9 @@ from sklearn.multiclass import OneVsOneClassifier
 
 # monoViewDecisions : (nbExample * nbFeature * NB_CLASS) array with the OVO/OVA scores for each 
 # 				example, feature and each class
-
-
-
 # weights : (nbFeature) array with the weights for each feature
+
+
 def weightedLinear(monoViewDecisions, weights):
     # Normalize weights ?
     # weights = weights/float(max(weights))
@@ -75,9 +74,10 @@ def majorityVoting(monoViewDecisions, NB_CLASS):
 
 
 # For probabilistic classifiers, we need to add more late fusion methods
-# For example, the bayesian inference
-#           probabilisticClassifiers is a nbExample array of sklearn probabilistic classifiers
-#                                    (such as Naive Bayesian Gaussian http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html#sklearn.naive_bayes.GaussianNB)
+# For example, in the bayesian inference
+# probabilisticClassifiers is a nbExample array of sklearn probabilistic classifiers
+# (such as Naive Bayesian Gaussian
+# http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html#sklearn.naive_bayes.GaussianNB)
 def bayesianInference(probabilisticClassifiers):
     nbFeatures = len(probabilisticClassifiers)
     classifiersProbasByFeature = np.array([probabilisticClassifier.class_prior_ \

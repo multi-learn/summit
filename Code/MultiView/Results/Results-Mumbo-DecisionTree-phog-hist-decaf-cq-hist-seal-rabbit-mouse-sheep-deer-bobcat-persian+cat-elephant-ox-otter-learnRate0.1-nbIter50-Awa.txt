@@ -1,0 +1,46 @@
+
+EarlyFusion classification using RandomForestas monoview classifier Learning on 
+	- phog-hist, decaf, cq-hist as features
+	- seal, rabbit, mouse, sheep, deer, bobcat, persian+cat, elephant, ox, otter as labels
+	- 579 training examples, 5406 testing examples (0.1 rate)
+
+ With 1 cores used for computing.
+
+The algorithm took : 
+	- 0:00:37.327640 to extract the database,
+	- 0:00:00.766185 to learn on 579 examples and 3 views,
+	- 0:00:01.440601 to predict on 5985 examples
+So a total classification time of 0:00:39.534429.
+
+Total accuracy 
+	- On train : 100.0%
+             precision    recall  f1-score   support
+
+       seal       1.00      1.00      1.00        59
+     rabbit       1.00      1.00      1.00        51
+      mouse       1.00      1.00      1.00        17
+      sheep       1.00      1.00      1.00        69
+       deer       1.00      1.00      1.00       112
+     bobcat       1.00      1.00      1.00        49
+persian+cat       1.00      1.00      1.00        66
+   elephant       1.00      1.00      1.00        87
+         ox       1.00      1.00      1.00        14
+      otter       1.00      1.00      1.00        55
+
+avg / total       1.00      1.00      1.00       579
+
+	- On test : 58.8050314465% 
+             precision    recall  f1-score   support
+
+       seal       0.55      0.62      0.58       450
+     rabbit       0.59      0.11      0.19       517
+      mouse       0.00      0.00      0.00       191
+      sheep       0.57      0.49      0.53       562
+       deer       0.47      0.89      0.62       961
+     bobcat       0.79      0.51      0.62       592
+persian+cat       0.65      0.91      0.76       648
+   elephant       0.62      0.75      0.68       660
+         ox       0.00      0.00      0.00       154
+      otter       0.76      0.48      0.59       671
+
+avg / total       0.58      0.59      0.55      5406
