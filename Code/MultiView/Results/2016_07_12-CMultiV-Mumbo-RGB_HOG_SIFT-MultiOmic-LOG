@@ -1,0 +1,14 @@
+2016-07-12 17:37:18,763 DEBUG: ### Main Programm for Multiview Classification
+2016-07-12 17:37:18,765 DEBUG: ### Classification - Database : MultiOmic ; Features : RGB, HOG, SIFT ; Algorithm : Mumbo ; Cores : 4
+2016-07-12 17:37:18,765 DEBUG: Start:	 Read CSV Database Files for MultiOmic
+2016-07-12 17:38:29,538 DEBUG: Info:	 Labels used: No, Yes
+2016-07-12 17:38:29,538 DEBUG: Info:	 Length of dataset:347
+2016-07-12 17:38:29,538 DEBUG: Info:	 Shape of RGB :(347, 25978)
+2016-07-12 17:38:29,538 DEBUG: Info:	 Shape of HOG :(347, 1046)
+2016-07-12 17:38:29,538 DEBUG: Info:	 Shape of SIFT :(347, 73599)
+2016-07-12 17:38:29,539 DEBUG: Done:	 Read CSV Files
+2016-07-12 17:38:29,539 DEBUG: Start:	 Determine Train/Test split for ratio 1.0
+2016-07-12 17:38:29,539 DEBUG: Info:	 Length of Learning Set: 347
+2016-07-12 17:38:29,539 DEBUG: Info:	 Length of Testing Set: 347
+2016-07-12 17:38:29,539 DEBUG: Done:	 Determine Train/Test split
+2016-07-12 17:38:29,539 DEBUG: Start:	 Learning with Mumbo

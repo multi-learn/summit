@@ -210,7 +210,8 @@ def getMultiOmicDB(features, path, name, NB_CLASS, LABELS_NAMES):
     methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
     rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
-    DATASET = {0:methylData, 1:mirnaData, 2:rnaseqData}
+    clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
+    DATASET = {0:methylData, 1:mirnaData, 2:rnaseqData, 3:clinical}
     DATASET_LENGTH = len(methylData)
     labelFile = open(path+'brca_labels_triple-negatif.csv')
     CLASS_LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])

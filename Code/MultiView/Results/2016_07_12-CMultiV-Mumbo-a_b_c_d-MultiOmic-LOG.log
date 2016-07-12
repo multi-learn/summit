@@ -1,0 +1,15 @@
+2016-07-12 17:41:18,676 DEBUG: ### Main Programm for Multiview Classification
+2016-07-12 17:41:18,677 DEBUG: ### Classification - Database : MultiOmic ; Features : a, b, c, d ; Algorithm : Mumbo ; Cores : 4
+2016-07-12 17:41:18,677 DEBUG: Start:	 Read CSV Database Files for MultiOmic
+2016-07-12 17:42:26,330 DEBUG: Info:	 Labels used: No, Yes
+2016-07-12 17:42:26,330 DEBUG: Info:	 Length of dataset:347
+2016-07-12 17:42:26,330 DEBUG: Info:	 Shape of a :(347, 25978)
+2016-07-12 17:42:26,330 DEBUG: Info:	 Shape of b :(347, 1046)
+2016-07-12 17:42:26,331 DEBUG: Info:	 Shape of c :(347, 73599)
+2016-07-12 17:42:26,331 DEBUG: Info:	 Shape of d :(1098, 127)
+2016-07-12 17:42:26,331 DEBUG: Done:	 Read CSV Files
+2016-07-12 17:42:26,331 DEBUG: Start:	 Determine Train/Test split for ratio 1.0
+2016-07-12 17:42:26,331 DEBUG: Info:	 Length of Learning Set: 347
+2016-07-12 17:42:26,331 DEBUG: Info:	 Length of Testing Set: 347
+2016-07-12 17:42:26,331 DEBUG: Done:	 Determine Train/Test split
+2016-07-12 17:42:26,331 DEBUG: Start:	 Learning with Mumbo

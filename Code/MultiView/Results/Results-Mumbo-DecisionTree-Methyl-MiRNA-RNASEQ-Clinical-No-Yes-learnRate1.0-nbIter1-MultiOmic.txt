@@ -1,0 +1,42 @@
+
+Mumbo classification using DecisionTreeas weak classifier with depth 1.
+
+ Learning on 
+	- Methyl MiRNA RNASEQ Clinical as features
+	- No Yes as labels
+	- 347 training examples, 347 testing examples (1.0 rate)
+
+ With configuration :
+	- 1 iterations on Mumbo
+	- 4 cores used for computing.
+
+The algorithm took : 
+	- 0:01:07.311659 to extract the database,
+	- 0:00:04.087585 to learn on 347 examples and 4 views,
+	- 0:00:00.077287 to predict on 694 examples
+So a total classification time of 0:01:11.476533.
+
+Total accuracy 
+	- On train : 88.4726224784%
+             precision    recall  f1-score   support
+
+         No       0.97      0.87      0.92       254
+        Yes       0.72      0.92      0.81        93
+
+avg / total       0.90      0.88      0.89       347
+
+	- On test : 88.4726224784% 
+             precision    recall  f1-score   support
+
+         No       0.97      0.87      0.92       254
+        Yes       0.72      0.92      0.81        93
+
+avg / total       0.90      0.88      0.89       347
+
+
+
+ Analysis for each Mumbo iteration : 
+	- Iteration 1
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl

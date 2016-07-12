@@ -1,0 +1,438 @@
+
+Mumbo classification using DecisionTreeas weak classifier with depth 1.
+
+ Learning on 
+	- Methyl MiRNA RNASEQ Clinical as features
+	- No Yes as labels
+	- 347 training examples, 347 testing examples (1.0 rate)
+
+ With configuration :
+	- 100 iterations on Mumbo
+	- 4 cores used for computing.
+
+The algorithm took : 
+	- 0:01:06.206754 to extract the database,
+	- 0:06:24.023738 to learn on 347 examples and 4 views,
+	- 0:00:05.547064 to predict on 694 examples
+So a total classification time of 0:07:35.777558.
+
+Total accuracy 
+	- On train : 88.4726224784%
+             precision    recall  f1-score   support
+
+         No       0.97      0.87      0.92       254
+        Yes       0.72      0.92      0.81        93
+
+avg / total       0.90      0.88      0.89       347
+
+	- On test : 88.4726224784% 
+             precision    recall  f1-score   support
+
+         No       0.97      0.87      0.92       254
+        Yes       0.72      0.92      0.81        93
+
+avg / total       0.90      0.88      0.89       347
+
+
+
+ Analysis for each Mumbo iteration : 
+	- Iteration 1
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 2
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 3
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 4
+		 Accuracy on train : 0.899135446686
+		 Accuracy on test : 0.899135446686
+		 Selected View : Methyl
+	- Iteration 5
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 6
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 7
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 8
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 9
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 10
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 11
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 12
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 13
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 14
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 15
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 16
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 17
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 18
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 19
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 20
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 21
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 22
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 23
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 24
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 25
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 26
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 27
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 28
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 29
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 30
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 31
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 32
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 33
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 34
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 35
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 36
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 37
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 38
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 39
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 40
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 41
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 42
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 43
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 44
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 45
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 46
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 47
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 48
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 49
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 50
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 51
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 52
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 53
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 54
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 55
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 56
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 57
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 58
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 59
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 60
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 61
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 62
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 63
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 64
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 65
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 66
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 67
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 68
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 69
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 70
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 71
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 72
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 73
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 74
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 75
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 76
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 77
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 78
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 79
+		 Accuracy on train : 0.887608069164
+		 Accuracy on test : 0.887608069164
+		 Selected View : Methyl
+	- Iteration 80
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 81
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 82
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 83
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 84
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 85
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 86
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 87
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 88
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 89
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 90
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 91
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 92
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 93
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 94
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 95
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 96
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 97
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 98
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 99
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
+	- Iteration 100
+		 Accuracy on train : 0.884726224784
+		 Accuracy on test : 0.884726224784
+		 Selected View : Methyl
