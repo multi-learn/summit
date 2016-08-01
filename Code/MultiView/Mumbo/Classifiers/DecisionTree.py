@@ -3,7 +3,7 @@ from sklearn.metrics import precision_recall_fscore_support
 import numpy as np
 # from sklearn.multiclass import OneVsRestClassifier
 from ModifiedMulticlass import OneVsRestClassifier
-import randomn
+import random
 
 # Add weights 
 
