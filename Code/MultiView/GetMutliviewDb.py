@@ -118,7 +118,7 @@ def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, 
     nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
     trainingExamplesIndices = []
     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
-        index = np.random.randint(0, DATASET_LENGTH-1, sum(nbTrainingExamples))
+        index = random.randint(0, DATASET_LENGTH-1)
         isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
         if isUseFull:
             trainingExamplesIndices.append(index)

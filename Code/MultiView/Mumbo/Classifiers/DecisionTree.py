@@ -3,6 +3,7 @@ from sklearn.metrics import precision_recall_fscore_support
 import numpy as np
 # from sklearn.multiclass import OneVsRestClassifier
 from ModifiedMulticlass import OneVsRestClassifier
+import randomn
 
 # Add weights 
 
@@ -26,7 +27,7 @@ def subSample(data, labels, weights, subSampling):
     nbTrainingExamples = [int(support * subSampling) for support in labelSupports]
     trainingExamplesIndices = []
     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
-        index = int(np.random.randint(0, nbExamples - 1, sum(nbTrainingExamples)))
+        index = random.randint(0, nbExamples - 1)
         isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, labels, labelDict)
         if isUseFull:
             trainingExamplesIndices.append(index)
