@@ -98,18 +98,32 @@ def getAwaDB(views, pathToAwa, nameDB, nbLabels, LABELS_NAMES):
     DATASET_LENGTH = len(labels)
     return data, labels, labelDictionnary, DATASET_LENGTH
 
-# def splitData(data, labels, ratioForTrain):
-#     trainData = []
-#     testData = []
-#     trainLabels = []
-#     testLabels = []
-#     for viewIndice in range(len(data)):
-#         a = 1
-#    return
 
-def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_VIEW):
-    nbTrainingExamples = int(DATASET_LENGTH * LEARNING_RATE)
-    trainingExamplesIndices = np.random.random_integers(0, DATASET_LENGTH, nbTrainingExamples)
+def getLabelSupports (CLASS_LABELS, NB_CLASS):
+    labels = set(CLASS_LABELS)
+    supports = [CLASS_LABELS.count(label) for label in labels]
+    return supports, dict((label, index) for label, index in zip(labels, range(len(labels))))
+
+
+def isUseful (labelSupports, index, CLASS_LABELS, labelDict):
+    if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:
+        labelSupports[labelDict[CLASS_LABELS[index]]] -= 1
+        return True, labelSupports
+    else :
+        return False, labelSupports
+
+
+def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_VIEW, NB_CLASS):
+    labelSupports, labelDict = getLabelSupports (CLASS_LABELS)
+    nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
+    trainingExamplesIndices = []
+    while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
+        index = np.random.randint(0, DATASET_LENGTH-1, sum(nbTrainingExamples))
+        isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
+        if isUseFull:
+            trainingExamplesIndices.append(index)
+
+    # trainingExamplesIndices = np.random.random_integers(0, DATASET_LENGTH-1, nbTrainingExamples)
     trainData, trainLabels = [], []
     testData, testLabels = [], []
     for viewIndice in range(NB_VIEW):

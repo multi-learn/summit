@@ -46,7 +46,7 @@ groupMumbo = parser.add_argument_group('Mumbo arguments')
 groupMumbo.add_argument('--MU_type', metavar='STRING', action='store',
                         help='Determine which monoview classifier to use with Mumbo', default='DecisionTree:DecisionTree:DecisionTree')
 groupMumbo.add_argument('--MU_config', metavar='STRING', action='store', nargs='+',
-                        help='Configuration for the monoview classifier in Mumbo', default='3 3 3')
+                        help='Configuration for the monoview classifier in Mumbo', default='3:1.0 3:1.0 3:1.0')
 groupMumbo.add_argument('--MU_iter', metavar='INT', action='store',
                         help='Number of iterations in Mumbos learning process', type=int, default=5)
 
@@ -128,7 +128,7 @@ logging.debug("Start:\t Determine Train/Test split for ratio "+str(LEARNING_RATE
 
 if LEARNING_RATE !=1.0:
     trainData, trainLabels, testData, testLabels = DB.extractRandomTrainingSet(DATASET, CLASS_LABELS, LEARNING_RATE,
-                                                                           datasetLength, NB_VIEW)
+                                                                           datasetLength, NB_VIEW, NB_CLASS)
 else:
     trainData = DATASET
     testData = DATASET
