@@ -8,7 +8,7 @@ from ModifiedMulticlass import OneVsRestClassifier
 
 def getLabelSupports(CLASS_LABELS):
     labels = set(CLASS_LABELS)
-    supports = [CLASS_LABELS.count(label) for label in labels]
+    supports = [CLASS_LABELS.tolist().count(label) for label in labels]
     return supports, dict((label, index) for label, index in zip(labels, range(len(labels))))
 
 
