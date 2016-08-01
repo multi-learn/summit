@@ -99,7 +99,7 @@ def getAwaDB(views, pathToAwa, nameDB, nbLabels, LABELS_NAMES):
     return data, labels, labelDictionnary, DATASET_LENGTH
 
 
-def getLabelSupports (CLASS_LABELS, NB_CLASS):
+def getLabelSupports (CLASS_LABELS):
     labels = set(CLASS_LABELS)
     supports = [CLASS_LABELS.count(label) for label in labels]
     return supports, dict((label, index) for label, index in zip(labels, range(len(labels))))
