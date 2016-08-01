@@ -64,7 +64,7 @@ def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS, costMatri
     return classifier, classes, isBad
 
 
-def trainWeakClassifers(classifierName, DATASET, CLASS_LABELS, costMatrices,
+def trainWeakClassifers(classifierNames, DATASET, CLASS_LABELS, costMatrices,
                         NB_CLASS, DATASET_LENGTH, iterIndice, classifier_config,
                         NB_CORES, NB_VIEW):
     trainedClassifiers = []
@@ -75,9 +75,9 @@ def trainWeakClassifers(classifierName, DATASET, CLASS_LABELS, costMatrices,
     else:
         NB_JOBS = NB_CORES
     trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
-            delayed(trainWeakClassifier)(classifierName, DATASET[viewIndice], CLASS_LABELS,
+            delayed(trainWeakClassifier)(classifierNames[viewIndice], DATASET[viewIndice], CLASS_LABELS,
                                          costMatrices, NB_CLASS, DATASET_LENGTH,
-                                         iterIndice, viewIndice, classifier_config)
+                                         iterIndice, viewIndice, classifier_config[viewIndice])
             for viewIndice in range(NB_VIEW))
 
     for (classifier, labelsArray, isBad) in trainedClassifiersAndLabels:
@@ -217,7 +217,7 @@ def updateGeneralCostMatrix(generalCostMatrix, generalFs, iterIndice,
 def train(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
           trainArguments):
     # Initialization
-    classifierConfig, NB_ITER, classifierName = trainArguments
+    classifierConfig, NB_ITER, classifierNames = trainArguments
     costMatrices, \
     generalCostMatrix, fs, ds, edges, alphas, \
     predictions, generalAlphas, generalFs = initialize(NB_CLASS, NB_VIEW,
@@ -229,7 +229,7 @@ def train(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
     # Learning
     for iterIndice in range(NB_ITER):
         print '_________________________________________________'
-        classifiers, predictedLabels, areBad = trainWeakClassifers(classifierName,
+        classifiers, predictedLabels, areBad = trainWeakClassifers(classifierNames,
                                                            DATASET,
                                                            CLASS_LABELS,
                                                            costMatrices,

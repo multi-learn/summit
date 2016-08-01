@@ -44,9 +44,9 @@ groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Numbe
 
 groupMumbo = parser.add_argument_group('Mumbo arguments')
 groupMumbo.add_argument('--MU_type', metavar='STRING', action='store',
-                        help='Determine which monoview classifier to use with Mumbo', default='DecisionTree')
-groupMumbo.add_argument('--MU_config', metavar='STRING', action='store',
-                        help='Configuration for the monoview classifier in Mumbo', default='3')
+                        help='Determine which monoview classifier to use with Mumbo', default='DecisionTree:DecisionTree:DecisionTree')
+groupMumbo.add_argument('--MU_config', metavar='STRING', action='store', nargs='+',
+                        help='Configuration for the monoview classifier in Mumbo', default='3 3 3')
 groupMumbo.add_argument('--MU_iter', metavar='INT', action='store',
                         help='Number of iterations in Mumbos learning process', type=int, default=5)
 
@@ -65,17 +65,17 @@ groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store',
 args = parser.parse_args()
 features = args.features.split(":")
 NB_VIEW = len(features)
-mumboClassifierConfig = args.MU_config.split(":")
+mumboClassifierConfig = [argument.split(':') for argument in args.MU_config]
 LEARNING_RATE = args.CL_split
 NB_CLASS = args.CL_nb_class
 LABELS_NAMES = args.CL_classes.split(":")
-classifierName = args.MU_type
+classifierNames = args.MU_type.split(':')
 NB_ITER = args.MU_iter
 NB_CORES = args.CL_cores
 fusionClassifierConfig = args.FU_cl_config.split(":")
 fusionMethodConfig = args.FU_config.split(":")
 FusionArguments = (args.FU_type, args.FU_method, fusionMethodConfig, args.FU_cl_type, fusionClassifierConfig)
-MumboArguments = (mumboClassifierConfig, NB_ITER, classifierName)
+MumboArguments = (mumboClassifierConfig, NB_ITER, classifierNames)
 
 
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
@@ -176,7 +176,7 @@ stringAnalysis, imagesAnalysis = analysisModule.execute(classifier, predictedTra
 logging.debug(stringAnalysis)
 featureString = "-".join(features)
 labelsString = "-".join(labelsSet)
-outputFileName = "Results/Results-Mumbo-" + classifierName + '-' + featureString + '-' + labelsString + '-learnRate' + str(
+outputFileName = "Results/Results-"+args.CL_type+"-" + ":".join(classifierNames) + '-' + featureString + '-' + labelsString + '-learnRate' + str(
     LEARNING_RATE) + '-nbIter' + str(NB_ITER) + '-' + args.name
 
 outputTextFile = open(outputFileName + '.txt', 'w')
