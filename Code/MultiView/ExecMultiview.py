@@ -70,6 +70,7 @@ LEARNING_RATE = args.CL_split
 NB_CLASS = args.CL_nb_class
 LABELS_NAMES = args.CL_classes.split(":")
 classifierNames = args.MU_type.split(':')
+print classifierNames
 NB_ITER = args.MU_iter
 NB_CORES = args.CL_cores
 fusionClassifierConfig = args.FU_cl_config.split(":")
