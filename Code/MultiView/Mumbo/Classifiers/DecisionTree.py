@@ -26,7 +26,7 @@ def subSample(data, labels, weights, subSampling):
     nbTrainingExamples = [int(support * subSampling) for support in labelSupports]
     trainingExamplesIndices = []
     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
-        index = np.random.randint(0, nbExamples - 1, sum(nbTrainingExamples))
+        index = int(np.random.randint(0, nbExamples - 1, sum(nbTrainingExamples)))
         isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, labels, labelDict)
         if isUseFull:
             trainingExamplesIndices.append(index)

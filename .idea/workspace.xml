@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2cddca2-4818-4b60-b3ce-fb207e328b36" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py" afterPath="$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py" afterPath="$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py" />
     </list>
     <ignored path="Multiview-Machine-Learning-OMIS.iws" />
@@ -89,8 +88,8 @@
       <file leaf-file-name="DecisionTree.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="49">
-              <caret line="10" column="37" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
+            <state relative-caret-position="420">
+              <caret line="28" column="82" selection-start-line="28" selection-start-column="82" selection-end-line="28" selection-end-column="82" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -1140,8 +1139,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="49">
-          <caret line="10" column="37" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
+        <state relative-caret-position="420">
+          <caret line="28" column="82" selection-start-line="28" selection-start-column="82" selection-end-line="28" selection-end-column="82" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
           </folding>
