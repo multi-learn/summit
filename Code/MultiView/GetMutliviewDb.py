@@ -221,15 +221,10 @@ def getCaltechDB(features, pathF, nameDB, NB_CLASS, LABELS_NAMES):
     return DATASET, CLASS_LABELS, LABELS_DICTIONARY, DATASET_LENGTH
 
 def getMultiOmicDB(features, path, name, NB_CLASS, LABELS_NAMES):
-    print "Methyl..."
     methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
-    print 'Mirna...'
     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
-    print 'RNASEQ'
     rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
-    print 'Clinical'
     clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
-    print 'Labels'
     DATASET = {0:methylData, 1:mirnaData, 2:rnaseqData, 3:clinical}
     DATASET_LENGTH = len(methylData)
     labelFile = open(path+'brca_labels_triple-negatif.csv')
