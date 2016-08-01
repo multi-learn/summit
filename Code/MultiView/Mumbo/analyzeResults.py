@@ -63,12 +63,12 @@ def execute(classifier, predictedTrainLabels, predictedTestLabels, trainLabels, 
     NB_VIEW = len(trainData)
 
     extractionTime, learningTime, predictionTime, classificationTime = times
-    classifierConfig, NB_ITER, classifierName = trainArguments
+    classifierConfigs, NB_ITER, classifierNames = trainArguments
     bestClassifiers, generalAlphas, bestViews = classifier
     classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
-    weakClassifierConfig = getattr(classifierModule, 'getConfig')(classifierConfig)
+    weakClassifierConfig = [getattr(classifierModule, 'getConfig')(classifierConfig) for classifierConfig in classifierConfigs ]
 
-    stringAnalysis = "\nMumbo classification using "+classifierName+ 'as weak classifier '+weakClassifierConfig+'\n\n '+\
+    stringAnalysis = "\nMumbo classification using "+', '.join(classifierNames)+ 'as weak classifier with config ('+ ' ,'.join(weakClassifierConfig)+'\n\n '+\
                      "Learning on \n\t- "+" ".join(features)+" as features\n\t- "+" ".join(LABELS_DICTIONARY.values())+\
                      " as labels\n\t- "+str(trainingSetLength)+" training examples, "+str(testingSetLength)+\
                      " testing examples ("+str(LEARNING_RATE)+" rate)\n\n With configuration :\n\t- "+str(NB_ITER)+\
