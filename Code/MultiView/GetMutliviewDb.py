@@ -143,6 +143,22 @@ def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, 
     return trainData, np.array(trainLabels[0]), testData, np.array(testLabels[0])
 
 
+def getKFoldIndices(nbFolds, CLASS_LABELS, DATASET_LENGTH, NB_CLASS):
+    labelSupports, labelDict = getLabelSupports(CLASS_LABELS)
+    nbTrainingExamples = [[int(support / nbFolds) for fold in range(nbFolds)] for support in labelSupports]
+    trainingExamplesIndices = []
+    usedIndices = []
+    for foldIndex, fold in enumerate(nbTrainingExamples):
+        trainingExamplesIndices.append([])
+        while fold != [0 for i in range(NB_CLASS)]:
+            index = random.randint(0, DATASET_LENGTH - 1)
+            if index not in usedIndices:
+                isUseFull, fold = isUseful(fold, index, CLASS_LABELS, labelDict)
+                if isUseFull:
+                    trainingExamplesIndices[foldIndex].append(index)
+                    usedIndices.append(index)
+
+
 def getDbfromCSV(path):
     files = os.listdir(path)
     DATA = np.zeros((3,40,2))

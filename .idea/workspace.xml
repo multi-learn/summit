@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2cddca2-4818-4b60-b3ce-fb207e328b36" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/ExecMultiview.py" afterPath="$PROJECT_DIR$/Code/MultiView/ExecMultiview.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py" afterPath="$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py" afterPath="$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py" />
     </list>
     <ignored path="Multiview-Machine-Learning-OMIS.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,11 +32,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ExecMultiview.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ExecMultiview.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/ExecMultiview.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="48" column="109" selection-start-line="48" selection-start-column="109" selection-end-line="48" selection-end-column="109" />
+            <state relative-caret-position="379">
+              <caret line="134" column="22" selection-start-line="134" selection-start-column="22" selection-end-line="134" selection-end-column="22" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -54,7 +57,7 @@
       <file leaf-file-name="Mumbo.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="874">
+            <state relative-caret-position="15">
               <caret line="231" column="37" selection-start-line="231" selection-start-column="37" selection-end-line="231" selection-end-column="37" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -66,7 +69,7 @@
       <file leaf-file-name="ModifiedMulticlass.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/ModifiedMulticlass.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="645">
+            <state relative-caret-position="15">
               <caret line="58" column="11" selection-start-line="58" selection-start-column="11" selection-end-line="58" selection-end-column="11" />
               <folding />
             </state>
@@ -76,7 +79,7 @@
       <file leaf-file-name="Kover.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/Kover.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
+            <state relative-caret-position="120">
               <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
               <folding>
                 <element signature="e#0#59#0" expanded="true" />
@@ -88,8 +91,8 @@
       <file leaf-file-name="DecisionTree.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="28" column="67" selection-start-line="28" selection-start-column="67" selection-end-line="28" selection-end-column="67" />
+            <state relative-caret-position="662">
+              <caret line="50" column="61" selection-start-line="50" selection-start-column="61" selection-end-line="50" selection-end-column="61" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -100,8 +103,8 @@
       <file leaf-file-name="analyzeResults.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="769">
-              <caret line="101" column="5" selection-start-line="101" selection-start-column="5" selection-end-line="101" selection-end-column="5" />
+            <state relative-caret-position="780">
+              <caret line="52" column="61" selection-start-line="52" selection-start-column="61" selection-end-line="52" selection-end-column="61" />
               <folding>
                 <element signature="e#0#98#0" expanded="true" />
               </folding>
@@ -109,11 +112,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GetMutliviewDb.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GetMutliviewDb.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="409">
-              <caret line="230" column="0" selection-start-line="230" selection-start-column="0" selection-end-line="230" selection-end-column="0" />
+            <state relative-caret-position="255">
+              <caret line="145" column="4" selection-start-line="145" selection-start-column="4" selection-end-line="145" selection-end-column="68" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -171,9 +174,9 @@
         <option value="$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/Kover.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py" />
-        <option value="$PROJECT_DIR$/Code/MultiView/ExecMultiview.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py" />
+        <option value="$PROJECT_DIR$/Code/MultiView/ExecMultiview.py" />
       </list>
     </option>
   </component>
@@ -334,33 +337,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="MultiView" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Results" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Multiview-Machine-Learning-OMIS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Multiview-Machine-Learning-OMIS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Code" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MultiView" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Mumbo" />
+              <option name="myItemId" value="MonoView" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1059,46 +1036,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/ModifiedMulticlass.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="58" column="11" selection-start-line="58" selection-start-column="11" selection-end-line="58" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="874">
-          <caret line="231" column="37" selection-start-line="231" selection-start-column="37" selection-end-line="231" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Code/MultiView/Results/2016_06_16-CMultiV-Fusion-phog-hist_decaf_cq-hist-Awa-LOG.log">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="769">
-          <caret line="101" column="5" selection-start-line="101" selection-start-column="5" selection-end-line="101" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#98#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MonoView/ExecClassifMonoView.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="96" column="125" selection-start-line="96" selection-start-column="78" selection-end-line="96" selection-end-column="125" />
           <folding />
         </state>
       </provider>
@@ -1111,19 +1052,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/ExecMultiview.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="48" column="109" selection-start-line="48" selection-start-column="109" selection-end-line="48" selection-end-column="109" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/Kover.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
+        <state relative-caret-position="120">
           <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
           <folding>
             <element signature="e#0#59#0" expanded="true" />
@@ -1131,22 +1062,68 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py">
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="780">
+          <caret line="52" column="61" selection-start-line="52" selection-start-column="61" selection-end-line="52" selection-end-column="61" />
+          <folding>
+            <element signature="e#0#98#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/ModifiedMulticlass.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="58" column="11" selection-start-line="58" selection-start-column="11" selection-end-line="58" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MonoView/ExecClassifMonoView.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
-          <caret line="28" column="67" selection-start-line="28" selection-start-column="67" selection-end-line="28" selection-end-column="67" />
+          <caret line="96" column="125" selection-start-line="96" selection-start-column="78" selection-end-line="96" selection-end-column="125" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="662">
+          <caret line="50" column="61" selection-start-line="50" selection-start-column="61" selection-end-line="50" selection-end-column="61" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py">
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="230" column="0" selection-start-line="230" selection-start-column="0" selection-end-line="230" selection-end-column="0" />
+        <state relative-caret-position="15">
+          <caret line="231" column="37" selection-start-line="231" selection-start-column="37" selection-end-line="231" selection-end-column="37" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="145" column="4" selection-start-line="145" selection-start-column="4" selection-end-line="145" selection-end-column="68" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/ExecMultiview.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="134" column="22" selection-start-line="134" selection-start-column="22" selection-end-line="134" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>

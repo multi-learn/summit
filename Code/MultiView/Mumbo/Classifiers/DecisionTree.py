@@ -45,6 +45,8 @@ def DecisionTree(data, labels, arg, weights):
     subSampling = float(arg[1])
     if subSampling != 1.0:
         subSampledData, subSampledLabels, subSampledWeights = subSample (data, labels, weights, subSampling)
+    else:
+        subSampledData, subSampledLabels, subSampledWeights = data, labels, weights
     isBad = False
     classifier = tree.DecisionTreeClassifier(max_depth=depth)
     #classifier = OneVsRestClassifier(tree.DecisionTreeClassifier(max_depth=depth))

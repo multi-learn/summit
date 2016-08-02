@@ -30,7 +30,7 @@ groupStandard.add_argument('--pathF', metavar='STRING', action='store',
                            default='../FeatExtraction/Results-FeatExtr/')
 
 groupClass = parser.add_argument_group('Classification arguments')
-groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the learning rate', type=float,
+groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the learning rate if > 1.0, number of fold for cross validation', type=float,
                         default=1.0)
 groupClass.add_argument('--CL_nb_class', metavar='INT', action='store', help='Number of classes, -1 for all', type=int,
                         default=4)
@@ -66,6 +66,7 @@ args = parser.parse_args()
 features = args.features.split(":")
 NB_VIEW = len(features)
 mumboClassifierConfig = [argument.split(':') for argument in args.MU_config]
+
 LEARNING_RATE = args.CL_split
 NB_CLASS = args.CL_nb_class
 LABELS_NAMES = args.CL_classes.split(":")
@@ -126,14 +127,18 @@ logging.debug("Done:\t Read CSV Files")
 # Calculate Train/Test data
 logging.debug("Start:\t Determine Train/Test split for ratio "+str(LEARNING_RATE))
 
-if LEARNING_RATE !=1.0:
+if LEARNING_RATE <=1.0:
     trainData, trainLabels, testData, testLabels = DB.extractRandomTrainingSet(DATASET, CLASS_LABELS, LEARNING_RATE,
                                                                            datasetLength, NB_VIEW, NB_CLASS)
-else:
+elif LEARNING_RATE == 1.0:
     trainData = DATASET
     testData = DATASET
     trainLabels = CLASS_LABELS
     testLabels = CLASS_LABELS
+
+else:
+    kFolds = getKFoldIndices(LEARNING_RATE, CLASS_LABELS, DATASET_LENGTH, NB_CLASS)
+
 
 DATASET_LENGTH = len(trainLabels)
 
