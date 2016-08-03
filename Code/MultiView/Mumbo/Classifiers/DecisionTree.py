@@ -13,21 +13,21 @@ def getLabelSupports(CLASS_LABELS):
     return supports, dict((label, index) for label, index in zip(labels, range(len(labels))))
 
 
-def isUseful(labelSupports, index, CLASS_LABELS, labelDict):
-    if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:
-        labelSupports[labelDict[CLASS_LABELS[index]]] -= 1
-        return True, labelSupports
+def isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict):
+    if nbTrainingExamples[labelDict[CLASS_LABELS[index]]] != 0:
+        nbTrainingExamples[labelDict[CLASS_LABELS[index]]] -= 1
+        return True, nbTrainingExamples
     else:
-        return False, labelSupports
+        return False, nbTrainingExamples
 
 
 def subSample(data, labels, weights, subSampling):
-    nbExamples = len(data)
+    nbExamples = len(labels)
     labelSupports, labelDict = getLabelSupports(labels)
-    nbTrainingExamples = [int(support * subSampling) for support in labelSupports]
+    nbTrainingExamples = [int(support / subSampling) for support in labelSupports]
     trainingExamplesIndices = []
     while nbTrainingExamples != [0 for i in range(len(labelSupports))]:
-        index = random.randint(0, nbExamples - 1)
+        index = int(random.randint(0, nbExamples - 1))
         isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, labels, labelDict)
         if isUseFull:
             trainingExamplesIndices.append(index)
@@ -49,6 +49,7 @@ def DecisionTree(data, labels, arg, weights):
         subSampledData, subSampledLabels, subSampledWeights = data, labels, weights
     isBad = False
     classifier = tree.DecisionTreeClassifier(max_depth=depth)
+
     #classifier = OneVsRestClassifier(tree.DecisionTreeClassifier(max_depth=depth))
     classifier.fit(subSampledData, subSampledLabels, subSampledWeights)
     prediction = classifier.predict(data)
@@ -60,5 +61,6 @@ def DecisionTree(data, labels, arg, weights):
 
 def getConfig(classifierConfig):
     depth = classifierConfig[0]
-    return 'with depth ' + depth + '.'
+    subSampling = classifierConfig[1]
+    return 'with depth ' + depth + ' -' + ' sub-sampled at ' + subSampling + ' '
 

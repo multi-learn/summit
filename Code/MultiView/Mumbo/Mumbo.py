@@ -2,6 +2,7 @@ import numpy as np
 import math
 from joblib import Parallel, delayed
 from Classifiers import *
+import logging
 
 
 # Data shape : ((Views, Examples, Corrdinates))
@@ -60,7 +61,7 @@ def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS, costMatri
     classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
     classifierMethod = getattr(classifierModule, classifierName)
     classifier, classes, isBad, pTr = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
-    print "View : "+str(viewIndice)+" : "+str(np.mean(pTr))
+    logging.debug("View : "+str(viewIndice)+" : "+str(np.mean(pTr)))
     return classifier, classes, isBad
 
 
@@ -228,7 +229,7 @@ def train(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
 
     # Learning
     for iterIndice in range(NB_ITER):
-        print '_________________________________________________'
+        logging.debug('Start:\t Iteration '+str(iterIndice+1))
         classifiers, predictedLabels, areBad = trainWeakClassifers(classifierNames,
                                                            DATASET,
                                                            CLASS_LABELS,
@@ -239,7 +240,7 @@ def train(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
                                                            classifierConfig,
                                                            NB_CORES, NB_VIEW)
         if areBad.all():
-            print "All bad for iteration " + str(iterIndice)
+            logging.warning("All bad for iteration " + str(iterIndice))
 
         predictions[iterIndice] = predictedLabels
 

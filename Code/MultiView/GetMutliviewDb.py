@@ -2,6 +2,7 @@ import numpy as np
 from string import digits
 import os
 import random
+import logging
 
 
 def getOneViewFromDB(viewName, pathToDB, DBName):
@@ -118,45 +119,51 @@ def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, 
     nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
     trainingExamplesIndices = []
     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
-        index = random.randint(0, DATASET_LENGTH-1)
+        index = int(random.randint(0, DATASET_LENGTH-1))
         isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
         if isUseFull:
             trainingExamplesIndices.append(index)
 
-    # trainingExamplesIndices = np.random.random_integers(0, DATASET_LENGTH-1, nbTrainingExamples)
-    trainData, trainLabels = [], []
-    testData, testLabels = [], []
-    for viewIndice in range(NB_VIEW):
-        trainD, testD = [], []
-        trainL, testL = [], []
-        for i in np.arange(DATASET_LENGTH):
-            if i in trainingExamplesIndices:
-                trainD.append(DATA[viewIndice][i])
-                trainL.append(CLASS_LABELS[i])
-            else:
-                testD.append(DATA[viewIndice][i])
-                testL.append(CLASS_LABELS[i])
-        trainData.append(np.array(trainD))
-        testData.append(np.array(testD))
-    trainLabels.append(np.array(trainL))
-    testLabels.append(np.array(testL))
-    return trainData, np.array(trainLabels[0]), testData, np.array(testLabels[0])
+    # # trainingExamplesIndices = np.random.random_integers(0, DATASET_LENGTH-1, nbTrainingExamples)
+    # trainData, trainLabels = [], []
+    # testData, testLabels = [], []
+    # for viewIndice in range(NB_VIEW):
+    #     trainD, testD = [], []
+    #     trainL, testL = [], []
+    #     for i in np.arange(DATASET_LENGTH):
+    #         if i in trainingExamplesIndices:
+    #             trainD.append(DATA[viewIndice][i])
+    #             trainL.append(CLASS_LABELS[i])
+    #         else:
+    #             testD.append(DATA[viewIndice][i])
+    #             testL.append(CLASS_LABELS[i])
+    #     trainData.append(np.array(trainD))
+    #     testData.append(np.array(testD))
+    # trainLabels.append(np.array(trainL))
+    # testLabels.append(np.array(testL))
+    # return trainData, np.array(trainLabels[0]), testData, np.array(testLabels[0])
+    return [trainingExamplesIndices, [index for index in range(DATASET_LENGTH) if index not in trainingExamplesIndices]]
 
 
 def getKFoldIndices(nbFolds, CLASS_LABELS, DATASET_LENGTH, NB_CLASS):
+    nbFolds=int(nbFolds)
     labelSupports, labelDict = getLabelSupports(CLASS_LABELS)
-    nbTrainingExamples = [[int(support / nbFolds) for fold in range(nbFolds)] for support in labelSupports]
+    print labelSupports
+    nbTrainingExamples = [[int(support / nbFolds) for support in labelSupports] for fold in range(nbFolds)]
+    print nbTrainingExamples[0]
     trainingExamplesIndices = []
     usedIndices = []
     for foldIndex, fold in enumerate(nbTrainingExamples):
+        print 'fold'
         trainingExamplesIndices.append([])
         while fold != [0 for i in range(NB_CLASS)]:
-            index = random.randint(0, DATASET_LENGTH - 1)
+            index = int(random.randint(0, DATASET_LENGTH - 1))
             if index not in usedIndices:
                 isUseFull, fold = isUseful(fold, index, CLASS_LABELS, labelDict)
                 if isUseFull:
                     trainingExamplesIndices[foldIndex].append(index)
                     usedIndices.append(index)
+    return trainingExamplesIndices
 
 
 def getDbfromCSV(path):
@@ -236,19 +243,36 @@ def getCaltechDB(features, pathF, nameDB, NB_CLASS, LABELS_NAMES):
 
     return DATASET, CLASS_LABELS, LABELS_DICTIONARY, DATASET_LENGTH
 
+# def getMultiOmicDB(features, path, name, NB_CLASS, LABELS_NAMES):
+#     logging.debug("Start:\t Getting Methylation Data")
+#     methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
+#     logging.debug("Done:\t Getting Methylation Data")
+#     logging.debug("Start:\t Getting MiRNA Data")
+#     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
+#     logging.debug("Done:\t Getting MiRNA Data")
+#     logging.debug("Start:\t Getting RNASeq Data")
+#     rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
+#     logging.debug("Done:\t Getting RNASeq Data")
+#     logging.debug("Start:\t Getting Clinical Data")
+#     clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
+#     logging.debug("Done:\t Getting Clinical Data")
+#     DATASET = {0:methylData, 1:mirnaData, 2:rnaseqData, 3:clinical}
+#     DATASET_LENGTH = len(methylData)
+#     labelFile = open(path+'brca_labels_triple-negatif.csv')
+#     CLASS_LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
+#     labelDictionnary = {0:"No", 1:"Yes"}
+#     return DATASET, CLASS_LABELS, labelDictionnary, DATASET_LENGTH
+
 def getMultiOmicDB(features, path, name, NB_CLASS, LABELS_NAMES):
-    methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
-    rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
     clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
-    DATASET = {0:methylData, 1:mirnaData, 2:rnaseqData, 3:clinical}
-    DATASET_LENGTH = len(methylData)
+    logging.debug("Done:\t Getting Clinical Data")
+    DATASET = {0:mirnaData, 1:clinical}
     labelFile = open(path+'brca_labels_triple-negatif.csv')
     CLASS_LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
+    DATASET_LENGTH = len(CLASS_LABELS)
     labelDictionnary = {0:"No", 1:"Yes"}
     return DATASET, CLASS_LABELS, labelDictionnary, DATASET_LENGTH
-
-
 
 
 

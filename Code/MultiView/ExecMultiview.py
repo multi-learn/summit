@@ -71,7 +71,6 @@ LEARNING_RATE = args.CL_split
 NB_CLASS = args.CL_nb_class
 LABELS_NAMES = args.CL_classes.split(":")
 classifierNames = args.MU_type.split(':')
-print classifierNames
 NB_ITER = args.MU_iter
 NB_CORES = args.CL_cores
 fusionClassifierConfig = args.FU_cl_config.split(":")
@@ -101,50 +100,51 @@ if (args.log):
     logging.getLogger().addHandler(logging.StreamHandler())
 
 # Determine the Database to extract features
-logging.debug("### Main Programm for Multiview Classification")
-logging.debug("### Classification - Database : " + str(args.name) + " ; Features : " + ", ".join(features) +
+logging.info("### Main Programm for Multiview Classification")
+logging.info("### Classification - Database : " + str(args.name) + " ; Views : " + ", ".join(features) +
               " ; Algorithm : " + args.CL_type + " ; Cores : " + str(NB_CORES))
 t_start = time.time()
 
 
 # Read the features
-logging.debug("Start:\t Read CSV Database Files for "+args.name)
+logging.info("Start:\t Read CSV Database Files for "+args.name)
 
 getDatabase = getattr(DB, "get"+args.name+"DB")
 
 DATASET, CLASS_LABELS, LABELS_DICTIONARY, datasetLength = getDatabase(features, args.pathF, args.name, NB_CLASS, LABELS_NAMES)
 
 labelsSet = LABELS_DICTIONARY.values()
-logging.debug("Info:\t Labels used: "+", ".join(labelsSet))
-logging.debug("Info:\t Length of dataset:" + str(datasetLength))
+logging.info("Info:\t Labels used: "+", ".join(labelsSet))
+logging.info("Info:\t Length of dataset:" + str(datasetLength))
 
 for viewIndice in range(NB_VIEW):
-    logging.debug("Info:\t Shape of " + features[viewIndice] + " :" + str(
+    logging.info("Info:\t Shape of " + features[viewIndice] + " :" + str(
         DATASET[viewIndice].shape))
-logging.debug("Done:\t Read CSV Files")
+logging.info("Done:\t Read CSV Files")
 
 
 # Calculate Train/Test data
-logging.debug("Start:\t Determine Train/Test split for ratio "+str(LEARNING_RATE))
+if LEARNING_RATE<=1.0:
+    logging.info("Start:\t Determine Train/Test split for ratio " + str(LEARNING_RATE))
+else:
+    logging.info("Start:\t Determine "+str(LEARNING_RATE)+" folds for cross validation ")
+
 
 if LEARNING_RATE <=1.0:
-    trainData, trainLabels, testData, testLabels = DB.extractRandomTrainingSet(DATASET, CLASS_LABELS, LEARNING_RATE,
-                                                                           datasetLength, NB_VIEW, NB_CLASS)
+    # trainData, trainLabels, testData, testLabels = DB.extractRandomTrainingSet(DATASET, CLASS_LABELS, LEARNING_RATE,
+    #                                                                        datasetLength, NB_VIEW, NB_CLASS)
+    kFolds = DB.extractRandomTrainingSet(DATASET, CLASS_LABELS, LEARNING_RATE, datasetLength, NB_VIEW, NB_CLASS)
+
 elif LEARNING_RATE == 1.0:
-    trainData = DATASET
-    testData = DATASET
-    trainLabels = CLASS_LABELS
-    testLabels = CLASS_LABELS
+    kFolds = [range(datasetLength), []]
 
 else:
-    kFolds = getKFoldIndices(LEARNING_RATE, CLASS_LABELS, DATASET_LENGTH, NB_CLASS)
+    kFolds = DB.getKFoldIndices(LEARNING_RATE, CLASS_LABELS, datasetLength, NB_CLASS)
 
 
-DATASET_LENGTH = len(trainLabels)
-
-logging.debug("Info:\t Length of Learning Set: " + str(DATASET_LENGTH))
-logging.debug("Info:\t Length of Testing Set: " + str(len(testLabels)))
-logging.debug("Done:\t Determine Train/Test split")
+logging.info("Info:\t Length of Learning Set: " + str(len(kFolds[0])))
+logging.info("Info:\t Length of Testing Set: " + str(datasetLength-len(kFolds[0])))
+logging.info("Done:\t Determine folds")
 extractionTime = time.time() - t_start
 
 classifierPackage = globals()[args.CL_type]  # Permet d'appeler un module avec une string
@@ -154,32 +154,51 @@ train = getattr(classifierModule, "train")
 predict = getattr(classifierModule, "predict")
 analysisModule = getattr(classifierPackage, "analyzeResults")
 
+kFoldPredictedTrainLabels = []
+kFoldPredictedTestLabels = []
+kFoldLearningTime = []
+kFoldPredictionTime = []
+kFoldClassifier = []
+
 # Begin Classification
-logging.debug("Start:\t Learning with " + args.CL_type)
+logging.info("Start:\t Learning with " + args.CL_type + " and "+ str(len(kFolds))+" folds")
+for foldIdx, fold in enumerate(kFolds) :
+    if fold:
+        logging.info("\tStart:\t Fold number "+str(foldIdx+1))
+        trainIndices = [index for index in range(datasetLength) if index not in fold]
+        testData = dict((key, value[fold, :]) for key, value in DATASET.iteritems())
+        trainData = dict((key, value[trainIndices, :]) for key, value in DATASET.iteritems())
+        testLabels = CLASS_LABELS[fold]
+        trainLabels = CLASS_LABELS[trainIndices]
+        DATASET_LENGTH = len(trainLabels)
+        classifier = train(trainData, trainLabels, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
+                       trainArguments)
+        kFoldClassifier.append(classifier)
 
-classifier = train(trainData, trainLabels, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
-                   trainArguments)
+        learningTime = time.time() - extractionTime - t_start
+        kFoldLearningTime.append(learningTime)
+        logging.info("\tStart: \t Classification")
 
-logging.debug("Done: \t Learning")
-learningTime = time.time() - extractionTime - t_start
-logging.debug("Start: \t Classification")
+        kFoldPredictedTrainLabels.append(predict(trainData, classifier, NB_CLASS))
+        kFoldPredictedTestLabels.append(predict(testData, classifier, NB_CLASS))
 
-predictedTrainLabels = predict(trainData, classifier, NB_CLASS)
-predictedTestLabels = predict(testData, classifier, NB_CLASS)
+        kFoldPredictionTime.append(time.time() - extractionTime - t_start - learningTime)
+        logging.info("\tDone: \t Fold number"+str(foldIdx+1))
 
-predictionTime = time.time() - extractionTime - t_start - learningTime
+
 classificationTime = time.time() - t_start
 
-logging.debug("Done:\t Classification")
-logging.debug("Info:\t Time for Classification: " + str(int(classificationTime)) + "[s]")
-logging.debug("Start:\t Result Analysis for " + args.CL_type)
+logging.info("Done:\t Classification")
+logging.info("Info:\t Time for Classification: " + str(int(classificationTime)) + "[s]")
+logging.info("Start:\t Result Analysis for " + args.CL_type)
 
-times = (extractionTime, learningTime, predictionTime, classificationTime)
+times = (extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime)
 
-stringAnalysis, imagesAnalysis = analysisModule.execute(classifier, predictedTrainLabels, predictedTestLabels, trainLabels,
-                                                        testLabels, trainData, testData, NB_CLASS, trainArguments,
-                                                        LEARNING_RATE, LABELS_DICTIONARY, features, NB_CORES, times)
-logging.debug(stringAnalysis)
+stringAnalysis, imagesAnalysis = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
+                                                        kFoldPredictedTestLabels, DATASET, CLASS_LABELS,
+                                                        NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY,
+                                                        features, NB_CORES, times, NB_VIEW, kFolds)
+logging.info(stringAnalysis)
 featureString = "-".join(features)
 labelsString = "-".join(labelsSet)
 outputFileName = "Results/Results-"+args.CL_type+"-" + ":".join(classifierNames) + '-' + featureString + '-' + labelsString + '-learnRate' + str(
@@ -193,7 +212,7 @@ if imagesAnalysis is not None:
     for imageName in imagesAnalysis:
         imagesAnalysis[imageName].savefig(outputFileName + imageName + '.png')
 
-logging.debug("Done:\t Result Analysis")
+logging.info("Done:\t Result Analysis")
 
 
 
@@ -204,44 +223,44 @@ logging.debug("Done:\t Result Analysis")
 # y_test_pred = cl_res.predict(X_test)
 # classLabelsDesc = pd.read_csv(args.pathF + args.fileCLD, sep=";", names=['label', 'name'])
 # classLabelsNames = classLabelsDesc.name
-# #logging.debug("" + str(classLabelsNames))
+# #logging.info("" + str(classLabelsNames))
 # classLabelsNamesList = classLabelsNames.values.tolist()
-# #logging.debug(""+ str(classLabelsNamesList))
+# #logging.info(""+ str(classLabelsNamesList))
 #
-# logging.debug("Start:\t Statistic Results")
+# logging.info("Start:\t Statistic Results")
 #
 # #Accuracy classification score
 # accuracy_score = ExportResults.accuracy_score(y_test, y_test_pred)
 #
 # # Classification Report with Precision, Recall, F1 , Support
-# logging.debug("Info:\t Classification report:")
+# logging.info("Info:\t Classification report:")
 # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Report"
-# logging.debug("\n" + str(metrics.classification_report(y_test, y_test_pred, labels = range(0,len(classLabelsDesc.name)), target_names=classLabelsNamesList)))
+# logging.info("\n" + str(metrics.classification_report(y_test, y_test_pred, labels = range(0,len(classLabelsDesc.name)), target_names=classLabelsNamesList)))
 # scores_df = ExportResults.classification_report_df(dir, filename, y_test, y_test_pred, range(0, len(classLabelsDesc.name)), classLabelsNamesList)
 #
 # # Create some useful statistcs
-# logging.debug("Info:\t Statistics:")
+# logging.info("Info:\t Statistics:")
 # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Stats"
 # stats_df = ExportResults.classification_stats(dir, filename, scores_df, accuracy_score)
-# logging.debug("\n" + stats_df.to_string())
+# logging.info("\n" + stats_df.to_string())
 #
 # # Confusion Matrix
-# logging.debug("Info:\t Calculate Confusionmatrix")
+# logging.info("Info:\t Calculate Confusionmatrix")
 # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-ConfMatrix"
 # df_conf_norm = ExportResults.confusion_matrix_df(dir, filename, y_test, y_test_pred, classLabelsNamesList)
 # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-ConfMatrixImg"
 # ExportResults.plot_confusion_matrix(dir, filename, df_conf_norm)
 #
-# logging.debug("Done:\t Statistic Results")
+# logging.info("Done:\t Statistic Results")
 #
 #
 # # Plot Result
-# logging.debug("Start:\t Plot Result")
+# logging.info("Start:\t Plot Result")
 # np_score = ExportResults.calcScorePerClass(y_test, cl_res.predict(X_test).astype(int))
 # ### dir and filename the same as CSV Export
 # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Score"
 # ExportResults.showResults(dir, filename, args.name, args.feat, np_score)
-# logging.debug("Done:\t Plot Result")
+# logging.info("Done:\t Plot Result")
 
 
 #

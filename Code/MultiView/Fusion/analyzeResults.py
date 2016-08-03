@@ -11,12 +11,11 @@ def error(testLabels, computedLabels):
 
 
 def execute(classifier, predictedTrainLabels, predictedTestLabels, trainLabels, testLabels, trainData, testData,
-            NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY, features, NB_CORES, times):
+            NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY, features, NB_CORES, times, NB_VIEW):
 
     trainingSetLength = len(trainLabels)
     testingSetLength = len(testLabels)
     DATASET_LENGTH = trainingSetLength+testingSetLength
-    NB_VIEW = len(trainData)
     extractionTime, learningTime, predictionTime, classificationTime = times
 
     fusionType, fusionMethod, fusionMethodConfig, monoviewClassifier, fusionClassifierConfig = trainArguments
