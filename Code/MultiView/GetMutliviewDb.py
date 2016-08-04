@@ -22,17 +22,20 @@ def getDataset(pathToDB, viewNames, DBName):
     return np.array(dataset)
 
 
-def createFakeData(NB_VIEW, DATASET_LENGTH, NB_CLASS):
+def getFakeDB(features, pathF, name , NB_CLASS, LABELS_NAME):
+    NB_VIEW = len(features)
+    DATASET_LENGTH = int(pathF)
     VIEW_DIMENSIONS = np.random.random_integers(5, 20, NB_VIEW)
 
-    DATA = [
+    DATA = dict((indx,
                         np.array([
                                      np.random.normal(0.0, 2, viewDimension)
-                                     for i in np.arange(DATASET_LENGTH)])
-                        for viewDimension in VIEW_DIMENSIONS]
+                                     for i in np.arange(DATASET_LENGTH)]))
+                        for indx, viewDimension in enumerate(VIEW_DIMENSIONS))
 
     CLASS_LABELS = np.random.random_integers(0, NB_CLASS-1, DATASET_LENGTH)
-    return DATA, VIEW_DIMENSIONS, CLASS_LABELS
+    LABELS_DICTIONARY = dict((indx, feature) for indx, feature in enumerate(features))
+    return DATA, CLASS_LABELS, LABELS_DICTIONARY, DATASET_LENGTH
 
 
 def getAwaLabels(nbLabels, pathToAwa):
@@ -243,36 +246,36 @@ def getCaltechDB(features, pathF, nameDB, NB_CLASS, LABELS_NAMES):
 
     return DATASET, CLASS_LABELS, LABELS_DICTIONARY, DATASET_LENGTH
 
-# def getMultiOmicDB(features, path, name, NB_CLASS, LABELS_NAMES):
-#     logging.debug("Start:\t Getting Methylation Data")
-#     methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
-#     logging.debug("Done:\t Getting Methylation Data")
-#     logging.debug("Start:\t Getting MiRNA Data")
-#     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
-#     logging.debug("Done:\t Getting MiRNA Data")
-#     logging.debug("Start:\t Getting RNASeq Data")
-#     rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
-#     logging.debug("Done:\t Getting RNASeq Data")
-#     logging.debug("Start:\t Getting Clinical Data")
-#     clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
-#     logging.debug("Done:\t Getting Clinical Data")
-#     DATASET = {0:methylData, 1:mirnaData, 2:rnaseqData, 3:clinical}
-#     DATASET_LENGTH = len(methylData)
-#     labelFile = open(path+'brca_labels_triple-negatif.csv')
-#     CLASS_LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
-#     labelDictionnary = {0:"No", 1:"Yes"}
-#     return DATASET, CLASS_LABELS, labelDictionnary, DATASET_LENGTH
-
 def getMultiOmicDB(features, path, name, NB_CLASS, LABELS_NAMES):
+    logging.debug("Start:\t Getting Methylation Data")
+    methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
+    logging.debug("Done:\t Getting Methylation Data")
+    logging.debug("Start:\t Getting MiRNA Data")
     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
+    logging.debug("Done:\t Getting MiRNA Data")
+    logging.debug("Start:\t Getting RNASeq Data")
+    rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
+    logging.debug("Done:\t Getting RNASeq Data")
+    logging.debug("Start:\t Getting Clinical Data")
     clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
     logging.debug("Done:\t Getting Clinical Data")
-    DATASET = {0:mirnaData, 1:clinical}
+    DATASET = {0:methylData, 1:mirnaData, 2:rnaseqData, 3:clinical}
+    DATASET_LENGTH = len(methylData)
     labelFile = open(path+'brca_labels_triple-negatif.csv')
     CLASS_LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
-    DATASET_LENGTH = len(CLASS_LABELS)
     labelDictionnary = {0:"No", 1:"Yes"}
     return DATASET, CLASS_LABELS, labelDictionnary, DATASET_LENGTH
+
+# def getMultiOmicDB(features, path, name, NB_CLASS, LABELS_NAMES):
+#     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
+#     clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
+#     logging.debug("Done:\t Getting Clinical Data")
+#     DATASET = {0:mirnaData, 1:clinical}
+#     labelFile = open(path+'brca_labels_triple-negatif.csv')
+#     CLASS_LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
+#     DATASET_LENGTH = len(CLASS_LABELS)
+#     labelDictionnary = {0:"No", 1:"Yes"}
+#     return DATASET, CLASS_LABELS, labelDictionnary, DATASET_LENGTH
 
 
 

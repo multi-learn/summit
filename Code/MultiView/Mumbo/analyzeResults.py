@@ -8,16 +8,8 @@ from Classifiers import *
 import logging
 
 
-def plotAccuracyByIter(predictedTrainLabelsByIter, predictedTestLabelsByIter, trainLabels, testLabels, NB_ITER):
+def plotAccuracyByIter(trainAccuracy, testAccuracy, NB_ITER):
     x = range(NB_ITER)
-    trainErrors = []
-    testErrors = []
-    for iterTrain, iterTest in zip(predictedTrainLabelsByIter, predictedTestLabelsByIter):
-        pTr, r, f1, s = precision_recall_fscore_support(trainLabels, iterTrain)
-        pTe, r, f1, s = precision_recall_fscore_support(testLabels, iterTest)
-
-        trainErrors.append(np.mean(pTr))
-        testErrors.append(np.mean(pTe))
 
     figure = plt.figure()
     ax1 = figure.add_subplot(111)
@@ -26,8 +18,8 @@ def plotAccuracyByIter(predictedTrainLabelsByIter, predictedTestLabelsByIter, tr
 
     ax1.set_xlabel("Iteration Index")
     ax1.set_ylabel("Accuracy")
-    ax1.plot(x,trainErrors, c='red', label='Train')
-    ax1.plot(x,testErrors, c='black', label='Test')
+    ax1.plot(x, trainAccuracy, c='red', label='Train')
+    ax1.plot(x, testAccuracy, c='black', label='Test')
 
     return 'accuracyByIteration', figure
 
@@ -119,9 +111,9 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
             stringAnalysis+= "\n\t\t Fold "+str(foldIdx+1)+"\n\t\t\tAccuracy on train : "+ \
                              str(kFoldAccuracyOnTrainByIter[foldIdx][iterIndex])+'\n\t\t\tAccuracy on test : '+ \
                              str(kFoldAccuracyOnTestByIter[foldIdx][iterIndex])+'\n\t\t\t Selected View : '+ \
-                             str(kFoldBestViews[foldIdx][iterIndex])
-        stringAnalysis += "\n\t\t- Mean : \n\t\t\t Accuracy on train : "+str(np.mean(np.array(kFoldAccuracyOnTrain[:][iterIndex])))+\
-                          "\n\t\t\t Accuracy on test : "+str(np.mean(np.array(kFoldAccuracyOnTest[:][iterIndex])))
+                             features[int(kFoldBestViews[foldIdx][iterIndex])]
+        stringAnalysis += "\n\t\t- Mean : \n\t\t\t Accuracy on train : "+str(np.array(kFoldAccuracyOnTrainByIter)[:,iterIndex].mean())+\
+                          "\n\t\t\t Accuracy on test : "+str(np.array(kFoldAccuracyOnTestByIter)[:,iterIndex].mean())
 
     stringAnalysis += "\n\nComputation time on "+str(NB_CORES)+" cores : \n\tDatabase extraction time : "+str(hms(seconds=extractionTime))+"\n\t"
     row_format = "{:>15}" * 3
@@ -131,23 +123,10 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
          stringAnalysis+=row_format.format("Fold "+str(index+1), *[str(hms(seconds=learningTime)), str(hms(seconds=predictionTime))     ])
     stringAnalysis+="\n\tSo a total classification time of "+str(hms(seconds=classificationTime))+".\n\n"
 
-    logging.info(stringAnalysis)
 
-    #
-    # stringAnalysis += "Total accuracy \n\t- On train : "+str(100*accuracy_score(trainLabels, predictedTrainLabels))+ \
-    #                   "%\n"+classification_report(trainLabels, predictedTrainLabels, target_names=LABELS_DICTIONARY.values())+ \
-    #                   "\n\t- On test : "+str(100*accuracy_score(testLabels, predictedTestLabels))+"% \n"+ \
-    #                   classification_report(testLabels, predictedTestLabels, target_names=LABELS_DICTIONARY.values())
-    #
-    #
-    # for iterIndex in range(NB_ITER):
-    #     stringAnalysis+= "\t- Iteration "+str(iterIndex+1)+"\n\t\t Accuracy on train : "+ \
-    #                      str(accuracy_score(trainLabels, predictedTrainLabelsByIter[iterIndex]))+'\n\t\t Accuracy on test : '+ \
-    #                      str(accuracy_score(testLabels, predictedTestLabelsByIter[iterIndex]))+'\n\t\t Selected View : '+ \
-    #                      features[int(bestViews[iterIndex])]+"\n"
-
-    name, image = plotAccuracyByIter(predictedTrainLabelsByIter, predictedTestLabelsByIter, trainLabels, testLabels, NB_ITER)
-    imagesAnalysis = {}
-    imagesAnalysis[name] = image
+    trainAccuracyByIter = np.array(kFoldAccuracyOnTrainByIter).mean(axis=0)
+    testAccuracyByIter = np.array(kFoldAccuracyOnTestByIter).mean(axis=0)
+    name, image = plotAccuracyByIter(trainAccuracyByIter, testAccuracyByIter, NB_ITER)
+    imagesAnalysis = {name: image}
 
     return stringAnalysis, imagesAnalysis

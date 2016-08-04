@@ -1,0 +1,3 @@
+2016-08-04 15:47:32,399 INFO: ### Main Programm for Multiview Classification
+2016-08-04 15:47:32,400 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Mumbo ; Cores : 4
+2016-08-04 15:47:32,400 INFO: Start:	 Read CSV Database Files for Fake

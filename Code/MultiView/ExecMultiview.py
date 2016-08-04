@@ -171,8 +171,7 @@ for foldIdx, fold in enumerate(kFolds) :
         testLabels = CLASS_LABELS[fold]
         trainLabels = CLASS_LABELS[trainIndices]
         DATASET_LENGTH = len(trainLabels)
-        classifier = train(trainData, trainLabels, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
-                       trainArguments)
+        classifier = train(trainData, trainLabels, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES, trainArguments)
         kFoldClassifier.append(classifier)
 
         learningTime = time.time() - extractionTime - t_start
@@ -183,7 +182,7 @@ for foldIdx, fold in enumerate(kFolds) :
         kFoldPredictedTestLabels.append(predict(testData, classifier, NB_CLASS))
 
         kFoldPredictionTime.append(time.time() - extractionTime - t_start - learningTime)
-        logging.info("\tDone: \t Fold number"+str(foldIdx+1))
+        logging.info("\tDone: \t Fold number "+str(foldIdx+1))
 
 
 classificationTime = time.time() - t_start

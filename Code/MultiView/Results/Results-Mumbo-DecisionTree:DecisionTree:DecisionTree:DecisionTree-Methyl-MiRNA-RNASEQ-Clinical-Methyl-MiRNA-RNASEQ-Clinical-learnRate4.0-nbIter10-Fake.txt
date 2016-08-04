@@ -1,0 +1,232 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 60.049833887
+	-On Test : 52.0202020202
+
+Dataset info :
+	-Database name : 
+	-Labels : Methyl, MiRNA, RNASEQ, Clinical
+	- Views : Methyl, MiRNA, RNASEQ, Clinical
+	-4 folds
+
+Classification configuration : 
+	- Algorithm used : Mumbo 
+	-Iterations : 10
+	-Weak Classifiers : 
+	- DecisionTree with depth 1 - sub-sampled at 0.05  
+	- DecisionTree with depth 1 - sub-sampled at 0.4  
+	- DecisionTree with depth 1 - sub-sampled at 0.4  
+	- DecisionTree with depth 1 - sub-sampled at 0.7 
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 55.1495016611
+			Accuracy on test : 57.5757575758
+			 Selected View : RNASEQ
+		 Fold 2
+			Accuracy on train : 58.4717607973
+			Accuracy on test : 49.4949494949
+			 Selected View : RNASEQ
+		 Fold 3
+			Accuracy on train : 57.4750830565
+			Accuracy on test : 53.5353535354
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 59.4684385382
+			Accuracy on test : 54.5454545455
+			 Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 57.6411960133
+			 Accuracy on test : 53.7878787879
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 56.4784053156
+			Accuracy on test : 47.4747474747
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 58.4717607973
+			Accuracy on test : 49.4949494949
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 57.4750830565
+			Accuracy on test : 53.5353535354
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 59.4684385382
+			Accuracy on test : 54.5454545455
+			 Selected View : RNASEQ
+		- Mean : 
+			 Accuracy on train : 57.9734219269
+			 Accuracy on test : 51.2626262626
+	- Iteration 3
+		 Fold 1
+			Accuracy on train : 58.1395348837
+			Accuracy on test : 53.5353535354
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 59.1362126246
+			Accuracy on test : 47.4747474747
+			 Selected View : Clinical
+		 Fold 3
+			Accuracy on train : 60.4651162791
+			Accuracy on test : 50.5050505051
+			 Selected View : Clinical
+		 Fold 4
+			Accuracy on train : 59.8006644518
+			Accuracy on test : 51.5151515152
+			 Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 59.3853820598
+			 Accuracy on test : 50.7575757576
+	- Iteration 4
+		 Fold 1
+			Accuracy on train : 60.4651162791
+			Accuracy on test : 55.5555555556
+			 Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 60.1328903654
+			Accuracy on test : 48.4848484848
+			 Selected View : Clinical
+		 Fold 3
+			Accuracy on train : 59.4684385382
+			Accuracy on test : 50.5050505051
+			 Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 59.8006644518
+			Accuracy on test : 53.5353535354
+			 Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 59.9667774086
+			 Accuracy on test : 52.0202020202
+	- Iteration 5
+		 Fold 1
+			Accuracy on train : 59.1362126246
+			Accuracy on test : 49.4949494949
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 59.8006644518
+			Accuracy on test : 46.4646464646
+			 Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 59.4684385382
+			Accuracy on test : 55.5555555556
+			 Selected View : Clinical
+		 Fold 4
+			Accuracy on train : 60.1328903654
+			Accuracy on test : 53.5353535354
+			 Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 59.634551495
+			 Accuracy on test : 51.2626262626
+	- Iteration 6
+		 Fold 1
+			Accuracy on train : 60.7973421927
+			Accuracy on test : 47.4747474747
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 59.1362126246
+			Accuracy on test : 56.5656565657
+			 Selected View : Clinical
+		 Fold 3
+			Accuracy on train : 57.1428571429
+			Accuracy on test : 53.5353535354
+			 Selected View : Clinical
+		 Fold 4
+			Accuracy on train : 61.1295681063
+			Accuracy on test : 52.5252525253
+			 Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 59.5514950166
+			 Accuracy on test : 52.5252525253
+	- Iteration 7
+		 Fold 1
+			Accuracy on train : 62.1262458472
+			Accuracy on test : 48.4848484848
+			 Selected View : Clinical
+		 Fold 2
+			Accuracy on train : 58.803986711
+			Accuracy on test : 54.5454545455
+			 Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 56.4784053156
+			Accuracy on test : 54.5454545455
+			 Selected View : Clinical
+		 Fold 4
+			Accuracy on train : 62.1262458472
+			Accuracy on test : 50.5050505051
+			 Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 59.8837209302
+			 Accuracy on test : 52.0202020202
+	- Iteration 8
+		 Fold 1
+			Accuracy on train : 64.4518272425
+			Accuracy on test : 47.4747474747
+			 Selected View : Clinical
+		 Fold 2
+			Accuracy on train : 59.4684385382
+			Accuracy on test : 54.5454545455
+			 Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 57.1428571429
+			Accuracy on test : 53.5353535354
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 61.4617940199
+			Accuracy on test : 51.5151515152
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 60.6312292359
+			 Accuracy on test : 51.7676767677
+	- Iteration 9
+		 Fold 1
+			Accuracy on train : 65.780730897
+			Accuracy on test : 47.4747474747
+			 Selected View : Clinical
+		 Fold 2
+			Accuracy on train : 59.1362126246
+			Accuracy on test : 55.5555555556
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 57.1428571429
+			Accuracy on test : 54.5454545455
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 60.4651162791
+			Accuracy on test : 50.5050505051
+			 Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 60.6312292359
+			 Accuracy on test : 52.0202020202
+	- Iteration 10
+		 Fold 1
+			Accuracy on train : 62.7906976744
+			Accuracy on test : 48.4848484848
+			 Selected View : RNASEQ
+		 Fold 2
+			Accuracy on train : 59.1362126246
+			Accuracy on test : 54.5454545455
+			 Selected View : RNASEQ
+		 Fold 3
+			Accuracy on train : 57.4750830565
+			Accuracy on test : 53.5353535354
+			 Selected View : Clinical
+		 Fold 4
+			Accuracy on train : 60.7973421927
+			Accuracy on test : 51.5151515152
+			 Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 60.049833887
+			 Accuracy on test : 52.0202020202
+
+Computation time on 4 cores : 
+	Database extraction time : 0:00:00.020921
+	                                        Learn
+	         Fold 1 0:00:02.103936 0:00:00.193358
+	         Fold 2 0:00:04.405758 0:00:00.192089
+	         Fold 3 0:00:06.687762 0:00:00.193153
+	         Fold 4 0:00:08.972693 0:00:00.194966
+	So a total classification time of 0:00:09.188835.
+

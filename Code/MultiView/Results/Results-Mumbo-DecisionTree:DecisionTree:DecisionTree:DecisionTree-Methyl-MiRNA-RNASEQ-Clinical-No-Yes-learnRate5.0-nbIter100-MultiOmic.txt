@@ -1,0 +1,2433 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 90.9677419355
+	-On Test : 88.5294117647
+
+Dataset info :
+	-Database name : 
+	-Labels : No, Yes
+	- Views : Methyl, MiRNA, RNASEQ, Clinical
+	-5 folds
+
+Classification configuration : 
+	- Algorithm used : Mumbo 
+	-Iterations : 100
+	-Weak Classifiers : 
+	- DecisionTree with depth 1 - sub-sampled at 0.05  
+	- DecisionTree with depth 1 - sub-sampled at 0.4  
+	- DecisionTree with depth 1 - sub-sampled at 0.4  
+	- DecisionTree with depth 1 - sub-sampled at 0.7 
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 83.1541218638
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 86.7383512545
+			Accuracy on test : 64.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 86.3799283154
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 84.5878136201
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 87.0967741935
+			Accuracy on test : 80.8823529412
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 85.5913978495
+			 Accuracy on test : 80.8823529412
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 83.1541218638
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 86.7383512545
+			Accuracy on test : 64.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 86.3799283154
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 86.7383512545
+			Accuracy on test : 82.3529411765
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 87.0967741935
+			Accuracy on test : 80.8823529412
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 86.0215053763
+			 Accuracy on test : 80.2941176471
+	- Iteration 3
+		 Fold 1
+			Accuracy on train : 87.8136200717
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 87.8136200717
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 86.7383512545
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 89.605734767
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 88.1003584229
+			 Accuracy on test : 86.4705882353
+	- Iteration 4
+		 Fold 1
+			Accuracy on train : 86.7383512545
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 89.605734767
+			Accuracy on test : 83.8235294118
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 86.7383512545
+			Accuracy on test : 83.8235294118
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 87.8136200717
+			Accuracy on test : 79.4117647059
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 87.8853046595
+			 Accuracy on test : 84.7058823529
+	- Iteration 5
+		 Fold 1
+			Accuracy on train : 87.8136200717
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 88.1720430108
+			Accuracy on test : 79.4117647059
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 89.0322580645
+			 Accuracy on test : 86.4705882353
+	- Iteration 6
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 87.8136200717
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 82.3529411765
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 87.8136200717
+			Accuracy on test : 79.4117647059
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 89.1039426523
+			 Accuracy on test : 85.0
+	- Iteration 7
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 88.1720430108
+			Accuracy on test : 79.4117647059
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 87.3529411765
+	- Iteration 8
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 87.4551971326
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			 Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.1720430108
+			Accuracy on test : 79.4117647059
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 89.3906810036
+			 Accuracy on test : 86.4705882353
+	- Iteration 9
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 88.1720430108
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 80.8823529412
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 89.7491039427
+			 Accuracy on test : 88.5294117647
+	- Iteration 10
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 89.247311828
+			Accuracy on test : 80.8823529412
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 89.8924731183
+			 Accuracy on test : 87.9411764706
+	- Iteration 11
+		 Fold 1
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 88.1720430108
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 80.8823529412
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 89.8924731183
+			 Accuracy on test : 88.2352941176
+	- Iteration 12
+		 Fold 1
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 89.247311828
+			Accuracy on test : 80.8823529412
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.1075268817
+			 Accuracy on test : 88.2352941176
+	- Iteration 13
+		 Fold 1
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 89.605734767
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 80.8823529412
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.1075268817
+			 Accuracy on test : 88.2352941176
+	- Iteration 14
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 80.8823529412
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 89.9641577061
+			 Accuracy on test : 87.9411764706
+	- Iteration 15
+		 Fold 1
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 92.6470588235
+			 Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 82.3529411765
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.1792114695
+			 Accuracy on test : 88.2352941176
+	- Iteration 16
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 83.8235294118
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 82.3529411765
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.3225806452
+			 Accuracy on test : 87.3529411765
+	- Iteration 17
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.5376344086
+			 Accuracy on test : 89.1176470588
+	- Iteration 18
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6093189964
+			 Accuracy on test : 88.8235294118
+	- Iteration 19
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.394265233
+			 Accuracy on test : 88.2352941176
+	- Iteration 20
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6093189964
+			 Accuracy on test : 88.2352941176
+	- Iteration 21
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.4659498208
+			 Accuracy on test : 88.8235294118
+	- Iteration 22
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6810035842
+			 Accuracy on test : 89.1176470588
+	- Iteration 23
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6810035842
+			 Accuracy on test : 88.8235294118
+	- Iteration 24
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 89.247311828
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.5376344086
+			 Accuracy on test : 88.2352941176
+	- Iteration 25
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.5294117647
+	- Iteration 26
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			 Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.4659498208
+			 Accuracy on test : 88.2352941176
+	- Iteration 27
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : RNASEQ
+		 Fold 2
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 89.1176470588
+	- Iteration 28
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.5294117647
+	- Iteration 29
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6810035842
+			 Accuracy on test : 88.5294117647
+	- Iteration 30
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 92.6470588235
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.9677419355
+			 Accuracy on test : 88.5294117647
+	- Iteration 31
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.9677419355
+			 Accuracy on test : 88.8235294118
+	- Iteration 32
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 91.1827956989
+			 Accuracy on test : 88.8235294118
+	- Iteration 33
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.9677419355
+			 Accuracy on test : 89.1176470588
+	- Iteration 34
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6093189964
+			 Accuracy on test : 88.5294117647
+	- Iteration 35
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 89.1176470588
+	- Iteration 36
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.8235294118
+	- Iteration 37
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6810035842
+			 Accuracy on test : 88.8235294118
+	- Iteration 38
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.247311828
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6093189964
+			 Accuracy on test : 88.8235294118
+	- Iteration 39
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6093189964
+			 Accuracy on test : 88.8235294118
+	- Iteration 40
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.247311828
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.5376344086
+			 Accuracy on test : 88.5294117647
+	- Iteration 41
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6810035842
+			 Accuracy on test : 88.5294117647
+	- Iteration 42
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6810035842
+			 Accuracy on test : 88.8235294118
+	- Iteration 43
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6810035842
+			 Accuracy on test : 88.5294117647
+	- Iteration 44
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6093189964
+			 Accuracy on test : 88.5294117647
+	- Iteration 45
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.5294117647
+	- Iteration 46
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 87.9411764706
+	- Iteration 47
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.5294117647
+	- Iteration 48
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.2352941176
+	- Iteration 49
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.2352941176
+	- Iteration 50
+		 Fold 1
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6093189964
+			 Accuracy on test : 88.2352941176
+	- Iteration 51
+		 Fold 1
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.5294117647
+	- Iteration 52
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.2352941176
+	- Iteration 53
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8960573477
+			 Accuracy on test : 88.5294117647
+	- Iteration 54
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.5294117647
+	- Iteration 55
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.9677419355
+			 Accuracy on test : 88.8235294118
+	- Iteration 56
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8960573477
+			 Accuracy on test : 88.8235294118
+	- Iteration 57
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 89.1176470588
+	- Iteration 58
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8960573477
+			 Accuracy on test : 89.1176470588
+	- Iteration 59
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 89.1176470588
+	- Iteration 60
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.8235294118
+	- Iteration 61
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8960573477
+			 Accuracy on test : 88.8235294118
+	- Iteration 62
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 91.0394265233
+			 Accuracy on test : 88.8235294118
+	- Iteration 63
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 91.0394265233
+			 Accuracy on test : 88.8235294118
+	- Iteration 64
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.9677419355
+			 Accuracy on test : 88.8235294118
+	- Iteration 65
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.9677419355
+			 Accuracy on test : 88.5294117647
+	- Iteration 66
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : Clinical
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8960573477
+			 Accuracy on test : 88.5294117647
+	- Iteration 67
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8960573477
+			 Accuracy on test : 88.8235294118
+	- Iteration 68
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 91.1764705882
+			 Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8960573477
+			 Accuracy on test : 88.8235294118
+	- Iteration 69
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 89.1176470588
+	- Iteration 70
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8960573477
+			 Accuracy on test : 89.1176470588
+	- Iteration 71
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 89.1176470588
+	- Iteration 72
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6810035842
+			 Accuracy on test : 88.8235294118
+	- Iteration 73
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6810035842
+			 Accuracy on test : 88.8235294118
+	- Iteration 74
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.8235294118
+	- Iteration 75
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.8235294118
+	- Iteration 76
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.8235294118
+	- Iteration 77
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.5294117647
+	- Iteration 78
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.5294117647
+	- Iteration 79
+		 Fold 1
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.5294117647
+	- Iteration 80
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.5294117647
+	- Iteration 81
+		 Fold 1
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.8235294118
+	- Iteration 82
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6810035842
+			 Accuracy on test : 88.8235294118
+	- Iteration 83
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.5294117647
+	- Iteration 84
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.8235294118
+	- Iteration 85
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6810035842
+			 Accuracy on test : 88.8235294118
+	- Iteration 86
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 88.2352941176
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.8235294118
+	- Iteration 87
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.6093189964
+			 Accuracy on test : 88.5294117647
+	- Iteration 88
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.5294117647
+	- Iteration 89
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.5294117647
+	- Iteration 90
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.5294117647
+	- Iteration 91
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.8235294118
+	- Iteration 92
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.752688172
+			 Accuracy on test : 88.8235294118
+	- Iteration 93
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.605734767
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.7562724014
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8960573477
+			 Accuracy on test : 88.8235294118
+	- Iteration 94
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.8235294118
+	- Iteration 95
+		 Fold 1
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.9677419355
+			 Accuracy on test : 89.1176470588
+	- Iteration 96
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.8235294118
+	- Iteration 97
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.8235294118
+	- Iteration 98
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 95.5882352941
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8243727599
+			 Accuracy on test : 88.8235294118
+	- Iteration 99
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.8960573477
+			 Accuracy on test : 88.5294117647
+	- Iteration 100
+		 Fold 1
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 86.7647058824
+			 Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 91.1764705882
+			 Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 94.1176470588
+			 Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 85.2941176471
+			 Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 90.9677419355
+			 Accuracy on test : 88.5294117647
+
+Computation time on 4 cores : 
+	Database extraction time : 0:01:01.347748
+	                                        Learn
+	         Fold 1 0:03:21.796699 0:00:01.836975
+	         Fold 2 0:06:43.521203 0:00:01.735183
+	         Fold 3 0:10:01.452275 0:00:01.743838
+	         Fold 4 0:12:59.689796 0:00:01.758940
+	         Fold 5 0:15:57.871111 0:00:01.718317
+	So a total classification time of 0:17:00.937383.
+

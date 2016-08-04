@@ -61,7 +61,7 @@ def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS, costMatri
     classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
     classifierMethod = getattr(classifierModule, classifierName)
     classifier, classes, isBad, pTr = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
-    logging.debug("View : "+str(viewIndice)+" : "+str(np.mean(pTr)))
+    logging.debug("\t\t\tView "+str(viewIndice)+" : "+str(np.mean(pTr)))
     return classifier, classes, isBad
 
 
@@ -229,7 +229,7 @@ def train(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
 
     # Learning
     for iterIndice in range(NB_ITER):
-        logging.debug('Start:\t Iteration '+str(iterIndice+1))
+        logging.debug('\t\tStart:\t Iteration '+str(iterIndice+1))
         classifiers, predictedLabels, areBad = trainWeakClassifers(classifierNames,
                                                            DATASET,
                                                            CLASS_LABELS,

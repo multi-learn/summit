@@ -1,0 +1,72 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 86.1111111111
+	-On Test : 84.3023255814
+
+Dataset info :
+	-Database name : 
+	-Labels : No, Yes
+	- Views : Methyl, MiRNA, RNASEQ, Clinical
+	-4 folds
+
+Classification configuration : 
+	- Algorithm used : Mumbo 
+	-Iterations : 2
+	-Weak Classifiers : 
+	- DecisionTree with depth 1 - sub-sampled at 0.05  
+	- DecisionTree with depth 1 - sub-sampled at 0.4  
+	- DecisionTree with depth 1 - sub-sampled at 0.4  
+	- DecisionTree with depth 1 - sub-sampled at 0.7 
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 83.1417624521
+			Accuracy on test : 89.5348837209
+			 Selected View : 1.0
+		 Fold 2
+			Accuracy on train : 86.9731800766
+			Accuracy on test : 86.0465116279
+			 Selected View : 1.0
+		 Fold 3
+			Accuracy on train : 85.4406130268
+			Accuracy on test : 88.3720930233
+			 Selected View : 1.0
+		 Fold 4
+			Accuracy on train : 87.7394636015
+			Accuracy on test : 82.5581395349
+			 Selected View : 1.0
+		- Mean : 
+			 Accuracy on train : 84.8659003831
+			 Accuracy on test : 86.6279069767
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 86.5900383142
+			Accuracy on test : 83.7209302326
+			 Selected View : 1.0
+		 Fold 2
+			Accuracy on train : 86.9731800766
+			Accuracy on test : 86.0465116279
+			 Selected View : 1.0
+		 Fold 3
+			Accuracy on train : 83.1417624521
+			Accuracy on test : 84.8837209302
+			 Selected View : 1.0
+		 Fold 4
+			Accuracy on train : 87.7394636015
+			Accuracy on test : 82.5581395349
+			 Selected View : 1.0
+		- Mean : 
+			 Accuracy on train : 86.9731800766
+			 Accuracy on test : 86.0465116279
+
+Computation time on 4 cores : 
+	Database extraction time : 0:01:00.488702
+	                                        Learn
+	         Fold 1 0:00:03.779435 0:00:00.040008
+	         Fold 2 0:00:06.890906 0:00:00.039855
+	         Fold 3 0:00:10.003515 0:00:00.040407
+	         Fold 4 0:00:13.113813 0:00:00.040339
+	So a total classification time of 0:01:13.643069.
+
