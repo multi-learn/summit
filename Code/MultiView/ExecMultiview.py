@@ -196,7 +196,7 @@ times = (extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationT
 stringAnalysis, imagesAnalysis = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
                                                         kFoldPredictedTestLabels, DATASET, CLASS_LABELS,
                                                         NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY,
-                                                        features, NB_CORES, times, NB_VIEW, kFolds)
+                                                        features, NB_CORES, times, NB_VIEW, kFolds, args.name)
 logging.info(stringAnalysis)
 featureString = "-".join(features)
 labelsString = "-".join(labelsSet)

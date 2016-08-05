@@ -63,8 +63,8 @@ def error(testLabels, computedLabels):
 
 
 def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, DATASET, CLASS_LABELS,
-            NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY, features, NB_CORES, times, NB_VIEW, kFolds):
-    extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime = times
+            NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY, features, NB_CORES, times, NB_VIEW, kFolds,
+            databaseName):
     classifierConfigs, NB_ITER, classifierNames = trainArguments
     if LEARNING_RATE<1.0:
         nbFolds = 2
@@ -99,8 +99,10 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
             kFoldAccuracyOnTrainByIter.append([])
             kFoldAccuracyOnTestByIter.append([])
             for iterIndex in range(NB_ITER):
-                kFoldAccuracyOnTestByIter[foldIdx].append(100 * accuracy_score(testLabels, PredictedTestLabelsByIter[iterIndex]))
-                kFoldAccuracyOnTrainByIter[foldIdx].append(100 * accuracy_score(trainLabels, PredictedTrainLabelsByIter[iterIndex]))
+                kFoldAccuracyOnTestByIter[foldIdx].append(100 * accuracy_score(testLabels,
+                                                                               PredictedTestLabelsByIter[iterIndex]))
+                kFoldAccuracyOnTrainByIter[foldIdx].append(100 * accuracy_score(trainLabels,
+                                                                                PredictedTrainLabelsByIter[iterIndex]))
             kFoldBestClassifiers.append(bestClassifiers)
             kFoldGeneralAlphas.append(generalAlphas)
             kFoldBestViews.append(bestViews)
@@ -111,14 +113,20 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     totalAccuracyOnTest = np.mean(kFoldAccuracyOnTest)
     extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime = times
     classifierConfigs, NB_ITER, classifierNames = trainArguments
-    weakClassifierConfigs = [getattr(globals()[classifierName], 'getConfig')(classifierConfig) for classifierConfig, classifierName in zip(classifierConfigs, classifierNames) ]
-    classifierAnalysis = ["\n\t\t-"+classifierName+" "+weakClassifierConfig for classifierName, weakClassifierConfig in zip(classifierNames, weakClassifierConfigs)]
+    weakClassifierConfigs = [getattr(globals()[classifierName], 'getConfig')(classifierConfig) for classifierConfig,
+                                                                                                   classifierName
+                             in zip(classifierConfigs, classifierNames) ]
+    classifierAnalysis = ["\n\t\t-"+classifierName+" "+weakClassifierConfig + "on "+feature for classifierName,
+                                                                                                weakClassifierConfig,
+                                                                                                feature
+                          in zip(classifierNames, weakClassifierConfigs, features)]
     bestViews = [findMainView(np.array(kFoldBestViews)[:,iterIdx]) for iterIdx in range(NB_ITER)]
     stringAnalysis = "\t\tResult for Multiview classification with Mumbo" \
-                     "\n\nAverage accuracy :\n\t-On Train : "+str(totalAccuracyOnTrain)+"\n\t-On Test : "+str(totalAccuracyOnTest)+ \
-                     "\n\nDataset info :\n\t-Database name : "+"\n\t-Labels : "+', '.join(LABELS_DICTIONARY.values())+"\n\t-Views : "+', '.join(features)+"\n\t-"+str(nbFolds)+" folds"\
-                     "\n\nClassification configuration : \n\t-Algorithm used : Mumbo \n\t-Iterations : "+str(NB_ITER)+"\n\t-Weak Classifiers : "+" ".join(classifierAnalysis)+ \
-            "\n\n For each iteration : "
+                     "\n\nAverage accuracy :\n\t-On Train : "+str(totalAccuracyOnTrain)+"\n\t-On Test : "+\
+                     str(totalAccuracyOnTest)+ "\n\nDataset info :\n\t-Database name : "+databaseName+"\n\t-Labels : "+\
+                     ', '.join(LABELS_DICTIONARY.values())+"\n\t-Views : "+', '.join(features)+"\n\t-"+str(nbFolds)+\
+                     " folds\n\nClassification configuration : \n\t-Algorithm used : Mumbo \n\t-Iterations : "+\
+                     str(NB_ITER)+"\n\t-Weak Classifiers : "+" ".join(classifierAnalysis)+ "\n\n For each iteration : "
 
     for iterIndex in range(NB_ITER):
         stringAnalysis += "\n\t- Iteration " + str(iterIndex + 1)
