@@ -1,0 +1,276 @@
+2016-08-05 05:14:59,824 INFO: ### Main Programm for Multiview Classification
+2016-08-05 05:14:59,825 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Mumbo ; Cores : 4
+2016-08-05 05:14:59,825 INFO: Start:	 Read CSV Database Files for Fake
+2016-08-05 05:14:59,831 INFO: Info:	 Labels used: Methyl, MiRNA, RNASEQ, Clinical
+2016-08-05 05:14:59,831 INFO: Info:	 Length of dataset:400
+2016-08-05 05:14:59,831 INFO: Info:	 Shape of Methyl :(400, 9)
+2016-08-05 05:14:59,831 INFO: Info:	 Shape of MiRNA :(400, 11)
+2016-08-05 05:14:59,831 INFO: Info:	 Shape of RNASEQ :(400, 9)
+2016-08-05 05:14:59,831 INFO: Info:	 Shape of Clinical :(400, 11)
+2016-08-05 05:14:59,831 INFO: Done:	 Read CSV Files
+2016-08-05 05:14:59,831 INFO: Start:	 Determine 2.0 folds for cross validation 
+2016-08-05 05:14:59,848 INFO: Info:	 Length of Learning Set: 199
+2016-08-05 05:14:59,848 INFO: Info:	 Length of Testing Set: 201
+2016-08-05 05:14:59,848 INFO: Done:	 Determine folds
+2016-08-05 05:14:59,848 INFO: Start:	 Learning with Mumbo and 2 folds
+2016-08-05 05:14:59,848 INFO: 	Start:	 Fold number 1
+2016-08-05 05:14:59,858 DEBUG: 		Start:	 Iteration 1
+2016-08-05 05:14:59,899 DEBUG: 			View 0 : 0.505473241928
+2016-08-05 05:14:59,902 DEBUG: 			View 1 : 0.547023809524
+2016-08-05 05:14:59,902 DEBUG: 			View 2 : 0.572765469824
+2016-08-05 05:14:59,905 DEBUG: 			View 3 : 0.594135802469
+2016-08-05 05:15:00,028 DEBUG: 		Start:	 Iteration 2
+2016-08-05 05:15:00,071 DEBUG: 			View 0 : 0.462849217357
+2016-08-05 05:15:00,073 DEBUG: 			View 1 : 0.529292929293
+2016-08-05 05:15:00,075 DEBUG: 			View 2 : 0.620947368421
+2016-08-05 05:15:00,075 DEBUG: 			View 3 : 0.579751131222
+2016-08-05 05:15:00,208 DEBUG: 		Start:	 Iteration 3
+2016-08-05 05:15:00,251 DEBUG: 			View 0 : 0.545798174689
+2016-08-05 05:15:00,252 DEBUG: 			View 2 : 0.580976532901
+2016-08-05 05:15:00,254 DEBUG: 			View 3 : 0.597778415404
+2016-08-05 05:15:00,255 DEBUG: 			View 1 : 0.584402994365
+2016-08-05 05:15:00,394 DEBUG: 		Start:	 Iteration 4
+2016-08-05 05:15:00,441 DEBUG: 			View 0 : 0.455539181442
+2016-08-05 05:15:00,443 DEBUG: 			View 1 : 0.562765792398
+2016-08-05 05:15:00,445 DEBUG: 			View 2 : 0.623605600763
+2016-08-05 05:15:00,445 DEBUG: 			View 3 : 0.564843960401
+2016-08-05 05:15:00,580 DEBUG: 		Start:	 Iteration 5
+2016-08-05 05:15:00,624 DEBUG: 			View 1 : 0.560435073025
+2016-08-05 05:15:00,624 DEBUG: 			View 0 : 0.517510862137
+2016-08-05 05:15:00,627 DEBUG: 			View 3 : 0.552859206191
+2016-08-05 05:15:00,627 DEBUG: 			View 2 : 0.527691463776
+2016-08-05 05:15:00,763 DEBUG: 		Start:	 Iteration 6
+2016-08-05 05:15:00,806 DEBUG: 			View 1 : 0.529151472266
+2016-08-05 05:15:00,807 DEBUG: 			View 2 : 0.52776150193
+2016-08-05 05:15:00,807 DEBUG: 			View 0 : 0.529514260796
+2016-08-05 05:15:00,810 DEBUG: 			View 3 : 0.597336945041
+2016-08-05 05:15:00,950 DEBUG: 		Start:	 Iteration 7
+2016-08-05 05:15:00,992 DEBUG: 			View 0 : 0.540663037906
+2016-08-05 05:15:00,992 DEBUG: 			View 1 : 0.56796922533
+2016-08-05 05:15:00,994 DEBUG: 			View 2 : 0.563747658175
+2016-08-05 05:15:00,995 DEBUG: 			View 3 : 0.58243761847
+2016-08-05 05:15:01,141 DEBUG: 		Start:	 Iteration 8
+2016-08-05 05:15:01,184 DEBUG: 			View 0 : 0.481804482961
+2016-08-05 05:15:01,188 DEBUG: 			View 2 : 0.549257428774
+2016-08-05 05:15:01,189 DEBUG: 			View 1 : 0.570648068216
+2016-08-05 05:15:01,190 DEBUG: 			View 3 : 0.571279069512
+2016-08-05 05:15:01,336 DEBUG: 		Start:	 Iteration 9
+2016-08-05 05:15:01,378 DEBUG: 			View 0 : 0.534599145632
+2016-08-05 05:15:01,382 DEBUG: 			View 1 : 0.524387844469
+2016-08-05 05:15:01,383 DEBUG: 			View 3 : 0.557497974809
+2016-08-05 05:15:01,383 DEBUG: 			View 2 : 0.564827044459
+2016-08-05 05:15:01,528 DEBUG: 		Start:	 Iteration 10
+2016-08-05 05:15:01,572 DEBUG: 			View 0 : 0.429031043871
+2016-08-05 05:15:01,574 DEBUG: 			View 1 : 0.536744420064
+2016-08-05 05:15:01,576 DEBUG: 			View 3 : 0.689975385702
+2016-08-05 05:15:01,576 DEBUG: 			View 2 : 0.633166730432
+2016-08-05 05:15:01,726 INFO: 	Start: 	 Classification
+2016-08-05 05:15:01,914 INFO: 	Done: 	 Fold number 1
+2016-08-05 05:15:01,914 INFO: 	Start:	 Fold number 2
+2016-08-05 05:15:01,924 DEBUG: 		Start:	 Iteration 1
+2016-08-05 05:15:01,968 DEBUG: 			View 0 : 0.526647286822
+2016-08-05 05:15:01,972 DEBUG: 			View 1 : 0.607917383821
+2016-08-05 05:15:01,973 DEBUG: 			View 2 : 0.629886363636
+2016-08-05 05:15:01,975 DEBUG: 			View 3 : 0.593529411765
+2016-08-05 05:15:02,102 DEBUG: 		Start:	 Iteration 2
+2016-08-05 05:15:02,147 DEBUG: 			View 2 : 0.7578125
+2016-08-05 05:15:02,148 DEBUG: 			View 0 : 0.533879710893
+2016-08-05 05:15:02,150 DEBUG: 			View 1 : 0.511241217799
+2016-08-05 05:15:02,153 DEBUG: 			View 3 : 0.541958041958
+2016-08-05 05:15:02,278 DEBUG: 		Start:	 Iteration 3
+2016-08-05 05:15:02,323 DEBUG: 			View 0 : 0.560316908214
+2016-08-05 05:15:02,325 DEBUG: 			View 1 : 0.553302094388
+2016-08-05 05:15:02,325 DEBUG: 			View 3 : 0.640025150474
+2016-08-05 05:15:02,326 DEBUG: 			View 2 : 0.556161534371
+2016-08-05 05:15:02,457 DEBUG: 		Start:	 Iteration 4
+2016-08-05 05:15:02,502 DEBUG: 			View 0 : 0.497742342339
+2016-08-05 05:15:02,505 DEBUG: 			View 1 : 0.527846536004
+2016-08-05 05:15:02,506 DEBUG: 			View 2 : 0.545422699756
+2016-08-05 05:15:02,507 DEBUG: 			View 3 : 0.573334207736
+2016-08-05 05:15:02,634 DEBUG: 		Start:	 Iteration 5
+2016-08-05 05:15:02,677 DEBUG: 			View 0 : 0.483602928543
+2016-08-05 05:15:02,680 DEBUG: 			View 2 : 0.512156455488
+2016-08-05 05:15:02,681 DEBUG: 			View 1 : 0.541021379512
+2016-08-05 05:15:02,684 DEBUG: 			View 3 : 0.579834822841
+2016-08-05 05:15:02,815 DEBUG: 		Start:	 Iteration 6
+2016-08-05 05:15:02,858 DEBUG: 			View 0 : 0.52291587798
+2016-08-05 05:15:02,862 DEBUG: 			View 3 : 0.55774093186
+2016-08-05 05:15:02,863 DEBUG: 			View 1 : 0.516337015279
+2016-08-05 05:15:02,864 DEBUG: 			View 2 : 0.667823172147
+2016-08-05 05:15:03,005 DEBUG: 		Start:	 Iteration 7
+2016-08-05 05:15:03,050 DEBUG: 			View 0 : 0.500877477091
+2016-08-05 05:15:03,051 DEBUG: 			View 2 : 0.539492387791
+2016-08-05 05:15:03,052 DEBUG: 			View 1 : 0.571497985958
+2016-08-05 05:15:03,055 DEBUG: 			View 3 : 0.608909024209
+2016-08-05 05:15:03,192 DEBUG: 		Start:	 Iteration 8
+2016-08-05 05:15:03,235 DEBUG: 			View 0 : 0.485709974635
+2016-08-05 05:15:03,236 DEBUG: 			View 2 : 0.575772637572
+2016-08-05 05:15:03,236 DEBUG: 			View 1 : 0.544177667276
+2016-08-05 05:15:03,240 DEBUG: 			View 3 : 0.75601001716
+2016-08-05 05:15:03,380 DEBUG: 		Start:	 Iteration 9
+2016-08-05 05:15:03,424 DEBUG: 			View 0 : 0.523198410293
+2016-08-05 05:15:03,427 DEBUG: 			View 1 : 0.61161972599
+2016-08-05 05:15:03,428 DEBUG: 			View 2 : 0.66210175402
+2016-08-05 05:15:03,429 DEBUG: 			View 3 : 0.580642944128
+2016-08-05 05:15:03,571 DEBUG: 		Start:	 Iteration 10
+2016-08-05 05:15:03,615 DEBUG: 			View 0 : 0.504057468121
+2016-08-05 05:15:03,616 DEBUG: 			View 1 : 0.519819717711
+2016-08-05 05:15:03,618 DEBUG: 			View 2 : 0.568817576977
+2016-08-05 05:15:03,620 DEBUG: 			View 3 : 0.64458067303
+2016-08-05 05:15:03,768 INFO: 	Start: 	 Classification
+2016-08-05 05:15:03,957 INFO: 	Done: 	 Fold number 2
+2016-08-05 05:15:03,957 INFO: Done:	 Classification
+2016-08-05 05:15:03,957 INFO: Info:	 Time for Classification: 4[s]
+2016-08-05 05:15:03,957 INFO: Start:	 Result Analysis for Mumbo
+2016-08-05 05:15:04,513 INFO: 		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 64.6766169154
+	-On Test : 47.2361809045
+
+Dataset info :
+	-Database name : 
+	-Labels : Methyl, MiRNA, RNASEQ, Clinical
+	-Views : Methyl, MiRNA, RNASEQ, Clinical
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : Mumbo 
+	-Iterations : 10
+	-Weak Classifiers : 
+		-DecisionTree with depth 1,  sub-sampled at 0.05  
+		-DecisionTree with depth 1,  sub-sampled at 0.4  
+		-DecisionTree with depth 1,  sub-sampled at 0.4  
+		-DecisionTree with depth 1,  sub-sampled at 0.7 
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 59.2039800995
+			Accuracy on test : 50.2512562814
+			Selected View : Clinical
+		 Fold 2
+			Accuracy on train : 56.7164179104
+			Accuracy on test : 47.7386934673
+			Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 57.960199005
+			 Accuracy on test : 48.9949748744
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 61.1940298507
+			Accuracy on test : 46.7336683417
+			Selected View : RNASEQ
+		 Fold 2
+			Accuracy on train : 56.7164179104
+			Accuracy on test : 47.7386934673
+			Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 58.9552238806
+			 Accuracy on test : 47.2361809045
+	- Iteration 3
+		 Fold 1
+			Accuracy on train : 61.6915422886
+			Accuracy on test : 47.7386934673
+			Selected View : RNASEQ
+		 Fold 2
+			Accuracy on train : 60.1990049751
+			Accuracy on test : 50.7537688442
+			Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 60.9452736318
+			 Accuracy on test : 49.2462311558
+	- Iteration 4
+		 Fold 1
+			Accuracy on train : 61.1940298507
+			Accuracy on test : 46.2311557789
+			Selected View : RNASEQ
+		 Fold 2
+			Accuracy on train : 61.1940298507
+			Accuracy on test : 43.216080402
+			Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 61.1940298507
+			 Accuracy on test : 44.7236180905
+	- Iteration 5
+		 Fold 1
+			Accuracy on train : 60.6965174129
+			Accuracy on test : 49.2462311558
+			Selected View : Clinical
+		 Fold 2
+			Accuracy on train : 63.184079602
+			Accuracy on test : 46.7336683417
+			Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 61.9402985075
+			 Accuracy on test : 47.9899497487
+	- Iteration 6
+		 Fold 1
+			Accuracy on train : 61.6915422886
+			Accuracy on test : 50.2512562814
+			Selected View : Clinical
+		 Fold 2
+			Accuracy on train : 61.6915422886
+			Accuracy on test : 45.2261306533
+			Selected View : RNASEQ
+		- Mean : 
+			 Accuracy on train : 61.6915422886
+			 Accuracy on test : 47.7386934673
+	- Iteration 7
+		 Fold 1
+			Accuracy on train : 60.6965174129
+			Accuracy on test : 52.7638190955
+			Selected View : Clinical
+		 Fold 2
+			Accuracy on train : 61.1940298507
+			Accuracy on test : 45.2261306533
+			Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 60.9452736318
+			 Accuracy on test : 48.9949748744
+	- Iteration 8
+		 Fold 1
+			Accuracy on train : 60.1990049751
+			Accuracy on test : 52.7638190955
+			Selected View : RNASEQ
+		 Fold 2
+			Accuracy on train : 60.1990049751
+			Accuracy on test : 43.7185929648
+			Selected View : RNASEQ
+		- Mean : 
+			 Accuracy on train : 60.1990049751
+			 Accuracy on test : 48.2412060302
+	- Iteration 9
+		 Fold 1
+			Accuracy on train : 61.6915422886
+			Accuracy on test : 50.7537688442
+			Selected View : RNASEQ
+		 Fold 2
+			Accuracy on train : 66.1691542289
+			Accuracy on test : 46.2311557789
+			Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 63.9303482587
+			 Accuracy on test : 48.4924623116
+	- Iteration 10
+		 Fold 1
+			Accuracy on train : 62.1890547264
+			Accuracy on test : 48.743718593
+			Selected View : RNASEQ
+		 Fold 2
+			Accuracy on train : 67.1641791045
+			Accuracy on test : 45.7286432161
+			Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 64.6766169154
+			 Accuracy on test : 47.2361809045
+
+Computation time on 4 cores : 
+	Database extraction time : 0:00:00.023135
+	                                        Learn
+	         Fold 1 0:00:01.878592 0:00:00.187149
+	         Fold 2 0:00:03.919810 0:00:00.188969
+	So a total classification time of 0:00:04.132144.
+
+
+2016-08-05 05:15:04,703 INFO: Done:	 Result Analysis

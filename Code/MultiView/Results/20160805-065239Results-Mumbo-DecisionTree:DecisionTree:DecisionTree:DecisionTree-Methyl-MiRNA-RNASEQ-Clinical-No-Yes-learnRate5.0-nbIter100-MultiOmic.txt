@@ -1,0 +1,2433 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 89.6774193548
+	-On Test : 84.4117647059
+
+Dataset info :
+	-Database name : 
+	-Labels : No, Yes
+	-Views : Methyl, MiRNA, RNASEQ, Clinical
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : Mumbo 
+	-Iterations : 100
+	-Weak Classifiers : 
+		-DecisionTree with depth 1,  sub-sampled at 1.0  
+		-DecisionTree with depth 1,  sub-sampled at 1.0  
+		-DecisionTree with depth 1,  sub-sampled at 1.0  
+		-DecisionTree with depth 1,  sub-sampled at 1.0 
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 76.4705882353
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 88.8888888889
+			 Accuracy on test : 82.0588235294
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 76.4705882353
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 88.8888888889
+			 Accuracy on test : 82.0588235294
+	- Iteration 3
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 76.4705882353
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 88.8888888889
+			 Accuracy on test : 82.0588235294
+	- Iteration 4
+		 Fold 1
+			Accuracy on train : 89.247311828
+			Accuracy on test : 85.2941176471
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 76.4705882353
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 89.9641577061
+			Accuracy on test : 91.1764705882
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.3189964158
+			 Accuracy on test : 82.9411764706
+	- Iteration 5
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.1176470588
+	- Iteration 6
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.1176470588
+	- Iteration 7
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.1176470588
+	- Iteration 8
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.4117647059
+	- Iteration 9
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.4117647059
+	- Iteration 10
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 89.247311828
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.3906810036
+			 Accuracy on test : 84.4117647059
+	- Iteration 11
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.1720430108
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.3906810036
+			 Accuracy on test : 84.4117647059
+	- Iteration 12
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.4117647059
+	- Iteration 13
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.1176470588
+	- Iteration 14
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.1176470588
+	- Iteration 15
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 16
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 90.3225806452
+			Accuracy on test : 88.2352941176
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.4623655914
+			 Accuracy on test : 84.4117647059
+	- Iteration 17
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 18
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 19
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.1720430108
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.4117647059
+	- Iteration 20
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.7491039427
+			 Accuracy on test : 84.4117647059
+	- Iteration 21
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.7491039427
+			 Accuracy on test : 84.4117647059
+	- Iteration 22
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.7058823529
+	- Iteration 23
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.7058823529
+	- Iteration 24
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.7058823529
+	- Iteration 25
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.7058823529
+	- Iteration 26
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.8888888889
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.7058823529
+	- Iteration 27
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.7491039427
+			 Accuracy on test : 84.4117647059
+	- Iteration 28
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 29
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 30
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 31
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 32
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 33
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 34
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 35
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.7491039427
+			 Accuracy on test : 84.4117647059
+	- Iteration 36
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 37
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 38
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 39
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 40
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 41
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 42
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 43
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.7491039427
+			 Accuracy on test : 84.4117647059
+	- Iteration 44
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 45
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 46
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 47
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 48
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 49
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 50
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 51
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 52
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 53
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 54
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 55
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 56
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 57
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 58
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 59
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.7491039427
+			 Accuracy on test : 84.4117647059
+	- Iteration 60
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 61
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 62
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 63
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 64
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 65
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.7491039427
+			 Accuracy on test : 84.4117647059
+	- Iteration 66
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 67
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 68
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 69
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 70
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 71
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.7491039427
+			 Accuracy on test : 84.4117647059
+	- Iteration 72
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.7491039427
+			 Accuracy on test : 84.4117647059
+	- Iteration 73
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 74
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 75
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 76
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 77
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 78
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.7491039427
+			 Accuracy on test : 84.4117647059
+	- Iteration 79
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 80
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 81
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 82
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 83
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 84
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 85
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 86
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 87
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 88
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+	- Iteration 89
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 90
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 91
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 92
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 93
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 91.0394265233
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.605734767
+			 Accuracy on test : 84.7058823529
+	- Iteration 94
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 95
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 96
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 97
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : MiRNA
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 98
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 99
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 91.3978494624
+			Accuracy on test : 82.3529411765
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.5340501792
+			 Accuracy on test : 84.7058823529
+	- Iteration 100
+		 Fold 1
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 83.8235294118
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 79.4117647059
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 90.6810035842
+			Accuracy on test : 89.7058823529
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 92.1146953405
+			Accuracy on test : 80.8823529412
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 88.5304659498
+			Accuracy on test : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 89.6774193548
+			 Accuracy on test : 84.4117647059
+
+Computation time on 4 cores : 
+	Database extraction time : 0:01:00.790641
+	                                        Learn
+	         Fold 1 0:04:38.872003 0:00:02.794767
+	         Fold 2 0:09:22.226079 0:00:01.930285
+	         Fold 3 0:14:01.510068 0:00:02.407923
+	         Fold 4 0:18:41.532106 0:00:02.761067
+	         Fold 5 0:23:21.098061 0:00:02.754139
+	So a total classification time of 0:24:24.643077.
+

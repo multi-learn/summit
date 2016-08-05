@@ -10,18 +10,18 @@ import logging
 def findMainView(bestViews):
     views = list(set(bestViews))
     mainView = ()
-    viewCount = np.array([bestView.count(view) for view in views])
+    viewCount = np.array([list(bestViews).count(view) for view in views])
     mainView = views[np.argmax(viewCount)]
     return mainView
 
 
-def plotAccuracyByIter(trainAccuracy, testAccuracy, NB_ITER, bestViews):
+def plotAccuracyByIter(trainAccuracy, testAccuracy, NB_ITER, bestViews, features):
     x = range(NB_ITER)
     mainView = findMainView(bestViews)
     figure = plt.figure()
     ax1 = figure.add_subplot(111)
 
-    ax1.set_title("Accuracy depending on iteration")
+    ax1.set_title("Accuracy depending on iteration \n Best view = "+features[int(mainView)])
 
     ax1.set_xlabel("Iteration Index")
     ax1.set_ylabel("Accuracy")
@@ -30,13 +30,13 @@ def plotAccuracyByIter(trainAccuracy, testAccuracy, NB_ITER, bestViews):
     for label, x, y in zip(bestViews, x, trainAccuracy):
         if label != mainView:
             plt.annotate(
-            label,
+            features[int(label)],
             xy=(x, y), xytext=(-20, 20),
             textcoords='offset points', ha='right', va='bottom',
             bbox=dict(boxstyle='round,pad=0.5', fc='yellow', alpha=0.5),
             arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0'))
 
-    return 'accuracyByIteration', figure
+    return '-accuracyByIteration', figure
 
 
 def classifyMumbobyIter(DATASET, classifiers, alphas, views, NB_CLASS):
@@ -113,7 +113,7 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     classifierConfigs, NB_ITER, classifierNames = trainArguments
     weakClassifierConfigs = [getattr(globals()[classifierName], 'getConfig')(classifierConfig) for classifierConfig, classifierName in zip(classifierConfigs, classifierNames) ]
     classifierAnalysis = ["\n\t\t-"+classifierName+" "+weakClassifierConfig for classifierName, weakClassifierConfig in zip(classifierNames, weakClassifierConfigs)]
-    bestViews = 
+    bestViews = [findMainView(np.array(kFoldBestViews)[:,iterIdx]) for iterIdx in range(NB_ITER)]
     stringAnalysis = "\t\tResult for Multiview classification with Mumbo" \
                      "\n\nAverage accuracy :\n\t-On Train : "+str(totalAccuracyOnTrain)+"\n\t-On Test : "+str(totalAccuracyOnTest)+ \
                      "\n\nDataset info :\n\t-Database name : "+"\n\t-Labels : "+', '.join(LABELS_DICTIONARY.values())+"\n\t-Views : "+', '.join(features)+"\n\t-"+str(nbFolds)+" folds"\
@@ -141,7 +141,7 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
 
     trainAccuracyByIter = np.array(kFoldAccuracyOnTrainByIter).mean(axis=0)
     testAccuracyByIter = np.array(kFoldAccuracyOnTestByIter).mean(axis=0)
-    name, image = plotAccuracyByIter(trainAccuracyByIter, testAccuracyByIter, NB_ITER)
+    name, image = plotAccuracyByIter(trainAccuracyByIter, testAccuracyByIter, NB_ITER, bestViews, features)
     imagesAnalysis = {name: image}
 
     return stringAnalysis, imagesAnalysis

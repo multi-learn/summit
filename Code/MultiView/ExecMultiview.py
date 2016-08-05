@@ -200,7 +200,8 @@ stringAnalysis, imagesAnalysis = analysisModule.execute(kFoldClassifier, kFoldPr
 logging.info(stringAnalysis)
 featureString = "-".join(features)
 labelsString = "-".join(labelsSet)
-outputFileName = "Results/Results-"+args.CL_type+"-" + ":".join(classifierNames) + '-' + featureString + '-' + labelsString + '-learnRate' + str(
+timestr = time.strftime("%Y%m%d-%H%M%S")
+outputFileName = "Results/"+timestr+"Results-"+args.CL_type+"-" + ":".join(classifierNames) + '-' + featureString + '-' + labelsString + '-learnRate' + str(
     LEARNING_RATE) + '-nbIter' + str(NB_ITER) + '-' + args.name
 
 outputTextFile = open(outputFileName + '.txt', 'w')
@@ -209,6 +210,13 @@ outputTextFile.close()
 
 if imagesAnalysis is not None:
     for imageName in imagesAnalysis:
+        # if os.path.isfile(outputFileName + imageName + ".png"):
+        #     for i in range(1,20):
+        #         testFileName = outputFileName + imageName + "-" + str(i) + ".png"
+        #         if os.path.isfile(testFileName )!=True:
+        #             imagesAnalysis[imageName].savefig(testFileName)
+        #             break
+
         imagesAnalysis[imageName].savefig(outputFileName + imageName + '.png')
 
 logging.info("Done:\t Result Analysis")
