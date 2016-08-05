@@ -63,5 +63,5 @@ def DecisionTree(data, labels, arg, weights):
 def getConfig(classifierConfig):
     depth = classifierConfig[0]
     subSampling = classifierConfig[1]
-    return 'with depth ' + depth + ' -' + ' sub-sampled at ' + subSampling + ' '
+    return 'with depth ' + depth + ', ' + ' sub-sampled at ' + subSampling + ' '
 
