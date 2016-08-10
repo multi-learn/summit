@@ -3,6 +3,7 @@ from string import digits
 import os
 import random
 import logging
+import h5py
 
 
 def getOneViewFromDB(viewName, pathToDB, DBName):
@@ -39,12 +40,12 @@ def getFakeDB(features, pathF, name , NB_CLASS, LABELS_NAME):
 
 
 def getAwaLabels(nbLabels, pathToAwa):
-    file = open(pathToAwa + 'Animals_with_Attributes/classes.txt', 'U')
-    linesFile = [''.join(line.strip().split()).translate(None, digits) for line in file.readlines()]
+    labelsFile = open(pathToAwa + 'Animals_with_Attributes/classes.txt', 'U')
+    linesFile = [''.join(line.strip().split()).translate(None, digits) for line in labelsFile.readlines()]
     return linesFile
 
 
-def getAwaDB(views, pathToAwa, nameDB, nbLabels, LABELS_NAMES):
+def getAwaDBcsv(views, pathToAwa, nameDB, nbLabels, LABELS_NAMES):
     awaLabels = getAwaLabels(nbLabels, pathToAwa)
     nbView = len(views)
     nbMaxLabels = len(awaLabels)
@@ -52,38 +53,37 @@ def getAwaDB(views, pathToAwa, nameDB, nbLabels, LABELS_NAMES):
         nbLabels = nbMaxLabels
     nbNamesGiven = len(LABELS_NAMES)
     if nbNamesGiven > nbLabels:
-        labelDictionnary = {i:LABELS_NAMES[i] for i in np.arange(nbLabels)}
+        labelDictionary = {i:LABELS_NAMES[i] for i in np.arange(nbLabels)}
     elif nbNamesGiven < nbLabels and nbLabels <= nbMaxLabels:
         if LABELS_NAMES != ['']:
-            labelDictionnary = {i:LABELS_NAMES[i] for i in np.arange(nbNamesGiven)}
+            labelDictionary = {i:LABELS_NAMES[i] for i in np.arange(nbNamesGiven)}
         else:
-            labelDictionnary = {}
+            labelDictionary = {}
             nbNamesGiven = 0
         nbLabelsToAdd = nbLabels-nbNamesGiven
         while nbLabelsToAdd > 0:
             currentLabel = random.choice(awaLabels)
-            if currentLabel not in labelDictionnary.values():
-                labelDictionnary[nbLabels-nbLabelsToAdd]=currentLabel
+            if currentLabel not in labelDictionary.values():
+                labelDictionary[nbLabels-nbLabelsToAdd]=currentLabel
                 nbLabelsToAdd -= 1
             else:
                 pass
     else:
-        labelDictionnary = {i: LABELS_NAMES[i] for i in np.arange(nbNamesGiven)}
-    viewDictionnary = {i: views[i] for i in np.arange(nbView)}
+        labelDictionary = {i: LABELS_NAMES[i] for i in np.arange(nbNamesGiven)}
+    viewDictionary = {i: views[i] for i in np.arange(nbView)}
     rawData = []
     labels = []
     nbExample = 0
-    # ij = []
     for view in np.arange(nbView):
         viewData = []
         for labelIndex in np.arange(nbLabels):
-            pathToExamples = pathToAwa + 'Animals_with_Attributes/Features/' + viewDictionnary[view] + '/' + \
-                             labelDictionnary[labelIndex] + '/'
+            pathToExamples = pathToAwa + 'Animals_with_Attributes/Features/' + viewDictionary[view] + '/' + \
+                             labelDictionary[labelIndex] + '/'
             examples = os.listdir(pathToExamples)
             if view == 0:
                 nbExample += len(examples)
             for example in examples:
-                if viewDictionnary[view]=='decaf':
+                if viewDictionary[view]=='decaf':
                     exampleFile = open(pathToExamples + example)
                     viewData.append([float(line.strip()) for line in exampleFile])
                 else:
@@ -94,16 +94,11 @@ def getAwaDB(views, pathToAwa, nameDB, nbLabels, LABELS_NAMES):
 
         rawData.append(np.array(viewData))
     data = rawData
-    # data = np.empty((nbExample, nbView), dtype=list)
-    # for viewIdice in np.arange(nbView):
-    #     for exampleIndice in np.arange(nbExample):
-    #         data[exampleIndice, viewIdice] = rawData[viewIdice][exampleIndice]
-    #         # data[exampleIndice, viewIdice] = {i:rawData[viewIdice][exampleIndice][i] for i in np.arange(len(rawData[viewIdice][exampleIndice]))}
     DATASET_LENGTH = len(labels)
-    return data, labels, labelDictionnary, DATASET_LENGTH
+    return data, labels, labelDictionary, DATASET_LENGTH
 
 
-def getLabelSupports (CLASS_LABELS):
+def getLabelSupports(CLASS_LABELS):
     labels = set(CLASS_LABELS)
     supports = [CLASS_LABELS.tolist().count(label) for label in labels]
     return supports, dict((label, index) for label, index in zip(labels, range(len(labels))))
@@ -117,8 +112,8 @@ def isUseful (labelSupports, index, CLASS_LABELS, labelDict):
         return False, labelSupports
 
 
-def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_VIEW, NB_CLASS):
-    labelSupports, labelDict = getLabelSupports (CLASS_LABELS)
+def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS):
+    labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS))
     nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
     trainingExamplesIndices = []
     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
@@ -126,41 +121,19 @@ def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, 
         isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
         if isUseFull:
             trainingExamplesIndices.append(index)
-
-    # # trainingExamplesIndices = np.random.random_integers(0, DATASET_LENGTH-1, nbTrainingExamples)
-    # trainData, trainLabels = [], []
-    # testData, testLabels = [], []
-    # for viewIndice in range(NB_VIEW):
-    #     trainD, testD = [], []
-    #     trainL, testL = [], []
-    #     for i in np.arange(DATASET_LENGTH):
-    #         if i in trainingExamplesIndices:
-    #             trainD.append(DATA[viewIndice][i])
-    #             trainL.append(CLASS_LABELS[i])
-    #         else:
-    #             testD.append(DATA[viewIndice][i])
-    #             testL.append(CLASS_LABELS[i])
-    #     trainData.append(np.array(trainD))
-    #     testData.append(np.array(testD))
-    # trainLabels.append(np.array(trainL))
-    # testLabels.append(np.array(testL))
-    # return trainData, np.array(trainLabels[0]), testData, np.array(testLabels[0])
     return [trainingExamplesIndices, [index for index in range(DATASET_LENGTH) if index not in trainingExamplesIndices]]
 
 
 def getKFoldIndices(nbFolds, CLASS_LABELS, DATASET_LENGTH, NB_CLASS):
     nbFolds=int(nbFolds)
-    labelSupports, labelDict = getLabelSupports(CLASS_LABELS)
-    print labelSupports
+    labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS))
     nbTrainingExamples = [[int(support / nbFolds) for support in labelSupports] for fold in range(nbFolds)]
-    print nbTrainingExamples[0]
     trainingExamplesIndices = []
     usedIndices = []
     for foldIndex, fold in enumerate(nbTrainingExamples):
-        print 'fold'
         trainingExamplesIndices.append([])
         while fold != [0 for i in range(NB_CLASS)]:
-            index = int(random.randint(0, DATASET_LENGTH - 1))
+            index = random.randint(0, DATASET_LENGTH - 1)
             if index not in usedIndices:
                 isUseFull, fold = isUseful(fold, index, CLASS_LABELS, labelDict)
                 if isUseFull:
@@ -200,15 +173,12 @@ def getDbfromCSV(path):
             X = open(path+file)
             for x, i in zip(X, range(20)):
                 DATA[2, i+20] = np.array([float(coord) for coord in x.strip().split('\t')])
-    print DATA
     LABELS = np.zeros(40)
     LABELS[:20]=LABELS[:20]+1
-    print LABELS
-    # Y = np.genfromtxt(args.pathF + args.fileCL, delimiter=';')
     return DATA, LABELS
 
 
-def getCaltechDB(features, pathF, nameDB, NB_CLASS, LABELS_NAMES):
+def getCaltechDBcsv(features, pathF, nameDB, NB_CLASS, LABELS_NAMES):
     fullDataset = []
     for feature in features:
         featureFile = pathF + nameDB + "-" + feature + '.csv'
@@ -217,7 +187,9 @@ def getCaltechDB(features, pathF, nameDB, NB_CLASS, LABELS_NAMES):
     fullClasslabels = np.genfromtxt(pathF + nameDB + '-ClassLabels.csv', delimiter=';').astype(int)
 
     labelsNamesFile = open(pathF+nameDB+'-ClassLabels-Description.csv')
-    labelsDictionary = dict((classIndice, labelName) for (classIndice, labelName) in [(int(line.split().strip(";")[0]), line.split().strip(";")[1]) for line in labelsNamesFile])
+    labelsDictionary = dict((classIndice, labelName) for (classIndice, labelName) in [(int(line.split().strip(";")[0]),
+                                                                                       line.split().strip(";")[1])
+                                                                                      for line in labelsNamesFile])
 
     datasetLength = len(fullClasslabels)
 
@@ -236,8 +208,8 @@ def getCaltechDB(features, pathF, nameDB, NB_CLASS, LABELS_NAMES):
 
     DATASET = {}
 
-    for featureIndice in range(len(fullDataset)):
-        DATASET[featureIndice]=np.array([fullDataset[exampleIndice] for exampleIndice in range(datasetLength) if fullClasslabels[exampleIndice] in keptLabelsIndices])
+    for featureIndex in range(len(fullDataset)):
+        DATASET[featureIndex]=np.array([fullDataset[exampleIndice] for exampleIndice in range(datasetLength) if fullClasslabels[exampleIndice] in keptLabelsIndices])
 
     CLASS_LABELS = np.array([keptLabelsIndices.index(classLabel) for classLabel in fullClasslabels if classLabel in keptLabelsIndices])
     DATASET_LENGTH = len(CLASS_LABELS)
@@ -246,36 +218,57 @@ def getCaltechDB(features, pathF, nameDB, NB_CLASS, LABELS_NAMES):
 
     return DATASET, CLASS_LABELS, LABELS_DICTIONARY, DATASET_LENGTH
 
-def getMultiOmicDB(features, path, name, NB_CLASS, LABELS_NAMES):
+
+def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
+
+    datasetFile = h5py.File(path+"MultiOmicDataset.hdf5", "w")
+
     logging.debug("Start:\t Getting Methylation Data")
     methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
+    datasetFile["/View0/matrix"] = methylData
+    datasetFile["/View0/name"] = "Methylation"
+    datasetFile["/View0/shape"] = methylData.shape
     logging.debug("Done:\t Getting Methylation Data")
+
     logging.debug("Start:\t Getting MiRNA Data")
     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
+    datasetFile["/View1/matrix"] = mirnaData
+    datasetFile["/View1/name"] = "MiRNA"
+    datasetFile["/View1/shape"] = mirnaData.shape
     logging.debug("Done:\t Getting MiRNA Data")
+
     logging.debug("Start:\t Getting RNASeq Data")
     rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
+    datasetFile["/View2/matrix"] = rnaseqData
+    datasetFile["/View2/name"] = "RNASeq"
+    datasetFile["/View2/shape"] = rnaseqData.shape
     logging.debug("Done:\t Getting RNASeq Data")
+
     logging.debug("Start:\t Getting Clinical Data")
     clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
+    datasetFile["/View3/matrix"] = clinical
+    datasetFile["/View3/name"] = "Clinical"
+    datasetFile["/View3/shape"] = clinical.shape
     logging.debug("Done:\t Getting Clinical Data")
-    DATASET = {0:methylData, 1:mirnaData, 2:rnaseqData, 3:clinical}
-    DATASET_LENGTH = len(methylData)
-    labelFile = open(path+'brca_labels_triple-negatif.csv')
-    CLASS_LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
-    labelDictionnary = {0:"No", 1:"Yes"}
-    return DATASET, CLASS_LABELS, labelDictionnary, DATASET_LENGTH
 
-# def getMultiOmicDB(features, path, name, NB_CLASS, LABELS_NAMES):
-#     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
-#     clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
-#     logging.debug("Done:\t Getting Clinical Data")
-#     DATASET = {0:mirnaData, 1:clinical}
-#     labelFile = open(path+'brca_labels_triple-negatif.csv')
-#     CLASS_LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
-#     DATASET_LENGTH = len(CLASS_LABELS)
-#     labelDictionnary = {0:"No", 1:"Yes"}
-#     return DATASET, CLASS_LABELS, labelDictionnary, DATASET_LENGTH
+    labelFile = open(path+'brca_labels_triple-negatif.csv')
+    LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
+    datasetFile["/Labels/labelsArray"] = LABELS
+
+    datasetFile["/nbView"] = 4
+    datasetFile["/nbClass"] = 2
+    datasetFile["/datasetLength"] = len(datasetFile["/Labels/labelsArray"])
+    labelDictionary = {0:"No", 1:"Yes"}
+
+    return datasetFile, labelDictionary
+
+
+def getMultiOmicDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
+    datasetFile = h5py.File(path+"MultiOmicDataset.hdf5", "r")
+    LABELS = datasetFile["/Labels/labelsArray"]
+    labelDictionary = {0:"No", 1:"Yes"}
+    return datasetFile, labelDictionary
+
 
 
 

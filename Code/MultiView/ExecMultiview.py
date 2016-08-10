@@ -1,5 +1,6 @@
 import sys
 import os.path
+
 sys.path.append(
         os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
@@ -13,7 +14,6 @@ import os
 import logging
 import time
 
-
 # Argument Parser
 parser = argparse.ArgumentParser(
         description='This file is used to classifiy multiview data thanks to three methods : Fusion (early & late), Multiview Machines, Mumbo.',
@@ -23,6 +23,8 @@ groupStandard = parser.add_argument_group('Standard arguments')
 groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Name of Database (default: %(default)s)',
                            default='Caltech')
+groupStandard.add_argument('--type', metavar='STRING', action='store', help='Type of database : .hdf5 or .csv',
+                           default='.csv')
 groupStandard.add_argument('--features', metavar='STRING', action='store',
                            help='Name of the features selected for learning', default='RGB:HOG:SIFT')
 groupStandard.add_argument('--pathF', metavar='STRING', action='store',
@@ -30,7 +32,8 @@ groupStandard.add_argument('--pathF', metavar='STRING', action='store',
                            default='../FeatExtraction/Results-FeatExtr/')
 
 groupClass = parser.add_argument_group('Classification arguments')
-groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the learning rate if > 1.0, number of fold for cross validation', type=float,
+groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
+                        help='Determine the learning rate if > 1.0, number of fold for cross validation', type=float,
                         default=1.0)
 groupClass.add_argument('--CL_nb_class', metavar='INT', action='store', help='Number of classes, -1 for all', type=int,
                         default=4)
@@ -44,7 +47,8 @@ groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Numbe
 
 groupMumbo = parser.add_argument_group('Mumbo arguments')
 groupMumbo.add_argument('--MU_type', metavar='STRING', action='store',
-                        help='Determine which monoview classifier to use with Mumbo', default='DecisionTree:DecisionTree:DecisionTree')
+                        help='Determine which monoview classifier to use with Mumbo',
+                        default='DecisionTree:DecisionTree:DecisionTree')
 groupMumbo.add_argument('--MU_config', metavar='STRING', action='store', nargs='+',
                         help='Configuration for the monoview classifier in Mumbo', default='3:1.0 3:1.0 3:1.0')
 groupMumbo.add_argument('--MU_iter', metavar='INT', action='store',
@@ -64,6 +68,7 @@ groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store',
 
 args = parser.parse_args()
 features = args.features.split(":")
+dataBaseType = args.type
 NB_VIEW = len(features)
 mumboClassifierConfig = [argument.split(':') for argument in args.MU_config]
 
@@ -78,10 +83,9 @@ fusionMethodConfig = args.FU_config.split(":")
 FusionArguments = (args.FU_type, args.FU_method, fusionMethodConfig, args.FU_cl_type, fusionClassifierConfig)
 MumboArguments = (mumboClassifierConfig, NB_ITER, classifierNames)
 
-
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
 logFileName = datetime.datetime.now().strftime(
-    "%Y_%m_%d") + "-CMultiV-" + args.CL_type + "-" + "_".join(features) + "-" + args.name + "-LOG"
+        "%Y_%m_%d") + "-CMultiV-" + args.CL_type + "-" + "_".join(features) + "-" + args.name + "-LOG"
 logFile = dir + logFileName
 
 if os.path.isfile(logFile + ".log"):
@@ -91,7 +95,7 @@ if os.path.isfile(logFile + ".log"):
             logfile = dir + testFileName
             break
 else:
-    logFile = logFile + ".log"
+    logFile += ".log"
 
 logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logFile, level=logging.DEBUG,
                     filemode='w')
@@ -102,56 +106,53 @@ if (args.log):
 # Determine the Database to extract features
 logging.info("### Main Programm for Multiview Classification")
 logging.info("### Classification - Database : " + str(args.name) + " ; Views : " + ", ".join(features) +
-              " ; Algorithm : " + args.CL_type + " ; Cores : " + str(NB_CORES))
+             " ; Algorithm : " + args.CL_type + " ; Cores : " + str(NB_CORES))
 t_start = time.time()
 
-
 # Read the features
-logging.info("Start:\t Read CSV Database Files for "+args.name)
+logging.info("Start:\t Read CSV Database Files for " + args.name)
 
-getDatabase = getattr(DB, "get"+args.name+"DB")
+getDatabase = getattr(DB, "get" + args.name + "DB" + dataBaseType[1:])
 
-DATASET, CLASS_LABELS, LABELS_DICTIONARY, datasetLength = getDatabase(features, args.pathF, args.name, NB_CLASS, LABELS_NAMES)
+DATASET, LABELS_DICTIONARY = getDatabase(features, args.pathF, args.name, NB_CLASS, LABELS_NAMES)
+datasetLength = DATASET["/datasetLength"][...]
+dataBaseType = "hdf5"
 
-labelsSet = LABELS_DICTIONARY.values()
-logging.info("Info:\t Labels used: "+", ".join(labelsSet))
+logging.info("Info:\t Labels used: " + ", ".join(LABELS_DICTIONARY.values()))
 logging.info("Info:\t Length of dataset:" + str(datasetLength))
 
-for viewIndice in range(NB_VIEW):
-    logging.info("Info:\t Shape of " + features[viewIndice] + " :" + str(
-        DATASET[viewIndice].shape))
-logging.info("Done:\t Read CSV Files")
-
+for viewIndex in range(NB_VIEW):
+    logging.info("Info:\t Shape of " + features[viewIndex] + " :" + str(
+            DATASET["View" + str(viewIndex) + "/shape"][...]))
+logging.info("Done:\t Read Database Files")
 
 # Calculate Train/Test data
-if LEARNING_RATE<=1.0:
+if LEARNING_RATE <= 1.0:
     logging.info("Start:\t Determine Train/Test split for ratio " + str(LEARNING_RATE))
 else:
-    logging.info("Start:\t Determine "+str(LEARNING_RATE)+" folds for cross validation ")
+    logging.info("Start:\t Determine " + str(LEARNING_RATE) + " folds for cross validation ")
 
-
-if LEARNING_RATE <=1.0:
-    # trainData, trainLabels, testData, testLabels = DB.extractRandomTrainingSet(DATASET, CLASS_LABELS, LEARNING_RATE,
+if LEARNING_RATE <= 1.0:
+    # trainData, trainLabels, testData, testLabels = DB.extractRandomTrainingSet(DATASET, LABELS, LEARNING_RATE,
     #                                                                        datasetLength, NB_VIEW, NB_CLASS)
-    kFolds = DB.extractRandomTrainingSet(DATASET, CLASS_LABELS, LEARNING_RATE, datasetLength, NB_VIEW, NB_CLASS)
+    kFolds = DB.extractRandomTrainingSet(DATASET["/Labels/labelsArray"], LEARNING_RATE, datasetLength, NB_CLASS)
 
 elif LEARNING_RATE == 1.0:
     kFolds = [range(datasetLength), []]
 
 else:
-    kFolds = DB.getKFoldIndices(LEARNING_RATE, CLASS_LABELS, datasetLength, NB_CLASS)
-
+    kFolds = DB.getKFoldIndices(LEARNING_RATE, DATASET["/Labels/labelsArray"], datasetLength, NB_CLASS)
 
 logging.info("Info:\t Length of Learning Set: " + str(len(kFolds[0])))
-logging.info("Info:\t Length of Testing Set: " + str(datasetLength-len(kFolds[0])))
+logging.info("Info:\t Length of Testing Set: " + str(datasetLength - len(kFolds[0])))
 logging.info("Done:\t Determine folds")
 extractionTime = time.time() - t_start
 
 classifierPackage = globals()[args.CL_type]  # Permet d'appeler un module avec une string
-trainArguments = globals()[args.CL_type+'Arguments']
+trainArguments = globals()[args.CL_type + 'Arguments']
 classifierModule = getattr(classifierPackage, args.CL_type)
-train = getattr(classifierModule, "train")
-predict = getattr(classifierModule, "predict")
+fit = getattr(classifierModule, "fit_"+dataBaseType)
+predict = getattr(classifierModule, "predict_"+dataBaseType)
 analysisModule = getattr(classifierPackage, "analyzeResults")
 
 kFoldPredictedTrainLabels = []
@@ -161,29 +162,28 @@ kFoldPredictionTime = []
 kFoldClassifier = []
 
 # Begin Classification
-logging.info("Start:\t Learning with " + args.CL_type + " and "+ str(len(kFolds))+" folds")
-for foldIdx, fold in enumerate(kFolds) :
+logging.info("Start:\t Learning with " + args.CL_type + " and " + str(len(kFolds)) + " folds")
+for foldIdx, fold in enumerate(kFolds):
     if fold:
-        logging.info("\tStart:\t Fold number "+str(foldIdx+1))
+        logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
         trainIndices = [index for index in range(datasetLength) if index not in fold]
-        testData = dict((key, value[fold, :]) for key, value in DATASET.iteritems())
-        trainData = dict((key, value[trainIndices, :]) for key, value in DATASET.iteritems())
-        testLabels = CLASS_LABELS[fold]
-        trainLabels = CLASS_LABELS[trainIndices]
-        DATASET_LENGTH = len(trainLabels)
-        classifier = train(trainData, trainLabels, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES, trainArguments)
+        # testData = dict((key, value[fold, :]) for key, value in DATASET.iteritems())
+        # trainData = dict((key, value) for key, value in zip(range(NB_VIEW), [DATASET["/View"+str(viewIndex)+"/matrix"][trainIndices, :] for viewIndex in range(NB_VIEW)]))
+        # testLabels = LABELS[fold]
+        # trainLabels = LABELS[trainIndices]
+        DATASET_LENGTH = len(trainIndices)
+        classifier = fit(trainIndices, trainArguments, NB_CORES, DATASET)
         kFoldClassifier.append(classifier)
 
         learningTime = time.time() - extractionTime - t_start
         kFoldLearningTime.append(learningTime)
         logging.info("\tStart: \t Classification")
 
-        kFoldPredictedTrainLabels.append(predict(trainData, classifier, NB_CLASS))
-        kFoldPredictedTestLabels.append(predict(testData, classifier, NB_CLASS))
+        kFoldPredictedTrainLabels.append(predict(DATASET, trainIndices, classifier, NB_CLASS))
+        kFoldPredictedTestLabels.append(predict(DATASET, fold, classifier, NB_CLASS))
 
         kFoldPredictionTime.append(time.time() - extractionTime - t_start - learningTime)
-        logging.info("\tDone: \t Fold number "+str(foldIdx+1))
-
+        logging.info("\tDone: \t Fold number " + str(foldIdx + 1))
 
 classificationTime = time.time() - t_start
 
@@ -194,15 +194,17 @@ logging.info("Start:\t Result Analysis for " + args.CL_type)
 times = (extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime)
 
 stringAnalysis, imagesAnalysis = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
-                                                        kFoldPredictedTestLabels, DATASET, CLASS_LABELS,
+                                                        kFoldPredictedTestLabels, DATASET,
                                                         NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY,
                                                         features, NB_CORES, times, NB_VIEW, kFolds, args.name)
+labelsSet = set(LABELS_DICTIONARY.values())
 logging.info(stringAnalysis)
 featureString = "-".join(features)
 labelsString = "-".join(labelsSet)
 timestr = time.strftime("%Y%m%d-%H%M%S")
-outputFileName = "Results/"+timestr+"Results-"+args.CL_type+"-" + ":".join(classifierNames) + '-' + featureString + '-' + labelsString + '-learnRate' + str(
-    LEARNING_RATE) + '-nbIter' + str(NB_ITER) + '-' + args.name
+outputFileName = "Results/" + timestr + "Results-" + args.CL_type + "-" + ":".join(
+    classifierNames) + '-' + featureString + '-' + labelsString + '-learnRate' + str(
+        LEARNING_RATE) + '-nbIter' + str(NB_ITER) + '-' + args.name
 
 outputTextFile = open(outputFileName + '.txt', 'w')
 outputTextFile.write(stringAnalysis)
@@ -281,21 +283,21 @@ logging.info("Done:\t Result Analysis")
 # LEARNING_RATE = 1.0
 #
 # print "Getting db ..."
-# DATASET, CLASS_LABELS, viewDictionnary, labelDictionnary = DB.getAwaData(pathToAwa, NB_CLASS, views)
+# DATASET, LABELS, viewDictionnary, labelDictionnary = DB.getAwaData(pathToAwa, NB_CLASS, views)
 # target_names = [labelDictionnary[label] for label in labelDictionnary]
-# # DATASET, CLASS_LABELS = DB.getDbfromCSV('/home/doob/OriginalData/')
+# # DATASET, LABELS = DB.getDbfromCSV('/home/doob/OriginalData/')
 # # NB_VIEW = 3
-# CLASS_LABELS = np.array([int(label) for label in CLASS_LABELS])
+# LABELS = np.array([int(label) for label in LABELS])
 # # print target_names
 # # print labelDictionnary
-# DATASET_LENGTH = len(CLASS_LABELS)
+# DATASET_LENGTH = len(LABELS)
 #
 # DATASET_LENGTH = len(trainLabels)
 # # print len(trainData), trainData[0].shape, len(trainLabels)
 # print "Done."
 #
 # print 'Training Mumbo ...'
-# # DATASET, VIEW_DIMENSIONS, CLASS_LABELS = DB.createFakeData(NB_VIEW, DATASET_LENGTH, NB_CLASS)
+# # DATASET, VIEW_DIMENSIONS, LABELS = DB.createFakeData(NB_VIEW, DATASET_LENGTH, NB_CLASS)
 # print "Trained."
 #
 # print "Predicting ..."
