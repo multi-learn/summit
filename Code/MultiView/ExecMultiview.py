@@ -69,7 +69,7 @@ groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store',
                          help='Configuration for the monoview classifier', default='100:10:5')
 
 args = parser.parse_args()
-views = args.features.split(":")
+views = args.views.split(":")
 dataBaseType = args.type
 NB_VIEW = len(views)
 mumboClassifierConfig = [argument.split(':') for argument in args.MU_config]
@@ -110,7 +110,7 @@ logging.info("### Classification - Database : " + str(args.name) + " ; Views : "
              " ; Algorithm : " + args.CL_type + " ; Cores : " + str(NB_CORES))
 
 
-logging.info("Start:\t Read "+str.upper(type[1:])+" Database Files for " + args.name)
+logging.info("Start:\t Read "+str.upper(dataBaseType[1:])+" Database Files for " + args.name)
 
 getDatabase = getattr(DB, "get" + args.name + "DB" + dataBaseType[1:])
 DATASET, LABELS_DICTIONARY = getDatabase(views, args.pathF, args.name, NB_CLASS, LABELS_NAMES)

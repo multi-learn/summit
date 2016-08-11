@@ -1,0 +1,11 @@
+2016-08-11 14:26:58,359 INFO: ### Main Programm for Multiview Classification
+2016-08-11 14:26:58,359 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical, PseudoRNASeq ; Algorithm : Mumbo ; Cores : 4
+2016-08-11 14:26:58,359 INFO: Start:	 Read CSV Database Files for MultiOmic
+2016-08-11 14:26:58,413 DEBUG: Start:	 Getting Methylation Data
+2016-08-11 14:27:11,365 DEBUG: Done:	 Getting Methylation Data
+2016-08-11 14:27:11,365 DEBUG: Start:	 Getting MiRNA Data
+2016-08-11 14:27:11,845 DEBUG: Done:	 Getting MiRNA Data
+2016-08-11 14:27:11,845 DEBUG: Start:	 Getting RNASeq Data
+2016-08-11 14:27:50,671 DEBUG: Done:	 Getting RNASeq Data
+2016-08-11 14:27:50,772 DEBUG: Start:	 Getting Clinical Data
+2016-08-11 14:27:50,927 DEBUG: Done:	 Getting Clinical Data
