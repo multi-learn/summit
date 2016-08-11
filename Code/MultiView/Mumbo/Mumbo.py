@@ -17,8 +17,8 @@ def initialize(NB_CLASS, NB_VIEW, NB_ITER, DATASET_LENGTH, CLASS_LABELS):
                                                                     for classe in range(NB_CLASS)
                                                                     ]) for exampleIndice in range(DATASET_LENGTH)
                                                           ]) for viewIndice in range(NB_VIEW)])
-                                    if iteration == 0
-                                    else np.zeros((NB_VIEW, DATASET_LENGTH, NB_CLASS))
+                                if iteration == 0
+                                else np.zeros((NB_VIEW, DATASET_LENGTH, NB_CLASS))
                                 for iteration in range(NB_ITER + 1)
                                 ])
     generalCostMatrix = np.array([
@@ -61,13 +61,25 @@ def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS, costMatri
     classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
     classifierMethod = getattr(classifierModule, classifierName)
     classifier, classes, isBad, pTr = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
-    logging.debug("\t\t\tView "+str(viewIndice)+" : "+str(np.mean(pTr)))
+    logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(np.mean(pTr)))
     return classifier, classes, isBad
 
 
-def trainWeakClassifers(classifierNames, DATASET, CLASS_LABELS, costMatrices,
-                        NB_CLASS, DATASET_LENGTH, iterIndice, classifier_config,
-                        NB_CORES, NB_VIEW):
+def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, costMatrices,
+                            NB_CLASS, DATASET_LENGTH, iterIndice, viewIndice,
+                            classifier_config, viewName):
+    weights = computeWeights(costMatrices, NB_CLASS, DATASET_LENGTH,
+                             iterIndice, viewIndice, CLASS_LABELS)
+    classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
+    classifierMethod = getattr(classifierModule, classifierName)
+    classifier, classes, isBad, pTr = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
+    logging.debug("\t\t\tFor " + viewName + " : " + str(np.mean(pTr)))
+    return classifier, classes, isBad
+
+
+def trainWeakClassifiers(classifierNames, DATASET, CLASS_LABELS, costMatrices,
+                         NB_CLASS, DATASET_LENGTH, iterIndice, classifier_config,
+                         NB_CORES, NB_VIEW):
     trainedClassifiers = []
     labelsMatrix = []
     areBad = []
@@ -78,8 +90,34 @@ def trainWeakClassifers(classifierNames, DATASET, CLASS_LABELS, costMatrices,
     trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
             delayed(trainWeakClassifier)(classifierNames[viewIndice], DATASET[viewIndice], CLASS_LABELS,
                                          costMatrices, NB_CLASS, DATASET_LENGTH,
-                                         iterIndice, viewIndice, classifier_config[viewIndice])
+                                         iterIndice, viewIndice, classifier_config[viewIndice],)
             for viewIndice in range(NB_VIEW))
+
+    for (classifier, labelsArray, isBad) in trainedClassifiersAndLabels:
+        trainedClassifiers.append(classifier)
+        labelsMatrix.append(labelsArray)
+        areBad.append(isBad)
+    return np.array(trainedClassifiers), np.array(labelsMatrix), np.array(areBad)
+
+
+def trainWeakClassifiers_hdf5(classifierNames, DATASET, trainIndices, costMatrices, NB_CLASS,
+                             DATASET_LENGTH, iterIndice, classifier_config,
+                             NB_CORES, NB_VIEW):
+    trainedClassifiers = []
+    labelsMatrix = []
+    areBad = []
+    if NB_CORES > NB_VIEW:
+        NB_JOBS = NB_VIEW
+    else:
+        NB_JOBS = NB_CORES
+    trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
+            delayed(trainWeakClassifier_hdf5)(classifierNames[viewIndex],
+                                         DATASET["/View"+str(viewIndex)+"/matrix"][trainIndices, :],
+                                         DATASET["/Labels/labelsArray"][trainIndices],
+                                         costMatrices, NB_CLASS, DATASET_LENGTH,
+                                         iterIndice, viewIndex, classifier_config[viewIndex],
+                                              str(DATASET["/View"+str(viewIndex)+"/name"][...]) )
+            for viewIndex in range(NB_VIEW))
 
     for (classifier, labelsArray, isBad) in trainedClassifiersAndLabels:
         trainedClassifiers.append(classifier)
@@ -91,9 +129,11 @@ def trainWeakClassifers(classifierNames, DATASET, CLASS_LABELS, costMatrices,
 def computeEdge(predictionMatrix, costMatrix, NB_CLASS, DATASET_LENGTH, CLASS_LABELS):
     # return np.sum(np.array([np.sum(predictionMatrix*costMatrix[:,classIndice]) for classIndice in range(NB_CLASS)]))
     cCost = float(np.sum(np.array(
-            [costMatrix[exampleIndice, int(predictionMatrix[exampleIndice])] for exampleIndice in range(DATASET_LENGTH)])))
+            [costMatrix[exampleIndice, int(predictionMatrix[exampleIndice])] for exampleIndice in
+             range(DATASET_LENGTH)])))
     tCost = float(np.sum(
-        np.array([-costMatrix[exampleIndice, CLASS_LABELS[exampleIndice]] for exampleIndice in range(DATASET_LENGTH)])))
+            np.array([-costMatrix[exampleIndice, CLASS_LABELS[exampleIndice]] for exampleIndice in
+                      range(DATASET_LENGTH)])))
     if tCost == 0.:
         edge = -cCost
     else:
@@ -141,14 +181,14 @@ def updateFs(predictions, ds, alphas, fs, iterIndice, NB_VIEW, DATASET_LENGTH,
                 fs[iterIndice, viewIndice, exampleIndice, classe] \
                     = np.sum(np.array([alphas[pastIterIndice, viewIndice]
                                        * ds[pastIterIndice, viewIndice, exampleIndice]
-                                           if predictions[pastIterIndice, viewIndice,
-                                                          exampleIndice]
-                                              ==
-                                              classe
-                                           else 0
+                                       if predictions[pastIterIndice, viewIndice,
+                                                      exampleIndice]
+                                          ==
+                                          classe
+                                       else 0
                                        for pastIterIndice in range(iterIndice)]))
     if np.amax(np.absolute(fs)) != 0:
-        fs = fs/np.amax(np.absolute(fs))
+        fs = fs / np.amax(np.absolute(fs))
     return fs
 
 
@@ -159,13 +199,13 @@ def updateCostmatrices(costMatrices, fs, iterIndice, NB_VIEW, DATASET_LENGTH,
             for classe in range(NB_CLASS):
                 if classe != CLASS_LABELS[exampleIndice]:
                     costMatrices[iterIndice + 1, viewIndice, exampleIndice, classe] \
-                        = 1.0*math.exp(fs[iterIndice, viewIndice, exampleIndice, classe] -
-                                        fs[iterIndice, viewIndice, exampleIndice, CLASS_LABELS[exampleIndice]])
+                        = 1.0 * math.exp(fs[iterIndice, viewIndice, exampleIndice, classe] -
+                                         fs[iterIndice, viewIndice, exampleIndice, CLASS_LABELS[exampleIndice]])
                 else:
                     costMatrices[iterIndice + 1, viewIndice, exampleIndice, classe] \
                         = -1. * np.sum(np.exp(fs[iterIndice, viewIndice, exampleIndice] -
-                                             fs[iterIndice, viewIndice, exampleIndice, classe]))
-    costMatrices = costMatrices/np.amax(np.absolute(costMatrices))
+                                              fs[iterIndice, viewIndice, exampleIndice, classe]))
+    costMatrices = costMatrices / np.amax(np.absolute(costMatrices))
     return costMatrices
 
 
@@ -194,7 +234,7 @@ def updateGeneralFs(generalFs, iterIndice, predictions, alphas,
                                    ])
                          )
     if np.amax(np.absolute(generalFs)) != 0:
-        generalFs = generalFs/np.amax(np.absolute(generalFs))
+        generalFs = generalFs / np.amax(np.absolute(generalFs))
     return generalFs
 
 
@@ -215,8 +255,7 @@ def updateGeneralCostMatrix(generalCostMatrix, generalFs, iterIndice,
     return generalCostMatrix
 
 
-def train(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
-          trainArguments):
+def fit(DATASET, CLASS_LABELS, trainArguments, NB_CORES=1):
     # Initialization
     classifierConfig, NB_ITER, classifierNames = trainArguments
     costMatrices, \
@@ -229,16 +268,16 @@ def train(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
 
     # Learning
     for iterIndice in range(NB_ITER):
-        logging.debug('\t\tStart:\t Iteration '+str(iterIndice+1))
-        classifiers, predictedLabels, areBad = trainWeakClassifers(classifierNames,
-                                                           DATASET,
-                                                           CLASS_LABELS,
-                                                           costMatrices,
-                                                           NB_CLASS,
-                                                           DATASET_LENGTH,
-                                                           iterIndice,
-                                                           classifierConfig,
-                                                           NB_CORES, NB_VIEW)
+        logging.debug('\t\tStart:\t Iteration ' + str(iterIndice + 1))
+        classifiers, predictedLabels, areBad = trainWeakClassifiers(classifierNames,
+                                                                    DATASET,
+                                                                    CLASS_LABELS,
+                                                                    costMatrices,
+                                                                    NB_CLASS,
+                                                                    DATASET_LENGTH,
+                                                                    iterIndice,
+                                                                    classifierConfig,
+                                                                    NB_CORES, NB_VIEW)
         if areBad.all():
             logging.warning("All bad for iteration " + str(iterIndice))
 
@@ -279,7 +318,76 @@ def train(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
                                                     DATASET_LENGTH, NB_CLASS,
                                                     CLASS_LABELS)
 
-    # finalFs = computeFinalFs(DATASET_LENGTH, NB_CLASS, generalAlphas, predictions, bestViews, CLASS_LABELS, NB_ITER)
+    # finalFs = computeFinalFs(DATASET_LENGTH, NB_CLASS, generalAlphas, predictions, bestViews, LABELS, NB_ITER)
+    return (bestClassifiers, generalAlphas, bestViews)
+
+
+def fit_hdf5(trainIndices, trainArguments, NB_CORES, DATASET):
+    # Initialization
+    NB_CLASS = DATASET["/nbClass"][...]
+    NB_VIEW = DATASET["/nbView"][...]
+    DATASET_LENGTH = len(trainIndices)
+    classifierConfig, NB_ITER, classifierNames = trainArguments
+    costMatrices, \
+    generalCostMatrix, fs, ds, edges, alphas, \
+    predictions, generalAlphas, generalFs = initialize(NB_CLASS, NB_VIEW,
+                                                       NB_ITER, DATASET_LENGTH,
+                                                       DATASET["/Labels/labelsArray"][trainIndices])
+    bestViews = np.zeros(NB_ITER)
+    bestClassifiers = []
+
+    # Learning
+    for iterIndex in range(NB_ITER):
+        logging.debug('\t\tStart:\t Iteration ' + str(iterIndex + 1))
+        classifiers, predictedLabels, areBad = trainWeakClassifiers_hdf5(classifierNames,
+                                                                        DATASET, trainIndices,
+                                                                        costMatrices,
+                                                                        NB_CLASS,
+                                                                        DATASET_LENGTH,
+                                                                        iterIndex,
+                                                                        classifierConfig,
+                                                                        NB_CORES, NB_VIEW)
+        if areBad.all():
+            logging.warning("All bad for iteration " + str(iterIndex))
+
+        predictions[iterIndex] = predictedLabels
+
+        for viewIndice in range(NB_VIEW):
+            edges[iterIndex, viewIndice] = computeEdge(predictions[iterIndex,
+                                                                   viewIndice],
+                                                       costMatrices[iterIndex,
+                                                                    viewIndice], NB_CLASS, DATASET_LENGTH,
+                                                       DATASET["/Labels/labelsArray"][trainIndices])
+            if areBad[viewIndice]:
+                alphas[iterIndex, viewIndice] = 0.
+            else:
+                alphas[iterIndex, viewIndice] = computeAlpha(edges[iterIndex,
+                                                                   viewIndice])
+        ds = updateDs(ds, predictions, DATASET["/Labels/labelsArray"][trainIndices], NB_VIEW, DATASET_LENGTH,
+                      NB_CLASS, iterIndex)
+        fs = updateFs(predictions, ds, alphas, fs, iterIndex, NB_VIEW,
+                      DATASET_LENGTH, NB_CLASS, DATASET["/Labels/labelsArray"][trainIndices])
+
+        costMatrices = updateCostmatrices(costMatrices, fs, iterIndex,
+                                          NB_VIEW, DATASET_LENGTH,
+                                          NB_CLASS, DATASET["/Labels/labelsArray"][trainIndices])
+        bestView, edge = chooseView(predictions, generalCostMatrix,
+                                    iterIndex, NB_VIEW, NB_CLASS, DATASET_LENGTH, DATASET["/Labels/labelsArray"][trainIndices])
+        bestViews[iterIndex] = bestView
+        if areBad.all():
+            generalAlphas[iterIndex] = 0.
+        else:
+            generalAlphas[iterIndex] = computeAlpha(edge)
+        bestClassifiers.append(classifiers[bestView])
+        generalFs = updateGeneralFs(generalFs, iterIndex, predictions, alphas,
+                                    DATASET_LENGTH, NB_CLASS, bestView,
+                                    generalAlphas, DATASET["/Labels/labelsArray"][trainIndices])
+        generalCostMatrix = updateGeneralCostMatrix(generalCostMatrix,
+                                                    generalFs, iterIndex,
+                                                    DATASET_LENGTH, NB_CLASS,
+                                                    DATASET["/Labels/labelsArray"][trainIndices])
+
+    # finalFs = computeFinalFs(DATASET_LENGTH, NB_CLASS, generalAlphas, predictions, bestViews, LABELS, NB_ITER)
     return (bestClassifiers, generalAlphas, bestViews)
 
 
@@ -294,6 +402,20 @@ def predict(DATASET, classifier, NB_CLASS):
             data = DATASET[int(view)][exampleIndice]
             votes[int(classifier.predict(np.array([data])))] += alpha
         predictedLabels[exampleIndice] = np.argmax(votes)
+    return predictedLabels
+
+
+def predict_hdf5(DATASET, usedIndices, classifier, NB_CLASS):
+    classifiers, alphas, views = classifier
+    DATASET_LENGTH = len(usedIndices)
+    predictedLabels = np.zeros(DATASET_LENGTH)
+
+    for labelIndex, exampleIndex in enumerate(usedIndices):
+        votes = np.zeros(NB_CLASS)
+        for classifier, alpha, view in zip(classifiers, alphas, views):
+            data = DATASET["/View"+str(int(view))+"/matrix"][exampleIndex, :]
+            votes[int(classifier.predict(np.array([data])))] += alpha
+        predictedLabels[labelIndex] = np.argmax(votes)
     return predictedLabels
 
 
@@ -313,8 +435,6 @@ def classifyMumbobyIter(DATASET, classifiers, alphas, views, NB_CLASS):
             predictedLabels[exampleIndice, iterIndice] = np.argmax(votes[exampleIndice])
 
     return np.transpose(predictedLabels)
-
-
 
 
 if __name__ == '__main__':
@@ -343,6 +463,7 @@ if __name__ == '__main__':
         trainLabels.append(np.array(trainL))
         testLabels.append(np.array(testL))
         return trainData, np.array(trainLabels[0]), testData, np.array(testLabels[0])
+
 
     def getAwaLabels(nbLabels, pathToAwa):
         file = open(pathToAwa + 'Animals_with_Attributes/classes.txt', 'U')
@@ -383,9 +504,10 @@ if __name__ == '__main__':
 
         return data, labels, viewDictionnary, labelDictionnary
 
+
     NB_CLASS = 5
     NB_ITER = 3
-    classifierName="DecisionTree"
+    classifierName = "DecisionTree"
     NB_CORES = 3
     pathToAwa = "/home/doob/"
     views = ['phog-hist', 'decaf', 'cq-hist']
@@ -396,7 +518,7 @@ if __name__ == '__main__':
     print "Getting db ..."
     DATASET, CLASS_LABELS, viewDictionnary, labelDictionnary = getAwaData(pathToAwa, NB_CLASS, views)
     target_names = labelDictionnary.values()
-    # DATASET, CLASS_LABELS = DB.getDbfromCSV('/home/doob/OriginalData/')
+    # DATASET, LABELS = DB.getDbfromCSV('/home/doob/OriginalData/')
     # NB_VIEW = 3
     CLASS_LABELS = np.array([int(label) for label in CLASS_LABELS])
     # print target_names
@@ -404,7 +526,7 @@ if __name__ == '__main__':
     fullDatasetLength = len(CLASS_LABELS)
 
     trainData, trainLabels, testData, testLabels = extractRandomTrainingSet(DATASET, CLASS_LABELS, LEARNING_RATE,
-                                                                               fullDatasetLength, NB_VIEW)
+                                                                            fullDatasetLength, NB_VIEW)
     DATASET_LENGTH = len(trainLabels)
     # print len(trainData), trainData[0].shape, len(trainLabels)
     print "Done."
@@ -412,9 +534,10 @@ if __name__ == '__main__':
     print 'Training Mumbo ...'
     trainArguments = classifierConfig, NB_ITER, classifierName
 
-    bestClassifiers, generalAlphas, bestViews = train(trainData, trainLabels, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES,
+    bestClassifiers, generalAlphas, bestViews = train(trainData, trainLabels, DATASET_LENGTH, NB_VIEW, NB_CLASS,
+                                                      NB_CORES,
                                                       trainArguments)
-    # DATASET, VIEW_DIMENSIONS, CLASS_LABELS = DB.createFakeData(NB_VIEW, DATASET_LENGTH, NB_CLASS)
+    # DATASET, VIEW_DIMENSIONS, LABELS = DB.createFakeData(NB_VIEW, DATASET_LENGTH, NB_CLASS)
     print "Trained."
 
     print "Predicting ..."
@@ -424,9 +547,9 @@ if __name__ == '__main__':
     print 'Reporting ...'
     predictedTrainLabelsByIter = classifyMumbobyIter(trainData, bestClassifiers, generalAlphas, bestViews, NB_CLASS)
     predictedTestLabelsByIter = classifyMumbobyIter(testData, bestClassifiers, generalAlphas, bestViews, NB_CLASS)
-    print str(NB_VIEW)+" views, "+str(NB_CLASS)+" classes, "+str(classifierConfig)+" depth trees"
-    print "Best views = "+str(bestViews)
-    print "Is equal : "+str((predictedTrainLabels==predictedTrainLabelsByIter[NB_ITER-1]).all())
+    print str(NB_VIEW) + " views, " + str(NB_CLASS) + " classes, " + str(classifierConfig) + " depth trees"
+    print "Best views = " + str(bestViews)
+    print "Is equal : " + str((predictedTrainLabels == predictedTrainLabelsByIter[NB_ITER - 1]).all())
 
     print "On train : "
     print classification_report(trainLabels, predictedTrainLabels, target_names=target_names)

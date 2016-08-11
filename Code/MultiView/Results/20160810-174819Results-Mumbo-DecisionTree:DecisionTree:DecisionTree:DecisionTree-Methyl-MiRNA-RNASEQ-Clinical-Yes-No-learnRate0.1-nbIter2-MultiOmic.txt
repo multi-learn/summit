@@ -1,0 +1,71 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 84.7507071996
+	-On Test : 83.9743589744
+	-On Validation : 90.1960784314
+
+Dataset info :
+	-Database name : MultiOmic
+	-Labels : No, Yes
+	-Views : Methyl, MiRNA, RNASEQ, Clinical
+	-3 folds
+
+Classification configuration : 
+	-Algorithm used : Mumbo 
+	-Iterations : 2
+	-Weak Classifiers : 
+		-DecisionTree with depth 1,  sub-sampled at 0.1 on Methyl 
+		-DecisionTree with depth 1,  sub-sampled at 0.1 on MiRNA 
+		-DecisionTree with depth 1,  sub-sampled at 0.7 on RNASEQ 
+		-DecisionTree with depth 1,  sub-sampled at 0.9 on Clinical
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 80.7531380753
+			Accuracy on test : 79.8076923077
+			Accuracy on validation : 88.2352941176
+			Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 82.6271186441
+			Accuracy on test : 75.9615384615
+			Accuracy on validation : 94.1176470588
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 84.1666666667
+			Accuracy on test : 79.8076923077
+			Accuracy on validation : 85.2941176471
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 82.5156411287
+			 Accuracy on test : 78.5256410256
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 86.6108786611
+			Accuracy on test : 83.6538461538
+			Accuracy on validation : 91.1764705882
+			Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 83.4745762712
+			Accuracy on test : 88.4615384615
+			Accuracy on validation : 94.1176470588
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 84.1666666667
+			Accuracy on test : 79.8076923077
+			Accuracy on validation : 85.2941176471
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 84.7507071996
+			 Accuracy on test : 83.9743589744
+
+Computation time on 4 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:03        0:00:00
+	         Fold 2        0:00:07        0:00:00
+	         Fold 3        0:00:11        0:00:00
+	          Total        0:00:23        0:00:00
+	So a total classification time of 0:00:12.
+

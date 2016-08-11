@@ -1,0 +1,81 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 77.6344086022
+	-On Test : 74.7058823529
+
+Dataset info :
+	-Database name : MultiOmic
+	-Labels : No, Yes
+	-Views : Methyl, MiRNA, RNASEQ, Clinical
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : Mumbo 
+	-Iterations : 2
+	-Weak Classifiers : 
+		-DecisionTree with depth 1,  sub-sampled at 0.05 on Methyl 
+		-DecisionTree with depth 1,  sub-sampled at 0.03 on MiRNA 
+		-DecisionTree with depth 1,  sub-sampled at 0.6 on RNASEQ 
+		-DecisionTree with depth 1,  sub-sampled at 0.5 on Clinical
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 73.1182795699
+			Accuracy on test : 73.5294117647
+			Selected View : Clinical
+		 Fold 2
+			Accuracy on train : 80.2867383513
+			Accuracy on test : 83.8235294118
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 75.9856630824
+			Accuracy on test : 64.7058823529
+			Selected View : RNASEQ
+		 Fold 4
+			Accuracy on train : 82.4372759857
+			Accuracy on test : 83.8235294118
+			Selected View : MiRNA
+		 Fold 5
+			Accuracy on train : 73.1182795699
+			Accuracy on test : 73.5294117647
+			Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 76.9892473118
+			 Accuracy on test : 75.8823529412
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 73.1182795699
+			Accuracy on test : 73.5294117647
+			Selected View : Clinical
+		 Fold 2
+			Accuracy on train : 80.2867383513
+			Accuracy on test : 83.8235294118
+			Selected View : RNASEQ
+		 Fold 3
+			Accuracy on train : 75.2688172043
+			Accuracy on test : 72.0588235294
+			Selected View : Clinical
+		 Fold 4
+			Accuracy on train : 82.4372759857
+			Accuracy on test : 83.8235294118
+			Selected View : Clinical
+		 Fold 5
+			Accuracy on train : 77.0609318996
+			Accuracy on test : 60.2941176471
+			Selected View : RNASEQ
+		- Mean : 
+			 Accuracy on train : 77.6344086022
+			 Accuracy on test : 74.7058823529
+
+Computation time on 4 cores : 
+	Database extraction time : 0:00:00.081707
+	                                        Learn
+	         Fold 1 0:00:03.515825 0:00:00.183676
+	         Fold 2 0:00:07.338863 0:00:00.300956
+	         Fold 3 0:00:11.190434 0:00:00.300585
+	         Fold 4 0:00:15.037320 0:00:00.186528
+	         Fold 5 0:00:18.775001 0:00:00.298192
+	So a total classification time of 0:00:19.155128.
+
