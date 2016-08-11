@@ -10,7 +10,6 @@ import logging
 
 def findMainView(bestViews):
     views = list(set(bestViews))
-    mainView = ()
     viewCount = np.array([list(bestViews).count(view) for view in views])
     mainView = views[np.argmax(viewCount)]
     return mainView
@@ -32,7 +31,7 @@ def plotAccuracyByIter(trainAccuracy, testAccuracy, validationAccuracy, NB_ITER,
     # for label, x, y in zip(bestViews, x, trainAccuracy):
     #     if label != mainView:
     #         plt.annotate(
-    #                 features[int(label)],
+    #                 views[int(label)],
     #                 xy=(x, y), xytext=(-20, 20),
     #                 textcoords='offset points', ha='right', va='bottom',
     #                 bbox=dict(boxstyle='round,pad=0.5', fc='yellow', alpha=0.5),

@@ -25,10 +25,10 @@ groupStandard.add_argument('--name', metavar='STRING', action='store', help='Nam
                            default='Caltech')
 groupStandard.add_argument('--type', metavar='STRING', action='store', help='Type of database : .hdf5 or .csv',
                            default='.csv')
-groupStandard.add_argument('--features', metavar='STRING', action='store',
-                           help='Name of the features selected for learning', default='RGB:HOG:SIFT')
+groupStandard.add_argument('--views', metavar='STRING', action='store',
+                           help='Name of the views selected for learning', default='RGB:HOG:SIFT')
 groupStandard.add_argument('--pathF', metavar='STRING', action='store',
-                           help='Path to the features (default: %(default)s)',
+                           help='Path to the views (default: %(default)s)',
                            default='../FeatExtraction/Results-FeatExtr/')
 
 groupClass = parser.add_argument_group('Classification arguments')
@@ -69,9 +69,9 @@ groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store',
                          help='Configuration for the monoview classifier', default='100:10:5')
 
 args = parser.parse_args()
-features = args.features.split(":")
+views = args.features.split(":")
 dataBaseType = args.type
-NB_VIEW = len(features)
+NB_VIEW = len(views)
 mumboClassifierConfig = [argument.split(':') for argument in args.MU_config]
 
 LEARNING_RATE = args.CL_split
@@ -88,7 +88,7 @@ MumboArguments = (mumboClassifierConfig, NB_ITER, classifierNames)
 
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
 logFileName = datetime.datetime.now().strftime(
-        "%Y_%m_%d") + "-CMultiV-" + args.CL_type + "-" + "_".join(features) + "-" + args.name + "-LOG"
+        "%Y_%m_%d") + "-CMultiV-" + args.CL_type + "-" + "_".join(views) + "-" + args.name + "-LOG"
 logFile = dir + logFileName
 if os.path.isfile(logFile + ".log"):
     for i in range(1, 20):
@@ -106,14 +106,14 @@ if (args.log):
 
 t_start = time.time()
 logging.info("### Main Programm for Multiview Classification")
-logging.info("### Classification - Database : " + str(args.name) + " ; Views : " + ", ".join(features) +
+logging.info("### Classification - Database : " + str(args.name) + " ; Views : " + ", ".join(views) +
              " ; Algorithm : " + args.CL_type + " ; Cores : " + str(NB_CORES))
 
 
-logging.info("Start:\t Read CSV Database Files for " + args.name)
+logging.info("Start:\t Read "+str.upper(type[1:])+" Database Files for " + args.name)
 
 getDatabase = getattr(DB, "get" + args.name + "DB" + dataBaseType[1:])
-DATASET, LABELS_DICTIONARY = getDatabase(features, args.pathF, args.name, NB_CLASS, LABELS_NAMES)
+DATASET, LABELS_DICTIONARY = getDatabase(views, args.pathF, args.name, NB_CLASS, LABELS_NAMES)
 datasetLength = DATASET["/datasetLength"][...]
 dataBaseType = "hdf5"
 
@@ -121,7 +121,7 @@ logging.info("Info:\t Labels used: " + ", ".join(LABELS_DICTIONARY.values()))
 logging.info("Info:\t Length of dataset:" + str(datasetLength))
 
 for viewIndex in range(NB_VIEW):
-    logging.info("Info:\t Shape of " + features[viewIndex] + " :" + str(
+    logging.info("Info:\t Shape of " + views[viewIndex] + " :" + str(
             DATASET["View" + str(viewIndex) + "/shape"][...]))
 logging.info("Done:\t Read Database Files")
 
@@ -192,11 +192,11 @@ times = (extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationT
 stringAnalysis, imagesAnalysis = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
                                                         kFoldPredictedTestLabels, kFoldPredictedValidationLabels, DATASET,
                                                         NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY,
-                                                        features, NB_CORES, times, NB_VIEW, kFolds, args.name, nbFolds,
+                                                        views, NB_CORES, times, NB_VIEW, kFolds, args.name, nbFolds,
                                                         validationIndices, datasetLength)
 labelsSet = set(LABELS_DICTIONARY.values())
 logging.info(stringAnalysis)
-featureString = "-".join(features)
+featureString = "-".join(views)
 labelsString = "-".join(labelsSet)
 timestr = time.strftime("%Y%m%d-%H%M%S")
 outputFileName = "Results/" + timestr + "Results-" + args.CL_type + "-" + ":".join(

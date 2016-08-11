@@ -14,7 +14,7 @@ import logging                          # To create Log-Files
 # Import own modules
 import DBCrawl			        # Functions to read Images from Database
 import Code.MonoView.ExportResults  # Functions to render results
-import FeatExtraction                   # Functions to extract the features from Database   
+import FeatExtraction                   # Functions to extract the views from Database
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann"
@@ -24,7 +24,7 @@ __date__	= 2016-03-25
 ### Argument Parser
 
 parser = argparse.ArgumentParser(
-description='This method permits to export one or more features at the same time for a database of images (path, name). To extract one feature activate it by using the specific argument (e.g. -RGB). For each feature you can define the parameters by using the optional arguments (e.g. --RGB_Hist 32). The results will be exported to a CSV-File.', 
+description='This method permits to export one or more views at the same time for a database of images (path, name). To extract one feature activate it by using the specific argument (e.g. -RGB). For each feature you can define the parameters by using the optional arguments (e.g. --RGB_Hist 32). The results will be exported to a CSV-File.',
 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 groupStandard = parser.add_argument_group('Standard arguments')
@@ -120,7 +120,7 @@ logging.debug("### Main Programm for Feature Extraction ###")
 logging.debug("### Extraction - NameDB=" + nameDB + ", Path=" + path  + ", Features=" + features)
 
 ################################ Read Images from Database
-# Determine the Database to extract features
+# Determine the Database to extract views
 
 logging.debug("Start:\t Exportation of images from DB")
 

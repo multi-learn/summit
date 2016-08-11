@@ -25,7 +25,7 @@ def execute(classifier, predictedTrainLabels, predictedTestLabels, trainLabels, 
                                                                   fusionClassifierConfig)
     #monoviewClassifierConfig+'\n\n '+ \
     stringAnalysis = "\n"+fusionType+" classification using "+monoviewClassifier+ 'as monoview classifier '+ \
-                     "Learning on \n\t- "+", ".join(features)+" as features\n\t- "+", ".join(LABELS_DICTIONARY.values())+ \
+                     "Learning on \n\t- "+", ".join(features)+" as views\n\t- "+", ".join(LABELS_DICTIONARY.values())+ \
                      " as labels\n\t- "+str(trainingSetLength)+" training examples, "+str(testingSetLength)+ \
                      " testing examples ("+str(LEARNING_RATE)+" rate)\n\n With "+str(NB_CORES)+' cores used for computing.\n\n'
 
@@ -48,7 +48,7 @@ def execute(classifier, predictedTrainLabels, predictedTestLabels, trainLabels, 
     #     stringAnalysis+= "\t- Iteration "+str(iterIndex+1)+"\n\t\t Accuracy on train : "+ \
     #                      str(accuracy_score(trainLabels, predictedTrainLabelsByIter[iterIndex]))+'\n\t\t Accuracy on test : '+ \
     #                      str(accuracy_score(testLabels, predictedTestLabelsByIter[iterIndex]))+'\n\t\t Selected View : '+ \
-    #                      features[int(bestViews[iterIndex])]+"\n"
+    #                      views[int(bestViews[iterIndex])]+"\n"
     #
     # name, image = plotAccuracyByIter(predictedTrainLabelsByIter, predictedTestLabelsByIter, trainLabels, testLabels, NB_ITER)
     imagesAnalysis = {}
