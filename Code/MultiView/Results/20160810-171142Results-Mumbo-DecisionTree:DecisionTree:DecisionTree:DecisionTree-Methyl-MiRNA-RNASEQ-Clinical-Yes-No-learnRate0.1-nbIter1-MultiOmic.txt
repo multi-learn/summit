@@ -1,0 +1,52 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 74.5704723713
+	-On Test : 74.0384615385
+	-On Validation : 74.5098039216
+
+Dataset info :
+	-Database name : MultiOmic
+	-Labels : No, Yes
+	-Views : Methyl, MiRNA, RNASEQ, Clinical
+	-3 folds
+
+Classification configuration : 
+	-Algorithm used : Mumbo 
+	-Iterations : 1
+	-Weak Classifiers : 
+		-DecisionTree with depth 1,  sub-sampled at 0.05 on Methyl 
+		-DecisionTree with depth 1,  sub-sampled at 0.03 on MiRNA 
+		-DecisionTree with depth 1,  sub-sampled at 0.6 on RNASEQ 
+		-DecisionTree with depth 1,  sub-sampled at 0.5 on Clinical
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 72.5321888412
+			Accuracy on test : 77.8846153846
+			Accuracy on validation : 73.5294117647
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 78.2978723404
+			Accuracy on test : 75.9615384615
+			Accuracy on validation : 73.5294117647
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 72.8813559322
+			Accuracy on test : 68.2692307692
+			Accuracy on validation : 76.4705882353
+			Selected View : Clinical
+		- Mean : 
+			 Accuracy on train : 74.5704723713
+			 Accuracy on test : 74.0384615385
+
+Computation time on 4 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:01        0:00:00
+	         Fold 2        0:00:03        0:00:00
+	         Fold 3        0:00:05        0:00:00
+	          Total        0:00:11        0:00:00
+	So a total classification time of 0:00:05.
+

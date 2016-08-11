@@ -112,6 +112,13 @@ def isUseful (labelSupports, index, CLASS_LABELS, labelDict):
         return False, labelSupports
 
 
+def splitDataset(DATASET, LEARNING_RATE, DATASET_LENGTH):
+    LABELS = DATASET["/Labels/labelsArray"][...]
+    NB_CLASS = int(DATASET["/nbClass"][...])
+    validationIndices = extractRandomTrainingSet(LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS)
+    return validationIndices
+
+
 def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS):
     labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS))
     nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
@@ -121,12 +128,11 @@ def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLA
         isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
         if isUseFull:
             trainingExamplesIndices.append(index)
-    return [trainingExamplesIndices, [index for index in range(DATASET_LENGTH) if index not in trainingExamplesIndices]]
+    return trainingExamplesIndices
 
 
-def getKFoldIndices(nbFolds, CLASS_LABELS, DATASET_LENGTH, NB_CLASS):
-    nbFolds=int(nbFolds)
-    labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS))
+def getKFoldIndices(nbFolds, CLASS_LABELS, DATASET_LENGTH, NB_CLASS, learningIndices):
+    labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS[learningIndices]))
     nbTrainingExamples = [[int(support / nbFolds) for support in labelSupports] for fold in range(nbFolds)]
     trainingExamplesIndices = []
     usedIndices = []
@@ -135,10 +141,10 @@ def getKFoldIndices(nbFolds, CLASS_LABELS, DATASET_LENGTH, NB_CLASS):
         while fold != [0 for i in range(NB_CLASS)]:
             index = random.randint(0, DATASET_LENGTH - 1)
             if index not in usedIndices:
-                isUseFull, fold = isUseful(fold, index, CLASS_LABELS, labelDict)
+                isUseFull, fold = isUseful(fold, learningIndices[index], CLASS_LABELS, labelDict)
                 if isUseFull:
-                    trainingExamplesIndices[foldIndex].append(index)
-                    usedIndices.append(index)
+                    trainingExamplesIndices[foldIndex].append(learningIndices[index])
+                    usedIndices.append(learningIndices[index])
     return trainingExamplesIndices
 
 
@@ -226,14 +232,14 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     logging.debug("Start:\t Getting Methylation Data")
     methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
     datasetFile["/View0/matrix"] = methylData
-    datasetFile["/View0/name"] = "Methylation"
+    datasetFile["/View0/name"] = "Methyl"
     datasetFile["/View0/shape"] = methylData.shape
     logging.debug("Done:\t Getting Methylation Data")
 
     logging.debug("Start:\t Getting MiRNA Data")
     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
     datasetFile["/View1/matrix"] = mirnaData
-    datasetFile["/View1/name"] = "MiRNA"
+    datasetFile["/View1/name"] = "MiRNA_"
     datasetFile["/View1/shape"] = mirnaData.shape
     logging.debug("Done:\t Getting MiRNA Data")
 
@@ -247,7 +253,7 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     logging.debug("Start:\t Getting Clinical Data")
     clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
     datasetFile["/View3/matrix"] = clinical
-    datasetFile["/View3/name"] = "Clinical"
+    datasetFile["/View3/name"] = "Clinic"
     datasetFile["/View3/shape"] = clinical.shape
     logging.debug("Done:\t Getting Clinical Data")
 

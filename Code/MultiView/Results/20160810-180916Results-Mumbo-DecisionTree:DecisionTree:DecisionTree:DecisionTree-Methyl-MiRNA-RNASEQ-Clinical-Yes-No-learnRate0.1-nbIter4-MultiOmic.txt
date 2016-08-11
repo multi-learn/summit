@@ -1,0 +1,109 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 86.9700361925
+	-On Test : 84.9358974359
+	-On Validation : 83.3333333333
+
+Dataset info :
+	-Database name : MultiOmic
+	-Labels : No, Yes
+	-Views : Methyl, MiRNA, RNASEQ, Clinical
+	-3 folds
+
+Classification configuration : 
+	-Algorithm used : Mumbo 
+	-Iterations : 4
+	-Weak Classifiers : 
+		-DecisionTree with depth 1,  sub-sampled at 0.1 on Methyl 
+		-DecisionTree with depth 1,  sub-sampled at 0.1 on MiRNA 
+		-DecisionTree with depth 1,  sub-sampled at 0.7 on RNASEQ 
+		-DecisionTree with depth 1,  sub-sampled at 1.0 on Clinical
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 81.3852813853
+			Accuracy on test : 83.6538461538
+			Accuracy on validation : 76.4705882353
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 86.9198312236
+			Accuracy on test : 80.7692307692
+			Accuracy on validation : 76.4705882353
+			Selected View : MiRNA
+		 Fold 3
+			Accuracy on train : 80.4081632653
+			Accuracy on test : 78.8461538462
+			Accuracy on validation : 82.3529411765
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 82.9044252914
+			 Accuracy on test : 81.0897435897
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 83.5497835498
+			Accuracy on test : 76.9230769231
+			Accuracy on validation : 76.4705882353
+			Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 86.9198312236
+			Accuracy on test : 80.7692307692
+			Accuracy on validation : 76.4705882353
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 84.0816326531
+			Accuracy on test : 90.3846153846
+			Accuracy on validation : 76.4705882353
+			Selected View : MiRNA
+		- Mean : 
+			 Accuracy on train : 84.8504158088
+			 Accuracy on test : 82.6923076923
+	- Iteration 3
+		 Fold 1
+			Accuracy on train : 87.4458874459
+			Accuracy on test : 85.5769230769
+			Accuracy on validation : 79.4117647059
+			Selected View : MiRNA
+		 Fold 2
+			Accuracy on train : 83.9662447257
+			Accuracy on test : 78.8461538462
+			Accuracy on validation : 73.5294117647
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 86.1224489796
+			Accuracy on test : 89.4230769231
+			Accuracy on validation : 88.2352941176
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 85.8448603837
+			 Accuracy on test : 84.6153846154
+	- Iteration 4
+		 Fold 1
+			Accuracy on train : 87.4458874459
+			Accuracy on test : 83.6538461538
+			Accuracy on validation : 88.2352941176
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 87.3417721519
+			Accuracy on test : 78.8461538462
+			Accuracy on validation : 76.4705882353
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 86.1224489796
+			Accuracy on test : 92.3076923077
+			Accuracy on validation : 85.2941176471
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 86.9700361925
+			 Accuracy on test : 84.9358974359
+
+Computation time on 4 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:08        0:00:00
+	         Fold 2        0:00:17        0:00:00
+	         Fold 3        0:00:27        0:00:00
+	          Total        0:00:53        0:00:01
+	So a total classification time of 0:00:28.
+

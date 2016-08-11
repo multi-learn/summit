@@ -34,7 +34,9 @@ groupStandard.add_argument('--pathF', metavar='STRING', action='store',
 groupClass = parser.add_argument_group('Classification arguments')
 groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
                         help='Determine the learning rate if > 1.0, number of fold for cross validation', type=float,
-                        default=1.0)
+                        default=0.9)
+groupClass.add_argument('--CL_nbFolds', metavar='INT', action='store', help='Number of folds in cross validation',
+                        type=int, default=3)
 groupClass.add_argument('--CL_nb_class', metavar='INT', action='store', help='Number of classes, -1 for all', type=int,
                         default=4)
 groupClass.add_argument('--CL_classes', metavar='STRING', action='store',
@@ -73,6 +75,7 @@ NB_VIEW = len(features)
 mumboClassifierConfig = [argument.split(':') for argument in args.MU_config]
 
 LEARNING_RATE = args.CL_split
+nbFolds = args.CL_nbFolds
 NB_CLASS = args.CL_nb_class
 LABELS_NAMES = args.CL_classes.split(":")
 classifierNames = args.MU_type.split(':')
@@ -87,7 +90,6 @@ dir = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
 logFileName = datetime.datetime.now().strftime(
         "%Y_%m_%d") + "-CMultiV-" + args.CL_type + "-" + "_".join(features) + "-" + args.name + "-LOG"
 logFile = dir + logFileName
-
 if os.path.isfile(logFile + ".log"):
     for i in range(1, 20):
         testFileName = logFileName + "-" + str(i) + ".log"
@@ -96,24 +98,21 @@ if os.path.isfile(logFile + ".log"):
             break
 else:
     logFile += ".log"
-
 logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logFile, level=logging.DEBUG,
                     filemode='w')
-
 if (args.log):
     logging.getLogger().addHandler(logging.StreamHandler())
 
-# Determine the Database to extract features
+
+t_start = time.time()
 logging.info("### Main Programm for Multiview Classification")
 logging.info("### Classification - Database : " + str(args.name) + " ; Views : " + ", ".join(features) +
              " ; Algorithm : " + args.CL_type + " ; Cores : " + str(NB_CORES))
-t_start = time.time()
 
-# Read the features
+
 logging.info("Start:\t Read CSV Database Files for " + args.name)
 
 getDatabase = getattr(DB, "get" + args.name + "DB" + dataBaseType[1:])
-
 DATASET, LABELS_DICTIONARY = getDatabase(features, args.pathF, args.name, NB_CLASS, LABELS_NAMES)
 datasetLength = DATASET["/datasetLength"][...]
 dataBaseType = "hdf5"
@@ -126,26 +125,26 @@ for viewIndex in range(NB_VIEW):
             DATASET["View" + str(viewIndex) + "/shape"][...]))
 logging.info("Done:\t Read Database Files")
 
-# Calculate Train/Test data
-if LEARNING_RATE <= 1.0:
-    logging.info("Start:\t Determine Train/Test split for ratio " + str(LEARNING_RATE))
+
+logging.info("Start:\t Determine validation split for ratio " + str(LEARNING_RATE))
+validationIndices = DB.splitDataset(DATASET, LEARNING_RATE, datasetLength)
+learningIndices = [index for index in range(datasetLength) if index not in validationIndices]
+datasetLength = len(learningIndices)
+logging.info("Done:\t Determine validation split")
+
+logging.info("Start:\t Determine "+str(nbFolds)+" folds")
+if nbFolds != 1:
+    kFolds = DB.getKFoldIndices(nbFolds, DATASET["/Labels/labelsArray"][...], datasetLength, NB_CLASS, learningIndices)
 else:
-    logging.info("Start:\t Determine " + str(LEARNING_RATE) + " folds for cross validation ")
-
-if LEARNING_RATE <= 1.0:
-    # trainData, trainLabels, testData, testLabels = DB.extractRandomTrainingSet(DATASET, LABELS, LEARNING_RATE,
-    #                                                                        datasetLength, NB_VIEW, NB_CLASS)
-    kFolds = DB.extractRandomTrainingSet(DATASET["/Labels/labelsArray"], LEARNING_RATE, datasetLength, NB_CLASS)
-
-elif LEARNING_RATE == 1.0:
     kFolds = [range(datasetLength), []]
 
-else:
-    kFolds = DB.getKFoldIndices(LEARNING_RATE, DATASET["/Labels/labelsArray"], datasetLength, NB_CLASS)
-
-logging.info("Info:\t Length of Learning Set: " + str(len(kFolds[0])))
-logging.info("Info:\t Length of Testing Set: " + str(datasetLength - len(kFolds[0])))
+logging.info("Info:\t Length of Learning Sets: " + str(datasetLength - len(kFolds[0])))
+logging.info("Info:\t Length of Testing Sets: " + str(len(kFolds[0])))
+logging.info("Info:\t Length of Validation Set: " + str(len(validationIndices)))
 logging.info("Done:\t Determine folds")
+
+
+logging.info("Start:\t Learning with " + args.CL_type + " and " + str(len(kFolds)) + " folds")
 extractionTime = time.time() - t_start
 
 classifierPackage = globals()[args.CL_type]  # Permet d'appeler un module avec une string
@@ -157,20 +156,16 @@ analysisModule = getattr(classifierPackage, "analyzeResults")
 
 kFoldPredictedTrainLabels = []
 kFoldPredictedTestLabels = []
+kFoldPredictedValidationLabels = []
 kFoldLearningTime = []
 kFoldPredictionTime = []
 kFoldClassifier = []
 
 # Begin Classification
-logging.info("Start:\t Learning with " + args.CL_type + " and " + str(len(kFolds)) + " folds")
 for foldIdx, fold in enumerate(kFolds):
     if fold:
         logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
         trainIndices = [index for index in range(datasetLength) if index not in fold]
-        # testData = dict((key, value[fold, :]) for key, value in DATASET.iteritems())
-        # trainData = dict((key, value) for key, value in zip(range(NB_VIEW), [DATASET["/View"+str(viewIndex)+"/matrix"][trainIndices, :] for viewIndex in range(NB_VIEW)]))
-        # testLabels = LABELS[fold]
-        # trainLabels = LABELS[trainIndices]
         DATASET_LENGTH = len(trainIndices)
         classifier = fit(trainIndices, trainArguments, NB_CORES, DATASET)
         kFoldClassifier.append(classifier)
@@ -181,6 +176,7 @@ for foldIdx, fold in enumerate(kFolds):
 
         kFoldPredictedTrainLabels.append(predict(DATASET, trainIndices, classifier, NB_CLASS))
         kFoldPredictedTestLabels.append(predict(DATASET, fold, classifier, NB_CLASS))
+        kFoldPredictedValidationLabels.append(predict(DATASET, validationIndices, classifier, NB_CLASS))
 
         kFoldPredictionTime.append(time.time() - extractionTime - t_start - learningTime)
         logging.info("\tDone: \t Fold number " + str(foldIdx + 1))
@@ -194,9 +190,10 @@ logging.info("Start:\t Result Analysis for " + args.CL_type)
 times = (extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime)
 
 stringAnalysis, imagesAnalysis = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
-                                                        kFoldPredictedTestLabels, DATASET,
+                                                        kFoldPredictedTestLabels, kFoldPredictedValidationLabels, DATASET,
                                                         NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY,
-                                                        features, NB_CORES, times, NB_VIEW, kFolds, args.name)
+                                                        features, NB_CORES, times, NB_VIEW, kFolds, args.name, nbFolds,
+                                                        validationIndices, datasetLength)
 labelsSet = set(LABELS_DICTIONARY.values())
 logging.info(stringAnalysis)
 featureString = "-".join(features)

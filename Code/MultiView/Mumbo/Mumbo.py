@@ -65,6 +65,18 @@ def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS, costMatri
     return classifier, classes, isBad
 
 
+def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, costMatrices,
+                            NB_CLASS, DATASET_LENGTH, iterIndice, viewIndice,
+                            classifier_config, viewName):
+    weights = computeWeights(costMatrices, NB_CLASS, DATASET_LENGTH,
+                             iterIndice, viewIndice, CLASS_LABELS)
+    classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
+    classifierMethod = getattr(classifierModule, classifierName)
+    classifier, classes, isBad, pTr = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
+    logging.debug("\t\t\tFor " + viewName + " : " + str(np.mean(pTr)))
+    return classifier, classes, isBad
+
+
 def trainWeakClassifiers(classifierNames, DATASET, CLASS_LABELS, costMatrices,
                          NB_CLASS, DATASET_LENGTH, iterIndice, classifier_config,
                          NB_CORES, NB_VIEW):
@@ -78,7 +90,7 @@ def trainWeakClassifiers(classifierNames, DATASET, CLASS_LABELS, costMatrices,
     trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
             delayed(trainWeakClassifier)(classifierNames[viewIndice], DATASET[viewIndice], CLASS_LABELS,
                                          costMatrices, NB_CLASS, DATASET_LENGTH,
-                                         iterIndice, viewIndice, classifier_config[viewIndice])
+                                         iterIndice, viewIndice, classifier_config[viewIndice],)
             for viewIndice in range(NB_VIEW))
 
     for (classifier, labelsArray, isBad) in trainedClassifiersAndLabels:
@@ -88,7 +100,7 @@ def trainWeakClassifiers(classifierNames, DATASET, CLASS_LABELS, costMatrices,
     return np.array(trainedClassifiers), np.array(labelsMatrix), np.array(areBad)
 
 
-def trainWeakClassifiersHDF5(classifierNames, DATASET, trainIndices, costMatrices, NB_CLASS,
+def trainWeakClassifiers_hdf5(classifierNames, DATASET, trainIndices, costMatrices, NB_CLASS,
                              DATASET_LENGTH, iterIndice, classifier_config,
                              NB_CORES, NB_VIEW):
     trainedClassifiers = []
@@ -99,11 +111,12 @@ def trainWeakClassifiersHDF5(classifierNames, DATASET, trainIndices, costMatrice
     else:
         NB_JOBS = NB_CORES
     trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
-            delayed(trainWeakClassifier)(classifierNames[viewIndex],
-                                         DATASET["/View"+str(viewIndex)+"/matrix"][trainIndices,:],
+            delayed(trainWeakClassifier_hdf5)(classifierNames[viewIndex],
+                                         DATASET["/View"+str(viewIndex)+"/matrix"][trainIndices, :],
                                          DATASET["/Labels/labelsArray"][trainIndices],
                                          costMatrices, NB_CLASS, DATASET_LENGTH,
-                                         iterIndice, viewIndex, classifier_config[viewIndex])
+                                         iterIndice, viewIndex, classifier_config[viewIndex],
+                                              str(DATASET["/View"+str(viewIndex)+"/name"][...]) )
             for viewIndex in range(NB_VIEW))
 
     for (classifier, labelsArray, isBad) in trainedClassifiersAndLabels:
@@ -326,7 +339,7 @@ def fit_hdf5(trainIndices, trainArguments, NB_CORES, DATASET):
     # Learning
     for iterIndex in range(NB_ITER):
         logging.debug('\t\tStart:\t Iteration ' + str(iterIndex + 1))
-        classifiers, predictedLabels, areBad = trainWeakClassifiersHDF5(classifierNames,
+        classifiers, predictedLabels, areBad = trainWeakClassifiers_hdf5(classifierNames,
                                                                         DATASET, trainIndices,
                                                                         costMatrices,
                                                                         NB_CLASS,
