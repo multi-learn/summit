@@ -3,11 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7b111a3e-1726-4d52-a9de-f7a3f867dbc7" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/ExecMultiview.py" afterPath="$PROJECT_DIR$/Code/MultiView/ExecMultiview.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py" afterPath="$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py" afterPath="$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py" afterPath="$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/run.py" afterPath="$PROJECT_DIR$/Code/MultiView/run.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Results/2016_08_12-CMultiV-Mumbo-Methyl_MiRNA_RNASEQ_Clinical-MultiOmic-LOG" afterPath="$PROJECT_DIR$/Code/MultiView/Results/2016_08_12-CMultiV-Mumbo-Methyl_MiRNA_RNASEQ_Clinical-MultiOmic-LOG" />
     </list>
     <ignored path="multiview-machine-learning-omis.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,7 +27,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="run.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="run.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/run.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="18">
@@ -41,13 +37,29 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GetMutliviewDb.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="GetMutliviewDb.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="829">
-              <caret line="299" column="0" selection-start-line="299" selection-start-column="0" selection-end-line="299" selection-end-column="0" />
+            <state relative-caret-position="843">
+              <caret line="266" column="39" selection-start-line="266" selection-start-column="39" selection-end-line="266" selection-end-column="39" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#152#238#0" expanded="false" />
+                <element signature="e#283#383#0" expanded="false" />
+                <element signature="e#435#576#0" expanded="false" />
+                <element signature="e#645#1283#0" expanded="false" />
+                <element signature="e#1329#1530#0" expanded="false" />
+                <element signature="e#1604#3758#0" expanded="false" />
+                <element signature="e#3801#3993#0" expanded="false" />
+                <element signature="e#4062#4257#0" expanded="false" />
+                <element signature="e#4322#4538#0" expanded="false" />
+                <element signature="e#4630#5142#0" expanded="false" />
+                <element signature="e#5236#6046#0" expanded="false" />
+                <element signature="e#6077#7629#0" expanded="false" />
+                <element signature="e#7706#9575#0" expanded="false" />
+                <element signature="e#11476#11788#0" expanded="false" />
+                <element signature="e#11825#12451#0" expanded="false" />
+                <element signature="e#12743#12815#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -68,8 +80,8 @@
       <file leaf-file-name="analyzeResults.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
+            <state relative-caret-position="558">
+              <caret line="31" column="39" selection-start-line="31" selection-start-column="39" selection-end-line="31" selection-end-column="39" />
               <folding>
                 <element signature="e#0#98#0" expanded="true" />
               </folding>
@@ -92,8 +104,8 @@
       <file leaf-file-name="ExecMultiview.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/ExecMultiview.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
-              <caret line="139" column="14" selection-start-line="139" selection-start-column="14" selection-end-line="139" selection-end-column="14" />
+            <state relative-caret-position="-471">
+              <caret line="116" column="46" selection-start-line="116" selection-start-column="46" selection-end-line="116" selection-end-column="46" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -104,8 +116,8 @@
       <file leaf-file-name="Mumbo.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2376">
-              <caret line="420" column="26" selection-start-line="420" selection-start-column="26" selection-end-line="420" selection-end-column="26" />
+            <state relative-caret-position="425">
+              <caret line="73" column="28" selection-start-line="73" selection-start-column="28" selection-end-line="73" selection-end-column="28" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -191,7 +203,7 @@
   <component name="PropertiesComponent">
     <property name="aspect.path.notification.shown" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Code/MultiView/run.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -839,7 +851,8 @@
       <workItem from="1470924240911" duration="7842000" />
       <workItem from="1470940573142" duration="1891000" />
       <workItem from="1471009339279" duration="3484000" />
-      <workItem from="1471015625592" duration="4908000" />
+      <workItem from="1471015625592" duration="6658000" />
+      <workItem from="1471026538529" duration="2605000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored and added subsampling file in classifiers module">
       <created>1470926189095</created>
@@ -852,11 +865,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18277000" />
+    <option name="totallyTimeSpent" value="22632000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -864,8 +877,8 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32925585" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -874,8 +887,8 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -926,7 +939,9 @@
     <option name="LAST_COMMIT_MESSAGE" value="Refactored and added subsampling file in classifiers module" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="antWorkspaceConfiguration">
@@ -934,6 +949,90 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="191" selection-start-line="1" selection-start-column="191" selection-end-line="1" selection-end-column="191" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#152#238#0" expanded="false" />
+            <element signature="e#283#383#0" expanded="false" />
+            <element signature="e#435#576#0" expanded="false" />
+            <element signature="e#645#1283#0" expanded="false" />
+            <element signature="e#1329#1530#0" expanded="false" />
+            <element signature="e#1604#3758#0" expanded="false" />
+            <element signature="e#3801#3993#0" expanded="false" />
+            <element signature="e#4062#4257#0" expanded="false" />
+            <element signature="e#4322#4538#0" expanded="false" />
+            <element signature="e#4630#5142#0" expanded="false" />
+            <element signature="e#5236#6046#0" expanded="false" />
+            <element signature="e#6077#7629#0" expanded="false" />
+            <element signature="e#7706#9575#0" expanded="false" />
+            <element signature="e#11476#11788#0" expanded="false" />
+            <element signature="e#11825#12451#0" expanded="false" />
+            <element signature="e#12743#12815#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#98#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/SubSampling.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="13" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/ExecMultiview.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2484">
+          <caret line="139" column="14" selection-start-line="139" selection-start-column="14" selection-end-line="139" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7488">
+          <caret line="420" column="26" selection-start-line="420" selection-start-column="26" selection-end-line="420" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Code/MultiView/run.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -948,6 +1047,22 @@
           <caret line="317" column="17" selection-start-line="317" selection-start-column="17" selection-end-line="317" selection-end-column="17" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#152#238#0" expanded="false" />
+            <element signature="e#283#383#0" expanded="false" />
+            <element signature="e#435#576#0" expanded="false" />
+            <element signature="e#645#1283#0" expanded="false" />
+            <element signature="e#1329#1530#0" expanded="false" />
+            <element signature="e#1604#3758#0" expanded="false" />
+            <element signature="e#3801#3993#0" expanded="false" />
+            <element signature="e#4062#4257#0" expanded="false" />
+            <element signature="e#4322#4538#0" expanded="false" />
+            <element signature="e#4630#5142#0" expanded="false" />
+            <element signature="e#5236#6046#0" expanded="false" />
+            <element signature="e#6077#7629#0" expanded="false" />
+            <element signature="e#7706#9575#0" expanded="false" />
+            <element signature="e#11476#11788#0" expanded="false" />
+            <element signature="e#11825#12451#0" expanded="false" />
+            <element signature="e#12743#12815#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1006,6 +1121,22 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#152#238#0" expanded="false" />
+            <element signature="e#283#383#0" expanded="false" />
+            <element signature="e#435#576#0" expanded="false" />
+            <element signature="e#645#1283#0" expanded="false" />
+            <element signature="e#1329#1530#0" expanded="false" />
+            <element signature="e#1604#3758#0" expanded="false" />
+            <element signature="e#3801#3993#0" expanded="false" />
+            <element signature="e#4062#4257#0" expanded="false" />
+            <element signature="e#4322#4538#0" expanded="false" />
+            <element signature="e#4630#5142#0" expanded="false" />
+            <element signature="e#5236#6046#0" expanded="false" />
+            <element signature="e#6077#7629#0" expanded="false" />
+            <element signature="e#7706#9575#0" expanded="false" />
+            <element signature="e#11476#11788#0" expanded="false" />
+            <element signature="e#11825#12451#0" expanded="false" />
+            <element signature="e#12743#12815#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1064,6 +1195,22 @@
           <caret line="307" column="42" selection-start-line="307" selection-start-column="42" selection-end-line="307" selection-end-column="42" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#152#238#0" expanded="false" />
+            <element signature="e#283#383#0" expanded="false" />
+            <element signature="e#435#576#0" expanded="false" />
+            <element signature="e#645#1283#0" expanded="false" />
+            <element signature="e#1329#1530#0" expanded="false" />
+            <element signature="e#1604#3758#0" expanded="false" />
+            <element signature="e#3801#3993#0" expanded="false" />
+            <element signature="e#4062#4257#0" expanded="false" />
+            <element signature="e#4322#4538#0" expanded="false" />
+            <element signature="e#4630#5142#0" expanded="false" />
+            <element signature="e#5236#6046#0" expanded="false" />
+            <element signature="e#6077#7629#0" expanded="false" />
+            <element signature="e#7706#9575#0" expanded="false" />
+            <element signature="e#11476#11788#0" expanded="false" />
+            <element signature="e#11825#12451#0" expanded="false" />
+            <element signature="e#12743#12815#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1130,6 +1277,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="191" selection-start-line="1" selection-start-column="191" selection-end-line="1" selection-end-column="191" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/SubSampling.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="18">
@@ -1150,20 +1305,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="829">
-          <caret line="299" column="0" selection-start-line="299" selection-start-column="0" selection-end-line="299" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
+        <state relative-caret-position="558">
+          <caret line="31" column="39" selection-start-line="31" selection-start-column="39" selection-end-line="31" selection-end-column="39" />
           <folding>
             <element signature="e#0#98#0" expanded="true" />
           </folding>
@@ -1172,8 +1317,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Code/MultiView/ExecMultiview.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="139" column="14" selection-start-line="139" selection-start-column="14" selection-end-line="139" selection-end-column="14" />
+        <state relative-caret-position="-471">
+          <caret line="116" column="46" selection-start-line="116" selection-start-column="46" selection-end-line="116" selection-end-column="46" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
@@ -1182,19 +1327,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2376">
-          <caret line="420" column="26" selection-start-line="420" selection-start-column="26" selection-end-line="420" selection-end-column="26" />
+        <state relative-caret-position="425">
+          <caret line="73" column="28" selection-start-line="73" selection-start-column="28" selection-end-line="73" selection-end-column="28" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/run.py">
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="191" selection-start-line="1" selection-start-column="191" selection-end-line="1" selection-end-column="191" />
-          <folding />
+        <state relative-caret-position="843">
+          <caret line="266" column="39" selection-start-line="266" selection-start-column="39" selection-end-line="266" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#152#238#0" expanded="false" />
+            <element signature="e#283#383#0" expanded="false" />
+            <element signature="e#435#576#0" expanded="false" />
+            <element signature="e#645#1283#0" expanded="false" />
+            <element signature="e#1329#1530#0" expanded="false" />
+            <element signature="e#1604#3758#0" expanded="false" />
+            <element signature="e#3801#3993#0" expanded="false" />
+            <element signature="e#4062#4257#0" expanded="false" />
+            <element signature="e#4322#4538#0" expanded="false" />
+            <element signature="e#4630#5142#0" expanded="false" />
+            <element signature="e#5236#6046#0" expanded="false" />
+            <element signature="e#6077#7629#0" expanded="false" />
+            <element signature="e#7706#9575#0" expanded="false" />
+            <element signature="e#11476#11788#0" expanded="false" />
+            <element signature="e#11825#12451#0" expanded="false" />
+            <element signature="e#12743#12815#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
