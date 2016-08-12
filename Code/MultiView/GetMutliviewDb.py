@@ -265,25 +265,8 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     datasetFile["/nbClass"] = 2
     datasetFile["/datasetLength"] = len(datasetFile["/Labels/labelsArray"])
     labelDictionary = {0:"No", 1:"Yes"}
-    datasetFile = getPseudoRNASeq(datasetFile)
+    # datasetFile = getPseudoRNASeq(datasetFile)
     return datasetFile, labelDictionary
-
-#
-# def getDiscriminantScores(Dataset):
-#     nbGenes = len(Dataset["/View2/matrix"][0,:])
-#     labels = Dataset["/Labels/labelsArray"]
-#     discriminantScoresMatrix = np.zeros((nbGenes, nbGenes))
-#     for i in range(nbGenes):
-#         for j in range(nbGenes):
-#             if i > j:
-#                 conditionalOrderingProbaYes = sum([(Dataset["/View2/matrix"][i, n] > Dataset["/View2/matrix"][i,n]) *
-#                                                    (labels[n] == 1) for n in range(nbGenes)])/sum([(labels[n] == 1)
-#                                                                                                    for n in range(nbGenes)])
-#                 conditionalOrderingProbaNo = sum([(Dataset["/View2/matrix"][i, n] > Dataset["/View2/matrix"][i,n]) *
-#                                                    (labels[n] == 1) for n in range(nbGenes)])/sum([(labels[n] == 1)
-#                                                                                                    for n in range(nbGenes)])
-#                 discriminantScoresMatrix[i,j] = conditionalOrderingProbaYes - conditionalOrderingProbaNo
-#     discriminantScoresArray = np.
 
 
 def makeArrayFromTriangular(pseudoRNASeqMatrix):
@@ -297,26 +280,23 @@ def makeArrayFromTriangular(pseudoRNASeqMatrix):
     return exampleArray
 
 
-def getPseudoRNASeq(Dataset):
-    nbGenes = len(Dataset["/View2/matrix"][0,:])
-    pseudoRNASeqMatrix = np.zeros((nbGenes, nbGenes), dtype=int)
-    pseudoRNASeq = np.zeros((Dataset["/datasetlength"][...], ((nbGenes-1)*nbGenes)/2), dtype=int)
-    for exampleIndex in xrange(Dataset["/datasetlength"][...]):
+def getPseudoRNASeq(dataset):
+    nbGenes = len(dataset["/View2/matrix"][0, :])
+    pseudoRNASeq = np.zeros((dataset["/datasetlength"][...], ((nbGenes - 1) * nbGenes) / 2), dtype=bool_)
+    for exampleIndex in xrange(dataset["/datasetlength"][...]):
+        arrayIndex = 0
         for i in xrange(nbGenes):
             for j in xrange(nbGenes):
                 if i > j:
-                    pseudoRNASeqMatrix[i, j] = int(Dataset["/View2/matrix"][exampleIndex,j] < int(Dataset["/View2/matrix"]
-                                                                                                 [exampleIndex, i]))
-        exampleArray = makeArrayFromTriangular(pseudoRNASeqMatrix)
-        pseudoRNASeq[exampleIndex, :] = exampleArray
-    Dataset["/View4/matrix"] = pseudoRNASeq
-    Dataset["/View4/name"] = "pseudoRNASeq"
-    return Dataset
+                    pseudoRNASeq[exampleIndex, arrayIndex] = dataset["/View2/matrix"][exampleIndex, j] < dataset["/View2/matrix"][exampleIndex, i]
+                    arrayIndex += 1
+    dataset["/View4/matrix"] = pseudoRNASeq
+    dataset["/View4/name"] = "pseudoRNASeq"
+    return dataset
 
 
 def getMultiOmicDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
     datasetFile = h5py.File(path+"MultiOmicDataset.hdf5", "r")
-    LABELS = datasetFile["/Labels/labelsArray"]
     labelDictionary = {0:"No", 1:"Yes"}
     return datasetFile, labelDictionary
 

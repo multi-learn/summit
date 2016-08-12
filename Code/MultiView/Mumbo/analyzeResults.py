@@ -15,14 +15,22 @@ def findMainView(bestViews):
     return mainView
 
 
-def plotAccuracyByIter(trainAccuracy, testAccuracy, validationAccuracy, NB_ITER, bestViews, features):
+def plotAccuracyByIter(trainAccuracy, testAccuracy, validationAccuracy, NB_ITER, bestViews, features, classifierAnalysis):
     x = range(NB_ITER)
     mainView = findMainView(bestViews)
     figure = plt.figure()
     ax1 = figure.add_subplot(111)
+    titleString = ""
+    for view, classifierConfig in zip(features, classifierAnalysis):
+        titleString += "\n" + view + " : " + classifierConfig
+    titleString+="Best view = " + features[int(mainView)]
 
-    ax1.set_title("Accuracy depending on iteration \n Best view = " + features[int(mainView)])
-
+    ax1.set_title("Accuracy depending on iteration", fontsize=20)
+    plt.text(0.5, 1.08, titleString,
+             horizontalalignment='center',
+             fontsize=8,
+             transform = ax1.transAxes)
+    figure.subplots_adjust(top=0.8)
     ax1.set_xlabel("Iteration Index")
     ax1.set_ylabel("Accuracy")
     ax1.plot(x, trainAccuracy, c='red', label='Train')
@@ -87,7 +95,7 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     kFoldAccuracyOnTestByIter = []
     kFoldAccuracyOnValidationByIter = []
     for foldIdx, fold in enumerate(kFolds):
-        if fold:
+        if fold!=range(DATASET_LENGTH):
             bestClassifiers, generalAlphas, bestViews = kFoldClassifier[foldIdx]
             trainIndices = [index for index in range(DATASET_LENGTH) if index not in fold]
             testLabels = CLASS_LABELS[fold]
@@ -131,9 +139,9 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     weakClassifierConfigs = [getattr(globals()[classifierName], 'getConfig')(classifierConfig) for classifierConfig,
                                                                                                    classifierName
                              in zip(classifierConfigs, classifierNames)]
-    classifierAnalysis = ["\n\t\t-" + classifierName + " " + weakClassifierConfig + "on " + feature for classifierName,
-                                                                                                        weakClassifierConfig,
-                                                                                                        feature
+    classifierAnalysis = [classifierName + " " + weakClassifierConfig + "on " + feature for classifierName,
+                                                                                            weakClassifierConfig,
+                                                                                            feature
                           in zip(classifierNames, weakClassifierConfigs, features)]
     bestViews = [findMainView(np.array(kFoldBestViews)[:, iterIdx]) for iterIdx in range(NB_ITER)]
     stringAnalysis = "\t\tResult for Multiview classification with Mumbo" \
@@ -143,7 +151,7 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
                      ', '.join(LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(features) + "\n\t-" + str(
                         nbFolds) + \
                      " folds\n\nClassification configuration : \n\t-Algorithm used : Mumbo \n\t-Iterations : " + \
-                     str(NB_ITER) + "\n\t-Weak Classifiers : " + " ".join(
+                     str(NB_ITER) + "\n\t-Weak Classifiers : " + "\n\t\t-".join(
                         classifierAnalysis) + "\n\n For each iteration : "
 
     for iterIndex in range(NB_ITER):
@@ -153,7 +161,7 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
                               str(kFoldAccuracyOnTrainByIter[foldIdx][iterIndex]) + '\n\t\t\tAccuracy on test : ' + \
                               str(kFoldAccuracyOnTestByIter[foldIdx][iterIndex]) + '\n\t\t\tAccuracy on validation : '+\
                               str(kFoldAccuracyOnValidationByIter[foldIdx][iterIndex]) + '\n\t\t\tSelected View : ' + \
-                              features[int(kFoldBestViews[foldIdx][iterIndex])]
+                              str(DATASET["/View"+str(int(kFoldBestViews[foldIdx][iterIndex]))+"/name"][...])
         stringAnalysis += "\n\t\t- Mean : \n\t\t\t Accuracy on train : " + str(
                 np.array(kFoldAccuracyOnTrainByIter)[:, iterIndex].mean()) + \
                           "\n\t\t\t Accuracy on test : " + str(np.array(kFoldAccuracyOnTestByIter)[:, iterIndex].mean())
@@ -175,7 +183,7 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     testAccuracyByIter = np.array(kFoldAccuracyOnTestByIter).mean(axis=0)
     validationAccuracyByIter = np.array(kFoldAccuracyOnValidationByIter).mean(axis=0)
     name, image = plotAccuracyByIter(trainAccuracyByIter, testAccuracyByIter, validationAccuracyByIter, NB_ITER,
-                                     bestViews, features)
+                                     bestViews, features, classifierAnalysis)
     imagesAnalysis = {name: image}
 
     return stringAnalysis, imagesAnalysis

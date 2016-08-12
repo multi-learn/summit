@@ -90,7 +90,7 @@ def trainWeakClassifiers(classifierNames, DATASET, CLASS_LABELS, costMatrices,
     trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
             delayed(trainWeakClassifier)(classifierNames[viewIndice], DATASET[viewIndice], CLASS_LABELS,
                                          costMatrices, NB_CLASS, DATASET_LENGTH,
-                                         iterIndice, viewIndice, classifier_config[viewIndice],)
+                                         iterIndice, viewIndice, classifier_config[viewIndice])
             for viewIndice in range(NB_VIEW))
 
     for (classifier, labelsArray, isBad) in trainedClassifiersAndLabels:
@@ -406,16 +406,19 @@ def predict(DATASET, classifier, NB_CLASS):
 
 
 def predict_hdf5(DATASET, usedIndices, classifier, NB_CLASS):
-    classifiers, alphas, views = classifier
-    DATASET_LENGTH = len(usedIndices)
-    predictedLabels = np.zeros(DATASET_LENGTH)
+    if usedIndices:
+        classifiers, alphas, views = classifier
+        DATASET_LENGTH = len(usedIndices)
+        predictedLabels = np.zeros(DATASET_LENGTH)
 
-    for labelIndex, exampleIndex in enumerate(usedIndices):
-        votes = np.zeros(NB_CLASS)
-        for classifier, alpha, view in zip(classifiers, alphas, views):
-            data = DATASET["/View"+str(int(view))+"/matrix"][exampleIndex, :]
-            votes[int(classifier.predict(np.array([data])))] += alpha
-        predictedLabels[labelIndex] = np.argmax(votes)
+        for labelIndex, exampleIndex in enumerate(usedIndices):
+            votes = np.zeros(NB_CLASS)
+            for classifier, alpha, view in zip(classifiers, alphas, views):
+                data = DATASET["/View"+str(int(view))+"/matrix"][exampleIndex, :]
+                votes[int(classifier.predict(np.array([data])))] += alpha
+            predictedLabels[labelIndex] = np.argmax(votes)
+    else:
+        predictedLabels=[]
     return predictedLabels
 
 

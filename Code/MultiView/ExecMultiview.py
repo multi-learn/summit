@@ -115,13 +115,14 @@ logging.info("Start:\t Read "+str.upper(dataBaseType[1:])+" Database Files for "
 getDatabase = getattr(DB, "get" + args.name + "DB" + dataBaseType[1:])
 DATASET, LABELS_DICTIONARY = getDatabase(views, args.pathF, args.name, NB_CLASS, LABELS_NAMES)
 datasetLength = DATASET["/datasetLength"][...]
+views = [str(DATASET["/View"+str(viewIndex)+"/name"][...]) for viewIndex in range(NB_VIEW)]
 dataBaseType = "hdf5"
 
 logging.info("Info:\t Labels used: " + ", ".join(LABELS_DICTIONARY.values()))
 logging.info("Info:\t Length of dataset:" + str(datasetLength))
 
 for viewIndex in range(NB_VIEW):
-    logging.info("Info:\t Shape of " + views[viewIndex] + " :" + str(
+    logging.info("Info:\t Shape of " + str(DATASET["/View"+str(viewIndex)+"/name"][...]) + " :" + str(
             DATASET["View" + str(viewIndex) + "/shape"][...]))
 logging.info("Done:\t Read Database Files")
 
@@ -136,7 +137,7 @@ logging.info("Start:\t Determine "+str(nbFolds)+" folds")
 if nbFolds != 1:
     kFolds = DB.getKFoldIndices(nbFolds, DATASET["/Labels/labelsArray"][...], datasetLength, NB_CLASS, learningIndices)
 else:
-    kFolds = [range(datasetLength), []]
+    kFolds = [[], range(datasetLength)]
 
 logging.info("Info:\t Length of Learning Sets: " + str(datasetLength - len(kFolds[0])))
 logging.info("Info:\t Length of Testing Sets: " + str(len(kFolds[0])))
@@ -163,7 +164,7 @@ kFoldClassifier = []
 
 # Begin Classification
 for foldIdx, fold in enumerate(kFolds):
-    if fold:
+    if fold != range(datasetLength):
         logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
         trainIndices = [index for index in range(datasetLength) if index not in fold]
         DATASET_LENGTH = len(trainIndices)
