@@ -1,0 +1,64 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 67.930113521
+	-On Test : 63.4615384615
+	-On Validation : 65.4368932039
+
+Dataset info :
+	-Database name : MultiOmic
+	-Labels : No, Yes
+	-Views : Methyl, MiRNA, RNASEQ, Clinical
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : Mumbo 
+	-Iterations : 1
+	-Weak Classifiers : 
+		-DecisionTree with depth 1,  sub-sampled at 0.015 on Methyl 
+		-DecisionTree with depth 1,  sub-sampled at 0.015 on MiRNA 
+		-DecisionTree with depth 1,  sub-sampled at 0.1 on RNASEQ 
+		-DecisionTree with depth 2,  sub-sampled at 0.4 on Clinical
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 67.4107142857
+			Accuracy on test : 76.9230769231
+			Accuracy on validation : 66.9902912621
+			Selected View : Clinic
+		 Fold 2
+			Accuracy on train : 70.9251101322
+			Accuracy on test : 50.0
+			Accuracy on validation : 65.0485436893
+			Selected View : Clinic
+		 Fold 3
+			Accuracy on train : 68.1415929204
+			Accuracy on test : 63.4615384615
+			Accuracy on validation : 66.9902912621
+			Selected View : Clinic
+		 Fold 4
+			Accuracy on train : 64.9122807018
+			Accuracy on test : 55.7692307692
+			Accuracy on validation : 64.0776699029
+			Selected View : Clinic
+		 Fold 5
+			Accuracy on train : 68.2608695652
+			Accuracy on test : 71.1538461538
+			Accuracy on validation : 64.0776699029
+			Selected View : Clinic
+		- Mean : 
+			 Accuracy on train : 67.930113521
+			 Accuracy on test : 63.4615384615
+
+Computation time on 4 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:01        0:00:00
+	         Fold 3        0:00:02        0:00:00
+	         Fold 4        0:00:03        0:00:00
+	         Fold 5        0:00:04        0:00:00
+	          Total        0:00:12        0:00:00
+	So a total classification time of 0:00:04.
+

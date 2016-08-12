@@ -1,0 +1,84 @@
+2016-08-12 13:14:13,799 INFO: ### Main Programm for Multiview Classification
+2016-08-12 13:14:13,799 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Mumbo ; Cores : 4
+2016-08-12 13:14:13,799 INFO: Start:	 Read HDF5 Database Files for MultiOmic
+2016-08-12 13:14:13,801 INFO: Info:	 Labels used: No, Yes
+2016-08-12 13:14:13,801 INFO: Info:	 Length of dataset:347
+2016-08-12 13:14:13,802 INFO: Info:	 Shape of Methyl :[  347 25978]
+2016-08-12 13:14:13,803 INFO: Info:	 Shape of MiRNA_ :[ 347 1046]
+2016-08-12 13:14:13,804 INFO: Info:	 Shape of RNASeq :[  347 73599]
+2016-08-12 13:14:13,805 INFO: Info:	 Shape of Clinic :[347 127]
+2016-08-12 13:14:13,805 INFO: Done:	 Read Database Files
+2016-08-12 13:14:13,805 INFO: Start:	 Determine validation split for ratio 0.3
+2016-08-12 13:14:13,807 INFO: Done:	 Determine validation split
+2016-08-12 13:14:13,807 INFO: Start:	 Determine 1 folds
+2016-08-12 13:14:13,808 INFO: Info:	 Length of Learning Sets: 251
+2016-08-12 13:14:13,808 INFO: Info:	 Length of Testing Sets: 0
+2016-08-12 13:14:13,808 INFO: Info:	 Length of Validation Set: 103
+2016-08-12 13:14:13,808 INFO: Done:	 Determine folds
+2016-08-12 13:14:13,808 INFO: Start:	 Learning with Mumbo and 2 folds
+2016-08-12 13:14:13,808 INFO: 	Start:	 Fold number 1
+2016-08-12 13:14:13,821 DEBUG: 		Start:	 Iteration 1
+2016-08-12 13:14:14,076 DEBUG: 			For MiRNA_ : 0.618042133746
+2016-08-12 13:14:14,092 DEBUG: 			For Methyl : 0.492742551566
+2016-08-12 13:14:14,343 DEBUG: 			For Clinic : 0.751599292228
+2016-08-12 13:14:14,499 DEBUG: 			For RNASeq : 0.573045100584
+2016-08-12 13:14:14,679 DEBUG: 		Start:	 Iteration 2
+2016-08-12 13:14:14,875 DEBUG: 			For MiRNA_ : 0.622807017544
+2016-08-12 13:14:14,890 DEBUG: 			For Methyl : 0.513168640261
+2016-08-12 13:14:15,145 DEBUG: 			For Clinic : 0.703282828283
+2016-08-12 13:14:15,306 DEBUG: 			For RNASeq : 0.500159642401
+2016-08-12 13:14:15,447 INFO: 	Start: 	 Classification
+2016-08-12 13:14:15,717 INFO: 	Done: 	 Fold number 1
+2016-08-12 13:14:15,717 INFO: Done:	 Classification
+2016-08-12 13:14:15,717 INFO: Info:	 Time for Classification: 1[s]
+2016-08-12 13:14:15,717 INFO: Start:	 Result Analysis for Mumbo
+2016-08-12 13:14:16,226 INFO: 		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 70.1195219124
+	-On Test : nan
+	-On Validation : 66.9902912621
+
+Dataset info :
+	-Database name : MultiOmic
+	-Labels : No, Yes
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-1 folds
+
+Classification configuration : 
+	-Algorithm used : Mumbo 
+	-Iterations : 2
+	-Weak Classifiers : DecisionTree with depth 1,  sub-sampled at 0.015 on Methyl
+		-DecisionTree with depth 1,  sub-sampled at 0.015 on MiRNA_
+		-DecisionTree with depth 1,  sub-sampled at 0.1 on RNASeq
+		-DecisionTree with depth 2,  sub-sampled at 0.3 on Clinic
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 70.1195219124
+			Accuracy on test : nan
+			Accuracy on validation : 66.9902912621
+			Selected View : Clinic
+		- Mean : 
+			 Accuracy on train : 70.1195219124
+			 Accuracy on test : nan
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 70.1195219124
+			Accuracy on test : nan
+			Accuracy on validation : 66.9902912621
+			Selected View : Clinic
+		- Mean : 
+			 Accuracy on train : 70.1195219124
+			 Accuracy on test : nan
+
+Computation time on 4 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:01        0:00:00
+	          Total        0:00:01        0:00:00
+	So a total classification time of 0:00:01.
+
+
+2016-08-12 13:14:16,431 INFO: Done:	 Result Analysis
