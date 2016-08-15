@@ -75,13 +75,13 @@ def error(testLabels, computedLabels):
 
 
 def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
-            DATASET, NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY, features, NB_CORES, times, NB_VIEW,
-            kFolds, databaseName, nbFolds, validationIndices, datasetLength):
+            DATASET, fitKWARGS, LEARNING_RATE, LABELS_DICTIONARY, features, NB_CORES, times, kFolds, databaseName,
+            nbFolds, validationIndices):
     CLASS_LABELS = DATASET["/Labels/labelsArray"][...]
-    classifierConfigs, NB_ITER, classifierNames = trainArguments
+    NB_ITER, classifierNames, classifierConfigs = fitKWARGS.values()
 
-
-    DATASET_LENGTH = datasetLength
+    DATASET_LENGTH = DATASET.get("datasetLength").value-len(validationIndices)
+    NB_CLASS = DATASET.get("nbClass").value
     kFoldPredictedTrainLabelsByIter = []
     kFoldPredictedTestLabelsByIter = []
     kFoldPredictedValidationLabelsByIter = []
@@ -135,7 +135,6 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     totalAccuracyOnTest = np.mean(kFoldAccuracyOnTest)
     totalAccuracyOnValidation = np.mean(kFoldAccuracyOnValidation)
     extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime = times
-    classifierConfigs, NB_ITER, classifierNames = trainArguments
     weakClassifierConfigs = [getattr(globals()[classifierName], 'getConfig')(classifierConfig) for classifierConfig,
                                                                                                    classifierName
                              in zip(classifierConfigs, classifierNames)]

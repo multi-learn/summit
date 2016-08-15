@@ -255,9 +255,11 @@ def updateGeneralCostMatrix(generalCostMatrix, generalFs, iterIndice,
     return generalCostMatrix
 
 
-def fit(DATASET, CLASS_LABELS, trainArguments, NB_CORES=1):
+def fit(DATASET, CLASS_LABELS, NB_CORES=1, **kwargs):
     # Initialization
-    classifierConfig, NB_ITER, classifierNames = trainArguments
+    classifierConfig = kwargs["classifierConfig"]
+    NB_ITER = kwargs["NB_ITER"]
+    classifierNames = kwargs["classifierNames"]
     costMatrices, \
     generalCostMatrix, fs, ds, edges, alphas, \
     predictions, generalAlphas, generalFs = initialize(NB_CLASS, NB_VIEW,
@@ -322,17 +324,21 @@ def fit(DATASET, CLASS_LABELS, trainArguments, NB_CORES=1):
     return (bestClassifiers, generalAlphas, bestViews)
 
 
-def fit_hdf5(trainIndices, trainArguments, NB_CORES, DATASET):
+def fit_hdf5(DATASET, LABELS, trainIndices=None, NB_CORES=1, **kwargs):
     # Initialization
+    if not trainIndices:
+        trainIndices = range(DATASET.get("datasetLength").value)
+    classifierConfig = kwargs["classifierConfig"]
+    NB_ITER = kwargs["NB_ITER"]
+    classifierNames = kwargs["classifierNames"]
     NB_CLASS = DATASET["/nbClass"][...]
     NB_VIEW = DATASET["/nbView"][...]
     DATASET_LENGTH = len(trainIndices)
-    classifierConfig, NB_ITER, classifierNames = trainArguments
     costMatrices, \
     generalCostMatrix, fs, ds, edges, alphas, \
     predictions, generalAlphas, generalFs = initialize(NB_CLASS, NB_VIEW,
                                                        NB_ITER, DATASET_LENGTH,
-                                                       DATASET["/Labels/labelsArray"][trainIndices])
+                                                       LABELS[trainIndices])
     bestViews = np.zeros(NB_ITER)
     bestClassifiers = []
 
@@ -357,22 +363,22 @@ def fit_hdf5(trainIndices, trainArguments, NB_CORES, DATASET):
                                                                    viewIndice],
                                                        costMatrices[iterIndex,
                                                                     viewIndice], NB_CLASS, DATASET_LENGTH,
-                                                       DATASET["/Labels/labelsArray"][trainIndices])
+                                                       LABELS[trainIndices])
             if areBad[viewIndice]:
                 alphas[iterIndex, viewIndice] = 0.
             else:
                 alphas[iterIndex, viewIndice] = computeAlpha(edges[iterIndex,
                                                                    viewIndice])
-        ds = updateDs(ds, predictions, DATASET["/Labels/labelsArray"][trainIndices], NB_VIEW, DATASET_LENGTH,
+        ds = updateDs(ds, predictions, LABELS[trainIndices], NB_VIEW, DATASET_LENGTH,
                       NB_CLASS, iterIndex)
         fs = updateFs(predictions, ds, alphas, fs, iterIndex, NB_VIEW,
-                      DATASET_LENGTH, NB_CLASS, DATASET["/Labels/labelsArray"][trainIndices])
+                      DATASET_LENGTH, NB_CLASS, LABELS[trainIndices])
 
         costMatrices = updateCostmatrices(costMatrices, fs, iterIndex,
                                           NB_VIEW, DATASET_LENGTH,
-                                          NB_CLASS, DATASET["/Labels/labelsArray"][trainIndices])
+                                          NB_CLASS, LABELS[trainIndices])
         bestView, edge = chooseView(predictions, generalCostMatrix,
-                                    iterIndex, NB_VIEW, NB_CLASS, DATASET_LENGTH, DATASET["/Labels/labelsArray"][trainIndices])
+                                    iterIndex, NB_VIEW, NB_CLASS, DATASET_LENGTH, LABELS[trainIndices])
         bestViews[iterIndex] = bestView
         if areBad.all():
             generalAlphas[iterIndex] = 0.
@@ -381,11 +387,11 @@ def fit_hdf5(trainIndices, trainArguments, NB_CORES, DATASET):
         bestClassifiers.append(classifiers[bestView])
         generalFs = updateGeneralFs(generalFs, iterIndex, predictions, alphas,
                                     DATASET_LENGTH, NB_CLASS, bestView,
-                                    generalAlphas, DATASET["/Labels/labelsArray"][trainIndices])
+                                    generalAlphas, LABELS[trainIndices])
         generalCostMatrix = updateGeneralCostMatrix(generalCostMatrix,
                                                     generalFs, iterIndex,
                                                     DATASET_LENGTH, NB_CLASS,
-                                                    DATASET["/Labels/labelsArray"][trainIndices])
+                                                    LABELS[trainIndices])
 
     # finalFs = computeFinalFs(DATASET_LENGTH, NB_CLASS, generalAlphas, predictions, bestViews, LABELS, NB_ITER)
     return (bestClassifiers, generalAlphas, bestViews)
@@ -405,7 +411,10 @@ def predict(DATASET, classifier, NB_CLASS):
     return predictedLabels
 
 
-def predict_hdf5(DATASET, usedIndices, classifier, NB_CLASS):
+def predict_hdf5(classifier, DATASET, usedIndices=None):
+    NB_CLASS = DATASET.get("nbClass").value
+    if usedIndices == None:
+        usedIndices = range(DATASET.get("datasetLength").value)
     if usedIndices:
         classifiers, alphas, views = classifier
         DATASET_LENGTH = len(usedIndices)
@@ -418,7 +427,7 @@ def predict_hdf5(DATASET, usedIndices, classifier, NB_CLASS):
                 votes[int(classifier.predict(np.array([data])))] += alpha
             predictedLabels[labelIndex] = np.argmax(votes)
     else:
-        predictedLabels=[]
+        predictedLabels = []
     return predictedLabels
 
 

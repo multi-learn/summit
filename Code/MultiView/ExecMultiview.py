@@ -83,8 +83,9 @@ NB_ITER = args.MU_iter
 NB_CORES = args.CL_cores
 fusionClassifierConfig = args.FU_cl_config.split(":")
 fusionMethodConfig = args.FU_config.split(":")
-FusionArguments = (args.FU_type, args.FU_method, fusionMethodConfig, args.FU_cl_type, fusionClassifierConfig)
-MumboArguments = (mumboClassifierConfig, NB_ITER, classifierNames)
+FusionKWARGS = {"fusionType":args.FU_type, "fusionMethod":args.FU_method, "fusionMethodConfig":fusionMethodConfig,
+                "classifierType":args.FU_cl_type, "classifierConfig":fusionClassifierConfig}
+MumboKWARGS = {"classifierConfig":mumboClassifierConfig, "NB_ITER":NB_ITER, "classifierNames":classifierNames}
 
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
 logFileName = datetime.datetime.now().strftime(
@@ -149,7 +150,7 @@ logging.info("Start:\t Learning with " + args.CL_type + " and " + str(len(kFolds
 extractionTime = time.time() - t_start
 
 classifierPackage = globals()[args.CL_type]  # Permet d'appeler un module avec une string
-trainArguments = globals()[args.CL_type + 'Arguments']
+fitKWARGS = globals()[args.CL_type + 'KWARGS']
 classifierModule = getattr(classifierPackage, args.CL_type)
 fit = getattr(classifierModule, "fit_"+dataBaseType)
 predict = getattr(classifierModule, "predict_"+dataBaseType)
@@ -168,16 +169,17 @@ for foldIdx, fold in enumerate(kFolds):
         logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
         trainIndices = [index for index in range(datasetLength) if index not in fold]
         DATASET_LENGTH = len(trainIndices)
-        classifier = fit(trainIndices, trainArguments, NB_CORES, DATASET)
+        classifier = fit(DATASET, DATASET["/Labels/labelsArray"][...], trainIndices=trainIndices, NB_CORES=NB_CORES,
+                         **fitKWARGS)
         kFoldClassifier.append(classifier)
 
         learningTime = time.time() - extractionTime - t_start
         kFoldLearningTime.append(learningTime)
         logging.info("\tStart: \t Classification")
 
-        kFoldPredictedTrainLabels.append(predict(DATASET, trainIndices, classifier, NB_CLASS))
-        kFoldPredictedTestLabels.append(predict(DATASET, fold, classifier, NB_CLASS))
-        kFoldPredictedValidationLabels.append(predict(DATASET, validationIndices, classifier, NB_CLASS))
+        kFoldPredictedTrainLabels.append(predict(classifier, DATASET, usedIndices=trainIndices))
+        kFoldPredictedTestLabels.append(predict(classifier, DATASET, usedIndices=fold))
+        kFoldPredictedValidationLabels.append(predict(classifier, DATASET, usedIndices=validationIndices))
 
         kFoldPredictionTime.append(time.time() - extractionTime - t_start - learningTime)
         logging.info("\tDone: \t Fold number " + str(foldIdx + 1))
@@ -191,10 +193,10 @@ logging.info("Start:\t Result Analysis for " + args.CL_type)
 times = (extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime)
 
 stringAnalysis, imagesAnalysis = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
-                                                        kFoldPredictedTestLabels, kFoldPredictedValidationLabels, DATASET,
-                                                        NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY,
-                                                        views, NB_CORES, times, NB_VIEW, kFolds, args.name, nbFolds,
-                                                        validationIndices, datasetLength)
+                                                        kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
+                                                        DATASET, fitKWARGS, LEARNING_RATE, LABELS_DICTIONARY,
+                                                        views, NB_CORES, times, kFolds, args.name, nbFolds,
+                                                        validationIndices)
 labelsSet = set(LABELS_DICTIONARY.values())
 logging.info(stringAnalysis)
 featureString = "-".join(views)

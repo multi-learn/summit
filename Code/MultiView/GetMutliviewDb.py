@@ -108,7 +108,7 @@ def isUseful (labelSupports, index, CLASS_LABELS, labelDict):
     if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:
         labelSupports[labelDict[CLASS_LABELS[index]]] -= 1
         return True, labelSupports
-    else :
+    else:
         return False, labelSupports
 
 
@@ -123,11 +123,15 @@ def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLA
     labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS))
     nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
     trainingExamplesIndices = []
+    usedIndices = []
     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
+        isUseFull = False
         index = int(random.randint(0, DATASET_LENGTH-1))
-        isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
+        if index not in usedIndices:
+            isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
         if isUseFull:
             trainingExamplesIndices.append(index)
+            usedIndices.append(index)
     return trainingExamplesIndices
 
 
