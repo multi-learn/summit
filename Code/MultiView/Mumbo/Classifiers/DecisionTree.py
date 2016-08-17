@@ -17,7 +17,7 @@ def DecisionTree(data, labels, arg, weights):
     #classifier = OneVsRestClassifier(tree.DecisionTreeClassifier(max_depth=depth))
     classifier.fit(subSampledData, subSampledLabels, subSampledWeights)
     prediction = classifier.predict(data)
-    pTr, r, f1, s = precision_recall_fscore_support(labels, prediction, sample_weight=weights)
+    pTr, r, f1, s = precision_recall_fscore_support(labels, prediction)
     if np.mean(pTr) < 0.5:
         isBad = True
 

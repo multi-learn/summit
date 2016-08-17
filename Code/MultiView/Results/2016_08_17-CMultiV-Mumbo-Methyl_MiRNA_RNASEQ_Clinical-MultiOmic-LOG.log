@@ -1,0 +1,39 @@
+2016-08-17 09:47:37,527 INFO: ### Main Programm for Multiview Classification
+2016-08-17 09:47:37,527 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Mumbo ; Cores : 4
+2016-08-17 09:47:37,527 INFO: Start:	 Read HDF5 Database Files for MultiOmic
+2016-08-17 09:47:37,869 INFO: Info:	 Labels used: No, Yes
+2016-08-17 09:47:37,869 INFO: Info:	 Length of dataset:347
+2016-08-17 09:47:37,870 INFO: Info:	 Shape of Methyl :[  347 25978]
+2016-08-17 09:47:37,871 INFO: Info:	 Shape of MiRNA_ :[ 347 1046]
+2016-08-17 09:47:37,872 INFO: Info:	 Shape of RNASeq :[  347 73599]
+2016-08-17 09:47:37,873 INFO: Info:	 Shape of Clinic :[347 127]
+2016-08-17 09:47:37,873 INFO: Done:	 Read Database Files
+2016-08-17 09:47:37,873 INFO: Start:	 Determine validation split for ratio 0.3
+2016-08-17 09:47:37,876 INFO: Done:	 Determine validation split
+2016-08-17 09:47:37,876 INFO: Start:	 Determine 1 folds
+2016-08-17 09:47:37,876 INFO: Info:	 Length of Learning Sets: 244
+2016-08-17 09:47:37,876 INFO: Info:	 Length of Testing Sets: 0
+2016-08-17 09:47:37,876 INFO: Info:	 Length of Validation Set: 103
+2016-08-17 09:47:37,876 INFO: Done:	 Determine folds
+2016-08-17 09:47:37,876 INFO: Start:	 Learning with Mumbo and 2 folds
+2016-08-17 09:47:37,876 INFO: 	Start:	 Fold number 1
+2016-08-17 09:47:37,887 DEBUG: 		Start:	 Iteration 1
+2016-08-17 09:47:41,915 DEBUG: 			For MiRNA_ : 0.561998663102 : True
+2016-08-17 09:47:41,936 DEBUG: 			For Methyl : 0.564099483359 : True
+2016-08-17 09:47:42,100 DEBUG: 			For Clinic : 0.647660818713 : True
+2016-08-17 09:47:42,243 DEBUG: 			For RNASeq : 0.477719884906 : False
+2016-08-17 09:47:42,369 DEBUG: 		Start:	 Iteration 2
+2016-08-17 09:47:44,072 DEBUG: 			For MiRNA_ : 0.525600686499 : True
+2016-08-17 09:47:44,088 DEBUG: 			For Methyl : 0.633783783784 : True
+2016-08-17 09:47:44,435 DEBUG: 			For Clinic : 0.599634703196 : True
+2016-08-17 09:47:44,579 DEBUG: 			For RNASeq : 0.563300492611 : True
+2016-08-17 09:47:44,742 DEBUG: 		Start:	 Iteration 3
+2016-08-17 09:47:45,440 DEBUG: 			For MiRNA_ : 0.530494505495 : True
+2016-08-17 09:47:45,458 DEBUG: 			For Methyl : 0.496668685645 : False
+2016-08-17 09:47:45,692 DEBUG: 			For Clinic : 0.702822580645 : True
+2016-08-17 09:47:45,840 DEBUG: 			For RNASeq : 0.554748062016 : True
+2016-08-17 09:47:45,955 INFO: 	Start: 	 Classification
+2016-08-17 09:47:46,525 INFO: 	Done: 	 Fold number 1
+2016-08-17 09:47:46,525 INFO: Done:	 Classification
+2016-08-17 09:47:46,525 INFO: Info:	 Time for Classification: 8[s]
+2016-08-17 09:47:46,525 INFO: Start:	 Result Analysis for Mumbo

@@ -75,7 +75,7 @@ def error(testLabels, computedLabels):
 
 
 def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
-            DATASET, fitKWARGS, LEARNING_RATE, LABELS_DICTIONARY, features, NB_CORES, times, kFolds, databaseName,
+            DATASET, fitKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, databaseName,
             nbFolds, validationIndices):
     CLASS_LABELS = DATASET["/Labels/labelsArray"][...]
     NB_ITER, classifierNames, classifierConfigs = fitKWARGS.values()
@@ -95,37 +95,36 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     kFoldAccuracyOnTestByIter = []
     kFoldAccuracyOnValidationByIter = []
     for foldIdx, fold in enumerate(kFolds):
-        if fold!=range(DATASET_LENGTH):
-            bestClassifiers, generalAlphas, bestViews = kFoldClassifier[foldIdx]
+        if fold != range(DATASET_LENGTH):
+            mumboClassifier = kFoldClassifier[foldIdx]
             trainIndices = [index for index in range(DATASET_LENGTH) if index not in fold]
             testLabels = CLASS_LABELS[fold]
             trainLabels = CLASS_LABELS[trainIndices]
             validationLabels = CLASS_LABELS[validationIndices]
-            PredictedTrainLabelsByIter = classifyMumbobyIter_hdf5(trainIndices, DATASET, bestClassifiers, generalAlphas,
-                                                                  bestViews,
-                                                                  NB_CLASS)
+            PredictedTrainLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, usedIndices=trainIndices,
+                                                                                  NB_CLASS=NB_CLASS)
             kFoldPredictedTrainLabelsByIter.append(PredictedTrainLabelsByIter)
-            PredictedTestLabelsByIter = classifyMumbobyIter_hdf5(fold, DATASET, bestClassifiers, generalAlphas,
-                                                                 bestViews,
-                                                                 NB_CLASS)
+            PredictedTestLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, usedIndices=fold,
+                                                                                 NB_CLASS=NB_CLASS)
             kFoldPredictedTestLabelsByIter.append(PredictedTestLabelsByIter)
-            PredictedValidationLabelsByIter = classifyMumbobyIter_hdf5(validationIndices, DATASET, bestClassifiers, generalAlphas,
-                                                                 bestViews,
-                                                                 NB_CLASS)
+            PredictedValidationLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET,
+                                                                                       usedIndices=validationIndices,
+                                                                                       NB_CLASS=NB_CLASS)
             kFoldPredictedValidationLabelsByIter.append(PredictedValidationLabelsByIter)
             kFoldAccuracyOnTrainByIter.append([])
             kFoldAccuracyOnTestByIter.append([])
             kFoldAccuracyOnValidationByIter.append([])
             for iterIndex in range(NB_ITER):
-                kFoldAccuracyOnTestByIter[foldIdx].append(100 * accuracy_score(testLabels,
-                                                                               PredictedTestLabelsByIter[iterIndex]))
+                if len(PredictedTestLabelsByIter)==NB_ITER:
+                    kFoldAccuracyOnTestByIter[foldIdx].append(100 * accuracy_score(testLabels,
+                                                                                    PredictedTestLabelsByIter[iterIndex]))
+                else:
+                    kFoldAccuracyOnTestByIter[foldIdx].append(0.0)
                 kFoldAccuracyOnTrainByIter[foldIdx].append(100 * accuracy_score(trainLabels,
                                                                                 PredictedTrainLabelsByIter[iterIndex]))
                 kFoldAccuracyOnValidationByIter[foldIdx].append(100 * accuracy_score(validationLabels,
                                                                                 PredictedValidationLabelsByIter[iterIndex]))
-            kFoldBestClassifiers.append(bestClassifiers)
-            kFoldGeneralAlphas.append(generalAlphas)
-            kFoldBestViews.append(bestViews)
+            kFoldBestViews.append(mumboClassifier.bestViews)
             kFoldAccuracyOnTrain.append(100 * accuracy_score(trainLabels, kFoldPredictedTrainLabels[foldIdx]))
             kFoldAccuracyOnTest.append(100 * accuracy_score(testLabels, kFoldPredictedTestLabels[foldIdx]))
             kFoldAccuracyOnValidation.append(100 * accuracy_score(validationLabels,
@@ -141,13 +140,13 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     classifierAnalysis = [classifierName + " " + weakClassifierConfig + "on " + feature for classifierName,
                                                                                             weakClassifierConfig,
                                                                                             feature
-                          in zip(classifierNames, weakClassifierConfigs, features)]
+                          in zip(classifierNames, weakClassifierConfigs, views)]
     bestViews = [findMainView(np.array(kFoldBestViews)[:, iterIdx]) for iterIdx in range(NB_ITER)]
     stringAnalysis = "\t\tResult for Multiview classification with Mumbo" \
                      "\n\nAverage accuracy :\n\t-On Train : " + str(totalAccuracyOnTrain) + "\n\t-On Test : " + \
                      str(totalAccuracyOnTest) + "\n\t-On Validation : " + str(totalAccuracyOnValidation) +\
                      "\n\nDataset info :\n\t-Database name : " + databaseName + "\n\t-Labels : " + \
-                     ', '.join(LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(features) + "\n\t-" + str(
+                     ', '.join(LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(views) + "\n\t-" + str(
                         nbFolds) + \
                      " folds\n\nClassification configuration : \n\t-Algorithm used : Mumbo \n\t-Iterations : " + \
                      str(NB_ITER) + "\n\t-Weak Classifiers : " + "\n\t\t-".join(
@@ -182,7 +181,7 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     testAccuracyByIter = np.array(kFoldAccuracyOnTestByIter).mean(axis=0)
     validationAccuracyByIter = np.array(kFoldAccuracyOnValidationByIter).mean(axis=0)
     name, image = plotAccuracyByIter(trainAccuracyByIter, testAccuracyByIter, validationAccuracyByIter, NB_ITER,
-                                     bestViews, features, classifierAnalysis)
+                                     bestViews, views, classifierAnalysis)
     imagesAnalysis = {name: image}
 
     return stringAnalysis, imagesAnalysis
