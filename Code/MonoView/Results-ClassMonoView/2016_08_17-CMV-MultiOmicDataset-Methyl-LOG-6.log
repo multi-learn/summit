@@ -1,0 +1,38 @@
+2016-08-17 11:40:02,859 DEBUG: ### Main Programm for Classification MonoView
+2016-08-17 11:40:02,859 DEBUG: ### Classification - Database:MultiOmicDataset Feature:Methyl train_size:0.9, GridSearch of Trees:25 75 125 175, CrossValidation k-folds:4, cores:4
+2016-08-17 11:40:02,860 DEBUG: Start:	 Read hdf5 Files
+2016-08-17 11:40:03,546 DEBUG: Info:	 Shape of Feature:(347, 25978), Length of classLabels vector:(347,)
+2016-08-17 11:40:03,546 DEBUG: Done:	 Read CSV Files
+2016-08-17 11:40:03,546 DEBUG: Start:	 Determine Train/Test split
+2016-08-17 11:40:03,566 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-17 11:40:03,566 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-17 11:40:03,566 DEBUG: Done:	 Determine Train/Test split
+2016-08-17 11:40:03,566 DEBUG: Start:	 Classification
+2016-08-17 11:40:11,515 DEBUG: Info:	 Time for Classification: 8.56852412224[s]
+2016-08-17 11:40:11,534 DEBUG: Done:	 Classification
+2016-08-17 11:40:11,534 DEBUG: Start:	 Exporting to CSV
+2016-08-17 11:40:11,546 DEBUG: Done:	 Exporting to CSV
+2016-08-17 11:40:11,589 DEBUG: Start:	 Statistic Results
+2016-08-17 11:40:11,589 DEBUG: Info:	 Classification report:
+2016-08-17 11:40:11,599 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.96      0.96      0.96        26
+        Oui       0.89      0.89      0.89         9
+
+avg / total       0.94      0.94      0.94        35
+
+2016-08-17 11:40:11,604 DEBUG: Info:	 Statistics:
+2016-08-17 11:40:11,626 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.942857142857
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.925214
+5    Mean of F1-Score of top 20 classes by F1-Score        0.925214
+6    Mean of F1-Score of top 30 classes by F1-Score        0.925214
+2016-08-17 11:40:11,626 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-17 11:40:15,533 DEBUG: Done:	 Statistic Results
+2016-08-17 11:40:15,533 DEBUG: Start:	 Plot Result
+2016-08-17 11:40:15,751 DEBUG: Done:	 Plot Result

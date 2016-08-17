@@ -12,7 +12,8 @@ import time                             # for time calculations
 import numpy as np                      # for reading CSV-files and Series
 import pandas as pd                     # for Series and DataFrames
 import logging                          # To create Log-Files
-from sklearn import metrics		# For stastics on classification        
+from sklearn import metrics		# For stastics on classification
+import h5py
 
 # Import own modules
 import ClassifMonoView	                # Functions for classification
@@ -31,6 +32,7 @@ formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 groupStandard = parser.add_argument_group('Standard arguments')
 groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
+groupStandard.add_argument('--type', metavar='STRING', action='store', help='Type of Dataset', default="hdf5")
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Name of Database (default: %(default)s)', default='DB')
 groupStandard.add_argument('--feat', metavar='STRING', action='store', help='Name of Feature for Classification (default: %(default)s)', default='RGB')
 groupStandard.add_argument('--pathF', metavar='STRING', action='store', help='Path to the views (default: %(default)s)', default='Results-FeatExtr/')
@@ -40,14 +42,34 @@ groupStandard.add_argument('--fileFeat', metavar='STRING', action='store', help=
 
 
 groupClass = parser.add_argument_group('Classification arguments')
-groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Determine the the train size', type=float, default=0.8)
-groupClass.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='25 75 125 175')
-groupClass.add_argument('--CL_RF_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=10)
-groupClass.add_argument('--CL_RF_Cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int, default=1)
+groupClass.add_argument('--CL_type', metavar='STRING', action='store', help='Classifier to use', default="RandomForest")
+groupClass.add_argument('--CL_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=10)
+groupClass.add_argument('--CL_Cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int, default=1)
+groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Split ratio for train and test', type=float, default=0.9)
+
+
+groupRF = parser.add_argument_group('Random Forest arguments')
+groupRF.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees', default='25 75 125 175')
+
+groupSVC = parser.add_argument_group('SVC arguments')
+groupSVC.add_argument('--CL_SVC_kernel', metavar='STRING', action='store', help='GridSearch : Kernels used', default='linear')
+groupSVC.add_argument('--CL_SVC_C', metavar='STRING', action='store', help='GridSearch : Penalty parameters used', default='1:10:100:1000')
+
+groupRF = parser.add_argument_group('Decision Trees arguments')
+groupRF.add_argument('--CL_DT_depth', metavar='STRING', action='store', help='GridSearch: Determine max depth for Decision Trees', default='1:3:5:7')
+
+groupSGD = parser.add_argument_group('SGD arguments')
+groupSGD.add_argument('--CL_SGD_alpha', metavar='STRING', action='store', help='GridSearch: Determine alpha for SGDClassifier', default='0.1:0.2:0.5:0.9')
+groupSGD.add_argument('--CL_SGD_loss', metavar='STRING', action='store', help='GridSearch: Determine loss for SGDClassifier', default='log')
+groupSGD.add_argument('--CL_SGD_penalty', metavar='STRING', action='store', help='GridSearch: Determine penalty for SGDClassifier', default='l2')
+
 
 args = parser.parse_args()
-num_estimators = map(int, args.CL_RF_trees.split())
-
+RandomForestKWARGS = {"classifier__n_estimators":map(int, args.CL_RF_trees.split())}
+SVCKWARGS = {"classifier__kernel":args.CL_SVC_kernel.split(":"), "classifier__C":map(int,args.CL_SVC_C.split(":"))}
+DecisionTreeKWARGS = {"classifier__max_depth":map(int,args.CL_DT_depth.split(":"))}
+SGDKWARGS = {"classifier__alpha" : map(float,args.CL_SGD_alpha.split(":")), "classifier__loss":args.CL_SGD_loss.split(":"),
+              "classifier__penalty":args.CL_SGD_penalty.split(":")}
 ### Main Programm
 t_start = time.time()
 
@@ -71,13 +93,19 @@ if(args.log):
 
 # Determine the Database to extract features
 logging.debug("### Main Programm for Classification MonoView")
-logging.debug("### Classification - Database:" + str(args.name) + " Feature:" + str(args.feat) + " train_size:" + str(args.CL_split) + ", GridSearch of Trees:" + args.CL_RF_trees + ", CrossValidation k-folds:" + str(args.CL_RF_CV) + ", cores:" + str(args.CL_RF_Cores))
+logging.debug("### Classification - Database:" + str(args.name) + " Feature:" + str(args.feat) + " train_size:" + str(args.CL_split) + ", GridSearch of Trees:" + args.CL_RF_trees + ", CrossValidation k-folds:" + str(args.CL_CV) + ", cores:" + str(args.CL_Cores))
 
 # Read the features
-logging.debug("Start:\t Read CSV Files")
+logging.debug("Start:\t Read "+args.type+" Files")
 
-X = np.genfromtxt(args.pathF + args.fileFeat, delimiter=';')
-Y = np.genfromtxt(args.pathF + args.fileCL, delimiter=';')
+if args.type == "csv":
+    X = np.genfromtxt(args.pathF + args.fileFeat, delimiter=';')
+    Y = np.genfromtxt(args.pathF + args.fileCL, delimiter=';')
+elif args.type == "hdf5":
+    dataset = h5py.File(args.pathF + args.name + ".hdf5", "r")
+    viewsDict = dict((dataset.get("/View"+str(viewIndex)+"/name").value, viewIndex) for viewIndex in range(dataset.get("nbView").value))
+    X = dataset["View"+str(viewsDict[args.feat])+"/matrix"][...]
+    Y = dataset["Labels/labelsArray"][...]
 
 logging.debug("Info:\t Shape of Feature:" + str(X.shape) + ", Length of classLabels vector:" + str(Y.shape))
 logging.debug("Done:\t Read CSV Files")
@@ -94,7 +122,12 @@ logging.debug("Done:\t Determine Train/Test split")
 # Begin Classification RandomForest
 logging.debug("Start:\t Classification")
 
-cl_desc, cl_res = ClassifMonoView.calcClassifRandomForestCV(X_train, y_train, num_estimators, args.CL_RF_CV, args.CL_RF_Cores)
+
+classifierFunction = getattr(ClassifMonoView, "Classif"+args.CL_type)
+classifierKWARGS = globals()[args.CL_type+"KWARGS"]
+
+cl_desc, cl_res = classifierFunction(X_train, y_train, nbFolds=args.CL_CV, nbCores = args.CL_Cores,
+                                                     **classifierKWARGS)
 t_end  = time.time() - t_start
 
 # Add result to Results DF

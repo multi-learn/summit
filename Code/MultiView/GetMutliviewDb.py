@@ -116,6 +116,7 @@ def splitDataset(DATASET, LEARNING_RATE, DATASET_LENGTH):
     LABELS = DATASET["/Labels/labelsArray"][...]
     NB_CLASS = int(DATASET["/nbClass"][...])
     validationIndices = extractRandomTrainingSet(LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS)
+    validationIndices.sort()
     return validationIndices
 
 
@@ -144,7 +145,7 @@ def getKFoldIndices(nbFolds, CLASS_LABELS, DATASET_LENGTH, NB_CLASS, learningInd
         trainingExamplesIndices.append([])
         while fold != [0 for i in range(NB_CLASS)]:
             index = random.randint(0, DATASET_LENGTH - 1)
-            if index not in usedIndices:
+            if learningIndices[index] not in usedIndices:
                 isUseFull, fold = isUseful(fold, learningIndices[index], CLASS_LABELS, labelDict)
                 if isUseFull:
                     trainingExamplesIndices[foldIndex].append(learningIndices[index])

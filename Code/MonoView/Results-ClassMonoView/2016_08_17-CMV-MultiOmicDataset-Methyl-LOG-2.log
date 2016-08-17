@@ -1,0 +1,6 @@
+2016-08-17 11:35:08,581 DEBUG: ### Main Programm for Classification MonoView
+2016-08-17 11:35:08,581 DEBUG: ### Classification - Database:MultiOmicDataset Feature:Methyl train_size:1.0, GridSearch of Trees:25 75 125 175, CrossValidation k-folds:4, cores:4
+2016-08-17 11:35:08,581 DEBUG: Start:	 Read hdf5 Files
+2016-08-17 11:35:08,767 DEBUG: Info:	 Shape of Feature:(347, 25978), Length of classLabels vector:(347,)
+2016-08-17 11:35:08,767 DEBUG: Done:	 Read CSV Files
+2016-08-17 11:35:08,767 DEBUG: Start:	 Determine Train/Test split

@@ -50,23 +50,25 @@ groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Numbe
 groupMumbo = parser.add_argument_group('Mumbo arguments')
 groupMumbo.add_argument('--MU_type', metavar='STRING', action='store',
                         help='Determine which monoview classifier to use with Mumbo',
-                        default='DecisionTree:DecisionTree:DecisionTree')
+                        default='DecisionTree:DecisionTree:DecisionTree:DecisionTree')
 groupMumbo.add_argument('--MU_config', metavar='STRING', action='store', nargs='+',
-                        help='Configuration for the monoview classifier in Mumbo', default='3:1.0 3:1.0 3:1.0')
+                        help='Configuration for the monoview classifier in Mumbo', default=['3:1.0', '3:1.0', '3:1.0',
+                                                                                            '3:1.0'])
 groupMumbo.add_argument('--MU_iter', metavar='INT', action='store',
                         help='Number of iterations in Mumbos learning process', type=int, default=5)
 
 groupFusion = parser.add_argument_group('Fusion arguments')
-groupFusion.add_argument('--FU_cl_type', metavar='STRING', action='store',
-                         help='Determine which monoview classifier to use with fusion', default='RandomForest')
 groupFusion.add_argument('--FU_type', metavar='STRING', action='store',
-                         help='Determine which type of fusion to use', default='EarlyFusion')
+                         help='Determine which type of fusion to use', default='LateFusion')
 groupFusion.add_argument('--FU_method', metavar='STRING', action='store',
-                         help='Determine which method of fusion to use', default='linearWeighted')
-groupFusion.add_argument('--FU_config', metavar='STRING', action='store',
-                         help='Configuration for the fusion method', default='1.0:1.0:1.0')
-groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store',
-                         help='Configuration for the monoview classifier', default='100:10:5')
+                         help='Determine which method of fusion to use', default='SVMForLinear')
+groupFusion.add_argument('--FU_method_config', metavar='STRING', action='store', nargs='+',
+                         help='Configuration for the fusion method', default=['1:1:1:1'])
+groupFusion.add_argument('--FU_cl_names', metavar='STRING', action='store',
+                         help='Names of the monoview classifiers used',
+                         default='RandomForest:RandomForest:RandomForest:RandomForest')
+groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store', nargs='+',
+                         help='Configuration for the monoview classifiers used', default=['3:4', '3:4', '3:4', '3:4'])
 
 args = parser.parse_args()
 views = args.views.split(":")
@@ -81,10 +83,13 @@ LABELS_NAMES = args.CL_classes.split(":")
 classifierNames = args.MU_type.split(':')
 NB_ITER = args.MU_iter
 NB_CORES = args.CL_cores
-fusionClassifierConfig = args.FU_cl_config.split(":")
-fusionMethodConfig = args.FU_config.split(":")
-FusionKWARGS = {"fusionType":args.FU_type, "fusionMethod":args.FU_method, "fusionMethodConfig":fusionMethodConfig,
-                "classifierType":args.FU_cl_type, "classifierConfig":fusionClassifierConfig}
+fusionClassifierNames = args.FU_cl_names.split(":")
+fusionClassifierConfig = [argument.split(':') for argument in args.FU_cl_config]
+fusionMethodConfig = [argument.split(':') for argument in args.FU_method_config]
+print args.FU_cl_config
+FusionKWARGS = {"fusionType":args.FU_type, "fusionMethod":args.FU_method,
+                "monoviewClassifiersNames":fusionClassifierNames, "monoviewClassifiersConfigs":fusionClassifierConfig,
+                'fusionMethodConfig':fusionMethodConfig}
 MumboKWARGS = {"classifiersConfigs":mumboClassifierConfig, "NB_ITER":NB_ITER, "classifiersNames":classifierNames}
 
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
@@ -165,6 +170,7 @@ kFoldClassifier = []
 # Begin Classification
 for foldIdx, fold in enumerate(kFolds):
     if fold != range(datasetLength):
+        fold.sort()
         logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
         trainIndices = [index for index in range(datasetLength) if index not in fold]
         DATASET_LENGTH = len(trainIndices)
@@ -176,7 +182,6 @@ for foldIdx, fold in enumerate(kFolds):
         learningTime = time.time() - extractionTime - t_start
         kFoldLearningTime.append(learningTime)
         logging.info("\tStart: \t Classification")
-        print trainIndices[0]
         kFoldPredictedTrainLabels.append(classifier.predict_hdf5(DATASET, usedIndices=trainIndices))
         kFoldPredictedTestLabels.append(classifier.predict_hdf5(DATASET, usedIndices=fold))
         kFoldPredictedValidationLabels.append(classifier.predict_hdf5(DATASET, usedIndices=validationIndices))

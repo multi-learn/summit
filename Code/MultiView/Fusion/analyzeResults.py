@@ -10,34 +10,35 @@ def error(testLabels, computedLabels):
     return float(error) * 100 / len(computedLabels)
 
 
-def execute(classifier, predictedTrainLabels, predictedTestLabels, trainLabels, testLabels, trainData, testData,
-            NB_CLASS, trainArguments, LEARNING_RATE, LABELS_DICTIONARY, features, NB_CORES, times, NB_VIEW):
+def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
+            DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, name, nbFolds,
+                                                 validationIndices):
 
-    trainingSetLength = len(trainLabels)
-    testingSetLength = len(testLabels)
-    DATASET_LENGTH = trainingSetLength+testingSetLength
-    extractionTime, learningTime, predictionTime, classificationTime = times
-
-    fusionType, fusionMethod, fusionMethodConfig, monoviewClassifier, fusionClassifierConfig = trainArguments
-    bestClassifiers, generalAlphas, bestViews = classifier
-    fusionTypeModule = globals()[fusionType]  # Permet d'appeler une fonction avec une string
-    monoviewClassifierConfig = getattr(fusionTypeModule, 'getConfig')(fusionMethodConfig, monoviewClassifier,
-                                                                  fusionClassifierConfig)
-    #monoviewClassifierConfig+'\n\n '+ \
-    stringAnalysis = "\n"+fusionType+" classification using "+monoviewClassifier+ 'as monoview classifier '+ \
-                     "Learning on \n\t- "+", ".join(features)+" as views\n\t- "+", ".join(LABELS_DICTIONARY.values())+ \
-                     " as labels\n\t- "+str(trainingSetLength)+" training examples, "+str(testingSetLength)+ \
-                     " testing examples ("+str(LEARNING_RATE)+" rate)\n\n With "+str(NB_CORES)+' cores used for computing.\n\n'
-
-    stringAnalysis += "The algorithm took : \n\t- "+str(hms(seconds=extractionTime))+" to extract the database,\n\t- "+ \
-                      str(hms(seconds=learningTime))+" to learn on "+str(trainingSetLength)+" examples and "+str(NB_VIEW)+ \
-                      " views,\n\t- "+str(hms(seconds=predictionTime))+" to predict on "+str(DATASET_LENGTH)+" examples\n"+ \
-                      "So a total classification time of "+str(hms(seconds=classificationTime))+".\n\n"
-
-    stringAnalysis += "Total accuracy \n\t- On train : "+str(100*accuracy_score(trainLabels, predictedTrainLabels))+ \
-                      "%\n"+classification_report(trainLabels, predictedTrainLabels, target_names=LABELS_DICTIONARY.values())+ \
-                      "\n\t- On test : "+str(100*accuracy_score(testLabels, predictedTestLabels))+"% \n"+ \
-                      classification_report(testLabels, predictedTestLabels, target_names=LABELS_DICTIONARY.values())
+    # trainingSetLength = len(trainLabels)
+    # testingSetLength = len(testLabels)
+    # DATASET_LENGTH = trainingSetLength+testingSetLength
+    # extractionTime, learningTime, predictionTime, classificationTime = times
+    #
+    # fusionType, fusionMethod, fusionMethodConfig, monoviewClassifier, fusionClassifierConfig = trainArguments
+    # bestClassifiers, generalAlphas, bestViews = classifier
+    # fusionTypeModule = globals()[fusionType]  # Permet d'appeler une fonction avec une string
+    # monoviewClassifierConfig = getattr(fusionTypeModule, 'getConfig')(fusionMethodConfig, monoviewClassifier,
+    #                                                               fusionClassifierConfig)
+    # #monoviewClassifierConfig+'\n\n '+ \
+    # stringAnalysis = "\n"+fusionType+" classification using "+monoviewClassifier+ 'as monoview classifier '+ \
+    #                  "Learning on \n\t- "+", ".join(features)+" as views\n\t- "+", ".join(LABELS_DICTIONARY.values())+ \
+    #                  " as labels\n\t- "+str(trainingSetLength)+" training examples, "+str(testingSetLength)+ \
+    #                  " testing examples ("+str(LEARNING_RATE)+" rate)\n\n With "+str(NB_CORES)+' cores used for computing.\n\n'
+    #
+    # stringAnalysis += "The algorithm took : \n\t- "+str(hms(seconds=extractionTime))+" to extract the database,\n\t- "+ \
+    #                   str(hms(seconds=learningTime))+" to learn on "+str(trainingSetLength)+" examples and "+str(NB_VIEW)+ \
+    #                   " views,\n\t- "+str(hms(seconds=predictionTime))+" to predict on "+str(DATASET_LENGTH)+" examples\n"+ \
+    #                   "So a total classification time of "+str(hms(seconds=classificationTime))+".\n\n"
+    #
+    # stringAnalysis += "Total accuracy \n\t- On train : "+str(100*accuracy_score(trainLabels, predictedTrainLabels))+ \
+    #                   "%\n"+classification_report(trainLabels, predictedTrainLabels, target_names=LABELS_DICTIONARY.values())+ \
+    #                   "\n\t- On test : "+str(100*accuracy_score(testLabels, predictedTestLabels))+"% \n"+ \
+    #                   classification_report(testLabels, predictedTestLabels, target_names=LABELS_DICTIONARY.values())
 
     # predictedTrainLabelsByIter = classifyMumbobyIter(trainData, bestClassifiers, generalAlphas, bestViews, NB_CLASS)
     # predictedTestLabelsByIter = classifyMumbobyIter(testData, bestClassifiers, generalAlphas, bestViews, NB_CLASS)
@@ -51,6 +52,7 @@ def execute(classifier, predictedTrainLabels, predictedTestLabels, trainLabels, 
     #                      views[int(bestViews[iterIndex])]+"\n"
     #
     # name, image = plotAccuracyByIter(predictedTrainLabelsByIter, predictedTestLabelsByIter, trainLabels, testLabels, NB_ITER)
+    stringAnalysis = "poulet"
     imagesAnalysis = {}
     # imagesAnalysis[name] = image
 

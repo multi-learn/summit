@@ -107,7 +107,74 @@ class Mumbo:
         # return costMatrices, generalCostMatrix, fs, ds, edges, alphas, \
         #        predictions, generalAlphas, generalFs
 
+    def fit_hdf5(self, DATASET, trainIndices=None):
+        # Initialization
+        if not trainIndices:
+            trainIndices = range(DATASET.get("datasetLength").value)
+        NB_CLASS = DATASET["/nbClass"][...]
+        NB_VIEW = DATASET["/nbView"][...]
+        DATASET_LENGTH = len(trainIndices)
+        LABELS = DATASET["/Labels/labelsArray"][trainIndices]
+        # costMatrices, \
+        # generalCostMatrix, fs, ds, edges, alphas, \
+        # predictions, generalAlphas, generalFs = initialize(NB_CLASS, NB_VIEW,
+        #                                                    NB_ITER, DATASET_LENGTH,
+        #                                                    LABELS[trainIndices])
+        bestViews = np.zeros(self.nbIter)
+        bestClassifiers = []
 
+        # Learning
+        self.iterIndex = 0
+        for i in range(self.nbIter):
+            logging.debug('\t\tStart:\t Iteration ' + str(self.iterIndex + 1))
+            classifiers, predictedLabels, areBad = self.trainWeakClassifiers_hdf5(DATASET, trainIndices, NB_CLASS,
+                                                                                  DATASET_LENGTH, NB_VIEW)
+            if areBad.all():
+                logging.warning("All bad for iteration " + str(self.iterIndex))
+
+            self.predictions[self.iterIndex] = predictedLabels
+
+            for viewIndice in range(NB_VIEW):
+                self.computeEdge(viewIndice, DATASET_LENGTH, LABELS)
+                if areBad[viewIndice]:
+                    self.alphas[self.iterIndex, viewIndice] = 0.
+                else:
+                    self.alphas[self.iterIndex, viewIndice] = self.computeAlpha(self.edges[self.iterIndex, viewIndice])
+
+            self.updateDs(LABELS, NB_VIEW, DATASET_LENGTH)
+            self.updateFs(NB_VIEW, DATASET_LENGTH, NB_CLASS)
+
+            self.updateCostmatrices(NB_VIEW, DATASET_LENGTH, NB_CLASS, LABELS)
+            bestView, edge = self.chooseView(NB_VIEW, LABELS, DATASET_LENGTH)
+            self.bestViews[self.iterIndex] = bestView
+            if areBad.all():
+                self.generalAlphas[self.iterIndex] = 0.
+            else:
+                self.generalAlphas[self.iterIndex] = self.computeAlpha(edge)
+            self.bestClassifiers.append(classifiers[bestView])
+            self.updateGeneralFs(DATASET_LENGTH, NB_CLASS, bestView)
+            self.updateGeneralCostMatrix(DATASET_LENGTH, NB_CLASS,LABELS)
+            self.iterIndex += 1
+
+            # finalFs = computeFinalFs(DATASET_LENGTH, NB_CLASS, generalAlphas, predictions, bestViews, LABELS, NB_ITER)
+
+    def predict_hdf5(self, DATASET, usedIndices=None):
+        NB_CLASS = DATASET.get("nbClass").value
+        if usedIndices == None:
+            usedIndices = range(DATASET.get("datasetLength").value)
+        if usedIndices:
+            DATASET_LENGTH = len(usedIndices)
+            predictedLabels = np.zeros(DATASET_LENGTH)
+
+            for labelIndex, exampleIndex in enumerate(usedIndices):
+                votes = np.zeros(NB_CLASS)
+                for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
+                    data = DATASET["/View"+str(int(view))+"/matrix"][exampleIndex, :]
+                    votes[int(classifier.predict(np.array([data])))] += alpha[view]
+                predictedLabels[labelIndex] = np.argmax(votes)
+        else:
+            predictedLabels = []
+        return predictedLabels
 
     def trainWeakClassifiers(self, DATASET, CLASS_LABELS, NB_CLASS, DATASET_LENGTH, NB_VIEW):
         trainedClassifiers = []
@@ -324,57 +391,6 @@ class Mumbo:
 
         # finalFs = computeFinalFs(DATASET_LENGTH, NB_CLASS, generalAlphas, predictions, bestViews, LABELS, NB_ITER)
 
-    def fit_hdf5(self, DATASET, trainIndices=None):
-        # Initialization
-        if not trainIndices:
-            trainIndices = range(DATASET.get("datasetLength").value)
-        NB_CLASS = DATASET["/nbClass"][...]
-        NB_VIEW = DATASET["/nbView"][...]
-        DATASET_LENGTH = len(trainIndices)
-        LABELS = DATASET["/Labels/labelsArray"][trainIndices]
-        # costMatrices, \
-        # generalCostMatrix, fs, ds, edges, alphas, \
-        # predictions, generalAlphas, generalFs = initialize(NB_CLASS, NB_VIEW,
-        #                                                    NB_ITER, DATASET_LENGTH,
-        #                                                    LABELS[trainIndices])
-        bestViews = np.zeros(self.nbIter)
-        bestClassifiers = []
-
-        # Learning
-        self.iterIndex = 0
-        for i in range(self.nbIter):
-            logging.debug('\t\tStart:\t Iteration ' + str(self.iterIndex + 1))
-            classifiers, predictedLabels, areBad = self.trainWeakClassifiers_hdf5(DATASET, trainIndices, NB_CLASS,
-                                                                                  DATASET_LENGTH, NB_VIEW)
-            if areBad.all():
-                logging.warning("All bad for iteration " + str(self.iterIndex))
-
-            self.predictions[self.iterIndex] = predictedLabels
-
-            for viewIndice in range(NB_VIEW):
-                self.computeEdge(viewIndice, DATASET_LENGTH, LABELS)
-                if areBad[viewIndice]:
-                    self.alphas[self.iterIndex, viewIndice] = 0.
-                else:
-                    self.alphas[self.iterIndex, viewIndice] = self.computeAlpha(self.edges[self.iterIndex, viewIndice])
-
-            self.updateDs(LABELS, NB_VIEW, DATASET_LENGTH)
-            self.updateFs(NB_VIEW, DATASET_LENGTH, NB_CLASS)
-
-            self.updateCostmatrices(NB_VIEW, DATASET_LENGTH, NB_CLASS, LABELS)
-            bestView, edge = self.chooseView(NB_VIEW, LABELS, DATASET_LENGTH)
-            self.bestViews[self.iterIndex] = bestView
-            if areBad.all():
-                self.generalAlphas[self.iterIndex] = 0.
-            else:
-                self.generalAlphas[self.iterIndex] = self.computeAlpha(edge)
-            self.bestClassifiers.append(classifiers[bestView])
-            self.updateGeneralFs(DATASET_LENGTH, NB_CLASS, bestView)
-            self.updateGeneralCostMatrix(DATASET_LENGTH, NB_CLASS,LABELS)
-            self.iterIndex += 1
-
-        # finalFs = computeFinalFs(DATASET_LENGTH, NB_CLASS, generalAlphas, predictions, bestViews, LABELS, NB_ITER)
-
     def predict(self, DATASET, NB_CLASS=2):
         DATASET_LENGTH = len(DATASET[0])
         predictedLabels = np.zeros(DATASET_LENGTH)
@@ -385,24 +401,6 @@ class Mumbo:
                 data = DATASET[int(view)][exampleIndice]
                 votes[int(classifier.predict(np.array([data])))] += alpha
             predictedLabels[exampleIndice] = np.argmax(votes)
-        return predictedLabels
-
-    def predict_hdf5(self, DATASET, usedIndices=None):
-        NB_CLASS = DATASET.get("nbClass").value
-        if usedIndices == None:
-            usedIndices = range(DATASET.get("datasetLength").value)
-        if usedIndices:
-            DATASET_LENGTH = len(usedIndices)
-            predictedLabels = np.zeros(DATASET_LENGTH)
-
-            for labelIndex, exampleIndex in enumerate(usedIndices):
-                votes = np.zeros(NB_CLASS)
-                for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
-                    data = DATASET["/View"+str(int(view))+"/matrix"][exampleIndex, :]
-                    votes[int(classifier.predict(np.array([data])))] += alpha[view]
-                predictedLabels[labelIndex] = np.argmax(votes)
-        else:
-            predictedLabels = []
         return predictedLabels
 
     def classifyMumbobyIter(self, DATASET, NB_CLASS=2):

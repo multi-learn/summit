@@ -10,6 +10,7 @@ from sklearn.cross_validation import train_test_split   # For calculating the tr
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
 from sklearn.grid_search import GridSearchCV            # GridSearch for parameters of classification
 from sklearn.ensemble import RandomForestClassifier     # RandomForest-Classifier
+import sklearn
 
 # Import own modules
 
@@ -135,13 +136,14 @@ def calcTrainTest(X,y,split):
 # X_test: Test Data
 # y_test: Test Labels
 # num_estimators: number of trees
-def calcClassifRandomForestCV(X_train, y_train, num_estimators, cv_folds, clas_cores):
+def ClassifRandomForest(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+    num_estimators =  kwargs["numEstimators"]
     # PipeLine with RandomForest classifier
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
 
     # Parameters for GridSearch: Number of Trees
     # can be extended with: oob_score, min_samples_leaf, max_features
-    param_rf = { 'classifier__n_estimators': num_estimators}
+    param_rf = kwargs
 
     # pipeline: Gridsearch avec le pipeline comme estimator
     # param: pour obtenir le meilleur model il va essayer tous les possiblites
@@ -153,17 +155,53 @@ def calcClassifRandomForestCV(X_train, y_train, num_estimators, cv_folds, clas_c
             pipeline_rf,
             param_grid=param_rf,
             refit=True,
-            n_jobs=clas_cores,
+            n_jobs=nbCores,
             scoring='accuracy',
-            cv=cv_folds,
+            cv=nbFolds,
     )
 
     rf_detector = grid_rf.fit(X_train, y_train)
 
     desc_estimators = rf_detector.best_params_["classifier__n_estimators"]
-    description = "Classif_" + "RF" + "-" + "CV_" +  str(cv_folds) + "-" + "Trees_" + str(desc_estimators)
+    description = "Classif_" + "RF" + "-" + "CV_" +  str(nbFolds) + "-" + "Trees_" + str(desc_estimators)
 
-    return (description, rf_detector)
+    return description, rf_detector
+
+
+def ClassifSVC(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+    pipeline_SVC = Pipeline([('classifier', sklearn.svm.SVC())])
+    param_SVC = kwargs
+
+    grid_SVC = GridSearchCV(pipeline_SVC, param_grid=param_SVC, refit=True, n_jobs=nbCores, scoring='accuracy',
+                            cv=nbFolds)
+    SVC_detector = grid_SVC.fit(X_train, y_train)
+    desc_params = []
+    description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(desc_params)
+    return description, SVC_detector
+
+
+def ClassifDecisionTree(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+    pipeline_DT = Pipeline([('classifier', sklearn.tree.DecisionTreeClassifier())])
+    param_DT = kwargs
+
+    grid_DT = GridSearchCV(pipeline_DT, param_grid=param_DT, refit=True, n_jobs=nbCores, scoring='accuracy',
+                            cv=nbFolds)
+    DT_detector = grid_DT.fit(X_train, y_train)
+    desc_params = []
+    description = "Classif_" + "DT" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(desc_params)
+    return description, DT_detector
+
+
+def ClassifSGD(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+    pipeline_SGD = Pipeline([('classifier', sklearn.linear_model.SGDClassifier())])
+    param_SGD = kwargs
+    grid_SGD = GridSearchCV(pipeline_SGD, param_grid=param_SGD, refit=True, n_jobs=nbCores, scoring='accuracy',
+                                cv=nbFolds)
+    SGD_detector = grid_SGD.fit(X_train, y_train)
+    desc_params = []
+    description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(desc_params)
+    return description, SGD_detector
+
 
 
 #def calcClassifRandomForest(X_train, X_test, y_test, y_train, num_estimators):
