@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
 
-from MonoviewClassifiers import *
+import MonoviewClassifiers
 
 import numpy as np
 
 
 class EarlyFusionClassifier:
     def __init__(self, monoviewClassifiersNames, monoviewClassifiersConfigs, NB_CORES=1):
-        self.monoviewClassifiersName = monoviewClassifiersNames[0]
+        self.monoviewClassifierName = monoviewClassifiersNames[0]
         self.monoviewClassifiersConfig = monoviewClassifiersConfigs[0]
         self.monoviewClassifier = None
         self.nbCores = NB_CORES
@@ -36,7 +36,7 @@ class WeightedLinear(EarlyFusionClassifier):
         if not trainIndices:
             trainIndices = range(DATASET.get("datasetLength").value)
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=trainIndices)
-        monoviewClassifierModule = globals()[self.monoviewClassifiersName]
+        monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
         self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET["/Labels/labelsArray"][trainIndices],
                                                                NB_CORES=self.nbCores,
                                                                **dict((str(configIndex),config) for configIndex,config in
@@ -51,4 +51,11 @@ class WeightedLinear(EarlyFusionClassifier):
         else:
             predictedLabels=[]
         return predictedLabels
+
+    def getConfig(self, fusionMethodConfig ,monoviewClassifiersNames, monoviewClassifiersConfigs):
+        print monoviewClassifiersNames
+        configString = "poulet"
+        monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifiersNames[0])
+        configString += monoviewClassifierModule.getConfig(monoviewClassifiersConfigs[0])
+        return configString
 

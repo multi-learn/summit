@@ -1,25 +1,61 @@
-2016-08-18 11:13:12,113 INFO: ### Main Programm for Multiview Classification
-2016-08-18 11:13:12,113 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Fusion ; Cores : 4
-2016-08-18 11:13:12,113 INFO: Start:	 Read HDF5 Database Files for MultiOmic
-2016-08-18 11:13:12,139 INFO: Info:	 Labels used: No, Yes
-2016-08-18 11:13:12,139 INFO: Info:	 Length of dataset:347
-2016-08-18 11:13:12,141 INFO: Info:	 Shape of Methyl :[  347 25978]
-2016-08-18 11:13:12,142 INFO: Info:	 Shape of MiRNA_ :[ 347 1046]
-2016-08-18 11:13:12,143 INFO: Info:	 Shape of RNASeq :[  347 73599]
-2016-08-18 11:13:12,145 INFO: Info:	 Shape of Clinic :[347 127]
-2016-08-18 11:13:12,145 INFO: Done:	 Read Database Files
-2016-08-18 11:13:12,145 INFO: Start:	 Determine validation split for ratio 0.3
-2016-08-18 11:13:12,149 INFO: Done:	 Determine validation split
-2016-08-18 11:13:12,149 INFO: Start:	 Determine 4 folds
-2016-08-18 11:13:12,156 INFO: Info:	 Length of Learning Sets: 184
-2016-08-18 11:13:12,157 INFO: Info:	 Length of Testing Sets: 60
-2016-08-18 11:13:12,157 INFO: Info:	 Length of Validation Set: 103
-2016-08-18 11:13:12,157 INFO: Done:	 Determine folds
-2016-08-18 11:13:12,157 INFO: Start:	 Learning with Fusion and 4 folds
-2016-08-18 11:13:12,157 INFO: 	Start:	 Fold number 1
-2016-08-18 11:13:12,507 INFO: 	Start: 	 Classification
-2016-08-18 11:13:13,991 INFO: 	Done: 	 Fold number 1
-2016-08-18 11:13:13,991 INFO: 	Start:	 Fold number 2
-2016-08-18 11:13:14,321 INFO: 	Start: 	 Classification
-2016-08-18 11:13:20,411 INFO: 	Done: 	 Fold number 2
-2016-08-18 11:13:21,300 INFO: 	Start:	 Fold number 3
+2016-08-18 11:57:24,976 INFO: ### Main Programm for Multiview Classification
+2016-08-18 11:57:24,976 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Fusion ; Cores : 4
+2016-08-18 11:57:24,976 INFO: Start:	 Read HDF5 Database Files for MultiOmic
+2016-08-18 11:57:24,978 INFO: Info:	 Labels used: No, Yes
+2016-08-18 11:57:24,978 INFO: Info:	 Length of dataset:347
+2016-08-18 11:57:24,979 INFO: Info:	 Shape of Methyl :[  347 25978]
+2016-08-18 11:57:24,980 INFO: Info:	 Shape of MiRNA_ :[ 347 1046]
+2016-08-18 11:57:24,981 INFO: Info:	 Shape of RNASeq :[  347 73599]
+2016-08-18 11:57:24,982 INFO: Info:	 Shape of Clinic :[347 127]
+2016-08-18 11:57:24,982 INFO: Done:	 Read Database Files
+2016-08-18 11:57:24,982 INFO: Start:	 Determine validation split for ratio 0.3
+2016-08-18 11:57:24,985 INFO: Done:	 Determine validation split
+2016-08-18 11:57:24,985 INFO: Start:	 Determine 4 folds
+2016-08-18 11:57:24,992 INFO: Info:	 Length of Learning Sets: 184
+2016-08-18 11:57:24,992 INFO: Info:	 Length of Testing Sets: 60
+2016-08-18 11:57:24,992 INFO: Info:	 Length of Validation Set: 103
+2016-08-18 11:57:24,993 INFO: Done:	 Determine folds
+2016-08-18 11:57:24,993 INFO: Start:	 Learning with Fusion and 4 folds
+2016-08-18 11:57:24,993 INFO: 	Start:	 Fold number 1
+2016-08-18 11:57:25,337 INFO: 	Start: 	 Classification
+2016-08-18 11:57:26,062 INFO: 	Done: 	 Fold number 1
+2016-08-18 11:57:26,063 INFO: 	Start:	 Fold number 2
+2016-08-18 11:57:26,395 INFO: 	Start: 	 Classification
+2016-08-18 11:57:27,100 INFO: 	Done: 	 Fold number 2
+2016-08-18 11:57:27,101 INFO: 	Start:	 Fold number 3
+2016-08-18 11:57:27,433 INFO: 	Start: 	 Classification
+2016-08-18 11:57:28,128 INFO: 	Done: 	 Fold number 3
+2016-08-18 11:57:28,128 INFO: 	Start:	 Fold number 4
+2016-08-18 11:57:28,456 INFO: 	Start: 	 Classification
+2016-08-18 11:57:29,149 INFO: 	Done: 	 Fold number 4
+2016-08-18 11:57:29,149 INFO: Done:	 Classification
+2016-08-18 11:57:29,149 INFO: Info:	 Time for Classification: 4[s]
+2016-08-18 11:57:29,150 INFO: Start:	 Result Analysis for Fusion
+2016-08-18 11:57:29,154 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy :
+	-On Train : 94.6933497537
+	-On Test : 83.3333333333
+	-On Validation : 91.5048543689
+
+Dataset info :
+	-Database name : MultiOmic
+	-Labels : No, Yes
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-4 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion pouletJambon
+
+Computation time on 4 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:01        0:00:00
+	         Fold 3        0:00:02        0:00:00
+	         Fold 4        0:00:03        0:00:00
+	          Total        0:00:07        0:00:02
+	So a total classification time of 0:00:04.
+
+
+2016-08-18 11:57:29,171 INFO: Done:	 Result Analysis

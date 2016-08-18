@@ -5,7 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b111a3e-1726-4d52-a9de-f7a3f867dbc7" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Fusion/Fusion.py" afterPath="$PROJECT_DIR$/Code/MultiView/Fusion/Fusion.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/EarlyFusion.py" afterPath="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/EarlyFusion.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/LateFusion.py" afterPath="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/LateFusion.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/RandomForest.py" afterPath="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/RandomForest.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Fusion/analyzeResults.py" afterPath="$PROJECT_DIR$/Code/MultiView/Fusion/analyzeResults.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py" afterPath="$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Results/2016_08_18-CMultiV-Fusion-Methyl_MiRNA_RNASEQ_Clinical-MultiOmic-LOG" afterPath="$PROJECT_DIR$/Code/MultiView/Results/2016_08_18-CMultiV-Fusion-Methyl_MiRNA_RNASEQ_Clinical-MultiOmic-LOG" />
     </list>
     <ignored path="multiview-machine-learning-omis.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -42,8 +48,8 @@
       <file leaf-file-name="ExecMultiview.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/ExecMultiview.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="828">
-              <caret line="70" column="91" selection-start-line="70" selection-start-column="91" selection-end-line="70" selection-end-column="91" />
+            <state relative-caret-position="522">
+              <caret line="92" column="56" selection-start-line="90" selection-start-column="1" selection-end-line="92" selection-end-column="56" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -54,8 +60,18 @@
       <file leaf-file-name="Mumbo.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1153">
-              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="36" />
+            <state relative-caret-position="54">
+              <caret line="3" column="6" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="analyzeResults.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-381">
+              <caret line="86" column="45" selection-start-line="86" selection-start-column="45" selection-end-line="86" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -64,18 +80,18 @@
       <file leaf-file-name="Fusion.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Fusion.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+            <state relative-caret-position="198">
+              <caret line="11" column="28" selection-start-line="11" selection-start-column="28" selection-end-line="11" selection-end-column="28" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LateFusion.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="LateFusion.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/LateFusion.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="738">
-              <caret line="56" column="23" selection-start-line="54" selection-start-column="8" selection-end-line="56" selection-end-column="23" />
+            <state relative-caret-position="594">
+              <caret line="201" column="0" selection-start-line="201" selection-start-column="0" selection-end-line="201" selection-end-column="0" />
               <folding>
                 <element signature="e#45#63#0" expanded="true" />
               </folding>
@@ -83,12 +99,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EarlyFusion.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="analyzeResults.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/analyzeResults.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="288">
+              <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EarlyFusion.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/EarlyFusion.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="20" column="36" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
-              <folding />
+            <state relative-caret-position="753">
+              <caret line="55" column="38" selection-start-line="55" selection-start-column="38" selection-end-line="55" selection-end-column="38" />
+              <folding>
+                <element signature="e#45#71#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -96,18 +124,8 @@
       <file leaf-file-name="RandomForest.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/RandomForest.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SVC.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/SVC.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="6" column="57" selection-start-line="6" selection-start-column="57" selection-end-line="6" selection-end-column="57" />
+            <state relative-caret-position="198">
+              <caret line="11" column="18" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -118,16 +136,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="7" selection-end-column="21" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SGD.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/SGD.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="8" column="7" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -155,23 +163,23 @@
       <list>
         <option value="$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/SubSampling.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/Mumbo/Classifiers/DecisionTree.py" />
-        <option value="$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py" />
         <option value="$PROJECT_DIR$/Code/MonoView/Results-ClassMonoView/run.py" />
         <option value="$PROJECT_DIR$/Code/MonoView/ClassifMonoView.py" />
         <option value="$PROJECT_DIR$/Code/MonoView/run.py" />
         <option value="$PROJECT_DIR$/Code/MonoView/ExecClassifMonoView.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py" />
-        <option value="$PROJECT_DIR$/Code/MultiView/Fusion/analyzeResults.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/GetMutliviewDb.py" />
-        <option value="$PROJECT_DIR$/Code/MultiView/Fusion/Fusion.py" />
-        <option value="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/RandomForest.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/DecisionTree.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/SGD.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/ExecMultiview.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/SVC.py" />
-        <option value="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/LateFusion.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/run.py" />
+        <option value="$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py" />
+        <option value="$PROJECT_DIR$/Code/MultiView/Fusion/Fusion.py" />
+        <option value="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/RandomForest.py" />
+        <option value="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/LateFusion.py" />
         <option value="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/EarlyFusion.py" />
+        <option value="$PROJECT_DIR$/Code/MultiView/Fusion/analyzeResults.py" />
       </list>
     </option>
   </component>
@@ -1072,7 +1080,7 @@
       <workItem from="1471015625592" duration="6658000" />
       <workItem from="1471026538529" duration="2605000" />
       <workItem from="1471292536490" duration="38724000" />
-      <workItem from="1471526341422" duration="7004000" />
+      <workItem from="1471526341422" duration="9555000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored and added subsampling file in classifiers module">
       <created>1470926189095</created>
@@ -1085,7 +1093,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="68360000" />
+    <option name="totallyTimeSpent" value="70911000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
@@ -1499,18 +1507,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1638">
-          <caret line="98" column="27" selection-start-line="98" selection-start-column="12" selection-end-line="98" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Code/MonoView/ExecClassifMonoView.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1800">
           <caret line="157" column="30" selection-start-line="157" selection-start-column="30" selection-end-line="157" selection-end-column="30" />
+          <folding>
+            <element signature="e#113#181#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1532,16 +1535,6 @@
             <element signature="e#11647#11959#0" expanded="false" />
             <element signature="e#11996#12622#0" expanded="false" />
             <element signature="e#12914#12986#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/analyzeResults.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="882">
-          <caret line="54" column="29" selection-start-line="54" selection-start-column="29" selection-end-line="54" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#98#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1580,22 +1573,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Fusion.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/RandomForest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/DecisionTree.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1604,22 +1581,54 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/LateFusion.py">
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/ExecMultiview.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="738">
-          <caret line="56" column="23" selection-start-line="54" selection-start-column="8" selection-end-line="56" selection-end-column="23" />
+        <state relative-caret-position="522">
+          <caret line="92" column="56" selection-start-line="90" selection-start-column="1" selection-end-line="92" selection-end-column="56" />
           <folding>
-            <element signature="e#45#63#0" expanded="true" />
+            <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/ExecMultiview.py">
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="828">
-          <caret line="70" column="91" selection-start-line="70" selection-start-column="91" selection-end-line="70" selection-end-column="91" />
+        <state relative-caret-position="54">
+          <caret line="3" column="6" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/analyzeResults.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-381">
+          <caret line="86" column="45" selection-start-line="86" selection-start-column="45" selection-end-line="86" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Fusion.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="28" selection-start-line="11" selection-start-column="28" selection-end-line="11" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/MonoviewClassifiers/RandomForest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="18" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/EarlyFusion.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="753">
+          <caret line="55" column="38" selection-start-line="55" selection-start-column="38" selection-end-line="55" selection-end-column="38" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#45#71#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1632,19 +1641,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/Mumbo/Mumbo.py">
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/analyzeResults.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1153">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="36" />
+        <state relative-caret-position="288">
+          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/EarlyFusion.py">
+    <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/LateFusion.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="20" column="36" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
-          <folding />
+        <state relative-caret-position="594">
+          <caret line="201" column="0" selection-start-line="201" selection-start-column="0" selection-end-line="201" selection-end-column="0" />
+          <folding>
+            <element signature="e#45#63#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

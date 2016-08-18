@@ -12,7 +12,74 @@ def error(testLabels, computedLabels):
 
 def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
             DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, name, nbFolds,
-                                                 validationIndices):
+            validationIndices):
+
+
+
+    CLASS_LABELS = DATASET["/Labels/labelsArray"][...]
+    #NB_ITER, classifierNames, classifierConfigs = initKWARGS.values()
+    monoviewClassifiersNames, fusionMethodConfig, fusionMethod, fusionType, monoviewClassifiersConfigs = initKWARGS.values()
+
+
+    DATASET_LENGTH = DATASET.get("datasetLength").value-len(validationIndices)
+    NB_CLASS = DATASET.get("nbClass").value
+    kFoldPredictedTrainLabelsByIter = []
+    kFoldPredictedTestLabelsByIter = []
+    kFoldPredictedValidationLabelsByIter = []
+    kFoldBestClassifiers = []
+    kFoldGeneralAlphas = []
+    kFoldBestViews = []
+    kFoldAccuracyOnTrain = []
+    kFoldAccuracyOnTest = []
+    kFoldAccuracyOnValidation = []
+    kFoldAccuracyOnTrainByIter = []
+    kFoldAccuracyOnTestByIter = []
+    kFoldAccuracyOnValidationByIter = []
+    for foldIdx, fold in enumerate(kFolds):
+        if fold != range(DATASET_LENGTH):
+            trainIndices = [index for index in range(DATASET_LENGTH) if index not in fold]
+            testLabels = CLASS_LABELS[fold]
+            trainLabels = CLASS_LABELS[trainIndices]
+            validationLabels = CLASS_LABELS[validationIndices]
+            kFoldAccuracyOnTrain.append(100 * accuracy_score(trainLabels, kFoldPredictedTrainLabels[foldIdx]))
+            kFoldAccuracyOnTest.append(100 * accuracy_score(testLabels, kFoldPredictedTestLabels[foldIdx]))
+            kFoldAccuracyOnValidation.append(100 * accuracy_score(validationLabels,
+                                                                  kFoldPredictedValidationLabels[foldIdx]))
+
+    fusionClassifier = kFoldClassifier[0]
+    fusionConfiguration = fusionClassifier.classifier.getConfig(fusionMethodConfig,
+                                                                monoviewClassifiersNames, monoviewClassifiersConfigs)
+
+    totalAccuracyOnTrain = np.mean(kFoldAccuracyOnTrain)
+    totalAccuracyOnTest = np.mean(kFoldAccuracyOnTest)
+    totalAccuracyOnValidation = np.mean(kFoldAccuracyOnValidation)
+    extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime = times
+
+    stringAnalysis = "\t\tResult for Multiview classification with "+ fusionType + \
+                     "\n\nAverage accuracy :\n\t-On Train : " + str(totalAccuracyOnTrain) + "\n\t-On Test : " + \
+                     str(totalAccuracyOnTest) + "\n\t-On Validation : " + str(totalAccuracyOnValidation) + \
+                     "\n\nDataset info :\n\t-Database name : " + name + "\n\t-Labels : " + \
+                     ', '.join(LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(views) + "\n\t-" + str(nbFolds) + \
+                     " folds\n\nClassification configuration : \n\t-Algorithm used : "+fusionType+" "+fusionConfiguration
+
+
+
+
+    stringAnalysis += "\n\nComputation time on " + str(NB_CORES) + " cores : \n\tDatabase extraction time : " + str(
+        hms(seconds=int(extractionTime))) + "\n\t"
+    row_format = "{:>15}" * 3
+    stringAnalysis += row_format.format("", *['Learn', 'Prediction'])
+    for index, (learningTime, predictionTime) in enumerate(zip(kFoldLearningTime, kFoldPredictionTime)):
+        stringAnalysis += '\n\t'
+        stringAnalysis += row_format.format("Fold " + str(index + 1), *[str(hms(seconds=int(learningTime))),
+                                                                        str(hms(seconds=int(predictionTime)))])
+    stringAnalysis += '\n\t'
+    stringAnalysis += row_format.format("Total", *[str(hms(seconds=int(sum(kFoldLearningTime)))),
+                                                   str(hms(seconds=int(sum(kFoldPredictionTime))))])
+    stringAnalysis += "\n\tSo a total classification time of " + str(hms(seconds=int(classificationTime))) + ".\n\n"
+
+
+    imagesAnalysis = {}
 
     # trainingSetLength = len(trainLabels)
     # testingSetLength = len(testLabels)
@@ -52,8 +119,6 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     #                      views[int(bestViews[iterIndex])]+"\n"
     #
     # name, image = plotAccuracyByIter(predictedTrainLabelsByIter, predictedTestLabelsByIter, trainLabels, testLabels, NB_ITER)
-    stringAnalysis = "poulet"
-    imagesAnalysis = {}
     # imagesAnalysis[name] = image
 
     return stringAnalysis, imagesAnalysis

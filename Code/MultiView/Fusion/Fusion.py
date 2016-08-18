@@ -37,3 +37,6 @@ class Fusion:
         predictFusion = getattr(fusionType, fusionMethod+"Predict")  # linearWeighted for example
         predictedLabels = predictFusion(DATASET, fusionClassifier)
         return predictedLabels
+
+
+

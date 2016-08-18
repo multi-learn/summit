@@ -75,10 +75,10 @@ def error(testLabels, computedLabels):
 
 
 def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
-            DATASET, fitKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, databaseName,
+            DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, databaseName,
             nbFolds, validationIndices):
     CLASS_LABELS = DATASET["/Labels/labelsArray"][...]
-    NB_ITER, classifierNames, classifierConfigs = fitKWARGS.values()
+    NB_ITER, classifierNames, classifierConfigs = initKWARGS.values()
 
     DATASET_LENGTH = DATASET.get("datasetLength").value-len(validationIndices)
     NB_CLASS = DATASET.get("nbClass").value

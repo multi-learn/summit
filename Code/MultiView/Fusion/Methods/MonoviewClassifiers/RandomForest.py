@@ -7,3 +7,6 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     classifier = RandomForestClassifier(n_estimators=num_estimators, max_depth=maxDepth, n_jobs=NB_CORES)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
+
+def getConfig(config):
+    return "Jambon"
