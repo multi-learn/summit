@@ -1,23 +1,25 @@
-2016-08-18 11:09:46,024 INFO: ### Main Programm for Multiview Classification
-2016-08-18 11:09:46,024 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Fusion ; Cores : 4
-2016-08-18 11:09:46,025 INFO: Start:	 Read HDF5 Database Files for MultiOmic
-2016-08-18 11:09:46,026 INFO: Info:	 Labels used: No, Yes
-2016-08-18 11:09:46,027 INFO: Info:	 Length of dataset:347
-2016-08-18 11:09:46,028 INFO: Info:	 Shape of Methyl :[  347 25978]
-2016-08-18 11:09:46,028 INFO: Info:	 Shape of MiRNA_ :[ 347 1046]
-2016-08-18 11:09:46,029 INFO: Info:	 Shape of RNASeq :[  347 73599]
-2016-08-18 11:09:46,030 INFO: Info:	 Shape of Clinic :[347 127]
-2016-08-18 11:09:46,030 INFO: Done:	 Read Database Files
-2016-08-18 11:09:46,030 INFO: Start:	 Determine validation split for ratio 0.3
-2016-08-18 11:09:46,033 INFO: Done:	 Determine validation split
-2016-08-18 11:09:46,033 INFO: Start:	 Determine 4 folds
-2016-08-18 11:09:46,039 INFO: Info:	 Length of Learning Sets: 184
-2016-08-18 11:09:46,040 INFO: Info:	 Length of Testing Sets: 60
-2016-08-18 11:09:46,040 INFO: Info:	 Length of Validation Set: 103
-2016-08-18 11:09:46,040 INFO: Done:	 Determine folds
-2016-08-18 11:09:46,040 INFO: Start:	 Learning with Fusion and 4 folds
-2016-08-18 11:09:46,040 INFO: 	Start:	 Fold number 1
-2016-08-18 11:09:46,764 INFO: 	Start: 	 Classification
-2016-08-18 11:09:52,651 INFO: 	Done: 	 Fold number 1
-2016-08-18 11:09:52,675 INFO: 	Start:	 Fold number 2
-2016-08-18 11:09:53,169 INFO: 	Start: 	 Classification
+2016-08-18 11:13:12,113 INFO: ### Main Programm for Multiview Classification
+2016-08-18 11:13:12,113 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Fusion ; Cores : 4
+2016-08-18 11:13:12,113 INFO: Start:	 Read HDF5 Database Files for MultiOmic
+2016-08-18 11:13:12,139 INFO: Info:	 Labels used: No, Yes
+2016-08-18 11:13:12,139 INFO: Info:	 Length of dataset:347
+2016-08-18 11:13:12,141 INFO: Info:	 Shape of Methyl :[  347 25978]
+2016-08-18 11:13:12,142 INFO: Info:	 Shape of MiRNA_ :[ 347 1046]
+2016-08-18 11:13:12,143 INFO: Info:	 Shape of RNASeq :[  347 73599]
+2016-08-18 11:13:12,145 INFO: Info:	 Shape of Clinic :[347 127]
+2016-08-18 11:13:12,145 INFO: Done:	 Read Database Files
+2016-08-18 11:13:12,145 INFO: Start:	 Determine validation split for ratio 0.3
+2016-08-18 11:13:12,149 INFO: Done:	 Determine validation split
+2016-08-18 11:13:12,149 INFO: Start:	 Determine 4 folds
+2016-08-18 11:13:12,156 INFO: Info:	 Length of Learning Sets: 184
+2016-08-18 11:13:12,157 INFO: Info:	 Length of Testing Sets: 60
+2016-08-18 11:13:12,157 INFO: Info:	 Length of Validation Set: 103
+2016-08-18 11:13:12,157 INFO: Done:	 Determine folds
+2016-08-18 11:13:12,157 INFO: Start:	 Learning with Fusion and 4 folds
+2016-08-18 11:13:12,157 INFO: 	Start:	 Fold number 1
+2016-08-18 11:13:12,507 INFO: 	Start: 	 Classification
+2016-08-18 11:13:13,991 INFO: 	Done: 	 Fold number 1
+2016-08-18 11:13:13,991 INFO: 	Start:	 Fold number 2
+2016-08-18 11:13:14,321 INFO: 	Start: 	 Classification
+2016-08-18 11:13:20,411 INFO: 	Done: 	 Fold number 2
+2016-08-18 11:13:21,300 INFO: 	Start:	 Fold number 3

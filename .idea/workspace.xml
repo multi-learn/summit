@@ -7,7 +7,6 @@
     <list default="true" id="7b111a3e-1726-4d52-a9de-f7a3f867dbc7" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/EarlyFusion.py" afterPath="$PROJECT_DIR$/Code/MultiView/Fusion/Methods/EarlyFusion.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/Results/2016_08_18-CMultiV-Fusion-Methyl_MiRNA_RNASEQ_Clinical-MultiOmic-LOG" afterPath="$PROJECT_DIR$/Code/MultiView/Results/2016_08_18-CMultiV-Fusion-Methyl_MiRNA_RNASEQ_Clinical-MultiOmic-LOG" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/MultiView/run.py" afterPath="$PROJECT_DIR$/Code/MultiView/run.py" />
     </list>
     <ignored path="multiview-machine-learning-omis.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -88,8 +87,8 @@
       <file leaf-file-name="EarlyFusion.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/EarlyFusion.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="843">
-              <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+            <state relative-caret-position="393">
+              <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -1074,7 +1073,7 @@
       <workItem from="1471015625592" duration="6658000" />
       <workItem from="1471026538529" duration="2605000" />
       <workItem from="1471292536490" duration="38724000" />
-      <workItem from="1471526341422" duration="6675000" />
+      <workItem from="1471526341422" duration="6838000" />
     </task>
     <task id="LOCAL-00001" summary="Refactored and added subsampling file in classifiers module">
       <created>1470926189095</created>
@@ -1087,7 +1086,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="68031000" />
+    <option name="totallyTimeSpent" value="68194000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
@@ -1644,8 +1643,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Code/MultiView/Fusion/Methods/EarlyFusion.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="843">
-          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+        <state relative-caret-position="393">
+          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
           <folding />
         </state>
       </provider>

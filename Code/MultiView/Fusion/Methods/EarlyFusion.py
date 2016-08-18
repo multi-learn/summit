@@ -14,14 +14,15 @@ class EarlyFusionClassifier:
         self.nbCores = NB_CORES
         self.monoviewData = None
 
-    def makeMonoviewData(self, DATASET, weights=None):
+    def makeMonoviewData_hdf5(self, DATASET, weights=None, trainIndices=None):
+        if not trainIndices:
+            trainIndices = range(DATASET.get("datasetLength").value)
         NB_VIEW = DATASET.get("nbView").value
-        DATASET_LENGTH = DATASET.get("datasetLength").value
         if weights==None:
             weights = np.array([1/NB_VIEW for i in range(NB_VIEW)])
         if sum(weights)!=1:
             weights = weights/sum(weights)
-        self.monoviewData = np.concatenate([weights[viewIndex]*DATASET["/View"+str(viewIndex)+"/matrix"][...]
+        self.monoviewData = np.concatenate([weights[viewIndex]*DATASET["/View"+str(viewIndex)+"/matrix"][trainIndices, :]
                                                          for viewIndex in np.arange(NB_VIEW)], axis=1)
 
 
@@ -34,9 +35,9 @@ class WeightedLinear(EarlyFusionClassifier):
     def fit_hdf5(self, DATASET, trainIndices=None):
         if not trainIndices:
             trainIndices = range(DATASET.get("datasetLength").value)
-        self.makeMonoviewData(DATASET, weights=self.weights)
+        self.makeMonoviewData_hdf5(DATASET, weights=self.weights, trainIndices=trainIndices)
         monoviewClassifierModule = globals()[self.monoviewClassifiersName]
-        self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET["/Labels/labelsArray"][...],
+        self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET["/Labels/labelsArray"][trainIndices],
                                                                NB_CORES=self.nbCores,
                                                                **dict((str(configIndex),config) for configIndex,config in
                                                                       enumerate(self.monoviewClassifiersConfig)))
@@ -45,7 +46,7 @@ class WeightedLinear(EarlyFusionClassifier):
         if usedIndices == None:
             usedIndices = range(DATASET.get("datasetLength").value)
         if usedIndices:
-            self.makeMonoviewData(DATASET, weights=self.weights)
+            self.makeMonoviewData_hdf5(DATASET, weights=self.weights)
             predictedLabels = self.monoviewClassifier.predict(self.monoviewData)
         else:
             predictedLabels=[]
