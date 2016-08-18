@@ -53,8 +53,8 @@ class WeightedLinear(EarlyFusionClassifier):
         return predictedLabels
 
     def getConfig(self, fusionMethodConfig ,monoviewClassifiersNames, monoviewClassifiersConfigs):
-        print monoviewClassifiersNames
-        configString = "poulet"
+        configString = "with weighted concatenation, using weights : "+", ".join(map(str, self.weights))+\
+                       " with monoview classifier : "
         monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifiersNames[0])
         configString += monoviewClassifierModule.getConfig(monoviewClassifiersConfigs[0])
         return configString

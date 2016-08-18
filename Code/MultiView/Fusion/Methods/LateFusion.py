@@ -193,7 +193,8 @@ class BayesianInference(LateFusionClassifier):
         return predictedLabels
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
-        configString = "poulet"
+        configString = "with Bayesian Inference using a weight for each view : "+", ".join(self.weights) + \
+                       "\n\t-With monoview classifiers : "
         for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
             configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)

@@ -9,4 +9,4 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     return classifier
 
 def getConfig(config):
-    return "Jambon"
+    return "\n\t\t- Random Forest with num_esimators : "+config[0]+", max_depth : "+config[1]

@@ -7,6 +7,7 @@ import argparse                         # for command line arguments
 import datetime                         # for TimeStamp in CSVFile
 import os                               # to geth path of the running script
 import time                             # for time calculations
+import operator
 
 # Import 3rd party modules
 import numpy as np                      # for reading CSV-files and Series
@@ -24,6 +25,7 @@ import ExportResults                    # Functions to render results
 __author__ 	= "Nikolas Huelsmann"
 __status__ 	= "Prototype"           # Production, Development, Prototype
 __date__	= 2016-03-25
+
 
 ### Argument Parser
 parser = argparse.ArgumentParser(
@@ -105,6 +107,13 @@ elif args.type == "hdf5":
     dataset = h5py.File(args.pathF + args.name + ".hdf5", "r")
     viewsDict = dict((dataset.get("/View"+str(viewIndex)+"/name").value, viewIndex) for viewIndex in range(dataset.get("nbView").value))
     X = dataset["View"+str(viewsDict[args.feat])+"/matrix"][...]
+    # X_ = dataset["View"+str(viewsDict[args.feat])+"/matrix"][...]
+    # X = np.zeros((dataset.get("datasetLength/").value, dataset["View"+str(viewsDict[args.feat])+"/shape"][1]), dtype=int)
+    # for exampleindice, exampleArray in enumerate(X_):
+    #     dicti = dict((index, value) for index, value in enumerate(exampleArray))
+    #     sorted_x = sorted(dicti.items(), key=operator.itemgetter(1))
+    #     X[exampleindice] = np.array([index for (index, value) in sorted_x], dtype=int)
+
     Y = dataset["Labels/labelsArray"][...]
 
 logging.debug("Info:\t Shape of Feature:" + str(X.shape) + ", Length of classLabels vector:" + str(Y.shape))

@@ -1,8 +1,0 @@
-;Statistic;Values
-0;Accuracy score on test;0.775862068966
-1;Top 10 classes by F1-Score;['Non', 'Oui']
-2;Worst 10 classes by F1-Score;['Oui', 'Non']
-3;Ratio of classes with F1-Score==0 of all classes;0.0
-4;Mean of F1-Score of top 10 classes by F1-Score;0.46087232859299276
-5;Mean of F1-Score of top 20 classes by F1-Score;0.46087232859299276
-6;Mean of F1-Score of top 30 classes by F1-Score;0.46087232859299276

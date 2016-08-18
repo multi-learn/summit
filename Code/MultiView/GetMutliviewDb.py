@@ -189,45 +189,119 @@ def getDbfromCSV(path):
     return DATA, LABELS
 
 
-def getCaltechDBcsv(features, pathF, nameDB, NB_CLASS, LABELS_NAMES):
-    fullDataset = []
-    for feature in features:
-        featureFile = pathF + nameDB + "-" + feature + '.csv'
-        fullDataset.append(np.genfromtxt(featureFile, delimiter=';'))
+def getPositions(labelsUsed, fullLabels):
+    usedIndices = []
+    for labelIndex, label in enumerate(fullLabels):
+        if label in labelsUsed:
+            usedIndices.append(labelIndex)
+    return usedIndices
 
-    fullClasslabels = np.genfromtxt(pathF + nameDB + '-ClassLabels.csv', delimiter=';').astype(int)
+
+def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES):
+    fullDataset = []
+    DATASET = h5py.File(nameDB+".hdf5", "w")
+    fullLabels = np.genfromtxt(pathF + nameDB + '-ClassLabels.csv', delimiter=';').astype(int)
+    if len(set(fullLabels))>NB_CLASS:
+        labelsAvailable = list(set(fullLabels))
+        labelsUsedIndices = np.random.randint(len(labelsAvailable), size=NB_CLASS)
+        labelsUsed = labelsAvailable[labelsUsedIndices]
+        usedIndices = getPositions(labelsUsed, fullLabels)
+    else:
+        labelsUsed = set(fullLabels)
+        usedIndices = range(len(fullLabels))
+    for viewIndex, view in enumerate(views):
+        viewFile = pathF + nameDB + "-" + view + '.csv'
+        viewMatrix = np.array(np.genfromtxt(viewFile, delimiter=';'))[usedIndices, :]
+        DATASET["/View"+str(viewIndex)+"/matrix"] = viewMatrix
+        DATASET["/View"+str(viewIndex)+"/name"] = view
+        DATASET["/View"+str(viewIndex)+"/shape"] = viewMatrix.shape
+
+    DATASET["/Labels/labelsArray"] = fullLabels[usedIndices]
 
     labelsNamesFile = open(pathF+nameDB+'-ClassLabels-Description.csv')
-    labelsDictionary = dict((classIndice, labelName) for (classIndice, labelName) in [(int(line.split().strip(";")[0]),
-                                                                                       line.split().strip(";")[1])
-                                                                                      for line in labelsNamesFile])
+    labelsDictionary = dict((classIndice, labelName) for (classIndice, labelName) in [(int(line.strip().split(";")[0]),
+                                                                                       line.strip().split(";")[1])
+                                                                                      for lineIndex, line in labelsNamesFile if int(line.strip().split(";")[0]) in labelsUsed])
+    DATASET["/datasetLength"] = len(DATASET["/Labels/labelsArray"][...])
+    DATASET["/nbView"] = len(views)
+    DATASET["/nbClass"] = len(set(DATASET["/Labels/labelsArray"][...]))
+    # keptLabelsIndices = [labelIndice for labelIndice, labelName in labelsDictionary.items() if labelName in LABELS_NAMES]
+    # maxNumbreOfClasses = len(labelsDictionary)
+    #
+    # if len(LABELS_NAMES) < NB_CLASS:
+    #     classIndice = 0
+    #     while classIndice < maxNumbreOfClasses:
+    #         if classIndice not in keptLabelsIndices:
+    #             keptLabelsIndices.append(classIndice)
+    #         classIndice+=1
+    #
+    # elif len(LABELS_NAMES) > NB_CLASS:
+    #     keptLabelsIndices = keptLabelsIndices[:NB_CLASS]
+    #
+    # DATASET = {}
+    #
+    # for featureIndex in range(len(fullDataset)):
+    #     DATASET[featureIndex]=np.array([fullDataset[exampleIndice] for exampleIndice in range(datasetLength) if fullClasslabels[exampleIndice] in keptLabelsIndices])
+    #
+    # CLASS_LABELS = np.array([keptLabelsIndices.index(classLabel) for classLabel in fullClasslabels if classLabel in keptLabelsIndices])
+    # DATASET_LENGTH = len(CLASS_LABELS)
+    #
+    # LABELS_DICTIONARY = dict((keptLabelsIndices.index(classLabel), labelsDictionary[classLabel]) for classLabel in keptLabelsIndices)
 
-    datasetLength = len(fullClasslabels)
+    return DATASET, labelsDictionary
 
-    keptLabelsIndices = [labelIndice for labelIndice, labelName in labelsDictionary.items() if labelName in LABELS_NAMES]
-    maxNumbreOfClasses = len(labelsDictionary)
 
-    if len(LABELS_NAMES) < NB_CLASS:
-        classIndice = 0
-        while classIndice < maxNumbreOfClasses:
-            if classIndice not in keptLabelsIndices:
-                keptLabelsIndices.append(classIndice)
-            classIndice+=1
+def getCaltechDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES):
+    DATASET = h5py.File(nameDB+".hdf5", "w")
+    fullLabels = np.genfromtxt(pathF + nameDB + '-ClassLabels.csv', delimiter=';').astype(int)
+    if len(set(fullLabels))>NB_CLASS:
+        labelsAvailable = list(set(fullLabels))
+        labelsUsedIndices = np.random.randint(len(labelsAvailable), size=NB_CLASS)
+        labelsUsed = labelsAvailable[labelsUsedIndices]
+        usedIndices = getPositions(labelsUsed, fullLabels)
+    else:
+        labelsUsed = set(fullLabels)
+        usedIndices = range(len(fullLabels))
+    for viewIndex, view in enumerate(views):
+        viewFile = pathF + nameDB + "-" + view + '.csv'
+        viewMatrix = np.array(np.genfromtxt(viewFile, delimiter=';'))[usedIndices, :]
+        DATASET["/View"+str(viewIndex)+"/matrix"] = viewMatrix
+        DATASET["/View"+str(viewIndex)+"/name"] = view
+        DATASET["/View"+str(viewIndex)+"/shape"] = viewMatrix.shape
 
-    elif len(LABELS_NAMES) > NB_CLASS:
-        keptLabelsIndices = keptLabelsIndices[:NB_CLASS]
+    DATASET["/Labels/labelsArray"] = fullLabels[usedIndices]
 
-    DATASET = {}
+    labelsNamesFile = open(pathF+nameDB+'-ClassLabels-Description.csv')
+    labelsDictionary = dict((classIndice, labelName) for (classIndice, labelName) in [(int(line.strip().split(";")[0]),
+                                                                                       line.strip().split(";")[1])
+                                                                                      for lineIndex, line in labelsNamesFile if int(line.strip().split(";")[0]) in labelsUsed])
+    DATASET["/datasetLength"] = len(DATASET["/Labels/labelsArray"][...])
+    DATASET["/nbView"] = len(views)
+    DATASET["/nbClass"] = len(set(DATASET["/Labels/labelsArray"][...]))
+    # keptLabelsIndices = [labelIndice for labelIndice, labelName in labelsDictionary.items() if labelName in LABELS_NAMES]
+    # maxNumbreOfClasses = len(labelsDictionary)
+    #
+    # if len(LABELS_NAMES) < NB_CLASS:
+    #     classIndice = 0
+    #     while classIndice < maxNumbreOfClasses:
+    #         if classIndice not in keptLabelsIndices:
+    #             keptLabelsIndices.append(classIndice)
+    #         classIndice+=1
+    #
+    # elif len(LABELS_NAMES) > NB_CLASS:
+    #     keptLabelsIndices = keptLabelsIndices[:NB_CLASS]
+    #
+    # DATASET = {}
+    #
+    # for featureIndex in range(len(fullDataset)):
+    #     DATASET[featureIndex]=np.array([fullDataset[exampleIndice] for exampleIndice in range(datasetLength) if fullClasslabels[exampleIndice] in keptLabelsIndices])
+    #
+    # CLASS_LABELS = np.array([keptLabelsIndices.index(classLabel) for classLabel in fullClasslabels if classLabel in keptLabelsIndices])
+    # DATASET_LENGTH = len(CLASS_LABELS)
+    #
+    # LABELS_DICTIONARY = dict((keptLabelsIndices.index(classLabel), labelsDictionary[classLabel]) for classLabel in keptLabelsIndices)
 
-    for featureIndex in range(len(fullDataset)):
-        DATASET[featureIndex]=np.array([fullDataset[exampleIndice] for exampleIndice in range(datasetLength) if fullClasslabels[exampleIndice] in keptLabelsIndices])
-
-    CLASS_LABELS = np.array([keptLabelsIndices.index(classLabel) for classLabel in fullClasslabels if classLabel in keptLabelsIndices])
-    DATASET_LENGTH = len(CLASS_LABELS)
-
-    LABELS_DICTIONARY = dict((keptLabelsIndices.index(classLabel), labelsDictionary[classLabel]) for classLabel in keptLabelsIndices)
-
-    return DATASET, CLASS_LABELS, LABELS_DICTIONARY, DATASET_LENGTH
+    return DATASET, labelsDictionary
 
 
 def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):

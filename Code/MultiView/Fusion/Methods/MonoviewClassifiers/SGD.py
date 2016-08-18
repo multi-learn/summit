@@ -11,3 +11,6 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     classifier = SGDClassifier(loss=loss, penalty=penalty, alpha=alpha)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
+
+def getConfig(config):
+    return "\n\t\t- SGDClassifier with loss : "+config[0]+", penalty : "+config[1]
