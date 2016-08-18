@@ -61,14 +61,15 @@ groupFusion = parser.add_argument_group('Fusion arguments')
 groupFusion.add_argument('--FU_type', metavar='STRING', action='store',
                          help='Determine which type of fusion to use', default='LateFusion')
 groupFusion.add_argument('--FU_method', metavar='STRING', action='store',
-                         help='Determine which method of fusion to use', default='SVMForLinear')
+                         help='Determine which method of fusion to use', default='WeightedLinear')
 groupFusion.add_argument('--FU_method_config', metavar='STRING', action='store', nargs='+',
                          help='Configuration for the fusion method', default=['1:1:1:1'])
 groupFusion.add_argument('--FU_cl_names', metavar='STRING', action='store',
                          help='Names of the monoview classifiers used',
-                         default='RandomForest:RandomForest:RandomForest:RandomForest')
+                         default='RandomForest:SGD:SVC:DecisionTree')
 groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store', nargs='+',
-                         help='Configuration for the monoview classifiers used', default=['3:4', '3:4', '3:4', '3:4'])
+                         help='Configuration for the monoview classifiers used', default=['3:4', 'log:l2', '10:linear',
+                                                                                          '4'])
 
 args = parser.parse_args()
 views = args.views.split(":")
