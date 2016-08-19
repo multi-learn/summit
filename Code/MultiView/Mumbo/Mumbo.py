@@ -24,8 +24,9 @@ def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS,
     classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
     classifierMethod = getattr(classifierModule, classifierName)
     classifier, classes, isBad, pTr = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
-    logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(np.mean(pTr)))
-    return classifier, classes, isBad
+    averageAccuracy = np.mean(pTr)
+    logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(averageAccuracy))
+    return classifier, classes, isBad, averageAccuracy
 
 def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, DATASET_LENGTH,
                              viewIndice, classifier_config, viewName, iterIndex, costMatrices):
@@ -33,8 +34,9 @@ def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, DATA
     classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
     classifierMethod = getattr(classifierModule, classifierName)
     classifier, classes, isBad, pTr = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
-    logging.debug("\t\t\tFor " + viewName + " : " + str(np.mean(pTr)) +" : "+ str(not isBad))
-    return classifier, classes, isBad
+    averageAccuracy = np.mean(pTr)
+    logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(averageAccuracy))
+    return classifier, classes, isBad, averageAccuracy
 
 
 
@@ -77,6 +79,7 @@ class Mumbo:
         self.iterIndex = 0
         self.bestClassifiers = []
         self.bestViews = np.zeros(self.nbIter, dtype=int)
+        self.averageAccuracies = np.zeros((self.nbIter, NB_VIEW))
         # costMatrices = np.array([
         #                             np.array([
         #                                          np.array([
@@ -147,6 +150,7 @@ class Mumbo:
             self.updateCostmatrices(NB_VIEW, DATASET_LENGTH, NB_CLASS, LABELS)
             bestView, edge = self.chooseView(NB_VIEW, LABELS, DATASET_LENGTH)
             self.bestViews[self.iterIndex] = bestView
+            logging.debug("\t\t\t Best view : \t\t"+DATASET["/View"+str(bestView)+"/name"][...])
             if areBad.all():
                 self.generalAlphas[self.iterIndex] = 0.
             else:
@@ -194,7 +198,8 @@ class Mumbo:
                                              costMatrices)
                 for viewIndice in range(NB_VIEW))
 
-        for (classifier, labelsArray, isBad) in trainedClassifiersAndLabels:
+        for viewIndex, (classifier, labelsArray, isBad, averageAccuracy) in enumerate(trainedClassifiersAndLabels):
+            self.averageAccuracies[self.iterIndex, viewIndex] = averageAccuracy
             trainedClassifiers.append(classifier)
             labelsMatrix.append(labelsArray)
             areBad.append(isBad)
@@ -222,7 +227,8 @@ class Mumbo:
                                              str(DATASET["/View"+str(viewIndex)+"/name"][...]), iterIndex, costMatrices)
                 for viewIndex in range(NB_VIEW))
 
-        for (classifier, labelsArray, isBad) in trainedClassifiersAndLabels:
+        for viewIndex, (classifier, labelsArray, isBad, averageAccuracy) in enumerate(trainedClassifiersAndLabels):
+            self.averageAccuracies[self.iterIndex, viewIndex] = averageAccuracy
             trainedClassifiers.append(classifier)
             labelsMatrix.append(labelsArray)
             areBad.append(isBad)
@@ -245,7 +251,7 @@ class Mumbo:
 
 
     def computeAlpha(self, edge):
-        if edge < 1 :
+        if 1 > edge > -1:
             return 0.5 * math.log((1 + edge) / (1 - edge))
         else:
             return 0

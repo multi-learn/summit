@@ -4,6 +4,7 @@ import os
 import random
 import logging
 import h5py
+import operator
 
 
 def getOneViewFromDB(viewName, pathToDB, DBName):
@@ -115,7 +116,7 @@ def isUseful (labelSupports, index, CLASS_LABELS, labelDict):
 def splitDataset(DATASET, LEARNING_RATE, DATASET_LENGTH):
     LABELS = DATASET["/Labels/labelsArray"][...]
     NB_CLASS = int(DATASET["/nbClass"][...])
-    validationIndices = extractRandomTrainingSet(LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS)
+    validationIndices = extractRandomTrainingSet(LABELS, 1-LEARNING_RATE, DATASET_LENGTH, NB_CLASS)
     validationIndices.sort()
     return validationIndices
 
@@ -347,6 +348,71 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     # datasetFile = getPseudoRNASeq(datasetFile)
     return datasetFile, labelDictionary
 
+def getMultiOmicModifiedDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
+
+    datasetFile = h5py.File(path+"ModifiedMultiOmicDataset.hdf5", "w")
+
+    logging.debug("Start:\t Getting Methylation Data")
+    methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
+    datasetFile["/View0/matrix"] = methylData
+    datasetFile["/View0/name"] = "Methyl_"
+    datasetFile["/View0/shape"] = methylData.shape
+    logging.debug("Done:\t Getting Methylation Data")
+
+    logging.debug("Start:\t Getting MiRNA Data")
+    mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
+    datasetFile["/View1/matrix"] = mirnaData
+    datasetFile["/View1/name"] = "MiRNA__"
+    datasetFile["/View1/shape"] = mirnaData.shape
+    logging.debug("Done:\t Getting MiRNA Data")
+
+    logging.debug("Start:\t Getting RNASeq Data")
+    rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
+    datasetFile["/View2/matrix"] = rnaseqData
+    datasetFile["/View2/name"] = "RNASeq_"
+    datasetFile["/View2/shape"] = rnaseqData.shape
+    logging.debug("Done:\t Getting RNASeq Data")
+
+    logging.debug("Start:\t Getting Clinical Data")
+    clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
+    datasetFile["/View3/matrix"] = clinical
+    datasetFile["/View3/name"] = "Clinic_"
+    datasetFile["/View3/shape"] = clinical.shape
+    logging.debug("Done:\t Getting Clinical Data")
+
+    logging.debug("Start:\t Getting Labels")
+    labelFile = open(path+'brca_labels_triple-negatif.csv')
+    LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
+    datasetFile["/Labels/labelsArray"] = LABELS
+    logging.debug("Done:\t Getting Labels")
+
+    logging.debug("Start:\t Getting Data Shape")
+    datasetFile["/nbView"] = 5
+    datasetFile["/nbClass"] = 2
+    datasetFile["/datasetLength"] = len(datasetFile["/Labels/labelsArray"])
+    labelDictionary = {0:"No", 1:"Yes"}
+    logging.debug("Done:\t Getting Data Shape")
+
+    logging.debug("Start:\t Getting Modified RNASeq Data")
+    RNASeq = datasetFile["View2/matrix"][...]
+    modifiedRNASeq = np.zeros((datasetFile.get("datasetLength/").value, datasetFile["View2/shape"][1]), dtype=int)
+    for exampleindice, exampleArray in enumerate(RNASeq):
+        RNASeqDictionary = dict((index, value) for index, value in enumerate(exampleArray))
+        sorted_x = sorted(RNASeqDictionary.items(), key=operator.itemgetter(1))
+        modifiedRNASeq[exampleindice] = np.array([index for (index, value) in sorted_x], dtype=int)
+    datasetFile["/View4/matrix"] = modifiedRNASeq
+    datasetFile["/View4/name"] = "MRNASeq"
+    datasetFile["/View4/shape"] = modifiedRNASeq.shape
+    logging.debug("Done:\t Getting Modified RNASeq Data")
+
+    return datasetFile, labelDictionary
+
+
+def getMultiOmicModifiedDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
+    datasetFile = h5py.File(path+"ModifiedMultiOmicDataset.hdf5", "r")
+    labelDictionary = {0:"No", 1:"Yes"}
+    return datasetFile, labelDictionary
+
 
 def makeArrayFromTriangular(pseudoRNASeqMatrix):
     matrixShape = len(pseudoRNASeqMatrix[0,:])
@@ -374,7 +440,7 @@ def getPseudoRNASeq(dataset):
     return dataset
 
 
-def getMultiOmicDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
+def getMultiOmicModDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
     datasetFile = h5py.File(path+"MultiOmicDataset.hdf5", "r")
     labelDictionary = {0:"No", 1:"Yes"}
     return datasetFile, labelDictionary

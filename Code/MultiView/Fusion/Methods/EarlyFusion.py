@@ -6,7 +6,7 @@ import MonoviewClassifiers
 import numpy as np
 
 
-class EarlyFusionClassifier:
+class EarlyFusionClassifier(object):
     def __init__(self, monoviewClassifiersNames, monoviewClassifiersConfigs, NB_CORES=1):
         self.monoviewClassifierName = monoviewClassifiersNames[0]
         self.monoviewClassifiersConfig = monoviewClassifiersConfigs[0]
@@ -24,6 +24,7 @@ class EarlyFusionClassifier:
             weights = weights/sum(weights)
         self.monoviewData = np.concatenate([weights[viewIndex]*DATASET["/View"+str(viewIndex)+"/matrix"][usedIndices, :]
                                                          for viewIndex in np.arange(NB_VIEW)], axis=1)
+
 
 
 class WeightedLinear(EarlyFusionClassifier):

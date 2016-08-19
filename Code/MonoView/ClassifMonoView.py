@@ -15,7 +15,7 @@ import sklearn
 # Import own modules
 
 # Author-Info
-__author__ 	= "Nikolas Huelsmann"
+__author__ 	= "Nikolas Huelsmann, Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 __date__	= 2016-03-25
 
@@ -136,7 +136,7 @@ def calcTrainTest(X,y,split):
 # X_test: Test Data
 # y_test: Test Labels
 # num_estimators: number of trees
-def ClassifRandomForest(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+def MonoviewClassifRandomForest(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     num_estimators =  kwargs["numEstimators"]
     # PipeLine with RandomForest classifier
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
@@ -168,7 +168,7 @@ def ClassifRandomForest(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     return description, rf_detector
 
 
-def ClassifSVC(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+def MonoviewClassifSVC(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     pipeline_SVC = Pipeline([('classifier', sklearn.svm.SVC())])
     param_SVC = kwargs
 
@@ -180,7 +180,7 @@ def ClassifSVC(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     return description, SVC_detector
 
 
-def ClassifDecisionTree(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+def MonoviewClassifDecisionTree(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     pipeline_DT = Pipeline([('classifier', sklearn.tree.DecisionTreeClassifier())])
     param_DT = kwargs
 
@@ -192,7 +192,7 @@ def ClassifDecisionTree(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     return description, DT_detector
 
 
-def ClassifSGD(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+def MonoviewClassifSGD(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     pipeline_SGD = Pipeline([('classifier', sklearn.linear_model.SGDClassifier())])
     param_SGD = kwargs
     grid_SGD = GridSearchCV(pipeline_SGD, param_grid=param_SGD, refit=True, n_jobs=nbCores, scoring='accuracy',

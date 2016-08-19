@@ -1,0 +1,1466 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 77.6581790123
+	-On Test : 76.2295081967
+	-On Validation : 86.8932038835
+
+Dataset info :
+	-Database name : MultiOmicModified
+	-Labels : No, Yes
+	-Views : Methyl_, MiRNA__, RNASeq_, Clinic_, MRNASeq
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : Mumbo 
+	-Iterations : 100
+	-Weak Classifiers : DecisionTree with depth 1,  sub-sampled at 0.02 on Methyl_
+		-DecisionTree with depth 1,  sub-sampled at 0.02 on MiRNA__
+		-DecisionTree with depth 1,  sub-sampled at 0.1 on RNASeq_
+		-DecisionTree with depth 2,  sub-sampled at 0.1 on Clinic_
+		-DecisionTree with depth 1,  sub-sampled at 0.1 on MRNASeq
+
+ Mean average accuracies and stats for each fold : 
+	- Fold 0
+		- On Methyl_ : 
+			- Mean average Accuracy : 0.521256036198
+			- Percentage of time chosen : 0.06
+		- On MiRNA__ : 
+			- Mean average Accuracy : 0.568966016737
+			- Percentage of time chosen : 0.31
+		- On RNASeq_ : 
+			- Mean average Accuracy : 0.549142664903
+			- Percentage of time chosen : 0.21
+		- On Clinic_ : 
+			- Mean average Accuracy : 0.562784785913
+			- Percentage of time chosen : 0.28
+		- On MRNASeq : 
+			- Mean average Accuracy : 0.545597584761
+			- Percentage of time chosen : 0.14
+	- Fold 1
+		- On Methyl_ : 
+			- Mean average Accuracy : 0.510790319607
+			- Percentage of time chosen : 0.06
+		- On MiRNA__ : 
+			- Mean average Accuracy : 0.56205327222
+			- Percentage of time chosen : 0.26
+		- On RNASeq_ : 
+			- Mean average Accuracy : 0.553175922629
+			- Percentage of time chosen : 0.13
+		- On Clinic_ : 
+			- Mean average Accuracy : 0.564739096326
+			- Percentage of time chosen : 0.31
+		- On MRNASeq : 
+			- Mean average Accuracy : 0.546886310662
+			- Percentage of time chosen : 0.24
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 62.962962963
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 73.786407767
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 62.5
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 73.786407767
+			Selected View : Methyl_
+		- Mean : 
+			 Accuracy on train : 62.7314814815
+			 Accuracy on test : 72.9508196721
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 68.5185185185
+			Accuracy on test : 61.4754098361
+			Accuracy on validation : 75.7281553398
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 66.25
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 76.6990291262
+			Selected View : Methyl_
+		- Mean : 
+			 Accuracy on train : 67.3842592593
+			 Accuracy on test : 67.6229508197
+	- Iteration 3
+		 Fold 1
+			Accuracy on train : 69.7530864198
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 78.640776699
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 66.25
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 76.6990291262
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 68.0015432099
+			 Accuracy on test : 73.3606557377
+	- Iteration 4
+		 Fold 1
+			Accuracy on train : 72.2222222222
+			Accuracy on test : 71.3114754098
+			Accuracy on validation : 78.640776699
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 68.125
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 77.6699029126
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 70.1736111111
+			 Accuracy on test : 72.9508196721
+	- Iteration 5
+		 Fold 1
+			Accuracy on train : 72.8395061728
+			Accuracy on test : 72.131147541
+			Accuracy on validation : 80.5825242718
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 81.9672131148
+			Accuracy on validation : 86.4077669903
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 75.1697530864
+			 Accuracy on test : 77.0491803279
+	- Iteration 6
+		 Fold 1
+			Accuracy on train : 73.4567901235
+			Accuracy on test : 68.0327868852
+			Accuracy on validation : 75.7281553398
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 71.875
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 80.5825242718
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 72.6658950617
+			 Accuracy on test : 71.7213114754
+	- Iteration 7
+		 Fold 1
+			Accuracy on train : 73.4567901235
+			Accuracy on test : 66.393442623
+			Accuracy on validation : 79.6116504854
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 73.75
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 81.5533980583
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 73.6033950617
+			 Accuracy on test : 70.9016393443
+	- Iteration 8
+		 Fold 1
+			Accuracy on train : 71.6049382716
+			Accuracy on test : 65.5737704918
+			Accuracy on validation : 76.6990291262
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 71.875
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 79.6116504854
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 71.7399691358
+			 Accuracy on test : 70.9016393443
+	- Iteration 9
+		 Fold 1
+			Accuracy on train : 72.8395061728
+			Accuracy on test : 67.2131147541
+			Accuracy on validation : 81.5533980583
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 78.6885245902
+			Accuracy on validation : 85.4368932039
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 74.8572530864
+			 Accuracy on test : 72.9508196721
+	- Iteration 10
+		 Fold 1
+			Accuracy on train : 69.7530864198
+			Accuracy on test : 69.6721311475
+			Accuracy on validation : 78.640776699
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 74.375
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 72.0640432099
+			 Accuracy on test : 71.7213114754
+	- Iteration 11
+		 Fold 1
+			Accuracy on train : 72.2222222222
+			Accuracy on test : 68.0327868852
+			Accuracy on validation : 81.5533980583
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 85.4368932039
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 74.5486111111
+			 Accuracy on test : 71.7213114754
+	- Iteration 12
+		 Fold 1
+			Accuracy on train : 71.6049382716
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 81.5533980583
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 78.125
+			Accuracy on test : 77.868852459
+			Accuracy on validation : 84.4660194175
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 74.8649691358
+			 Accuracy on test : 75.4098360656
+	- Iteration 13
+		 Fold 1
+			Accuracy on train : 72.8395061728
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 79.375
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 86.4077669903
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 76.1072530864
+			 Accuracy on test : 75.0
+	- Iteration 14
+		 Fold 1
+			Accuracy on train : 67.9012345679
+			Accuracy on test : 71.3114754098
+			Accuracy on validation : 78.640776699
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 81.25
+			Accuracy on test : 77.0491803279
+			Accuracy on validation : 88.3495145631
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 74.575617284
+			 Accuracy on test : 74.1803278689
+	- Iteration 15
+		 Fold 1
+			Accuracy on train : 71.6049382716
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 81.5533980583
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 80.625
+			Accuracy on test : 77.868852459
+			Accuracy on validation : 87.3786407767
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 76.1149691358
+			 Accuracy on test : 75.4098360656
+	- Iteration 16
+		 Fold 1
+			Accuracy on train : 70.987654321
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 80.5825242718
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 79.375
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 86.4077669903
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 75.1813271605
+			 Accuracy on test : 75.0
+	- Iteration 17
+		 Fold 1
+			Accuracy on train : 72.2222222222
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 84.4660194175
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 80.625
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 88.3495145631
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 76.4236111111
+			 Accuracy on test : 77.0491803279
+	- Iteration 18
+		 Fold 1
+			Accuracy on train : 69.7530864198
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 81.5533980583
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 81.25
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 89.3203883495
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 75.5015432099
+			 Accuracy on test : 74.5901639344
+	- Iteration 19
+		 Fold 1
+			Accuracy on train : 73.4567901235
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 84.4660194175
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 79.375
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 88.3495145631
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 76.4158950617
+			 Accuracy on test : 75.0
+	- Iteration 20
+		 Fold 1
+			Accuracy on train : 74.6913580247
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 84.4660194175
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 78.75
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 88.3495145631
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 76.7206790123
+			 Accuracy on test : 75.4098360656
+	- Iteration 21
+		 Fold 1
+			Accuracy on train : 72.2222222222
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 88.3495145631
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 74.5486111111
+			 Accuracy on test : 74.1803278689
+	- Iteration 22
+		 Fold 1
+			Accuracy on train : 73.4567901235
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 85.4368932039
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 78.125
+			Accuracy on test : 77.0491803279
+			Accuracy on validation : 88.3495145631
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 75.7908950617
+			 Accuracy on test : 76.2295081967
+	- Iteration 23
+		 Fold 1
+			Accuracy on train : 72.2222222222
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 85.4368932039
+			Selected View : Methyl_
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 77.0491803279
+			Accuracy on validation : 88.3495145631
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 74.8611111111
+			 Accuracy on test : 76.2295081967
+	- Iteration 24
+		 Fold 1
+			Accuracy on train : 72.2222222222
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 85.4368932039
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 87.3786407767
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 74.5486111111
+			 Accuracy on test : 75.4098360656
+	- Iteration 25
+		 Fold 1
+			Accuracy on train : 72.8395061728
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 86.4077669903
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 76.25
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 87.3786407767
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 74.5447530864
+			 Accuracy on test : 75.0
+	- Iteration 26
+		 Fold 1
+			Accuracy on train : 74.6913580247
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 86.4077669903
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 78.75
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 90.2912621359
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 76.7206790123
+			 Accuracy on test : 75.8196721311
+	- Iteration 27
+		 Fold 1
+			Accuracy on train : 75.9259259259
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 87.3786407767
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 88.3495145631
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 76.400462963
+			 Accuracy on test : 75.4098360656
+	- Iteration 28
+		 Fold 1
+			Accuracy on train : 78.3950617284
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 88.3495145631
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 76.25
+			Accuracy on test : 77.0491803279
+			Accuracy on validation : 87.3786407767
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 77.3225308642
+			 Accuracy on test : 76.2295081967
+	- Iteration 29
+		 Fold 1
+			Accuracy on train : 79.012345679
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 88.3495145631
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 77.868852459
+			Accuracy on validation : 90.2912621359
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 78.2561728395
+			 Accuracy on test : 77.0491803279
+	- Iteration 30
+		 Fold 1
+			Accuracy on train : 80.8641975309
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 89.3203883495
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 77.0491803279
+			Accuracy on validation : 88.3495145631
+			Selected View : Methyl_
+		- Mean : 
+			 Accuracy on train : 79.1820987654
+			 Accuracy on test : 75.8196721311
+	- Iteration 31
+		 Fold 1
+			Accuracy on train : 79.012345679
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 88.3495145631
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 78.125
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 89.3203883495
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 78.5686728395
+			 Accuracy on test : 75.0
+	- Iteration 32
+		 Fold 1
+			Accuracy on train : 79.6296296296
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 89.3203883495
+			Selected View : Methyl_
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 88.3495145631
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 78.5648148148
+			 Accuracy on test : 73.7704918033
+	- Iteration 33
+		 Fold 1
+			Accuracy on train : 77.7777777778
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 87.3786407767
+			Selected View : Methyl_
+		 Fold 2
+			Accuracy on train : 78.75
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 89.3203883495
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 78.2638888889
+			 Accuracy on test : 73.7704918033
+	- Iteration 34
+		 Fold 1
+			Accuracy on train : 76.5432098765
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 88.3495145631
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 72.131147541
+			Accuracy on validation : 87.3786407767
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 76.7091049383
+			 Accuracy on test : 72.5409836066
+	- Iteration 35
+		 Fold 1
+			Accuracy on train : 74.6913580247
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 85.4368932039
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 76.25
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 87.3786407767
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 75.4706790123
+			 Accuracy on test : 73.7704918033
+	- Iteration 36
+		 Fold 1
+			Accuracy on train : 74.6913580247
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 84.4660194175
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 86.4077669903
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 75.7831790123
+			 Accuracy on test : 73.3606557377
+	- Iteration 37
+		 Fold 1
+			Accuracy on train : 72.8395061728
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 78.125
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 88.3495145631
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 75.4822530864
+			 Accuracy on test : 74.1803278689
+	- Iteration 38
+		 Fold 1
+			Accuracy on train : 72.8395061728
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 75.625
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 84.4660194175
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 74.2322530864
+			 Accuracy on test : 74.1803278689
+	- Iteration 39
+		 Fold 1
+			Accuracy on train : 72.2222222222
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 78.125
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 87.3786407767
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 75.1736111111
+			 Accuracy on test : 74.1803278689
+	- Iteration 40
+		 Fold 1
+			Accuracy on train : 71.6049382716
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 81.5533980583
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 78.125
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 88.3495145631
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 74.8649691358
+			 Accuracy on test : 74.1803278689
+	- Iteration 41
+		 Fold 1
+			Accuracy on train : 71.6049382716
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 81.5533980583
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 78.75
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 89.3203883495
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 75.1774691358
+			 Accuracy on test : 74.1803278689
+	- Iteration 42
+		 Fold 1
+			Accuracy on train : 73.4567901235
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 84.4660194175
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 76.25
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 86.4077669903
+			Selected View : Methyl_
+		- Mean : 
+			 Accuracy on train : 74.8533950617
+			 Accuracy on test : 74.1803278689
+	- Iteration 43
+		 Fold 1
+			Accuracy on train : 72.8395061728
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 84.4660194175
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 75.0
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 85.4368932039
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 73.9197530864
+			 Accuracy on test : 73.7704918033
+	- Iteration 44
+		 Fold 1
+			Accuracy on train : 73.4567901235
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 84.4660194175
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 74.375
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 85.4368932039
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 73.9158950617
+			 Accuracy on test : 73.3606557377
+	- Iteration 45
+		 Fold 1
+			Accuracy on train : 72.8395061728
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 84.4660194175
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 73.75
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 84.4660194175
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 73.2947530864
+			 Accuracy on test : 73.3606557377
+	- Iteration 46
+		 Fold 1
+			Accuracy on train : 71.6049382716
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 82.5242718447
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 73.125
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 84.4660194175
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 72.3649691358
+			 Accuracy on test : 73.3606557377
+	- Iteration 47
+		 Fold 1
+			Accuracy on train : 71.6049382716
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 74.375
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 86.4077669903
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 72.9899691358
+			 Accuracy on test : 74.1803278689
+	- Iteration 48
+		 Fold 1
+			Accuracy on train : 72.2222222222
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 82.5242718447
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 74.375
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 86.4077669903
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 73.2986111111
+			 Accuracy on test : 74.1803278689
+	- Iteration 49
+		 Fold 1
+			Accuracy on train : 71.6049382716
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 74.375
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 86.4077669903
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 72.9899691358
+			 Accuracy on test : 74.5901639344
+	- Iteration 50
+		 Fold 1
+			Accuracy on train : 69.7530864198
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 81.5533980583
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 89.3203883495
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 73.6265432099
+			 Accuracy on test : 74.5901639344
+	- Iteration 51
+		 Fold 1
+			Accuracy on train : 70.3703703704
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 81.5533980583
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 76.25
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 88.3495145631
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 73.3101851852
+			 Accuracy on test : 75.0
+	- Iteration 52
+		 Fold 1
+			Accuracy on train : 70.3703703704
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 81.5533980583
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 76.25
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 88.3495145631
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 73.3101851852
+			 Accuracy on test : 74.5901639344
+	- Iteration 53
+		 Fold 1
+			Accuracy on train : 71.6049382716
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 81.5533980583
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 75.625
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 86.4077669903
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 73.6149691358
+			 Accuracy on test : 74.1803278689
+	- Iteration 54
+		 Fold 1
+			Accuracy on train : 72.2222222222
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 81.5533980583
+			Selected View : Methyl_
+		 Fold 2
+			Accuracy on train : 76.25
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 88.3495145631
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 74.2361111111
+			 Accuracy on test : 74.1803278689
+	- Iteration 55
+		 Fold 1
+			Accuracy on train : 72.8395061728
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 81.5533980583
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 75.625
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 86.4077669903
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 74.2322530864
+			 Accuracy on test : 74.1803278689
+	- Iteration 56
+		 Fold 1
+			Accuracy on train : 71.6049382716
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 80.5825242718
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 76.25
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 88.3495145631
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 73.9274691358
+			 Accuracy on test : 74.1803278689
+	- Iteration 57
+		 Fold 1
+			Accuracy on train : 72.2222222222
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 81.5533980583
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 87.3786407767
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 74.5486111111
+			 Accuracy on test : 73.7704918033
+	- Iteration 58
+		 Fold 1
+			Accuracy on train : 70.987654321
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 80.5825242718
+			Selected View : Methyl_
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 88.3495145631
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 74.2438271605
+			 Accuracy on test : 74.1803278689
+	- Iteration 59
+		 Fold 1
+			Accuracy on train : 72.2222222222
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 88.3495145631
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 74.8611111111
+			 Accuracy on test : 74.1803278689
+	- Iteration 60
+		 Fold 1
+			Accuracy on train : 70.987654321
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 79.6116504854
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 89.3203883495
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 74.2438271605
+			 Accuracy on test : 74.1803278689
+	- Iteration 61
+		 Fold 1
+			Accuracy on train : 72.8395061728
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 87.3786407767
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 74.8572530864
+			 Accuracy on test : 74.1803278689
+	- Iteration 62
+		 Fold 1
+			Accuracy on train : 70.3703703704
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 79.6116504854
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 89.3203883495
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 73.9351851852
+			 Accuracy on test : 74.1803278689
+	- Iteration 63
+		 Fold 1
+			Accuracy on train : 70.987654321
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 80.5825242718
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 88.3495145631
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 73.9313271605
+			 Accuracy on test : 74.1803278689
+	- Iteration 64
+		 Fold 1
+			Accuracy on train : 73.4567901235
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 81.5533980583
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 88.3495145631
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 75.1658950617
+			 Accuracy on test : 74.1803278689
+	- Iteration 65
+		 Fold 1
+			Accuracy on train : 74.0740740741
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 75.625
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 86.4077669903
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 74.849537037
+			 Accuracy on test : 74.5901639344
+	- Iteration 66
+		 Fold 1
+			Accuracy on train : 72.8395061728
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 88.3495145631
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 74.8572530864
+			 Accuracy on test : 74.5901639344
+	- Iteration 67
+		 Fold 1
+			Accuracy on train : 75.3086419753
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 76.25
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 87.3786407767
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 75.7793209877
+			 Accuracy on test : 74.5901639344
+	- Iteration 68
+		 Fold 1
+			Accuracy on train : 73.4567901235
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 88.3495145631
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 75.1658950617
+			 Accuracy on test : 74.5901639344
+	- Iteration 69
+		 Fold 1
+			Accuracy on train : 74.6913580247
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 76.25
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 87.3786407767
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 75.4706790123
+			 Accuracy on test : 74.5901639344
+	- Iteration 70
+		 Fold 1
+			Accuracy on train : 73.4567901235
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 76.25
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 87.3786407767
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 74.8533950617
+			 Accuracy on test : 74.5901639344
+	- Iteration 71
+		 Fold 1
+			Accuracy on train : 75.3086419753
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 88.3495145631
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 76.0918209877
+			 Accuracy on test : 74.5901639344
+	- Iteration 72
+		 Fold 1
+			Accuracy on train : 74.6913580247
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 76.875
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 88.3495145631
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 75.7831790123
+			 Accuracy on test : 74.5901639344
+	- Iteration 73
+		 Fold 1
+			Accuracy on train : 74.6913580247
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 89.3203883495
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 76.0956790123
+			 Accuracy on test : 74.5901639344
+	- Iteration 74
+		 Fold 1
+			Accuracy on train : 75.3086419753
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 89.3203883495
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 76.4043209877
+			 Accuracy on test : 74.1803278689
+	- Iteration 75
+		 Fold 1
+			Accuracy on train : 77.1604938272
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 84.4660194175
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 75.4098360656
+			Accuracy on validation : 89.3203883495
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 77.3302469136
+			 Accuracy on test : 74.5901639344
+	- Iteration 76
+		 Fold 1
+			Accuracy on train : 75.3086419753
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 89.3203883495
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 76.4043209877
+			 Accuracy on test : 75.0
+	- Iteration 77
+		 Fold 1
+			Accuracy on train : 74.0740740741
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 89.3203883495
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 75.787037037
+			 Accuracy on test : 75.0
+	- Iteration 78
+		 Fold 1
+			Accuracy on train : 75.9259259259
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 78.125
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 89.3203883495
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 77.025462963
+			 Accuracy on test : 75.0
+	- Iteration 79
+		 Fold 1
+			Accuracy on train : 74.6913580247
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 77.5
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 89.3203883495
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 76.0956790123
+			 Accuracy on test : 75.0
+	- Iteration 80
+		 Fold 1
+			Accuracy on train : 77.1604938272
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 83.4951456311
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 78.75
+			Accuracy on test : 77.0491803279
+			Accuracy on validation : 90.2912621359
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 77.9552469136
+			 Accuracy on test : 75.8196721311
+	- Iteration 81
+		 Fold 1
+			Accuracy on train : 75.3086419753
+			Accuracy on test : 74.5901639344
+			Accuracy on validation : 82.5242718447
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 80.0
+			Accuracy on test : 76.2295081967
+			Accuracy on validation : 90.2912621359
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 77.6543209877
+			 Accuracy on test : 75.4098360656
+	- Iteration 82
+		 Fold 1
+			Accuracy on train : 77.1604938272
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 80.0
+			Accuracy on test : 77.0491803279
+			Accuracy on validation : 92.2330097087
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 78.5802469136
+			 Accuracy on test : 75.4098360656
+	- Iteration 83
+		 Fold 1
+			Accuracy on train : 77.1604938272
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 80.625
+			Accuracy on test : 78.6885245902
+			Accuracy on validation : 91.2621359223
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 78.8927469136
+			 Accuracy on test : 76.2295081967
+	- Iteration 84
+		 Fold 1
+			Accuracy on train : 75.9259259259
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 82.5242718447
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 80.0
+			Accuracy on test : 77.0491803279
+			Accuracy on validation : 92.2330097087
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 77.962962963
+			 Accuracy on test : 75.0
+	- Iteration 85
+		 Fold 1
+			Accuracy on train : 77.7777777778
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 84.4660194175
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 80.625
+			Accuracy on test : 78.6885245902
+			Accuracy on validation : 91.2621359223
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 79.2013888889
+			 Accuracy on test : 75.8196721311
+	- Iteration 86
+		 Fold 1
+			Accuracy on train : 77.1604938272
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 80.0
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 91.2621359223
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 78.5802469136
+			 Accuracy on test : 76.6393442623
+	- Iteration 87
+		 Fold 1
+			Accuracy on train : 77.1604938272
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 83.4951456311
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 80.625
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 91.2621359223
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 78.8927469136
+			 Accuracy on test : 76.2295081967
+	- Iteration 88
+		 Fold 1
+			Accuracy on train : 77.7777777778
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 83.4951456311
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 80.0
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 91.2621359223
+			Selected View : Methyl_
+		- Mean : 
+			 Accuracy on train : 78.8888888889
+			 Accuracy on test : 76.6393442623
+	- Iteration 89
+		 Fold 1
+			Accuracy on train : 77.7777777778
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 83.4951456311
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 80.625
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 92.2330097087
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 79.2013888889
+			 Accuracy on test : 76.2295081967
+	- Iteration 90
+		 Fold 1
+			Accuracy on train : 77.1604938272
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 82.5242718447
+			Selected View : Clinic_
+		 Fold 2
+			Accuracy on train : 80.625
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 92.2330097087
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 78.8927469136
+			 Accuracy on test : 76.2295081967
+	- Iteration 91
+		 Fold 1
+			Accuracy on train : 75.9259259259
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 82.5242718447
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 80.625
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 92.2330097087
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 78.275462963
+			 Accuracy on test : 76.2295081967
+	- Iteration 92
+		 Fold 1
+			Accuracy on train : 76.5432098765
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 82.5242718447
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 80.0
+			Accuracy on test : 78.6885245902
+			Accuracy on validation : 91.2621359223
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 78.2716049383
+			 Accuracy on test : 75.8196721311
+	- Iteration 93
+		 Fold 1
+			Accuracy on train : 75.9259259259
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 82.5242718447
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 81.25
+			Accuracy on test : 78.6885245902
+			Accuracy on validation : 92.2330097087
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 78.587962963
+			 Accuracy on test : 75.8196721311
+	- Iteration 94
+		 Fold 1
+			Accuracy on train : 77.1604938272
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 82.5242718447
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 80.625
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 91.2621359223
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 78.8927469136
+			 Accuracy on test : 76.2295081967
+	- Iteration 95
+		 Fold 1
+			Accuracy on train : 76.5432098765
+			Accuracy on test : 72.131147541
+			Accuracy on validation : 82.5242718447
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 81.25
+			Accuracy on test : 78.6885245902
+			Accuracy on validation : 92.2330097087
+			Selected View : Methyl_
+		- Mean : 
+			 Accuracy on train : 78.8966049383
+			 Accuracy on test : 75.4098360656
+	- Iteration 96
+		 Fold 1
+			Accuracy on train : 77.1604938272
+			Accuracy on test : 72.131147541
+			Accuracy on validation : 83.4951456311
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 81.25
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 92.2330097087
+			Selected View : MRNASeq
+		- Mean : 
+			 Accuracy on train : 79.2052469136
+			 Accuracy on test : 75.8196721311
+	- Iteration 97
+		 Fold 1
+			Accuracy on train : 76.5432098765
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 83.4951456311
+			Selected View : MRNASeq
+		 Fold 2
+			Accuracy on train : 81.25
+			Accuracy on test : 78.6885245902
+			Accuracy on validation : 92.2330097087
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 78.8966049383
+			 Accuracy on test : 75.8196721311
+	- Iteration 98
+		 Fold 1
+			Accuracy on train : 76.5432098765
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 83.4951456311
+			Selected View : RNASeq_
+		 Fold 2
+			Accuracy on train : 81.25
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 92.2330097087
+			Selected View : Clinic_
+		- Mean : 
+			 Accuracy on train : 78.8966049383
+			 Accuracy on test : 76.2295081967
+	- Iteration 99
+		 Fold 1
+			Accuracy on train : 75.9259259259
+			Accuracy on test : 73.7704918033
+			Accuracy on validation : 82.5242718447
+			Selected View : MiRNA__
+		 Fold 2
+			Accuracy on train : 81.25
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 92.2330097087
+			Selected View : RNASeq_
+		- Mean : 
+			 Accuracy on train : 78.587962963
+			 Accuracy on test : 76.6393442623
+	- Iteration 100
+		 Fold 1
+			Accuracy on train : 74.6913580247
+			Accuracy on test : 72.9508196721
+			Accuracy on validation : 81.5533980583
+			Selected View : Methyl_
+		 Fold 2
+			Accuracy on train : 80.625
+			Accuracy on test : 79.5081967213
+			Accuracy on validation : 92.2330097087
+			Selected View : MiRNA__
+		- Mean : 
+			 Accuracy on train : 77.6581790123
+			 Accuracy on test : 76.2295081967
+
+Computation time on 5 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:01:34        0:00:17
+	         Fold 2        0:03:26        0:00:17
+	          Total        0:05:01        0:00:34
+	So a total classification time of 0:03:43.
+

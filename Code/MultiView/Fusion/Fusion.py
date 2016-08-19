@@ -1,6 +1,5 @@
 from Methods import *
 
-
 class Fusion:
     def __init__(self, NB_VIEW, DATASET_LENGTH, CLASS_LABELS, NB_CORES=1,**kwargs):
         fusionType = kwargs['fusionType']

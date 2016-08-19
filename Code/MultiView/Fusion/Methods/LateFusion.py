@@ -24,7 +24,7 @@ def fifMonoviewClassifier(classifierName, data, labels, classifierConfig):
                                                 )))
     return classifier
 
-class LateFusionClassifier:
+class LateFusionClassifier(object):
     def __init__(self, monoviewClassifiersNames, monoviewClassifiersConfigs, NB_CORES=1):
         self.monoviewClassifiersNames = monoviewClassifiersNames
         self.monoviewClassifiersConfigs = monoviewClassifiersConfigs
