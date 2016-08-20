@@ -440,7 +440,7 @@ def getPseudoRNASeq(dataset):
     return dataset
 
 
-def getMultiOmicModDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
+def getMultiOmicDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
     datasetFile = h5py.File(path+"MultiOmicDataset.hdf5", "r")
     labelDictionary = {0:"No", 1:"Yes"}
     return datasetFile, labelDictionary

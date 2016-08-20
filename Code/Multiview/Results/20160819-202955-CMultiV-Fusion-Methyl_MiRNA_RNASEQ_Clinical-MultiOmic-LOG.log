@@ -1,0 +1,62 @@
+2016-08-19 20:29:55,097 INFO: ### Main Programm for Multiview Classification
+2016-08-19 20:29:55,097 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Fusion ; Cores : 4
+2016-08-19 20:29:55,097 INFO: Start:	 Read HDF5 Database Files for MultiOmic
+2016-08-19 20:29:55,099 INFO: Info:	 Labels used: No, Yes
+2016-08-19 20:29:55,099 INFO: Info:	 Length of dataset:347
+2016-08-19 20:29:55,100 INFO: Info:	 Shape of Methyl :[  347 25978]
+2016-08-19 20:29:55,100 INFO: Info:	 Shape of MiRNA_ :[ 347 1046]
+2016-08-19 20:29:55,101 INFO: Info:	 Shape of RNASeq :[  347 73599]
+2016-08-19 20:29:55,102 INFO: Info:	 Shape of Clinic :[347 127]
+2016-08-19 20:29:55,102 INFO: Done:	 Read Database Files
+2016-08-19 20:29:55,102 INFO: Start:	 Determine validation split for ratio 0.7
+2016-08-19 20:29:55,104 INFO: Done:	 Determine validation split
+2016-08-19 20:29:55,104 INFO: Start:	 Determine 4 folds
+2016-08-19 20:29:55,109 INFO: Info:	 Length of Learning Sets: 184
+2016-08-19 20:29:55,110 INFO: Info:	 Length of Testing Sets: 60
+2016-08-19 20:29:55,110 INFO: Info:	 Length of Validation Set: 103
+2016-08-19 20:29:55,110 INFO: Done:	 Determine folds
+2016-08-19 20:29:55,110 INFO: Start:	 Learning with Fusion and 4 folds
+2016-08-19 20:29:55,110 INFO: 	Start:	 Fold number 1
+2016-08-19 20:29:55,538 INFO: 	Start: 	 Classification
+2016-08-19 20:29:56,398 INFO: 	Done: 	 Fold number 1
+2016-08-19 20:29:56,398 INFO: 	Start:	 Fold number 2
+2016-08-19 20:29:56,818 INFO: 	Start: 	 Classification
+2016-08-19 20:29:57,650 INFO: 	Done: 	 Fold number 2
+2016-08-19 20:29:57,650 INFO: 	Start:	 Fold number 3
+2016-08-19 20:29:58,068 INFO: 	Start: 	 Classification
+2016-08-19 20:29:58,907 INFO: 	Done: 	 Fold number 3
+2016-08-19 20:29:58,907 INFO: 	Start:	 Fold number 4
+2016-08-19 20:29:59,327 INFO: 	Start: 	 Classification
+2016-08-19 20:30:00,179 INFO: 	Done: 	 Fold number 4
+2016-08-19 20:30:00,179 INFO: Done:	 Classification
+2016-08-19 20:30:00,179 INFO: Info:	 Time for Classification: 5[s]
+2016-08-19 20:30:00,179 INFO: Start:	 Result Analysis for Fusion
+2016-08-19 20:30:00,182 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy :
+	-On Train : 95.0794711824
+	-On Test : 80.8333333333
+	-On Validation : 94.1747572816
+
+Dataset info :
+	-Database name : MultiOmic
+	-Labels : No, Yes
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-4 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 1.0, 1.0, 1.0, 1.0 with monoview classifier : 
+		- Random Forest with num_esimators : 3, max_depth : 4
+
+Computation time on 4 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:01        0:00:00
+	         Fold 3        0:00:02        0:00:00
+	         Fold 4        0:00:04        0:00:00
+	          Total        0:00:09        0:00:03
+	So a total classification time of 0:00:05.
+
+
+2016-08-19 20:30:00,183 INFO: Done:	 Result Analysis

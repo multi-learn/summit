@@ -71,6 +71,15 @@ class WeightedLinear(LateFusionClassifier):
 
         return predictedLabels
 
+    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
+        configString = "with Weighted linear using a weight for each view : "+", ".join(self.weights) + \
+                       "\n\t-With monoview classifiers : "
+        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
+            monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
+            configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
+        return configString
+
+
 
 # The SVMClassifier is here used to find the right weights for linear fusion
 # Here we have a function to train it, one to fuse. 
@@ -121,6 +130,13 @@ class SVMForLinear(LateFusionClassifier):
 
         self.SVMClassifier.fit(monoViewDecisions, DATASET["/Labels/labelsArray"][usedIndices])
 
+    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
+        configString = "with SVM for linear \n\t-With monoview classifiers : "
+        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
+            monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
+            configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
+        return configString
+
 
 # For majority voting, we have a problem : we have 5 fetures and 101 classes
 # on Calthech, so if each feature votes for one class, we can't find a good 
@@ -159,6 +175,13 @@ class MajorityVoting(LateFusionClassifier):
         else:
             predictedLabels = []
         return predictedLabels
+
+    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
+        configString = "with Majority Voting \n\t-With monoview classifiers : "
+        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
+            monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
+            configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
+        return configString
 
 
 # For probabilistic classifiers, we need to add more late fusion methods

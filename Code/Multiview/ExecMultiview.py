@@ -4,7 +4,7 @@ import os.path
 sys.path.append(
         os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-from MultiView import *
+from Multiview import *
 
 import GetMultiviewDb as DB
 import argparse
@@ -15,23 +15,30 @@ import logging
 import time
 
 
-def ExecMultiview(views, dataBaseType, args, NB_VIEW, LEARNING_RATE, nbFolds, NB_CLASS, LABELS_NAMES, NB_CORES,
-                  MumboKWARGS, FusionKWARGS):
+def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, **kwargs):
+
+    CL_type = kwargs["CL_type"]
+    views = kwargs["views"]
+    NB_VIEW = kwargs["NB_VIEW"]
+    NB_CLASS = kwargs["NB_CLASS"]
+    LABELS_NAMES = kwargs["LABELS_NAMES"]
+    MumboKWARGS = kwargs["MumboKWARGS"]
+    FusionKWARGS = kwargs["FusionKWARGS"]
 
     t_start = time.time()
     logging.info("### Main Programm for Multiview Classification")
-    logging.info("### Classification - Database : " + str(args.name) + " ; Views : " + ", ".join(views) +
-                 " ; Algorithm : " + args.CL_type + " ; Cores : " + str(NB_CORES))
+    logging.info("### Classification - Database : " + str(name) + " ; Views : " + ", ".join(views) +
+                 " ; Algorithm : " + CL_type + " ; Cores : " + str(nbCores))
 
 
-    logging.info("Start:\t Read "+str.upper(dataBaseType[1:])+" Database Files for " + args.name)
+    logging.info("Start:\t Read " + str.upper(databaseType[1:]) + " Database Files for " + name)
 
-    getDatabase = getattr(DB, "get" + args.name + "DB" + dataBaseType[1:])
-    DATASET, LABELS_DICTIONARY = getDatabase(views, args.pathF, args.name, NB_CLASS, LABELS_NAMES)
+    getDatabase = getattr(DB, "get" + name + "DB" + databaseType[1:])
+    DATASET, LABELS_DICTIONARY = getDatabase(views, path, name, NB_CLASS, LABELS_NAMES)
     datasetLength = DATASET["/datasetLength"][...]
     NB_VIEW = DATASET.get("nbView").value
     views = [str(DATASET["/View"+str(viewIndex)+"/name"][...]) for viewIndex in range(NB_VIEW)]
-    dataBaseType = "hdf5"
+    databaseType = "hdf5"
 
     logging.info("Info:\t Labels used: " + ", ".join(LABELS_DICTIONARY.values()))
     logging.info("Info:\t Length of dataset:" + str(datasetLength))
@@ -42,8 +49,8 @@ def ExecMultiview(views, dataBaseType, args, NB_VIEW, LEARNING_RATE, nbFolds, NB
     logging.info("Done:\t Read Database Files")
 
 
-    logging.info("Start:\t Determine validation split for ratio " + str(LEARNING_RATE))
-    validationIndices = DB.splitDataset(DATASET, LEARNING_RATE, datasetLength)
+    logging.info("Start:\t Determine validation split for ratio " + str(learningRate))
+    validationIndices = DB.splitDataset(DATASET, learningRate, datasetLength)
     learningIndices = [index for index in range(datasetLength) if index not in validationIndices]
     datasetLength = len(learningIndices)
     logging.info("Done:\t Determine validation split")
@@ -60,13 +67,13 @@ def ExecMultiview(views, dataBaseType, args, NB_VIEW, LEARNING_RATE, nbFolds, NB
     logging.info("Done:\t Determine folds")
 
 
-    logging.info("Start:\t Learning with " + args.CL_type + " and " + str(len(kFolds)) + " folds")
+    logging.info("Start:\t Learning with " + CL_type + " and " + str(len(kFolds)) + " folds")
     extractionTime = time.time() - t_start
 
-    classifierPackage = globals()[args.CL_type]  # Permet d'appeler un module avec une string
-    initKWARGS = globals()[args.CL_type + 'KWARGS']
-    classifierModule = getattr(classifierPackage, args.CL_type)
-    classifierClass = getattr(classifierModule, args.CL_type)
+    classifierPackage = globals()[CL_type]  # Permet d'appeler un module avec une string
+    initKWARGS = globals()[CL_type + 'KWARGS']
+    classifierModule = getattr(classifierPackage, CL_type)
+    classifierClass = getattr(classifierModule, CL_type)
     analysisModule = getattr(classifierPackage, "analyzeResults")
 
     kFoldPredictedTrainLabels = []
@@ -83,7 +90,7 @@ def ExecMultiview(views, dataBaseType, args, NB_VIEW, LEARNING_RATE, nbFolds, NB
             logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
             trainIndices = [index for index in range(datasetLength) if index not in fold]
             DATASET_LENGTH = len(trainIndices)
-            classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("/Labels/labelsArray").value, NB_CORES=NB_CORES, **initKWARGS)
+            classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("/Labels/labelsArray").value, NB_CORES=nbCores, **initKWARGS)
 
             classifier.fit_hdf5(DATASET, trainIndices=trainIndices)
             kFoldClassifier.append(classifier)
@@ -102,22 +109,22 @@ def ExecMultiview(views, dataBaseType, args, NB_VIEW, LEARNING_RATE, nbFolds, NB
 
     logging.info("Done:\t Classification")
     logging.info("Info:\t Time for Classification: " + str(int(classificationTime)) + "[s]")
-    logging.info("Start:\t Result Analysis for " + args.CL_type)
+    logging.info("Start:\t Result Analysis for " + CL_type)
 
     times = (extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime)
 
     stringAnalysis, imagesAnalysis = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
                                                             kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
-                                                            DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY,
-                                                            views, NB_CORES, times, kFolds, args.name, nbFolds,
+                                                            DATASET, initKWARGS, learningRate, LABELS_DICTIONARY,
+                                                            views, nbCores, times, kFolds, name, nbFolds,
                                                             validationIndices)
     labelsSet = set(LABELS_DICTIONARY.values())
     logging.info(stringAnalysis)
     featureString = "-".join(views)
     labelsString = "-".join(labelsSet)
     timestr = time.strftime("%Y%m%d-%H%M%S")
-    outputFileName = "Results/" + timestr + "Results-" + args.CL_type + "-" + featureString + '-' + labelsString + \
-                     '-learnRate' + str(LEARNING_RATE) + '-' + args.name
+    outputFileName = "Results/" + timestr + "Results-" + CL_type + "-" + featureString + '-' + labelsString + \
+                     '-learnRate' + str(learningRate) + '-' + name
 
     outputTextFile = open(outputFileName + '.txt', 'w')
     outputTextFile.write(stringAnalysis)
@@ -170,7 +177,7 @@ if __name__=='__main__':
     groupClass.add_argument('--CL_type', metavar='STRING', action='store',
                             help='Determine which multiview classifier to use', default='Mumbo')
     groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
-                            default=5)
+                            default=1)
 
     groupMumbo = parser.add_argument_group('Mumbo arguments')
     groupMumbo.add_argument('--MU_type', metavar='STRING', action='store',
@@ -232,9 +239,14 @@ if __name__=='__main__':
                         filemode='w')
     if args.log:
         logging.getLogger().addHandler(logging.StreamHandler())
-
-    ExecMultiview(views, dataBaseType, args, NB_VIEW, LEARNING_RATE, nbFolds, NB_CLASS, LABELS_NAMES, NB_CORES,
-                  MumboKWARGS, FusionKWARGS)
+    arguments = {"CL_type": "Fusion",
+                 "views": args.views.split(":"),
+                 "NB_VIEW": len(args.views.split(":")),
+                 "NB_CLASS": len(args.CL_classes.split(":")),
+                 "LABELS_NAMES": args.CL_classes.split(":"),
+                 "FusionKWARGS": FusionKWARGS,
+                 "MumboKWARGS": MumboKWARGS}
+    ExecMultiview(args.name, args.CL_split, args.CL_nbFolds, args.CL_cores, args.type, args.pathF, **arguments)
 
 
 

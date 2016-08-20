@@ -30,21 +30,30 @@ __date__	= 2016-03-25
 ### Argument Parser
 
 
-def ExecMonoview(args, RandomForestKWARGS, SVCKWARGS, DecisionTreeKWARGS, SGDKWARGS):
+def ExecMonoview(name, learningRate, nbFolds, nbCores, databaseType, path, **kwargs):
+    RandomForestKWARGS = kwargs["RandomForestKWARGS"]
+    SVCKWARGS = kwargs["SVCKWARGS"]
+    DecisionTreeKWARGS = kwargs["DecisionTreeKWARGS"]
+    SGDKWARGS = kwargs["SGDKWARGS"]
+    feat = kwargs["feat"]
+    fileFeat = kwargs["fileFeat"]
+    fileCL = kwargs["fileCL"]
+    fileCLD = kwargs["fileCLD"]
+    CL_type = kwargs["CL_type"]
 # Determine the Database to extract features
     logging.debug("### Main Programm for Classification MonoView")
-    logging.debug("### Classification - Database:" + str(args.name) + " Feature:" + str(args.feat) + " train_size:" + str(args.CL_split) + ", GridSearch of Trees:" + args.CL_RF_trees + ", CrossValidation k-folds:" + str(args.CL_CV) + ", cores:" + str(args.CL_Cores))
+    logging.debug("### Classification - Database:" + str(name) + " Feature:" + str(feat) + " train_size:" + str(learningRate) + ", CrossValidation k-folds:" + str(nbFolds) + ", cores:" + str(nbCores))
 
     # Read the features
-    logging.debug("Start:\t Read "+args.type+" Files")
+    logging.debug("Start:\t Read " + databaseType + " Files")
 
-    if args.type == "csv":
-        X = np.genfromtxt(args.pathF + args.fileFeat, delimiter=';')
-        Y = np.genfromtxt(args.pathF + args.fileCL, delimiter=';')
-    elif args.type == "hdf5":
-        dataset = h5py.File(args.pathF + args.name + ".hdf5", "r")
+    if databaseType == "csv":
+        X = np.genfromtxt(path + fileFeat, delimiter=';')
+        Y = np.genfromtxt(path + fileCL, delimiter=';')
+    elif databaseType == "hdf5":
+        dataset = h5py.File(path + name + ".hdf5", "r")
         viewsDict = dict((dataset.get("/View"+str(viewIndex)+"/name").value, viewIndex) for viewIndex in range(dataset.get("nbView").value))
-        X = dataset["View"+str(viewsDict[args.feat])+"/matrix"][...]
+        X = dataset["View"+str(viewsDict[feat])+"/matrix"][...]
         # X_ = dataset["View"+str(viewsDict[args.feat])+"/matrix"][...]
         # X = np.zeros((dataset.get("datasetLength/").value, dataset["View"+str(viewsDict[args.feat])+"/shape"][1]), dtype=int)
         # for exampleindice, exampleArray in enumerate(X_):
@@ -60,7 +69,7 @@ def ExecMonoview(args, RandomForestKWARGS, SVCKWARGS, DecisionTreeKWARGS, SGDKWA
     # Calculate Train/Test data
     logging.debug("Start:\t Determine Train/Test split")
 
-    X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(X, Y, args.CL_split)
+    X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(X, Y, learningRate)
 
     logging.debug("Info:\t Shape X_train:" + str(X_train.shape) + ", Length of y_train:" + str(len(y_train)))
     logging.debug("Info:\t Shape X_test:" + str(X_test.shape) + ", Length of y_test:" + str(len(y_test)))
@@ -70,10 +79,10 @@ def ExecMonoview(args, RandomForestKWARGS, SVCKWARGS, DecisionTreeKWARGS, SGDKWA
     logging.debug("Start:\t Classification")
 
 
-    classifierFunction = getattr(ClassifMonoView, "MonoviewClassif"+args.CL_type)
-    classifierKWARGS = globals()[args.CL_type+"KWARGS"]
+    classifierFunction = getattr(ClassifMonoView, "MonoviewClassif"+CL_type)
+    classifierKWARGS = globals()[CL_type+"KWARGS"]
 
-    cl_desc, cl_res = classifierFunction(X_train, y_train, nbFolds=args.CL_CV, nbCores = args.CL_Cores,
+    cl_desc, cl_res = classifierFunction(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores,
                                                          **classifierKWARGS)
     t_end  = time.time() - t_start
 
@@ -88,13 +97,13 @@ def ExecMonoview(args, RandomForestKWARGS, SVCKWARGS, DecisionTreeKWARGS, SGDKWA
     # CSV Export
     logging.debug("Start:\t Exporting to CSV")
     dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
-    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat
+    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat
     ExportResults.exportPandasToCSV(df_class_res, dir, filename)
     logging.debug("Done:\t Exporting to CSV")
 
     # Stats Result
     y_test_pred = cl_res.predict(X_test)
-    classLabelsDesc = pd.read_csv(args.pathF + args.fileCLD, sep=";", names=['label', 'name'])
+    classLabelsDesc = pd.read_csv(path + fileCLD, sep=";", names=['label', 'name'])
     classLabelsNames = classLabelsDesc.name
     #logging.debug("" + str(classLabelsNames))
     classLabelsNamesList = classLabelsNames.values.tolist()
@@ -107,21 +116,21 @@ def ExecMonoview(args, RandomForestKWARGS, SVCKWARGS, DecisionTreeKWARGS, SGDKWA
 
     # Classification Report with Precision, Recall, F1 , Support
     logging.debug("Info:\t Classification report:")
-    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Report"
+    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Report"
     logging.debug("\n" + str(metrics.classification_report(y_test, y_test_pred, labels = range(0,len(classLabelsDesc.name)), target_names=classLabelsNamesList)))
     scores_df = ExportResults.classification_report_df(dir, filename, y_test, y_test_pred, range(0, len(classLabelsDesc.name)), classLabelsNamesList)
 
     # Create some useful statistcs
     logging.debug("Info:\t Statistics:")
-    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Stats"
+    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Stats"
     stats_df = ExportResults.classification_stats(dir, filename, scores_df, accuracy_score)
     logging.debug("\n" + stats_df.to_string())
 
     # Confusion Matrix
     logging.debug("Info:\t Calculate Confusionmatrix")
-    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-ConfMatrix"
+    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-ConfMatrix"
     df_conf_norm = ExportResults.confusion_matrix_df(dir, filename, y_test, y_test_pred, classLabelsNamesList)
-    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-ConfMatrixImg"
+    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-ConfMatrixImg"
     ExportResults.plot_confusion_matrix(dir, filename, df_conf_norm)
 
     logging.debug("Done:\t Statistic Results")
@@ -131,8 +140,8 @@ def ExecMonoview(args, RandomForestKWARGS, SVCKWARGS, DecisionTreeKWARGS, SGDKWA
     logging.debug("Start:\t Plot Result")
     np_score = ExportResults.calcScorePerClass(y_test, cl_res.predict(X_test).astype(int))
     ### dir and filename the same as CSV Export
-    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Score"
-    ExportResults.showResults(dir, filename, args.name, args.feat, np_score)
+    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Score"
+    ExportResults.showResults(dir, filename, name, feat, np_score)
     logging.debug("Done:\t Plot Result")
 
 
@@ -201,3 +210,8 @@ if __name__=='__main__':
 
     if(args.log):
         logging.getLogger().addHandler(logging.StreamHandler())
+
+    arguments = {"RandomForestKWARGS": RandomForestKWARGS, "SVCKWARGS": SVCKWARGS,
+                 "DecisionTreeKWARGS": DecisionTreeKWARGS, "SGDKWARGS": SGDKWARGS, "feat":args.feat,
+                 "fileFeat": args.fileFeat, "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": args.CL_type}
+    ExecMonoview(args.name, args.CL_split, args.CL_CV, args.CL_Cores, args.type, args.pathF, **arguments)

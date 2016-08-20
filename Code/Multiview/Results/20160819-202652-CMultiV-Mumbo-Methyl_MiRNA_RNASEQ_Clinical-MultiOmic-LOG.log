@@ -1,0 +1,23 @@
+2016-08-19 20:26:52,708 INFO: ### Main Programm for Multiview Classification
+2016-08-19 20:26:52,708 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Fusion ; Cores : 5
+2016-08-19 20:26:52,708 INFO: Start:	 Read HDF5 Database Files for MultiOmic
+2016-08-19 20:26:52,710 INFO: Info:	 Labels used: No, Yes
+2016-08-19 20:26:52,710 INFO: Info:	 Length of dataset:347
+2016-08-19 20:26:52,711 INFO: Info:	 Shape of Methyl :[  347 25978]
+2016-08-19 20:26:52,711 INFO: Info:	 Shape of MiRNA_ :[ 347 1046]
+2016-08-19 20:26:52,712 INFO: Info:	 Shape of RNASeq :[  347 73599]
+2016-08-19 20:26:52,713 INFO: Info:	 Shape of Clinic :[347 127]
+2016-08-19 20:26:52,713 INFO: Done:	 Read Database Files
+2016-08-19 20:26:52,713 INFO: Start:	 Determine validation split for ratio 0.7
+2016-08-19 20:26:52,715 INFO: Done:	 Determine validation split
+2016-08-19 20:26:52,715 INFO: Start:	 Determine 4 folds
+2016-08-19 20:26:52,722 INFO: Info:	 Length of Learning Sets: 184
+2016-08-19 20:26:52,722 INFO: Info:	 Length of Testing Sets: 60
+2016-08-19 20:26:52,722 INFO: Info:	 Length of Validation Set: 103
+2016-08-19 20:26:52,722 INFO: Done:	 Determine folds
+2016-08-19 20:26:52,722 INFO: Start:	 Learning with Fusion and 4 folds
+2016-08-19 20:26:52,723 INFO: 	Start:	 Fold number 1
+2016-08-19 20:27:17,884 INFO: 	Start: 	 Classification
+2016-08-19 20:27:25,928 INFO: 	Done: 	 Fold number 1
+2016-08-19 20:27:25,928 INFO: 	Start:	 Fold number 2
+2016-08-19 20:27:49,108 INFO: 	Start: 	 Classification
