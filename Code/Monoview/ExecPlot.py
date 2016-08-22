@@ -67,7 +67,7 @@ feat_desc = df_feat_res.a_feat_desc.values
 
 dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-FeatParaOpt/"
 #filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-FPO-" + args.name + "-" + args.feature + "-" + args.param
-#ExportResults.exportPandasToCSV(df_feat_res, dir, filename)
+#ExportResults.exportPandasToCSV(df_feat_res, directory, filename)
 
 # Store or Show plot
 if(args.show):

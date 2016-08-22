@@ -15,16 +15,22 @@ def isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict):
         return False, nbTrainingExamples
 
 
-def subSample(data, labels, weights, subSampling):
+def subSample(data, labels, subSampling, weights=None):
+    if weights == None:
+        weights = np.ones(len(labels))/len(labels)
     nbExamples = len(labels)
     labelSupports, labelDict = getLabelSupports(labels)
-    nbTrainingExamples = [int(support * subSampling) for support in labelSupports]
+
+    nbTrainingExamples = [int(support * subSampling) if int(support * subSampling) > 0 else 1
+                          for support in labelSupports]
     trainingExamplesIndices = []
+    usedIndices = []
     while nbTrainingExamples != [0 for i in range(len(labelSupports))]:
         index = int(random.randint(0, nbExamples - 1))
         isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, labels, labelDict)
-        if isUseFull:
+        if isUseFull and index not in usedIndices:
             trainingExamplesIndices.append(index)
+            usedIndices.append(index)
     subSampledData = []
     subSampledLabels = []
     subSampledWeights = []

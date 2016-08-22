@@ -1,0 +1,21 @@
+2016-08-22 10:53:19,373 INFO: ### Main Programm for Multiview Classification
+2016-08-22 10:53:19,374 INFO: ### Classification - Database : ModifiedMultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Mumbo ; Cores : 1
+2016-08-22 10:53:19,374 INFO: Start:	 Read HDF5 Database Files for ModifiedMultiOmic
+2016-08-22 10:53:19,376 INFO: Info:	 Labels used: No, Yes
+2016-08-22 10:53:19,376 INFO: Info:	 Length of dataset:347
+2016-08-22 10:53:19,377 INFO: Info:	 Shape of Methyl_ :[  347 25978]
+2016-08-22 10:53:19,378 INFO: Info:	 Shape of MiRNA__ :[ 347 1046]
+2016-08-22 10:53:19,379 INFO: Info:	 Shape of RNASeq_ :[  347 73599]
+2016-08-22 10:53:19,380 INFO: Info:	 Shape of Clinic_ :[347 127]
+2016-08-22 10:53:19,381 INFO: Info:	 Shape of MRNASeq :[  347 73599]
+2016-08-22 10:53:19,381 INFO: Done:	 Read Database Files
+2016-08-22 10:53:19,381 INFO: Start:	 Determine validation split for ratio 0.7
+2016-08-22 10:53:19,384 INFO: Done:	 Determine validation split
+2016-08-22 10:53:19,384 INFO: Start:	 Determine 4 folds
+2016-08-22 10:53:19,390 INFO: Info:	 Length of Learning Sets: 184
+2016-08-22 10:53:19,390 INFO: Info:	 Length of Testing Sets: 60
+2016-08-22 10:53:19,390 INFO: Info:	 Length of Validation Set: 103
+2016-08-22 10:53:19,390 INFO: Done:	 Determine folds
+2016-08-22 10:53:19,390 INFO: Start:	 Learning with Mumbo and 4 folds
+2016-08-22 10:53:49,071 INFO: 	Start:	 Fold number 1
+2016-08-22 10:53:49,747 DEBUG: 		Start:	 Iteration 1

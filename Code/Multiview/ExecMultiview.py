@@ -15,7 +15,7 @@ import logging
 import time
 
 
-def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, **kwargs):
+def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=False, **kwargs):
 
     CL_type = kwargs["CL_type"]
     views = kwargs["views"]
@@ -29,6 +29,7 @@ def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, **kw
     logging.info("### Main Programm for Multiview Classification")
     logging.info("### Classification - Database : " + str(name) + " ; Views : " + ", ".join(views) +
                  " ; Algorithm : " + CL_type + " ; Cores : " + str(nbCores))
+
 
 
     logging.info("Start:\t Read " + str.upper(databaseType[1:]) + " Database Files for " + name)
@@ -71,9 +72,10 @@ def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, **kw
     extractionTime = time.time() - t_start
 
     classifierPackage = globals()[CL_type]  # Permet d'appeler un module avec une string
-    initKWARGS = globals()[CL_type + 'KWARGS']
+    initKWARGS = kwargs[CL_type + 'KWARGS']
     classifierModule = getattr(classifierPackage, CL_type)
     classifierClass = getattr(classifierModule, CL_type)
+    classifierGridSearch = getattr(classifierModule, "gridSearch_hdf5")
     analysisModule = getattr(classifierPackage, "analyzeResults")
 
     kFoldPredictedTrainLabels = []
@@ -82,6 +84,13 @@ def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, **kw
     kFoldLearningTime = []
     kFoldPredictionTime = []
     kFoldClassifier = []
+
+
+    if gridSearch:
+        logging.info("Start:\t Gridsearching best settings for monoview classifiers")
+        bestSettings = classifierGridSearch(DATASET, initKWARGS["classifiersNames"])
+        initKWARGS["classifiersConfigs"] = bestSettings
+        logging.info("Done:\t Gridsearching best settings for monoview classifiers")
 
     # Begin Classification
     for foldIdx, fold in enumerate(kFolds):
@@ -184,8 +193,8 @@ if __name__=='__main__':
                             help='Determine which monoview classifier to use with Mumbo',
                             default='DecisionTree:DecisionTree:DecisionTree:DecisionTree')
     groupMumbo.add_argument('--MU_config', metavar='STRING', action='store', nargs='+',
-                            help='Configuration for the monoview classifier in Mumbo', default=['3:1.0', '3:1.0', '3:1.0',
-                                                                                                '3:1.0'])
+                            help='Configuration for the monoview classifier in Mumbo', default=['1:0.02', '1:0.018', '1:0.1',
+                                                                                                '2:0.09'])
     groupMumbo.add_argument('--MU_iter', metavar='INT', action='store',
                             help='Number of iterations in Mumbos learning process', type=int, default=5)
 
@@ -220,7 +229,7 @@ if __name__=='__main__':
     fusionClassifierConfig = [argument.split(':') for argument in args.FU_cl_config]
     fusionMethodConfig = [argument.split(':') for argument in args.FU_method_config]
     FusionKWARGS = {"fusionType":args.FU_type, "fusionMethod":args.FU_method,
-                    "monoviewClassifiersNames":fusionClassifierNames, "monoviewClassifiersConfigs":fusionClassifierConfig,
+                    "classifiersNames":fusionClassifierNames, "classifiersConfigs":fusionClassifierConfig,
                     'fusionMethodConfig':fusionMethodConfig}
     MumboKWARGS = {"classifiersConfigs":mumboClassifierConfig, "NB_ITER":mumboNB_ITER, "classifiersNames":mumboclassifierNames}
     dir = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
@@ -239,14 +248,14 @@ if __name__=='__main__':
                         filemode='w')
     if args.log:
         logging.getLogger().addHandler(logging.StreamHandler())
-    arguments = {"CL_type": "Fusion",
+    arguments = {"CL_type": args.CL_type,
                  "views": args.views.split(":"),
                  "NB_VIEW": len(args.views.split(":")),
                  "NB_CLASS": len(args.CL_classes.split(":")),
                  "LABELS_NAMES": args.CL_classes.split(":"),
                  "FusionKWARGS": FusionKWARGS,
                  "MumboKWARGS": MumboKWARGS}
-    ExecMultiview(args.name, args.CL_split, args.CL_nbFolds, args.CL_cores, args.type, args.pathF, **arguments)
+    ExecMultiview(args.name, args.CL_split, args.CL_nbFolds, args.CL_cores, args.type, args.pathF, gridSearch=True, **arguments)
 
 
 
@@ -267,20 +276,20 @@ if __name__=='__main__':
 # logging.info("Info:\t Classification report:")
 # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Report"
 # logging.info("\n" + str(metrics.classification_report(y_test, y_test_pred, labels = range(0,len(classLabelsDesc.name)), target_names=classLabelsNamesList)))
-# scores_df = ExportResults.classification_report_df(dir, filename, y_test, y_test_pred, range(0, len(classLabelsDesc.name)), classLabelsNamesList)
+# scores_df = ExportResults.classification_report_df(directory, filename, y_test, y_test_pred, range(0, len(classLabelsDesc.name)), classLabelsNamesList)
 #
 # # Create some useful statistcs
 # logging.info("Info:\t Statistics:")
 # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Stats"
-# stats_df = ExportResults.classification_stats(dir, filename, scores_df, accuracy_score)
+# stats_df = ExportResults.classification_stats(directory, filename, scores_df, accuracy_score)
 # logging.info("\n" + stats_df.to_string())
 #
 # # Confusion Matrix
 # logging.info("Info:\t Calculate Confusionmatrix")
 # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-ConfMatrix"
-# df_conf_norm = ExportResults.confusion_matrix_df(dir, filename, y_test, y_test_pred, classLabelsNamesList)
+# df_conf_norm = ExportResults.confusion_matrix_df(directory, filename, y_test, y_test_pred, classLabelsNamesList)
 # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-ConfMatrixImg"
-# ExportResults.plot_confusion_matrix(dir, filename, df_conf_norm)
+# ExportResults.plot_confusion_matrix(directory, filename, df_conf_norm)
 #
 # logging.info("Done:\t Statistic Results")
 #
@@ -288,9 +297,9 @@ if __name__=='__main__':
 # # Plot Result
 # logging.info("Start:\t Plot Result")
 # np_score = ExportResults.calcScorePerClass(y_test, cl_res.predict(X_test).astype(int))
-# ### dir and filename the same as CSV Export
+# ### directory and filename the same as CSV Export
 # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-Score"
-# ExportResults.showResults(dir, filename, args.name, args.feat, np_score)
+# ExportResults.showResults(directory, filename, args.name, args.feat, np_score)
 # logging.info("Done:\t Plot Result")
 
 

@@ -1,0 +1,19 @@
+2016-08-22 13:32:38,699 INFO: Begginging
+2016-08-22 13:32:38,701 INFO: ### Main Programm for Multiview Classification
+2016-08-22 13:32:38,701 INFO: ### Classification - Database : MultiOmic ; Views : RGB, HOG, SIFT, HOG, MHOG ; Algorithm : Mumbo ; Cores : 1
+2016-08-22 13:32:38,701 INFO: Start:	 Read HDF5 Database Files for MultiOmic
+2016-08-22 13:32:38,704 INFO: Info:	 Labels used: No, Yes
+2016-08-22 13:32:38,705 INFO: Info:	 Length of dataset:347
+2016-08-22 13:32:38,706 INFO: Info:	 Shape of Methyl :[  347 25978]
+2016-08-22 13:32:38,707 INFO: Info:	 Shape of MiRNA_ :[ 347 1046]
+2016-08-22 13:32:38,709 INFO: Info:	 Shape of RNASeq :[  347 73599]
+2016-08-22 13:32:38,709 INFO: Info:	 Shape of Clinic :[347 127]
+2016-08-22 13:32:38,710 INFO: Done:	 Read Database Files
+2016-08-22 13:32:38,710 INFO: Start:	 Determine validation split for ratio 0.9
+2016-08-22 13:32:38,711 INFO: Done:	 Determine validation split
+2016-08-22 13:32:38,711 INFO: Start:	 Determine 1 folds
+2016-08-22 13:32:38,711 INFO: Info:	 Length of Learning Sets: 313
+2016-08-22 13:32:38,711 INFO: Info:	 Length of Testing Sets: 0
+2016-08-22 13:32:38,712 INFO: Info:	 Length of Validation Set: 34
+2016-08-22 13:32:38,712 INFO: Done:	 Determine folds
+2016-08-22 13:32:38,712 INFO: Start:	 Learning with Mumbo and 2 folds

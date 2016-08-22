@@ -29,7 +29,7 @@ class EarlyFusionClassifier(object):
 
 class WeightedLinear(EarlyFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        EarlyFusionClassifier.__init__(self, kwargs['monoviewClassifiersNames'], kwargs['monoviewClassifiersConfigs'],
+        EarlyFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['monoviewClassifiersConfigs'],
                                       NB_CORES=NB_CORES)
         self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 

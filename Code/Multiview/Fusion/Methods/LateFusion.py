@@ -45,7 +45,7 @@ class LateFusionClassifier(object):
 
 class WeightedLinear(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['monoviewClassifiersNames'], kwargs['monoviewClassifiersConfigs'],
+        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['monoviewClassifiersConfigs'],
                                       NB_CORES=NB_CORES)
         self.weights = map(float, kwargs['fusionMethodConfig'][0])
 
@@ -86,7 +86,7 @@ class WeightedLinear(LateFusionClassifier):
 # And one to do both.
 class SVMForLinear(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['monoviewClassifiersNames'], kwargs['monoviewClassifiersConfigs'],
+        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['monoviewClassifiersConfigs'],
                                       NB_CORES=NB_CORES)
         self.SVMClassifier = None
 
@@ -143,7 +143,7 @@ class SVMForLinear(LateFusionClassifier):
 # result
 class MajorityVoting(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['monoviewClassifiersNames'], kwargs['monoviewClassifiersConfigs'],
+        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['monoviewClassifiersConfigs'],
                                       NB_CORES=NB_CORES)
 
     def predict_hdf5(self, DATASET, usedIndices=None):
@@ -191,7 +191,7 @@ class MajorityVoting(LateFusionClassifier):
 # http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html#sklearn.naive_bayes.GaussianNB)
 class BayesianInference(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['monoviewClassifiersNames'], kwargs['monoviewClassifiersConfigs'],
+        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['monoviewClassifiersConfigs'],
                                       NB_CORES=NB_CORES)
         self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 

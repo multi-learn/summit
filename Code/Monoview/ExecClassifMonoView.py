@@ -30,7 +30,7 @@ __date__	= 2016-03-25
 ### Argument Parser
 
 
-def ExecMonoview(name, learningRate, nbFolds, nbCores, databaseType, path, **kwargs):
+def ExecMonoview(name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True, **kwargs):
     RandomForestKWARGS = kwargs["RandomForestKWARGS"]
     SVCKWARGS = kwargs["SVCKWARGS"]
     DecisionTreeKWARGS = kwargs["DecisionTreeKWARGS"]
@@ -139,7 +139,7 @@ def ExecMonoview(name, learningRate, nbFolds, nbCores, databaseType, path, **kwa
     # Plot Result
     logging.debug("Start:\t Plot Result")
     np_score = ExportResults.calcScorePerClass(y_test, cl_res.predict(X_test).astype(int))
-    ### dir and filename the same as CSV Export
+    ### directory and filename the same as CSV Export
     filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Score"
     ExportResults.showResults(dir, filename, name, feat, np_score)
     logging.debug("Done:\t Plot Result")

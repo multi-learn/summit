@@ -18,13 +18,13 @@ parser = argparse.ArgumentParser(
 groupStandard = parser.add_argument_group('Standard arguments')
 groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Name of Database (default: %(default)s)',
-                           default='Caltech')
+                           default='MultiOmic')
 groupStandard.add_argument('--type', metavar='STRING', action='store', help='Type of database : .hdf5 or .csv',
-                           default='.csv')
+                           default='.hdf5')
 groupStandard.add_argument('--views', metavar='STRING', action='store',help='Name of the views selected for learning',
                            default='RGB:HOG:SIFT:HOG:MHOG')
 groupStandard.add_argument('--pathF', metavar='STRING', action='store',help='Path to the views (default: %(default)s)',
-                           default='../FeatExtraction/Results-FeatExtr/')
+                           default='/home/bbauvin/Documents/Data/Data_multi_omics/')
 groupStandard.add_argument('--fileCL', metavar='STRING', action='store',
                            help='Name of classLabels CSV-file  (default: %(default)s)', default='classLabels.csv')
 groupStandard.add_argument('--fileCLD', metavar='STRING', action='store',
@@ -38,7 +38,7 @@ groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
                         help='Determine the learning rate if > 1.0, number of fold for cross validation', type=float,
                         default=0.9)
 groupClass.add_argument('--CL_nbFolds', metavar='INT', action='store', help='Number of folds in cross validation',
-                        type=int, default=3)
+                        type=int, default=1)
 groupClass.add_argument('--CL_nb_class', metavar='INT', action='store', help='Number of classes, -1 for all', type=int,
                         default=4)
 groupClass.add_argument('--CL_classes', metavar='STRING', action='store',
@@ -108,6 +108,25 @@ groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store', nar
 
 
 args = parser.parse_args()
+
+directory = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
+logFileName = time.strftime("%Y%m%d-%H%M%S") + "-CMultiV-" + args.CL_type + "-" + "_".join(args.views.split(":")) + "-" + args.name + \
+              "-LOG"
+logFile = directory + logFileName
+if os.path.isfile(logFile + ".log"):
+    for i in range(1, 20):
+        testFileName = logFileName + "-" + str(i) + ".log"
+        if not (os.path.isfile(directory + testFileName)):
+            logfile = directory + testFileName
+            break
+else:
+    logFile += ".log"
+logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logFile, level=logging.DEBUG,
+                    filemode='w')
+if args.log:
+    logging.getLogger().addHandler(logging.StreamHandler())
+
+logging.info("Begginging")
 benchmark = {}
 if args.CL_type.split(":")==["Benchmark"]:
     if args.CL_algorithm=='':
@@ -149,7 +168,7 @@ if "Monoview" in args.CL_type.strip(":"):
 classifierTable = "a"
 fusionClassifierConfig = "a"
 fusionMethodConfig = "a"
-mumboNB_ITER = "a"
+mumboNB_ITER = 2
 mumboClassifierConfig = "a"
 mumboclassifierNames = "a"
 RandomForestKWARGS = {"classifier__n_estimators":map(int, args.CL_RF_trees.split())}
@@ -167,14 +186,14 @@ if benchmark["Monoview"]:
             arguments = {classifier+"KWARGS": globals()[classifier+"KWARGS"], "feat":view, "fileFeat": args.fileFeat,
                          "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier}
             argumentDictionaries["Monoview"].append(arguments)
+for arguments in argumentDictionaries["Monoview"]:
+    ExecMonoview(args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, gridSearch=True, **arguments)
 if benchmark["Multiview"]:
     if benchmark["Multiview"]["Fusion"]:
         if benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
             for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]:
-                for i in range(int(np.power(len(args.views.split(":")), len(benchmark["Multiview"]["Fusion"]["Classifiers"])))):
                 #for classifier in benchmark["Multiview"]["Fusion"]["Classifiers"]:
                   #  for view in args.views.split(":"):
-                    if True==True:
                         classifiersMatrix = []
                         arguments = {"CL_type": "Fusion",
                                      "views": args.views.split(":"),
@@ -182,7 +201,7 @@ if benchmark["Multiview"]:
                                      "NB_CLASS": len(args.CL_classes.split(":")),
                                      "LABELS_NAMES": args.CL_classes.split(":"),
                                      "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,
-                                                      "monoviewClassifiersNames": classifierTable,
+                                                      "monoviewClassifiersNames": bestClassifiers,
                                                       "monoviewClassifiersConfigs": fusionClassifierConfig,
                                                       'fusionMethodConfig': fusionMethodConfig}}
                         argumentDictionaries["Multiview"].append(arguments)
@@ -208,8 +227,12 @@ if benchmark["Multiview"]:
                          "NB_CLASS": len(args.CL_classes.split(":")),
                          "LABELS_NAMES": args.CL_classes.split(":"),
                          "MumboKWARGS": {"classifiersConfigs": mumboClassifierConfig,"NB_ITER": mumboNB_ITER,
-                                         "classifiersNames": mumboclassifierNames}}
+                                         "classifiersNames": ["DecisionTree", "DecisionTree", "DecisionTree", "DecisionTree"]},
+                         "FusionKWARGS": ""}
             argumentDictionaries["Multiview"].append(arguments)
+for argument in argumentDictionaries["Multiview"]:
+    print "poulet"
+    ExecMultiview(args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, gridSearch=True, **argument)
 results = {}
 # for classifierType, argumentsList in argumentDictionaries.iteritems():
 #     executionMethod = globals()["Exec"+classifierType]
@@ -241,15 +264,15 @@ print len(argumentDictionaries["Multiview"]), len(argumentDictionaries["Monoview
 #                 "monoviewClassifiersNames":fusionClassifierNames, "monoviewClassifiersConfigs":fusionClassifierConfig,
 #                 'fusionMethodConfig':fusionMethodConfig}
 # MumboKWARGS = {"classifiersConfigs":mumboClassifierConfig, "NB_ITER":mumboNB_ITER, "classifiersNames":mumboclassifierNames}
-# dir = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
+# directory = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
 # logFileName = time.strftime("%Y%m%d-%H%M%S") + "-CMultiV-" + args.CL_type + "-" + "_".join(views) + "-" + args.name + \
 #               "-LOG"
-# logFile = dir + logFileName
+# logFile = directory + logFileName
 # if os.path.isfile(logFile + ".log"):
 #     for i in range(1, 20):
 #         testFileName = logFileName + "-" + str(i) + ".log"
-#         if not (os.path.isfile(dir + testFileName)):
-#             logfile = dir + testFileName
+#         if not (os.path.isfile(directory + testFileName)):
+#             logfile = directory + testFileName
 #             break
 # else:
 #     logFile += ".log"

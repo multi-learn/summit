@@ -38,6 +38,17 @@ def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, DATA
     logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(averageAccuracy))
     return classifier, classes, isBad, averageAccuracy
 
+def gridSearch_hdf5(DATASET, classifiersNames):
+    bestSettings = []
+    for classifierIndex, classifierName in enumerate(classifiersNames):
+        classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
+        classifierMethod = getattr(classifierModule, "gridSearch")
+        bestSettings.append(classifierMethod(DATASET["/View"+str(classifierIndex)+"/matrix"][...],
+                                             DATASET["/Labels/labelsArray"][...]))
+    return bestSettings
+
+
+
 
 
 class Mumbo:

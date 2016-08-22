@@ -348,7 +348,8 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     # datasetFile = getPseudoRNASeq(datasetFile)
     return datasetFile, labelDictionary
 
-def getMultiOmicModifiedDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
+
+def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
     datasetFile = h5py.File(path+"ModifiedMultiOmicDataset.hdf5", "w")
 
@@ -408,7 +409,7 @@ def getMultiOmicModifiedDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     return datasetFile, labelDictionary
 
 
-def getMultiOmicModifiedDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
+def getModifiedMultiOmicDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
     datasetFile = h5py.File(path+"ModifiedMultiOmicDataset.hdf5", "r")
     labelDictionary = {0:"No", 1:"Yes"}
     return datasetFile, labelDictionary
