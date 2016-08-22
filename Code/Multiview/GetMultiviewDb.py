@@ -137,7 +137,7 @@ def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLA
     return trainingExamplesIndices
 
 
-def getKFoldIndices(nbFolds, CLASS_LABELS, DATASET_LENGTH, NB_CLASS, learningIndices):
+def getKFoldIndices(nbFolds, CLASS_LABELS, NB_CLASS, learningIndices):
     labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS[learningIndices]))
     nbTrainingExamples = [[int(support / nbFolds) for support in labelSupports] for fold in range(nbFolds)]
     trainingExamplesIndices = []
@@ -145,7 +145,8 @@ def getKFoldIndices(nbFolds, CLASS_LABELS, DATASET_LENGTH, NB_CLASS, learningInd
     for foldIndex, fold in enumerate(nbTrainingExamples):
         trainingExamplesIndices.append([])
         while fold != [0 for i in range(NB_CLASS)]:
-            index = random.randint(0, DATASET_LENGTH - 1)
+            print fold
+            index = random.randint(0, len(learningIndices)-1)
             if learningIndices[index] not in usedIndices:
                 isUseFull, fold = isUseful(fold, learningIndices[index], CLASS_LABELS, labelDict)
                 if isUseFull:

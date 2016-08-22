@@ -1,5 +1,14 @@
 from Methods import *
 
+def gridSearch_hdf5(DATASET, classifiersNames):
+    bestSettings = []
+    for classifierIndex, classifierName in enumerate(classifiersNames):
+        classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
+        classifierMethod = getattr(classifierModule, "gridSearch")
+        bestSettings.append(classifierMethod(DATASET["/View"+str(classifierIndex)+"/matrix"][...],
+                                             DATASET["/Labels/labelsArray"][...]))
+    return bestSettings
+
 class Fusion:
     def __init__(self, NB_VIEW, DATASET_LENGTH, CLASS_LABELS, NB_CORES=1,**kwargs):
         fusionType = kwargs['fusionType']

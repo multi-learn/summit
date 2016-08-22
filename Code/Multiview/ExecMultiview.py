@@ -39,7 +39,7 @@ def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, grid
     datasetLength = DATASET["/datasetLength"][...]
     NB_VIEW = DATASET.get("nbView").value
     views = [str(DATASET["/View"+str(viewIndex)+"/name"][...]) for viewIndex in range(NB_VIEW)]
-    databaseType = "hdf5"
+    NB_CLASS = DATASET.get("nbClass").value
 
     logging.info("Info:\t Labels used: " + ", ".join(LABELS_DICTIONARY.values()))
     logging.info("Info:\t Length of dataset:" + str(datasetLength))
@@ -58,7 +58,7 @@ def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, grid
 
     logging.info("Start:\t Determine "+str(nbFolds)+" folds")
     if nbFolds != 1:
-        kFolds = DB.getKFoldIndices(nbFolds, DATASET["/Labels/labelsArray"][...], datasetLength, NB_CLASS, learningIndices)
+        kFolds = DB.getKFoldIndices(nbFolds, DATASET["/Labels/labelsArray"][...], NB_CLASS, learningIndices)
     else:
         kFolds = [[], range(datasetLength)]
 

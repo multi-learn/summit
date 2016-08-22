@@ -1,0 +1,4 @@
+2016-08-22 14:10:37,027 INFO: Begginging
+2016-08-22 14:10:37,028 DEBUG: ### Main Programm for Classification MonoView
+2016-08-22 14:10:37,028 DEBUG: ### Classification - Database:MultiOmic Feature:HOG train_size:0.9, CrossValidation k-folds:1, cores:1
+2016-08-22 14:10:37,028 DEBUG: Start:	 Read .hdf5 Files

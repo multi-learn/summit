@@ -31,36 +31,29 @@ __date__	= 2016-03-25
 
 
 def ExecMonoview(name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True, **kwargs):
-    RandomForestKWARGS = kwargs["RandomForestKWARGS"]
-    SVCKWARGS = kwargs["SVCKWARGS"]
-    DecisionTreeKWARGS = kwargs["DecisionTreeKWARGS"]
-    SGDKWARGS = kwargs["SGDKWARGS"]
+    t_start = time.time()
+    directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
     feat = kwargs["feat"]
     fileFeat = kwargs["fileFeat"]
     fileCL = kwargs["fileCL"]
     fileCLD = kwargs["fileCLD"]
     CL_type = kwargs["CL_type"]
-# Determine the Database to extract features
+    classifierKWARGS = kwargs[CL_type+"KWARGS"]
+
+    # Determine the Database to extract features
     logging.debug("### Main Programm for Classification MonoView")
-    logging.debug("### Classification - Database:" + str(name) + " Feature:" + str(feat) + " train_size:" + str(learningRate) + ", CrossValidation k-folds:" + str(nbFolds) + ", cores:" + str(nbCores))
+    logging.debug("### Classification - Database:" + str(name) + " Feature:" + str(feat) + " train_size:" + str(learningRate) + ", CrossValidation k-folds:" + str(nbFolds) + ", cores:" + str(nbCores)+", algorithm : "+CL_type)
 
     # Read the features
     logging.debug("Start:\t Read " + databaseType + " Files")
 
-    if databaseType == "csv":
+    if databaseType == ".csv":
         X = np.genfromtxt(path + fileFeat, delimiter=';')
         Y = np.genfromtxt(path + fileCL, delimiter=';')
-    elif databaseType == "hdf5":
+    elif databaseType == ".hdf5":
         dataset = h5py.File(path + name + ".hdf5", "r")
         viewsDict = dict((dataset.get("/View"+str(viewIndex)+"/name").value, viewIndex) for viewIndex in range(dataset.get("nbView").value))
         X = dataset["View"+str(viewsDict[feat])+"/matrix"][...]
-        # X_ = dataset["View"+str(viewsDict[args.feat])+"/matrix"][...]
-        # X = np.zeros((dataset.get("datasetLength/").value, dataset["View"+str(viewsDict[args.feat])+"/shape"][1]), dtype=int)
-        # for exampleindice, exampleArray in enumerate(X_):
-        #     dicti = dict((index, value) for index, value in enumerate(exampleArray))
-        #     sorted_x = sorted(dicti.items(), key=operator.itemgetter(1))
-        #     X[exampleindice] = np.array([index for (index, value) in sorted_x], dtype=int)
-
         Y = dataset["Labels/labelsArray"][...]
 
     logging.debug("Info:\t Shape of Feature:" + str(X.shape) + ", Length of classLabels vector:" + str(Y.shape))
@@ -80,7 +73,6 @@ def ExecMonoview(name, learningRate, nbFolds, nbCores, databaseType, path, gridS
 
 
     classifierFunction = getattr(ClassifMonoView, "MonoviewClassif"+CL_type)
-    classifierKWARGS = globals()[CL_type+"KWARGS"]
 
     cl_desc, cl_res = classifierFunction(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores,
                                                          **classifierKWARGS)
@@ -95,11 +87,11 @@ def ExecMonoview(name, learningRate, nbFolds, nbCores, databaseType, path, gridS
     logging.debug("Done:\t Classification")
 
     # CSV Export
-    logging.debug("Start:\t Exporting to CSV")
-    dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
-    filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat
-    ExportResults.exportPandasToCSV(df_class_res, dir, filename)
-    logging.debug("Done:\t Exporting to CSV")
+    # logging.debug("Start:\t Exporting to CSV")
+    # directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
+    # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat
+    # ExportResults.exportPandasToCSV(df_class_res, directory, filename)
+    # logging.debug("Done:\t Exporting to CSV")
 
     # Stats Result
     y_test_pred = cl_res.predict(X_test)
@@ -118,20 +110,20 @@ def ExecMonoview(name, learningRate, nbFolds, nbCores, databaseType, path, gridS
     logging.debug("Info:\t Classification report:")
     filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Report"
     logging.debug("\n" + str(metrics.classification_report(y_test, y_test_pred, labels = range(0,len(classLabelsDesc.name)), target_names=classLabelsNamesList)))
-    scores_df = ExportResults.classification_report_df(dir, filename, y_test, y_test_pred, range(0, len(classLabelsDesc.name)), classLabelsNamesList)
+    scores_df = ExportResults.classification_report_df(directory, filename, y_test, y_test_pred, range(0, len(classLabelsDesc.name)), classLabelsNamesList)
 
     # Create some useful statistcs
     logging.debug("Info:\t Statistics:")
     filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Stats"
-    stats_df = ExportResults.classification_stats(dir, filename, scores_df, accuracy_score)
+    stats_df = ExportResults.classification_stats(directory, filename, scores_df, accuracy_score)
     logging.debug("\n" + stats_df.to_string())
 
     # Confusion Matrix
     logging.debug("Info:\t Calculate Confusionmatrix")
     filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-ConfMatrix"
-    df_conf_norm = ExportResults.confusion_matrix_df(dir, filename, y_test, y_test_pred, classLabelsNamesList)
+    df_conf_norm = ExportResults.confusion_matrix_df(directory, filename, y_test, y_test_pred, classLabelsNamesList)
     filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-ConfMatrixImg"
-    ExportResults.plot_confusion_matrix(dir, filename, df_conf_norm)
+    ExportResults.plot_confusion_matrix(directory, filename, df_conf_norm)
 
     logging.debug("Done:\t Statistic Results")
 
@@ -141,8 +133,9 @@ def ExecMonoview(name, learningRate, nbFolds, nbCores, databaseType, path, gridS
     np_score = ExportResults.calcScorePerClass(y_test, cl_res.predict(X_test).astype(int))
     ### directory and filename the same as CSV Export
     filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Score"
-    ExportResults.showResults(dir, filename, name, feat, np_score)
+    ExportResults.showResults(directory, filename, name, feat, np_score)
     logging.debug("Done:\t Plot Result")
+    return [CL_type, accuracy_score, cl_desc]
 
 
 if __name__=='__main__':
@@ -191,17 +184,17 @@ if __name__=='__main__':
     SGDKWARGS = {"classifier__alpha" : map(float,args.CL_SGD_alpha.split(":")), "classifier__loss":args.CL_SGD_loss.split(":"),
                  "classifier__penalty":args.CL_SGD_penalty.split(":")}
     ### Main Programm
-    t_start = time.time()
+
 
     # Configure Logger
-    dir = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
+    directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
     logfilename= datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-LOG"
-    logfile = dir + logfilename
+    logfile = directory + logfilename
     if os.path.isfile(logfile + ".log"):
         for i in range(1,20):
             testFileName = logfilename  + "-" + str(i) + ".log"
-            if os.path.isfile(dir + testFileName )!=True:
-                logfile = dir + testFileName
+            if os.path.isfile(directory + testFileName)!=True:
+                logfile = directory + testFileName
                 break
     else:
         logfile = logfile + ".log"

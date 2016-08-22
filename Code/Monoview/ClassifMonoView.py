@@ -137,7 +137,7 @@ def calcTrainTest(X,y,split):
 # y_test: Test Labels
 # num_estimators: number of trees
 def MonoviewClassifRandomForest(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
-    num_estimators =  kwargs["numEstimators"]
+    num_estimators =  kwargs["classifier__n_estimators"]
     # PipeLine with RandomForest classifier
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
 
@@ -162,8 +162,8 @@ def MonoviewClassifRandomForest(X_train, y_train, nbFolds=4, nbCores=1, **kwargs
 
     rf_detector = grid_rf.fit(X_train, y_train)
 
-    desc_estimators = rf_detector.best_params_["classifier__n_estimators"]
-    description = "Classif_" + "RF" + "-" + "CV_" +  str(nbFolds) + "-" + "Trees_" + str(desc_estimators)
+    desc_estimators = [rf_detector.best_params_["classifier__n_estimators"]]
+    description = "Classif_" + "RF" + "-" + "CV_" +  str(nbFolds) + "-" + "Trees_" + str(map(str,desc_estimators))
 
     return description, rf_detector
 
@@ -175,8 +175,8 @@ def MonoviewClassifSVC(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     grid_SVC = GridSearchCV(pipeline_SVC, param_grid=param_SVC, refit=True, n_jobs=nbCores, scoring='accuracy',
                             cv=nbFolds)
     SVC_detector = grid_SVC.fit(X_train, y_train)
-    desc_params = []
-    description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(desc_params)
+    desc_params = [SVC_detector.best_params_["classifier__C"], SVC_detector.best_params_["classifier__kernel"]]
+    description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
     return description, SVC_detector
 
 
@@ -187,8 +187,8 @@ def MonoviewClassifDecisionTree(X_train, y_train, nbFolds=4, nbCores=1, **kwargs
     grid_DT = GridSearchCV(pipeline_DT, param_grid=param_DT, refit=True, n_jobs=nbCores, scoring='accuracy',
                             cv=nbFolds)
     DT_detector = grid_DT.fit(X_train, y_train)
-    desc_params = []
-    description = "Classif_" + "DT" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(desc_params)
+    desc_params = [DT_detector.best_params_["classifier__max_depth"]]
+    description = "Classif_" + "DT" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
     return description, DT_detector
 
 
@@ -198,9 +198,20 @@ def MonoviewClassifSGD(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     grid_SGD = GridSearchCV(pipeline_SGD, param_grid=param_SGD, refit=True, n_jobs=nbCores, scoring='accuracy',
                                 cv=nbFolds)
     SGD_detector = grid_SGD.fit(X_train, y_train)
-    desc_params = []
-    description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(desc_params)
+    desc_params = [SGD_detector.best_params_["classifier__loss"], SGD_detector.best_params_["classifier__penalty"],
+                   SGD_detector.best_params_["classifier__alpha"]]
+    description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
     return description, SGD_detector
+
+def MonoviewClassifKNN(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+    pipeline_KNN = Pipeline([('classifier', sklearn.neighbors.KNeighborsClassifier())])
+    param_KNN = kwargs
+    grid_KNN = GridSearchCV(pipeline_KNN, param_grid=param_KNN, refit=True, n_jobs=nbCores, scoring='accuracy',
+                            cv=nbFolds)
+    KNN_detector = grid_KNN.fit(X_train, y_train)
+    desc_params = [KNN_detector.best_params_["classifier__n_neighbors"]]
+    description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
+    return description, KNN_detector
 
 
 

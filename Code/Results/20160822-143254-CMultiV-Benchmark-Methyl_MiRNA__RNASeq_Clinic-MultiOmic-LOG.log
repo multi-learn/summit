@@ -1,0 +1,65 @@
+2016-08-22 14:32:54,250 INFO: Begginging
+2016-08-22 14:32:54,299 DEBUG: ### Main Programm for Classification MonoView
+2016-08-22 14:32:54,299 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2016-08-22 14:32:54,299 DEBUG: Start:	 Read .hdf5 Files
+2016-08-22 14:32:54,299 DEBUG: ### Main Programm for Classification MonoView
+2016-08-22 14:32:54,300 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : RandomForest
+2016-08-22 14:32:54,300 DEBUG: Start:	 Read .hdf5 Files
+2016-08-22 14:32:54,300 DEBUG: ### Main Programm for Classification MonoView
+2016-08-22 14:32:54,300 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SGD
+2016-08-22 14:32:54,300 DEBUG: Start:	 Read .hdf5 Files
+2016-08-22 14:32:54,304 DEBUG: ### Main Programm for Classification MonoView
+2016-08-22 14:32:54,304 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SVC
+2016-08-22 14:32:54,305 DEBUG: Start:	 Read .hdf5 Files
+2016-08-22 14:32:54,305 DEBUG: Info:	 Shape of Feature:(347, 1046), Length of classLabels vector:(347,)
+2016-08-22 14:32:54,305 DEBUG: Done:	 Read CSV Files
+2016-08-22 14:32:54,305 DEBUG: Start:	 Determine Train/Test split
+2016-08-22 14:32:54,308 DEBUG: Info:	 Shape of Feature:(347, 1046), Length of classLabels vector:(347,)
+2016-08-22 14:32:54,308 DEBUG: Done:	 Read CSV Files
+2016-08-22 14:32:54,308 DEBUG: Start:	 Determine Train/Test split
+2016-08-22 14:32:54,308 DEBUG: Info:	 Shape X_train:(312, 1046), Length of y_train:312
+2016-08-22 14:32:54,308 DEBUG: Info:	 Shape X_test:(35, 1046), Length of y_test:35
+2016-08-22 14:32:54,309 DEBUG: Done:	 Determine Train/Test split
+2016-08-22 14:32:54,309 DEBUG: Start:	 Classification
+2016-08-22 14:32:54,309 DEBUG: Info:	 Shape of Feature:(347, 1046), Length of classLabels vector:(347,)
+2016-08-22 14:32:54,309 DEBUG: Done:	 Read CSV Files
+2016-08-22 14:32:54,309 DEBUG: Start:	 Determine Train/Test split
+2016-08-22 14:32:54,311 DEBUG: Info:	 Shape X_train:(312, 1046), Length of y_train:312
+2016-08-22 14:32:54,312 DEBUG: Info:	 Shape of Feature:(347, 1046), Length of classLabels vector:(347,)
+2016-08-22 14:32:54,312 DEBUG: Info:	 Shape X_test:(35, 1046), Length of y_test:35
+2016-08-22 14:32:54,312 DEBUG: Done:	 Read CSV Files
+2016-08-22 14:32:54,312 DEBUG: Done:	 Determine Train/Test split
+2016-08-22 14:32:54,312 DEBUG: Start:	 Determine Train/Test split
+2016-08-22 14:32:54,312 DEBUG: Start:	 Classification
+2016-08-22 14:32:54,312 DEBUG: Info:	 Shape X_train:(312, 1046), Length of y_train:312
+2016-08-22 14:32:54,312 DEBUG: Info:	 Shape X_test:(35, 1046), Length of y_test:35
+2016-08-22 14:32:54,313 DEBUG: Done:	 Determine Train/Test split
+2016-08-22 14:32:54,313 DEBUG: Start:	 Classification
+2016-08-22 14:32:54,314 DEBUG: Info:	 Shape X_train:(312, 1046), Length of y_train:312
+2016-08-22 14:32:54,314 DEBUG: Info:	 Shape X_test:(35, 1046), Length of y_test:35
+2016-08-22 14:32:54,314 DEBUG: Done:	 Determine Train/Test split
+2016-08-22 14:32:54,314 DEBUG: Start:	 Classification
+2016-08-22 14:32:54,552 DEBUG: Info:	 Time for Classification: 0.245424985886[s]
+2016-08-22 14:32:54,552 DEBUG: Done:	 Classification
+2016-08-22 14:32:54,555 DEBUG: Start:	 Statistic Results
+2016-08-22 14:32:54,555 DEBUG: Info:	 Classification report:
+2016-08-22 14:32:54,557 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.65      1.00      0.79        22
+        Oui       1.00      0.08      0.14        13
+
+avg / total       0.78      0.66      0.55        35
+
+2016-08-22 14:32:54,596 DEBUG: Info:	 Time for Classification: 0.292104005814[s]
+2016-08-22 14:32:54,596 DEBUG: Done:	 Classification
+2016-08-22 14:32:54,598 DEBUG: Start:	 Statistic Results
+2016-08-22 14:32:54,598 DEBUG: Info:	 Classification report:
+2016-08-22 14:32:54,599 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.94      0.77      0.85        22
+        Oui       0.71      0.92      0.80        13
+
+avg / total       0.86      0.83      0.83        35
+
