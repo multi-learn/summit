@@ -25,7 +25,7 @@ def plotAccuracyByIter(trainAccuracy, testAccuracy, validationAccuracy, NB_ITER,
     titleString = ""
     for view, classifierConfig in zip(features, classifierAnalysis):
         titleString += "\n" + view + " : " + classifierConfig
-    titleString+="Best view = " + features[int(mainView)]
+    titleString+="\nBest view = " + features[int(mainView)]
 
     ax1.set_title("Accuracy depending on iteration", fontsize=20)
     plt.text(0.5, 1.08, titleString,
@@ -63,7 +63,7 @@ def classifyMumbobyIter_hdf5(usedIndices, DATASET, classifiers, alphas, views, N
         votesByIter = np.zeros((DATASET_LENGTH, NB_CLASS))
 
         for usedExampleIndex, exampleIndex in enumerate(usedIndices):
-            data = np.array([np.array(DATASET["/View" + str(int(view)) + "/matrix"][exampleIndex, :])])
+            data = np.array([np.array(DATASET.get("View" + str(int(view)))[exampleIndex, :])])
             votesByIter[usedExampleIndex, int(classifier.predict(data))] += alpha
             votes[usedExampleIndex] = votes[usedExampleIndex] + np.array(votesByIter[usedExampleIndex])
             predictedLabels[usedExampleIndex, iterIndex] = np.argmax(votes[usedExampleIndex])
@@ -79,13 +79,13 @@ def error(testLabels, computedLabels):
 def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
             DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, databaseName,
             nbFolds, validationIndices):
-    CLASS_LABELS = DATASET["/Labels/labelsArray"][...]
+    CLASS_LABELS = DATASET.get("labels")[...]
     NB_ITER, classifierNames, classifierConfigs = initKWARGS.values()
-    nbView = DATASET.get("nbView").value
-    viewNames = [DATASET.get("/View"+str(viewIndex)+"/name").value for viewIndex in range(nbView)]
+    nbView = DATASET.get("Metadata").attrs["nbView"]
+    viewNames = [DATASET.get("View"+str(viewIndex)).attrs["name"] for viewIndex in range(nbView)]
 
-    DATASET_LENGTH = DATASET.get("datasetLength").value-len(validationIndices)
-    NB_CLASS = DATASET.get("nbClass").value
+    DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]-len(validationIndices)
+    NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     kFoldPredictedTrainLabelsByIter = []
     kFoldPredictedTestLabelsByIter = []
     kFoldPredictedValidationLabelsByIter = []
@@ -179,7 +179,7 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
                               str(kFoldAccuracyOnTrainByIter[foldIdx][iterIndex]) + '\n\t\t\tAccuracy on test : ' + \
                               str(kFoldAccuracyOnTestByIter[foldIdx][iterIndex]) + '\n\t\t\tAccuracy on validation : '+\
                               str(kFoldAccuracyOnValidationByIter[foldIdx][iterIndex]) + '\n\t\t\tSelected View : ' + \
-                              str(DATASET["/View"+str(int(kFoldBestViews[foldIdx][iterIndex]))+"/name"][...])
+                              str(DATASET["View"+str(int(kFoldBestViews[foldIdx][iterIndex]))].attrs["name"])
         stringAnalysis += "\n\t\t- Mean : \n\t\t\t Accuracy on train : " + str(
                 np.array(kFoldAccuracyOnTrainByIter)[:, iterIndex].mean()) + \
                           "\n\t\t\t Accuracy on test : " + str(np.array(kFoldAccuracyOnTestByIter)[:, iterIndex].mean())

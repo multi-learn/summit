@@ -30,7 +30,7 @@ __date__	= 2016-03-25
 ### Argument Parser
 
 
-def ExecMonoview(name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True, **kwargs):
+def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True, **kwargs):
     t_start = time.time()
     directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
     feat = kwargs["feat"]
@@ -44,20 +44,6 @@ def ExecMonoview(name, learningRate, nbFolds, nbCores, databaseType, path, gridS
     logging.debug("### Main Programm for Classification MonoView")
     logging.debug("### Classification - Database:" + str(name) + " Feature:" + str(feat) + " train_size:" + str(learningRate) + ", CrossValidation k-folds:" + str(nbFolds) + ", cores:" + str(nbCores)+", algorithm : "+CL_type)
 
-    # Read the features
-    logging.debug("Start:\t Read " + databaseType + " Files")
-
-    if databaseType == ".csv":
-        X = np.genfromtxt(path + fileFeat, delimiter=';')
-        Y = np.genfromtxt(path + fileCL, delimiter=';')
-    elif databaseType == ".hdf5":
-        dataset = h5py.File(path + name + ".hdf5", "r")
-        viewsDict = dict((dataset.get("/View"+str(viewIndex)+"/name").value, viewIndex) for viewIndex in range(dataset.get("nbView").value))
-        X = dataset["View"+str(viewsDict[feat])+"/matrix"][...]
-        Y = dataset["Labels/labelsArray"][...]
-
-    logging.debug("Info:\t Shape of Feature:" + str(X.shape) + ", Length of classLabels vector:" + str(Y.shape))
-    logging.debug("Done:\t Read CSV Files")
 
     # Calculate Train/Test data
     logging.debug("Start:\t Determine Train/Test split")
@@ -204,7 +190,23 @@ if __name__=='__main__':
     if(args.log):
         logging.getLogger().addHandler(logging.StreamHandler())
 
+
+    # Read the features
+    logging.debug("Start:\t Read " + args.type + " Files")
+
+    if args.databaseType == ".csv":
+        X = np.genfromtxt(args.pathF + args.fileFeat, delimiter=';')
+        Y = np.genfromtxt(args.pathF + args.fileCL, delimiter=';')
+    elif args.type == ".hdf5":
+        dataset = h5py.File(args.pathF + args.name + ".hdf5", "r")
+        viewsDict = dict((dataset.get("View"+str(viewIndex)).attrs["name"], viewIndex) for viewIndex in range(dataset.get("Metadata").attrs["nbView"]))
+        X = dataset["View"+str(viewsDict[args.feat])][...]
+        Y = dataset["labels"][...]
+
+    logging.debug("Info:\t Shape of Feature:" + str(X.shape) + ", Length of classLabels vector:" + str(Y.shape))
+    logging.debug("Done:\t Read CSV Files")
+
     arguments = {"RandomForestKWARGS": RandomForestKWARGS, "SVCKWARGS": SVCKWARGS,
                  "DecisionTreeKWARGS": DecisionTreeKWARGS, "SGDKWARGS": SGDKWARGS, "feat":args.feat,
                  "fileFeat": args.fileFeat, "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": args.CL_type}
-    ExecMonoview(args.name, args.CL_split, args.CL_CV, args.CL_Cores, args.type, args.pathF, **arguments)
+    ExecMonoview(X, Y, args.name, args.CL_split, args.CL_CV, args.CL_Cores, args.type, args.pathF, **arguments)

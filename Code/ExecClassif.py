@@ -3,6 +3,7 @@ import pkgutil
 import Multiview
 from Multiview.ExecMultiview import ExecMultiview
 from Monoview.ExecClassifMonoView import ExecMonoview
+import Multiview.GetMultiviewDb as DB
 import Monoview
 import os
 import time
@@ -130,6 +131,14 @@ logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=lo
 if args.log:
     logging.getLogger().addHandler(logging.StreamHandler())
 
+getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
+DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, len(args.CL_classes), args.CL_classes)
+datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
+NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
+views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
+NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+
+
 logging.info("Begginging")
 benchmark = {}
 if args.CL_type.split(":")==["Benchmark"]:
@@ -184,28 +193,30 @@ KNNKWARGS = {"classifier__n_neighbors": map(float,args.CL_KNN_neigh.split(":"))}
 
 
 argumentDictionaries = {"Monoview":{}, "Multiview":[]}
-if benchmark["Monoview"]:
-    for view in args.views.split(":"):
-        argumentDictionaries["Monoview"][str(view)] = []
-        for classifier in benchmark["Monoview"]:
-            arguments = {classifier+"KWARGS": globals()[classifier+"KWARGS"], "feat":view, "fileFeat": args.fileFeat,
-                         "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier,
-                         classifier+"KWARGS": globals()[classifier+"KWARGS"]}
-            argumentDictionaries["Monoview"][str(view)].append(arguments)
-
-bestClassifiers = []
-bestClassifiersConfigs = []
-for viewArguments in argumentDictionaries["Monoview"].values():
-    resultsMonoview = Parallel(n_jobs=nbCores)(
-        delayed(ExecMonoview)(args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, gridSearch=True,
-                              **arguments)
-        for arguments in viewArguments)
-    accuracies = [result[1] for result in resultsMonoview]
-    classifiersNames = [result[0] for result in resultsMonoview]
-    classifiersConfigs = [result[2] for result in resultsMonoview]
-    bestClassifiers.append(classifiersNames[np.argmax(np.array(accuracies))])
-    bestClassifiersConfigs.append(classifiersConfigs[np.argmax(np.array(accuracies))])
-
+# if benchmark["Monoview"]:
+#     for view in args.views.split(":"):
+#         argumentDictionaries["Monoview"][str(view)] = []
+#         for classifier in benchmark["Monoview"]:
+#             arguments = {classifier+"KWARGS": globals()[classifier+"KWARGS"], "feat":view, "fileFeat": args.fileFeat,
+#                          "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier,
+#                          classifier+"KWARGS": globals()[classifier+"KWARGS"]}
+#             argumentDictionaries["Monoview"][str(view)].append(arguments)
+#
+# bestClassifiers = []
+# bestClassifiersConfigs = []
+# for viewIndex, viewArguments in enumerate(argumentDictionaries["Monoview"].values()):
+#     resultsMonoview = Parallel(n_jobs=nbCores)(
+#         delayed(ExecMonoview)(DATASET.get("View"+str(viewIndex)).value, DATASET.get("labels").value, args.name,
+#                               args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, gridSearch=True,
+#                               **arguments)
+#         for arguments in viewArguments)
+#     accuracies = [result[1] for result in resultsMonoview]
+#     classifiersNames = [result[0] for result in resultsMonoview]
+#     classifiersConfigs = [result[2] for result in resultsMonoview]
+#     bestClassifiers.append(classifiersNames[np.argmax(np.array(accuracies))])
+#     bestClassifiersConfigs.append(classifiersConfigs[np.argmax(np.array(accuracies))])
+bestClassifiers = ["DecisionTree", "DecisionTree", "DecisionTree", "DecisionTree"]
+bestClassifiersConfigs = [["1"],["1"],["1"],["1"]]
 if benchmark["Multiview"]:
     if benchmark["Multiview"]["Fusion"]:
         if benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
@@ -249,8 +260,8 @@ if benchmark["Multiview"]:
             argumentDictionaries["Multiview"].append(arguments)
 
 resultsMultiview = Parallel(n_jobs=nbCores)(
-    delayed(ExecMultiview)(args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, gridSearch=True,
-                          **arguments)
+    delayed(ExecMultiview)(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
+                           LABELS_DICTIONARY, gridSearch=True, **arguments)
     for arguments in argumentDictionaries["Multiview"])
 
 # for classifierType, argumentsList in argumentDictionaries.iteritems():

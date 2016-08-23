@@ -1,13 +1,15 @@
 from Methods import *
 
+
 def gridSearch_hdf5(DATASET, classifiersNames):
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
         classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
         classifierMethod = getattr(classifierModule, "gridSearch")
-        bestSettings.append(classifierMethod(DATASET["/View"+str(classifierIndex)+"/matrix"][...],
-                                             DATASET["/Labels/labelsArray"][...]))
+        bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[...],
+                                             DATASET.get("labels")[...]))
     return bestSettings
+
 
 class Fusion:
     def __init__(self, NB_VIEW, DATASET_LENGTH, CLASS_LABELS, NB_CORES=1,**kwargs):
@@ -32,7 +34,7 @@ class Fusion:
 
     def predict_hdf5(self, DATASET, usedIndices=None):
         if usedIndices == None:
-            usedIndices = range(DATASET.get("datasetLength").value)
+            usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if usedIndices:
             predictedLabels = self.classifier.predict_hdf5(DATASET, usedIndices=usedIndices)
         else:

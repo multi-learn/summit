@@ -114,8 +114,8 @@ def isUseful (labelSupports, index, CLASS_LABELS, labelDict):
 
 
 def splitDataset(DATASET, LEARNING_RATE, DATASET_LENGTH):
-    LABELS = DATASET["/Labels/labelsArray"][...]
-    NB_CLASS = int(DATASET["/nbClass"][...])
+    LABELS = DATASET.get("labels")[...]
+    NB_CLASS = int(DATASET["Metadata"].attrs["nbClass"])
     validationIndices = extractRandomTrainingSet(LABELS, 1-LEARNING_RATE, DATASET_LENGTH, NB_CLASS)
     validationIndices.sort()
     return validationIndices
@@ -174,7 +174,6 @@ def getDbfromCSV(path):
 
     for file in files:
         if file[-8:]=='plus.csv' and file[:7]=='sample1':
-            print 'poulet'
             X = open(path+file)
             for x, i in zip(X, range(20)):
                 DATA[0, i+20] = np.array([float(coord) for coord in x.strip().split('\t')])
@@ -254,7 +253,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES):
 
 
 def getCaltechDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES):
-    DATASET = h5py.File(nameDB+".hdf5", "w")
+    datasetFile = h5py.File(nameDB+".hdf5", "w")
     fullLabels = np.genfromtxt(pathF + nameDB + '-ClassLabels.csv', delimiter=';').astype(int)
     if len(set(fullLabels))>NB_CLASS:
         labelsAvailable = list(set(fullLabels))
@@ -267,19 +266,19 @@ def getCaltechDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES):
     for viewIndex, view in enumerate(views):
         viewFile = pathF + nameDB + "-" + view + '.csv'
         viewMatrix = np.array(np.genfromtxt(viewFile, delimiter=';'))[usedIndices, :]
-        DATASET["/View"+str(viewIndex)+"/matrix"] = viewMatrix
-        DATASET["/View"+str(viewIndex)+"/name"] = view
-        DATASET["/View"+str(viewIndex)+"/shape"] = viewMatrix.shape
+        datasetFile["/View"+str(viewIndex)+"/matrix"] = viewMatrix
+        datasetFile["/View"+str(viewIndex)+"/name"] = view
+        datasetFile["/View"+str(viewIndex)+"/shape"] = viewMatrix.shape
 
-    DATASET["/Labels/labelsArray"] = fullLabels[usedIndices]
+    datasetFile["/Labels/labelsArray"] = fullLabels[usedIndices]
 
     labelsNamesFile = open(pathF+nameDB+'-ClassLabels-Description.csv')
     labelsDictionary = dict((classIndice, labelName) for (classIndice, labelName) in [(int(line.strip().split(";")[0]),
                                                                                        line.strip().split(";")[1])
                                                                                       for lineIndex, line in labelsNamesFile if int(line.strip().split(";")[0]) in labelsUsed])
-    DATASET["/datasetLength"] = len(DATASET["/Labels/labelsArray"][...])
-    DATASET["/nbView"] = len(views)
-    DATASET["/nbClass"] = len(set(DATASET["/Labels/labelsArray"][...]))
+    datasetFile["/datasetLength"] = len(datasetFile["/Labels/labelsArray"][...])
+    datasetFile["/nbView"] = len(views)
+    datasetFile["/nbClass"] = len(set(datasetFile["/Labels/labelsArray"][...]))
     # keptLabelsIndices = [labelIndice for labelIndice, labelName in labelsDictionary.items() if labelName in LABELS_NAMES]
     # maxNumbreOfClasses = len(labelsDictionary)
     #
@@ -293,125 +292,131 @@ def getCaltechDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES):
     # elif len(LABELS_NAMES) > NB_CLASS:
     #     keptLabelsIndices = keptLabelsIndices[:NB_CLASS]
     #
-    # DATASET = {}
+    # datasetFile = {}
     #
     # for featureIndex in range(len(fullDataset)):
-    #     DATASET[featureIndex]=np.array([fullDataset[exampleIndice] for exampleIndice in range(datasetLength) if fullClasslabels[exampleIndice] in keptLabelsIndices])
+    #     datasetFile[featureIndex]=np.array([fullDataset[exampleIndice] for exampleIndice in range(datasetLength) if fullClasslabels[exampleIndice] in keptLabelsIndices])
     #
     # CLASS_LABELS = np.array([keptLabelsIndices.index(classLabel) for classLabel in fullClasslabels if classLabel in keptLabelsIndices])
     # DATASET_LENGTH = len(CLASS_LABELS)
     #
     # LABELS_DICTIONARY = dict((keptLabelsIndices.index(classLabel), labelsDictionary[classLabel]) for classLabel in keptLabelsIndices)
 
-    return DATASET, labelsDictionary
+    return datasetFile, labelsDictionary
 
 
 def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
-    datasetFile = h5py.File(path+"MultiOmicDataset.hdf5", "w")
+    datasetFile = h5py.File(path+"MultiOmic.hdf5", "w")
 
     logging.debug("Start:\t Getting Methylation Data")
     methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
-    datasetFile["/View0/matrix"] = methylData
-    datasetFile["/View0/name"] = "Methyl"
-    datasetFile["/View0/shape"] = methylData.shape
+    methylDset = datasetFile.create_dataset("View0", methylData.shape)
+    methylDset[...] = methylData
+    methylDset.attrs["name"] = "Methyl"
     logging.debug("Done:\t Getting Methylation Data")
 
     logging.debug("Start:\t Getting MiRNA Data")
     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
-    datasetFile["/View1/matrix"] = mirnaData
-    datasetFile["/View1/name"] = "MiRNA_"
-    datasetFile["/View1/shape"] = mirnaData.shape
+    mirnaDset = datasetFile.create_dataset("View1", mirnaData.shape)
+    mirnaDset[...] = mirnaData
+    mirnaDset.attrs["name"]="MiRNA_"
     logging.debug("Done:\t Getting MiRNA Data")
 
     logging.debug("Start:\t Getting RNASeq Data")
     rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
-    datasetFile["/View2/matrix"] = rnaseqData
-    datasetFile["/View2/name"] = "RNASeq"
-    datasetFile["/View2/shape"] = rnaseqData.shape
+    rnaseqDset = datasetFile.create_dataset("View2", rnaseqData.shape)
+    rnaseqDset[...] = rnaseqData
+    rnaseqDset.attrs["name"]="RANSeq"
     logging.debug("Done:\t Getting RNASeq Data")
 
     logging.debug("Start:\t Getting Clinical Data")
     clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
-    datasetFile["/View3/matrix"] = clinical
-    datasetFile["/View3/name"] = "Clinic"
-    datasetFile["/View3/shape"] = clinical.shape
+    clinicalDset = datasetFile.create_dataset("View3", clinical.shape)
+    clinicalDset[...] = clinical
+    clinicalDset.attrs["name"] = "Clinic"
     logging.debug("Done:\t Getting Clinical Data")
 
     labelFile = open(path+'brca_labels_triple-negatif.csv')
-    LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
-    datasetFile["/Labels/labelsArray"] = LABELS
+    labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
+    labelsDset = datasetFile.create_dataset("labels", labels.shape)
+    labelsDset[...] = labels
+    labelsDset.attrs["name"] = "Labels"
 
-    datasetFile["/nbView"] = 4
-    datasetFile["/nbClass"] = 2
-    datasetFile["/datasetLength"] = len(datasetFile["/Labels/labelsArray"])
+    metaDataGrp = datasetFile.create_group("Metadata")
+    metaDataGrp.attrs["nbView"] = 4
+    metaDataGrp.attrs["nbClass"] = 2
+    metaDataGrp.attrs["datasetLength"] = len(labels)
     labelDictionary = {0:"No", 1:"Yes"}
+    datasetFile.close()
+    datasetFile = h5py.File(path+"MultiOmic.hdf5", "r")
     # datasetFile = getPseudoRNASeq(datasetFile)
     return datasetFile, labelDictionary
 
 
 def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
-    datasetFile = h5py.File(path+"ModifiedMultiOmicDataset.hdf5", "w")
+    datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "w")
 
     logging.debug("Start:\t Getting Methylation Data")
     methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
-    datasetFile["/View0/matrix"] = methylData
-    datasetFile["/View0/name"] = "Methyl_"
-    datasetFile["/View0/shape"] = methylData.shape
+    methylDset = datasetFile.create_dataset("View0", methylData.shape)
+    methylDset[...] = methylData
+    methylDset.attrs["name"] = "Methyl_"
     logging.debug("Done:\t Getting Methylation Data")
 
     logging.debug("Start:\t Getting MiRNA Data")
     mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
-    datasetFile["/View1/matrix"] = mirnaData
-    datasetFile["/View1/name"] = "MiRNA__"
-    datasetFile["/View1/shape"] = mirnaData.shape
+    mirnaDset = datasetFile.create_dataset("View1", mirnaData.shape)
+    mirnaDset[...] = mirnaData
+    mirnaDset.attrs["name"]="MiRNA__"
     logging.debug("Done:\t Getting MiRNA Data")
 
     logging.debug("Start:\t Getting RNASeq Data")
     rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
-    datasetFile["/View2/matrix"] = rnaseqData
-    datasetFile["/View2/name"] = "RNASeq_"
-    datasetFile["/View2/shape"] = rnaseqData.shape
+    rnaseqDset = datasetFile.create_dataset("View2", rnaseqData.shape)
+    rnaseqDset[...] = rnaseqData
+    rnaseqDset.attrs["name"]="RANSeq_"
     logging.debug("Done:\t Getting RNASeq Data")
 
     logging.debug("Start:\t Getting Clinical Data")
     clinical = np.genfromtxt(path+"clinicalMatrix.csv", delimiter=',')
-    datasetFile["/View3/matrix"] = clinical
-    datasetFile["/View3/name"] = "Clinic_"
-    datasetFile["/View3/shape"] = clinical.shape
+    clinicalDset = datasetFile.create_dataset("View3", clinical.shape)
+    clinicalDset[...] = clinical
+    clinicalDset.attrs["name"] = "Clinic_"
     logging.debug("Done:\t Getting Clinical Data")
 
-    logging.debug("Start:\t Getting Labels")
     labelFile = open(path+'brca_labels_triple-negatif.csv')
-    LABELS = np.array([int(line.strip().split(',')[1]) for line in labelFile])
-    datasetFile["/Labels/labelsArray"] = LABELS
-    logging.debug("Done:\t Getting Labels")
+    labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
+    labelsDset = datasetFile.create_dataset("labels", labels.shape)
+    labelsDset[...] = labels
+    labelsDset.attrs["name"] = "Labels"
 
-    logging.debug("Start:\t Getting Data Shape")
-    datasetFile["/nbView"] = 5
-    datasetFile["/nbClass"] = 2
-    datasetFile["/datasetLength"] = len(datasetFile["/Labels/labelsArray"])
+    metaDataGrp = datasetFile.create_group("Metadata")
+    metaDataGrp.attrs["nbView"] = 4
+    metaDataGrp.attrs["nbClass"] = 2
+    metaDataGrp.attrs["datasetLength"] = len(labels)
     labelDictionary = {0:"No", 1:"Yes"}
-    logging.debug("Done:\t Getting Data Shape")
 
     logging.debug("Start:\t Getting Modified RNASeq Data")
-    RNASeq = datasetFile["View2/matrix"][...]
-    modifiedRNASeq = np.zeros((datasetFile.get("datasetLength/").value, datasetFile["View2/shape"][1]), dtype=int)
+    RNASeq = datasetFile["View2"][...]
+    modifiedRNASeq = np.zeros((datasetFile.get("Metadata").attrs["datasetLength"], datasetFile.get("View2").shape[1]), dtype=int)
     for exampleindice, exampleArray in enumerate(RNASeq):
         RNASeqDictionary = dict((index, value) for index, value in enumerate(exampleArray))
         sorted_x = sorted(RNASeqDictionary.items(), key=operator.itemgetter(1))
         modifiedRNASeq[exampleindice] = np.array([index for (index, value) in sorted_x], dtype=int)
-    datasetFile["/View4/matrix"] = modifiedRNASeq
-    datasetFile["/View4/name"] = "MRNASeq"
-    datasetFile["/View4/shape"] = modifiedRNASeq.shape
+    mrnaseqDset = datasetFile.create_dataset("View4", modifiedRNASeq.shape, data=modifiedRNASeq)
+    mrnaseqDset.attrs["name"] = "MRNASeq"
     logging.debug("Done:\t Getting Modified RNASeq Data")
+
+    datasetFile.close()
+    datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "r")
 
     return datasetFile, labelDictionary
 
 
 def getModifiedMultiOmicDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
-    datasetFile = h5py.File(path+"ModifiedMultiOmicDataset.hdf5", "r")
+    datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "r")
     labelDictionary = {0:"No", 1:"Yes"}
     return datasetFile, labelDictionary
 
@@ -443,7 +448,7 @@ def getPseudoRNASeq(dataset):
 
 
 def getMultiOmicDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
-    datasetFile = h5py.File(path+"MultiOmicDataset.hdf5", "r")
+    datasetFile = h5py.File(path+"MultiOmic.hdf5", "r")
     labelDictionary = {0:"No", 1:"Yes"}
     return datasetFile, labelDictionary
 

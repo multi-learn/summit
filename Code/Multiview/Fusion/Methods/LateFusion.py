@@ -33,12 +33,12 @@ class LateFusionClassifier(object):
 
     def fit_hdf5(self, DATASET, trainIndices=None):
         if trainIndices == None:
-            trainIndices = range(DATASET.get("datasetLength").value)
-        nbView = DATASET.get("nbView").value
+            trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
+        nbView = DATASET.get("Metadata").attrs["nbView"]
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
             delayed(fifMonoviewClassifier)(self.monoviewClassifiersNames[viewIndex],
-                                              DATASET["/View"+str(viewIndex)+"/matrix"][trainIndices, :],
-                                              DATASET["/Labels/labelsArray"][trainIndices],
+                                              DATASET.get("View"+str(viewIndex))[trainIndices, :],
+                                              DATASET.get("labels")[trainIndices],
                                               self.monoviewClassifiersConfigs[viewIndex])
             for viewIndex in range(nbView))
 
@@ -53,13 +53,13 @@ class WeightedLinear(LateFusionClassifier):
         # Normalize weights ?
         # weights = weights/float(max(weights))
         if usedIndices == None:
-            usedIndices = range(DATASET.get("datasetLength").value)
+            usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if usedIndices:
             predictedLabels = []
-            viewScores = np.zeros((DATASET.get("nbView").value, len(usedIndices), DATASET.get("nbClass").value))
-            for viewIndex in range(DATASET.get("nbView").value):
+            viewScores = np.zeros((DATASET.get("Metadata").attrs["nbView"], len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
+            for viewIndex in range(DATASET.get("Metadata").attrs["nbView"]):
                 viewScores[viewIndex] = self.monoviewClassifiers[viewIndex].predict_proba(
-                    DATASET["/View" + str(viewIndex) + "/matrix"][usedIndices])
+                    DATASET.get("View" + str(viewIndex))[usedIndices])
             for currentIndex, usedIndex in enumerate(usedIndices):
                 predictedLabel = np.argmax(np.array(
                     [max(viewScore) * weight for viewScore, weight in zip(viewScores[:, currentIndex], self.weights)],
@@ -92,13 +92,13 @@ class SVMForLinear(LateFusionClassifier):
 
     def fit_hdf5(self, DATASET, trainIndices=None):
         if trainIndices == None:
-            trainIndices = range(DATASET.get("datasetLength").value)
-        nbViews = DATASET.get("nbView").value
+            trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
+        nbViews = DATASET.get("Metadata").attrs["nbView"]
         for viewIndex in range(nbViews):
             monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[viewIndex])
             self.monoviewClassifiers.append(
-                monoviewClassifier.fit(DATASET["/View" + str(viewIndex) + "/matrix"][trainIndices],
-                                       DATASET["/Labels/labelsArray"][trainIndices],
+                monoviewClassifier.fit(DATASET.get("View" + str(viewIndex))[trainIndices],
+                                       DATASET.get("labels")[trainIndices],
                                        NB_CORES=self.nbCores,
                                        **dict((str(configIndex), config) for configIndex, config in
                                               enumerate(self.monoviewClassifiersConfigs[viewIndex]
@@ -109,13 +109,13 @@ class SVMForLinear(LateFusionClassifier):
         # Normalize weights ?
         # weights = weights/float(max(weights))
         if usedIndices == None:
-            usedIndices = range(DATASET.get("datasetLength").value)
+            usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if usedIndices:
-            monoviewDecisions = np.zeros((len(usedIndices), DATASET.get("nbView").value), dtype=int)
-            for viewIndex in range(DATASET.get("nbView").value):
+            monoviewDecisions = np.zeros((len(usedIndices), DATASET.get("Metadata").attrs["nbView"]), dtype=int)
+            for viewIndex in range(DATASET.get("Metadata").attrs["nbView"]):
                 monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[viewIndex])
                 monoviewDecisions[:, viewIndex] = self.monoviewClassifiers[viewIndex].predict(
-                    DATASET["/View" + str(viewIndex) + "/matrix"][usedIndices])
+                    DATASET.get("View" + str(viewIndex))[usedIndices])
             predictedLabels = self.SVMClassifier.predict(monoviewDecisions)
         else:
             predictedLabels = []
@@ -123,12 +123,12 @@ class SVMForLinear(LateFusionClassifier):
 
     def SVMForLinearFusionFit(self, DATASET, usedIndices=None):
         self.SVMClassifier = OneVsOneClassifier(SVC())
-        monoViewDecisions = np.zeros((len(usedIndices), DATASET.get("nbView").value), dtype=int)
-        for viewIndex in range(DATASET.get("nbView").value):
+        monoViewDecisions = np.zeros((len(usedIndices), DATASET.get("Metadata").attrs["nbView"]), dtype=int)
+        for viewIndex in range(DATASET.get("Metadata").attrs["nbView"]):
             monoViewDecisions[:, viewIndex] = self.monoviewClassifiers[viewIndex].predict(
-                DATASET["/View" + str(viewIndex) + "/matrix"][usedIndices])
+                DATASET.get("View" + str(viewIndex))[usedIndices])
 
-        self.SVMClassifier.fit(monoViewDecisions, DATASET["/Labels/labelsArray"][usedIndices])
+        self.SVMClassifier.fit(monoViewDecisions, DATASET.get("labels")[usedIndices])
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
         configString = "with SVM for linear \n\t-With monoview classifiers : "
@@ -148,20 +148,20 @@ class MajorityVoting(LateFusionClassifier):
 
     def predict_hdf5(self, DATASET, usedIndices=None):
         if usedIndices == None:
-            usedIndices = range(DATASET.get("datasetLength").value)
+            usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if usedIndices:
             datasetLength = len(usedIndices)
-            votes = np.zeros((datasetLength, DATASET.get("nbClass").value), dtype=int)
-            monoViewDecisions = np.zeros((len(usedIndices), DATASET.get("nbView").value), dtype=int)
-            for viewIndex in range(DATASET.get("nbView").value):
+            votes = np.zeros((datasetLength, DATASET.get("Metadata").attrs["nbClass"]), dtype=int)
+            monoViewDecisions = np.zeros((len(usedIndices),DATASET.get("Metadata").attrs["nbView"]), dtype=int)
+            for viewIndex in range(DATASET.get("Metadata").attrs["nbView"]):
                 monoViewDecisions[:, viewIndex] = self.monoviewClassifiers[viewIndex].predict(
-                    DATASET["/View" + str(viewIndex) + "/matrix"][usedIndices])
+                    DATASET.get("View" + str(viewIndex))[usedIndices])
             for exampleIndex in range(datasetLength):
                 for featureClassification in monoViewDecisions[exampleIndex, :]:
                     votes[exampleIndex, featureClassification] += 1
                 nbMaximum = len(np.where(votes[exampleIndex] == max(votes[exampleIndex]))[0])
                 try:
-                    assert nbMaximum != DATASET.get("nbView").value
+                    assert nbMaximum != DATASET.get("Metadata").attrs["nbView"]
                 except:
                     print "Majority voting can't decide, each classifier has voted for a different class"
                     raise
@@ -198,16 +198,14 @@ class BayesianInference(LateFusionClassifier):
     def predict_hdf5(self, DATASET, usedIndices=None):
         nbView = DATASET.get("nbView").value
         if usedIndices == None:
-            usedIndices = range(DATASET.get("datasetLength").value)
+            usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if sum(self.weights)!=1.0:
             self.weights = self.weights/sum(self.weights)
         if usedIndices:
 
-            viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("nbClass").value))
+            viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
             for viewIndex in range(nbView):
-                viewScores[viewIndex] = np.power(self.monoviewClassifiers[viewIndex].predict_proba(DATASET["/View" +
-                                                                                                  str(viewIndex) +
-                                                                                                  "/matrix"]
+                viewScores[viewIndex] = np.power(self.monoviewClassifiers[viewIndex].predict_proba(DATASET.get("View" + str(viewIndex))
                                                                                           [usedIndices]),
                                                  self.weights[viewIndex])
             predictedLabels = np.argmax(np.prod(viewScores, axis=1), axis=1)

@@ -15,12 +15,16 @@ import logging
 import time
 
 
-def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=False, **kwargs):
+def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY, gridSearch=False, **kwargs):
+
+    datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
+    NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
+    views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
+    NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
     CL_type = kwargs["CL_type"]
     views = kwargs["views"]
     NB_VIEW = kwargs["NB_VIEW"]
-    NB_CLASS = kwargs["NB_CLASS"]
     LABELS_NAMES = kwargs["LABELS_NAMES"]
     MumboKWARGS = kwargs["MumboKWARGS"]
     FusionKWARGS = kwargs["FusionKWARGS"]
@@ -30,23 +34,9 @@ def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, grid
     logging.info("### Classification - Database : " + str(name) + " ; Views : " + ", ".join(views) +
                  " ; Algorithm : " + CL_type + " ; Cores : " + str(nbCores))
 
-
-
-    logging.info("Start:\t Read " + str.upper(databaseType[1:]) + " Database Files for " + name)
-
-    getDatabase = getattr(DB, "get" + name + "DB" + databaseType[1:])
-    DATASET, LABELS_DICTIONARY = getDatabase(views, path, name, NB_CLASS, LABELS_NAMES)
-    datasetLength = DATASET["/datasetLength"][...]
-    NB_VIEW = DATASET.get("nbView").value
-    views = [str(DATASET["/View"+str(viewIndex)+"/name"][...]) for viewIndex in range(NB_VIEW)]
-    NB_CLASS = DATASET.get("nbClass").value
-
-    logging.info("Info:\t Labels used: " + ", ".join(LABELS_DICTIONARY.values()))
-    logging.info("Info:\t Length of dataset:" + str(datasetLength))
-
     for viewIndex in range(NB_VIEW):
-        logging.info("Info:\t Shape of " + str(DATASET["/View"+str(viewIndex)+"/name"][...]) + " :" + str(
-                DATASET["View" + str(viewIndex) + "/shape"][...]))
+        logging.info("Info:\t Shape of " + str(DATASET.get("View"+str(viewIndex)).attrs["name"]) + " :" + str(
+            DATASET.get("View"+str(viewIndex)).shape))
     logging.info("Done:\t Read Database Files")
 
 
@@ -58,7 +48,7 @@ def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, grid
 
     logging.info("Start:\t Determine "+str(nbFolds)+" folds")
     if nbFolds != 1:
-        kFolds = DB.getKFoldIndices(nbFolds, DATASET["/Labels/labelsArray"][...], NB_CLASS, learningIndices)
+        kFolds = DB.getKFoldIndices(nbFolds, DATASET.get("labels")[...], NB_CLASS, learningIndices)
     else:
         kFolds = [[], range(datasetLength)]
 
@@ -99,7 +89,7 @@ def ExecMultiview(name, learningRate, nbFolds, nbCores, databaseType, path, grid
             logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
             trainIndices = [index for index in range(datasetLength) if index not in fold]
             DATASET_LENGTH = len(trainIndices)
-            classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("/Labels/labelsArray").value, NB_CORES=nbCores, **initKWARGS)
+            classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("labels").value, NB_CORES=nbCores, **initKWARGS)
 
             classifier.fit_hdf5(DATASET, trainIndices=trainIndices)
             kFoldClassifier.append(classifier)
@@ -255,7 +245,17 @@ if __name__=='__main__':
                  "LABELS_NAMES": args.CL_classes.split(":"),
                  "FusionKWARGS": FusionKWARGS,
                  "MumboKWARGS": MumboKWARGS}
-    ExecMultiview(args.name, args.CL_split, args.CL_nbFolds, args.CL_cores, args.type, args.pathF, gridSearch=True, **arguments)
+
+    logging.info("Start:\t Read " + str.upper(args.type[1:]) + " Database Files for " + args.name)
+
+    getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
+    DATASET, LABELS_DICTIONARY = getDatabase(views, args.pathF, args.name, NB_CLASS, LABELS_NAMES)
+
+    logging.info("Info:\t Labels used: " + ", ".join(LABELS_DICTIONARY.values()))
+    logging.info("Info:\t Length of dataset:" + str(DATASET.get("Metadata").attrs["datasetlength"]))
+
+    ExecMultiview(DATASET, args.name, args.CL_split, args.CL_nbFolds, args.CL_cores, args.type, args.pathF,
+                  LABELS_DICTIONARY, gridSearch=True, **arguments)
 
 
 

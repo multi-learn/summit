@@ -1,0 +1,661 @@
+2016-08-23 10:57:59,005 INFO: Begginging
+2016-08-23 10:57:59,439 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:57:59,439 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2016-08-23 10:57:59,439 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:57:59,465 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-23 10:57:59,465 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-23 10:57:59,465 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:57:59,465 DEBUG: Start:	 Classification
+2016-08-23 10:58:06,426 DEBUG: Info:	 Time for Classification: 6.67265105247[s]
+2016-08-23 10:58:06,426 DEBUG: Done:	 Classification
+2016-08-23 10:58:06,451 DEBUG: Start:	 Statistic Results
+2016-08-23 10:58:06,451 DEBUG: Info:	 Classification report:
+2016-08-23 10:58:06,460 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       1.00      0.80      0.89        25
+        Oui       0.67      1.00      0.80        10
+
+avg / total       0.90      0.86      0.86        35
+
+2016-08-23 10:58:06,462 DEBUG: Info:	 Statistics:
+2016-08-23 10:58:06,493 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.857142857143
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.844444
+5    Mean of F1-Score of top 20 classes by F1-Score        0.844444
+6    Mean of F1-Score of top 30 classes by F1-Score        0.844444
+2016-08-23 10:58:06,493 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:58:08,420 DEBUG: Done:	 Statistic Results
+2016-08-23 10:58:08,420 DEBUG: Start:	 Plot Result
+2016-08-23 10:58:08,640 DEBUG: Done:	 Plot Result
+2016-08-23 10:58:08,652 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:58:08,652 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : KNN
+2016-08-23 10:58:08,652 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:58:08,665 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-23 10:58:08,665 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-23 10:58:08,665 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:58:08,665 DEBUG: Start:	 Classification
+2016-08-23 10:58:18,001 DEBUG: Info:	 Time for Classification: 9.3463408947[s]
+2016-08-23 10:58:18,002 DEBUG: Done:	 Classification
+2016-08-23 10:58:18,484 DEBUG: Start:	 Statistic Results
+2016-08-23 10:58:18,484 DEBUG: Info:	 Classification report:
+2016-08-23 10:58:18,485 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.89      0.93      0.91        27
+        Oui       0.71      0.62      0.67         8
+
+avg / total       0.85      0.86      0.85        35
+
+2016-08-23 10:58:18,487 DEBUG: Info:	 Statistics:
+2016-08-23 10:58:18,494 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.857142857143
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.787879
+5    Mean of F1-Score of top 20 classes by F1-Score        0.787879
+6    Mean of F1-Score of top 30 classes by F1-Score        0.787879
+2016-08-23 10:58:18,494 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:58:18,798 DEBUG: Done:	 Statistic Results
+2016-08-23 10:58:18,799 DEBUG: Start:	 Plot Result
+2016-08-23 10:58:19,485 DEBUG: Done:	 Plot Result
+2016-08-23 10:58:19,494 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:58:19,494 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : RandomForest
+2016-08-23 10:58:19,494 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:58:19,506 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-23 10:58:19,507 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-23 10:58:19,507 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:58:19,507 DEBUG: Start:	 Classification
+2016-08-23 10:58:26,047 DEBUG: Info:	 Time for Classification: 6.5495569706[s]
+2016-08-23 10:58:26,047 DEBUG: Done:	 Classification
+2016-08-23 10:58:26,055 DEBUG: Start:	 Statistic Results
+2016-08-23 10:58:26,056 DEBUG: Info:	 Classification report:
+2016-08-23 10:58:26,056 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.93      0.93      0.93        27
+        Oui       0.75      0.75      0.75         8
+
+avg / total       0.89      0.89      0.89        35
+
+2016-08-23 10:58:26,058 DEBUG: Info:	 Statistics:
+2016-08-23 10:58:26,066 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.885714285714
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.837963
+5    Mean of F1-Score of top 20 classes by F1-Score        0.837963
+6    Mean of F1-Score of top 30 classes by F1-Score        0.837963
+2016-08-23 10:58:26,066 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:58:26,354 DEBUG: Done:	 Statistic Results
+2016-08-23 10:58:26,354 DEBUG: Start:	 Plot Result
+2016-08-23 10:58:26,569 DEBUG: Done:	 Plot Result
+2016-08-23 10:58:26,578 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:58:26,578 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SGD
+2016-08-23 10:58:26,578 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:58:26,591 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-23 10:58:26,591 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-23 10:58:26,591 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:58:26,591 DEBUG: Start:	 Classification
+2016-08-23 10:58:27,979 DEBUG: Info:	 Time for Classification: 1.39624905586[s]
+2016-08-23 10:58:27,979 DEBUG: Done:	 Classification
+2016-08-23 10:58:27,984 DEBUG: Start:	 Statistic Results
+2016-08-23 10:58:27,984 DEBUG: Info:	 Classification report:
+2016-08-23 10:58:27,985 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.92      0.85      0.88        27
+        Oui       0.60      0.75      0.67         8
+
+avg / total       0.85      0.83      0.83        35
+
+2016-08-23 10:58:27,988 DEBUG: Info:	 Statistics:
+2016-08-23 10:58:27,997 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.828571428571
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.775641
+5    Mean of F1-Score of top 20 classes by F1-Score        0.775641
+6    Mean of F1-Score of top 30 classes by F1-Score        0.775641
+2016-08-23 10:58:27,997 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:58:28,309 DEBUG: Done:	 Statistic Results
+2016-08-23 10:58:28,309 DEBUG: Start:	 Plot Result
+2016-08-23 10:58:28,550 DEBUG: Done:	 Plot Result
+2016-08-23 10:58:28,559 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:58:28,559 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SVC
+2016-08-23 10:58:28,559 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:58:28,571 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-23 10:58:28,571 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-23 10:58:28,571 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:58:28,571 DEBUG: Start:	 Classification
+2016-08-23 10:58:36,064 DEBUG: Info:	 Time for Classification: 7.50162100792[s]
+2016-08-23 10:58:36,064 DEBUG: Done:	 Classification
+2016-08-23 10:58:36,204 DEBUG: Start:	 Statistic Results
+2016-08-23 10:58:36,205 DEBUG: Info:	 Classification report:
+2016-08-23 10:58:36,205 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.96      0.87      0.91        30
+        Oui       0.50      0.80      0.62         5
+
+avg / total       0.90      0.86      0.87        35
+
+2016-08-23 10:58:36,207 DEBUG: Info:	 Statistics:
+2016-08-23 10:58:36,215 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.857142857143
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.763833
+5    Mean of F1-Score of top 20 classes by F1-Score        0.763833
+6    Mean of F1-Score of top 30 classes by F1-Score        0.763833
+2016-08-23 10:58:36,215 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:58:36,505 DEBUG: Done:	 Statistic Results
+2016-08-23 10:58:36,505 DEBUG: Start:	 Plot Result
+2016-08-23 10:58:36,847 DEBUG: Done:	 Plot Result
+2016-08-23 10:58:36,880 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:58:36,880 DEBUG: ### Classification - Database:MultiOmic Feature:RNASeq train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2016-08-23 10:58:36,881 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:58:36,881 DEBUG: Info:	 Shape X_train:(312, 1046), Length of y_train:312
+2016-08-23 10:58:36,881 DEBUG: Info:	 Shape X_test:(35, 1046), Length of y_test:35
+2016-08-23 10:58:36,881 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:58:36,882 DEBUG: Start:	 Classification
+2016-08-23 10:58:37,080 DEBUG: Info:	 Time for Classification: 0.196507930756[s]
+2016-08-23 10:58:37,080 DEBUG: Done:	 Classification
+2016-08-23 10:58:37,081 DEBUG: Start:	 Statistic Results
+2016-08-23 10:58:37,082 DEBUG: Info:	 Classification report:
+2016-08-23 10:58:37,083 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.88      0.88      0.88        26
+        Oui       0.67      0.67      0.67         9
+
+avg / total       0.83      0.83      0.83        35
+
+2016-08-23 10:58:37,084 DEBUG: Info:	 Statistics:
+2016-08-23 10:58:37,091 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.828571428571
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.775641
+5    Mean of F1-Score of top 20 classes by F1-Score        0.775641
+6    Mean of F1-Score of top 30 classes by F1-Score        0.775641
+2016-08-23 10:58:37,092 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:58:37,376 DEBUG: Done:	 Statistic Results
+2016-08-23 10:58:37,376 DEBUG: Start:	 Plot Result
+2016-08-23 10:58:37,582 DEBUG: Done:	 Plot Result
+2016-08-23 10:58:37,583 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:58:37,584 DEBUG: ### Classification - Database:MultiOmic Feature:RNASeq train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : KNN
+2016-08-23 10:58:37,584 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:58:37,584 DEBUG: Info:	 Shape X_train:(312, 1046), Length of y_train:312
+2016-08-23 10:58:37,585 DEBUG: Info:	 Shape X_test:(35, 1046), Length of y_test:35
+2016-08-23 10:58:37,585 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:58:37,585 DEBUG: Start:	 Classification
+2016-08-23 10:58:37,903 DEBUG: Info:	 Time for Classification: 0.316462993622[s]
+2016-08-23 10:58:37,903 DEBUG: Done:	 Classification
+2016-08-23 10:58:37,919 DEBUG: Start:	 Statistic Results
+2016-08-23 10:58:37,920 DEBUG: Info:	 Classification report:
+2016-08-23 10:58:37,921 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.84      0.93      0.88        28
+        Oui       0.50      0.29      0.36         7
+
+avg / total       0.77      0.80      0.78        35
+
+2016-08-23 10:58:37,922 DEBUG: Info:	 Statistics:
+2016-08-23 10:58:37,929 DEBUG: 
+                                          Statistic      Values
+0                            Accuracy score on test         0.8
+1                        Top 10 classes by F1-Score  [Non, Oui]
+2                      Worst 10 classes by F1-Score  [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes           0
+4    Mean of F1-Score of top 10 classes by F1-Score    0.622496
+5    Mean of F1-Score of top 20 classes by F1-Score    0.622496
+6    Mean of F1-Score of top 30 classes by F1-Score    0.622496
+2016-08-23 10:58:37,929 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:58:38,209 DEBUG: Done:	 Statistic Results
+2016-08-23 10:58:38,209 DEBUG: Start:	 Plot Result
+2016-08-23 10:58:38,432 DEBUG: Done:	 Plot Result
+2016-08-23 10:58:38,433 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:58:38,433 DEBUG: ### Classification - Database:MultiOmic Feature:RNASeq train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : RandomForest
+2016-08-23 10:58:38,433 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:58:38,434 DEBUG: Info:	 Shape X_train:(312, 1046), Length of y_train:312
+2016-08-23 10:58:38,434 DEBUG: Info:	 Shape X_test:(35, 1046), Length of y_test:35
+2016-08-23 10:58:38,434 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:58:38,434 DEBUG: Start:	 Classification
+2016-08-23 10:58:41,426 DEBUG: Info:	 Time for Classification: 2.98975014687[s]
+2016-08-23 10:58:41,426 DEBUG: Done:	 Classification
+2016-08-23 10:58:41,443 DEBUG: Start:	 Statistic Results
+2016-08-23 10:58:41,443 DEBUG: Info:	 Classification report:
+2016-08-23 10:58:41,444 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.92      0.92      0.92        24
+        Oui       0.82      0.82      0.82        11
+
+avg / total       0.89      0.89      0.89        35
+
+2016-08-23 10:58:41,446 DEBUG: Info:	 Statistics:
+2016-08-23 10:58:41,453 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.885714285714
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.867424
+5    Mean of F1-Score of top 20 classes by F1-Score        0.867424
+6    Mean of F1-Score of top 30 classes by F1-Score        0.867424
+2016-08-23 10:58:41,453 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:58:41,744 DEBUG: Done:	 Statistic Results
+2016-08-23 10:58:41,744 DEBUG: Start:	 Plot Result
+2016-08-23 10:58:41,973 DEBUG: Done:	 Plot Result
+2016-08-23 10:58:41,974 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:58:41,974 DEBUG: ### Classification - Database:MultiOmic Feature:RNASeq train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SGD
+2016-08-23 10:58:41,974 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:58:41,975 DEBUG: Info:	 Shape X_train:(312, 1046), Length of y_train:312
+2016-08-23 10:58:41,975 DEBUG: Info:	 Shape X_test:(35, 1046), Length of y_test:35
+2016-08-23 10:58:41,975 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:58:41,975 DEBUG: Start:	 Classification
+2016-08-23 10:58:42,070 DEBUG: Info:	 Time for Classification: 0.0909140110016[s]
+2016-08-23 10:58:42,070 DEBUG: Done:	 Classification
+2016-08-23 10:58:42,072 DEBUG: Start:	 Statistic Results
+2016-08-23 10:58:42,072 DEBUG: Info:	 Classification report:
+2016-08-23 10:58:42,074 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.88      0.84      0.86        25
+        Oui       0.64      0.70      0.67        10
+
+avg / total       0.81      0.80      0.80        35
+
+2016-08-23 10:58:42,076 DEBUG: Info:	 Statistics:
+2016-08-23 10:58:42,086 DEBUG: 
+                                          Statistic      Values
+0                            Accuracy score on test         0.8
+1                        Top 10 classes by F1-Score  [Non, Oui]
+2                      Worst 10 classes by F1-Score  [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes           0
+4    Mean of F1-Score of top 10 classes by F1-Score    0.761905
+5    Mean of F1-Score of top 20 classes by F1-Score    0.761905
+6    Mean of F1-Score of top 30 classes by F1-Score    0.761905
+2016-08-23 10:58:42,087 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:58:42,421 DEBUG: Done:	 Statistic Results
+2016-08-23 10:58:42,421 DEBUG: Start:	 Plot Result
+2016-08-23 10:58:42,694 DEBUG: Done:	 Plot Result
+2016-08-23 10:58:42,695 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:58:42,695 DEBUG: ### Classification - Database:MultiOmic Feature:RNASeq train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SVC
+2016-08-23 10:58:42,695 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:58:42,696 DEBUG: Info:	 Shape X_train:(312, 1046), Length of y_train:312
+2016-08-23 10:58:42,696 DEBUG: Info:	 Shape X_test:(35, 1046), Length of y_test:35
+2016-08-23 10:58:42,696 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:58:42,696 DEBUG: Start:	 Classification
+2016-08-23 10:58:52,919 DEBUG: Info:	 Time for Classification: 10.2208080292[s]
+2016-08-23 10:58:52,919 DEBUG: Done:	 Classification
+2016-08-23 10:58:52,924 DEBUG: Start:	 Statistic Results
+2016-08-23 10:58:52,924 DEBUG: Info:	 Classification report:
+2016-08-23 10:58:52,925 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.92      0.89      0.91        27
+        Oui       0.67      0.75      0.71         8
+
+avg / total       0.86      0.86      0.86        35
+
+2016-08-23 10:58:52,927 DEBUG: Info:	 Statistics:
+2016-08-23 10:58:52,934 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.857142857143
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.805771
+5    Mean of F1-Score of top 20 classes by F1-Score        0.805771
+6    Mean of F1-Score of top 30 classes by F1-Score        0.805771
+2016-08-23 10:58:52,934 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:58:53,223 DEBUG: Done:	 Statistic Results
+2016-08-23 10:58:53,223 DEBUG: Start:	 Plot Result
+2016-08-23 10:58:53,432 DEBUG: Done:	 Plot Result
+2016-08-23 10:58:53,462 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:58:53,462 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2016-08-23 10:58:53,463 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:58:53,524 DEBUG: Info:	 Shape X_train:(312, 73599), Length of y_train:312
+2016-08-23 10:58:53,524 DEBUG: Info:	 Shape X_test:(35, 73599), Length of y_test:35
+2016-08-23 10:58:53,524 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:58:53,524 DEBUG: Start:	 Classification
+2016-08-23 10:59:12,961 DEBUG: Info:	 Time for Classification: 19.4953379631[s]
+2016-08-23 10:59:12,961 DEBUG: Done:	 Classification
+2016-08-23 10:59:12,964 DEBUG: Start:	 Statistic Results
+2016-08-23 10:59:12,964 DEBUG: Info:	 Classification report:
+2016-08-23 10:59:12,965 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.74      0.65      0.69        26
+        Oui       0.25      0.33      0.29         9
+
+avg / total       0.61      0.57      0.59        35
+
+2016-08-23 10:59:12,967 DEBUG: Info:	 Statistics:
+2016-08-23 10:59:12,974 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.571428571429
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.489796
+5    Mean of F1-Score of top 20 classes by F1-Score        0.489796
+6    Mean of F1-Score of top 30 classes by F1-Score        0.489796
+2016-08-23 10:59:12,974 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:59:13,251 DEBUG: Done:	 Statistic Results
+2016-08-23 10:59:13,251 DEBUG: Start:	 Plot Result
+2016-08-23 10:59:13,458 DEBUG: Done:	 Plot Result
+2016-08-23 10:59:13,487 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:59:13,487 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : KNN
+2016-08-23 10:59:13,487 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:59:13,523 DEBUG: Info:	 Shape X_train:(312, 73599), Length of y_train:312
+2016-08-23 10:59:13,523 DEBUG: Info:	 Shape X_test:(35, 73599), Length of y_test:35
+2016-08-23 10:59:13,523 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:59:13,524 DEBUG: Start:	 Classification
+2016-08-23 10:59:40,117 DEBUG: Info:	 Time for Classification: 26.6264278889[s]
+2016-08-23 10:59:40,117 DEBUG: Done:	 Classification
+2016-08-23 10:59:41,459 DEBUG: Start:	 Statistic Results
+2016-08-23 10:59:41,459 DEBUG: Info:	 Classification report:
+2016-08-23 10:59:41,460 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.67      0.96      0.79        23
+        Oui       0.50      0.08      0.14        12
+
+avg / total       0.61      0.66      0.57        35
+
+2016-08-23 10:59:41,462 DEBUG: Info:	 Statistics:
+2016-08-23 10:59:41,469 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.657142857143
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.464286
+5    Mean of F1-Score of top 20 classes by F1-Score        0.464286
+6    Mean of F1-Score of top 30 classes by F1-Score        0.464286
+2016-08-23 10:59:41,469 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:59:41,749 DEBUG: Done:	 Statistic Results
+2016-08-23 10:59:41,749 DEBUG: Start:	 Plot Result
+2016-08-23 10:59:43,291 DEBUG: Done:	 Plot Result
+2016-08-23 10:59:43,321 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:59:43,321 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : RandomForest
+2016-08-23 10:59:43,321 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:59:43,357 DEBUG: Info:	 Shape X_train:(312, 73599), Length of y_train:312
+2016-08-23 10:59:43,357 DEBUG: Info:	 Shape X_test:(35, 73599), Length of y_test:35
+2016-08-23 10:59:43,358 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:59:43,358 DEBUG: Start:	 Classification
+2016-08-23 10:59:58,108 DEBUG: Info:	 Time for Classification: 14.7840790749[s]
+2016-08-23 10:59:58,108 DEBUG: Done:	 Classification
+2016-08-23 10:59:58,127 DEBUG: Start:	 Statistic Results
+2016-08-23 10:59:58,128 DEBUG: Info:	 Classification report:
+2016-08-23 10:59:58,142 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.63      1.00      0.77        22
+        Oui       0.00      0.00      0.00        13
+
+avg / total       0.40      0.63      0.49        35
+
+2016-08-23 10:59:58,147 DEBUG: Info:	 Statistics:
+2016-08-23 10:59:58,157 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.628571428571
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes             0.5
+4    Mean of F1-Score of top 10 classes by F1-Score        0.385965
+5    Mean of F1-Score of top 20 classes by F1-Score        0.385965
+6    Mean of F1-Score of top 30 classes by F1-Score        0.385965
+2016-08-23 10:59:58,157 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 10:59:58,457 DEBUG: Done:	 Statistic Results
+2016-08-23 10:59:58,457 DEBUG: Start:	 Plot Result
+2016-08-23 10:59:58,679 DEBUG: Done:	 Plot Result
+2016-08-23 10:59:58,709 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 10:59:58,709 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SGD
+2016-08-23 10:59:58,709 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 10:59:58,745 DEBUG: Info:	 Shape X_train:(312, 73599), Length of y_train:312
+2016-08-23 10:59:58,745 DEBUG: Info:	 Shape X_test:(35, 73599), Length of y_test:35
+2016-08-23 10:59:58,745 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 10:59:58,745 DEBUG: Start:	 Classification
+2016-08-23 11:00:01,208 DEBUG: Info:	 Time for Classification: 2.49507904053[s]
+2016-08-23 11:00:01,208 DEBUG: Done:	 Classification
+2016-08-23 11:00:01,217 DEBUG: Start:	 Statistic Results
+2016-08-23 11:00:01,217 DEBUG: Info:	 Classification report:
+2016-08-23 11:00:01,218 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.69      1.00      0.81        24
+        Oui       0.00      0.00      0.00        11
+
+avg / total       0.47      0.69      0.56        35
+
+2016-08-23 11:00:01,220 DEBUG: Info:	 Statistics:
+2016-08-23 11:00:01,228 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.685714285714
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes             0.5
+4    Mean of F1-Score of top 10 classes by F1-Score         0.40678
+5    Mean of F1-Score of top 20 classes by F1-Score         0.40678
+6    Mean of F1-Score of top 30 classes by F1-Score         0.40678
+2016-08-23 11:00:01,228 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 11:00:01,541 DEBUG: Done:	 Statistic Results
+2016-08-23 11:00:01,541 DEBUG: Start:	 Plot Result
+2016-08-23 11:00:01,827 DEBUG: Done:	 Plot Result
+2016-08-23 11:00:01,859 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 11:00:01,859 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SVC
+2016-08-23 11:00:01,859 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 11:00:01,897 DEBUG: Info:	 Shape X_train:(312, 73599), Length of y_train:312
+2016-08-23 11:00:01,897 DEBUG: Info:	 Shape X_test:(35, 73599), Length of y_test:35
+2016-08-23 11:00:01,897 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 11:00:01,897 DEBUG: Start:	 Classification
+2016-08-23 11:00:34,135 DEBUG: Info:	 Time for Classification: 32.2736110687[s]
+2016-08-23 11:00:34,136 DEBUG: Done:	 Classification
+2016-08-23 11:00:34,724 DEBUG: Start:	 Statistic Results
+2016-08-23 11:00:34,724 DEBUG: Info:	 Classification report:
+2016-08-23 11:00:34,725 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.82      0.69      0.75        26
+        Oui       0.38      0.56      0.45         9
+
+avg / total       0.71      0.66      0.67        35
+
+2016-08-23 11:00:34,727 DEBUG: Info:	 Statistics:
+2016-08-23 11:00:34,734 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.657142857143
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.602273
+5    Mean of F1-Score of top 20 classes by F1-Score        0.602273
+6    Mean of F1-Score of top 30 classes by F1-Score        0.602273
+2016-08-23 11:00:34,734 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 11:00:35,019 DEBUG: Done:	 Statistic Results
+2016-08-23 11:00:35,019 DEBUG: Start:	 Plot Result
+2016-08-23 11:00:35,811 DEBUG: Done:	 Plot Result
+2016-08-23 11:00:35,838 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 11:00:35,838 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2016-08-23 11:00:35,838 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 11:00:35,839 DEBUG: Info:	 Shape X_train:(312, 127), Length of y_train:312
+2016-08-23 11:00:35,839 DEBUG: Info:	 Shape X_test:(35, 127), Length of y_test:35
+2016-08-23 11:00:35,839 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 11:00:35,839 DEBUG: Start:	 Classification
+2016-08-23 11:00:35,880 DEBUG: Info:	 Time for Classification: 0.0384650230408[s]
+2016-08-23 11:00:35,880 DEBUG: Done:	 Classification
+2016-08-23 11:00:35,881 DEBUG: Start:	 Statistic Results
+2016-08-23 11:00:35,882 DEBUG: Info:	 Classification report:
+2016-08-23 11:00:35,882 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.63      1.00      0.77        22
+        Oui       0.00      0.00      0.00        13
+
+avg / total       0.40      0.63      0.49        35
+
+2016-08-23 11:00:35,884 DEBUG: Info:	 Statistics:
+2016-08-23 11:00:35,891 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.628571428571
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes             0.5
+4    Mean of F1-Score of top 10 classes by F1-Score        0.385965
+5    Mean of F1-Score of top 20 classes by F1-Score        0.385965
+6    Mean of F1-Score of top 30 classes by F1-Score        0.385965
+2016-08-23 11:00:35,891 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 11:00:36,167 DEBUG: Done:	 Statistic Results
+2016-08-23 11:00:36,167 DEBUG: Start:	 Plot Result
+2016-08-23 11:00:36,373 DEBUG: Done:	 Plot Result
+2016-08-23 11:00:36,374 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 11:00:36,374 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : KNN
+2016-08-23 11:00:36,374 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 11:00:36,375 DEBUG: Info:	 Shape X_train:(312, 127), Length of y_train:312
+2016-08-23 11:00:36,375 DEBUG: Info:	 Shape X_test:(35, 127), Length of y_test:35
+2016-08-23 11:00:36,375 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 11:00:36,375 DEBUG: Start:	 Classification
+2016-08-23 11:00:36,442 DEBUG: Info:	 Time for Classification: 0.0647449493408[s]
+2016-08-23 11:00:36,442 DEBUG: Done:	 Classification
+2016-08-23 11:00:36,445 DEBUG: Start:	 Statistic Results
+2016-08-23 11:00:36,445 DEBUG: Info:	 Classification report:
+2016-08-23 11:00:36,446 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.85      0.97      0.91        30
+        Oui       0.00      0.00      0.00         5
+
+avg / total       0.73      0.83      0.78        35
+
+2016-08-23 11:00:36,448 DEBUG: Info:	 Statistics:
+2016-08-23 11:00:36,455 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.828571428571
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes             0.5
+4    Mean of F1-Score of top 10 classes by F1-Score        0.453125
+5    Mean of F1-Score of top 20 classes by F1-Score        0.453125
+6    Mean of F1-Score of top 30 classes by F1-Score        0.453125
+2016-08-23 11:00:36,456 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 11:00:36,744 DEBUG: Done:	 Statistic Results
+2016-08-23 11:00:36,744 DEBUG: Start:	 Plot Result
+2016-08-23 11:00:36,951 DEBUG: Done:	 Plot Result
+2016-08-23 11:00:36,952 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 11:00:36,952 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : RandomForest
+2016-08-23 11:00:36,952 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 11:00:36,952 DEBUG: Info:	 Shape X_train:(312, 127), Length of y_train:312
+2016-08-23 11:00:36,952 DEBUG: Info:	 Shape X_test:(35, 127), Length of y_test:35
+2016-08-23 11:00:36,953 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 11:00:36,953 DEBUG: Start:	 Classification
+2016-08-23 11:00:39,168 DEBUG: Info:	 Time for Classification: 2.21314096451[s]
+2016-08-23 11:00:39,168 DEBUG: Done:	 Classification
+2016-08-23 11:00:39,177 DEBUG: Start:	 Statistic Results
+2016-08-23 11:00:39,177 DEBUG: Info:	 Classification report:
+2016-08-23 11:00:39,178 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.90      1.00      0.95        26
+        Oui       1.00      0.67      0.80         9
+
+avg / total       0.92      0.91      0.91        35
+
+2016-08-23 11:00:39,180 DEBUG: Info:	 Statistics:
+2016-08-23 11:00:39,187 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.914285714286
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.872727
+5    Mean of F1-Score of top 20 classes by F1-Score        0.872727
+6    Mean of F1-Score of top 30 classes by F1-Score        0.872727
+2016-08-23 11:00:39,187 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 11:00:39,476 DEBUG: Done:	 Statistic Results
+2016-08-23 11:00:39,476 DEBUG: Start:	 Plot Result
+2016-08-23 11:00:39,690 DEBUG: Done:	 Plot Result
+2016-08-23 11:00:39,691 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 11:00:39,691 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SGD
+2016-08-23 11:00:39,691 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 11:00:39,691 DEBUG: Info:	 Shape X_train:(312, 127), Length of y_train:312
+2016-08-23 11:00:39,692 DEBUG: Info:	 Shape X_test:(35, 127), Length of y_test:35
+2016-08-23 11:00:39,692 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 11:00:39,692 DEBUG: Start:	 Classification
+2016-08-23 11:00:39,757 DEBUG: Info:	 Time for Classification: 0.0622010231018[s]
+2016-08-23 11:00:39,757 DEBUG: Done:	 Classification
+2016-08-23 11:00:39,758 DEBUG: Start:	 Statistic Results
+2016-08-23 11:00:39,759 DEBUG: Info:	 Classification report:
+2016-08-23 11:00:39,759 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.77      1.00      0.87        27
+        Oui       0.00      0.00      0.00         8
+
+avg / total       0.60      0.77      0.67        35
+
+2016-08-23 11:00:39,761 DEBUG: Info:	 Statistics:
+2016-08-23 11:00:39,769 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.771428571429
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes             0.5
+4    Mean of F1-Score of top 10 classes by F1-Score        0.435484
+5    Mean of F1-Score of top 20 classes by F1-Score        0.435484
+6    Mean of F1-Score of top 30 classes by F1-Score        0.435484
+2016-08-23 11:00:39,769 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 11:00:40,097 DEBUG: Done:	 Statistic Results
+2016-08-23 11:00:40,097 DEBUG: Start:	 Plot Result
+2016-08-23 11:00:40,305 DEBUG: Done:	 Plot Result
+2016-08-23 11:00:40,306 DEBUG: ### Main Programm for Classification MonoView
+2016-08-23 11:00:40,306 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SVC
+2016-08-23 11:00:40,307 DEBUG: Start:	 Determine Train/Test split
+2016-08-23 11:00:40,307 DEBUG: Info:	 Shape X_train:(312, 127), Length of y_train:312
+2016-08-23 11:00:40,307 DEBUG: Info:	 Shape X_test:(35, 127), Length of y_test:35
+2016-08-23 11:00:40,307 DEBUG: Done:	 Determine Train/Test split
+2016-08-23 11:00:40,307 DEBUG: Start:	 Classification
+2016-08-23 11:02:01,155 DEBUG: Info:	 Time for Classification: 80.8456330299[s]
+2016-08-23 11:02:01,156 DEBUG: Done:	 Classification
+2016-08-23 11:02:01,158 DEBUG: Start:	 Statistic Results
+2016-08-23 11:02:01,158 DEBUG: Info:	 Classification report:
+2016-08-23 11:02:01,159 DEBUG: 
+             precision    recall  f1-score   support
+
+        Non       0.71      1.00      0.83        20
+        Oui       1.00      0.47      0.64        15
+
+avg / total       0.84      0.77      0.75        35
+
+2016-08-23 11:02:01,161 DEBUG: Info:	 Statistics:
+2016-08-23 11:02:01,168 DEBUG: 
+                                          Statistic          Values
+0                            Accuracy score on test  0.771428571429
+1                        Top 10 classes by F1-Score      [Non, Oui]
+2                      Worst 10 classes by F1-Score      [Oui, Non]
+3  Ratio of classes with F1-Score==0 of all classes               0
+4    Mean of F1-Score of top 10 classes by F1-Score        0.734848
+5    Mean of F1-Score of top 20 classes by F1-Score        0.734848
+6    Mean of F1-Score of top 30 classes by F1-Score        0.734848
+2016-08-23 11:02:01,168 DEBUG: Info:	 Calculate Confusionmatrix
+2016-08-23 11:02:01,456 DEBUG: Done:	 Statistic Results
+2016-08-23 11:02:01,456 DEBUG: Start:	 Plot Result
+2016-08-23 11:02:01,662 DEBUG: Done:	 Plot Result
