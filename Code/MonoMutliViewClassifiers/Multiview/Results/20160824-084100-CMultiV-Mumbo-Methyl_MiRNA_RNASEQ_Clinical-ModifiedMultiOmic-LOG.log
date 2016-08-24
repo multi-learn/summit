@@ -1,0 +1,12 @@
+2016-08-24 08:41:00,873 INFO: Start:	 Read CSV Database Files for ModifiedMultiOmic
+2016-08-24 08:41:00,968 DEBUG: Start:	 Getting Methylation Data
+2016-08-24 08:41:13,912 DEBUG: Done:	 Getting Methylation Data
+2016-08-24 08:41:13,912 DEBUG: Start:	 Getting MiRNA Data
+2016-08-24 08:41:14,437 DEBUG: Done:	 Getting MiRNA Data
+2016-08-24 08:41:14,438 DEBUG: Start:	 Getting RNASeq Data
+2016-08-24 08:41:58,294 DEBUG: Done:	 Getting RNASeq Data
+2016-08-24 08:41:58,382 DEBUG: Start:	 Getting Clinical Data
+2016-08-24 08:41:58,478 DEBUG: Done:	 Getting Clinical Data
+2016-08-24 08:41:58,521 DEBUG: Start:	 Getting Modified RNASeq Data
+2016-08-24 08:42:49,046 DEBUG: Done:	 Getting Modified RNASeq Data
+2016-08-24 08:42:50,194 INFO: Info:	 Labels used: No, Yes

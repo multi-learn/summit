@@ -1,0 +1,27 @@
+2016-08-24 09:32:34,093 INFO: Start:	 Read HDF5 Database Files for ModifiedMultiOmic
+2016-08-24 09:32:34,093 INFO: Info:	 Labels used: No, Yes
+2016-08-24 09:32:34,094 INFO: Info:	 Length of dataset:347
+2016-08-24 09:32:34,095 INFO: ### Main Programm for Multiview Classification
+2016-08-24 09:32:34,095 INFO: ### Classification - Database : ModifiedMultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Mumbo ; Cores : 1
+2016-08-24 09:32:34,096 INFO: Info:	 Shape of Methyl_ :(347, 25978)
+2016-08-24 09:32:34,096 INFO: Info:	 Shape of MiRNA__ :(347, 1046)
+2016-08-24 09:32:34,096 INFO: Info:	 Shape of RANSeq_ :(347, 73599)
+2016-08-24 09:32:34,097 INFO: Info:	 Shape of Clinic_ :(347, 127)
+2016-08-24 09:32:34,097 INFO: Done:	 Read Database Files
+2016-08-24 09:32:34,097 INFO: Start:	 Determine validation split for ratio 0.7
+2016-08-24 09:32:34,100 INFO: Done:	 Determine validation split
+2016-08-24 09:32:34,100 INFO: Start:	 Determine 2 folds
+2016-08-24 09:32:34,111 INFO: Info:	 Length of Learning Sets: 122
+2016-08-24 09:32:34,111 INFO: Info:	 Length of Testing Sets: 122
+2016-08-24 09:32:34,111 INFO: Info:	 Length of Validation Set: 103
+2016-08-24 09:32:34,111 INFO: Done:	 Determine folds
+2016-08-24 09:32:34,111 INFO: Start:	 Learning with Mumbo and 2 folds
+2016-08-24 09:32:34,112 INFO: Start:	 Gridsearching best settings for monoview classifiers
+2016-08-24 09:32:34,112 DEBUG: 	Start:	 Gridsearch for DecisionTree on Methyl_
+2016-08-24 09:32:41,471 DEBUG: 0.585014409222Poulet
+2016-08-24 09:32:41,471 DEBUG: 0.596714697406Poulet
+2016-08-24 09:32:41,472 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-24 09:32:41,472 DEBUG: 	Start:	 Gridsearch for DecisionTree on MiRNA__
+2016-08-24 09:32:43,398 DEBUG: 0.58386167147Poulet
+2016-08-24 09:32:43,399 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-24 09:32:43,399 DEBUG: 	Start:	 Gridsearch for DecisionTree on RANSeq_

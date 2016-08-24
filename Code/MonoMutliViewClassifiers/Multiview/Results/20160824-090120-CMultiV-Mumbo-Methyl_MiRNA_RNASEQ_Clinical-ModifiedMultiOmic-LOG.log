@@ -1,0 +1,97 @@
+2016-08-24 09:01:20,823 INFO: Start:	 Read HDF5 Database Files for ModifiedMultiOmic
+2016-08-24 09:01:20,823 INFO: Info:	 Labels used: No, Yes
+2016-08-24 09:01:20,823 INFO: Info:	 Length of dataset:347
+2016-08-24 09:01:20,825 INFO: ### Main Programm for Multiview Classification
+2016-08-24 09:01:20,825 INFO: ### Classification - Database : ModifiedMultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Mumbo ; Cores : 1
+2016-08-24 09:01:20,825 INFO: Info:	 Shape of Methyl_ :(347, 25978)
+2016-08-24 09:01:20,826 INFO: Info:	 Shape of MiRNA__ :(347, 1046)
+2016-08-24 09:01:20,826 INFO: Info:	 Shape of RANSeq_ :(347, 73599)
+2016-08-24 09:01:20,827 INFO: Info:	 Shape of Clinic_ :(347, 127)
+2016-08-24 09:01:20,827 INFO: Done:	 Read Database Files
+2016-08-24 09:01:20,827 INFO: Start:	 Determine validation split for ratio 0.7
+2016-08-24 09:01:20,830 INFO: Done:	 Determine validation split
+2016-08-24 09:01:20,830 INFO: Start:	 Determine 2 folds
+2016-08-24 09:01:20,838 INFO: Info:	 Length of Learning Sets: 122
+2016-08-24 09:01:20,838 INFO: Info:	 Length of Testing Sets: 122
+2016-08-24 09:01:20,838 INFO: Info:	 Length of Validation Set: 103
+2016-08-24 09:01:20,838 INFO: Done:	 Determine folds
+2016-08-24 09:01:20,839 INFO: Start:	 Learning with Mumbo and 2 folds
+2016-08-24 09:01:20,839 INFO: Start:	 Gridsearching best settings for monoview classifiers
+2016-08-24 09:01:20,839 DEBUG: 	Start:	 Gridsearch for DecisionTree on Methyl_
+2016-08-24 09:01:28,173 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-24 09:01:28,173 DEBUG: 	Start:	 Gridsearch for DecisionTree on MiRNA__
+2016-08-24 09:01:30,085 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-24 09:01:30,086 DEBUG: 	Start:	 Gridsearch for DecisionTree on RANSeq_
+2016-08-24 09:01:46,691 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-24 09:01:46,691 DEBUG: 	Start:	 Gridsearch for DecisionTree on Clinic_
+2016-08-24 09:01:48,441 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-24 09:01:48,441 DEBUG: 	Start:	 Gridsearch for DecisionTree on MRNASeq
+2016-08-24 09:02:44,634 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-24 09:02:44,634 INFO: Done:	 Gridsearching best settings for monoview classifiers
+2016-08-24 09:02:44,634 INFO: 	Start:	 Fold number 1
+2016-08-24 09:02:46,206 DEBUG: 		Start:	 Iteration 1
+2016-08-24 09:02:46,269 DEBUG: 			View 0 : 0.37037037037
+2016-08-24 09:02:46,303 DEBUG: 			View 1 : 0.623456790123
+2016-08-24 09:02:46,497 DEBUG: 			View 2 : 0.648148148148
+2016-08-24 09:02:46,505 DEBUG: 			View 3 : 0.62962962963
+2016-08-24 09:02:46,552 DEBUG: 			 Best view : 		Methyl_
+2016-08-24 09:02:46,634 DEBUG: 		Start:	 Iteration 2
+2016-08-24 09:02:46,652 DEBUG: 			View 0 : 0.438271604938
+2016-08-24 09:02:46,660 DEBUG: 			View 1 : 0.493827160494
+2016-08-24 09:02:46,699 DEBUG: 			View 2 : 0.549382716049
+2016-08-24 09:02:46,707 DEBUG: 			View 3 : 0.518518518519
+2016-08-24 09:02:46,760 DEBUG: 			 Best view : 		RANSeq_
+2016-08-24 09:02:46,915 DEBUG: 		Start:	 Iteration 3
+2016-08-24 09:02:46,932 DEBUG: 			View 0 : 0.543209876543
+2016-08-24 09:02:46,940 DEBUG: 			View 1 : 0.425925925926
+2016-08-24 09:02:46,978 DEBUG: 			View 2 : 0.518518518519
+2016-08-24 09:02:46,985 DEBUG: 			View 3 : 0.648148148148
+2016-08-24 09:02:47,040 DEBUG: 			 Best view : 		Clinic_
+2016-08-24 09:02:47,253 DEBUG: 		Start:	 Iteration 4
+2016-08-24 09:02:47,270 DEBUG: 			View 0 : 0.432098765432
+2016-08-24 09:02:47,278 DEBUG: 			View 1 : 0.623456790123
+2016-08-24 09:02:47,316 DEBUG: 			View 2 : 0.456790123457
+2016-08-24 09:02:47,324 DEBUG: 			View 3 : 0.537037037037
+2016-08-24 09:02:47,381 DEBUG: 			 Best view : 		MiRNA__
+2016-08-24 09:02:47,652 DEBUG: 		Start:	 Iteration 5
+2016-08-24 09:02:47,669 DEBUG: 			View 0 : 0.395061728395
+2016-08-24 09:02:47,677 DEBUG: 			View 1 : 0.561728395062
+2016-08-24 09:02:47,715 DEBUG: 			View 2 : 0.524691358025
+2016-08-24 09:02:47,723 DEBUG: 			View 3 : 0.413580246914
+2016-08-24 09:02:47,781 DEBUG: 			 Best view : 		MiRNA__
+2016-08-24 09:02:48,113 DEBUG: 		Start:	 Iteration 6
+2016-08-24 09:02:48,130 DEBUG: 			View 0 : 0.716049382716
+2016-08-24 09:02:48,138 DEBUG: 			View 1 : 0.351851851852
+2016-08-24 09:02:48,176 DEBUG: 			View 2 : 0.549382716049
+2016-08-24 09:02:48,183 DEBUG: 			View 3 : 0.530864197531
+2016-08-24 09:02:48,245 DEBUG: 			 Best view : 		Methyl_
+2016-08-24 09:02:48,639 DEBUG: 		Start:	 Iteration 7
+2016-08-24 09:02:48,656 DEBUG: 			View 0 : 0.598765432099
+2016-08-24 09:02:48,664 DEBUG: 			View 1 : 0.524691358025
+2016-08-24 09:02:48,701 DEBUG: 			View 2 : 0.524691358025
+2016-08-24 09:02:48,709 DEBUG: 			View 3 : 0.382716049383
+2016-08-24 09:02:48,773 DEBUG: 			 Best view : 		Methyl_
+2016-08-24 09:02:49,242 DEBUG: 		Start:	 Iteration 8
+2016-08-24 09:02:49,262 DEBUG: 			View 0 : 0.33950617284
+2016-08-24 09:02:49,272 DEBUG: 			View 1 : 0.617283950617
+2016-08-24 09:02:49,315 DEBUG: 			View 2 : 0.5
+2016-08-24 09:02:49,325 DEBUG: 			View 3 : 0.574074074074
+2016-08-24 09:02:49,401 DEBUG: 			 Best view : 		MiRNA__
+2016-08-24 09:02:49,959 DEBUG: 		Start:	 Iteration 9
+2016-08-24 09:02:49,975 DEBUG: 			View 0 : 0.512345679012
+2016-08-24 09:02:49,984 DEBUG: 			View 1 : 0.537037037037
+2016-08-24 09:02:50,021 DEBUG: 			View 2 : 0.438271604938
+2016-08-24 09:02:50,029 DEBUG: 			View 3 : 0.604938271605
+2016-08-24 09:02:50,097 DEBUG: 			 Best view : 		Clinic_
+2016-08-24 09:02:50,670 DEBUG: 		Start:	 Iteration 10
+2016-08-24 09:02:50,687 DEBUG: 			View 0 : 0.401234567901
+2016-08-24 09:02:50,695 DEBUG: 			View 1 : 0.635802469136
+2016-08-24 09:02:50,733 DEBUG: 			View 2 : 0.518518518519
+2016-08-24 09:02:50,740 DEBUG: 			View 3 : 0.543209876543
+2016-08-24 09:02:50,811 DEBUG: 			 Best view : 		MiRNA__
+2016-08-24 09:02:51,445 DEBUG: 		Start:	 Iteration 11
+2016-08-24 09:02:51,462 DEBUG: 			View 0 : 0.592592592593
+2016-08-24 09:02:51,470 DEBUG: 			View 1 : 0.537037037037
+2016-08-24 09:02:51,508 DEBUG: 			View 2 : 0.388888888889
+2016-08-24 09:02:51,516 DEBUG: 			View 3 : 0.450617283951
+2016-08-24 09:02:51,589 DEBUG: 			 Best view : 		Methyl_

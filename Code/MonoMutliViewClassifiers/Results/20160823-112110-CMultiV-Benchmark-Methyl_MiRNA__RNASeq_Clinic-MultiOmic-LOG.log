@@ -1,0 +1,157 @@
+2016-08-23 11:21:10,029 INFO: Begginging
+2016-08-23 11:21:10,033 INFO: ### Main Programm for Multiview Classification
+2016-08-23 11:21:10,033 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Mumbo ; Cores : 1
+2016-08-23 11:21:10,034 INFO: Info:	 Shape of Methyl :(347, 25978)
+2016-08-23 11:21:10,034 INFO: Info:	 Shape of MiRNA_ :(347, 1046)
+2016-08-23 11:21:10,034 INFO: Info:	 Shape of RANSeq :(347, 73599)
+2016-08-23 11:21:10,035 INFO: Info:	 Shape of Clinic :(347, 127)
+2016-08-23 11:21:10,035 INFO: Done:	 Read Database Files
+2016-08-23 11:21:10,035 INFO: Start:	 Determine validation split for ratio 0.9
+2016-08-23 11:21:10,038 INFO: Done:	 Determine validation split
+2016-08-23 11:21:10,038 INFO: Start:	 Determine 2 folds
+2016-08-23 11:21:10,056 INFO: Info:	 Length of Learning Sets: 157
+2016-08-23 11:21:10,056 INFO: Info:	 Length of Testing Sets: 156
+2016-08-23 11:21:10,056 INFO: Info:	 Length of Validation Set: 34
+2016-08-23 11:21:10,056 INFO: Done:	 Determine folds
+2016-08-23 11:21:10,056 INFO: Start:	 Learning with Mumbo and 2 folds
+2016-08-23 11:21:10,056 INFO: Start:	 Gridsearching best settings for monoview classifiers
+2016-08-23 11:21:38,101 INFO: Done:	 Gridsearching best settings for monoview classifiers
+2016-08-23 11:21:38,101 INFO: 	Start:	 Fold number 1
+2016-08-23 11:21:38,116 DEBUG: 		Start:	 Iteration 1
+2016-08-23 11:21:38,135 DEBUG: 			View 0 : 0.619047619048
+2016-08-23 11:21:38,144 DEBUG: 			View 1 : 0.696428571429
+2016-08-23 11:21:38,178 DEBUG: 			View 2 : 0.303571428571
+2016-08-23 11:21:38,187 DEBUG: 			View 3 : 0.696428571429
+2016-08-23 11:21:38,223 DEBUG: 			 Best view : 		MiRNA_
+2016-08-23 11:21:38,231 DEBUG: 		Start:	 Iteration 2
+2016-08-23 11:21:38,249 DEBUG: 			View 0 : 0.315476190476
+2016-08-23 11:21:38,258 DEBUG: 			View 1 : 0.690476190476
+2016-08-23 11:21:38,302 DEBUG: 			View 2 : 0.589285714286
+2016-08-23 11:21:38,312 DEBUG: 			View 3 : 0.660714285714
+2016-08-23 11:21:38,353 DEBUG: 			 Best view : 		MiRNA_
+2016-08-23 11:21:38,361 INFO: 	Start: 	 Classification
+2016-08-23 11:21:38,625 INFO: 	Done: 	 Fold number 1
+2016-08-23 11:21:38,626 INFO: 	Start:	 Fold number 2
+2016-08-23 11:21:38,640 DEBUG: 		Start:	 Iteration 1
+2016-08-23 11:21:38,657 DEBUG: 			View 0 : 0.710227272727
+2016-08-23 11:21:38,666 DEBUG: 			View 1 : 0.477272727273
+2016-08-23 11:21:38,704 DEBUG: 			View 2 : 0.289772727273
+2016-08-23 11:21:38,714 DEBUG: 			View 3 : 0.289772727273
+2016-08-23 11:21:38,751 DEBUG: 			 Best view : 		Methyl
+2016-08-23 11:21:38,759 DEBUG: 		Start:	 Iteration 2
+2016-08-23 11:21:38,777 DEBUG: 			View 0 : 0.710227272727
+2016-08-23 11:21:38,787 DEBUG: 			View 1 : 0.625
+2016-08-23 11:21:38,832 DEBUG: 			View 2 : 0.392045454545
+2016-08-23 11:21:38,842 DEBUG: 			View 3 : 0.306818181818
+2016-08-23 11:21:38,885 DEBUG: 			 Best view : 		Methyl
+2016-08-23 11:21:38,894 INFO: 	Start: 	 Classification
+2016-08-23 11:21:39,183 INFO: 	Done: 	 Fold number 2
+2016-08-23 11:21:39,183 INFO: Done:	 Classification
+2016-08-23 11:21:39,183 INFO: Info:	 Time for Classification: 29[s]
+2016-08-23 11:21:39,183 INFO: Start:	 Result Analysis for Mumbo
+2016-08-23 11:21:39,918 INFO: 		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 70.3327922078
+	-On Test : 73.0769230769
+	-On Validation : 73.5294117647
+
+Dataset info :
+	-Database name : MultiOmic
+	-Labels : No, Yes
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-2 folds
+	- Validation set length : 34 for learning rate : 0.9
+
+Classification configuration : 
+	-Algorithm used : Mumbo 
+	-Iterations : 2
+	-Weak Classifiers : DecisionTree with depth 1.0,  sub-sampled at 0.006 on Methyl
+		-DecisionTree with depth 1.0,  sub-sampled at 0.006 on MiRNA_
+		-DecisionTree with depth 1.0,  sub-sampled at 0.006 on RNASeq
+		-DecisionTree with depth 1.0,  sub-sampled at 0.0065 on Clinic
+
+ Mean average accuracies and stats for each fold : 
+	- Fold 0
+		- On Methyl : 
+			- Mean average Accuracy : 0.467261904762
+			- Percentage of time chosen : 0.0
+		- On MiRNA_ : 
+			- Mean average Accuracy : 0.693452380952
+			- Percentage of time chosen : 1.0
+		- On RANSeq : 
+			- Mean average Accuracy : 0.446428571429
+			- Percentage of time chosen : 0.0
+		- On Clinic : 
+			- Mean average Accuracy : 0.678571428571
+			- Percentage of time chosen : 0.0
+	- Fold 1
+		- On Methyl : 
+			- Mean average Accuracy : 0.710227272727
+			- Percentage of time chosen : 1.0
+		- On MiRNA_ : 
+			- Mean average Accuracy : 0.551136363636
+			- Percentage of time chosen : 0.0
+		- On RANSeq : 
+			- Mean average Accuracy : 0.340909090909
+			- Percentage of time chosen : 0.0
+		- On Clinic : 
+			- Mean average Accuracy : 0.298295454545
+			- Percentage of time chosen : 0.0
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 69.6428571429
+			Accuracy on test : 73.0769230769
+			Accuracy on validation : 73.5294117647
+			Selected View : MiRNA_
+		 Fold 2
+			Accuracy on train : 71.0227272727
+			Accuracy on test : 73.0769230769
+			Accuracy on validation : 73.5294117647
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 70.3327922078
+			 Accuracy on test : 73.0769230769
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 69.6428571429
+			Accuracy on test : 73.0769230769
+			Accuracy on validation : 73.5294117647
+			Selected View : MiRNA_
+		 Fold 2
+			Accuracy on train : 71.0227272727
+			Accuracy on test : 73.0769230769
+			Accuracy on validation : 73.5294117647
+			Selected View : Methyl
+		- Mean : 
+			 Accuracy on train : 70.3327922078
+			 Accuracy on test : 73.0769230769
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:28        0:00:00
+	         Fold 2        0:00:28        0:00:00
+	          Total        0:00:57        0:00:00
+	So a total classification time of 0:00:29.
+
+
+2016-08-23 11:21:40,125 INFO: Done:	 Result Analysis
+2016-08-23 11:21:40,126 INFO: ### Main Programm for Multiview Classification
+2016-08-23 11:21:40,126 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Mumbo ; Cores : 1
+2016-08-23 11:21:40,127 INFO: Info:	 Shape of Methyl :(347, 25978)
+2016-08-23 11:21:40,127 INFO: Info:	 Shape of MiRNA_ :(347, 1046)
+2016-08-23 11:21:40,127 INFO: Info:	 Shape of RANSeq :(347, 73599)
+2016-08-23 11:21:40,128 INFO: Info:	 Shape of Clinic :(347, 127)
+2016-08-23 11:21:40,128 INFO: Done:	 Read Database Files
+2016-08-23 11:21:40,128 INFO: Start:	 Determine validation split for ratio 0.9
+2016-08-23 11:21:40,131 INFO: Done:	 Determine validation split
+2016-08-23 11:21:40,131 INFO: Start:	 Determine 2 folds
+2016-08-23 11:21:40,145 INFO: Info:	 Length of Learning Sets: 157
+2016-08-23 11:21:40,145 INFO: Info:	 Length of Testing Sets: 156
+2016-08-23 11:21:40,145 INFO: Info:	 Length of Validation Set: 34
+2016-08-23 11:21:40,145 INFO: Done:	 Determine folds
+2016-08-23 11:21:40,145 INFO: Start:	 Learning with Mumbo and 2 folds
+2016-08-23 11:21:40,145 INFO: Start:	 Gridsearching best settings for monoview classifiers

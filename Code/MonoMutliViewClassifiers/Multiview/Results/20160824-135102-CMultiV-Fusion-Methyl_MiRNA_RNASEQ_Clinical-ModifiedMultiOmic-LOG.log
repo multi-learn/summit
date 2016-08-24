@@ -1,0 +1,19 @@
+2016-08-24 13:51:02,963 INFO: Start:	 Read HDF5 Database Files for ModifiedMultiOmic
+2016-08-24 13:51:02,964 INFO: Info:	 Labels used: No, Yes
+2016-08-24 13:51:02,964 INFO: Info:	 Length of dataset:347
+2016-08-24 13:51:02,965 INFO: ### Main Programm for Multiview Classification
+2016-08-24 13:51:02,966 INFO: ### Classification - Database : ModifiedMultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Fusion ; Cores : 4
+2016-08-24 13:51:02,966 INFO: Info:	 Shape of Methyl_ :(347, 25978)
+2016-08-24 13:51:02,966 INFO: Info:	 Shape of MiRNA__ :(347, 1046)
+2016-08-24 13:51:02,967 INFO: Info:	 Shape of RANSeq_ :(347, 73599)
+2016-08-24 13:51:02,967 INFO: Info:	 Shape of Clinic_ :(347, 127)
+2016-08-24 13:51:02,967 INFO: Done:	 Read Database Files
+2016-08-24 13:51:02,968 INFO: Start:	 Determine validation split for ratio 0.7
+2016-08-24 13:51:02,971 INFO: Done:	 Determine validation split
+2016-08-24 13:51:02,971 INFO: Start:	 Determine 5 folds
+2016-08-24 13:51:02,981 INFO: Info:	 Length of Learning Sets: 196
+2016-08-24 13:51:02,981 INFO: Info:	 Length of Testing Sets: 48
+2016-08-24 13:51:02,981 INFO: Info:	 Length of Validation Set: 103
+2016-08-24 13:51:02,981 INFO: Done:	 Determine folds
+2016-08-24 13:51:02,981 INFO: Start:	 Learning with Fusion and 5 folds
+2016-08-24 13:51:02,982 INFO: 	Start:	 Fold number 1

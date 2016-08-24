@@ -1,0 +1,8 @@
+2016-08-24 15:16:56,323 INFO: Begginging
+2016-08-24 15:16:56,345 DEBUG: ### Main Programm for Classification MonoView
+2016-08-24 15:16:56,345 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2016-08-24 15:16:56,345 DEBUG: Start:	 Determine Train/Test split
+2016-08-24 15:16:56,394 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-24 15:16:56,395 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-24 15:16:56,395 DEBUG: Done:	 Determine Train/Test split
+2016-08-24 15:16:56,395 DEBUG: Start:	 Classification

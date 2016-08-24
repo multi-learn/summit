@@ -1,0 +1,53 @@
+2016-08-24 09:33:12,122 INFO: Start:	 Read HDF5 Database Files for ModifiedMultiOmic
+2016-08-24 09:33:12,123 INFO: Info:	 Labels used: No, Yes
+2016-08-24 09:33:12,123 INFO: Info:	 Length of dataset:347
+2016-08-24 09:33:12,124 INFO: ### Main Programm for Multiview Classification
+2016-08-24 09:33:12,124 INFO: ### Classification - Database : ModifiedMultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Mumbo ; Cores : 1
+2016-08-24 09:33:12,125 INFO: Info:	 Shape of Methyl_ :(347, 25978)
+2016-08-24 09:33:12,125 INFO: Info:	 Shape of MiRNA__ :(347, 1046)
+2016-08-24 09:33:12,125 INFO: Info:	 Shape of RANSeq_ :(347, 73599)
+2016-08-24 09:33:12,126 INFO: Info:	 Shape of Clinic_ :(347, 127)
+2016-08-24 09:33:12,126 INFO: Done:	 Read Database Files
+2016-08-24 09:33:12,126 INFO: Start:	 Determine validation split for ratio 0.7
+2016-08-24 09:33:12,129 INFO: Done:	 Determine validation split
+2016-08-24 09:33:12,129 INFO: Start:	 Determine 2 folds
+2016-08-24 09:33:12,143 INFO: Info:	 Length of Learning Sets: 122
+2016-08-24 09:33:12,143 INFO: Info:	 Length of Testing Sets: 122
+2016-08-24 09:33:12,143 INFO: Info:	 Length of Validation Set: 103
+2016-08-24 09:33:12,143 INFO: Done:	 Determine folds
+2016-08-24 09:33:12,143 INFO: Start:	 Learning with Mumbo and 2 folds
+2016-08-24 09:33:12,143 INFO: Start:	 Gridsearching best settings for monoview classifiers
+2016-08-24 09:33:12,143 DEBUG: 	Start:	 Gridsearch for DecisionTree on Methyl_
+2016-08-24 09:33:19,481 DEBUG: 0.596714697406Poulet
+2016-08-24 09:33:19,481 DEBUG: 0.583227665706Poulet
+2016-08-24 09:33:19,481 DEBUG: 0.591527377522Poulet
+2016-08-24 09:33:19,481 DEBUG: 0.58288184438Poulet
+2016-08-24 09:33:19,481 DEBUG: 0.535273775216Poulet
+2016-08-24 09:33:19,481 DEBUG: 0.515619596542Poulet
+2016-08-24 09:33:19,481 DEBUG: 0.523804034582Poulet
+2016-08-24 09:33:19,481 DEBUG: 0.521556195965Poulet
+2016-08-24 09:33:19,482 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-24 09:33:19,482 DEBUG: 	Start:	 Gridsearch for DecisionTree on MiRNA__
+2016-08-24 09:33:21,403 DEBUG: 0.58553314121Poulet
+2016-08-24 09:33:21,403 DEBUG: 0.554178674352Poulet
+2016-08-24 09:33:21,403 DEBUG: 0.53734870317Poulet
+2016-08-24 09:33:21,403 DEBUG: 0.575792507205Poulet
+2016-08-24 09:33:21,403 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-24 09:33:21,404 DEBUG: 	Start:	 Gridsearch for DecisionTree on RANSeq_
+2016-08-24 09:33:38,038 DEBUG: 0.576253602305Poulet
+2016-08-24 09:33:38,038 DEBUG: 0.566109510086Poulet
+2016-08-24 09:33:38,038 DEBUG: 0.577925072046Poulet
+2016-08-24 09:33:38,039 DEBUG: 0.58144092219Poulet
+2016-08-24 09:33:38,039 DEBUG: 0.502305475504Poulet
+2016-08-24 09:33:38,039 DEBUG: 0.501613832853Poulet
+2016-08-24 09:33:38,039 DEBUG: 0.50818443804Poulet
+2016-08-24 09:33:38,039 DEBUG: 0.52795389049Poulet
+2016-08-24 09:33:38,039 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-24 09:33:38,040 DEBUG: 	Start:	 Gridsearch for DecisionTree on Clinic_
+2016-08-24 09:33:39,777 DEBUG: 0.551296829971Poulet
+2016-08-24 09:33:39,777 DEBUG: 0.591008645533Poulet
+2016-08-24 09:33:39,777 DEBUG: 0.582478386167Poulet
+2016-08-24 09:33:39,777 DEBUG: 0.567838616715Poulet
+2016-08-24 09:33:39,777 DEBUG: 0.517002881844Poulet
+2016-08-24 09:33:39,777 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-24 09:33:39,778 DEBUG: 	Start:	 Gridsearch for DecisionTree on MRNASeq
