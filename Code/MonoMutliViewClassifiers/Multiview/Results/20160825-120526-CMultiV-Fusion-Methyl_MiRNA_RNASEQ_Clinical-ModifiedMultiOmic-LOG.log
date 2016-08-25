@@ -1,0 +1,30 @@
+2016-08-25 12:05:26,273 INFO: Start:	 Read CSV Database Files for ModifiedMultiOmic
+2016-08-25 12:05:26,331 DEBUG: Start:	 Getting Methylation Data
+2016-08-25 12:05:39,490 DEBUG: Done:	 Getting Methylation Data
+2016-08-25 12:05:39,495 DEBUG: Start:	 Getting MiRNA Data
+2016-08-25 12:05:40,023 DEBUG: Done:	 Getting MiRNA Data
+2016-08-25 12:05:40,025 DEBUG: Start:	 Getting RNASeq Data
+2016-08-25 12:06:36,383 DEBUG: Done:	 Getting RNASeq Data
+2016-08-25 12:06:36,527 DEBUG: Start:	 Getting Clinical Data
+2016-08-25 12:06:37,052 DEBUG: Done:	 Getting Clinical Data
+2016-08-25 12:06:37,247 DEBUG: Start:	 Getting Modified RNASeq Data
+2016-08-25 12:07:27,431 DEBUG: Done:	 Getting Modified RNASeq Data
+2016-08-25 12:07:27,433 DEBUG: Done:	 Getting Binary RNASeq Data
+2016-08-25 12:07:29,769 INFO: Info:	 Labels used: No, Yes
+2016-08-25 12:07:29,789 INFO: Info:	 Length of dataset:347
+2016-08-25 12:07:29,819 INFO: ### Main Programm for Multiview Classification
+2016-08-25 12:07:29,821 INFO: ### Classification - Database : ModifiedMultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Fusion ; Cores : 4
+2016-08-25 12:07:29,823 INFO: Info:	 Shape of Methyl_ :(347, 25978)
+2016-08-25 12:07:29,825 INFO: Info:	 Shape of MiRNA__ :(347, 1046)
+2016-08-25 12:07:29,827 INFO: Info:	 Shape of RNASeq_ :(347, 73599)
+2016-08-25 12:07:29,830 INFO: Info:	 Shape of Clinic_ :(347, 127)
+2016-08-25 12:07:29,832 INFO: Done:	 Read Database Files
+2016-08-25 12:07:29,833 INFO: Start:	 Determine validation split for ratio 0.7
+2016-08-25 12:07:29,890 INFO: Done:	 Determine validation split
+2016-08-25 12:07:29,892 INFO: Start:	 Determine 5 folds
+2016-08-25 12:07:29,900 INFO: Info:	 Length of Learning Sets: 196
+2016-08-25 12:07:29,902 INFO: Info:	 Length of Testing Sets: 48
+2016-08-25 12:07:29,903 INFO: Info:	 Length of Validation Set: 103
+2016-08-25 12:07:29,905 INFO: Done:	 Determine folds
+2016-08-25 12:07:29,907 INFO: Start:	 Learning with Fusion and 5 folds
+2016-08-25 12:07:29,908 INFO: 	Start:	 Fold number 1

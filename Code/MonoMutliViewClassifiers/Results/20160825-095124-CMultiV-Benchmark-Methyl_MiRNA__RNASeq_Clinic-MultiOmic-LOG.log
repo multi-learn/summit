@@ -1,0 +1,89 @@
+2016-08-25 09:51:24,124 INFO: Begginging
+2016-08-25 09:51:24,186 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:51:24,186 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : Adaboost
+2016-08-25 09:51:24,186 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:51:24,210 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-25 09:51:24,210 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-25 09:51:24,210 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:51:24,210 DEBUG: Start:	 Classification
+2016-08-25 09:51:33,000 DEBUG: Info:	 Time for Classification: 8.71911692619[s]
+2016-08-25 09:51:33,000 DEBUG: Done:	 Classification
+2016-08-25 09:51:33,022 DEBUG: Start:	 Statistic Results
+2016-08-25 09:51:33,023 INFO: Accuracy :0.742857142857
+2016-08-25 09:51:33,036 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:51:33,036 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2016-08-25 09:51:33,036 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:51:33,048 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-25 09:51:33,048 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-25 09:51:33,048 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:51:33,048 DEBUG: Start:	 Classification
+2016-08-25 09:51:40,005 DEBUG: Info:	 Time for Classification: 6.96573996544[s]
+2016-08-25 09:51:40,005 DEBUG: Done:	 Classification
+2016-08-25 09:51:40,007 DEBUG: Start:	 Statistic Results
+2016-08-25 09:51:40,007 INFO: Accuracy :1.0
+2016-08-25 09:51:40,016 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:51:40,016 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : KNN
+2016-08-25 09:51:40,017 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:51:40,029 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-25 09:51:40,030 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-25 09:51:40,030 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:51:40,030 DEBUG: Start:	 Classification
+2016-08-25 09:51:50,394 DEBUG: Info:	 Time for Classification: 10.3715598583[s]
+2016-08-25 09:51:50,394 DEBUG: Done:	 Classification
+2016-08-25 09:51:50,958 DEBUG: Start:	 Statistic Results
+2016-08-25 09:51:50,959 INFO: Accuracy :0.942857142857
+2016-08-25 09:51:50,973 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:51:50,973 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : RandomForest
+2016-08-25 09:51:50,973 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:51:50,987 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-25 09:51:50,987 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-25 09:51:50,987 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:51:50,987 DEBUG: Start:	 Classification
+2016-08-25 09:51:58,555 DEBUG: Info:	 Time for Classification: 7.57835888863[s]
+2016-08-25 09:51:58,555 DEBUG: Done:	 Classification
+2016-08-25 09:51:58,568 DEBUG: Start:	 Statistic Results
+2016-08-25 09:51:58,568 INFO: Accuracy :0.8
+2016-08-25 09:51:58,577 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:51:58,577 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SGD
+2016-08-25 09:51:58,577 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:51:58,590 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-25 09:51:58,590 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-25 09:51:58,590 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:51:58,590 DEBUG: Start:	 Classification
+2016-08-25 09:52:00,152 DEBUG: Info:	 Time for Classification: 1.57103300095[s]
+2016-08-25 09:52:00,152 DEBUG: Done:	 Classification
+2016-08-25 09:52:00,156 DEBUG: Start:	 Statistic Results
+2016-08-25 09:52:00,156 INFO: Accuracy :0.771428571429
+2016-08-25 09:52:00,168 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:52:00,168 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SVMLinear
+2016-08-25 09:52:00,168 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:52:00,183 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-25 09:52:00,184 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-25 09:52:00,184 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:52:00,184 DEBUG: Start:	 Classification
+2016-08-25 09:52:08,021 DEBUG: Info:	 Time for Classification: 7.84802913666[s]
+2016-08-25 09:52:08,021 DEBUG: Done:	 Classification
+2016-08-25 09:52:08,170 DEBUG: Start:	 Statistic Results
+2016-08-25 09:52:08,170 INFO: Accuracy :0.971428571429
+2016-08-25 09:52:08,183 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:52:08,183 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SVMPoly
+2016-08-25 09:52:08,183 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:52:08,196 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-25 09:52:08,196 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-25 09:52:08,196 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:52:08,196 DEBUG: Start:	 Classification
+2016-08-25 09:52:35,761 DEBUG: Info:	 Time for Classification: 27.5747389793[s]
+2016-08-25 09:52:35,761 DEBUG: Done:	 Classification
+2016-08-25 09:52:35,917 DEBUG: Start:	 Statistic Results
+2016-08-25 09:52:35,917 INFO: Accuracy :0.942857142857
+2016-08-25 09:52:35,926 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:52:35,926 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.9, CrossValidation k-folds:2, cores:1, algorithm : SVMRBF
+2016-08-25 09:52:35,926 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:52:35,937 DEBUG: Info:	 Shape X_train:(312, 25978), Length of y_train:312
+2016-08-25 09:52:35,937 DEBUG: Info:	 Shape X_test:(35, 25978), Length of y_test:35
+2016-08-25 09:52:35,937 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:52:35,937 DEBUG: Start:	 Classification
+2016-08-25 09:52:43,959 DEBUG: Info:	 Time for Classification: 8.02944397926[s]
+2016-08-25 09:52:43,959 DEBUG: Done:	 Classification
+2016-08-25 09:52:44,145 DEBUG: Start:	 Statistic Results
+2016-08-25 09:52:44,146 INFO: Accuracy :0.914285714286

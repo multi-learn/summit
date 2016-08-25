@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser(
 groupStandard = parser.add_argument_group('Standard arguments')
 groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Name of Database (default: %(default)s)',
-                           default='MultiOmic')
+                           default='ModifiedMultiOmic')
 groupStandard.add_argument('--type', metavar='STRING', action='store', help='Type of database : .hdf5 or .csv',
                            default='.hdf5')
 groupStandard.add_argument('--views', metavar='STRING', action='store',help='Name of the views selected for learning',
@@ -39,9 +39,9 @@ groupStandard.add_argument('--fileFeat', metavar='STRING', action='store',
 groupClass = parser.add_argument_group('Classification arguments')
 groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
                         help='Determine the learning rate if > 1.0, number of fold for cross validation', type=float,
-                        default=0.9)
+                        default=0.7)
 groupClass.add_argument('--CL_nbFolds', metavar='INT', action='store', help='Number of folds in cross validation',
-                        type=int, default=2)
+                        type=int, default=5)
 groupClass.add_argument('--CL_nb_class', metavar='INT', action='store', help='Number of classes, -1 for all', type=int,
                         default=4)
 groupClass.add_argument('--CL_classes', metavar='STRING', action='store',
@@ -156,7 +156,7 @@ views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in 
 NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
 
-logging.info("Begginging")
+logging.info("Start:\t Finding all available mono- & multiview algorithms")
 benchmark = {}
 if args.CL_type.split(":")==["Benchmark"]:
     if args.CL_algorithm=='':
@@ -197,7 +197,6 @@ if "Monoview" in args.CL_type.strip(":"):
     benchmark["Monoview"] = args.CL_algos_monoview.split(":")
 
 
-classifierTable = "a"
 fusionClassifierConfig = "a"
 fusionMethodConfig = "a"
 mumboNB_ITER = 2
@@ -217,7 +216,7 @@ AdaboostKWARGS = {"0": args.CL_Ada_n_est.split(":"), "1": args.CL_Ada_b_est.spli
 
 argumentDictionaries = {"Monoview": {}, "Multiview": []}
 if benchmark["Monoview"]:
-    for view in args.views.split(":"):
+    for view in views:
         argumentDictionaries["Monoview"][str(view)] = []
         for classifier in benchmark["Monoview"]:
 
@@ -227,66 +226,68 @@ if benchmark["Monoview"]:
             argumentDictionaries["Monoview"][str(view)].append(arguments)
 bestClassifiers = []
 bestClassifiersConfigs = []
+resultsMonoview =[]
 for viewIndex, viewArguments in enumerate(argumentDictionaries["Monoview"].values()):
-    resultsMonoview = Parallel(n_jobs=nbCores)(
-        delayed(ExecMonoview)(DATASET.get("View"+str(viewIndex)).value, DATASET.get("labels").value, args.name,
+    resultsMonoview += (Parallel(n_jobs=nbCores)(
+        delayed(ExecMonoview)(DATASET.get("View"+str(viewIndex)), DATASET.get("labels").value, args.name,
                               args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, gridSearch=True,
                               **arguments)
-        for arguments in viewArguments)
+        for arguments in viewArguments))
 
-    accuracies = [result[1] for result in resultsMonoview]
-    classifiersNames = [result[0] for result in resultsMonoview]
-    classifiersConfigs = [result[2] for result in resultsMonoview]
+    accuracies = [result[1] for result in resultsMonoview[viewIndex]]
+    classifiersNames = [result[0] for result in resultsMonoview[viewIndex]]
+    classifiersConfigs = [result[2] for result in resultsMonoview[viewIndex]]
     bestClassifiers.append(classifiersNames[np.argmax(np.array(accuracies))])
     bestClassifiersConfigs.append(classifiersConfigs[np.argmax(np.array(accuracies))])
 # bestClassifiers = ["DecisionTree", "DecisionTree", "DecisionTree", "DecisionTree"]
 # bestClassifiersConfigs = [["1"],["1"],["1"],["1"]]
+#
+# if benchmark["Multiview"]:
+#     if benchmark["Multiview"]["Mumbo"]:
+#         for classifier in benchmark["Multiview"]["Mumbo"]:
+#             arguments = {"CL_type": "Mumbo",
+#                          "views": args.views.split(":"),
+#                          "NB_VIEW": len(args.views.split(":")),
+#                          "NB_CLASS": len(args.CL_classes.split(":")),
+#                          "LABELS_NAMES": args.CL_classes.split(":"),
+#                          "MumboKWARGS": {"classifiersNames": ["DecisionTree", "DecisionTree", "DecisionTree",
+#                                                               "DecisionTree"],
+#                                          "maxIter":int(args.MU_iter[0]), "minIter":int(args.MU_iter[1]),
+#                                          "threshold":args.MU_iter[2]}}
+#             argumentDictionaries["Multiview"].append(arguments)
+#     if benchmark["Multiview"]["Fusion"]:
+#         if benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
+#             for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]:
+#                 arguments = {"CL_type": "Fusion",
+#                              "views": args.views.split(":"),
+#                              "NB_VIEW": len(args.views.split(":")),
+#                              "NB_CLASS": len(args.CL_classes.split(":")),
+#                              "LABELS_NAMES": args.CL_classes.split(":"),
+#                              "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,
+#                                               "classifiersNames": bestClassifiers,
+#                                               "classifiersConfigs": bestClassifiersConfigs,
+#                                               'fusionMethodConfig': fusionMethodConfig}}
+#                 argumentDictionaries["Multiview"].append(arguments)
+#         if benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
+#             for method in benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"]:
+#                 for classifier in benchmark["Multiview"]["Fusion"]["Classifiers"]:
+#                     arguments = {"CL_type": "Fusion",
+#                                  "views": args.views.split(":"),
+#                                  "NB_VIEW": len(args.views.split(":")),
+#                                  "NB_CLASS": len(args.CL_classes.split(":")),
+#                                  "LABELS_NAMES": args.CL_classes.split(":"),
+#                                  "FusionKWARGS": {"fusionType":"EarlyFusion", "fusionMethod":method,
+#                                                   "classifiersNames": classifier,
+#                                                   "classifiersConfigs": fusionClassifierConfig,
+#                                                   'fusionMethodConfig': fusionMethodConfig}}
+#                     argumentDictionaries["Multiview"].append(arguments)
 
-if benchmark["Multiview"]:
-    if benchmark["Multiview"]["Mumbo"]:
-        for classifier in benchmark["Multiview"]["Mumbo"]:
-            arguments = {"CL_type": "Mumbo",
-                         "views": args.views.split(":"),
-                         "NB_VIEW": len(args.views.split(":")),
-                         "NB_CLASS": len(args.CL_classes.split(":")),
-                         "LABELS_NAMES": args.CL_classes.split(":"),
-                         "MumboKWARGS": {"classifiersNames": ["DecisionTree", "DecisionTree", "DecisionTree",
-                                                              "DecisionTree"],
-                                         "maxIter":int(args.MU_iter[0]), "minIter":int(args.MU_iter[1]),
-                                         "threshold":args.MU_iter[2]}}
-            argumentDictionaries["Multiview"].append(arguments)
-    if benchmark["Multiview"]["Fusion"]:
-        if benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
-            for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]:
-                arguments = {"CL_type": "Fusion",
-                             "views": args.views.split(":"),
-                             "NB_VIEW": len(args.views.split(":")),
-                             "NB_CLASS": len(args.CL_classes.split(":")),
-                             "LABELS_NAMES": args.CL_classes.split(":"),
-                             "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,
-                                              "classifiersNames": bestClassifiers,
-                                              "classifiersConfigs": bestClassifiersConfigs,
-                                              'fusionMethodConfig': fusionMethodConfig}}
-                argumentDictionaries["Multiview"].append(arguments)
-        if benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
-            for method in benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"]:
-                for classifier in benchmark["Multiview"]["Fusion"]["Classifiers"]:
-                    arguments = {"CL_type": "Fusion",
-                                 "views": args.views.split(":"),
-                                 "NB_VIEW": len(args.views.split(":")),
-                                 "NB_CLASS": len(args.CL_classes.split(":")),
-                                 "LABELS_NAMES": args.CL_classes.split(":"),
-                                 "FusionKWARGS": {"fusionType":"EarlyFusion", "fusionMethod":method,
-                                                  "classifiersNames": classifier,
-                                                  "classifiersConfigs": fusionClassifierConfig,
-                                                  'fusionMethodConfig': fusionMethodConfig}}
-                    argumentDictionaries["Multiview"].append(arguments)
-
-resultsMultiview = Parallel(n_jobs=nbCores)(
-    delayed(ExecMultiview)(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
-                           LABELS_DICTIONARY, gridSearch=True, **arguments)
-    for arguments in argumentDictionaries["Multiview"])
-
+# resultsMultiview = Parallel(n_jobs=nbCores)(
+#     delayed(ExecMultiview)(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
+#                            LABELS_DICTIONARY, gridSearch=True, **arguments)
+#     for arguments in argumentDictionaries["Multiview"])
+resultsMultiview = []
+results = (resultsMonoview, resultsMultiview)
 resultAnalysis(benchmark, results)
 print len(argumentDictionaries["Multiview"]), len(argumentDictionaries["Monoview"])
 

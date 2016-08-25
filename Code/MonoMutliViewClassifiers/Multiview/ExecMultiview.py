@@ -112,7 +112,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
     times = (extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime)
 
-    stringAnalysis, imagesAnalysis = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
+    stringAnalysis, imagesAnalysis, train, test, val = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
                                                             kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
                                                             DATASET, initKWARGS, learningRate, LABELS_DICTIONARY,
                                                             views, nbCores, times, kFolds, name, nbFolds,
@@ -141,6 +141,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
             imagesAnalysis[imageName].savefig(outputFileName + imageName + '.png')
 
     logging.info("Done:\t Result Analysis")
+    return CL_type, classificationKWARGS, train, test, val
 
 
 if __name__=='__main__':

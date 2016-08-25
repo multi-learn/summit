@@ -1,0 +1,19 @@
+2016-08-25 10:02:39,609 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-08-25 10:02:40,264 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 10:02:40,264 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:RANSeq_ train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : Adaboost
+2016-08-25 10:02:40,264 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 10:02:40,278 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-25 10:02:40,279 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-25 10:02:40,279 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 10:02:40,279 DEBUG: Start:	 Classification
+2016-08-25 10:02:46,914 DEBUG: Info:	 Time for Classification: 6.64618396759[s]
+2016-08-25 10:02:46,914 DEBUG: Done:	 Classification
+2016-08-25 10:02:46,919 DEBUG: Start:	 Statistic Results
+2016-08-25 10:02:46,920 INFO: Accuracy :0.828571428571
+2016-08-25 10:02:46,931 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 10:02:46,931 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:RANSeq_ train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2016-08-25 10:02:46,931 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 10:02:46,942 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-25 10:02:46,943 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-25 10:02:46,943 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 10:02:46,943 DEBUG: Start:	 Classification

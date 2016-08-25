@@ -1,0 +1,43 @@
+2016-08-25 09:56:46,701 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-08-25 09:56:47,338 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:56:47,339 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : Adaboost
+2016-08-25 09:56:47,339 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:56:47,392 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-25 09:56:47,393 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-25 09:56:47,393 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:56:47,393 DEBUG: Start:	 Classification
+2016-08-25 09:56:47,398 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:56:47,398 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2016-08-25 09:56:47,398 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:56:47,459 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:56:47,459 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : KNN
+2016-08-25 09:56:47,459 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:56:47,514 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:56:47,515 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : RandomForest
+2016-08-25 09:56:47,515 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:56:47,584 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-25 09:56:47,584 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-25 09:56:47,584 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:56:47,584 DEBUG: Start:	 Classification
+2016-08-25 09:56:47,713 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-25 09:56:47,713 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-25 09:56:47,714 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:56:47,714 DEBUG: Start:	 Classification
+2016-08-25 09:56:47,738 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-25 09:56:47,738 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-25 09:56:47,738 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:56:47,738 DEBUG: Start:	 Classification
+2016-08-25 09:56:51,086 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:56:51,087 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : SGD
+2016-08-25 09:56:51,087 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:56:51,139 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-25 09:56:51,139 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-25 09:56:51,139 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:56:51,140 DEBUG: Start:	 Classification
+2016-08-25 09:56:51,192 DEBUG: ### Main Programm for Classification MonoView
+2016-08-25 09:56:51,192 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : SVMLinear
+2016-08-25 09:56:51,192 DEBUG: Start:	 Determine Train/Test split
+2016-08-25 09:56:51,245 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-25 09:56:51,246 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-25 09:56:51,246 DEBUG: Done:	 Determine Train/Test split
+2016-08-25 09:56:51,246 DEBUG: Start:	 Classification

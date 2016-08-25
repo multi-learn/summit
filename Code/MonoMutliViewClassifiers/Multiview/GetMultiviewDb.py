@@ -392,7 +392,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     labelsDset.attrs["name"] = "Labels"
 
     metaDataGrp = datasetFile.create_group("Metadata")
-    metaDataGrp.attrs["nbView"] = 4
+    metaDataGrp.attrs["nbView"] = 5
     metaDataGrp.attrs["nbClass"] = 2
     metaDataGrp.attrs["datasetLength"] = len(labels)
     labelDictionary = {0:"No", 1:"Yes"}
@@ -408,10 +408,39 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     mrnaseqDset.attrs["name"] = "MRNASeq"
     logging.debug("Done:\t Getting Modified RNASeq Data")
 
+    datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "r")
+    logging.debug("Start:\t Getting Binary RNASeq Data")
+    binarizedRNASeqDset = datasetFile.create_dataset("View5", shape=(len(labels), len(rnaseqData)*(len(rnaseqData)-1)/2), dtype=bool)
+    for exampleIndex in range(len(labels)):
+        offseti=0
+        rnaseqData = datasetFile["View2"][exampleIndex]
+        for i, idata in enumerate(rnaseqData):
+            for j, jdata in enumerate(rnaseqData):
+                if i < j:
+                    binarizedRNASeqDset[offseti+j] = idata > jdata
+            offseti += len(rnaseqData)-i-1
+    binarizedRNASeqDset.attrs["name"] = "BRNASeq"
+    i=0
+    for featureIndex in range(len(rnaseqData)*(len(rnaseqData)-1)/2):
+        if allSame(binarizedRNASeqDset[:, featureIndex]):
+            i+=1
+    print i
+    logging.debug("Done:\t Getting Binary RNASeq Data")
+
+
     datasetFile.close()
     datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "r")
 
     return datasetFile, labelDictionary
+
+
+def allSame(array):
+    value = array[0]
+    areAllSame = True
+    for i in array:
+        if i != value:
+            areAllSame = False
+    return areAllSame
 
 
 def getModifiedMultiOmicDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):

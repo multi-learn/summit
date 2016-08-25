@@ -80,7 +80,10 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
             DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, databaseName,
             nbFolds, validationIndices):
     CLASS_LABELS = DATASET.get("labels")[...]
-    NB_ITER, classifierNames, classifierConfigs = initKWARGS.values()
+    MumboKWARGS = {"classifiersConfigs":mumboClassifierConfig,
+                   "classifiersNames":mumboclassifierNames, "maxIter":int(args.MU_iter[0]),
+                   "minIter":int(args.MU_iter[1]), "threshold":args.MU_iter[2]}
+    classifierConfigs, classifierNames, maxIter, minIter, threshold = initKWARGS.values()
     nbView = DATASET.get("Metadata").attrs["nbView"]
     viewNames = [DATASET.get("View"+str(viewIndex)).attrs["name"] for viewIndex in range(nbView)]
 
@@ -161,11 +164,11 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
                         nbFolds) + \
                      " folds\n\t- Validation set length : "+str(len(validationIndices))+" for learning rate : "+\
                      str(LEARNING_RATE)+\
-                     "\n\nClassification configuration : \n\t-Algorithm used : Mumbo \n\t-Iterations : " + \
-                     str(NB_ITER) + "\n\t-Weak Classifiers : " + "\n\t\t-".join(
+                     "\n\nClassification configuration : \n\t-Algorithm used : Mumbo \n\t-Iterations : min " + \
+                     str(minIter)+ ", max "+ str(maxIter)+", threshold "+ str(threshold)+  + "\n\t-Weak Classifiers : " + "\n\t\t-".join(
                         classifierAnalysis) + "\n\n Mean average accuracies and stats for each fold : "
     for foldIdx in range(nbFolds):
-        stringAnalysis += "\n\t- Fold "+str(foldIdx)
+        stringAnalysis += "\n\t- Fold "+str(foldIdx)+", used "+str(kFoldClassifier.iterIndex + 1)
         for viewIndex, (meanAverageAccuracy, bestViewStat) in enumerate(zip(kFoldMeanAverageAccuracies[foldIdx], kFoldBestViewsStats[foldIdx])):
             stringAnalysis+="\n\t\t- On "+viewNames[viewIndex]+\
                             " : \n\t\t\t- Mean average Accuracy : "+str(meanAverageAccuracy)+\
@@ -204,4 +207,4 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
                                      bestViews, views, classifierAnalysis, viewNames)
     imagesAnalysis = {name: image}
 
-    return stringAnalysis, imagesAnalysis
+    return stringAnalysis, imagesAnalysis, totalAccuracyOnTrain, totalAccuracyOnTest, totalAccuracyOnValidation

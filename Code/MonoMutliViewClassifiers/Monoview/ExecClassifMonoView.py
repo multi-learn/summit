@@ -31,14 +31,16 @@ __date__	= 2016-03-25
 
 
 def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True, **kwargs):
+
     t_start = time.time()
     directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
-    feat = kwargs["feat"]
+    feat = X.attrs["name"]
     fileFeat = kwargs["fileFeat"]
     fileCL = kwargs["fileCL"]
     fileCLD = kwargs["fileCLD"]
     CL_type = kwargs["CL_type"]
     classifierKWARGS = kwargs[CL_type+"KWARGS"]
+    X = X.value
 
     # Determine the Database to extract features
     logging.debug("### Main Programm for Classification MonoView")
@@ -93,6 +95,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     accuracy_score = ExportResults.accuracy_score(y_test, y_test_pred)
     logging.info("Accuracy :" +str(accuracy_score))
 
+    return [CL_type, accuracy_score, cl_desc, feat]
     # # Classification Report with Precision, Recall, F1 , Support
     # logging.debug("Info:\t Classification report:")
     # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Report"
