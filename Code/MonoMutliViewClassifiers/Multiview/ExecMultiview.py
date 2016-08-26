@@ -78,8 +78,12 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
     if gridSearch:
         logging.info("Start:\t Gridsearching best settings for monoview classifiers")
-        bestSettings = classifierGridSearch(DATASET, classificationKWARGS["classifiersNames"])
+        bestSettings, fusionConfig = classifierGridSearch(DATASET, classificationKWARGS, learningIndices)
         classificationKWARGS["classifiersConfigs"] = bestSettings
+        try:
+            classificationKWARGS["fusionMethodConfig"] = fusionConfig
+        except:
+            pass
         logging.info("Done:\t Gridsearching best settings for monoview classifiers")
 
     # Begin Classification

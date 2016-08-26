@@ -41,7 +41,7 @@ groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
                         help='Determine the learning rate if > 1.0, number of fold for cross validation', type=float,
                         default=0.7)
 groupClass.add_argument('--CL_nbFolds', metavar='INT', action='store', help='Number of folds in cross validation',
-                        type=int, default=5)
+                        type=int, default=5 )
 groupClass.add_argument('--CL_nb_class', metavar='INT', action='store', help='Number of classes, -1 for all', type=int,
                         default=4)
 groupClass.add_argument('--CL_classes', metavar='STRING', action='store',
@@ -51,12 +51,11 @@ groupClass.add_argument('--CL_type', metavar='STRING', action='store',
                         help='Determine whether to use Multiview, Monoview, or Benchmark, separate with : if multiple',
                         default='Benchmark')
 groupClass.add_argument('--CL_algorithm', metavar='STRING', action='store',
-                        help='Determine which classifier to use, if CL_type = Benchmark, fill monoview and multiview '
-                             'options', default='')
+                        help='Determine which classifier to use, if empty, considering all', default='')
 groupClass.add_argument('--CL_algos_monoview', metavar='STRING', action='store',
-                        help='Determine which monoview classifier to use, separate with : if multiple', default='')
+                        help='Determine which monoview classifier to use, separate with : if multiple, if empty, considering all', default='')
 groupClass.add_argument('--CL_algos_multiview', metavar='STRING', action='store',
-                        help='Determine which multiview classifier to use, separate with : if multiple', default='')
+                        help='Determine which multiview classifier to use, separate with : if multiple, if empty, considering all', default='')
 groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
                         default=1)
 

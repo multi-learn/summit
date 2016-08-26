@@ -8,7 +8,7 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     maxDepth = int(kwargs['1'])
     classifier = RandomForestClassifier(n_estimators=num_estimators, max_depth=maxDepth, n_jobs=NB_CORES)
     classifier.fit(DATASET, CLASS_LABELS)
-    return classifier
+    return "No desc", classifier
 
 
 def fit_gridsearch(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
@@ -40,6 +40,17 @@ def fit_gridsearch(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     desc_estimators = [rf_detector.best_params_["classifier__n_estimators"]]
     description = "Classif_" + "RF" + "-" + "CV_" +  str(nbFolds) + "-" + "Trees_" + str(map(str,desc_estimators))
     return description, rf_detector
+
+
+def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+    pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
+    param_rf = {"classifier__n_estimators": np.random.randint(1, 30, 10)}
+
+    grid_rf = GridSearchCV(pipeline_rf,param_grid=param_rf,refit=True,n_jobs=nbCores,scoring='accuracy',cv=nbFolds)
+    rf_detector = grid_rf.fit(X_train, y_train)
+
+    desc_estimators = [rf_detector.best_params_["classifier__n_estimators"]]
+    return desc_estimators
 
 
 def getConfig(config):

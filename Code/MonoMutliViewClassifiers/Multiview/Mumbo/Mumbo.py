@@ -39,7 +39,8 @@ def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, DATA
     logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(averageAccuracy))
     return classifier, classes, isBad, averageAccuracy
 
-def gridSearch_hdf5(DATASET, classifiersNames):
+def gridSearch_hdf5(DATASET, classificationKWARGS):
+    classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
         logging.debug("\tStart:\t Gridsearch for "+classifierName+" on "+DATASET.get("View"+str(classifierIndex)).attrs["name"])
@@ -48,7 +49,7 @@ def gridSearch_hdf5(DATASET, classifiersNames):
         bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[...],
                                              DATASET.get("labels")[...]))
         logging.debug("\tDone:\t Gridsearch for "+classifierName)
-    return bestSettings
+    return bestSettings, None
 
 
 

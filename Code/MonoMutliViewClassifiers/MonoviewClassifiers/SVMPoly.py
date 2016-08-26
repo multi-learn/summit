@@ -1,6 +1,7 @@
 from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
 from sklearn.grid_search import GridSearchCV
+import numpy as np
 
 
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
@@ -8,18 +9,19 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     degree = int(kwargs['1'])
     classifier = SVC(C=C, kernel='poly', degree=degree, probability=True)
     classifier.fit(DATASET, CLASS_LABELS)
-    return classifier
+    return "No desc", classifier
 
 
 def fit_gridsearch(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
-    pipeline_SVMLinear = Pipeline([('classifier', SVC(kernel="linear"))])
-    param_SVMLinear = {"classifier__C": map(int, kwargs['0']), "classifier__degree": map(int, kwargs["1"])}
-    grid_SVMLinear = GridSearchCV(pipeline_SVMLinear, param_grid=param_SVMLinear, refit=True, n_jobs=nbCores, scoring='accuracy',
+    pipeline_SVMPoly = Pipeline([('classifier', SVC(kernel="poly"))])
+    param_SVMPoly= {"classifier__C": np.random.randint(1,2000,30), "classifier__degree": np.random.randint(1,10,5)}
+    grid_SVMPoly = GridSearchCV(pipeline_SVMPoly, param_grid=param_SVMPoly, refit=True, n_jobs=nbCores, scoring='accuracy',
                                   cv=nbFolds)
-    SVMLinear_detector = grid_SVMLinear.fit(X_train, y_train)
-    desc_params = [SVMLinear_detector.best_params_["classifier__C"], SVMLinear_detector.best_params_["classifier__degree"]]
-    description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
-    return description, SVMLinear_detector
+    SVMPoly_detector = grid_SVMPoly.fit(X_train, y_train)
+    desc_params = [SVMPoly_detector.best_params_["classifier__C"], SVMPoly_detector.best_params_["classifier__degree"]]
+    return desc_params
+
+
 
 
 def getConfig(config):

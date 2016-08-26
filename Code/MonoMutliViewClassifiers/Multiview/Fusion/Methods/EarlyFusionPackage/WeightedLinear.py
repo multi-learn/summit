@@ -1,36 +1,31 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8
-
-import numpy as np
-
+from EarlyFusion import EarlyFusionClassifier
 import MonoviewClassifiers
+import numpy as np
+from sklearn.metrics import accuracy_score
 
 
-class EarlyFusionClassifier(object):
-    def __init__(self, monoviewClassifiersNames, monoviewClassifiersConfigs, NB_CORES=1):
-        self.monoviewClassifierName = monoviewClassifiersNames[0]
-        self.monoviewClassifiersConfig = monoviewClassifiersConfigs[0]
-        self.monoviewClassifier = None
-        self.nbCores = NB_CORES
-        self.monoviewData = None
-
-    def makeMonoviewData_hdf5(self, DATASET, weights=None, usedIndices=None):
-        if not usedIndices:
-            uesdIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
-        if type(weights)=="NoneType":
-            weights = np.array([1/NB_VIEW for i in range(NB_VIEW)])
-        if sum(weights)!=1:
-            weights = weights/sum(weights)
-        self.monoviewData = np.concatenate([weights[viewIndex]*DATASET.get("View"+str(viewIndex))[usedIndices, :]
-                                                         for viewIndex in np.arange(NB_VIEW)], axis=1)
-
+def gridSearch(DATASET, classificationKWARGS, trainIndices):
+    bestScore = 0.0
+    bestConfig = None
+    if classificationKWARGS["fusionMethodConfig"][0] is not None:
+        for i in range(0):
+            randomWeightsArray = np.random.random_sample(len(DATASET.get("Metadata").attrs["nbView"]))
+            normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
+            classificationKWARGS["fusionMethodConfig"][0] = normalizedArray
+            classifier = WeightedLinear(1, **classificationKWARGS)
+            classifier.fit_hdf5(DATASET, trainIndices)
+            predictedLabels = classifier.predict_hdf5(DATASET, trainIndices)
+            accuracy = accuracy_score(DATASET.get("labels")[trainIndices], predictedLabels)
+            if accuracy > bestScore:
+                bestScore = accuracy
+                bestConfig = normalizedArray
+        return bestConfig
 
 
 class WeightedLinear(EarlyFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
         EarlyFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['monoviewClassifiersConfigs'],
-                                      NB_CORES=NB_CORES)
+                                       NB_CORES=NB_CORES)
         self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 
     def fit_hdf5(self, DATASET, trainIndices=None):
@@ -39,9 +34,9 @@ class WeightedLinear(EarlyFusionClassifier):
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=trainIndices)
         monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
         desc, self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET.get("labels")[trainIndices],
-                                                               NB_CORES=self.nbCores,
-                                                               **dict((str(configIndex),config) for configIndex,config in
-                                                                      enumerate(self.monoviewClassifiersConfig)))
+                                                                     NB_CORES=self.nbCores,
+                                                                     **dict((str(configIndex),config) for configIndex,config in
+                                                                            enumerate(self.monoviewClassifiersConfig)))
 
     def predict_hdf5(self, DATASET, usedIndices=None):
         if usedIndices == None:
@@ -64,7 +59,7 @@ class WeightedLinear(EarlyFusionClassifier):
         return predictedLabels
 
     def getConfig(self, fusionMethodConfig ,monoviewClassifiersNames, monoviewClassifiersConfigs):
-        configString = "with weighted concatenation, using weights : "+", ".join(map(str, self.weights))+\
+        configString = "with weighted concatenation, using weights : "+", ".join(map(str, self.weights))+ \
                        " with monoview classifier : "
         monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifiersNames[0])
         configString += monoviewClassifierModule.getConfig(monoviewClassifiersConfigs[0])
@@ -73,4 +68,3 @@ class WeightedLinear(EarlyFusionClassifier):
     def gridSearch(self, classificationKWARGS):
 
         return
-

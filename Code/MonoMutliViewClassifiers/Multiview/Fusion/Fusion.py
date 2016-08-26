@@ -1,14 +1,22 @@
 from Methods import *
+import MonoviewClassifiers
 
 
-def gridSearch_hdf5(DATASET, classifiersNames):
+def gridSearch_hdf5(DATASET, classificationKWARGS):
+    fusionTypeName = classificationKWARGS["fusionType"]
+    fusionTypePackage = globals()[fusionTypeName+"Package"]
+    fusionMethodModuleName = classificationKWARGS["fusionMethod"]
+    fusionMethodModule = getattr(fusionTypePackage, fusionMethodModuleName)
+    classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
-        classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
+        classifierModule = getattr(MonoviewClassifiers, classifierName)
         classifierMethod = getattr(classifierModule, "gridSearch")
         bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[...],
                                              DATASET.get("labels")[...]))
-    return bestSettings
+    classificationKWARGS["classifiersConfigs"] = bestSettings
+    fusionMethodConfig = fusionMethodModule.gridSearch(DATASET, classificationKWARGS)
+    return bestSettings, fusionMethodConfig
 
 
 class Fusion:

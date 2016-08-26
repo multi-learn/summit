@@ -1,6 +1,7 @@
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
 from sklearn.grid_search import GridSearchCV
+import numpy as np
 
 
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
@@ -12,7 +13,7 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
         alpha = 0.15
     classifier = SGDClassifier(loss=loss, penalty=penalty, alpha=alpha)
     classifier.fit(DATASET, CLASS_LABELS)
-    return classifier
+    return "No desc", classifier
 
 
 def fit_gridsearch(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
@@ -27,6 +28,20 @@ def fit_gridsearch(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
     return description, SGD_detector
 
+
+def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+    pipeline_SGD = Pipeline([('classifier', SGDClassifier())])
+    losses = ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron']
+    penalties = ["l1", "l2", "elasticnet"]
+    alphas = list(np.random.randint(1,10,10))+list(np.random.random_sample(10))
+    param_SGD = {"classifier__loss": losses, "classifier__penalty": penalties,
+                 "classifier__alpha": alphas}
+    grid_SGD = GridSearchCV(pipeline_SGD, param_grid=param_SGD, refit=True, n_jobs=nbCores, scoring='accuracy',
+                            cv=nbFolds)
+    SGD_detector = grid_SGD.fit(X_train, y_train)
+    desc_params = [SGD_detector.best_params_["classifier__loss"], SGD_detector.best_params_["classifier__penalty"],
+                   SGD_detector.best_params_["classifier__alpha"]]
+    return desc_params
 
 def getConfig(config):
     return "\n\t\t- SGDClassifier with loss : "+config[0]+", penalty : "+config[1]

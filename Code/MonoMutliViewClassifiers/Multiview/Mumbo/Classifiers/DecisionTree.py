@@ -24,10 +24,12 @@ def DecisionTree(data, labels, arg, weights):
 
     return classifier, prediction, isBad, accuracy
 
+
 def getConfig(classifierConfig):
     depth = classifierConfig[0]
     subSampling = classifierConfig[1]
     return 'with depth ' + str(depth) + ', ' + ' sub-sampled at ' + str(subSampling) + ' '
+
 
 def gridSearch(data, labels):
     minSubSampling = 1.0/(len(labels)/2)
