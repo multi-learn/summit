@@ -41,6 +41,15 @@ class Fusion:
             predictedLabels = []
         return predictedLabels
 
+    def predict_probas_hdf5(self, DATASET, usedIndices=None):
+        if usedIndices == None:
+            usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
+        if usedIndices:
+            predictedLabels = self.classifier.predict_probas_hdf5(DATASET, usedIndices=usedIndices)
+        else:
+            predictedLabels = []
+        return predictedLabels
+
     def predict(self, DATASET, classifier, NB_CLASS):
         fusionType, fusionMethod, fusionClassifier = classifier
         fusionType = globals()[fusionType]  # Early/late fusion

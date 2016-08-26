@@ -206,6 +206,25 @@ class Mumbo:
             predictedLabels = []
         return predictedLabels
 
+    def predict_proba_hdf5(self, DATASET, usedIndices=None):
+        NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+        if usedIndices == None:
+            usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
+        if usedIndices:
+            DATASET_LENGTH = len(usedIndices)
+            predictedProbas = np.zeros((DATASET_LENGTH, NB_CLASS))
+
+            for labelIndex, exampleIndex in enumerate(usedIndices):
+                votes = np.zeros(NB_CLASS)
+                for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
+                    data = DATASET["/View"+str(int(view))][exampleIndex, :]
+                    predictedProbas[labelIndex, int(classifier.predict(np.array([data])))] += alpha[view]
+                predictedProbas[labelIndex,:] = predictedProbas[labelIndex,:]/np.sum(predictedProbas[labelIndex,:])
+        else:
+            predictedProbas = []
+        return predictedProbas
+
+
     def trainWeakClassifiers(self, DATASET, CLASS_LABELS, NB_CLASS, DATASET_LENGTH, NB_VIEW):
         trainedClassifiers = []
         labelsMatrix = []

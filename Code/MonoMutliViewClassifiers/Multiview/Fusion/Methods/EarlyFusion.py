@@ -53,10 +53,20 @@ class WeightedLinear(EarlyFusionClassifier):
             predictedLabels=[]
         return predictedLabels
 
+    def predict_proba_hdf5(self, DATASET, usedIndices=None):
+        if usedIndices == None:
+            usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
+        if usedIndices:
+            self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=usedIndices)
+            predictedLabels = self.monoviewClassifier.predict_proba(self.monoviewData)
+        else:
+            predictedLabels=[]
+        return predictedLabels
+
     def getConfig(self, fusionMethodConfig ,monoviewClassifiersNames, monoviewClassifiersConfigs):
         configString = "with weighted concatenation, using weights : "+", ".join(map(str, self.weights))+\
                        " with monoview classifier : "
-        monoviewClassifierModule = getattr(poulet, monoviewClassifiersNames[0])
+        monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifiersNames[0])
         configString += monoviewClassifierModule.getConfig(monoviewClassifiersConfigs[0])
         return configString
 
