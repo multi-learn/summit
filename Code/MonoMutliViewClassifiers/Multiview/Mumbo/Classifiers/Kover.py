@@ -6,9 +6,4 @@ from ModifiedMulticlass import OneVsRestClassifier
 
 # Add weights
 
-
-def Kover(data, labels, arg, weights,):
-    isBad = False
-    subSamplingRatio = arg[0]
-
-    return classifier, prediction, isBad
+pass

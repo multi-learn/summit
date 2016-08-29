@@ -31,7 +31,7 @@ def getConfig(classifierConfig):
     return 'with depth ' + str(depth) + ', ' + ' sub-sampled at ' + str(subSampling) + ' '
 
 
-def gridSearch(data, labels):
+def gridSearch(data, labels, metrics="accuracy_score"):
     minSubSampling = 1.0/(len(labels)/2)
     bestSettings = []
     bestResults = []

@@ -1,8 +1,22 @@
 from Methods import *
 import MonoviewClassifiers
+import numpy as np
 
 
-def gridSearch_hdf5(DATASET, classificationKWARGS):
+def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None):
+    if not usedIndices:
+        uesdIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
+    NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
+    if type(weights)=="NoneType":
+        weights = np.array([1/NB_VIEW for i in range(NB_VIEW)])
+    if sum(weights)!=1:
+        weights = weights/sum(weights)
+    monoviewData = np.concatenate([weights[viewIndex]*DATASET.get("View"+str(viewIndex))[usedIndices, :]
+                                        for viewIndex in np.arange(NB_VIEW)], axis=1)
+    return monoviewData
+
+
+def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metrics=None):
     fusionTypeName = classificationKWARGS["fusionType"]
     fusionTypePackage = globals()[fusionTypeName+"Package"]
     fusionMethodModuleName = classificationKWARGS["fusionMethod"]
@@ -12,10 +26,14 @@ def gridSearch_hdf5(DATASET, classificationKWARGS):
     for classifierIndex, classifierName in enumerate(classifiersNames):
         classifierModule = getattr(MonoviewClassifiers, classifierName)
         classifierMethod = getattr(classifierModule, "gridSearch")
-        bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[...],
-                                             DATASET.get("labels")[...]))
+        if fusionMethodModuleName == "LateFusion":
+            bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[learningIndices],
+                                                 DATASET.get("labels")[learningIndices], metrics=metrics[classifierIndex]))
+        else:
+            bestSettings.append(classifierMethod(makeMonoviewData_hdf5(DATASET, usedIndices=learningIndices),
+                                                 DATASET.get("labels")[learningIndices], metrics=metrics[classifierIndex]))
     classificationKWARGS["classifiersConfigs"] = bestSettings
-    fusionMethodConfig = fusionMethodModule.gridSearch(DATASET, classificationKWARGS)
+    fusionMethodConfig = fusionMethodModule.gridSearch(DATASET, classificationKWARGS, learningIndices)
     return bestSettings, fusionMethodConfig
 
 

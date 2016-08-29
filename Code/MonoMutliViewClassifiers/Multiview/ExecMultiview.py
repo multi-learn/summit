@@ -16,12 +16,15 @@ import time
 
 
 
-def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY, gridSearch=False, **kwargs):
+def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY,
+                  gridSearch=False, metrics=None,**kwargs):
 
     datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
     NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
     views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+    if not metrics:
+        metrics = ["accuracy_score" for view in range (NB_VIEW)]
 
     CL_type = kwargs["CL_type"]
     views = kwargs["views"]
@@ -78,7 +81,8 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
     if gridSearch:
         logging.info("Start:\t Gridsearching best settings for monoview classifiers")
-        bestSettings, fusionConfig = classifierGridSearch(DATASET, classificationKWARGS, learningIndices)
+        bestSettings, fusionConfig = classifierGridSearch(DATASET, classificationKWARGS, learningIndices
+                                                          , metrics=metrics)
         classificationKWARGS["classifiersConfigs"] = bestSettings
         try:
             classificationKWARGS["fusionMethodConfig"] = fusionConfig

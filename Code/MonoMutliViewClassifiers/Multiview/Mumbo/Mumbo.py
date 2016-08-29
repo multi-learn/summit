@@ -21,6 +21,7 @@ def computeWeights(DATASET_LENGTH, iterIndex, viewIndice, CLASS_LABELS, costMatr
                         for exampleIndice in range(DATASET_LENGTH)])
     return weights
 
+
 def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS,
                         DATASET_LENGTH, viewIndice, classifier_config, iterIndex, costMatrices):
     weights = computeWeights(DATASET_LENGTH, iterIndex, viewIndice, CLASS_LABELS, costMatrices)
@@ -29,6 +30,7 @@ def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS,
     classifier, classes, isBad, averageAccuracy = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
     logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(averageAccuracy))
     return classifier, classes, isBad, averageAccuracy
+
 
 def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, DATASET_LENGTH,
                              viewIndice, classifier_config, viewName, iterIndex, costMatrices):
@@ -39,20 +41,18 @@ def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, DATA
     logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(averageAccuracy))
     return classifier, classes, isBad, averageAccuracy
 
-def gridSearch_hdf5(DATASET, classificationKWARGS):
+
+def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metrics=None):
     classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
         logging.debug("\tStart:\t Gridsearch for "+classifierName+" on "+DATASET.get("View"+str(classifierIndex)).attrs["name"])
         classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
         classifierMethod = getattr(classifierModule, "gridSearch")
-        bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[...],
-                                             DATASET.get("labels")[...]))
+        bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[learningIndices],
+                                             DATASET.get("labels")[learningIndices], metrics=metrics[classifierIndex]))
         logging.debug("\tDone:\t Gridsearch for "+classifierName)
     return bestSettings, None
-
-
-
 
 
 class Mumbo:

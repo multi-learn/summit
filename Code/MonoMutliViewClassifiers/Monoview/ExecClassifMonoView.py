@@ -20,6 +20,7 @@ import h5py
 import ClassifMonoView	                # Functions for classification
 import ExportResults                    # Functions to render results
 import MonoviewClassifiers
+import Metrics
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann, Baptiste BAUVIN"
@@ -30,7 +31,8 @@ __date__	= 2016-03-25
 ### Argument Parser
 
 
-def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True, **kwargs):
+def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True,
+                metrics="accuracy_score", **kwargs):
 
     t_start = time.time()
     directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
@@ -41,6 +43,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     CL_type = kwargs["CL_type"]
     classifierKWARGS = kwargs[CL_type+"KWARGS"]
     X = X.value
+    metrics = [getattr(Metrics, metric) for metric in metrics]
 
     # Determine the Database to extract features
     logging.debug("### Main Programm for Classification MonoView")
@@ -61,9 +64,10 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
 
 
     classifierModule = getattr(MonoviewClassifiers, CL_type)
-    classifierFunction = getattr(classifierModule, "fit_gridsearch")
+    classifierGridSearch = getattr(classifierModule, "gridSearch")
 
-    cl_desc, cl_res = classifierFunction(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores,**classifierKWARGS)
+    cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metrics=metrics)
+    cl_res = classifierModule.fit(X_train, y_train, NB_CORES=nbCores)
     t_end  = time.time() - t_start
 
     # Add result to Results DF
@@ -149,6 +153,8 @@ if __name__=='__main__':
     groupClass.add_argument('--CL_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int, default=10)
     groupClass.add_argument('--CL_Cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int, default=1)
     groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Split ratio for train and test', type=float, default=0.9)
+    groupClass.add_argument('--CL_metrics', metavar='STRING', action='store',
+                        help='Determine which metric to use, separate with ":" if multiple, if empty, considering all', default='')
 
 
     groupClassifier = parser.add_argument_group('Classifier Config')
@@ -217,4 +223,5 @@ if __name__=='__main__':
 
     arguments = {args.CL_type+"KWARGS": classifierKWARGS, "feat":args.feat,"fileFeat": args.fileFeat,
                  "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": args.CL_type}
-    ExecMonoview(X, Y, args.name, args.CL_split, args.CL_CV, args.CL_Cores, args.type, args.pathF, **arguments)
+    ExecMonoview(X, Y, args.name, args.CL_split, args.CL_CV, args.CL_Cores, args.type, args.pathF,
+                 metrics=args.CL_metrics, **arguments)

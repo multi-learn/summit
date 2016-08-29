@@ -58,6 +58,8 @@ groupClass.add_argument('--CL_algos_multiview', metavar='STRING', action='store'
                         help='Determine which multiview classifier to use, separate with : if multiple, if empty, considering all', default='')
 groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
                         default=1)
+groupClass.add_argument('--CL_metrics', metavar='STRING', action='store',
+                        help='Determine which metric to use, separate with ":" if multiple, if empty, considering all', default='')
 
 groupRF = parser.add_argument_group('Random Forest arguments')
 groupRF.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees',
@@ -198,9 +200,9 @@ if "Monoview" in args.CL_type.strip(":"):
 
 fusionClassifierConfig = "a"
 fusionMethodConfig = "a"
-mumboNB_ITER = 2
 mumboClassifierConfig = "a"
 mumboclassifierNames = "a"
+metrics = args.CL_metrics.split(":")
 
 RandomForestKWARGS = {"0":map(int, args.CL_RF_trees.split())}
 SVMLinearKWARGS = {"0":map(int, args.CL_SVML_C.split(":"))}
@@ -230,7 +232,7 @@ for viewIndex, viewArguments in enumerate(argumentDictionaries["Monoview"].value
     resultsMonoview += (Parallel(n_jobs=nbCores)(
         delayed(ExecMonoview)(DATASET.get("View"+str(viewIndex)), DATASET.get("labels").value, args.name,
                               args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, gridSearch=True,
-                              **arguments)
+                              metrics=metrics[viewIndex], **arguments)
         for arguments in viewArguments))
 
     accuracies = [result[1] for result in resultsMonoview[viewIndex]]
@@ -283,7 +285,7 @@ for viewIndex, viewArguments in enumerate(argumentDictionaries["Monoview"].value
 
 # resultsMultiview = Parallel(n_jobs=nbCores)(
 #     delayed(ExecMultiview)(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
-#                            LABELS_DICTIONARY, gridSearch=True, **arguments)
+#                            LABELS_DICTIONARY, gridSearch=True, metrics=metrics, **arguments)
 #     for arguments in argumentDictionaries["Multiview"])
 resultsMultiview = []
 results = (resultsMonoview, resultsMultiview)
