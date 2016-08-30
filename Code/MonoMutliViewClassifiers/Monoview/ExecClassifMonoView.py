@@ -32,7 +32,7 @@ __date__	= 2016-03-25
 
 
 def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True,
-                metrics="accuracy_score", **kwargs):
+                metric=["accuracy_score", None], nIter=30, **kwargs):
 
     t_start = time.time()
     directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
@@ -43,7 +43,6 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     CL_type = kwargs["CL_type"]
     classifierKWARGS = kwargs[CL_type+"KWARGS"]
     X = X.value
-    metrics = [getattr(Metrics, metric) for metric in metrics]
 
     # Determine the Database to extract features
     logging.debug("### Main Programm for Classification MonoView")
@@ -62,18 +61,17 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     # Begin Classification RandomForest
     logging.debug("Start:\t Classification")
 
-
     classifierModule = getattr(MonoviewClassifiers, CL_type)
     classifierGridSearch = getattr(classifierModule, "gridSearch")
 
-    cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metrics=metrics)
-    cl_res = classifierModule.fit(X_train, y_train, NB_CORES=nbCores)
+    cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metric=metric, nIter=nIter)
+    cl_res = classifierModule.fit(X_train, y_train, NB_CORES=nbCores, **dict((str(index), desc) for index, desc in enumerate(cl_desc)))
     t_end  = time.time() - t_start
 
     # Add result to Results DF
     df_class_res = pd.DataFrame()
-    df_class_res = df_class_res.append({'a_class_time':t_end, 'b_cl_desc': cl_desc, 'c_cl_res': cl_res,
-                                                    'd_cl_score': cl_res.best_score_}, ignore_index=True)
+    # df_class_res = df_class_res.append({'a_class_time':t_end, 'b_cl_desc': cl_desc, 'c_cl_res': cl_res,
+    #                                                 'd_cl_score': cl_res.best_score_}, ignore_index=True)
 
     logging.debug("Info:\t Time for Classification: " + str(t_end) + "[s]")
     logging.debug("Done:\t Classification")

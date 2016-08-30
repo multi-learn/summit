@@ -1,4 +1,4 @@
-from LateFusion import LateFusionClassifier
+from ...Methods.LateFusion import LateFusionClassifier
 import MonoviewClassifiers
 import numpy as np
 from sklearn.multiclass import OneVsOneClassifier
@@ -11,7 +11,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices):
 
 class SVMForLinear(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['monoviewClassifiersConfigs'],
+        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                       NB_CORES=NB_CORES)
         self.SVMClassifier = None
 

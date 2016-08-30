@@ -1,1 +1,2 @@
-from . import EarlyFusionPackage, LateFusionPackage
+from . import EarlyFusion, LateFusion, LateFusionPackage, EarlyFusionPackage
+__all__ = ["EarlyFusionPackage", "LateFusionPackage"]

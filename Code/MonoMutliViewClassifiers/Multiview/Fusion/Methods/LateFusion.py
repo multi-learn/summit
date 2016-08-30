@@ -36,13 +36,12 @@ class LateFusionClassifier(object):
         if trainIndices == None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         nbView = DATASET.get("Metadata").attrs["nbView"]
-        monoviewResults = Parallel(n_jobs=self.nbCores)(
+        self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
             delayed(fifMonoviewClassifier)(self.monoviewClassifiersNames[viewIndex],
                                               DATASET.get("View"+str(viewIndex))[trainIndices, :],
                                               DATASET.get("labels")[trainIndices],
                                               self.monoviewClassifiersConfigs[viewIndex])
             for viewIndex in range(nbView))
-        self.monoviewClassifiers = [monoviewClassifier for desc, monoviewClassifier in monoviewResults]
 
 
 # class WeightedLinear(LateFusionClassifier):

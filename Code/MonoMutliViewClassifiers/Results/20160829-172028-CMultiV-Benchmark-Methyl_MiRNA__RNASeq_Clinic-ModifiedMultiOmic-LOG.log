@@ -1,0 +1,89 @@
+2016-08-29 17:20:28,923 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-08-29 17:20:28,935 DEBUG: ### Main Programm for Classification MonoView
+2016-08-29 17:20:28,936 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:Methyl_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-08-29 17:20:28,936 DEBUG: Start:	 Determine Train/Test split
+2016-08-29 17:20:28,949 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-29 17:20:28,949 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-29 17:20:28,949 DEBUG: Done:	 Determine Train/Test split
+2016-08-29 17:20:28,950 DEBUG: Start:	 Classification
+2016-08-29 17:21:38,751 DEBUG: Info:	 Time for Classification: 69.825948[s]
+2016-08-29 17:21:38,752 DEBUG: Done:	 Classification
+2016-08-29 17:21:38,757 DEBUG: Start:	 Statistic Results
+2016-08-29 17:21:38,757 INFO: Accuracy :0.790476190476
+2016-08-29 17:21:38,768 DEBUG: ### Main Programm for Classification MonoView
+2016-08-29 17:21:38,768 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:Methyl_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-08-29 17:21:38,768 DEBUG: Start:	 Determine Train/Test split
+2016-08-29 17:21:38,779 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-29 17:21:38,780 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-29 17:21:38,780 DEBUG: Done:	 Determine Train/Test split
+2016-08-29 17:21:38,780 DEBUG: Start:	 Classification
+2016-08-29 17:22:12,472 DEBUG: Info:	 Time for Classification: 33.7131619453[s]
+2016-08-29 17:22:12,472 DEBUG: Done:	 Classification
+2016-08-29 17:22:12,475 DEBUG: Start:	 Statistic Results
+2016-08-29 17:22:12,475 INFO: Accuracy :0.780952380952
+2016-08-29 17:22:12,487 DEBUG: ### Main Programm for Classification MonoView
+2016-08-29 17:22:12,487 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:Methyl_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-08-29 17:22:12,487 DEBUG: Start:	 Determine Train/Test split
+2016-08-29 17:22:12,500 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-29 17:22:12,500 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-29 17:22:12,500 DEBUG: Done:	 Determine Train/Test split
+2016-08-29 17:22:12,501 DEBUG: Start:	 Classification
+2016-08-29 17:22:27,403 DEBUG: Info:	 Time for Classification: 14.9256680012[s]
+2016-08-29 17:22:27,403 DEBUG: Done:	 Classification
+2016-08-29 17:22:28,653 DEBUG: Start:	 Statistic Results
+2016-08-29 17:22:28,654 INFO: Accuracy :0.866666666667
+2016-08-29 17:22:28,666 DEBUG: ### Main Programm for Classification MonoView
+2016-08-29 17:22:28,666 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:Methyl_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-08-29 17:22:28,666 DEBUG: Start:	 Determine Train/Test split
+2016-08-29 17:22:28,679 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-29 17:22:28,680 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-29 17:22:28,680 DEBUG: Done:	 Determine Train/Test split
+2016-08-29 17:22:28,680 DEBUG: Start:	 Classification
+2016-08-29 17:23:06,935 DEBUG: Info:	 Time for Classification: 38.2793560028[s]
+2016-08-29 17:23:06,935 DEBUG: Done:	 Classification
+2016-08-29 17:23:06,942 DEBUG: Start:	 Statistic Results
+2016-08-29 17:23:06,943 INFO: Accuracy :0.847619047619
+2016-08-29 17:23:06,954 DEBUG: ### Main Programm for Classification MonoView
+2016-08-29 17:23:06,955 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:Methyl_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-08-29 17:23:06,955 DEBUG: Start:	 Determine Train/Test split
+2016-08-29 17:23:06,969 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-29 17:23:06,969 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-29 17:23:06,969 DEBUG: Done:	 Determine Train/Test split
+2016-08-29 17:23:06,969 DEBUG: Start:	 Classification
+2016-08-29 17:27:52,404 DEBUG: Info:	 Time for Classification: 285.460083008[s]
+2016-08-29 17:27:52,405 DEBUG: Done:	 Classification
+2016-08-29 17:27:52,414 DEBUG: Start:	 Statistic Results
+2016-08-29 17:27:52,414 INFO: Accuracy :0.847619047619
+2016-08-29 17:27:52,423 DEBUG: ### Main Programm for Classification MonoView
+2016-08-29 17:27:52,423 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:Methyl_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-08-29 17:27:52,423 DEBUG: Start:	 Determine Train/Test split
+2016-08-29 17:27:52,435 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-29 17:27:52,435 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-29 17:27:52,435 DEBUG: Done:	 Determine Train/Test split
+2016-08-29 17:27:52,435 DEBUG: Start:	 Classification
+2016-08-29 17:28:17,707 DEBUG: Info:	 Time for Classification: 25.2910339832[s]
+2016-08-29 17:28:17,707 DEBUG: Done:	 Classification
+2016-08-29 17:28:18,029 DEBUG: Start:	 Statistic Results
+2016-08-29 17:28:18,029 INFO: Accuracy :0.866666666667
+2016-08-29 17:28:18,037 DEBUG: ### Main Programm for Classification MonoView
+2016-08-29 17:28:18,038 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:Methyl_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMPoly
+2016-08-29 17:28:18,038 DEBUG: Start:	 Determine Train/Test split
+2016-08-29 17:28:18,049 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-29 17:28:18,049 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-29 17:28:18,049 DEBUG: Done:	 Determine Train/Test split
+2016-08-29 17:28:18,049 DEBUG: Start:	 Classification
+2016-08-29 17:30:54,635 DEBUG: Info:	 Time for Classification: 156.604124069[s]
+2016-08-29 17:30:54,635 DEBUG: Done:	 Classification
+2016-08-29 17:30:54,996 DEBUG: Start:	 Statistic Results
+2016-08-29 17:30:54,997 INFO: Accuracy :0.914285714286
+2016-08-29 17:30:55,005 DEBUG: ### Main Programm for Classification MonoView
+2016-08-29 17:30:55,005 DEBUG: ### Classification - Database:ModifiedMultiOmic Feature:Methyl_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMRBF
+2016-08-29 17:30:55,005 DEBUG: Start:	 Determine Train/Test split
+2016-08-29 17:30:55,016 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-08-29 17:30:55,016 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-08-29 17:30:55,016 DEBUG: Done:	 Determine Train/Test split
+2016-08-29 17:30:55,017 DEBUG: Start:	 Classification
+2016-08-29 17:31:21,638 DEBUG: Info:	 Time for Classification: 26.6399168968[s]
+2016-08-29 17:31:21,638 DEBUG: Done:	 Classification
+2016-08-29 17:31:21,995 DEBUG: Start:	 Statistic Results
+2016-08-29 17:31:21,995 INFO: Accuracy :0.92380952381

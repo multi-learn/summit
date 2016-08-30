@@ -3,8 +3,6 @@
 
 import numpy as np
 
-import MonoviewClassifiers
-
 
 class EarlyFusionClassifier(object):
     def __init__(self, monoviewClassifiersNames, monoviewClassifiersConfigs, NB_CORES=1):
@@ -18,7 +16,7 @@ class EarlyFusionClassifier(object):
         if not usedIndices:
             uesdIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
-        if type(weights)=="NoneType":
+        if weights== None:
             weights = np.array([1/NB_VIEW for i in range(NB_VIEW)])
         if sum(weights)!=1:
             weights = weights/sum(weights)

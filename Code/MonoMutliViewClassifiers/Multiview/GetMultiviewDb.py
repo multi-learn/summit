@@ -24,9 +24,9 @@ def getDataset(pathToDB, viewNames, DBName):
     return np.array(dataset)
 
 
-def getFakeDB(features, pathF, name , NB_CLASS, LABELS_NAME):
+def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
     NB_VIEW = len(features)
-    DATASET_LENGTH = int(pathF)
+    DATASET_LENGTH = 300
     VIEW_DIMENSIONS = np.random.random_integers(5, 20, NB_VIEW)
 
     DATA = dict((indx,
@@ -37,7 +37,23 @@ def getFakeDB(features, pathF, name , NB_CLASS, LABELS_NAME):
 
     CLASS_LABELS = np.random.random_integers(0, NB_CLASS-1, DATASET_LENGTH)
     LABELS_DICTIONARY = dict((indx, feature) for indx, feature in enumerate(features))
-    return DATA, CLASS_LABELS, LABELS_DICTIONARY, DATASET_LENGTH
+    datasetFile = h5py.File(pathF+"Fake.hdf5", "w")
+    for index, viewData in enumerate(DATA.values()):
+        viewDset = datasetFile.create_dataset("View"+str(index), viewData.shape)
+        viewDset[...] = viewData
+        viewDset.attrs["name"] = "View"+str(index)
+    labelsDset = datasetFile.create_dataset("labels", CLASS_LABELS.shape)
+    labelsDset[...] = CLASS_LABELS
+    labelsDset.attrs["name"] = "Labels"
+
+    metaDataGrp = datasetFile.create_group("Metadata")
+    metaDataGrp.attrs["nbView"] = NB_VIEW
+    metaDataGrp.attrs["nbClass"] = NB_CLASS
+    metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
+    labelDictionary = {0:"No", 1:"Yes"}
+    datasetFile.close()
+    datasetFile = h5py.File(pathF+"Fake.hdf5", "r")
+    return datasetFile, LABELS_DICTIONARY
 
 
 def getAwaLabels(nbLabels, pathToAwa):
@@ -385,17 +401,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     clinicalDset.attrs["name"] = "Clinic_"
     logging.debug("Done:\t Getting Clinical Data")
 
-    labelFile = open(path+'brca_labels_triple-negatif.csv')
-    labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
-    labelsDset = datasetFile.create_dataset("labels", labels.shape)
-    labelsDset[...] = labels
-    labelsDset.attrs["name"] = "Labels"
 
-    metaDataGrp = datasetFile.create_group("Metadata")
-    metaDataGrp.attrs["nbView"] = 5
-    metaDataGrp.attrs["nbClass"] = 2
-    metaDataGrp.attrs["datasetLength"] = len(labels)
-    labelDictionary = {0:"No", 1:"Yes"}
 
     logging.debug("Start:\t Getting Modified RNASeq Data")
     RNASeq = datasetFile["View2"][...]
@@ -408,24 +414,35 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     mrnaseqDset.attrs["name"] = "MRNASeq"
     logging.debug("Done:\t Getting Modified RNASeq Data")
 
-    datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "r")
-    logging.debug("Start:\t Getting Binary RNASeq Data")
-    binarizedRNASeqDset = datasetFile.create_dataset("View5", shape=(len(labels), len(rnaseqData)*(len(rnaseqData)-1)/2), dtype=bool)
-    for exampleIndex in range(len(labels)):
-        offseti=0
-        rnaseqData = datasetFile["View2"][exampleIndex]
-        for i, idata in enumerate(rnaseqData):
-            for j, jdata in enumerate(rnaseqData):
-                if i < j:
-                    binarizedRNASeqDset[offseti+j] = idata > jdata
-            offseti += len(rnaseqData)-i-1
-    binarizedRNASeqDset.attrs["name"] = "BRNASeq"
-    i=0
-    for featureIndex in range(len(rnaseqData)*(len(rnaseqData)-1)/2):
-        if allSame(binarizedRNASeqDset[:, featureIndex]):
-            i+=1
-    print i
-    logging.debug("Done:\t Getting Binary RNASeq Data")
+    labelFile = open(path+'brca_labels_triple-negatif.csv')
+    labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
+    labelsDset = datasetFile.create_dataset("labels", labels.shape)
+    labelsDset[...] = labels
+    labelsDset.attrs["name"] = "Labels"
+
+    metaDataGrp = datasetFile.create_group("Metadata")
+    metaDataGrp.attrs["nbView"] = 5
+    metaDataGrp.attrs["nbClass"] = 2
+    metaDataGrp.attrs["datasetLength"] = len(labels)
+    labelDictionary = {0:"No", 1:"Yes"}
+    # datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "r")
+    # logging.debug("Start:\t Getting Binary RNASeq Data")
+    # binarizedRNASeqDset = datasetFile.create_dataset("View5", shape=(len(labels), len(rnaseqData)*(len(rnaseqData)-1)/2), dtype=bool)
+    # for exampleIndex in range(len(labels)):
+    #     offseti=0
+    #     rnaseqData = datasetFile["View2"][exampleIndex]
+    #     for i, idata in enumerate(rnaseqData):
+    #         for j, jdata in enumerate(rnaseqData):
+    #             if i < j:
+    #                 binarizedRNASeqDset[offseti+j] = idata > jdata
+    #         offseti += len(rnaseqData)-i-1
+    # binarizedRNASeqDset.attrs["name"] = "BRNASeq"
+    # i=0
+    # for featureIndex in range(len(rnaseqData)*(len(rnaseqData)-1)/2):
+    #     if allSame(binarizedRNASeqDset[:, featureIndex]):
+    #         i+=1
+    # print i
+    # logging.debug("Done:\t Getting Binary RNASeq Data")
 
 
     datasetFile.close()

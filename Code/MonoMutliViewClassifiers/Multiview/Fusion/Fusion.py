@@ -7,7 +7,7 @@ def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None):
     if not usedIndices:
         uesdIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
     NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
-    if type(weights)=="NoneType":
+    if weights==None:
         weights = np.array([1/NB_VIEW for i in range(NB_VIEW)])
     if sum(weights)!=1:
         weights = weights/sum(weights)
@@ -16,7 +16,7 @@ def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None):
     return monoviewData
 
 
-def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metrics=None):
+def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metric=None, nIter=30):
     fusionTypeName = classificationKWARGS["fusionType"]
     fusionTypePackage = globals()[fusionTypeName+"Package"]
     fusionMethodModuleName = classificationKWARGS["fusionMethod"]
@@ -28,12 +28,14 @@ def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metrics=None
         classifierMethod = getattr(classifierModule, "gridSearch")
         if fusionMethodModuleName == "LateFusion":
             bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[learningIndices],
-                                                 DATASET.get("labels")[learningIndices], metrics=metrics[classifierIndex]))
+                                                 DATASET.get("labels")[learningIndices], metric=metric,
+                                                 nIter=nIter))
         else:
             bestSettings.append(classifierMethod(makeMonoviewData_hdf5(DATASET, usedIndices=learningIndices),
-                                                 DATASET.get("labels")[learningIndices], metrics=metrics[classifierIndex]))
+                                                 DATASET.get("labels")[learningIndices], metric=metric,
+                                                 nIter=nIter))
     classificationKWARGS["classifiersConfigs"] = bestSettings
-    fusionMethodConfig = fusionMethodModule.gridSearch(DATASET, classificationKWARGS, learningIndices)
+    fusionMethodConfig = fusionMethodModule.gridSearch(DATASET, classificationKWARGS, learningIndices, nIter=nIter)
     return bestSettings, fusionMethodConfig
 
 
@@ -41,8 +43,9 @@ class Fusion:
     def __init__(self, NB_VIEW, DATASET_LENGTH, CLASS_LABELS, NB_CORES=1,**kwargs):
         fusionType = kwargs['fusionType']
         fusionMethod = kwargs['fusionMethod']
-        fusionTypeModule = globals()[fusionType]
-        fusionMethodClass = getattr(fusionTypeModule, fusionMethod)
+        fusionTypePackage = globals()[fusionType+"Package"]
+        fusionMethodModule = getattr(fusionTypePackage, fusionMethod)
+        fusionMethodClass = getattr(fusionMethodModule, fusionMethod)
         nbCores = NB_CORES
         classifierKWARGS = dict((key, value) for key, value in kwargs.iteritems() if key not in ['fusionType', 'fusionMethod'])
         self.classifier = fusionMethodClass(NB_CORES=nbCores, **classifierKWARGS)

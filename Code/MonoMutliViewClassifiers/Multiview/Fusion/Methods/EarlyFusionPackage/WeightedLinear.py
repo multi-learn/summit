@@ -1,15 +1,15 @@
-from EarlyFusion import EarlyFusionClassifier
+from ...Methods.EarlyFusion import EarlyFusionClassifier
 import MonoviewClassifiers
 import numpy as np
 from sklearn.metrics import accuracy_score
 
 
-def gridSearch(DATASET, classificationKWARGS, trainIndices):
+def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
     bestScore = 0.0
     bestConfig = None
     if classificationKWARGS["fusionMethodConfig"][0] is not None:
-        for i in range(0):
-            randomWeightsArray = np.random.random_sample(len(DATASET.get("Metadata").attrs["nbView"]))
+        for i in range(nIter):
+            randomWeightsArray = np.random.random_sample(DATASET.get("Metadata").attrs["nbView"])
             normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
             classificationKWARGS["fusionMethodConfig"][0] = normalizedArray
             classifier = WeightedLinear(1, **classificationKWARGS)
@@ -24,7 +24,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices):
 
 class WeightedLinear(EarlyFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        EarlyFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['monoviewClassifiersConfigs'],
+        EarlyFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                        NB_CORES=NB_CORES)
         self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 
@@ -33,7 +33,7 @@ class WeightedLinear(EarlyFusionClassifier):
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=trainIndices)
         monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
-        desc, self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET.get("labels")[trainIndices],
+        self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET.get("labels")[trainIndices],
                                                                      NB_CORES=self.nbCores,
                                                                      **dict((str(configIndex),config) for configIndex,config in
                                                                             enumerate(self.monoviewClassifiersConfig)))

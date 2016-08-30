@@ -1,14 +1,14 @@
-from LateFusion import LateFusionClassifier
+from ...Methods.LateFusion import LateFusionClassifier
 import MonoviewClassifiers
 import numpy as np
 from sklearn.metrics import accuracy_score
 
-def gridSearch(DATASET, classificationKWARGS, trainIndices):
+def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
     bestScore = 0.0
     bestConfig = None
     if classificationKWARGS["fusionMethodConfig"][0] is not None:
-        for i in range(0):
-            randomWeightsArray = np.random.random_sample(len(DATASET.get("Metadata").attrs["nbView"]))
+        for i in range(nIter):
+            randomWeightsArray = np.random.random_sample(DATASET.get("Metadata").attrs["nbView"])
             normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
             classificationKWARGS["fusionMethodConfig"][0] = normalizedArray
             classifier = BayesianInference(1, **classificationKWARGS)
@@ -23,12 +23,12 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices):
 
 class BayesianInference(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['monoviewClassifiersConfigs'],
+        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                       NB_CORES=NB_CORES)
         self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 
     def predict_hdf5(self, DATASET, usedIndices=None):
-        nbView = DATASET.get("nbView").value
+        nbView = DATASET.get("Metadata").attrs["nbView"]
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if sum(self.weights)!=1.0:
@@ -40,7 +40,7 @@ class BayesianInference(LateFusionClassifier):
                 viewScores[viewIndex] = np.power(self.monoviewClassifiers[viewIndex].predict_proba(DATASET.get("View" + str(viewIndex))
                                                                                                    [usedIndices]),
                                                  self.weights[viewIndex])
-            predictedLabels = np.argmax(np.prod(viewScores, axis=1), axis=1)
+            predictedLabels = np.argmax(np.prod(viewScores, axis=0), axis=1)
         else:
             predictedLabels = []
         return predictedLabels

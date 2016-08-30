@@ -1,0 +1,21 @@
+2016-08-30 10:24:54,277 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-08-30 10:24:54,280 INFO: ### Main Programm for Multiview Classification
+2016-08-30 10:24:54,280 INFO: ### Classification - Database : ModifiedMultiOmic ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Mumbo ; Cores : 1
+2016-08-30 10:24:54,280 INFO: Info:	 Shape of Methyl_ :(347, 25978)
+2016-08-30 10:24:54,281 INFO: Info:	 Shape of MiRNA__ :(347, 1046)
+2016-08-30 10:24:54,281 INFO: Info:	 Shape of RNASeq_ :(347, 73599)
+2016-08-30 10:24:54,282 INFO: Info:	 Shape of Clinic_ :(347, 127)
+2016-08-30 10:24:54,282 INFO: Done:	 Read Database Files
+2016-08-30 10:24:54,282 INFO: Start:	 Determine validation split for ratio 0.7
+2016-08-30 10:24:54,286 INFO: Done:	 Determine validation split
+2016-08-30 10:24:54,286 INFO: Start:	 Determine 5 folds
+2016-08-30 10:24:54,294 INFO: Info:	 Length of Learning Sets: 196
+2016-08-30 10:24:54,294 INFO: Info:	 Length of Testing Sets: 48
+2016-08-30 10:24:54,294 INFO: Info:	 Length of Validation Set: 103
+2016-08-30 10:24:54,294 INFO: Done:	 Determine folds
+2016-08-30 10:24:54,294 INFO: Start:	 Learning with Mumbo and 5 folds
+2016-08-30 10:24:54,294 INFO: Start:	 Gridsearching best settings for monoview classifiers
+2016-08-30 10:24:54,295 DEBUG: 	Start:	 Gridsearch for DecisionTree on Methyl_
+2016-08-30 10:24:58,093 DEBUG: 		Info:	 Best Reslut : 0.515409836066
+2016-08-30 10:24:58,093 DEBUG: 	Done:	 Gridsearch for DecisionTree
+2016-08-30 10:24:58,095 DEBUG: 	Start:	 Gridsearch for DecisionTree on MiRNA__

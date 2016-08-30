@@ -1,15 +1,15 @@
-from LateFusion import LateFusionClassifier
+from ...Methods.LateFusion import LateFusionClassifier
 import MonoviewClassifiers
 import numpy as np
 from sklearn.metrics import accuracy_score
 
 
-def gridSearch(DATASET, classificationKWARGS, trainIndices):
+def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
     bestScore = 0.0
     bestConfig = None
     if classificationKWARGS["fusionMethodConfig"][0] is not None:
-        for i in range(0):
-            randomWeightsArray = np.random.random_sample(len(DATASET.get("Metadata").attrs["nbView"]))
+        for i in range(nIter):
+            randomWeightsArray = np.random.random_sample(DATASET.get("Metadata").attrs["nbView"])
             normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
             classificationKWARGS["fusionMethodConfig"][0] = normalizedArray
             classifier = WeightedLinear(1, **classificationKWARGS)
@@ -24,7 +24,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices):
 
 class WeightedLinear(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['monoviewClassifiersConfigs'],
+        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                       NB_CORES=NB_CORES)
         self.weights = map(float, kwargs['fusionMethodConfig'][0])
 

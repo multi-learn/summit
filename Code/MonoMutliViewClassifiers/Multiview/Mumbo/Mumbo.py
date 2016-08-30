@@ -42,7 +42,7 @@ def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, DATA
     return classifier, classes, isBad, averageAccuracy
 
 
-def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metrics=None):
+def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metric=None, nIter=None):
     classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
@@ -50,7 +50,7 @@ def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metrics=None
         classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
         classifierMethod = getattr(classifierModule, "gridSearch")
         bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[learningIndices],
-                                             DATASET.get("labels")[learningIndices], metrics=metrics[classifierIndex]))
+                                             DATASET.get("labels")[learningIndices], metric=metric))
         logging.debug("\tDone:\t Gridsearch for "+classifierName)
     return bestSettings, None
 
