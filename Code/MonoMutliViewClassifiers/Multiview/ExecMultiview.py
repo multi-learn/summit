@@ -79,7 +79,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
 
     if gridSearch:
-        logging.info("Start:\t Gridsearching best settings for monoview classifiers")
+        logging.info("Start:\t Randomsearching best settings for monoview classifiers")
         bestSettings, fusionConfig = classifierGridSearch(DATASET, classificationKWARGS, learningIndices
                                                           , metric=metric, nIter=nIter)
         classificationKWARGS["classifiersConfigs"] = bestSettings
@@ -87,8 +87,9 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
             classificationKWARGS["fusionMethodConfig"] = fusionConfig
         except:
             pass
-        logging.info("Done:\t Gridsearching best settings for monoview classifiers")
+        logging.info("Done:\t Randomsearching best settings for monoview classifiers")
 
+    logging.info("Start:\t Classification")
     # Begin Classification
     for foldIdx, fold in enumerate(kFolds):
         if fold != range(datasetLength):

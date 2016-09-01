@@ -14,32 +14,58 @@ __author__ 	= "Nikolas Huelsmann"
 __status__ 	= "Prototype"           # Production, Development, Prototype
 __date__	= 2016-03-25
 
-import sys
-print("Python-V.: " + sys.version)
+try:
+    import sys
+    print("Python-V.: " + sys.version)
+except:
+    print "Please install Python 2.7"
 
-import cv2
-print("OpenCV2-V.: " + cv2.__version__)
+try:
+    import cv2
+    print("OpenCV2-V.: " + cv2.__version__)
+except:
+    print "Please install cv2 module"
 
-import pandas as pd
-print("Pandas-V.: " + pd.__version__)
+try:
+    import pandas as pd
+    print("Pandas-V.: " + pd.__version__)
+except:
+    print "Please install pandas module"
 
-import numpy
-print("Numpy-V.: " + numpy.version.version)
+try:
+    import numpy
+    print("Numpy-V.: " + numpy.version.version)
+except:
+    print "Please install numpy module"
 
-import scipy
-print("Scipy-V.: " + scipy.__version__)
+try:
+    import scipy
+    print("Scipy-V.: " + scipy.__version__)
+except:
+    print "Please install scipy module"
 
-import matplotlib
-print("Matplotlib-V.: " + matplotlib.__version__)
+try:
+    import matplotlib
+    print("Matplotlib-V.: " + matplotlib.__version__)
+except:
+    print "Please install matplotlib module"
 
-import sklearn
-print("Sklearn-V.: " + sklearn.__version__)
+try:
+    import sklearn
+    print("Sklearn-V.: " + sklearn.__version__)
+except:
+    print "Please install sklearn module"
 
+try:
+    import logging                          # To create Log-Files
+    print("Logging: " + logging.__version__)
+except:
+    print "Please install logging module"
 
-import logging                          # To create Log-Files  
-print("Logging: " + logging.__version__)
-
-import joblib
-print("joblib: " + joblib.__version__)
+try:
+    import joblib
+    print("joblib: " + joblib.__version__)
+except:
+    print "Pease install joblib module"
 
 

@@ -266,22 +266,22 @@ for viewIndex, viewArguments in enumerate(argumentDictionaries["Monoview"].value
 # bestClassifiersConfigs = [["1"],["1"],["1"],["1"]]
 try:
     if benchmark["Multiview"]:
-        # try:
-        #     if benchmark["Multiview"]["Mumbo"]:
-        #         for combination in itertools.combinations_with_replacement(range(len(benchmark["Multiview"]["Mumbo"])), NB_VIEW):
-        #             classifiersNames = [benchmark["Multiview"]["Mumbo"][index] for index in combination]
-        #             arguments = {"CL_type": "Mumbo",
-        #                          "views": args.views.split(":"),
-        #                          "NB_VIEW": len(args.views.split(":")),
-        #                          "NB_CLASS": len(args.CL_classes.split(":")),
-        #                          "LABELS_NAMES": args.CL_classes.split(":"),
-        #                          "MumboKWARGS": {"classifiersNames": classifiersNames,
-        #                                          "maxIter":int(args.MU_iter[0]), "minIter":int(args.MU_iter[1]),
-        #                                          "threshold":args.MU_iter[2],
-        #                                          "classifiersConfigs": [argument.split(":") for argument in args.MU_config]}}
-        #             argumentDictionaries["Multiview"].append(arguments)
-        # except:
-        #     pass
+        try:
+            if benchmark["Multiview"]["Mumbo"]:
+                for combination in itertools.combinations_with_replacement(range(len(benchmark["Multiview"]["Mumbo"])), NB_VIEW):
+                    classifiersNames = [benchmark["Multiview"]["Mumbo"][index] for index in combination]
+                    arguments = {"CL_type": "Mumbo",
+                                 "views": args.views.split(":"),
+                                 "NB_VIEW": len(args.views.split(":")),
+                                 "NB_CLASS": len(args.CL_classes.split(":")),
+                                 "LABELS_NAMES": args.CL_classes.split(":"),
+                                 "MumboKWARGS": {"classifiersNames": classifiersNames,
+                                                 "maxIter":int(args.MU_iter[0]), "minIter":int(args.MU_iter[1]),
+                                                 "threshold":args.MU_iter[2],
+                                                 "classifiersConfigs": [argument.split(":") for argument in args.MU_config]}}
+                    argumentDictionaries["Multiview"].append(arguments)
+        except:
+            pass
         try:
             if benchmark["Multiview"]["Fusion"]:
                 try:

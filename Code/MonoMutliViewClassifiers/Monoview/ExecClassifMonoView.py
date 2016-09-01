@@ -60,46 +60,39 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     logging.debug("Done:\t Determine Train/Test split")
 
     # Begin Classification RandomForest
-    logging.debug("Start:\t Classification")
 
     classifierModule = getattr(MonoviewClassifiers, CL_type)
     classifierGridSearch = getattr(classifierModule, "gridSearch")
 
     if gridSearch:
+        logging.debug("Start:\t RandomSearch best settings")
         cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metric=metric, nIter=nIter)
         clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
+        logging.debug("Done:\t RandomSearch best settings")
+    logging.debug("Start:\t Training")
     cl_res = classifierModule.fit(X_train, y_train, NB_CORES=nbCores, **clKWARGS)
     t_end  = time.time() - t_start
 
-    # Add result to Results DF
-    df_class_res = pd.DataFrame()
-    # df_class_res = df_class_res.append({'a_class_time':t_end, 'b_cl_desc': cl_desc, 'c_cl_res': cl_res,
-    #                                                 'd_cl_score': cl_res.best_score_}, ignore_index=True)
+    logging.debug("Info:\t Time for Training: " + str(t_end) + "[s]")
+    logging.debug("Done:\t Training")
 
-    logging.debug("Info:\t Time for Classification: " + str(t_end) + "[s]")
-    logging.debug("Done:\t Classification")
-
-    # CSV Export
-    # logging.debug("Start:\t Exporting to CSV")
-    # directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
-    # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat
-    # ExportResults.exportPandasToCSV(df_class_res, directory, filename)
-    # logging.debug("Done:\t Exporting to CSV")
-
+    logging.debug("Start:\t Predicting")
     # Stats Result
     y_test_pred = cl_res.predict(X_test)
     classLabelsDesc = pd.read_csv(path + fileCLD, sep=";", names=['label', 'name'])
     classLabelsNames = classLabelsDesc.name
+    logging.debug("Done:\t Predicting")
     #logging.debug("" + str(classLabelsNames))
     classLabelsNamesList = classLabelsNames.values.tolist()
     #logging.debug(""+ str(classLabelsNamesList))
 
-    logging.debug("Start:\t Statistic Results")
+    logging.debug("Start:\t Getting Results")
 
     #Accuracy classification score
     accuracy_score = ExportResults.accuracy_score(y_test, y_test_pred)
     logging.info("Accuracy :" +str(accuracy_score))
     cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
+    logging.debug("Done:\t Getting Results")
     return [CL_type, accuracy_score, cl_desc, feat]
     # # Classification Report with Precision, Recall, F1 , Support
     # logging.debug("Info:\t Classification report:")
