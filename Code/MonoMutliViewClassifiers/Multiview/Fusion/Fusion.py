@@ -31,7 +31,7 @@ def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metric=None,
     classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
-        logging.debug("\tStart:\t Random search for "+classifierName)
+        logging.debug("\tStart:\t Random search for "+classifierName+ " with "+str(nIter)+" iterations")
         classifierModule = getattr(MonoviewClassifiers, classifierName)
         classifierMethod = getattr(classifierModule, "gridSearch")
         if fusionMethodModuleName == "LateFusion":

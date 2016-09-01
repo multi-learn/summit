@@ -64,7 +64,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     classifierGridSearch = getattr(classifierModule, "gridSearch")
 
     if gridSearch:
-        logging.debug("Start:\t RandomSearch best settings")
+        logging.debug("Start:\t RandomSearch best settings with "+str(nIter)+" iterations")
         cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metric=metric, nIter=nIter)
         clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
         logging.debug("Done:\t RandomSearch best settings")
