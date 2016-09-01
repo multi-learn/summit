@@ -23,18 +23,9 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
 
     DATASET_LENGTH = DATASET.get("datasetLength").value-len(validationIndices)
     NB_CLASS = DATASET.get("nbClass").value
-    kFoldPredictedTrainLabelsByIter = []
-    kFoldPredictedTestLabelsByIter = []
-    kFoldPredictedValidationLabelsByIter = []
-    kFoldBestClassifiers = []
-    kFoldGeneralAlphas = []
-    kFoldBestViews = []
     kFoldAccuracyOnTrain = []
     kFoldAccuracyOnTest = []
     kFoldAccuracyOnValidation = []
-    kFoldAccuracyOnTrainByIter = []
-    kFoldAccuracyOnTestByIter = []
-    kFoldAccuracyOnValidationByIter = []
     for foldIdx, fold in enumerate(kFolds):
         if fold != range(DATASET_LENGTH):
             trainIndices = [index for index in range(DATASET_LENGTH) if index not in fold]

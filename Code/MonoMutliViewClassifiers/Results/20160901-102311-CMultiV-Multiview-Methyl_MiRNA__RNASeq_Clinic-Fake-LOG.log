@@ -1,0 +1,18 @@
+2016-09-01 10:23:11,614 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-01 10:23:11,616 INFO: ### Main Programm for Multiview Classification
+2016-09-01 10:23:11,616 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Mumbo ; Cores : 1
+2016-09-01 10:23:11,616 INFO: Info:	 Shape of View0 :(300, 16)
+2016-09-01 10:23:11,617 INFO: Info:	 Shape of View1 :(300, 15)
+2016-09-01 10:23:11,617 INFO: Info:	 Shape of View2 :(300, 13)
+2016-09-01 10:23:11,618 INFO: Info:	 Shape of View3 :(300, 11)
+2016-09-01 10:23:11,618 INFO: Done:	 Read Database Files
+2016-09-01 10:23:11,618 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-01 10:23:11,628 INFO: Done:	 Determine validation split
+2016-09-01 10:23:11,628 INFO: Start:	 Determine 5 folds
+2016-09-01 10:23:11,640 INFO: Info:	 Length of Learning Sets: 179
+2016-09-01 10:23:11,640 INFO: Info:	 Length of Testing Sets: 37
+2016-09-01 10:23:11,640 INFO: Info:	 Length of Validation Set: 84
+2016-09-01 10:23:11,640 INFO: Done:	 Determine folds
+2016-09-01 10:23:11,640 INFO: Start:	 Learning with Mumbo and 5 folds
+2016-09-01 10:23:11,641 INFO: Start:	 Gridsearching best settings for monoview classifiers
+2016-09-01 10:23:11,641 DEBUG: 	Start:	 Gridsearch for DecisionTree on View0

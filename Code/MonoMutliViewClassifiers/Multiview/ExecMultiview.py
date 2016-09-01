@@ -65,7 +65,6 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     extractionTime = time.time() - t_start
 
     classifierPackage = globals()[CL_type]  # Permet d'appeler un module avec une string
-    initKWARGS = kwargs[CL_type + 'KWARGS']
     classifierModule = getattr(classifierPackage, CL_type)
     classifierClass = getattr(classifierModule, CL_type)
     classifierGridSearch = getattr(classifierModule, "gridSearch_hdf5")
@@ -122,9 +121,9 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
     stringAnalysis, imagesAnalysis, train, test, val = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
                                                             kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
-                                                            DATASET, initKWARGS, learningRate, LABELS_DICTIONARY,
+                                                            DATASET, classificationKWARGS, learningRate, LABELS_DICTIONARY,
                                                             views, nbCores, times, kFolds, name, nbFolds,
-                                                            validationIndices)
+                                                            validationIndices, gridSearch, nIter)
     labelsSet = set(LABELS_DICTIONARY.values())
     logging.info(stringAnalysis)
     featureString = "-".join(views)
@@ -139,12 +138,12 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
     if imagesAnalysis is not None:
         for imageName in imagesAnalysis:
-            # if os.path.isfile(outputFileName + imageName + ".png"):
-            #     for i in range(1,20):
-            #         testFileName = outputFileName + imageName + "-" + str(i) + ".png"
-            #         if os.path.isfile(testFileName )!=True:
-            #             imagesAnalysis[imageName].savefig(testFileName)
-            #             break
+            if os.path.isfile(outputFileName + imageName + ".png"):
+                for i in range(1,20):
+                    testFileName = outputFileName + imageName + "-" + str(i) + ".png"
+                    if os.path.isfile(testFileName )!=True:
+                        imagesAnalysis[imageName].savefig(testFileName)
+                        break
 
             imagesAnalysis[imageName].savefig(outputFileName + imageName + '.png')
 

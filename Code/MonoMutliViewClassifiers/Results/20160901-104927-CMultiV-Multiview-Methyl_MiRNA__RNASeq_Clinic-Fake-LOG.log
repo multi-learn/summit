@@ -1,0 +1,257 @@
+2016-09-01 10:49:27,533 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-01 10:49:27,534 INFO: ### Main Programm for Multiview Classification
+2016-09-01 10:49:27,535 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Mumbo ; Cores : 1
+2016-09-01 10:49:27,535 INFO: Info:	 Shape of View0 :(300, 19)
+2016-09-01 10:49:27,535 INFO: Info:	 Shape of View1 :(300, 9)
+2016-09-01 10:49:27,536 INFO: Info:	 Shape of View2 :(300, 16)
+2016-09-01 10:49:27,536 INFO: Info:	 Shape of View3 :(300, 8)
+2016-09-01 10:49:27,536 INFO: Done:	 Read Database Files
+2016-09-01 10:49:27,536 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-01 10:49:27,540 INFO: Done:	 Determine validation split
+2016-09-01 10:49:27,540 INFO: Start:	 Determine 5 folds
+2016-09-01 10:49:27,546 INFO: Info:	 Length of Learning Sets: 170
+2016-09-01 10:49:27,546 INFO: Info:	 Length of Testing Sets: 41
+2016-09-01 10:49:27,546 INFO: Info:	 Length of Validation Set: 89
+2016-09-01 10:49:27,546 INFO: Done:	 Determine folds
+2016-09-01 10:49:27,546 INFO: Start:	 Learning with Mumbo and 5 folds
+2016-09-01 10:49:27,546 INFO: 	Start:	 Fold number 1
+2016-09-01 10:49:27,577 DEBUG: 		Start:	 Iteration 1
+2016-09-01 10:49:27,584 DEBUG: 			View 0 : 0.546448087432
+2016-09-01 10:49:27,591 DEBUG: 			View 1 : 0.546448087432
+2016-09-01 10:49:27,598 DEBUG: 			View 2 : 0.546448087432
+2016-09-01 10:49:27,604 DEBUG: 			View 3 : 0.546448087432
+2016-09-01 10:49:27,639 DEBUG: 			 Best view : 		View0
+2016-09-01 10:49:27,718 DEBUG: 		Start:	 Iteration 2
+2016-09-01 10:49:27,726 DEBUG: 			View 0 : 0.737704918033
+2016-09-01 10:49:27,733 DEBUG: 			View 1 : 0.661202185792
+2016-09-01 10:49:27,740 DEBUG: 			View 2 : 0.732240437158
+2016-09-01 10:49:27,747 DEBUG: 			View 3 : 0.715846994536
+2016-09-01 10:49:27,788 DEBUG: 			 Best view : 		View0
+2016-09-01 10:49:27,937 DEBUG: 		Start:	 Iteration 3
+2016-09-01 10:49:27,945 DEBUG: 			View 0 : 0.737704918033
+2016-09-01 10:49:27,954 DEBUG: 			View 1 : 0.661202185792
+2016-09-01 10:49:27,962 DEBUG: 			View 2 : 0.737704918033
+2016-09-01 10:49:27,969 DEBUG: 			View 3 : 0.715846994536
+2016-09-01 10:49:28,013 DEBUG: 			 Best view : 		View0
+2016-09-01 10:49:28,226 INFO: 	Start: 	 Classification
+2016-09-01 10:49:28,571 INFO: 	Done: 	 Fold number 1
+2016-09-01 10:49:28,571 INFO: 	Start:	 Fold number 2
+2016-09-01 10:49:28,602 DEBUG: 		Start:	 Iteration 1
+2016-09-01 10:49:28,609 DEBUG: 			View 0 : 0.519774011299
+2016-09-01 10:49:28,616 DEBUG: 			View 1 : 0.491525423729
+2016-09-01 10:49:28,623 DEBUG: 			View 2 : 0.435028248588
+2016-09-01 10:49:28,629 DEBUG: 			View 3 : 0.54802259887
+2016-09-01 10:49:28,663 DEBUG: 			 Best view : 		View1
+2016-09-01 10:49:28,740 DEBUG: 		Start:	 Iteration 2
+2016-09-01 10:49:28,748 DEBUG: 			View 0 : 0.723163841808
+2016-09-01 10:49:28,755 DEBUG: 			View 1 : 0.649717514124
+2016-09-01 10:49:28,762 DEBUG: 			View 2 : 0.661016949153
+2016-09-01 10:49:28,769 DEBUG: 			View 3 : 0.71186440678
+2016-09-01 10:49:28,809 DEBUG: 			 Best view : 		View0
+2016-09-01 10:49:28,951 DEBUG: 		Start:	 Iteration 3
+2016-09-01 10:49:28,958 DEBUG: 			View 0 : 0.723163841808
+2016-09-01 10:49:28,965 DEBUG: 			View 1 : 0.649717514124
+2016-09-01 10:49:28,972 DEBUG: 			View 2 : 0.661016949153
+2016-09-01 10:49:28,979 DEBUG: 			View 3 : 0.71186440678
+2016-09-01 10:49:29,022 DEBUG: 			 Best view : 		View0
+2016-09-01 10:49:29,229 INFO: 	Start: 	 Classification
+2016-09-01 10:49:29,569 INFO: 	Done: 	 Fold number 2
+2016-09-01 10:49:29,569 INFO: 	Start:	 Fold number 3
+2016-09-01 10:49:29,600 DEBUG: 		Start:	 Iteration 1
+2016-09-01 10:49:29,606 DEBUG: 			View 0 : 0.527777777778
+2016-09-01 10:49:29,613 DEBUG: 			View 1 : 0.527777777778
+2016-09-01 10:49:29,619 DEBUG: 			View 2 : 0.527777777778
+2016-09-01 10:49:29,625 DEBUG: 			View 3 : 0.527777777778
+2016-09-01 10:49:29,659 DEBUG: 			 Best view : 		View0
+2016-09-01 10:49:29,737 DEBUG: 		Start:	 Iteration 2
+2016-09-01 10:49:29,745 DEBUG: 			View 0 : 0.733333333333
+2016-09-01 10:49:29,752 DEBUG: 			View 1 : 0.627777777778
+2016-09-01 10:49:29,759 DEBUG: 			View 2 : 0.738888888889
+2016-09-01 10:49:29,766 DEBUG: 			View 3 : 0.722222222222
+2016-09-01 10:49:29,806 DEBUG: 			 Best view : 		View2
+2016-09-01 10:49:29,950 DEBUG: 		Start:	 Iteration 3
+2016-09-01 10:49:29,957 DEBUG: 			View 0 : 0.733333333333
+2016-09-01 10:49:29,964 DEBUG: 			View 1 : 0.627777777778
+2016-09-01 10:49:29,971 DEBUG: 			View 2 : 0.738888888889
+2016-09-01 10:49:29,978 DEBUG: 			View 3 : 0.722222222222
+2016-09-01 10:49:30,022 DEBUG: 			 Best view : 		View2
+2016-09-01 10:49:30,232 INFO: 	Start: 	 Classification
+2016-09-01 10:49:30,573 INFO: 	Done: 	 Fold number 3
+2016-09-01 10:49:30,573 INFO: 	Start:	 Fold number 4
+2016-09-01 10:49:30,605 DEBUG: 		Start:	 Iteration 1
+2016-09-01 10:49:30,612 DEBUG: 			View 0 : 0.470588235294
+2016-09-01 10:49:30,619 DEBUG: 			View 1 : 0.470588235294
+2016-09-01 10:49:30,626 DEBUG: 			View 2 : 0.470588235294
+2016-09-01 10:49:30,632 DEBUG: 			View 3 : 0.470588235294
+2016-09-01 10:49:30,633 WARNING: 		WARNING:	All bad for iteration 0
+2016-09-01 10:49:30,668 DEBUG: 			 Best view : 		View0
+2016-09-01 10:49:30,749 DEBUG: 		Start:	 Iteration 2
+2016-09-01 10:49:30,756 DEBUG: 			View 0 : 0.72192513369
+2016-09-01 10:49:30,764 DEBUG: 			View 1 : 0.700534759358
+2016-09-01 10:49:30,771 DEBUG: 			View 2 : 0.705882352941
+2016-09-01 10:49:30,778 DEBUG: 			View 3 : 0.748663101604
+2016-09-01 10:49:30,819 DEBUG: 			 Best view : 		View3
+2016-09-01 10:49:30,970 DEBUG: 		Start:	 Iteration 3
+2016-09-01 10:49:30,977 DEBUG: 			View 0 : 0.72192513369
+2016-09-01 10:49:30,985 DEBUG: 			View 1 : 0.700534759358
+2016-09-01 10:49:30,992 DEBUG: 			View 2 : 0.705882352941
+2016-09-01 10:49:30,999 DEBUG: 			View 3 : 0.748663101604
+2016-09-01 10:49:31,045 DEBUG: 			 Best view : 		View3
+2016-09-01 10:49:31,261 INFO: 	Start: 	 Classification
+2016-09-01 10:49:31,608 INFO: 	Done: 	 Fold number 4
+2016-09-01 10:49:31,609 INFO: 	Start:	 Fold number 5
+2016-09-01 10:49:31,640 DEBUG: 		Start:	 Iteration 1
+2016-09-01 10:49:31,648 DEBUG: 			View 0 : 0.52688172043
+2016-09-01 10:49:31,655 DEBUG: 			View 1 : 0.52688172043
+2016-09-01 10:49:31,662 DEBUG: 			View 2 : 0.559139784946
+2016-09-01 10:49:31,669 DEBUG: 			View 3 : 0.489247311828
+2016-09-01 10:49:31,704 DEBUG: 			 Best view : 		View3
+2016-09-01 10:49:31,784 DEBUG: 		Start:	 Iteration 2
+2016-09-01 10:49:31,791 DEBUG: 			View 0 : 0.758064516129
+2016-09-01 10:49:31,799 DEBUG: 			View 1 : 0.704301075269
+2016-09-01 10:49:31,806 DEBUG: 			View 2 : 0.725806451613
+2016-09-01 10:49:31,813 DEBUG: 			View 3 : 0.645161290323
+2016-09-01 10:49:31,854 DEBUG: 			 Best view : 		View0
+2016-09-01 10:49:32,003 DEBUG: 		Start:	 Iteration 3
+2016-09-01 10:49:32,011 DEBUG: 			View 0 : 0.758064516129
+2016-09-01 10:49:32,018 DEBUG: 			View 1 : 0.704301075269
+2016-09-01 10:49:32,026 DEBUG: 			View 2 : 0.725806451613
+2016-09-01 10:49:32,033 DEBUG: 			View 3 : 0.645161290323
+2016-09-01 10:49:32,078 DEBUG: 			 Best view : 		View0
+2016-09-01 10:49:32,295 INFO: 	Start: 	 Classification
+2016-09-01 10:49:32,641 INFO: 	Done: 	 Fold number 5
+2016-09-01 10:49:32,641 INFO: Done:	 Classification
+2016-09-01 10:49:32,642 INFO: Info:	 Time for Classification: 5[s]
+2016-09-01 10:49:32,642 INFO: Start:	 Result Analysis for Mumbo
+2016-09-01 10:49:34,567 INFO: 		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 74.1297053293
+	-On Test : 50.243902439
+	-On Validation : 68.0898876404Dataset info :
+	-Dataset name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : View0 of shape (300, 19), View1 of shape (300, 9), View2 of shape (300, 16), View3 of shape (300, 8)
+	-5 folds
+	- Validation set length : 89 for learning rate : 0.7 on a total number of examples of 300
+
+
+
+Mumbo configuration : 
+	-Used 1 core(s)
+	-Iterations : min 1, max 10, threshold 0.1
+	-Weak Classifiers : DecisionTree with depth 3,  sub-sampled at 1.0 on View0
+		-DecisionTree with depth 3,  sub-sampled at 1.0 on View1
+		-DecisionTree with depth 3,  sub-sampled at 1.0 on View2
+		-DecisionTree with depth 3,  sub-sampled at 1.0 on View3
+
+
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:01        0:00:00
+	         Fold 3        0:00:02        0:00:00
+	         Fold 4        0:00:03        0:00:00
+	         Fold 5        0:00:04        0:00:00
+	          Total        0:00:13        0:00:01
+	So a total classification time of 0:00:05.
+
+
+
+Mean average accuracies and stats for each fold :
+	- Fold 0, used 4
+		- On View0 : 
+			- Mean average Accuracy : 0.20218579235
+			- Percentage of time chosen : 1.0
+		- On View1 : 
+			- Mean average Accuracy : 0.186885245902
+			- Percentage of time chosen : 0.0
+		- On View2 : 
+			- Mean average Accuracy : 0.201639344262
+			- Percentage of time chosen : 0.0
+		- On View3 : 
+			- Mean average Accuracy : 0.19781420765
+			- Percentage of time chosen : 0.0
+	- Fold 1, used 4
+		- On View0 : 
+			- Mean average Accuracy : 0.196610169492
+			- Percentage of time chosen : 0.9
+		- On View1 : 
+			- Mean average Accuracy : 0.179096045198
+			- Percentage of time chosen : 0.1
+		- On View2 : 
+			- Mean average Accuracy : 0.175706214689
+			- Percentage of time chosen : 0.0
+		- On View3 : 
+			- Mean average Accuracy : 0.197175141243
+			- Percentage of time chosen : 0.0
+	- Fold 2, used 4
+		- On View0 : 
+			- Mean average Accuracy : 0.199444444444
+			- Percentage of time chosen : 0.8
+		- On View1 : 
+			- Mean average Accuracy : 0.178333333333
+			- Percentage of time chosen : 0.0
+		- On View2 : 
+			- Mean average Accuracy : 0.200555555556
+			- Percentage of time chosen : 0.2
+		- On View3 : 
+			- Mean average Accuracy : 0.197222222222
+			- Percentage of time chosen : 0.0
+	- Fold 3, used 4
+		- On View0 : 
+			- Mean average Accuracy : 0.191443850267
+			- Percentage of time chosen : 0.8
+		- On View1 : 
+			- Mean average Accuracy : 0.187165775401
+			- Percentage of time chosen : 0.0
+		- On View2 : 
+			- Mean average Accuracy : 0.188235294118
+			- Percentage of time chosen : 0.0
+		- On View3 : 
+			- Mean average Accuracy : 0.19679144385
+			- Percentage of time chosen : 0.2
+	- Fold 4, used 4
+		- On View0 : 
+			- Mean average Accuracy : 0.204301075269
+			- Percentage of time chosen : 0.9
+		- On View1 : 
+			- Mean average Accuracy : 0.193548387097
+			- Percentage of time chosen : 0.0
+		- On View2 : 
+			- Mean average Accuracy : 0.201075268817
+			- Percentage of time chosen : 0.0
+		- On View3 : 
+			- Mean average Accuracy : 0.177956989247
+			- Percentage of time chosen : 0.1
+
+ For each iteration : 
+	- Iteration 4
+		 Fold 1
+			Accuracy on train : 45.3551912568
+			Accuracy on test : 0.0
+			Accuracy on validation : 46.0674157303
+			Selected View : View0
+		 Fold 2
+			Accuracy on train : 46.8926553672
+			Accuracy on test : 0.0
+			Accuracy on validation : 46.0674157303
+			Selected View : View0
+		 Fold 3
+			Accuracy on train : 47.2222222222
+			Accuracy on test : 0.0
+			Accuracy on validation : 46.0674157303
+			Selected View : View0
+		 Fold 4
+			Accuracy on train : 47.0588235294
+			Accuracy on test : 0.0
+			Accuracy on validation : 46.0674157303
+			Selected View : View0
+		 Fold 5
+			Accuracy on train : 46.2365591398
+			Accuracy on test : 0.0
+			Accuracy on validation : 46.0674157303
+			Selected View : View0
+2016-09-01 10:49:34,899 INFO: Done:	 Result Analysis

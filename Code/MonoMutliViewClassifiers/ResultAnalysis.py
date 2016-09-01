@@ -6,7 +6,7 @@ def resultAnalysis(benchmark, results):
     mono, multi = results
     names = [type_+feat for [type_, b, c, feat] in mono]+[type_ if type_ != "Fusion" else type_+a["FusionType"]+a["FusionMethod"] for type_, a, b, c, d in multi]
     nbResults = len(mono)+len(multi)
-    accuracies = [float(accuracy)*100 for [a, accuracy, c, d] in mono]+[float(accuracy)*100 for a, b, c, d, accuracy in multi]
+    accuracies = [float(accuracy) for [a, accuracy, c, d] in mono]+[float(accuracy) for a, b, c, d, accuracy in multi]
     f = pylab.figure()
     try:
         fig = plt.gcf()

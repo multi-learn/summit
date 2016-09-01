@@ -1,0 +1,17 @@
+2016-09-01 10:23:34,132 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-01 10:23:34,134 INFO: ### Main Programm for Multiview Classification
+2016-09-01 10:23:34,134 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Mumbo ; Cores : 1
+2016-09-01 10:23:34,134 INFO: Info:	 Shape of View0 :(300, 6)
+2016-09-01 10:23:34,135 INFO: Info:	 Shape of View1 :(300, 16)
+2016-09-01 10:23:34,135 INFO: Info:	 Shape of View2 :(300, 11)
+2016-09-01 10:23:34,136 INFO: Info:	 Shape of View3 :(300, 18)
+2016-09-01 10:23:34,136 INFO: Done:	 Read Database Files
+2016-09-01 10:23:34,136 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-01 10:23:34,146 INFO: Done:	 Determine validation split
+2016-09-01 10:23:34,146 INFO: Start:	 Determine 5 folds
+2016-09-01 10:23:34,160 INFO: Info:	 Length of Learning Sets: 176
+2016-09-01 10:23:34,160 INFO: Info:	 Length of Testing Sets: 39
+2016-09-01 10:23:34,160 INFO: Info:	 Length of Validation Set: 85
+2016-09-01 10:23:34,160 INFO: Done:	 Determine folds
+2016-09-01 10:23:34,160 INFO: Start:	 Learning with Mumbo and 5 folds
+2016-09-01 10:23:34,160 INFO: 	Start:	 Fold number 1

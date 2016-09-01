@@ -1,0 +1,63 @@
+2016-08-30 17:45:26,259 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-08-30 17:45:26,262 DEBUG: ### Main Programm for Classification MonoView
+2016-08-30 17:45:26,262 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-08-30 17:45:26,262 DEBUG: Start:	 Determine Train/Test split
+2016-08-30 17:45:26,262 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-08-30 17:45:26,262 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-08-30 17:45:26,263 DEBUG: Done:	 Determine Train/Test split
+2016-08-30 17:45:26,263 DEBUG: Start:	 Classification
+2016-08-30 17:45:27,353 DEBUG: Info:	 Time for Classification: 1.09098100662[s]
+2016-08-30 17:45:27,353 DEBUG: Done:	 Classification
+2016-08-30 17:45:27,355 DEBUG: Start:	 Statistic Results
+2016-08-30 17:45:27,355 INFO: Accuracy :0.0777777777778
+2016-08-30 17:45:27,356 DEBUG: ### Main Programm for Classification MonoView
+2016-08-30 17:45:27,357 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-08-30 17:45:27,357 DEBUG: Start:	 Determine Train/Test split
+2016-08-30 17:45:27,357 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-08-30 17:45:27,357 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-08-30 17:45:27,357 DEBUG: Done:	 Determine Train/Test split
+2016-08-30 17:45:27,357 DEBUG: Start:	 Classification
+2016-08-30 17:45:28,092 DEBUG: Info:	 Time for Classification: 0.735261917114[s]
+2016-08-30 17:45:28,092 DEBUG: Done:	 Classification
+2016-08-30 17:45:28,093 DEBUG: Start:	 Statistic Results
+2016-08-30 17:45:28,093 INFO: Accuracy :0.0666666666667
+2016-08-30 17:45:28,094 DEBUG: ### Main Programm for Classification MonoView
+2016-08-30 17:45:28,094 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-08-30 17:45:28,094 DEBUG: Start:	 Determine Train/Test split
+2016-08-30 17:45:28,095 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-08-30 17:45:28,095 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-08-30 17:45:28,095 DEBUG: Done:	 Determine Train/Test split
+2016-08-30 17:45:28,095 DEBUG: Start:	 Classification
+2016-08-30 17:45:28,697 DEBUG: Info:	 Time for Classification: 0.603069067001[s]
+2016-08-30 17:45:28,698 DEBUG: Done:	 Classification
+2016-08-30 17:45:28,700 DEBUG: Start:	 Statistic Results
+2016-08-30 17:45:28,700 INFO: Accuracy :0.0888888888889
+2016-08-30 17:45:28,701 DEBUG: ### Main Programm for Classification MonoView
+2016-08-30 17:45:28,701 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-08-30 17:45:28,701 DEBUG: Start:	 Determine Train/Test split
+2016-08-30 17:45:28,702 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-08-30 17:45:28,702 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-08-30 17:45:28,702 DEBUG: Done:	 Determine Train/Test split
+2016-08-30 17:45:28,702 DEBUG: Start:	 Classification
+2016-08-30 17:45:35,101 DEBUG: Info:	 Time for Classification: 6.39919686317[s]
+2016-08-30 17:45:35,101 DEBUG: Done:	 Classification
+2016-08-30 17:45:35,104 DEBUG: Start:	 Statistic Results
+2016-08-30 17:45:35,104 INFO: Accuracy :0.0777777777778
+2016-08-30 17:45:35,105 DEBUG: ### Main Programm for Classification MonoView
+2016-08-30 17:45:35,106 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-08-30 17:45:35,106 DEBUG: Start:	 Determine Train/Test split
+2016-08-30 17:45:35,106 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-08-30 17:45:35,106 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-08-30 17:45:35,106 DEBUG: Done:	 Determine Train/Test split
+2016-08-30 17:45:35,106 DEBUG: Start:	 Classification
+2016-08-30 17:45:36,361 DEBUG: Info:	 Time for Classification: 1.25554490089[s]
+2016-08-30 17:45:36,361 DEBUG: Done:	 Classification
+2016-08-30 17:45:36,362 DEBUG: Start:	 Statistic Results
+2016-08-30 17:45:36,363 INFO: Accuracy :0.111111111111
+2016-08-30 17:45:36,364 DEBUG: ### Main Programm for Classification MonoView
+2016-08-30 17:45:36,364 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-08-30 17:45:36,364 DEBUG: Start:	 Determine Train/Test split
+2016-08-30 17:45:36,364 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-08-30 17:45:36,364 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-08-30 17:45:36,364 DEBUG: Done:	 Determine Train/Test split
+2016-08-30 17:45:36,364 DEBUG: Start:	 Classification

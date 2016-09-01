@@ -27,6 +27,7 @@ def getDataset(pathToDB, viewNames, DBName):
 def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
     NB_VIEW = len(features)
     DATASET_LENGTH = 300
+    NB_CLASS = 2
     VIEW_DIMENSIONS = np.random.random_integers(5, 20, NB_VIEW)
 
     DATA = dict((indx,
@@ -36,6 +37,7 @@ def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
                         for indx, viewDimension in enumerate(VIEW_DIMENSIONS))
 
     CLASS_LABELS = np.random.random_integers(0, NB_CLASS-1, DATASET_LENGTH)
+    print CLASS_LABELS
     LABELS_DICTIONARY = dict((indx, feature) for indx, feature in enumerate(features))
     datasetFile = h5py.File(pathF+"Fake.hdf5", "w")
     for index, viewData in enumerate(DATA.values()):
@@ -389,8 +391,13 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
     logging.debug("Start:\t Getting RNASeq Data")
     rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
-    rnaseqDset = datasetFile.create_dataset("View2", rnaseqData.shape)
-    rnaseqDset[...] = rnaseqData
+    uselessRows = []
+    for rowIndex, row in enumerate(np.transpose(rnaseqData)):
+        if not row.any():
+            uselessRows.append(rowIndex)
+    usefulRows = [usefulRowIndex for usefulRowIndex in range(rnaseqData.shape[1]) if usefulRowIndex not in uselessRows]
+    rnaseqDset = datasetFile.create_dataset("View2", (rnaseqData.shape[0], len(usefulRows)))
+    rnaseqDset[...] = rnaseqData[:, usefulRows]
     rnaseqDset.attrs["name"]="RNASeq_"
     logging.debug("Done:\t Getting RNASeq Data")
 
@@ -403,16 +410,34 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
 
 
-    logging.debug("Start:\t Getting Modified RNASeq Data")
+    logging.debug("Start:\t Getting Sorted RNASeq Data")
     RNASeq = datasetFile["View2"][...]
     modifiedRNASeq = np.zeros((datasetFile.get("Metadata").attrs["datasetLength"], datasetFile.get("View2").shape[1]), dtype=int)
-    for exampleindice, exampleArray in enumerate(RNASeq):
+    for exampleIndex, exampleArray in enumerate(RNASeq):
         RNASeqDictionary = dict((index, value) for index, value in enumerate(exampleArray))
         sorted_x = sorted(RNASeqDictionary.items(), key=operator.itemgetter(1))
-        modifiedRNASeq[exampleindice] = np.array([index for (index, value) in sorted_x], dtype=int)
+        modifiedRNASeq[exampleIndex] = np.array([index for (index, value) in sorted_x], dtype=int)
     mrnaseqDset = datasetFile.create_dataset("View4", modifiedRNASeq.shape, data=modifiedRNASeq)
-    mrnaseqDset.attrs["name"] = "MRNASeq"
-    logging.debug("Done:\t Getting Modified RNASeq Data")
+    mrnaseqDset.attrs["name"] = "SRNASeq"
+    logging.debug("Done:\t Getting Sorted RNASeq Data")
+
+    logging.debug("Start:\t Getting Binned RNASeq Data")
+    SRNASeq = datasetFile["View4"][...]
+    nbBins = 372
+    binLen = 935
+    binOffset = 187
+    bins = np.zeros((nbBins, binLen), dtype=int)
+    for binIndex in range(nbBins):
+        bins[binIndex] = np.arange(binLen)+binIndex*binOffset
+    binnedRNASeq = np.zeros((datasetFile.get("Metadata").attrs["datasetLength"], datasetFile.get("View2").shape[1]*nbBins), dtype=bool)
+    for exampleIndex, exampleArray in enumerate(SRNASeq):
+        for geneRank, geneIndex in enumerate(exampleArray):
+            for binIndex, bin in bins:
+                if geneRank in bin:
+                    binnedRNASeq[exampleIndex, geneIndex*nbBins+binIndex] = True
+    brnaseqDset = datasetFile.create_dataset("View5", binnedRNASeq.shape, data=binnedRNASeq)
+    brnaseqDset.attrs["name"] = "BRNASeq"
+    logging.debug("Done:\t Getting Binned RNASeq Data")
 
     labelFile = open(path+'brca_labels_triple-negatif.csv')
     labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])

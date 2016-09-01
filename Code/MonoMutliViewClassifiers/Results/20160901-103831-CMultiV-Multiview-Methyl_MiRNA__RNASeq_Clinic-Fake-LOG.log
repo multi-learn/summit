@@ -1,0 +1,54 @@
+2016-09-01 10:38:31,151 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-01 10:38:31,152 INFO: ### Main Programm for Multiview Classification
+2016-09-01 10:38:31,152 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Mumbo ; Cores : 1
+2016-09-01 10:38:31,153 INFO: Info:	 Shape of View0 :(300, 18)
+2016-09-01 10:38:31,153 INFO: Info:	 Shape of View1 :(300, 17)
+2016-09-01 10:38:31,154 INFO: Info:	 Shape of View2 :(300, 12)
+2016-09-01 10:38:31,154 INFO: Info:	 Shape of View3 :(300, 8)
+2016-09-01 10:38:31,154 INFO: Done:	 Read Database Files
+2016-09-01 10:38:31,154 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-01 10:38:31,164 INFO: Done:	 Determine validation split
+2016-09-01 10:38:31,164 INFO: Start:	 Determine 5 folds
+2016-09-01 10:38:31,180 INFO: Info:	 Length of Learning Sets: 177
+2016-09-01 10:38:31,180 INFO: Info:	 Length of Testing Sets: 39
+2016-09-01 10:38:31,180 INFO: Info:	 Length of Validation Set: 84
+2016-09-01 10:38:31,180 INFO: Done:	 Determine folds
+2016-09-01 10:38:31,180 INFO: Start:	 Learning with Mumbo and 5 folds
+2016-09-01 10:38:31,180 INFO: 	Start:	 Fold number 1
+2016-09-01 10:38:31,296 DEBUG: 		Start:	 Iteration 1
+2016-09-01 10:38:31,304 DEBUG: 			View 0 : 0.102564102564
+2016-09-01 10:38:31,311 DEBUG: 			View 1 : 0.102564102564
+2016-09-01 10:38:31,318 DEBUG: 			View 2 : 0.102564102564
+2016-09-01 10:38:31,326 DEBUG: 			View 3 : 0.102564102564
+2016-09-01 10:38:31,326 WARNING: 		WARNING:	All bad for iteration 0
+2016-09-01 10:38:31,496 DEBUG: 			 Best view : 		View0
+2016-09-01 10:38:31,612 DEBUG: 		Start:	 Iteration 2
+2016-09-01 10:38:31,621 DEBUG: 			View 0 : 0.2
+2016-09-01 10:38:31,630 DEBUG: 			View 1 : 0.251282051282
+2016-09-01 10:38:31,638 DEBUG: 			View 2 : 0.25641025641
+2016-09-01 10:38:31,646 DEBUG: 			View 3 : 0.215384615385
+2016-09-01 10:38:31,646 WARNING: 		WARNING:	All bad for iteration 1
+2016-09-01 10:38:31,842 DEBUG: 			 Best view : 		View2
+2016-09-01 10:38:32,036 DEBUG: 		Start:	 Iteration 3
+2016-09-01 10:38:32,055 DEBUG: 			View 0 : 0.2
+2016-09-01 10:38:32,063 DEBUG: 			View 1 : 0.251282051282
+2016-09-01 10:38:32,071 DEBUG: 			View 2 : 0.25641025641
+2016-09-01 10:38:32,080 DEBUG: 			View 3 : 0.215384615385
+2016-09-01 10:38:32,080 WARNING: 		WARNING:	All bad for iteration 2
+2016-09-01 10:38:32,283 DEBUG: 			 Best view : 		View2
+2016-09-01 10:38:32,545 INFO: 	Start: 	 Classification
+2016-09-01 10:38:32,889 INFO: 	Done: 	 Fold number 1
+2016-09-01 10:38:32,889 INFO: 	Start:	 Fold number 2
+2016-09-01 10:38:33,003 DEBUG: 		Start:	 Iteration 1
+2016-09-01 10:38:33,011 DEBUG: 			View 0 : 0.132978723404
+2016-09-01 10:38:33,019 DEBUG: 			View 1 : 0.148936170213
+2016-09-01 10:38:33,027 DEBUG: 			View 2 : 0.143617021277
+2016-09-01 10:38:33,035 DEBUG: 			View 3 : 0.143617021277
+2016-09-01 10:38:33,035 WARNING: 		WARNING:	All bad for iteration 0
+2016-09-01 10:38:33,200 DEBUG: 			 Best view : 		View1
+2016-09-01 10:38:33,310 DEBUG: 		Start:	 Iteration 2
+2016-09-01 10:38:33,319 DEBUG: 			View 0 : 0.212765957447
+2016-09-01 10:38:33,327 DEBUG: 			View 1 : 0.276595744681
+2016-09-01 10:38:33,335 DEBUG: 			View 2 : 0.255319148936
+2016-09-01 10:38:33,343 DEBUG: 			View 3 : 0.260638297872
+2016-09-01 10:38:33,343 WARNING: 		WARNING:	All bad for iteration 1

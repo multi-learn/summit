@@ -7,7 +7,7 @@ from scipy.stats import randint
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     C = int(kwargs['0'])
     degree = int(kwargs['1'])
-    classifier = SVC(C=C, kernel='poly', degree=degree, probability=True)
+    classifier = SVC(C=C, kernel='poly', degree=degree, probability=True, max_iter=1000)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
 
@@ -25,7 +25,7 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
 
 
 def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
-    pipeline_SVMPoly = Pipeline([('classifier', SVC(kernel="poly"))])
+    pipeline_SVMPoly = Pipeline([('classifier', SVC(kernel="poly", max_iter=1000))])
     param_SVMPoly = {"classifier__C": randint(1, 10000), "classifier__degree":randint(1, 30)}
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:

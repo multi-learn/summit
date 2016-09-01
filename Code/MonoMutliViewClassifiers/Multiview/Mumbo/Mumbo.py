@@ -13,11 +13,11 @@ from sklearn.metrics import accuracy_score
 def computeWeights(DATASET_LENGTH, iterIndex, viewIndice, CLASS_LABELS, costMatrices):
     dist = np.sum(costMatrices[iterIndex, viewIndice])
     dist = dist - np.sum(np.array(
-        [costMatrices[iterIndex, viewIndice, exampleIndice, CLASS_LABELS[exampleIndice]] for exampleIndice in
+        [costMatrices[iterIndex, viewIndice, exampleIndice, int(CLASS_LABELS[exampleIndice])] for exampleIndice in
          range(DATASET_LENGTH)]))
 
     weights = np.array([-costMatrices[iterIndex, viewIndice,
-                                      exampleIndice, CLASS_LABELS[exampleIndice]] / dist
+                                      exampleIndice, int(CLASS_LABELS[exampleIndice])] / dist
                         for exampleIndice in range(DATASET_LENGTH)])
     return weights
 
@@ -146,7 +146,7 @@ class Mumbo:
         # Learning
         isStabilized=False
         self.iterIndex = 0
-        while not isStabilized or self.iterIndex >= self.maxIter:
+        while not isStabilized and not self.iterIndex >= self.maxIter-1:
             if self.iterIndex > self.minIter:
                 coeffs = np.polyfit(np.log(np.arange(self.iterIndex)+0.00001), self.iterAccuracies[:self.iterIndex], 1)
                 if coeffs[0]/self.iterIndex < self.threshold:
@@ -156,7 +156,7 @@ class Mumbo:
             classifiers, predictedLabels, areBad = self.trainWeakClassifiers_hdf5(DATASET, trainIndices, NB_CLASS,
                                                                                   DATASET_LENGTH, NB_VIEW)
             if areBad.all():
-                logging.warning("WARNING:\tAll bad for iteration " + str(self.iterIndex))
+                logging.warning("\t\tWARNING:\tAll bad for iteration " + str(self.iterIndex))
 
             self.predictions[self.iterIndex] = predictedLabels
 
@@ -288,7 +288,7 @@ class Mumbo:
             [costMatrix[exampleIndice, int(predictionMatrix[exampleIndice])] for exampleIndice in
              range(DATASET_LENGTH)])))
         tCost = float(np.sum(
-            np.array([-costMatrix[exampleIndice, CLASS_LABELS[exampleIndice]] for exampleIndice in
+            np.array([-costMatrix[exampleIndice, int(CLASS_LABELS[exampleIndice])] for exampleIndice in
                       range(DATASET_LENGTH)])))
         if tCost == 0.:
             self.edges[self.iterIndex, viewIndex] = -cCost
@@ -350,7 +350,7 @@ class Mumbo:
                     if classe != CLASS_LABELS[exampleIndice]:
                         self.costMatrices[self.iterIndex + 1, viewIndice, exampleIndice, classe] \
                             = 1.0 * math.exp(self.fs[self.iterIndex, viewIndice, exampleIndice, classe] -
-                                             self.fs[self.iterIndex, viewIndice, exampleIndice, CLASS_LABELS[exampleIndice]])
+                                             self.fs[self.iterIndex, viewIndice, exampleIndice, int(CLASS_LABELS[exampleIndice])])
                     else:
                         self.costMatrices[self.iterIndex + 1, viewIndice, exampleIndice, classe] \
                             = -1. * np.sum(np.exp(self.fs[self.iterIndex, viewIndice, exampleIndice] -
@@ -389,7 +389,7 @@ class Mumbo:
                 if classe != CLASS_LABELS[exampleIndice]:
                     self.generalCostMatrix[self.iterIndex, exampleIndice, classe] \
                         = math.exp(self.generalFs[self.iterIndex, exampleIndice, classe] -
-                                   self.generalFs[self.iterIndex, exampleIndice, CLASS_LABELS[exampleIndice]])
+                                   self.generalFs[self.iterIndex, exampleIndice, int(CLASS_LABELS[exampleIndice])])
                 else:
                     self.generalCostMatrix[self.iterIndex, exampleIndice, classe] \
                         = -1 * np.sum(np.exp(self.generalFs[self.iterIndex, exampleIndice] -

@@ -1,0 +1,116 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 81.5158825307
+	-On Test : 46.8292682927
+	-On Validation : 69.2134831461Dataset info :
+	-Dataset name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : View0 of shape (300, 14), View1 of shape (300, 8), View2 of shape (300, 12), View3 of shape (300, 16)
+	-5 folds
+	- Validation set length : 89 for learning rate : 0.7 on a total number of examples of 300
+
+
+
+Mumbo configuration : 
+	-Used 1 core(s)
+	-Iterations : min 1, max 100, threshold 0.002
+	-Weak Classifiers : DecisionTree with depth 3,  sub-sampled at 1.0 on View0
+		-DecisionTree with depth 3,  sub-sampled at 1.0 on View1
+		-DecisionTree with depth 3,  sub-sampled at 1.0 on View2
+		-DecisionTree with depth 3,  sub-sampled at 1.0 on View3
+
+
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:07        0:00:01
+	         Fold 2        0:00:17        0:00:01
+	         Fold 3        0:00:26        0:00:01
+	         Fold 4        0:00:34        0:00:01
+	         Fold 5        0:00:42        0:00:01
+	          Total        0:02:08        0:00:07
+	So a total classification time of 0:00:43.
+
+
+
+Mean average accuracies and stats for each fold :
+	- Fold 0, used 14
+		- On View0 : 
+			- Mean average Accuracy : 0.0847311827957
+			- Percentage of time chosen : 0.92
+		- On View1 : 
+			- Mean average Accuracy : 0.081935483871
+			- Percentage of time chosen : 0.01
+		- On View2 : 
+			- Mean average Accuracy : 0.0851612903226
+			- Percentage of time chosen : 0.03
+		- On View3 : 
+			- Mean average Accuracy : 0.0855913978495
+			- Percentage of time chosen : 0.04
+	- Fold 1, used 15
+		- On View0 : 
+			- Mean average Accuracy : 0.0910989010989
+			- Percentage of time chosen : 0.89
+		- On View1 : 
+			- Mean average Accuracy : 0.0860989010989
+			- Percentage of time chosen : 0.0
+		- On View2 : 
+			- Mean average Accuracy : 0.0958241758242
+			- Percentage of time chosen : 0.11
+		- On View3 : 
+			- Mean average Accuracy : 0.0919230769231
+			- Percentage of time chosen : 0.0
+	- Fold 2, used 14
+		- On View0 : 
+			- Mean average Accuracy : 0.0864516129032
+			- Percentage of time chosen : 0.92
+		- On View1 : 
+			- Mean average Accuracy : 0.0817741935484
+			- Percentage of time chosen : 0.0
+		- On View2 : 
+			- Mean average Accuracy : 0.0876344086022
+			- Percentage of time chosen : 0.03
+		- On View3 : 
+			- Mean average Accuracy : 0.0870967741935
+			- Percentage of time chosen : 0.05
+	- Fold 3, used 13
+		- On View0 : 
+			- Mean average Accuracy : 0.0753888888889
+			- Percentage of time chosen : 0.89
+		- On View1 : 
+			- Mean average Accuracy : 0.0780555555556
+			- Percentage of time chosen : 0.01
+		- On View2 : 
+			- Mean average Accuracy : 0.0793333333333
+			- Percentage of time chosen : 0.03
+		- On View3 : 
+			- Mean average Accuracy : 0.0818333333333
+			- Percentage of time chosen : 0.07
+	- Fold 4, used 13
+		- On View0 : 
+			- Mean average Accuracy : 0.0769662921348
+			- Percentage of time chosen : 0.88
+		- On View1 : 
+			- Mean average Accuracy : 0.0785393258427
+			- Percentage of time chosen : 0.01
+		- On View2 : 
+			- Mean average Accuracy : 0.0793820224719
+			- Percentage of time chosen : 0.02
+		- On View3 : 
+			- Mean average Accuracy : 0.0829213483146
+			- Percentage of time chosen : 0.09
+
+ For each iteration : 
+	- Iteration 13
+		 Fold 4
+			Accuracy on train : 48.3333333333
+			Accuracy on test : 0.0
+			Accuracy on validation : 48.3146067416
+			Selected View : View0
+		 Fold 5
+			Accuracy on train : 48.3146067416
+			Accuracy on test : 0.0
+			Accuracy on validation : 48.3146067416
+			Selected View : View0
