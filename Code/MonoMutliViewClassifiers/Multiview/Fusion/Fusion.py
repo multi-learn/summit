@@ -3,6 +3,12 @@ import MonoviewClassifiers
 import numpy as np
 
 
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "Prototype"                           # Production, Development, Prototype
+
+
+
 def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None):
     if not usedIndices:
         uesdIndices = range(DATASET.get("Metadata").attrs["datasetLength"])

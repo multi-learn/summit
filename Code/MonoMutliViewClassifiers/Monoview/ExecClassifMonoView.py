@@ -41,7 +41,6 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     fileCL = kwargs["fileCL"]
     fileCLD = kwargs["fileCLD"]
     CL_type = kwargs["CL_type"]
-    classifierKWARGS = kwargs[CL_type+"KWARGS"]
     X = X.value
     clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
 

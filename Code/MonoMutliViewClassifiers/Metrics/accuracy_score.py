@@ -1,8 +1,26 @@
+"""Functions :
+ score: to get the accuracy score
+ get_scorer: returns a sklearn scorer for grid search
+"""
+
 from sklearn.metrics import accuracy_score as metric
 from sklearn.metrics import make_scorer
 
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "Prototype"                           # Production, Development, Prototype
+
 
 def score(y_true, y_pred, **kwargs):
+    """Arguments:
+    y_true: real labels
+    y_pred predicted labels
+
+    Keyword Arguments:
+    "0": weights to compute accuracy
+
+    Returns:
+    Weighted accuracy score for y_true, y_pred"""
     try:
         sample_weight = kwargs["0"]
     except:
@@ -12,6 +30,11 @@ def score(y_true, y_pred, **kwargs):
 
 
 def get_scorer(**kwargs):
+    """Keyword Arguments:
+    "0": weights to compute accuracy
+
+    Returns:
+    A weighted sklearn scorer for accuracy"""
     try:
         sample_weight = kwargs["0"]
     except:

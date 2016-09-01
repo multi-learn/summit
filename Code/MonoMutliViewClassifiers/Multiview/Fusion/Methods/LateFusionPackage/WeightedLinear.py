@@ -29,8 +29,7 @@ class WeightedLinear(LateFusionClassifier):
         self.weights = map(float, kwargs['fusionMethodConfig'][0])
 
     def predict_hdf5(self, DATASET, usedIndices=None):
-        # Normalize weights ?
-        # weights = weights/float(max(weights))
+        self.weights = self.weights/float(max(self.weights))
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if usedIndices:
@@ -44,7 +43,6 @@ class WeightedLinear(LateFusionClassifier):
                     [max(viewScore) * weight for viewScore, weight in zip(viewScores[:, currentIndex], self.weights)],
                     dtype=float))
                 predictedLabels.append(predictedLabel)
-                # fusedExamples = np.array([sum(np.array([featureScores * weight for weight, featureScores in zip(weights, exampleDecisions)])) for exampleDecisions in monoViewDecisions])
         else:
             predictedLabels = []
 

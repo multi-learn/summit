@@ -28,6 +28,7 @@ class BayesianInference(LateFusionClassifier):
         self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 
     def predict_hdf5(self, DATASET, usedIndices=None):
+        self.weights = self.weights/float(max(self.weights))
         nbView = DATASET.get("Metadata").attrs["nbView"]
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])

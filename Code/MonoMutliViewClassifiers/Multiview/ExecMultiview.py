@@ -15,6 +15,11 @@ import logging
 import time
 
 
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "Prototype"                           # Production, Development, Prototype
+
+
 
 def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY,
                   gridSearch=False, metric=None, nIter=30, **kwargs):
@@ -54,7 +59,6 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
         kFolds = DB.getKFoldIndices(nbFolds, DATASET.get("labels")[...], NB_CLASS, learningIndices)
     else:
         kFolds = [[], range(datasetLength)]
-
     logging.info("Info:\t Length of Learning Sets: " + str(datasetLength - len(kFolds[0])))
     logging.info("Info:\t Length of Testing Sets: " + str(len(kFolds[0])))
     logging.info("Info:\t Length of Validation Set: " + str(len(validationIndices)))

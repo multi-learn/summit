@@ -1,5 +1,14 @@
+"""Functions :
+ score: to get the f1 score
+ get_scorer: returns a sklearn scorer for grid search
+"""
+
 from sklearn.metrics import f1_score as metric
 from sklearn.metrics import make_scorer
+
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
 def score(y_true, y_pred, **kwargs):

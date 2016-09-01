@@ -1,8 +1,16 @@
+# Import built-in modules
+import time
+import pylab
+
+# Import third party modules
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import time
-import pylab
+
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "Prototype"                           # Production, Development, Prototype
+
 
 def resultAnalysis(benchmark, results):
     mono, multi = results

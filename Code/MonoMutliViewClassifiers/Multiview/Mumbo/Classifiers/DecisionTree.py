@@ -1,5 +1,5 @@
 from sklearn import tree
-from sklearn.metrics import precision_recall_fscore_support, accuracy_score
+from sklearn.metrics import accuracy_score
 import numpy as np
 from ModifiedMulticlass import OneVsRestClassifier
 from SubSampling import subSample

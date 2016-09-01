@@ -55,11 +55,6 @@ def calcTrainTestOwn(X,y,split):
 def calcTrainTest(X,y,split):
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=split)
 
-    #print X_train.shape
-    #print X_test.shape
-    #print y_train.shape
-    #print y_test.shape
-
     return (X_train, X_test, y_train, y_test)
 
 # Classifiers

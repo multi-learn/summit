@@ -4,24 +4,19 @@ from sklearn.grid_search import RandomizedSearchCV
 import Metrics
 from scipy.stats import randint
 
+
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "Prototype"                           # Production, Development, Prototype
+
+
+
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     C = int(kwargs['0'])
     degree = int(kwargs['1'])
     classifier = SVC(C=C, kernel='poly', degree=degree, probability=True, max_iter=1000)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
-
-
-# def fit_gridsearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], **kwargs):
-#     pipeline_SVMPoly = Pipeline([('classifier', SVC(kernel="poly"))])
-#     param_SVMPoly= {"classifier__C": np.random.randint(1,2000,30), "classifier__degree": np.random.randint(1,10,5)}
-#     metricModule = getattr(Metrics, metric[0])
-#     scorer = metricModule.get_scorer(dict((index, metricConfig) for index, metricConfig in enumerate(metric[1])))
-#     grid_SVMPoly = GridSearchCV(pipeline_SVMPoly, param_grid=param_SVMPoly, refit=True, n_jobs=nbCores, scoring='accuracy',
-#                                   cv=nbFolds)
-#     SVMPoly_detector = grid_SVMPoly.fit(X_train, y_train)
-#     desc_params = [SVMPoly_detector.best_params_["classifier__C"], SVMPoly_detector.best_params_["classifier__degree"]]
-#     return desc_params
 
 
 def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):

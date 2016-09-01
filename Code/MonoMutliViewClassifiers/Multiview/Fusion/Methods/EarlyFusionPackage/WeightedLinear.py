@@ -31,6 +31,7 @@ class WeightedLinear(EarlyFusionClassifier):
     def fit_hdf5(self, DATASET, trainIndices=None):
         if not trainIndices:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
+        self.weights = self.weights/float(max(self.weights))
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=trainIndices)
         monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
         self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET.get("labels")[trainIndices],
@@ -40,6 +41,7 @@ class WeightedLinear(EarlyFusionClassifier):
                                                                                       )))
 
     def predict_hdf5(self, DATASET, usedIndices=None):
+        self.weights = self.weights/float(max(self.weights))
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if usedIndices:

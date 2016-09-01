@@ -1,19 +1,35 @@
+# Import built-in modules
 import argparse
-import pkgutil
+import pkgutil                       # for TimeStamp in CSVFile
+import os
+import time                             # for time calculations
+import operator
+import itertools
+
+# Import 3rd party modules
+from joblib import Parallel, delayed
+import numpy as np
+import logging
+import matplotlib
+matplotlib.use('Agg')
+
+# Import own modules
 import Multiview
 from Multiview.ExecMultiview import ExecMultiview
 from Monoview.ExecClassifMonoView import ExecMonoview
 import Multiview.GetMultiviewDb as DB
 import Monoview
-import os
-import time
-import logging
-from joblib import Parallel, delayed
 from ResultAnalysis import resultAnalysis
-import itertools
-import numpy as np
+from Versions import testVersions
 import MonoviewClassifiers
 
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "Prototype"                           # Production, Development, Prototype
+
+
+
+testVersions()
 
 parser = argparse.ArgumentParser(
     description='This file is used to benchmark the accuracies fo multiple classification algorithm on multiview data.',
@@ -139,6 +155,8 @@ groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store', nar
 
 args = parser.parse_args()
 nbCores = args.CL_cores
+if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech"]:
+    getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
 
 try:
     gridSearch = args.CL_NoGS
@@ -262,8 +280,6 @@ for viewIndex, viewArguments in enumerate(argumentDictionaries["Monoview"].value
     print classifiersConfigs
     bestClassifiers.append(classifiersNames[np.argmax(np.array(accuracies))])
     bestClassifiersConfigs.append(classifiersConfigs[np.argmax(np.array(accuracies))])
-# bestClassifiers = ["DecisionTree", "DecisionTree", "DecisionTree", "DecisionTree"]
-# bestClassifiersConfigs = [["1"],["1"],["1"],["1"]]
 try:
     if benchmark["Multiview"]:
         try:
@@ -321,7 +337,6 @@ except:
     pass
 
 
-# print len(argumentDictionaries["Multiview"]), len(argumentDictionaries["Monoview"])
 resultsMultiview = Parallel(n_jobs=nbCores)(
     delayed(ExecMultiview)(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
                            LABELS_DICTIONARY, gridSearch=gridSearch,

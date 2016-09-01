@@ -1,6 +1,10 @@
 from sklearn.metrics import precision_score as metric
 from sklearn.metrics import make_scorer
 
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "Prototype"                           # Production, Development, Prototype
+
 
 def score(y_true, y_pred, **kwargs):
     try:

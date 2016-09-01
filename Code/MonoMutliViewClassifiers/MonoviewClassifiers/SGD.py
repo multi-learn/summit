@@ -4,6 +4,13 @@ from sklearn.grid_search import RandomizedSearchCV
 import Metrics
 from scipy.stats import uniform
 
+
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "Prototype"                           # Production, Development, Prototype
+
+
+
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     loss = kwargs['0']
     penalty = kwargs['1']
@@ -14,21 +21,6 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     classifier = SGDClassifier(loss=loss, penalty=penalty, alpha=alpha)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
-
-
-# def fit_gridsearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], **kwargs):
-#     pipeline_SGD = Pipeline([('classifier', SGDClassifier())])
-#     param_SGD = {"classifier__loss": kwargs['1'], "classifier__penalty": kwargs['2'],
-#                  "classifier__alpha": map(float, kwargs['0'])}
-#     metricModule = getattr(Metrics, metric[0])
-#     scorer = metricModule.get_scorer(dict((index, metricConfig) for index, metricConfig in enumerate(metric[1])))
-#     grid_SGD = GridSearchCV(pipeline_SGD, param_grid=param_SGD, refit=True, n_jobs=nbCores, scoring='accuracy',
-#                             cv=nbFolds)
-#     SGD_detector = grid_SGD.fit(X_train, y_train)
-#     desc_params = [SGD_detector.best_params_["classifier__loss"], SGD_detector.best_params_["classifier__penalty"],
-#                    SGD_detector.best_params_["classifier__alpha"]]
-#     description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
-#     return description, SGD_detector
 
 
 def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):

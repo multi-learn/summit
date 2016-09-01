@@ -10,6 +10,11 @@ from Classifiers import *
 import logging
 
 
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "Prototype"                           # Production, Development, Prototype
+
+
 
 def findMainView(bestViews):
     views = list(set(bestViews))
@@ -42,14 +47,6 @@ def plotAccuracyByIter(trainAccuracy, testAccuracy, validationAccuracy, NB_ITER,
     ax1.plot(x, trainAccuracy, c='red', label='Train')
     ax1.plot(x, testAccuracy, c='black', label='Test')
     ax1.plot(x, validationAccuracy, c='blue', label='Validation')
-    # for label, x, y in zip(bestViews, x, trainAccuracy):
-    #     if label == 2:
-    #         plt.annotate(
-    #                 viewNames[int(label)],
-    #                 xy=(x, y), xytext=(-20, 20),
-    #                 textcoords='offset points', ha='right', va='bottom',
-    #                 bbox=dict(boxstyle='round,pad=0.5', fc='yellow', alpha=0.5),
-    #                 arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0'))
 
     ax1.legend(loc='lower center', 
                 ncol=3, fancybox=True, shadow=True)
@@ -225,13 +222,8 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
             DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, databaseName,
             nbFolds, validationIndices, gridSearch, nIter):
     CLASS_LABELS = DATASET.get("labels")[...]
-    classifierNames = initKWARGS["classifiersNames"]
     maxIter = initKWARGS["maxIter"]
     minIter = initKWARGS["minIter"]
-    threshold = initKWARGS["threshold"]
-    classifiersConfig = initKWARGS["classifiersConfigs"]
-    nbView = DATASET.get("Metadata").attrs["nbView"]
-    # viewNames = [DATASET.get("View"+str(viewIndex)).attrs["name"] for viewIndex in range(nbView)]
     dbConfigurationString, viewNames = getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices, LABELS_DICTIONARY)
     algoConfigurationString, classifierAnalysis = getAlgoConfig(initKWARGS, NB_CORES, viewNames, gridSearch, nIter, times)
     (totalAccuracyOnTrain, totalAccuracyOnTest, totalAccuracyOnValidation, kFoldMeanAverageAccuracies,
@@ -260,86 +252,12 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
 
 
 
-    DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]-len(validationIndices)
-    NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
-    # kFoldPredictedTrainLabelsByIter = []
-    # kFoldPredictedTestLabelsByIter = []
-    # kFoldPredictedValidationLabelsByIter = []
-    # kFoldBestViews = []
-    # kFoldAccuracyOnTrain = []
-    # kFoldAccuracyOnTest = []
-    # kFoldAccuracyOnValidation = []
-    # kFoldAccuracyOnTrainByIter = []
-    # kFoldAccuracyOnTestByIter = []
-    # kFoldAccuracyOnValidationByIter = []
-    # kFoldMeanAverageAccuracies = []
-    # kFoldBestViewsStats = []
-    # for foldIdx, fold in enumerate(kFolds):
-    #     if fold != range(DATASET_LENGTH):
-    #         mumboClassifier = kFoldClassifier[foldIdx]
-    #         meanAverageAccuracies = np.mean(mumboClassifier.averageAccuracies, axis=0)
-    #         kFoldMeanAverageAccuracies.append(meanAverageAccuracies)
-    #         trainIndices = [index for index in range(DATASET_LENGTH) if index not in fold]
-    #         testLabels = CLASS_LABELS[fold]
-    #         trainLabels = CLASS_LABELS[trainIndices]
-    #         validationLabels = CLASS_LABELS[validationIndices]
-    #         PredictedTrainLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, usedIndices=trainIndices,
-    #                                                                               NB_CLASS=NB_CLASS)
-    #         kFoldPredictedTrainLabelsByIter.append(PredictedTrainLabelsByIter)
-    #         PredictedTestLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, usedIndices=fold,
-    #                                                                              NB_CLASS=NB_CLASS)
-    #         kFoldPredictedTestLabelsByIter.append(PredictedTestLabelsByIter)
-    #         PredictedValidationLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET,
-    #                                                                                    usedIndices=validationIndices,
-    #                                                                                    NB_CLASS=NB_CLASS)
-    #         kFoldPredictedValidationLabelsByIter.append(PredictedValidationLabelsByIter)
-    #         kFoldAccuracyOnTrainByIter.append([])
-    #         kFoldAccuracyOnTestByIter.append([])
-    #         kFoldAccuracyOnValidationByIter.append([])
-    #         for iterIndex in range(mumboClassifier.iterIndex+1):
-    #             if len(PredictedTestLabelsByIter)==mumboClassifier.iterIndex+1:
-    #                 kFoldAccuracyOnTestByIter[foldIdx].append(100 * accuracy_score(testLabels,
-    #                                                                                 PredictedTestLabelsByIter[iterIndex]))
-    #             else:
-    #                 kFoldAccuracyOnTestByIter[foldIdx].append(0.0)
-    #             kFoldAccuracyOnTrainByIter[foldIdx].append(100 * accuracy_score(trainLabels,
-    #                                                                             PredictedTrainLabelsByIter[iterIndex]))
-    #             kFoldAccuracyOnValidationByIter[foldIdx].append(100 * accuracy_score(validationLabels,
-    #                                                                             PredictedValidationLabelsByIter[iterIndex]))
-    #         kFoldBestViews.append(mumboClassifier.bestViews)
-    #         kFoldBestViewsStats.append([float(list(mumboClassifier.bestViews).count(viewIndex))/
-    #                                     len(mumboClassifier.bestViews)
-    #                                     for viewIndex in range(nbView)])
-    #         kFoldAccuracyOnTrain.append(100 * accuracy_score(trainLabels, kFoldPredictedTrainLabels[foldIdx]))
-    #         kFoldAccuracyOnTest.append(100 * accuracy_score(testLabels, kFoldPredictedTestLabels[foldIdx]))
-    #         kFoldAccuracyOnValidation.append(100 * accuracy_score(validationLabels,
-    #                                                               kFoldPredictedValidationLabels[foldIdx]))
-    #
-    # totalAccuracyOnTrain = np.mean(kFoldAccuracyOnTrain)
-    # totalAccuracyOnTest = np.mean(kFoldAccuracyOnTest)
-    # totalAccuracyOnValidation = np.mean(kFoldAccuracyOnValidation)
-    # extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime = times
-    # weakClassifierConfigs = [getattr(globals()[classifierName], 'getConfig')(classifiersConfig) for classifiersConfig,
-    #                                                                                                classifierName
-    #                          in zip(classifiersConfig, classifierNames)]
-    # classifierAnalysis = [classifierName + " " + weakClassifierConfig + "on " + feature for classifierName,
-    #                                                                                         weakClassifierConfig,
-    #                                                                                         feature
-    #                       in zip(classifierNames, weakClassifierConfigs, views)]
     bestViews = [findMainView(np.array(kFoldBestViews)[:, iterIdx]) for iterIdx in range(nbMinIter)]
     stringAnalysis = "\t\tResult for Multiview classification with Mumbo" \
                      "\n\nAverage accuracy :\n\t-On Train : " + str(totalAccuracyOnTrain) + "\n\t-On Test : " + \
                      str(totalAccuracyOnTest) + "\n\t-On Validation : " + str(totalAccuracyOnValidation)
     stringAnalysis += dbConfigurationString
     stringAnalysis += algoConfigurationString
-    #                  "\n\nDataset info :\n\t-Database name : " + databaseName + "\n\t-Labels : " + \
-    #                  ', '.join(LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(views) + "\n\t-" + str(
-    #                     nbFolds) + \
-    #                  " folds\n\t- Validation set length : "+str(len(validationIndices))+" for learning rate : "+\
-    #                  str(LEARNING_RATE)+\
-    #                  "\n\nClassification configuration : \n\t-Algorithm used : Mumbo \n\t-Iterations : min " + \
-    #                  str(minIter)+ ", max "+ str(maxIter)+", threshold "+ str(threshold)+  + "\n\t-Weak Classifiers : " + "\n\t\t-".join(
-    #                     classifierAnalysis) + "\n\n Mean average accuracies and stats for each fold : "
     stringAnalysis += "Mean average accuracies and stats for each fold :"
     for foldIdx in range(nbFolds):
         stringAnalysis += "\n\t- Fold "+str(foldIdx)+", used "+str(kFoldClassifier[foldIdx].iterIndex + 1)
@@ -358,23 +276,7 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
                                   str(kFoldAccuracyOnTestByIter[foldIdx][iterIndex]) + '\n\t\t\tAccuracy on validation : '+\
                                   str(kFoldAccuracyOnValidationByIter[foldIdx][iterIndex]) + '\n\t\t\tSelected View : ' + \
                                   str(DATASET["View"+str(int(kFoldBestViews[foldIdx][iterIndex]))].attrs["name"])
-            # stringAnalysis += "\n\t\t- Mean : \n\t\t\t Accuracy on train : " + str(
-            #         np.array(kFoldAccuracyOnTrainByIter)[:, iterIndex].mean()) + \
-            #                   "\n\t\t\t Accuracy on test : " + str(np.array(kFoldAccuracyOnTestByIter)[:, iterIndex].mean())
 
-    # stringAnalysis += "\n\nComputation time on " + str(NB_CORES) + " cores : \n\tDatabase extraction time : " + str(
-    #         hms(seconds=int(extractionTime))) + "\n\t"
-    # row_format = "{:>15}" * 3
-    # stringAnalysis += row_format.format("", *['Learn', 'Prediction'])
-    # for index, (learningTime, predictionTime) in enumerate(zip(kFoldLearningTime, kFoldPredictionTime)):
-    #     stringAnalysis += '\n\t'
-    #     stringAnalysis += row_format.format("Fold " + str(index + 1), *[str(hms(seconds=int(learningTime))),
-    #                                                                     str(hms(seconds=int(predictionTime)))])
-    # stringAnalysis += '\n\t'
-    # stringAnalysis += row_format.format("Total", *[str(hms(seconds=int(sum(kFoldLearningTime)))),
-    #                                                str(hms(seconds=int(sum(kFoldPredictionTime))))])
-    # stringAnalysis += "\n\tSo a total classification time of " + str(hms(seconds=int(classificationTime))) + ".\n\n"
-    #
     trainAccuracyByIter = list(formatedAccuracies["Train"].mean(axis=0))+modifiedMean(surplusAccuracies["Train"])
     testAccuracyByIter = list(formatedAccuracies["Test"].mean(axis=0))+modifiedMean(surplusAccuracies["Test"])
     validationAccuracyByIter = list(formatedAccuracies["Validation"].mean(axis=0))+modifiedMean(surplusAccuracies["Validation"])
@@ -382,5 +284,5 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     name, image = plotAccuracyByIter(trainAccuracyByIter, testAccuracyByIter, validationAccuracyByIter, nbMaxIter,
                                      bestViews, views, classifierAnalysis)
     imagesAnalysis = {name: image}
-    #
+
     return stringAnalysis, imagesAnalysis, totalAccuracyOnTrain, totalAccuracyOnTest, totalAccuracyOnValidation

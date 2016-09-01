@@ -4,8 +4,12 @@ from joblib import Parallel, delayed
 from Classifiers import *
 import time
 import logging
-import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
+
+
+# Author-Info
+__author__ 	= "Baptiste Bauvin"
+__status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
 # Data shape : ((Views, Examples, Corrdinates))
@@ -97,35 +101,7 @@ class Mumbo:
         self.bestViews = np.zeros(self.maxIter, dtype=int)
         self.averageAccuracies = np.zeros((self.maxIter, NB_VIEW))
         self.iterAccuracies = np.zeros(self.maxIter)
-        # costMatrices = np.array([
-        #                             np.array([
-        #                                          np.array([
-        #                                                       np.array([1 if CLASS_LABELS[exampleIndice] != classe
-        #                                                                 else -(NB_CLASS - 1)
-        #                                                                 for classe in range(NB_CLASS)
-        #                                                                 ]) for exampleIndice in range(DATASET_LENGTH)
-        #                                                       ]) for viewIndice in range(NB_VIEW)])
-        #                             if iteration == 0
-        #                             else np.zeros((NB_VIEW, DATASET_LENGTH, NB_CLASS))
-        #                             for iteration in range(NB_ITER + 1)
-        #                             ])
-        # generalCostMatrix = np.array([
-        #                                  np.array([
-        #                                               np.array([1 if CLASS_LABELS[exampleIndice] != classe
-        #                                                         else -(NB_CLASS - 1)
-        #                                                         for classe in range(NB_CLASS)
-        #                                                         ]) for exampleIndice in range(DATASET_LENGTH)
-        #                                               ]) for iteration in range(NB_ITER)
-        #                                  ])
-        # fs = np.zeros((NB_ITER, NB_VIEW, DATASET_LENGTH, NB_CLASS))
-        # ds = np.zeros((NB_ITER, NB_VIEW, DATASET_LENGTH))
-        # edges = np.zeros((NB_ITER, NB_VIEW))
-        # alphas = np.zeros((NB_ITER, NB_VIEW))
-        # predictions = np.zeros((NB_ITER, NB_VIEW, DATASET_LENGTH))
-        # generalAlphas = np.zeros(NB_ITER)
-        # generalFs = np.zeros((NB_ITER, DATASET_LENGTH, NB_CLASS))
-        # return costMatrices, generalCostMatrix, fs, ds, edges, alphas, \
-        #        predictions, generalAlphas, generalFs
+
 
     def fit_hdf5(self, DATASET, trainIndices=None):
         # Initialization
@@ -135,11 +111,6 @@ class Mumbo:
         NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
         DATASET_LENGTH = len(trainIndices)
         LABELS = DATASET["labels"][trainIndices]
-        # costMatrices, \
-        # generalCostMatrix, fs, ds, edges, alphas, \
-        # predictions, generalAlphas, generalFs = initialize(NB_CLASS, NB_VIEW,
-        #                                                    NB_ITER, DATASET_LENGTH,
-        #                                                    LABELS[trainIndices])
         bestViews = np.zeros(self.maxIter)
         bestClassifiers = []
 
@@ -187,7 +158,6 @@ class Mumbo:
 
             self.iterIndex += 1
 
-            # finalFs = computeFinalFs(DATASET_LENGTH, NB_CLASS, generalAlphas, predictions, bestViews, LABELS, NB_ITER)
 
     def predict_hdf5(self, DATASET, usedIndices=None):
         NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
@@ -283,7 +253,6 @@ class Mumbo:
     def computeEdge(self, viewIndex, DATASET_LENGTH, CLASS_LABELS):
         predictionMatrix = self.predictions[self.iterIndex, viewIndex]
         costMatrix = self.costMatrices[self.iterIndex, viewIndex]
-        # return np.sum(np.array([np.sum(predictionMatrix*costMatrix[:,classIndice]) for classIndice in range(NB_CLASS)]))
         cCost = float(np.sum(np.array(
             [costMatrix[exampleIndice, int(predictionMatrix[exampleIndice])] for exampleIndice in
              range(DATASET_LENGTH)])))
@@ -356,7 +325,6 @@ class Mumbo:
                             = -1. * np.sum(np.exp(self.fs[self.iterIndex, viewIndice, exampleIndice] -
                                                   self.fs[self.iterIndex, viewIndice, exampleIndice, classe]))
         self.costMatrices /= np.amax(np.absolute(self.costMatrices))
-        #return costMatrices
 
     def chooseView(self, NB_VIEW, CLASS_LABELS, DATASET_LENGTH):
         for viewIndex in range(NB_VIEW):
@@ -381,7 +349,6 @@ class Mumbo:
                              )
         if np.amax(np.absolute(self.generalFs)) != 0:
             self.generalFs /= np.amax(np.absolute(self.generalFs))
-            #return generalFs
 
     def updateGeneralCostMatrix(self, DATASET_LENGTH, NB_CLASS, CLASS_LABELS):
         for exampleIndice in range(DATASET_LENGTH):
@@ -394,19 +361,12 @@ class Mumbo:
                     self.generalCostMatrix[self.iterIndex, exampleIndice, classe] \
                         = -1 * np.sum(np.exp(self.generalFs[self.iterIndex, exampleIndice] -
                                              self.generalFs[self.iterIndex, exampleIndice, classe]))
-                    # if np.amax(np.absolute(generalCostMatrix)) != 0:
-                    #     generalCostMatrix = generalCostMatrix/np.amax(np.absolute(generalCostMatrix))
 
     def fit(self, DATASET, CLASS_LABELS, **kwargs):
         # Initialization
         DATASET_LENGTH = len(CLASS_LABELS)
         NB_VIEW = len(DATASET)
         NB_CLASS = len(set(CLASS_LABELS))
-        # costMatrices, \
-        # generalCostMatrix, fs, ds, edges, alphas, \
-        # predictions, generalAlphas, generalFs = initialize(NB_CLASS, NB_VIEW,
-        #                                                    NB_ITER, DATASET_LENGTH,
-        #                                                    CLASS_LABELS)
         bestViews = np.zeros(self.maxIter)
         bestClassifiers = []
 
@@ -441,7 +401,6 @@ class Mumbo:
             self.updateGeneralFs(DATASET_LENGTH, NB_CLASS, bestView)
             self.updateGeneralCostMatrix(DATASET_LENGTH, NB_CLASS, CLASS_LABELS)
 
-            # finalFs = computeFinalFs(DATASET_LENGTH, NB_CLASS, generalAlphas, predictions, bestViews, LABELS, NB_ITER)
 
     def predict(self, DATASET, NB_CLASS=2):
         DATASET_LENGTH = len(DATASET[0])
@@ -494,122 +453,3 @@ class Mumbo:
                 predictedLabels.append([])
 
         return np.transpose(predictedLabels)
-#
-# if __name__ == '__main__':
-#     from sklearn.metrics import classification_report
-#     from string import digits
-#     import os
-#
-#
-#     def extractRandomTrainingSet(DATA, CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_VIEW):
-#         nbTrainingExamples = int(DATASET_LENGTH * LEARNING_RATE)
-#         trainingExamplesIndices = np.random.random_integers(0, DATASET_LENGTH, nbTrainingExamples)
-#         trainData, trainLabels = [], []
-#         testData, testLabels = [], []
-#         for viewIndice in range(NB_VIEW):
-#             trainD, testD = [], []
-#             trainL, testL = [], []
-#             for i in np.arange(DATASET_LENGTH):
-#                 if i in trainingExamplesIndices:
-#                     trainD.append(DATA[viewIndice][i])
-#                     trainL.append(CLASS_LABELS[i])
-#                 else:
-#                     testD.append(DATA[viewIndice][i])
-#                     testL.append(CLASS_LABELS[i])
-#             trainData.append(np.array(trainD))
-#             testData.append(np.array(testD))
-#         trainLabels.append(np.array(trainL))
-#         testLabels.append(np.array(testL))
-#         return trainData, np.array(trainLabels[0]), testData, np.array(testLabels[0])
-#
-#
-#     def getAwaLabels(nbLabels, pathToAwa):
-#         file = open(pathToAwa + 'Animals_with_Attributes/classes.txt', 'U')
-#         linesFile = [''.join(line.strip().split()).translate(None, digits) for line in file.readlines()]
-#         awaLabels = [linesFile[label] for label in np.arange(nbLabels)]
-#         return awaLabels
-#
-#
-#     def getAwaData(pathToAwa, nbLabels, views):
-#         awaLabels = getAwaLabels(nbLabels, pathToAwa)
-#         nbView = len(views)
-#         labelDictionnary = {i: awaLabels[i] for i in np.arange(nbLabels)}
-#         viewDictionnary = {i: views[i] for i in np.arange(nbView)}
-#         rawData = []
-#         labels = []
-#         nbExample = 0
-#         # ij = []
-#         for view in np.arange(nbView):
-#             viewData = []
-#             for label in np.arange(nbLabels):
-#                 pathToExamples = pathToAwa + 'Animals_with_Attributes/Features/' + viewDictionnary[view] + '/' + \
-#                                  labelDictionnary[label] + '/'
-#                 examples = os.listdir(pathToExamples)
-#                 if view == 0:
-#                     nbExample += len(examples)
-#                 for example in examples:
-#                     exampleFile = open(pathToExamples + example)
-#                     viewData.append([[float(coordinate) for coordinate in raw.split()] for raw in exampleFile][0])
-#                     if view == 0:
-#                         labels.append(label)
-#             rawData.append(np.array(viewData))
-#         data = rawData
-#         # data = np.empty((nbExample, nbView), dtype=list)
-#         # for viewIdice in np.arange(nbView):
-#         #     for exampleIndice in np.arange(nbExample):
-#         #         data[exampleIndice, viewIdice] = rawData[viewIdice][exampleIndice]
-#         #         # data[exampleIndice, viewIdice] = {i:rawData[viewIdice][exampleIndice][i] for i in np.arange(len(rawData[viewIdice][exampleIndice]))}
-#
-#         return data, labels, viewDictionnary, labelDictionnary
-#
-#
-#     NB_CLASS = 5
-#     NB_ITER = 3
-#     classifierName = "DecisionTree"
-#     NB_CORES = 3
-#     pathToAwa = "/home/doob/"
-#     views = ['phog-hist', 'decaf', 'cq-hist']
-#     NB_VIEW = len(views)
-#     LEARNING_RATE = 0.5
-#     classifierConfig = ['3']
-#
-#     print "Getting db ..."
-#     DATASET, CLASS_LABELS, viewDictionnary, labelDictionnary = getAwaData(pathToAwa, NB_CLASS, views)
-#     target_names = labelDictionnary.values()
-#     # DATASET, LABELS = DB.getDbfromCSV('/home/doob/OriginalData/')
-#     # NB_VIEW = 3
-#     CLASS_LABELS = np.array([int(label) for label in CLASS_LABELS])
-#     # print target_names
-#     # print labelDictionnary
-#     fullDatasetLength = len(CLASS_LABELS)
-#
-#     trainData, trainLabels, testData, testLabels = extractRandomTrainingSet(DATASET, CLASS_LABELS, LEARNING_RATE,
-#                                                                             fullDatasetLength, NB_VIEW)
-#     DATASET_LENGTH = len(trainLabels)
-#     # print len(trainData), trainData[0].shape, len(trainLabels)
-#     print "Done."
-#
-#     print 'Training Mumbo ...'
-#     trainArguments = classifierConfig, NB_ITER, classifierName
-#
-#     bestClassifiers, generalAlphas, bestViews = train(trainData, trainLabels, DATASET_LENGTH, NB_VIEW, NB_CLASS,
-#                                                       NB_CORES,
-#                                                       trainArguments)
-#     # DATASET, VIEW_DIMENSIONS, LABELS = DB.createFakeData(NB_VIEW, DATASET_LENGTH, NB_CLASS)
-#     print "Trained."
-#
-#     print "Predicting ..."
-#     predictedTrainLabels = predict(trainData, (bestClassifiers, generalAlphas, bestViews), NB_CLASS)
-#     predictedTestLabels = predict(testData, (bestClassifiers, generalAlphas, bestViews), NB_CLASS)
-#     print 'Done.'
-#     print 'Reporting ...'
-#     predictedTrainLabelsByIter = classifyMumbobyIter(trainData, bestClassifiers, generalAlphas, bestViews, NB_CLASS)
-#     predictedTestLabelsByIter = classifyMumbobyIter(testData, bestClassifiers, generalAlphas, bestViews, NB_CLASS)
-#     print str(NB_VIEW) + " views, " + str(NB_CLASS) + " classes, " + str(classifierConfig) + " depth trees"
-#     print "Best views = " + str(bestViews)
-#     print "Is equal : " + str((predictedTrainLabels == predictedTrainLabelsByIter[NB_ITER - 1]).all())
-#
-#     print "On train : "
-#     print classification_report(trainLabels, predictedTrainLabels, target_names=target_names)
-#     print "On test : "
-#     print classification_report(testLabels, predictedTestLabels, target_names=target_names)
