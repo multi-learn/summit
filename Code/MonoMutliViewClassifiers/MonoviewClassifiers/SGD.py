@@ -33,7 +33,7 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
 
 def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SGD = Pipeline([('classifier', SGDClassifier())])
-    losses = ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron']
+    losses = ['log', 'modified_huber', 'perceptron']
     penalties = ["l1", "l2", "elasticnet"]
     alphas = uniform()
     param_SGD = {"classifier__loss": losses, "classifier__penalty": penalties,
@@ -52,4 +52,7 @@ def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score",
     return desc_params
 
 def getConfig(config):
-    return "\n\t\t- SGDClassifier with loss : "+config[0]+", penalty : "+config[1]
+    try:
+        return "\n\t\t- SGDClassifier with loss : "+config[0]+", penalty : "+config[1]
+    except:
+        return "\n\t\t- SGDClassifier with loss : "+config["0"]+", penalty : "+config["1"]

@@ -19,7 +19,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
             if accuracy > bestScore:
                 bestScore = accuracy
                 bestConfig = normalizedArray
-        return bestConfig
+        return [bestConfig]
 
 
 class WeightedLinear(LateFusionClassifier):
@@ -51,7 +51,7 @@ class WeightedLinear(LateFusionClassifier):
         return predictedLabels
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
-        configString = "with Weighted linear using a weight for each view : "+", ".join(self.weights) + \
+        configString = "with Weighted linear using a weight for each view : "+", ".join(map(str,self.weights)) + \
                        "\n\t-With monoview classifiers : "
         for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)

@@ -5,7 +5,7 @@ from sklearn.multiclass import OneVsOneClassifier
 from sklearn.svm import SVC
 
 
-def gridSearch(DATASET, classificationKWARGS, trainIndices):
+def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
     return None
 
 
@@ -26,8 +26,7 @@ class SVMForLinear(LateFusionClassifier):
                                        DATASET.get("labels")[trainIndices],
                                        NB_CORES=self.nbCores,
                                        **dict((str(configIndex), config) for configIndex, config in
-                                              enumerate(self.monoviewClassifiersConfigs[viewIndex]
-                                                        )))[1])
+                                              enumerate(self.monoviewClassifiersConfigs[viewIndex]))))
         self.SVMForLinearFusionFit(DATASET, usedIndices=trainIndices)
 
     def predict_hdf5(self, DATASET, usedIndices=None):

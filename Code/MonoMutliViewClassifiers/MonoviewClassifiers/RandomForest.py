@@ -62,4 +62,7 @@ def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score",
 
 
 def getConfig(config):
-    return "\n\t\t- Random Forest with num_esimators : "+config[0]+", max_depth : "+config[1]
+    try:
+        return "\n\t\t- Random Forest with num_esimators : "+str(config[0])+", max_depth : "+str(config[1])
+    except:
+        return "\n\t\t- Random Forest with num_esimators : "+str(config["0"])+", max_depth : "+str(config["1"])

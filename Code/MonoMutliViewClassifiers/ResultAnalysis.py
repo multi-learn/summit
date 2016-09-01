@@ -4,15 +4,18 @@ import pylab
 
 def resultAnalysis(benchmark, results):
     mono, multi = results
-    names = [type_+feat for [type_, b, c, feat] in mono]+[type_ if type_ != "Fusion" else type_+a["FusionType"]+a["FusionMethod"] for type_, a, b, c, d in multi]
-    nbResults = len(mono)+len(multi)
-    accuracies = [float(accuracy) for [a, accuracy, c, d] in mono]+[float(accuracy) for a, b, c, d, accuracy in multi]
-    f = pylab.figure()
-    try:
-        fig = plt.gcf()
-        fig.subplots_adjust(bottom=2.0)
-    except:
-        pass
+    flattenedMono = []
+    for view in mono:
+        for res in view:
+            flattenedMono.append(res)
+    names = [res[0]+res[3] for res in flattenedMono]
+    names+=[type_ if type_ != "Fusion" else type_+a["fusionType"]+a["fusionMethod"] for type_, a, b, c, d in multi]
+    nbResults = len(flattenedMono)+len(multi)
+    accuracies = [float(res[1]) for res in flattenedMono]
+    accuracies += [float(accuracy) for a, b, c, d, accuracy in multi]
+    f = pylab.figure(figsize=(40, 30))
+    fig = plt.gcf()
+    fig.subplots_adjust(bottom=105.0, top=105.01)
     ax = f.add_axes([0.1, 0.1, 0.8, 0.8])
     ax.set_title("Accuracies on validation set for each classifier")
     ax.bar(range(nbResults), accuracies, align='center')

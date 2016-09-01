@@ -19,7 +19,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
             if accuracy > bestScore:
                 bestScore = accuracy
                 bestConfig = normalizedArray
-        return bestConfig
+        return [bestConfig]
 
 
 class WeightedLinear(EarlyFusionClassifier):
@@ -35,8 +35,9 @@ class WeightedLinear(EarlyFusionClassifier):
         monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
         self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET.get("labels")[trainIndices],
                                                                      NB_CORES=self.nbCores,
-                                                                     **dict((str(configIndex),config) for configIndex,config in
-                                                                            enumerate(self.monoviewClassifiersConfig)))
+                                                                     **dict((str(configIndex), config) for configIndex, config in
+                                                                            enumerate(self.monoviewClassifiersConfig
+                                                                                      )))
 
     def predict_hdf5(self, DATASET, usedIndices=None):
         if usedIndices == None:

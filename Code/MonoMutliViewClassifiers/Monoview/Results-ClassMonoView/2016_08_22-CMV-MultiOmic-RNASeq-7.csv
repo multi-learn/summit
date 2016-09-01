@@ -1,9 +1,0 @@
-;a_class_time;b_cl_desc;c_cl_res;d_cl_score
-0;33.6544530392;Classif_SVC-CV_2-;"GridSearchCV(cv=2, error_score='raise',
-       estimator=Pipeline(steps=[('classifier', SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
-  decision_function_shape=None, degree=3, gamma='auto', kernel='rbf',
-  max_iter=-1, probability=False, random_state=None, shrinking=True,
-  tol=0.001, verbose=False))]),
-       fit_params={}, iid=True, n_jobs=1,
-       param_grid={'classifier__kernel': ['linear'], 'classifier__C': [1, 10, 100, 1000]},
-       pre_dispatch='2*n_jobs', refit=True, scoring='accuracy', verbose=0)";0.634615384615

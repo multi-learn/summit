@@ -43,6 +43,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     CL_type = kwargs["CL_type"]
     classifierKWARGS = kwargs[CL_type+"KWARGS"]
     X = X.value
+    clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
 
     # Determine the Database to extract features
     logging.debug("### Main Programm for Classification MonoView")
@@ -64,8 +65,10 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     classifierModule = getattr(MonoviewClassifiers, CL_type)
     classifierGridSearch = getattr(classifierModule, "gridSearch")
 
-    cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metric=metric, nIter=nIter)
-    cl_res = classifierModule.fit(X_train, y_train, NB_CORES=nbCores, **dict((str(index), desc) for index, desc in enumerate(cl_desc)))
+    if gridSearch:
+        cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metric=metric, nIter=nIter)
+        clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
+    cl_res = classifierModule.fit(X_train, y_train, NB_CORES=nbCores, **clKWARGS)
     t_end  = time.time() - t_start
 
     # Add result to Results DF
@@ -96,7 +99,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     #Accuracy classification score
     accuracy_score = ExportResults.accuracy_score(y_test, y_test_pred)
     logging.info("Accuracy :" +str(accuracy_score))
-
+    cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
     return [CL_type, accuracy_score, cl_desc, feat]
     # # Classification Report with Precision, Recall, F1 , Support
     # logging.debug("Info:\t Classification report:")

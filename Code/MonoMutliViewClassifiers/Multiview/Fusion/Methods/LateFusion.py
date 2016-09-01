@@ -17,12 +17,15 @@ import MonoviewClassifiers
 # monoViewDecisions : (nbExample * nbFeature * NB_CLASS) array with the OVO/OVA scores for each 
 # 				example, feature and each class
 # weights : (nbFeature) array with the weights for each feature
-def fifMonoviewClassifier(classifierName, data, labels, classifierConfig):
+def fitMonoviewClassifier(classifierName, data, labels, classifierConfig):
     monoviewClassifier = getattr(MonoviewClassifiers, classifierName)
     classifier = monoviewClassifier.fit(data,labels,**dict((str(configIndex), config) for configIndex, config in
                                       enumerate(classifierConfig
                                                 )))
     return classifier
+
+def getAccuracies(LateFusionClassifiers):
+    return ""
 
 
 class LateFusionClassifier(object):
@@ -31,13 +34,14 @@ class LateFusionClassifier(object):
         self.monoviewClassifiersConfigs = monoviewClassifiersConfigs
         self.monoviewClassifiers = []
         self.nbCores = NB_CORES
+        self.accuracies = np.zeros(len(monoviewClassifiersNames))
 
     def fit_hdf5(self, DATASET, trainIndices=None):
         if trainIndices == None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         nbView = DATASET.get("Metadata").attrs["nbView"]
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
-            delayed(fifMonoviewClassifier)(self.monoviewClassifiersNames[viewIndex],
+            delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[viewIndex],
                                               DATASET.get("View"+str(viewIndex))[trainIndices, :],
                                               DATASET.get("labels")[trainIndices],
                                               self.monoviewClassifiersConfigs[viewIndex])

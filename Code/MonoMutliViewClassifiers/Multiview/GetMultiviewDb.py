@@ -37,7 +37,6 @@ def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
                         for indx, viewDimension in enumerate(VIEW_DIMENSIONS))
 
     CLASS_LABELS = np.random.random_integers(0, NB_CLASS-1, DATASET_LENGTH)
-    print CLASS_LABELS
     LABELS_DICTIONARY = dict((indx, feature) for indx, feature in enumerate(features))
     datasetFile = h5py.File(pathF+"Fake.hdf5", "w")
     for index, viewData in enumerate(DATA.values()):

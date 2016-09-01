@@ -18,7 +18,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
             if accuracy > bestScore:
                 bestScore = accuracy
                 bestConfig = normalizedArray
-        return bestConfig
+        return [bestConfig]
 
 
 class BayesianInference(LateFusionClassifier):
@@ -46,9 +46,10 @@ class BayesianInference(LateFusionClassifier):
         return predictedLabels
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
-        configString = "with Bayesian Inference using a weight for each view : "+", ".join(self.weights) + \
+        configString = "with Bayesian Inference using a weight for each view : "+", ".join(map(str, self.weights)) + \
                        "\n\t-With monoview classifiers : "
         for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
+            print monoviewClassifierConfig
             configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
         return configString

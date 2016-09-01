@@ -1,2 +1,0 @@
-2016-08-19 20:16:59,329 DEBUG: ### Main Programm for Classification MonoView
-2016-08-19 20:16:59,330 DEBUG: ### Classification - Database:MultiOmicDataset Feature:RNASeq train_size:0.5, CrossValidation k-folds:5, cores:4

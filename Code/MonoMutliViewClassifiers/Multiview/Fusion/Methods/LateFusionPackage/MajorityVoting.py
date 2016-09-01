@@ -19,7 +19,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
             if accuracy > bestScore:
                 bestScore = accuracy
                 bestConfig = normalizedArray
-        return bestConfig
+        return [bestConfig]
 
 
 class MajorityVoting(LateFusionClassifier):

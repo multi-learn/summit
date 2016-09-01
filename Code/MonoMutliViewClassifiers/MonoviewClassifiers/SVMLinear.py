@@ -42,4 +42,7 @@ def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score",
 
 
 def getConfig(config):
-    return "\n\t\t- SVM with C : "+config[0]+", kernel : "+config[1]
+    try:
+        return "\n\t\t- SVM Linear with C : "+str(config[0])
+    except:
+        return "\n\t\t- SVM Linear with C : "+str(config["0"])

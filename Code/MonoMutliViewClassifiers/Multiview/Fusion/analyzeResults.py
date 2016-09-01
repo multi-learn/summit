@@ -4,25 +4,34 @@ import matplotlib.pyplot as plt
 import operator
 from datetime import timedelta as hms
 from Methods import *
+import Methods.LateFusion
 
 def error(testLabels, computedLabels):
     error = sum(map(operator.ne, computedLabels, testLabels))
     return float(error) * 100 / len(computedLabels)
 
 
-def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
-            DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, name, nbFolds,
-            validationIndices):
+def execute(kFoldClassifier, kFoldPredictedTrainLabels,
+            kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
+            DATASET, classificationKWARGS, learningRate, LABELS_DICTIONARY,
+            views, nbCores, times, kFolds, name, nbFolds,
+            validationIndices, gridSearch, nIter):
 
+    # kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
+    # DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, name, nbFolds,
+    # validationIndices
 
-
-    CLASS_LABELS = DATASET["/Labels/labelsArray"][...]
+    CLASS_LABELS = DATASET.get("labels").value
     #NB_ITER, classifierNames, classifierConfigs = initKWARGS.values()
-    monoviewClassifiersNames, fusionMethodConfig, fusionMethod, fusionType, monoviewClassifiersConfigs = initKWARGS.values()
 
+    fusionType = classificationKWARGS["fusionType"]
+    fusionMethod = classificationKWARGS["fusionMethod"]
+    monoviewClassifiersNames = classificationKWARGS["classifiersNames"]
+    monoviewClassifiersConfigs = classificationKWARGS["classifiersConfigs"]
+    fusionMethodConfig = classificationKWARGS["fusionMethodConfig"]
 
-    DATASET_LENGTH = DATASET.get("datasetLength").value-len(validationIndices)
-    NB_CLASS = DATASET.get("nbClass").value
+    DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]-len(validationIndices)
+    NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     kFoldAccuracyOnTrain = []
     kFoldAccuracyOnTest = []
     kFoldAccuracyOnValidation = []
@@ -53,10 +62,10 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
                      ', '.join(LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(views) + "\n\t-" + str(nbFolds) + \
                      " folds\n\nClassification configuration : \n\t-Algorithm used : "+fusionType+" "+fusionConfiguration
 
+    if fusionType=="LateFusion":
+        stringAnalysis+=Methods.LateFusion.getAccuracies(kFoldClassifier)
 
-
-
-    stringAnalysis += "\n\nComputation time on " + str(NB_CORES) + " cores : \n\tDatabase extraction time : " + str(
+    stringAnalysis += "\n\nComputation time on " + str(nbCores) + " cores : \n\tDatabase extraction time : " + str(
         hms(seconds=int(extractionTime))) + "\n\t"
     row_format = "{:>15}" * 3
     stringAnalysis += row_format.format("", *['Learn', 'Prediction'])

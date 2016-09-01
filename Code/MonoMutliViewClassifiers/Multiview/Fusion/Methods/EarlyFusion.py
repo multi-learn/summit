@@ -5,9 +5,9 @@ import numpy as np
 
 
 class EarlyFusionClassifier(object):
-    def __init__(self, monoviewClassifiersNames, monoviewClassifiersConfigs, NB_CORES=1):
-        self.monoviewClassifierName = monoviewClassifiersNames[0]
-        self.monoviewClassifiersConfig = monoviewClassifiersConfigs[0]
+    def __init__(self, monoviewClassifierName, monoviewClassifierConfig, NB_CORES=1):
+        self.monoviewClassifierName = monoviewClassifierName[0]
+        self.monoviewClassifiersConfig = monoviewClassifierConfig[0]
         self.monoviewClassifier = None
         self.nbCores = NB_CORES
         self.monoviewData = None

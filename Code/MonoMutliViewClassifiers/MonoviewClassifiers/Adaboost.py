@@ -7,7 +7,7 @@ from scipy.stats import randint
 
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     num_estimators = int(kwargs['0'])
-    base_estimators = kwargs['1']
+    base_estimators = DecisionTreeClassifier()#kwargs['1']
     classifier = AdaBoostClassifier(n_estimators=num_estimators, base_estimator=base_estimators)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
@@ -49,4 +49,7 @@ def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIt
 
 
 def getConfig(config):
-    return "\n\t\t- Adaboost with num_esimators : "+config[0]+", base_estimators : "+config[1]
+    try :
+        return "\n\t\t- Adaboost with num_esimators : "+str(config[0])+", base_estimators : "+str(config[1])
+    except:
+        return "\n\t\t- Adaboost with num_esimators : "+str(config["0"])+", base_estimators : "+str(config["1"])

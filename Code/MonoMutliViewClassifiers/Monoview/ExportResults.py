@@ -187,7 +187,7 @@ def showResults(directory, filename, db, feat, score):
 
 # Function to calculate the accuracy score for test data
 def accuracy_score(y_test, y_test_pred):
-    return str(metrics.accuracy_score(y_test, y_test_pred))
+    return metrics.accuracy_score(y_test, y_test_pred)
 
 
 # Function to calculate a report of classifiaction and store it

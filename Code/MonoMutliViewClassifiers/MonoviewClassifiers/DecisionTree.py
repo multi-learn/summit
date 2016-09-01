@@ -41,4 +41,7 @@ def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score",
 
 
 def getConfig(config):
-    return "\n\t\t- Decision Tree with max_depth : "+config[0]
+    try:
+        return "\n\t\t- Decision Tree with max_depth : "+str(config[0])
+    except:
+        return "\n\t\t- Decision Tree with max_depth : "+str(config["0"])
