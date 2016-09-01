@@ -52,6 +52,8 @@ groupStandard.add_argument('--fileCLD', metavar='STRING', action='store',
                            default='classLabels-Description.csv')
 groupStandard.add_argument('--fileFeat', metavar='STRING', action='store',
                            help='Name of feature CSV-file  (default: %(default)s)', default='feature.csv')
+groupStandard.add_argument('--nice', metavar='INT', action='store', type=int,
+                           help='Niceness for the process', default=0)
 
 groupClass = parser.add_argument_group('Classification arguments')
 groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
@@ -133,7 +135,7 @@ groupMumbo.add_argument('--MU_config', metavar='STRING', action='store', nargs='
                         default=['3:1.0', '3:1.0', '3:1.0','3:1.0'])
 groupMumbo.add_argument('--MU_iter', metavar='INT', action='store', nargs=3,
                         help='Max number of iteration, min number of iteration, convergence threshold', type=float,
-                        default=[100, 3, 0.005])
+                        default=[1000, 300, 0.0001])
 
 groupFusion = parser.add_argument_group('Fusion arguments')
 groupFusion.add_argument('--FU_types', metavar='STRING', action='store',
@@ -154,6 +156,7 @@ groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store', nar
 
 
 args = parser.parse_args()
+os.nice(args.nice)
 nbCores = args.CL_cores
 if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech"]:
     getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
@@ -277,7 +280,6 @@ for viewIndex, viewArguments in enumerate(argumentDictionaries["Monoview"].value
     accuracies = [result[1] for result in resultsMonoview[viewIndex]]
     classifiersNames = [result[0] for result in resultsMonoview[viewIndex]]
     classifiersConfigs = [result[2] for result in resultsMonoview[viewIndex]]
-    print classifiersConfigs
     bestClassifiers.append(classifiersNames[np.argmax(np.array(accuracies))])
     bestClassifiersConfigs.append(classifiersConfigs[np.argmax(np.array(accuracies))])
 try:

@@ -1,6 +1,7 @@
 from Methods import *
 import MonoviewClassifiers
 import numpy as np
+import logging
 
 
 # Author-Info
@@ -30,6 +31,7 @@ def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metric=None,
     classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
+        logging.debug("\tStart:\t Random search for "+classifierName)
         classifierModule = getattr(MonoviewClassifiers, classifierName)
         classifierMethod = getattr(classifierModule, "gridSearch")
         if fusionMethodModuleName == "LateFusion":
@@ -40,6 +42,7 @@ def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metric=None,
             bestSettings.append(classifierMethod(makeMonoviewData_hdf5(DATASET, usedIndices=learningIndices),
                                                  DATASET.get("labels")[learningIndices], metric=metric,
                                                  nIter=nIter))
+        logging.debug("\tDone:\t Random search for "+classifierName)
     classificationKWARGS["classifiersConfigs"] = bestSettings
     fusionMethodConfig = fusionMethodModule.gridSearch(DATASET, classificationKWARGS, learningIndices, nIter=nIter)
     return bestSettings, fusionMethodConfig
