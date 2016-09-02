@@ -29,3 +29,16 @@ def get_scorer(**kwargs):
     except:
         average = "binary"
     return make_scorer(metric, greater_is_better=True, sample_weight=sample_weight, average=average)
+
+
+def getConfig(**kwargs):
+    try:
+        sample_weight = kwargs["0"]
+    except:
+        sample_weight=None
+    try:
+        average = kwargs["3"]
+    except:
+        average = "binary"
+    configString = "ROS AUC score using "+str(sample_weight)+" as sample_weights, "+average+" as average (higher is better)"
+    return configString

@@ -7,6 +7,7 @@ import operator
 from datetime import timedelta as hms
 from Methods import *
 import Methods.LateFusion
+import Metrics
 
 
 # Author-Info
@@ -19,12 +20,24 @@ def error(testLabels, computedLabels):
     error = sum(map(operator.ne, computedLabels, testLabels))
     return float(error) * 100 / len(computedLabels)
 
+def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
+    metricModule = getattr(Metrics, metric[0])
+    if metric[1]!=None:
+        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+    else:
+        metricKWARGS = {}
+    metricScoreString = "\tFor "+metricModule.getConfig(**metricKWARGS)+" : "
+    metricScoreString += "\n\t\t- Score on train : "+str(metricModule.score(y_train, y_train_pred))
+    metricScoreString += "\n\t\t- Score on test : "+str(metricModule.score(y_test, y_test_pred))
+    metricScoreString += "\n"
+    return metricScoreString
+
 
 def execute(kFoldClassifier, kFoldPredictedTrainLabels,
             kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
             DATASET, classificationKWARGS, learningRate, LABELS_DICTIONARY,
             views, nbCores, times, kFolds, name, nbFolds,
-            validationIndices, gridSearch, nIter):
+            validationIndices, gridSearch, nIter, metrics):
 
     CLASS_LABELS = DATASET.get("labels").value
 

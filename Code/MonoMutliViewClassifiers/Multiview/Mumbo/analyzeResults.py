@@ -8,6 +8,7 @@ from datetime import timedelta as hms
 import Mumbo
 from Classifiers import *
 import logging
+import Metrics
 
 
 # Author-Info
@@ -218,9 +219,22 @@ def modifiedMean(surplusAccuracies):
         meanAccuracies.append(np.mean(np.array(accuraciesToMean)))
     return meanAccuracies
 
+
+def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
+    metricModule = getattr(Metrics, metric[0])
+    if metric[1]!=None:
+        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+    else:
+        metricKWARGS = {}
+    metricScoreString = "\tFor "+metricModule.getConfig(**metricKWARGS)+" : "
+    metricScoreString += "\n\t\t- Score on train : "+str(metricModule.score(y_train, y_train_pred))
+    metricScoreString += "\n\t\t- Score on test : "+str(metricModule.score(y_test, y_test_pred))
+    metricScoreString += "\n"
+    return metricScoreString
+
 def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
             DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, databaseName,
-            nbFolds, validationIndices, gridSearch, nIter):
+            nbFolds, validationIndices, gridSearch, nIter, metrics):
     CLASS_LABELS = DATASET.get("labels")[...]
     maxIter = initKWARGS["maxIter"]
     minIter = initKWARGS["minIter"]

@@ -1,0 +1,15 @@
+2016-09-02 12:47:57,340 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-02 12:47:57,363 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 12:47:57,363 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-02 12:47:57,363 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 12:47:57,395 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-02 12:47:57,395 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-02 12:47:57,395 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 12:47:57,395 DEBUG: Start:	 RandomSearch best settings with 10 iterations
+2016-09-02 12:49:04,691 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 12:49:04,691 DEBUG: Start:	 Training
+2016-09-02 12:49:06,667 DEBUG: Info:	 Time for Training: 69.3246622086[s]
+2016-09-02 12:49:06,667 DEBUG: Done:	 Training
+2016-09-02 12:49:06,667 DEBUG: Start:	 Predicting
+2016-09-02 12:49:06,680 DEBUG: Done:	 Predicting
+2016-09-02 12:49:06,680 DEBUG: Start:	 Getting Results

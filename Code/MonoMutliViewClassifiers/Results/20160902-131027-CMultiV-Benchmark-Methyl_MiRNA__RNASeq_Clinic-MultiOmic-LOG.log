@@ -1,0 +1,211 @@
+2016-09-02 13:10:27,237 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-02 13:10:27,250 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 13:10:27,250 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-02 13:10:27,250 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 13:10:27,264 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-02 13:10:27,264 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-02 13:10:27,264 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 13:10:27,264 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 13:10:42,290 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 13:10:42,290 DEBUG: Start:	 Training
+2016-09-02 13:10:43,872 DEBUG: Info:	 Time for Training: 16.6333310604[s]
+2016-09-02 13:10:43,873 DEBUG: Done:	 Training
+2016-09-02 13:10:43,873 DEBUG: Start:	 Predicting
+2016-09-02 13:10:43,885 DEBUG: Done:	 Predicting
+2016-09-02 13:10:43,886 DEBUG: Start:	 Getting Results
+2016-09-02 13:10:43,887 DEBUG: Done:	 Getting Results
+2016-09-02 13:10:43,887 INFO: Classification on MultiOmic database for Methyl with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.857142857143
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Methyl	 View shape : (347, 25978)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 13, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 cores 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.857142857143
+
+
+ Classification took 0:00:16
+2016-09-02 13:10:43,887 INFO: Done:	 Result Analysis
+2016-09-02 13:10:43,899 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 13:10:43,899 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-02 13:10:43,899 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 13:10:43,911 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-02 13:10:43,911 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-02 13:10:43,911 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 13:10:43,911 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 13:10:57,838 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 13:10:57,838 DEBUG: Start:	 Training
+2016-09-02 13:10:59,345 DEBUG: Info:	 Time for Training: 15.4560749531[s]
+2016-09-02 13:10:59,345 DEBUG: Done:	 Training
+2016-09-02 13:10:59,345 DEBUG: Start:	 Predicting
+2016-09-02 13:10:59,352 DEBUG: Done:	 Predicting
+2016-09-02 13:10:59,352 DEBUG: Start:	 Getting Results
+2016-09-02 13:10:59,353 DEBUG: Done:	 Getting Results
+2016-09-02 13:10:59,353 INFO: Classification on MultiOmic database for Methyl with DecisionTree
+
+accuracy_score on train : 0.979338842975
+accuracy_score on test : 0.857142857143
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Methyl	 View shape : (347, 25978)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 3
+	- Executed on 1 cores 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.979338842975
+		- Score on test : 0.857142857143
+
+
+ Classification took 0:00:15
+2016-09-02 13:10:59,353 INFO: Done:	 Result Analysis
+2016-09-02 13:10:59,366 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 13:10:59,366 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-02 13:10:59,366 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 13:10:59,379 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-02 13:10:59,380 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-02 13:10:59,380 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 13:10:59,380 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 13:11:04,252 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 13:11:04,252 DEBUG: Start:	 Training
+2016-09-02 13:11:04,401 DEBUG: Info:	 Time for Training: 5.0470020771[s]
+2016-09-02 13:11:04,402 DEBUG: Done:	 Training
+2016-09-02 13:11:04,402 DEBUG: Start:	 Predicting
+2016-09-02 13:11:08,673 DEBUG: Done:	 Predicting
+2016-09-02 13:11:08,673 DEBUG: Start:	 Getting Results
+2016-09-02 13:11:08,674 DEBUG: Done:	 Getting Results
+2016-09-02 13:11:08,674 INFO: Classification on MultiOmic database for Methyl with KNN
+
+accuracy_score on train : 0.900826446281
+accuracy_score on test : 0.885714285714
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Methyl	 View shape : (347, 25978)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 7
+	- Executed on 1 cores 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.900826446281
+		- Score on test : 0.885714285714
+
+
+ Classification took 0:00:05
+2016-09-02 13:11:08,674 INFO: Done:	 Result Analysis
+2016-09-02 13:11:08,686 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 13:11:08,686 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-02 13:11:08,686 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 13:11:08,700 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-02 13:11:08,701 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-02 13:11:08,701 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 13:11:08,701 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 13:11:11,366 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 13:11:11,366 DEBUG: Start:	 Training
+2016-09-02 13:11:11,603 DEBUG: Info:	 Time for Training: 2.92731499672[s]
+2016-09-02 13:11:11,603 DEBUG: Done:	 Training
+2016-09-02 13:11:11,603 DEBUG: Start:	 Predicting
+2016-09-02 13:11:11,615 DEBUG: Done:	 Predicting
+2016-09-02 13:11:11,616 DEBUG: Start:	 Getting Results
+2016-09-02 13:11:11,616 DEBUG: Done:	 Getting Results
+2016-09-02 13:11:11,617 INFO: Classification on MultiOmic database for Methyl with RandomForest
+
+accuracy_score on train : 0.987603305785
+accuracy_score on test : 0.819047619048
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Methyl	 View shape : (347, 25978)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 25, max_depth : 4
+	- Executed on 1 cores 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.987603305785
+		- Score on test : 0.819047619048
+
+
+ Classification took 0:00:02
+2016-09-02 13:11:11,617 INFO: Done:	 Result Analysis
+2016-09-02 13:11:11,628 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 13:11:11,629 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-09-02 13:11:11,629 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 13:11:11,643 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-02 13:11:11,643 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-02 13:11:11,643 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 13:11:11,643 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 13:11:13,151 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 13:11:13,152 DEBUG: Start:	 Training
+2016-09-02 13:11:13,238 DEBUG: Info:	 Time for Training: 1.61937594414[s]
+2016-09-02 13:11:13,238 DEBUG: Done:	 Training
+2016-09-02 13:11:13,238 DEBUG: Start:	 Predicting
+2016-09-02 13:11:13,267 DEBUG: Done:	 Predicting
+2016-09-02 13:11:13,267 DEBUG: Start:	 Getting Results
+2016-09-02 13:11:13,268 DEBUG: Done:	 Getting Results
+2016-09-02 13:11:13,268 INFO: Classification on MultiOmic database for Methyl with SGD
+
+accuracy_score on train : 0.772727272727
+accuracy_score on test : 0.67619047619
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Methyl	 View shape : (347, 25978)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SGDClassifier with loss : perceptron, penalty : l2
+	- Executed on 1 cores 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.772727272727
+		- Score on test : 0.67619047619
+
+
+ Classification took 0:00:01
+2016-09-02 13:11:13,269 INFO: Done:	 Result Analysis
+2016-09-02 13:11:13,278 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 13:11:13,278 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-09-02 13:11:13,278 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 13:11:13,290 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-02 13:11:13,290 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-02 13:11:13,290 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 13:11:13,290 DEBUG: Start:	 RandomSearch best settings with 2 iterations

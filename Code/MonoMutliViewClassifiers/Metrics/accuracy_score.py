@@ -40,3 +40,12 @@ def get_scorer(**kwargs):
     except:
         sample_weight=None
     return make_scorer(metric, greater_is_better=True, sample_weight=sample_weight)
+
+
+def getConfig(**kwargs):
+    try:
+        sample_weight = kwargs["0"]
+    except:
+        sample_weight=None
+    configString = "Accuracy score using "+str(sample_weight)+" as sample_weights (higher is better)"
+    return configString

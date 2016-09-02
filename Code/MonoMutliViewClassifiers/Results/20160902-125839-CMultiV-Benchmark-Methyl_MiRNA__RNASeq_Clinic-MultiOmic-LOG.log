@@ -1,0 +1,40 @@
+2016-09-02 12:58:39,868 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-02 12:58:39,881 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 12:58:39,882 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-02 12:58:39,882 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 12:58:39,896 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-02 12:58:39,896 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-02 12:58:39,896 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 12:58:39,896 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 12:58:55,156 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 12:58:55,156 DEBUG: Start:	 Training
+2016-09-02 12:58:56,812 DEBUG: Info:	 Time for Training: 16.941628933[s]
+2016-09-02 12:58:56,812 DEBUG: Done:	 Training
+2016-09-02 12:58:56,812 DEBUG: Start:	 Predicting
+2016-09-02 12:58:56,825 DEBUG: Done:	 Predicting
+2016-09-02 12:58:56,825 DEBUG: Start:	 Getting Results
+2016-09-02 12:58:56,827 DEBUG: Done:	 Getting Results
+2016-09-02 12:58:56,827 INFO: Classification on MultiOmic database for Methyl with AdaboostAccuracy on train : 1.0
+Accuracy on test : 0.838095238095
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Methyl	 View shape : (347, 25978)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Classifier used : Adaboost
+	- Executed on 1 cores 
+	
+		- Ad
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For accuracy_scoreAccuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.838095238095
+
+
+ Classification took 0:00:16

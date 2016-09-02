@@ -13,3 +13,7 @@ def score(y_true, y_pred, **kwargs):
 
 def get_scorer(**kwargs):
     return make_scorer(metric, greater_is_better=True)
+
+def getConfig(**kwargs):
+    configString = "Matthews correlation coefficient (higher is better)"
+    return configString

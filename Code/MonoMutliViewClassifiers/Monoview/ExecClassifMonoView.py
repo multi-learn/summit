@@ -21,6 +21,7 @@ import ClassifMonoView	                # Functions for classification
 import ExportResults                    # Functions to render results
 import MonoviewClassifiers
 import Metrics
+from analyzeResult import execute
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann, Baptiste BAUVIN"
@@ -32,7 +33,7 @@ __date__	= 2016-03-25
 
 
 def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True,
-                metric=["accuracy_score", None], nIter=30, **kwargs):
+                metrics=[["accuracy_score", None]], nIter=30, **kwargs):
 
     t_start = time.time()
     directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
@@ -65,7 +66,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
 
     if gridSearch:
         logging.debug("Start:\t RandomSearch best settings with "+str(nIter)+" iterations")
-        cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metric=metric, nIter=nIter)
+        cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metric=metrics[0], nIter=nIter)
         clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
         logging.debug("Done:\t RandomSearch best settings")
     logging.debug("Start:\t Training")
@@ -77,6 +78,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
 
     logging.debug("Start:\t Predicting")
     # Stats Result
+    y_train_pred = cl_res.predict(X_train)
     y_test_pred = cl_res.predict(X_test)
     classLabelsDesc = pd.read_csv(path + fileCLD, sep=";", names=['label', 'name'])
     classLabelsNames = classLabelsDesc.name
@@ -88,11 +90,36 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     logging.debug("Start:\t Getting Results")
 
     #Accuracy classification score
-    accuracy_score = ExportResults.accuracy_score(y_test, y_test_pred)
-    logging.info("Accuracy :" +str(accuracy_score))
+    stringAnalysis, imagesAnalysis, train, ham, test = execute(name, learningRate, nbFolds, nbCores, gridSearch, metrics, nIter, feat, CL_type,
+                                         clKWARGS, classLabelsNames, X.shape,
+                                         y_train, y_train_pred, y_test, y_test_pred, t_end)
     cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
     logging.debug("Done:\t Getting Results")
-    return [CL_type, accuracy_score, cl_desc, feat]
+    logging.info(stringAnalysis)
+    labelsString = "-".join(classLabelsNames)
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+    CL_type_string = CL_type
+    print CL_type_string
+    outputFileName = "Results/" + timestr + "Results-" + CL_type_string + "-" + labelsString + \
+                     '-learnRate' + str(learningRate) + '-' + name
+
+    outputTextFile = open(outputFileName + '.txt', 'w')
+    outputTextFile.write(stringAnalysis)
+    outputTextFile.close()
+
+    if imagesAnalysis is not None:
+        for imageName in imagesAnalysis:
+            if os.path.isfile(outputFileName + imageName + ".png"):
+                for i in range(1,20):
+                    testFileName = outputFileName + imageName + "-" + str(i) + ".png"
+                    if os.path.isfile(testFileName )!=True:
+                        imagesAnalysis[imageName].savefig(testFileName)
+                        break
+
+            imagesAnalysis[imageName].savefig(outputFileName + imageName + '.png')
+
+    logging.info("Done:\t Result Analysis")
+    return [CL_type, test, cl_desc, feat]
     # # Classification Report with Precision, Recall, F1 , Support
     # logging.debug("Info:\t Classification report:")
     # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Report"

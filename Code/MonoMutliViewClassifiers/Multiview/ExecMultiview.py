@@ -22,14 +22,14 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 
 def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY,
-                  gridSearch=False, metric=None, nIter=30, **kwargs):
+                  gridSearch=False, metrics=None, nIter=30, **kwargs):
 
     datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
     NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
     views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
-    if not metric:
-        metric = ["accuracy_score", None]
+    if not metrics:
+        metrics = [["accuracy_score", None]]
 
     CL_type = kwargs["CL_type"]
     views = kwargs["views"]
@@ -85,7 +85,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     if gridSearch:
         logging.info("Start:\t Randomsearching best settings for monoview classifiers")
         bestSettings, fusionConfig = classifierGridSearch(DATASET, classificationKWARGS, learningIndices
-                                                          , metric=metric, nIter=nIter)
+                                                          , metric=metrics[0], nIter=nIter)
         classificationKWARGS["classifiersConfigs"] = bestSettings
         try:
             classificationKWARGS["fusionMethodConfig"] = fusionConfig
@@ -128,13 +128,18 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
                                                             kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
                                                             DATASET, classificationKWARGS, learningRate, LABELS_DICTIONARY,
                                                             views, nbCores, times, kFolds, name, nbFolds,
-                                                            validationIndices, gridSearch, nIter)
+                                                            validationIndices, gridSearch, nIter, metrics)
     labelsSet = set(LABELS_DICTIONARY.values())
     logging.info(stringAnalysis)
     featureString = "-".join(views)
     labelsString = "-".join(labelsSet)
     timestr = time.strftime("%Y%m%d-%H%M%S")
-    outputFileName = "Results/" + timestr + "Results-" + CL_type + "-" + featureString + '-' + labelsString + \
+    CL_type_string = CL_type
+    if CL_type=="Fusion":
+        CL_type_string += "-"+classificationKWARGS["fusionType"]+"-"+classificationKWARGS["fusionMethod"]+"-"+"-".join(classificationKWARGS["classifiersNames"])
+    elif CL_type=="Mumbo":
+        CL_type_string += "-"+"-".join(classificationKWARGS["classifiersNames"])
+    outputFileName = "Results/" + timestr + "Results-" + CL_type_string + "-" + featureString + '-' + labelsString + \
                      '-learnRate' + str(learningRate) + '-' + name
 
     outputTextFile = open(outputFileName + '.txt', 'w')
