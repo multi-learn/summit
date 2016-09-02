@@ -29,7 +29,18 @@ __status__ 	= "Prototype"           # Production, Development, Prototype
 __date__	= 2016-03-25
 
 
-### Argument Parser
+def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databaseType, path, gridSearch=True,
+                           metrics=[["accuracy_score", None]], nIter=30, **args):
+    DATASET = h5py.File(path+name+str(datasetFileIndex)+".hdf5", "r")
+    kwargs = args["args"]
+
+    views = [DATASET.get("View"+str(viewIndex)).attrs["name"] for viewIndex in range(DATASET.get("Metadata").attrs["nbView"])]
+    neededViewIndex = views.index(kwargs["feat"])
+    X = DATASET.get("View"+str(neededViewIndex))
+    Y = DATASET.get("labels").value
+    returnedViewIndex = args["viewIndex"]
+    return returnedViewIndex, ExecMonoview(X, Y, name, learningRate, nbFolds, 1, databaseType, path, gridSearch=gridSearch,
+                        metrics=metrics, nIter=nIter, **kwargs)
 
 
 def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True,
@@ -99,7 +110,6 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     labelsString = "-".join(classLabelsNames)
     timestr = time.strftime("%Y%m%d-%H%M%S")
     CL_type_string = CL_type
-    print CL_type_string
     outputFileName = "Results/" + timestr + "Results-" + CL_type_string + "-" + labelsString + \
                      '-learnRate' + str(learningRate) + '-' + name
 

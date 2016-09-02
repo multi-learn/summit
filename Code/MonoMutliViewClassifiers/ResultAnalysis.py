@@ -14,14 +14,10 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 def resultAnalysis(benchmark, results):
     mono, multi = results
-    flattenedMono = []
-    for view in mono:
-        for res in view:
-            flattenedMono.append(res)
-    names = [res[0]+res[3] for res in flattenedMono]
+    names = [res[1][0]+res[1][3] for res in mono]
     names+=[type_ if type_ != "Fusion" else type_+a["fusionType"]+a["fusionMethod"] for type_, a, b, c, d in multi]
-    nbResults = len(flattenedMono)+len(multi)
-    accuracies = [float(res[1]) for res in flattenedMono]
+    nbResults = len(mono)+len(multi)
+    accuracies = [float(res[1][1]) for res in mono]
     accuracies += [float(accuracy) for a, b, c, d, accuracy in multi]
     f = pylab.figure(figsize=(40, 30))
     fig = plt.gcf()

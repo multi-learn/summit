@@ -1,0 +1,617 @@
+2016-09-02 15:13:47,347 DEBUG: Start:	 Creating 2 temporary datasets for multiprocessing
+2016-09-02 15:13:47,347 WARNING: This may use a lot of HDD storage space : 0 Gbytes
+2016-09-02 15:13:49,198 DEBUG: Start:	 Creating datasets for multiprocessing
+2016-09-02 15:13:49,200 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-02 15:13:49,247 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:49,247 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:49,248 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-02 15:13:49,248 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-02 15:13:49,248 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:49,248 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:49,251 DEBUG: Info:	 Shape X_train:(242, 1046), Length of y_train:242
+2016-09-02 15:13:49,251 DEBUG: Info:	 Shape X_train:(242, 1046), Length of y_train:242
+2016-09-02 15:13:49,251 DEBUG: Info:	 Shape X_test:(105, 1046), Length of y_test:105
+2016-09-02 15:13:49,251 DEBUG: Info:	 Shape X_test:(105, 1046), Length of y_test:105
+2016-09-02 15:13:49,251 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:49,251 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:49,251 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:49,251 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:49,643 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:49,643 DEBUG: Start:	 Training
+2016-09-02 15:13:49,691 DEBUG: Info:	 Time for Training: 0.444986104965[s]
+2016-09-02 15:13:49,691 DEBUG: Done:	 Training
+2016-09-02 15:13:49,691 DEBUG: Start:	 Predicting
+2016-09-02 15:13:49,691 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:49,691 DEBUG: Start:	 Training
+2016-09-02 15:13:49,694 DEBUG: Done:	 Predicting
+2016-09-02 15:13:49,694 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:49,695 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:49,695 INFO: Classification on MultiOmic database for MiRNA_ with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.771428571429
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : MiRNA_	 View shape : (347, 1046)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 28
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.771428571429
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:49,695 INFO: Done:	 Result Analysis
+2016-09-02 15:13:49,740 DEBUG: Info:	 Time for Training: 0.494187116623[s]
+2016-09-02 15:13:49,740 DEBUG: Done:	 Training
+2016-09-02 15:13:49,740 DEBUG: Start:	 Predicting
+2016-09-02 15:13:49,743 DEBUG: Done:	 Predicting
+2016-09-02 15:13:49,743 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:49,745 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:49,745 INFO: Classification on MultiOmic database for MiRNA_ with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.761904761905
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : MiRNA_	 View shape : (347, 1046)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 12, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.761904761905
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:49,745 INFO: Done:	 Result Analysis
+2016-09-02 15:13:49,894 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:49,894 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:49,894 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-02 15:13:49,894 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-02 15:13:49,894 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:49,894 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:49,897 DEBUG: Info:	 Shape X_train:(242, 1046), Length of y_train:242
+2016-09-02 15:13:49,897 DEBUG: Info:	 Shape X_train:(242, 1046), Length of y_train:242
+2016-09-02 15:13:49,897 DEBUG: Info:	 Shape X_test:(105, 1046), Length of y_test:105
+2016-09-02 15:13:49,897 DEBUG: Info:	 Shape X_test:(105, 1046), Length of y_test:105
+2016-09-02 15:13:49,897 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:49,898 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:49,898 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:49,898 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:50,119 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:50,120 DEBUG: Start:	 Training
+2016-09-02 15:13:50,124 DEBUG: Info:	 Time for Training: 0.23109292984[s]
+2016-09-02 15:13:50,124 DEBUG: Done:	 Training
+2016-09-02 15:13:50,124 DEBUG: Start:	 Predicting
+2016-09-02 15:13:50,266 DEBUG: Done:	 Predicting
+2016-09-02 15:13:50,266 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:50,267 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:50,267 INFO: Classification on MultiOmic database for MiRNA_ with KNN
+
+accuracy_score on train : 0.789256198347
+accuracy_score on test : 0.809523809524
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : MiRNA_	 View shape : (347, 1046)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 19
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.789256198347
+		- Score on test : 0.809523809524
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:50,268 INFO: Done:	 Result Analysis
+2016-09-02 15:13:50,387 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:50,388 DEBUG: Start:	 Training
+2016-09-02 15:13:50,451 DEBUG: Info:	 Time for Training: 0.558418989182[s]
+2016-09-02 15:13:50,451 DEBUG: Done:	 Training
+2016-09-02 15:13:50,452 DEBUG: Start:	 Predicting
+2016-09-02 15:13:50,458 DEBUG: Done:	 Predicting
+2016-09-02 15:13:50,458 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:50,459 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:50,459 INFO: Classification on MultiOmic database for MiRNA_ with RandomForest
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.847619047619
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : MiRNA_	 View shape : (347, 1046)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 19, max_depth : 28
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.847619047619
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:50,459 INFO: Done:	 Result Analysis
+2016-09-02 15:13:50,550 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:50,550 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:50,550 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-09-02 15:13:50,551 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-09-02 15:13:50,551 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:50,551 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:50,553 DEBUG: Info:	 Shape X_train:(242, 1046), Length of y_train:242
+2016-09-02 15:13:50,553 DEBUG: Info:	 Shape X_train:(242, 1046), Length of y_train:242
+2016-09-02 15:13:50,553 DEBUG: Info:	 Shape X_test:(105, 1046), Length of y_test:105
+2016-09-02 15:13:50,553 DEBUG: Info:	 Shape X_test:(105, 1046), Length of y_test:105
+2016-09-02 15:13:50,553 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:50,553 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:50,554 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:50,554 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:50,686 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:50,686 DEBUG: Start:	 Training
+2016-09-02 15:13:50,690 DEBUG: Info:	 Time for Training: 0.141922950745[s]
+2016-09-02 15:13:50,690 DEBUG: Done:	 Training
+2016-09-02 15:13:50,690 DEBUG: Start:	 Predicting
+2016-09-02 15:13:50,694 DEBUG: Done:	 Predicting
+2016-09-02 15:13:50,694 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:50,695 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:50,695 INFO: Classification on MultiOmic database for MiRNA_ with SGD
+
+accuracy_score on train : 0.772727272727
+accuracy_score on test : 0.752380952381
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : MiRNA_	 View shape : (347, 1046)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SGDClassifier with loss : perceptron, penalty : l2
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.772727272727
+		- Score on test : 0.752380952381
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:50,695 INFO: Done:	 Result Analysis
+2016-09-02 15:13:50,927 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:50,927 DEBUG: Start:	 Training
+2016-09-02 15:13:51,101 DEBUG: Info:	 Time for Training: 0.55322599411[s]
+2016-09-02 15:13:51,102 DEBUG: Done:	 Training
+2016-09-02 15:13:51,102 DEBUG: Start:	 Predicting
+2016-09-02 15:13:51,143 DEBUG: Done:	 Predicting
+2016-09-02 15:13:51,143 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:51,144 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:51,144 INFO: Classification on MultiOmic database for MiRNA_ with SVMLinear
+
+accuracy_score on train : 0.694214876033
+accuracy_score on test : 0.685714285714
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : MiRNA_	 View shape : (347, 1046)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 9918
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.694214876033
+		- Score on test : 0.685714285714
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:51,144 INFO: Done:	 Result Analysis
+2016-09-02 15:13:51,297 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:51,297 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:51,297 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMRBF
+2016-09-02 15:13:51,297 DEBUG: ### Classification - Database:MultiOmic Feature:MiRNA_ train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMPoly
+2016-09-02 15:13:51,297 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:51,297 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:51,299 DEBUG: Info:	 Shape X_train:(242, 1046), Length of y_train:242
+2016-09-02 15:13:51,299 DEBUG: Info:	 Shape X_train:(242, 1046), Length of y_train:242
+2016-09-02 15:13:51,299 DEBUG: Info:	 Shape X_test:(105, 1046), Length of y_test:105
+2016-09-02 15:13:51,299 DEBUG: Info:	 Shape X_test:(105, 1046), Length of y_test:105
+2016-09-02 15:13:51,299 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:51,299 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:51,299 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:51,299 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:51,370 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:51,370 DEBUG: Start:	 Training
+2016-09-02 15:13:51,375 DEBUG: Info:	 Time for Training: 0.0801219940186[s]
+2016-09-02 15:13:51,375 DEBUG: Done:	 Training
+2016-09-02 15:13:51,375 DEBUG: Start:	 Predicting
+2016-09-02 15:13:51,379 DEBUG: Done:	 Predicting
+2016-09-02 15:13:51,379 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:51,380 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:51,380 INFO: Classification on MultiOmic database for MiRNA_ with SVMPoly
+
+accuracy_score on train : 0.264462809917
+accuracy_score on test : 0.27619047619
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : MiRNA_	 View shape : (347, 1046)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 9918
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.264462809917
+		- Score on test : 0.27619047619
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:51,380 INFO: Done:	 Result Analysis
+2016-09-02 15:13:51,923 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:51,923 DEBUG: Start:	 Training
+2016-09-02 15:13:52,236 DEBUG: Info:	 Time for Training: 0.940616846085[s]
+2016-09-02 15:13:52,236 DEBUG: Done:	 Training
+2016-09-02 15:13:52,236 DEBUG: Start:	 Predicting
+2016-09-02 15:13:52,329 DEBUG: Done:	 Predicting
+2016-09-02 15:13:52,329 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:52,330 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:52,330 INFO: Classification on MultiOmic database for MiRNA_ with SVMRBF
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.72380952381
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : MiRNA_	 View shape : (347, 1046)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 9918
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.72380952381
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:52,330 INFO: Done:	 Result Analysis
+2016-09-02 15:13:52,446 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:52,446 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:52,447 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-02 15:13:52,447 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-02 15:13:52,447 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:52,447 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:52,448 DEBUG: Info:	 Shape X_train:(242, 127), Length of y_train:242
+2016-09-02 15:13:52,448 DEBUG: Info:	 Shape X_train:(242, 127), Length of y_train:242
+2016-09-02 15:13:52,448 DEBUG: Info:	 Shape X_test:(105, 127), Length of y_test:105
+2016-09-02 15:13:52,448 DEBUG: Info:	 Shape X_test:(105, 127), Length of y_test:105
+2016-09-02 15:13:52,448 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:52,448 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:52,448 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:52,448 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:52,510 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:52,510 DEBUG: Start:	 Training
+2016-09-02 15:13:52,513 DEBUG: Info:	 Time for Training: 0.0666189193726[s]
+2016-09-02 15:13:52,513 DEBUG: Done:	 Training
+2016-09-02 15:13:52,513 DEBUG: Start:	 Predicting
+2016-09-02 15:13:52,515 DEBUG: Done:	 Predicting
+2016-09-02 15:13:52,515 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:52,516 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:52,516 INFO: Classification on MultiOmic database for Clinic with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.857142857143
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Clinic	 View shape : (347, 127)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 14
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.857142857143
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:52,517 INFO: Done:	 Result Analysis
+2016-09-02 15:13:52,536 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:52,536 DEBUG: Start:	 Training
+2016-09-02 15:13:52,541 DEBUG: Info:	 Time for Training: 0.0951437950134[s]
+2016-09-02 15:13:52,541 DEBUG: Done:	 Training
+2016-09-02 15:13:52,541 DEBUG: Start:	 Predicting
+2016-09-02 15:13:52,544 DEBUG: Done:	 Predicting
+2016-09-02 15:13:52,544 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:52,546 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:52,546 INFO: Classification on MultiOmic database for Clinic with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.857142857143
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Clinic	 View shape : (347, 127)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 14, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.857142857143
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:52,546 INFO: Done:	 Result Analysis
+2016-09-02 15:13:52,697 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:52,697 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:52,697 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-02 15:13:52,697 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-02 15:13:52,697 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:52,697 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:52,699 DEBUG: Info:	 Shape X_train:(242, 127), Length of y_train:242
+2016-09-02 15:13:52,699 DEBUG: Info:	 Shape X_train:(242, 127), Length of y_train:242
+2016-09-02 15:13:52,699 DEBUG: Info:	 Shape X_test:(105, 127), Length of y_test:105
+2016-09-02 15:13:52,699 DEBUG: Info:	 Shape X_test:(105, 127), Length of y_test:105
+2016-09-02 15:13:52,699 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:52,699 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:52,699 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:52,699 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:52,768 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:52,768 DEBUG: Start:	 Training
+2016-09-02 15:13:52,769 DEBUG: Info:	 Time for Training: 0.0731210708618[s]
+2016-09-02 15:13:52,769 DEBUG: Done:	 Training
+2016-09-02 15:13:52,769 DEBUG: Start:	 Predicting
+2016-09-02 15:13:52,792 DEBUG: Done:	 Predicting
+2016-09-02 15:13:52,793 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:52,793 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:52,794 INFO: Classification on MultiOmic database for Clinic with KNN
+
+accuracy_score on train : 0.735537190083
+accuracy_score on test : 0.72380952381
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Clinic	 View shape : (347, 127)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 47
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.735537190083
+		- Score on test : 0.72380952381
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:52,794 INFO: Done:	 Result Analysis
+2016-09-02 15:13:53,091 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:53,091 DEBUG: Start:	 Training
+2016-09-02 15:13:53,139 DEBUG: Info:	 Time for Training: 0.443457126617[s]
+2016-09-02 15:13:53,139 DEBUG: Done:	 Training
+2016-09-02 15:13:53,140 DEBUG: Start:	 Predicting
+2016-09-02 15:13:53,146 DEBUG: Done:	 Predicting
+2016-09-02 15:13:53,146 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:53,147 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:53,147 INFO: Classification on MultiOmic database for Clinic with RandomForest
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.790476190476
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Clinic	 View shape : (347, 127)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 19, max_depth : 28
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.790476190476
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:53,147 INFO: Done:	 Result Analysis
+2016-09-02 15:13:53,247 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:53,248 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-09-02 15:13:53,248 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:53,249 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:53,249 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-09-02 15:13:53,249 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:53,250 DEBUG: Info:	 Shape X_train:(242, 127), Length of y_train:242
+2016-09-02 15:13:53,250 DEBUG: Info:	 Shape X_test:(105, 127), Length of y_test:105
+2016-09-02 15:13:53,250 DEBUG: Info:	 Shape X_train:(242, 127), Length of y_train:242
+2016-09-02 15:13:53,251 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:53,251 DEBUG: Info:	 Shape X_test:(105, 127), Length of y_test:105
+2016-09-02 15:13:53,251 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:53,251 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:53,251 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:53,344 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:53,344 DEBUG: Start:	 Training
+2016-09-02 15:13:53,345 DEBUG: Info:	 Time for Training: 0.0991361141205[s]
+2016-09-02 15:13:53,346 DEBUG: Done:	 Training
+2016-09-02 15:13:53,346 DEBUG: Start:	 Predicting
+2016-09-02 15:13:53,359 DEBUG: Done:	 Predicting
+2016-09-02 15:13:53,359 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:53,360 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:53,360 INFO: Classification on MultiOmic database for Clinic with SGD
+
+accuracy_score on train : 0.714876033058
+accuracy_score on test : 0.666666666667
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Clinic	 View shape : (347, 127)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SGDClassifier with loss : modified_huber, penalty : l2
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.714876033058
+		- Score on test : 0.666666666667
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:53,360 INFO: Done:	 Result Analysis
+2016-09-02 15:13:53,375 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:53,375 DEBUG: Start:	 Training
+2016-09-02 15:13:53,423 DEBUG: Info:	 Time for Training: 0.17630815506[s]
+2016-09-02 15:13:53,423 DEBUG: Done:	 Training
+2016-09-02 15:13:53,423 DEBUG: Start:	 Predicting
+2016-09-02 15:13:53,433 DEBUG: Done:	 Predicting
+2016-09-02 15:13:53,433 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:53,434 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:53,434 INFO: Classification on MultiOmic database for Clinic with SVMLinear
+
+accuracy_score on train : 0.586776859504
+accuracy_score on test : 0.638095238095
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Clinic	 View shape : (347, 127)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 9918
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.586776859504
+		- Score on test : 0.638095238095
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:53,435 INFO: Done:	 Result Analysis
+2016-09-02 15:13:53,490 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:53,490 DEBUG: ### Main Programm for Classification MonoView
+2016-09-02 15:13:53,490 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMRBF
+2016-09-02 15:13:53,490 DEBUG: ### Classification - Database:MultiOmic Feature:Clinic train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMPoly
+2016-09-02 15:13:53,490 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:53,490 DEBUG: Start:	 Determine Train/Test split
+2016-09-02 15:13:53,491 DEBUG: Info:	 Shape X_train:(242, 127), Length of y_train:242
+2016-09-02 15:13:53,491 DEBUG: Info:	 Shape X_train:(242, 127), Length of y_train:242
+2016-09-02 15:13:53,491 DEBUG: Info:	 Shape X_test:(105, 127), Length of y_test:105
+2016-09-02 15:13:53,491 DEBUG: Info:	 Shape X_test:(105, 127), Length of y_test:105
+2016-09-02 15:13:53,491 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:53,491 DEBUG: Done:	 Determine Train/Test split
+2016-09-02 15:13:53,491 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:53,491 DEBUG: Start:	 RandomSearch best settings with 2 iterations
+2016-09-02 15:13:53,680 DEBUG: Done:	 RandomSearch best settings
+2016-09-02 15:13:53,680 DEBUG: Start:	 Training
+2016-09-02 15:13:53,757 DEBUG: Info:	 Time for Training: 0.26763510704[s]
+2016-09-02 15:13:53,757 DEBUG: Done:	 Training
+2016-09-02 15:13:53,757 DEBUG: Start:	 Predicting
+2016-09-02 15:13:53,774 DEBUG: Done:	 Predicting
+2016-09-02 15:13:53,774 DEBUG: Start:	 Getting Results
+2016-09-02 15:13:53,775 DEBUG: Done:	 Getting Results
+2016-09-02 15:13:53,775 INFO: Classification on MultiOmic database for Clinic with SVMRBF
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.72380952381
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Clinic	 View shape : (347, 127)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 9918
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.72380952381
+
+
+ Classification took 0:00:00
+2016-09-02 15:13:53,776 INFO: Done:	 Result Analysis

@@ -13,12 +13,20 @@ import datetime
 import os
 import logging
 import time
+import h5py
 
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
+
+
+def ExecMultiview_multicore(coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY ,
+                            gridSearch=False, nbCores=1, metrics=None, nIter=30, **arguments):
+    DATASET = h5py.File(path+name+str(coreIndex)+".hdf5", "r")
+    return ExecMultiview(DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY,
+                         gridSearch=False, metrics=None, nIter=30, **arguments)
 
 
 def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY,

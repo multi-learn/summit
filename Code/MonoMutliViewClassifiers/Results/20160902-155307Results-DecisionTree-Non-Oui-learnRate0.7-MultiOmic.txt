@@ -1,0 +1,24 @@
+Classification on MultiOmic database for MiRNA_ with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.780952380952
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : MiRNA_	 View shape : (347, 1046)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 29
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.780952380952
+
+
+ Classification took 0:00:00

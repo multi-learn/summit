@@ -12,11 +12,13 @@ import numpy as np
 import logging
 import matplotlib
 matplotlib.use('Agg')
+import math
+import time
 
 # Import own modules
 import Multiview
-from Multiview.ExecMultiview import ExecMultiview
-from Monoview.ExecClassifMonoView import ExecMonoview
+from Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
+from Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 import Multiview.GetMultiviewDb as DB
 import Monoview
 from ResultAnalysis import resultAnalysis
@@ -160,6 +162,8 @@ os.nice(args.nice)
 nbCores = args.CL_cores
 if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech"]:
     getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
+else:
+    getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
 
 try:
     gridSearch = args.CL_NoGS
@@ -183,9 +187,17 @@ logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=lo
 if args.log:
     logging.getLogger().addHandler(logging.StreamHandler())
 
-getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
+
 DATASET, LABELS_DICTIONARY = getDatabase(args.views.split(":"), args.pathF, args.name, len(args.CL_classes), args.CL_classes)
 datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
+if nbCores>1:
+    logging.debug("Start:\t Creating "+str(nbCores)+" temporary datasets for multiprocessing")
+    logging.warning(" WARNING : /!\ This may use a lot of HDD storage space : "+
+                    str(os.path.getsize(args.pathF+args.name+".hdf5")*nbCores/float(1024)/1000/1000)+" Gbytes /!\ ")
+    time.sleep(5)
+    datasetFiles = DB.copyHDF5(args.pathF, args.name, nbCores)
+    logging.debug("Start:\t Creating datasets for multiprocessing")
+
 NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
 views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
 NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
@@ -257,31 +269,50 @@ AdaboostKWARGS = {"0": args.CL_Ada_n_est.split(":")[0], "1": args.CL_Ada_b_est.s
 argumentDictionaries = {"Monoview": {}, "Multiview": []}
 try:
     if benchmark["Monoview"]:
+        argumentDictionaries["Monoview"] = []
         for view in views:
-            argumentDictionaries["Monoview"][str(view)] = []
             for classifier in benchmark["Monoview"]:
-
-                arguments = {classifier+"KWARGS": globals()[classifier+"KWARGS"], "feat":view, "fileFeat": args.fileFeat,
-                             "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier}
-
-                argumentDictionaries["Monoview"][str(view)].append(arguments)
+                arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGS"], "feat":view, "fileFeat": args.fileFeat,
+                                     "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier}, "viewIndex":views.index(view)}
+                argumentDictionaries["Monoview"].append(arguments)
 except:
     pass
 bestClassifiers = []
 bestClassifiersConfigs = []
 resultsMonoview = []
-for viewIndex, viewArguments in enumerate(argumentDictionaries["Monoview"].values()):
-    resultsMonoview.append( (Parallel(n_jobs=nbCores)(
-        delayed(ExecMonoview)(DATASET.get("View"+str(viewIndex)), DATASET.get("labels").value, args.name,
-                              args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, gridSearch=gridSearch,
-                              metric=metric, nIter=args.CL_GS_iter, **arguments)
-        for arguments in viewArguments)))
+if nbCores>1:
+    nbExperiments = len(argumentDictionaries["Monoview"])
+    print nbExperiments
+    for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
+        resultsMonoview+=(Parallel(n_jobs=nbCores)(
+                delayed(ExecMonoview_multicore)(args.name, args.CL_split, args.CL_nbFolds, coreIndex, args.type, args.pathF, gridSearch=gridSearch,
+                                      metric=metric, nIter=args.CL_GS_iter, **argumentDictionaries["Monoview"][coreIndex+stepIndex*nbCores])
+                for coreIndex in range(min(nbCores, nbExperiments - (stepIndex + 1) * nbCores))))
+    accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
+    print accuracies
+    for result in resultsMonoview:
+        print result[0]
+    print resultsMonoview[0][0]
+    classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
+    classifiersConfigs = [[result[1][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
+    for viewIndex, view in enumerate(views):
+        bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+        bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
 
-    accuracies = [result[1] for result in resultsMonoview[viewIndex]]
-    classifiersNames = [result[0] for result in resultsMonoview[viewIndex]]
-    classifiersConfigs = [result[2] for result in resultsMonoview[viewIndex]]
-    bestClassifiers.append(classifiersNames[np.argmax(np.array(accuracies))])
-    bestClassifiersConfigs.append(classifiersConfigs[np.argmax(np.array(accuracies))])
+else:
+    resultsMonoview.append([ExecMonoview(datasetFiles[viewIndex].get("View"+str(viewIndex)),
+                                             datasetFiles[viewIndex].get("labels").value, args.name,
+                                             args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
+                                             gridSearch=gridSearch, metric=metric, nIter=args.CL_GS_iter,
+                                             **arguments["args"])
+                                for arguments in argumentDictionaries["Monoview"]])
+
+    accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
+    classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
+    classifiersConfigs = [[result[1][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
+    for viewIndex, view in enumerate(views):
+        bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+        bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
 try:
     if benchmark["Multiview"]:
         try:
@@ -337,13 +368,24 @@ try:
             pass
 except:
     pass
+if nbCores>1:
+    resultsMultiview = []
+    nbExperiments = len(argumentDictionaries["Multiview"])
+    for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
+        resultsMultiview += Parallel(n_jobs=nbCores)(
+            delayed(ExecMultiview_multicore)(coreIndex, args.name, args.CL_split, args.CL_nbFolds, args.type, args.pathF,
+                                   LABELS_DICTIONARY, gridSearch=gridSearch,
+                                   metrics=metrics, **argumentDictionaries["Multiview"][stepIndex*nbCores+coreIndex])
+            for coreIndex in range(min(nbCores, nbExperiments - (stepIndex + 1) * nbCores)))
+else:
+    resultsMultiview = [ExecMultiview(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
+                               LABELS_DICTIONARY, gridSearch=gridSearch,
+                               metrics=metrics, **arguments) for arguments in argumentDictionaries["Multiview"]]
 
-
-resultsMultiview = Parallel(n_jobs=nbCores)(
-    delayed(ExecMultiview)(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
-                           LABELS_DICTIONARY, gridSearch=gridSearch,
-                           metrics=metrics, **arguments)
-    for arguments in argumentDictionaries["Multiview"])
+if nbCores>1:
+    logging.debug("Start:\t Deleting "+str(nbCores)+" temporary datasets for multiprocessing")
+    datasetFiles = DB.deleteHDF5(args.pathF, args.name, nbCores)
+    logging.debug("Start:\t Deleting datasets for multiprocessing")
 
 results = (resultsMonoview, resultsMultiview)
 resultAnalysis(benchmark, results)

@@ -355,6 +355,19 @@ def getMultiOmicDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
     return datasetFile, labelDictionary
 
 
+def copyHDF5(pathF, name, nbCores):
+    datasetFile = h5py.File(pathF+name+".hdf5", "r")
+    for coreIndex in range(nbCores):
+        newDataSet = h5py.File(pathF+name+str(coreIndex)+".hdf5", "w")
+        for dataset in datasetFile:
+            datasetFile.copy("/"+dataset, newDataSet["/"])
+        newDataSet.close()
+
+
+def deleteHDF5(pathF, name, nbCores):
+    for coreIndex in range(nbCores):
+        os.remove(pathF+name+str(coreIndex)+".hdf5")
+
 # def getOneViewFromDB(viewName, pathToDB, DBName):
 #     view = np.genfromtxt(pathToDB + DBName +"-" + viewName, delimiter=';')
 #     return view
