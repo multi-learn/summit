@@ -1,0 +1,230 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 70.9959933267
+	-On Test : 48.0952380952
+	-On Validation : 70.0Dataset info :
+	-Dataset name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : View0 of shape (300, 19), View1 of shape (300, 7), View2 of shape (300, 18), View3 of shape (300, 6)
+	-5 folds
+	- Validation set length : 90 for learning rate : 0.7 on a total number of examples of 300
+
+
+
+Mumbo configuration : 
+	-Used 1 core(s)
+	-Iterations : min 1, max 10, threshold 0.01
+	-Weak Classifiers : DecisionTree with depth 3,  sub-sampled at 1.0 on View0
+		-DecisionTree with depth 3,  sub-sampled at 1.0 on View1
+		-DecisionTree with depth 3,  sub-sampled at 1.0 on View2
+		-DecisionTree with depth 3,  sub-sampled at 1.0 on View3
+
+
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:01        0:00:00
+	         Fold 2        0:00:02        0:00:00
+	         Fold 3        0:00:03        0:00:00
+	         Fold 4        0:00:05        0:00:00
+	         Fold 5        0:00:06        0:00:00
+	          Total        0:00:19        0:00:02
+	So a total classification time of 0:00:07.
+
+
+
+Mean average accuracies and stats for each fold :
+	- Fold 0, used 5
+		- On View0 : 
+			- Mean average Accuracy : 0.265
+			- Percentage of time chosen : 0.8
+		- On View1 : 
+			- Mean average Accuracy : 0.248333333333
+			- Percentage of time chosen : 0.0
+		- On View2 : 
+			- Mean average Accuracy : 0.262777777778
+			- Percentage of time chosen : 0.1
+		- On View3 : 
+			- Mean average Accuracy : 0.252222222222
+			- Percentage of time chosen : 0.1
+	- Fold 1, used 5
+		- On View0 : 
+			- Mean average Accuracy : 0.275287356322
+			- Percentage of time chosen : 1.0
+		- On View1 : 
+			- Mean average Accuracy : 0.233333333333
+			- Percentage of time chosen : 0.0
+		- On View2 : 
+			- Mean average Accuracy : 0.262068965517
+			- Percentage of time chosen : 0.0
+		- On View3 : 
+			- Mean average Accuracy : 0.241379310345
+			- Percentage of time chosen : 0.0
+	- Fold 2, used 4
+		- On View0 : 
+			- Mean average Accuracy : 0.176373626374
+			- Percentage of time chosen : 0.7
+		- On View1 : 
+			- Mean average Accuracy : 0.180769230769
+			- Percentage of time chosen : 0.3
+		- On View2 : 
+			- Mean average Accuracy : 0.165384615385
+			- Percentage of time chosen : 0.0
+		- On View3 : 
+			- Mean average Accuracy : 0.185164835165
+			- Percentage of time chosen : 0.0
+	- Fold 3, used 5
+		- On View0 : 
+			- Mean average Accuracy : 0.267391304348
+			- Percentage of time chosen : 0.9
+		- On View1 : 
+			- Mean average Accuracy : 0.254347826087
+			- Percentage of time chosen : 0.1
+		- On View2 : 
+			- Mean average Accuracy : 0.244565217391
+			- Percentage of time chosen : 0.0
+		- On View3 : 
+			- Mean average Accuracy : 0.24347826087
+			- Percentage of time chosen : 0.0
+	- Fold 4, used 5
+		- On View0 : 
+			- Mean average Accuracy : 0.251955307263
+			- Percentage of time chosen : 1.0
+		- On View1 : 
+			- Mean average Accuracy : 0.256424581006
+			- Percentage of time chosen : 0.0
+		- On View2 : 
+			- Mean average Accuracy : 0.241340782123
+			- Percentage of time chosen : 0.0
+		- On View3 : 
+			- Mean average Accuracy : 0.25251396648
+			- Percentage of time chosen : 0.0
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 47.7777777778
+			Accuracy on test : 0.0
+			Accuracy on validation : 50.0
+			Selected View : View3
+		 Fold 2
+			Accuracy on train : 46.5517241379
+			Accuracy on test : 0.0
+			Accuracy on validation : 50.0
+			Selected View : View0
+		 Fold 3
+			Accuracy on train : 47.2527472527
+			Accuracy on test : 0.0
+			Accuracy on validation : 50.0
+			Selected View : View1
+		 Fold 4
+			Accuracy on train : 47.8260869565
+			Accuracy on test : 0.0
+			Accuracy on validation : 50.0
+			Selected View : View0
+		 Fold 5
+			Accuracy on train : 46.3687150838
+			Accuracy on test : 0.0
+			Accuracy on validation : 50.0
+			Selected View : View0
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 72.7777777778
+			Accuracy on test : 0.0
+			Accuracy on validation : 77.7777777778
+			Selected View : View0
+		 Fold 2
+			Accuracy on train : 74.1379310345
+			Accuracy on test : 0.0
+			Accuracy on validation : 71.1111111111
+			Selected View : View0
+		 Fold 3
+			Accuracy on train : 65.9340659341
+			Accuracy on test : 0.0
+			Accuracy on validation : 61.1111111111
+			Selected View : View1
+		 Fold 4
+			Accuracy on train : 71.7391304348
+			Accuracy on test : 0.0
+			Accuracy on validation : 70.0
+			Selected View : View0
+		 Fold 5
+			Accuracy on train : 70.3910614525
+			Accuracy on test : 0.0
+			Accuracy on validation : 71.1111111111
+			Selected View : View0
+	- Iteration 3
+		 Fold 1
+			Accuracy on train : 72.7777777778
+			Accuracy on test : 0.0
+			Accuracy on validation : 77.7777777778
+			Selected View : View0
+		 Fold 2
+			Accuracy on train : 74.1379310345
+			Accuracy on test : 0.0
+			Accuracy on validation : 71.1111111111
+			Selected View : View0
+		 Fold 3
+			Accuracy on train : 65.9340659341
+			Accuracy on test : 0.0
+			Accuracy on validation : 61.1111111111
+			Selected View : View1
+		 Fold 4
+			Accuracy on train : 71.7391304348
+			Accuracy on test : 0.0
+			Accuracy on validation : 70.0
+			Selected View : View0
+		 Fold 5
+			Accuracy on train : 70.3910614525
+			Accuracy on test : 0.0
+			Accuracy on validation : 71.1111111111
+			Selected View : View0
+	- Iteration 4
+		 Fold 1
+			Accuracy on train : 72.7777777778
+			Accuracy on test : 0.0
+			Accuracy on validation : 77.7777777778
+			Selected View : View2
+		 Fold 2
+			Accuracy on train : 74.1379310345
+			Accuracy on test : 0.0
+			Accuracy on validation : 71.1111111111
+			Selected View : View0
+		 Fold 3
+			Accuracy on train : 47.2527472527
+			Accuracy on test : 0.0
+			Accuracy on validation : 50.0
+			Selected View : View0
+		 Fold 4
+			Accuracy on train : 71.7391304348
+			Accuracy on test : 0.0
+			Accuracy on validation : 70.0
+			Selected View : View1
+		 Fold 5
+			Accuracy on train : 70.3910614525
+			Accuracy on test : 0.0
+			Accuracy on validation : 70.0
+			Selected View : View0
+	- Iteration 5
+		 Fold 1
+			Accuracy on train : 47.7777777778
+			Accuracy on test : 0.0
+			Accuracy on validation : 50.0
+			Selected View : View0
+		 Fold 2
+			Accuracy on train : 46.5517241379
+			Accuracy on test : 0.0
+			Accuracy on validation : 50.0
+			Selected View : View0
+		 Fold 4
+			Accuracy on train : 47.8260869565
+			Accuracy on test : 0.0
+			Accuracy on validation : 50.0
+			Selected View : View0
+		 Fold 5
+			Accuracy on train : 46.3687150838
+			Accuracy on test : 0.0
+			Accuracy on validation : 50.0
+			Selected View : View0

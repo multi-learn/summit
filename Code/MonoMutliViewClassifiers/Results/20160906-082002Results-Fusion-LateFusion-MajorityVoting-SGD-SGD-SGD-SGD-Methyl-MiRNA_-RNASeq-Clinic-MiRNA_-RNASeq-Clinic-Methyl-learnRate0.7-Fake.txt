@@ -1,0 +1,32 @@
+		Result for Multiview classification with LateFusion
+
+Average accuracy :
+	-On Train : 54.932173067
+	-On Test : 55.6097560976
+	-On Validation : 57.3033707865
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with Majority Voting 
+	-With monoview classifiers : 
+		- SGDClassifier with loss : modified_huber, penalty : elasticnet
+		- SGDClassifier with loss : modified_huber, penalty : l1
+		- SGDClassifier with loss : modified_huber, penalty : l1
+		- SGDClassifier with loss : modified_huber, penalty : l1
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:01        0:00:00
+	So a total classification time of 0:00:00.
+

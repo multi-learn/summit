@@ -137,7 +137,7 @@ groupMumbo.add_argument('--MU_config', metavar='STRING', action='store', nargs='
                         default=['3:1.0', '3:1.0', '3:1.0','3:1.0'])
 groupMumbo.add_argument('--MU_iter', metavar='INT', action='store', nargs=3,
                         help='Max number of iteration, min number of iteration, convergence threshold', type=float,
-                        default=[1000, 300, 0.0001])
+                        default=[10,1, 0.01])
 
 groupFusion = parser.add_argument_group('Fusion arguments')
 groupFusion.add_argument('--FU_types', metavar='STRING', action='store',
@@ -160,7 +160,7 @@ groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store', nar
 args = parser.parse_args()
 os.nice(args.nice)
 nbCores = args.CL_cores
-if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech"]:
+if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake"]:
     getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
 else:
     getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
@@ -282,17 +282,12 @@ bestClassifiersConfigs = []
 resultsMonoview = []
 if nbCores>1:
     nbExperiments = len(argumentDictionaries["Monoview"])
-    print nbExperiments
     for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
         resultsMonoview+=(Parallel(n_jobs=nbCores)(
                 delayed(ExecMonoview_multicore)(args.name, args.CL_split, args.CL_nbFolds, coreIndex, args.type, args.pathF, gridSearch=gridSearch,
                                       metric=metric, nIter=args.CL_GS_iter, **argumentDictionaries["Monoview"][coreIndex+stepIndex*nbCores])
                 for coreIndex in range(min(nbCores, nbExperiments - (stepIndex + 1) * nbCores))))
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
-    print accuracies
-    for result in resultsMonoview:
-        print result[0]
-    print resultsMonoview[0][0]
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersConfigs = [[result[1][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     for viewIndex, view in enumerate(views):
@@ -300,11 +295,11 @@ if nbCores>1:
         bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
 
 else:
-    resultsMonoview.append([ExecMonoview(datasetFiles[viewIndex].get("View"+str(viewIndex)),
-                                             datasetFiles[viewIndex].get("labels").value, args.name,
+    resultsMonoview+=([ExecMonoview(DATASET.get("View"+str(arguments["viewIndex"])),
+                                             DATASET.get("labels").value, args.name,
                                              args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
                                              gridSearch=gridSearch, metric=metric, nIter=args.CL_GS_iter,
-                                             **arguments["args"])
+                                             **arguments)
                                 for arguments in argumentDictionaries["Monoview"]])
 
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
@@ -388,6 +383,6 @@ if nbCores>1:
     logging.debug("Start:\t Deleting datasets for multiprocessing")
 
 results = (resultsMonoview, resultsMultiview)
-resultAnalysis(benchmark, results)
+resultAnalysis(benchmark, results, args.name)
 
 

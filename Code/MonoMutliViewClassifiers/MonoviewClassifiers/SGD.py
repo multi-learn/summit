@@ -25,7 +25,7 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
 
 def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SGD = Pipeline([('classifier', SGDClassifier())])
-    losses = ['log', 'modified_huber', 'perceptron']
+    losses = ['log', 'modified_huber']
     penalties = ["l1", "l2", "elasticnet"]
     alphas = uniform()
     param_SGD = {"classifier__loss": losses, "classifier__penalty": penalties,

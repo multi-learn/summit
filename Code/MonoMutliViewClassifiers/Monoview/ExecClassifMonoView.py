@@ -39,13 +39,17 @@ def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databa
     X = DATASET.get("View"+str(neededViewIndex))
     Y = DATASET.get("labels").value
     returnedViewIndex = args["viewIndex"]
-    return returnedViewIndex, ExecMonoview(X, Y, name, learningRate, nbFolds, 1, databaseType, path, gridSearch=gridSearch,
-                        metrics=metrics, nIter=nIter, **kwargs)
+    return ExecMonoview(X, Y, name, learningRate, nbFolds, 1, databaseType, path, gridSearch=gridSearch,
+                        metrics=metrics, nIter=nIter, **args)
 
 
 def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True,
-                metrics=[["accuracy_score", None]], nIter=30, **kwargs):
+                metrics=[["accuracy_score", None]], nIter=30, **args):
 
+    try:
+        kwargs = args["args"]
+    except:
+        kwargs = args
     t_start = time.time()
     directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
     feat = X.attrs["name"]
@@ -129,7 +133,8 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
             imagesAnalysis[imageName].savefig(outputFileName + imageName + '.png')
 
     logging.info("Done:\t Result Analysis")
-    return [CL_type, test, cl_desc, feat]
+    viewIndex = args["viewIndex"]
+    return viewIndex, [CL_type, test, cl_desc, feat]
     # # Classification Report with Precision, Recall, F1 , Support
     # logging.debug("Info:\t Classification report:")
     # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Report"

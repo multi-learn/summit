@@ -30,7 +30,6 @@ class SVMForLinear(LateFusionClassifier):
         self.SVMForLinearFusionFit(DATASET, usedIndices=trainIndices)
 
     def predict_hdf5(self, DATASET, usedIndices=None):
-        self.weights = self.weights/float(max(self.weights))
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if usedIndices:
