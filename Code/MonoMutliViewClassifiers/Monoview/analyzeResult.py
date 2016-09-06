@@ -38,6 +38,7 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
 
 def execute(name, learningRate, nbFolds, nbCores, gridSearch, metrics, nIter, feat, CL_type, clKWARGS, classLabelsNames,
             shape, y_train, y_train_pred, y_test, y_test_pred, time):
+    metricsScores = {}
     metricModule = getattr(Metrics, metrics[0][0])
     train = metricModule.score(y_train, y_train_pred)
     val = metricModule.score(y_test, y_test_pred)
@@ -47,7 +48,13 @@ def execute(name, learningRate, nbFolds, nbCores, gridSearch, metrics, nIter, fe
     stringAnalysis += getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS)
     for metric in metrics:
         stringAnalysis+=getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred)
+        if metric[1]!=None:
+            metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+        else:
+            metricKWARGS = {}
+        metricsScores[metric[0]] = [getattr(Metrics, metric[0]).score(y_train, y_train_pred, **metricKWARGS), "",
+                                    getattr(Metrics, metric[0]).score(y_test, y_test_pred, **metricKWARGS)]
     stringAnalysis += "\n\n Classification took "+ str(hms(seconds=int(time)))
 
     imageAnalysis = {}
-    return stringAnalysis, imageAnalysis, train, "", val
+    return stringAnalysis, imageAnalysis, metricsScores

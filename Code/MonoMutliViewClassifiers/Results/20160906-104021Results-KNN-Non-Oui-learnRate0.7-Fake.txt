@@ -1,0 +1,24 @@
+Classification on Fake database for View1 with KNN
+
+accuracy_score on train : 0.652380952381
+accuracy_score on test : 0.522222222222
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 7)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 9
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.652380952381
+		- Score on test : 0.522222222222
+
+
+ Classification took 0:00:00

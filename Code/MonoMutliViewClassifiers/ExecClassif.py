@@ -160,6 +160,7 @@ groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store', nar
 args = parser.parse_args()
 os.nice(args.nice)
 nbCores = args.CL_cores
+start = time.time()
 if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake"]:
     getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
 else:
@@ -265,8 +266,9 @@ SGDKWARGS = {"2": map(float, args.CL_SGD_alpha.split(":"))[0], "1": args.CL_SGD_
 KNNKWARGS = {"0": map(float, args.CL_KNN_neigh.split(":"))[0]}
 AdaboostKWARGS = {"0": args.CL_Ada_n_est.split(":")[0], "1": args.CL_Ada_b_est.split(":")[0]}
 
-
+dataBaseTime = time.time()-start
 argumentDictionaries = {"Monoview": {}, "Multiview": []}
+print benchmark
 try:
     if benchmark["Monoview"]:
         argumentDictionaries["Monoview"] = []
@@ -308,6 +310,7 @@ else:
     for viewIndex, view in enumerate(views):
         bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
         bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+monoviewTime = time.time()-dataBaseTime
 try:
     if benchmark["Multiview"]:
         try:
@@ -376,12 +379,13 @@ else:
     resultsMultiview = [ExecMultiview(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
                                LABELS_DICTIONARY, gridSearch=gridSearch,
                                metrics=metrics, **arguments) for arguments in argumentDictionaries["Multiview"]]
-
+multiviewTime = time.time()-monoviewTime
 if nbCores>1:
     logging.debug("Start:\t Deleting "+str(nbCores)+" temporary datasets for multiprocessing")
     datasetFiles = DB.deleteHDF5(args.pathF, args.name, nbCores)
     logging.debug("Start:\t Deleting datasets for multiprocessing")
 
+times = [dataBaseTime, monoviewTime, multiviewTime]
 results = (resultsMonoview, resultsMultiview)
 resultAnalysis(benchmark, results, args.name)
 

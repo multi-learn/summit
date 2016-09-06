@@ -1,0 +1,24 @@
+Classification on Fake database for View3 with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.533333333333
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 19)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 16
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.533333333333
+
+
+ Classification took 0:00:00

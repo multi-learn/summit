@@ -26,7 +26,7 @@ def ExecMultiview_multicore(coreIndex, name, learningRate, nbFolds, databaseType
                             gridSearch=False, nbCores=1, metrics=None, nIter=30, **arguments):
     DATASET = h5py.File(path+name+str(coreIndex)+".hdf5", "r")
     return ExecMultiview(DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY,
-                         gridSearch=False, metrics=None, nIter=30, **arguments)
+                         gridSearch=gridSearch, metrics=None, nIter=30, **arguments)
 
 
 def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY,
@@ -59,15 +59,15 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     logging.info("Start:\t Determine validation split for ratio " + str(learningRate))
     validationIndices = DB.splitDataset(DATASET, learningRate, datasetLength)
     learningIndices = [index for index in range(datasetLength) if index not in validationIndices]
-    datasetLength = len(learningIndices)
+    classificationSetLength = len(learningIndices)
     logging.info("Done:\t Determine validation split")
 
     logging.info("Start:\t Determine "+str(nbFolds)+" folds")
     if nbFolds != 1:
         kFolds = DB.getKFoldIndices(nbFolds, DATASET.get("labels")[...], NB_CLASS, learningIndices)
     else:
-        kFolds = [[], range(datasetLength)]
-    logging.info("Info:\t Length of Learning Sets: " + str(datasetLength - len(kFolds[0])))
+        kFolds = [[], range(classificationSetLength)]
+    logging.info("Info:\t Length of Learning Sets: " + str(classificationSetLength - len(kFolds[0])))
     logging.info("Info:\t Length of Testing Sets: " + str(len(kFolds[0])))
     logging.info("Info:\t Length of Validation Set: " + str(len(validationIndices)))
     logging.info("Done:\t Determine folds")
@@ -89,7 +89,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     kFoldPredictionTime = []
     kFoldClassifier = []
 
-
+    gridSearch=True
     if gridSearch:
         logging.info("Start:\t Randomsearching best settings for monoview classifiers")
         bestSettings, fusionConfig = classifierGridSearch(DATASET, classificationKWARGS, learningIndices
@@ -104,10 +104,10 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     logging.info("Start:\t Classification")
     # Begin Classification
     for foldIdx, fold in enumerate(kFolds):
-        if fold != range(datasetLength):
+        if fold != range(classificationSetLength):
             fold.sort()
             logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
-            trainIndices = [index for index in range(datasetLength) if index not in fold]
+            trainIndices = [index for index in range(datasetLength) if (index not in fold) and (index not in validationIndices)]
             DATASET_LENGTH = len(trainIndices)
             classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("labels").value, NB_CORES=nbCores, **classificationKWARGS)
 
@@ -132,7 +132,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
     times = (extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime)
 
-    stringAnalysis, imagesAnalysis, train, test, val = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
+    stringAnalysis, imagesAnalysis, metricsScores = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
                                                             kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
                                                             DATASET, classificationKWARGS, learningRate, LABELS_DICTIONARY,
                                                             views, nbCores, times, kFolds, name, nbFolds,
@@ -166,7 +166,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
             imagesAnalysis[imageName].savefig(outputFileName + imageName + '.png')
 
     logging.info("Done:\t Result Analysis")
-    return CL_type, classificationKWARGS, train, test, val
+    return CL_type, classificationKWARGS, metricsScores
 
 
 if __name__=='__main__':

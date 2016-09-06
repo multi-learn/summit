@@ -1,0 +1,24 @@
+Classification on Fake database for View3 with RandomForest
+
+accuracy_score on train : 0.966666666667
+accuracy_score on test : 0.422222222222
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 17)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 8, max_depth : 18
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.966666666667
+		- Score on test : 0.422222222222
+
+
+ Classification took 0:00:00

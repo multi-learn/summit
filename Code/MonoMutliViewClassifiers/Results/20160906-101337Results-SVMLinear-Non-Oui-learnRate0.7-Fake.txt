@@ -1,0 +1,24 @@
+Classification on Fake database for View2 with SVMLinear
+
+accuracy_score on train : 0.519047619048
+accuracy_score on test : 0.488888888889
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 7)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 9584
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.519047619048
+		- Score on test : 0.488888888889
+
+
+ Classification took 0:00:00

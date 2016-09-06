@@ -1,0 +1,15 @@
+2016-09-06 10:06:22,879 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-06 10:06:22,881 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:06:22,881 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-06 10:06:22,881 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:06:22,882 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-06 10:06:22,882 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-06 10:06:22,882 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:06:22,882 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:06:22,965 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:06:22,965 DEBUG: Start:	 Training
+2016-09-06 10:06:22,970 DEBUG: Info:	 Time for Training: 0.0897569656372[s]
+2016-09-06 10:06:22,971 DEBUG: Done:	 Training
+2016-09-06 10:06:22,971 DEBUG: Start:	 Predicting
+2016-09-06 10:06:22,984 DEBUG: Done:	 Predicting
+2016-09-06 10:06:22,984 DEBUG: Start:	 Getting Results

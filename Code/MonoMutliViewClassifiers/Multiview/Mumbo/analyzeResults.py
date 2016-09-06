@@ -131,7 +131,7 @@ def getAlgoConfig(initKWARGS, NB_CORES, viewNames, gridSearch, nIter, times):
 
 def getClassificationReport(kFolds, kFoldClassifier, CLASS_LABELS, validationIndices, DATASET,
                             kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels):
-    DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]-len(validationIndices)
+    DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]
     nbView = DATASET.get("Metadata").attrs["nbView"]
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     kFoldPredictedTrainLabelsByIter = []
@@ -152,7 +152,7 @@ def getClassificationReport(kFolds, kFoldClassifier, CLASS_LABELS, validationInd
             mumboClassifier = kFoldClassifier[foldIdx]
             meanAverageAccuracies = np.mean(mumboClassifier.averageAccuracies, axis=0)
             kFoldMeanAverageAccuracies.append(meanAverageAccuracies)
-            trainIndices = [index for index in range(DATASET_LENGTH) if index not in fold]
+            trainIndices = [index for index in range(DATASET_LENGTH) if (index not in fold) and (index not in validationIndices)]
             testLabels = CLASS_LABELS[fold]
             trainLabels = CLASS_LABELS[trainIndices]
             validationLabels = CLASS_LABELS[validationIndices]
@@ -232,6 +232,31 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
     metricScoreString += "\n"
     return metricScoreString
 
+
+def getTotalMetricScores(metric, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
+                         kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds):
+    labels = DATASET.get("labels").value
+    metricModule = getattr(Metrics, metric[0])
+    if metric[1]!=None:
+        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+    else:
+        metricKWARGS = {}
+    trainScore = np.mean(np.array([metricModule.score([label for index, label in enumerate(labels) if (index not in fold) and (index not in validationIndices)], predictedLabels, **metricKWARGS) for fold, predictedLabels in zip(kFolds, kFoldPredictedTrainLabels)]))
+    testScore = np.mean(np.array([metricModule.score(labels[fold], predictedLabels, **metricKWARGS) for fold, predictedLabels in zip(kFolds, kFoldPredictedTestLabels)]))
+    validationScore = np.mean(np.array([metricModule.score(labels[validationIndices], predictedLabels, **metricKWARGS) for predictedLabels in kFoldPredictedValidationLabels]))
+    return [trainScore, testScore, validationScore]
+
+
+def getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
+                 kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds,):
+    metricsScores = {}
+    for metric in metrics:
+        metricsScores[metric[0]] = getTotalMetricScores(metric, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
+                                                        kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds)
+    return metricsScores
+
+
+
 def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
             DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, databaseName,
             nbFolds, validationIndices, gridSearch, nIter, metrics):
@@ -280,7 +305,6 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
                             " : \n\t\t\t- Mean average Accuracy : "+str(meanAverageAccuracy)+\
                             "\n\t\t\t- Percentage of time chosen : "+str(bestViewStat)
     stringAnalysis += "\n\n For each iteration : "
-    print iterRelevant(0, kFoldClassifier)
     for iterIndex in range(maxIter):
         if iterRelevant(iterIndex, kFoldClassifier).any():
             stringAnalysis += "\n\t- Iteration " + str(iterIndex + 1)
@@ -294,9 +318,9 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     trainAccuracyByIter = list(formatedAccuracies["Train"].mean(axis=0))+modifiedMean(surplusAccuracies["Train"])
     testAccuracyByIter = list(formatedAccuracies["Test"].mean(axis=0))+modifiedMean(surplusAccuracies["Test"])
     validationAccuracyByIter = list(formatedAccuracies["Validation"].mean(axis=0))+modifiedMean(surplusAccuracies["Validation"])
-    print nbMaxIter
     name, image = plotAccuracyByIter(trainAccuracyByIter, testAccuracyByIter, validationAccuracyByIter, nbMaxIter,
                                      bestViews, views, classifierAnalysis)
     imagesAnalysis = {name: image}
-
-    return stringAnalysis, imagesAnalysis, totalAccuracyOnTrain, totalAccuracyOnTest, totalAccuracyOnValidation
+    metricsScores = getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
+                                     kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds)
+    return stringAnalysis, imagesAnalysis, metricsScores

@@ -32,6 +32,31 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
     metricScoreString += "\n"
     return metricScoreString
 
+def getTotalMetricScores(metric, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
+                         kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds):
+    labels = DATASET.get("labels").value
+    metricModule = getattr(Metrics, metric[0])
+    if metric[1]!=None:
+        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+    else:
+        metricKWARGS = {}
+    trainScore = np.mean(np.array([metricModule.score([label for index, label in enumerate(labels) if index not in fold+validationIndices], predictedLabels, **metricKWARGS) for fold, predictedLabels in zip(kFolds, kFoldPredictedTrainLabels)]))
+    testScore = np.mean(np.array([metricModule.score(labels[fold], predictedLabels, **metricKWARGS) for fold, predictedLabels in zip(kFolds, kFoldPredictedTestLabels)]))
+    validationScore = np.mean(np.array([metricModule.score(labels[validationIndices], predictedLabels, **metricKWARGS) for predictedLabels in kFoldPredictedValidationLabels]))
+    return [trainScore, testScore, validationScore]
+
+
+def getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
+                     kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds):
+    metricsScores = {}
+    for metric in metrics:
+        metricsScores[metric[0]] = getTotalMetricScores(metric, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
+                                                        kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds)
+    return metricsScores
+
+
+
+
 
 def execute(kFoldClassifier, kFoldPredictedTrainLabels,
             kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
@@ -95,4 +120,6 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels,
                                                    str(hms(seconds=int(sum(kFoldPredictionTime))))])
     stringAnalysis += "\n\tSo a total classification time of " + str(hms(seconds=int(classificationTime))) + ".\n\n"
     imagesAnalysis = {}
-    return stringAnalysis, imagesAnalysis, totalAccuracyOnTrain, totalAccuracyOnTest, totalAccuracyOnValidation
+    metricsScores = getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
+                                     kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds)
+    return stringAnalysis, imagesAnalysis, metricsScores

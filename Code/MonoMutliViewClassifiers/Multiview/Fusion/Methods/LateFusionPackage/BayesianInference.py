@@ -51,6 +51,5 @@ class BayesianInference(LateFusionClassifier):
                        "\n\t-With monoview classifiers : "
         for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
-            print monoviewClassifierConfig
             configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
         return configString

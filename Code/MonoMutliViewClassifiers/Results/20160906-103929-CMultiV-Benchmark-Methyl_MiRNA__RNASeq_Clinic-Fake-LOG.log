@@ -1,0 +1,1250 @@
+2016-09-06 10:39:29,831 DEBUG: Start:	 Creating 2 temporary datasets for multiprocessing
+2016-09-06 10:39:29,831 WARNING:  WARNING : /!\ This may use a lot of HDD storage space : 0.000170875 Gbytes /!\ 
+2016-09-06 10:39:34,843 DEBUG: Start:	 Creating datasets for multiprocessing
+2016-09-06 10:39:34,844 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-06 10:39:34,896 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:34,896 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-06 10:39:34,896 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:34,897 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:34,897 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-06 10:39:34,897 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:34,897 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-06 10:39:34,898 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-06 10:39:34,898 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:34,898 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:34,898 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-06 10:39:34,898 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-06 10:39:34,899 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:34,899 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:34,942 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:34,943 DEBUG: Start:	 Training
+2016-09-06 10:39:34,946 DEBUG: Info:	 Time for Training: 0.0496671199799[s]
+2016-09-06 10:39:34,946 DEBUG: Done:	 Training
+2016-09-06 10:39:34,946 DEBUG: Start:	 Predicting
+2016-09-06 10:39:34,948 DEBUG: Done:	 Predicting
+2016-09-06 10:39:34,949 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:34,950 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:34,950 INFO: Classification on Fake database for View0 with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.511111111111
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 11
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.511111111111
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:34,950 INFO: Done:	 Result Analysis
+2016-09-06 10:39:34,952 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:34,952 DEBUG: Start:	 Training
+2016-09-06 10:39:34,957 DEBUG: Info:	 Time for Training: 0.0618000030518[s]
+2016-09-06 10:39:34,957 DEBUG: Done:	 Training
+2016-09-06 10:39:34,957 DEBUG: Start:	 Predicting
+2016-09-06 10:39:34,960 DEBUG: Done:	 Predicting
+2016-09-06 10:39:34,961 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:34,962 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:34,963 INFO: Classification on Fake database for View0 with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.533333333333
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 11, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.533333333333
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:34,963 INFO: Done:	 Result Analysis
+2016-09-06 10:39:35,046 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:35,046 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:35,046 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-06 10:39:35,046 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-06 10:39:35,046 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:35,046 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:35,047 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-06 10:39:35,047 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-06 10:39:35,047 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-06 10:39:35,047 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-06 10:39:35,047 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:35,047 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:35,047 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:35,047 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:35,081 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:35,081 DEBUG: Start:	 Training
+2016-09-06 10:39:35,081 DEBUG: Info:	 Time for Training: 0.0358710289001[s]
+2016-09-06 10:39:35,081 DEBUG: Done:	 Training
+2016-09-06 10:39:35,081 DEBUG: Start:	 Predicting
+2016-09-06 10:39:35,089 DEBUG: Done:	 Predicting
+2016-09-06 10:39:35,089 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:35,091 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:35,091 INFO: Classification on Fake database for View0 with KNN
+
+accuracy_score on train : 0.571428571429
+accuracy_score on test : 0.455555555556
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 43
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.571428571429
+		- Score on test : 0.455555555556
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:35,091 INFO: Done:	 Result Analysis
+2016-09-06 10:39:35,328 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:35,328 DEBUG: Start:	 Training
+2016-09-06 10:39:35,368 DEBUG: Info:	 Time for Training: 0.322957992554[s]
+2016-09-06 10:39:35,369 DEBUG: Done:	 Training
+2016-09-06 10:39:35,369 DEBUG: Start:	 Predicting
+2016-09-06 10:39:35,374 DEBUG: Done:	 Predicting
+2016-09-06 10:39:35,374 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:35,376 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:35,376 INFO: Classification on Fake database for View0 with RandomForest
+
+accuracy_score on train : 0.990476190476
+accuracy_score on test : 0.511111111111
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 15, max_depth : 11
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.990476190476
+		- Score on test : 0.511111111111
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:35,376 INFO: Done:	 Result Analysis
+2016-09-06 10:39:35,496 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:35,496 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:35,496 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-09-06 10:39:35,496 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-09-06 10:39:35,497 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:35,497 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:35,498 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-06 10:39:35,498 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-06 10:39:35,498 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-06 10:39:35,498 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-06 10:39:35,498 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:35,498 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:35,498 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:35,498 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:35,546 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:35,546 DEBUG: Start:	 Training
+2016-09-06 10:39:35,547 DEBUG: Info:	 Time for Training: 0.0519301891327[s]
+2016-09-06 10:39:35,547 DEBUG: Done:	 Training
+2016-09-06 10:39:35,547 DEBUG: Start:	 Predicting
+2016-09-06 10:39:35,553 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:35,554 DEBUG: Start:	 Training
+2016-09-06 10:39:35,565 DEBUG: Done:	 Predicting
+2016-09-06 10:39:35,565 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:35,567 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:35,567 INFO: Classification on Fake database for View0 with SGD
+
+accuracy_score on train : 0.495238095238
+accuracy_score on test : 0.522222222222
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SGDClassifier with loss : log, penalty : l1
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.495238095238
+		- Score on test : 0.522222222222
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:35,567 INFO: Done:	 Result Analysis
+2016-09-06 10:39:35,575 DEBUG: Info:	 Time for Training: 0.0798330307007[s]
+2016-09-06 10:39:35,575 DEBUG: Done:	 Training
+2016-09-06 10:39:35,575 DEBUG: Start:	 Predicting
+2016-09-06 10:39:35,579 DEBUG: Done:	 Predicting
+2016-09-06 10:39:35,579 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:35,581 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:35,581 INFO: Classification on Fake database for View0 with SVMLinear
+
+accuracy_score on train : 0.519047619048
+accuracy_score on test : 0.522222222222
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7957
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.519047619048
+		- Score on test : 0.522222222222
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:35,581 INFO: Done:	 Result Analysis
+2016-09-06 10:39:35,643 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:35,643 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:35,644 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMRBF
+2016-09-06 10:39:35,644 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMPoly
+2016-09-06 10:39:35,644 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:35,644 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:35,645 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-06 10:39:35,645 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-06 10:39:35,645 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-06 10:39:35,646 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:35,646 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-06 10:39:35,646 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:35,646 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:35,646 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:35,698 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:35,699 DEBUG: Start:	 Training
+2016-09-06 10:39:35,701 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:35,701 DEBUG: Start:	 Training
+2016-09-06 10:39:35,716 DEBUG: Info:	 Time for Training: 0.0735998153687[s]
+2016-09-06 10:39:35,717 DEBUG: Done:	 Training
+2016-09-06 10:39:35,717 DEBUG: Start:	 Predicting
+2016-09-06 10:39:35,720 DEBUG: Info:	 Time for Training: 0.0770709514618[s]
+2016-09-06 10:39:35,720 DEBUG: Done:	 Training
+2016-09-06 10:39:35,720 DEBUG: Start:	 Predicting
+2016-09-06 10:39:35,723 DEBUG: Done:	 Predicting
+2016-09-06 10:39:35,723 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:35,724 DEBUG: Done:	 Predicting
+2016-09-06 10:39:35,724 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:35,724 INFO: Classification on Fake database for View0 with SVMRBF
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.533333333333
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7957
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.533333333333
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:35,724 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:35,724 INFO: Done:	 Result Analysis
+2016-09-06 10:39:35,726 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:35,726 INFO: Classification on Fake database for View0 with SVMPoly
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.522222222222
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7957
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.522222222222
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:35,726 INFO: Done:	 Result Analysis
+2016-09-06 10:39:35,791 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:35,791 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:35,791 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-06 10:39:35,791 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-06 10:39:35,791 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:35,791 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:35,792 DEBUG: Info:	 Shape X_train:(210, 8), Length of y_train:210
+2016-09-06 10:39:35,792 DEBUG: Info:	 Shape X_train:(210, 8), Length of y_train:210
+2016-09-06 10:39:35,792 DEBUG: Info:	 Shape X_test:(90, 8), Length of y_test:90
+2016-09-06 10:39:35,792 DEBUG: Info:	 Shape X_test:(90, 8), Length of y_test:90
+2016-09-06 10:39:35,792 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:35,792 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:35,792 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:35,792 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:35,826 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:35,827 DEBUG: Start:	 Training
+2016-09-06 10:39:35,828 DEBUG: Info:	 Time for Training: 0.0375211238861[s]
+2016-09-06 10:39:35,828 DEBUG: Done:	 Training
+2016-09-06 10:39:35,828 DEBUG: Start:	 Predicting
+2016-09-06 10:39:35,831 DEBUG: Done:	 Predicting
+2016-09-06 10:39:35,831 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:35,832 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:35,832 INFO: Classification on Fake database for View1 with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.455555555556
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 8)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 11
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.455555555556
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:35,833 INFO: Done:	 Result Analysis
+2016-09-06 10:39:35,840 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:35,840 DEBUG: Start:	 Training
+2016-09-06 10:39:35,843 DEBUG: Info:	 Time for Training: 0.0527670383453[s]
+2016-09-06 10:39:35,843 DEBUG: Done:	 Training
+2016-09-06 10:39:35,843 DEBUG: Start:	 Predicting
+2016-09-06 10:39:35,846 DEBUG: Done:	 Predicting
+2016-09-06 10:39:35,846 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:35,848 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:35,848 INFO: Classification on Fake database for View1 with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.466666666667
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 8)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 11, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.466666666667
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:35,848 INFO: Done:	 Result Analysis
+2016-09-06 10:39:35,945 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:35,945 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:35,945 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-06 10:39:35,945 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-06 10:39:35,945 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:35,945 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:35,946 DEBUG: Info:	 Shape X_train:(210, 8), Length of y_train:210
+2016-09-06 10:39:35,946 DEBUG: Info:	 Shape X_train:(210, 8), Length of y_train:210
+2016-09-06 10:39:35,947 DEBUG: Info:	 Shape X_test:(90, 8), Length of y_test:90
+2016-09-06 10:39:35,947 DEBUG: Info:	 Shape X_test:(90, 8), Length of y_test:90
+2016-09-06 10:39:35,947 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:35,947 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:35,947 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:35,947 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:35,998 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:35,998 DEBUG: Start:	 Training
+2016-09-06 10:39:35,999 DEBUG: Info:	 Time for Training: 0.0549540519714[s]
+2016-09-06 10:39:35,999 DEBUG: Done:	 Training
+2016-09-06 10:39:35,999 DEBUG: Start:	 Predicting
+2016-09-06 10:39:36,008 DEBUG: Done:	 Predicting
+2016-09-06 10:39:36,008 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:36,011 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:36,011 INFO: Classification on Fake database for View1 with KNN
+
+accuracy_score on train : 0.528571428571
+accuracy_score on test : 0.566666666667
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 8)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 43
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.528571428571
+		- Score on test : 0.566666666667
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:36,011 INFO: Done:	 Result Analysis
+2016-09-06 10:39:36,240 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:36,240 DEBUG: Start:	 Training
+2016-09-06 10:39:36,279 DEBUG: Info:	 Time for Training: 0.334888935089[s]
+2016-09-06 10:39:36,279 DEBUG: Done:	 Training
+2016-09-06 10:39:36,279 DEBUG: Start:	 Predicting
+2016-09-06 10:39:36,284 DEBUG: Done:	 Predicting
+2016-09-06 10:39:36,285 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:36,286 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:36,286 INFO: Classification on Fake database for View1 with RandomForest
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.444444444444
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 8)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 15, max_depth : 11
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.444444444444
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:36,286 INFO: Done:	 Result Analysis
+2016-09-06 10:39:36,394 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:36,394 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:36,394 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-09-06 10:39:36,394 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-09-06 10:39:36,394 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:36,394 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:36,395 DEBUG: Info:	 Shape X_train:(210, 8), Length of y_train:210
+2016-09-06 10:39:36,395 DEBUG: Info:	 Shape X_train:(210, 8), Length of y_train:210
+2016-09-06 10:39:36,395 DEBUG: Info:	 Shape X_test:(90, 8), Length of y_test:90
+2016-09-06 10:39:36,395 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:36,395 DEBUG: Info:	 Shape X_test:(90, 8), Length of y_test:90
+2016-09-06 10:39:36,395 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:36,395 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:36,396 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:36,441 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:36,441 DEBUG: Start:	 Training
+2016-09-06 10:39:36,442 DEBUG: Info:	 Time for Training: 0.0489950180054[s]
+2016-09-06 10:39:36,442 DEBUG: Done:	 Training
+2016-09-06 10:39:36,442 DEBUG: Start:	 Predicting
+2016-09-06 10:39:36,445 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:36,445 DEBUG: Start:	 Training
+2016-09-06 10:39:36,463 DEBUG: Info:	 Time for Training: 0.0693230628967[s]
+2016-09-06 10:39:36,463 DEBUG: Done:	 Training
+2016-09-06 10:39:36,463 DEBUG: Start:	 Predicting
+2016-09-06 10:39:36,466 DEBUG: Done:	 Predicting
+2016-09-06 10:39:36,466 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:36,467 DEBUG: Done:	 Predicting
+2016-09-06 10:39:36,467 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:36,468 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:36,469 INFO: Classification on Fake database for View1 with SGD
+
+accuracy_score on train : 0.504761904762
+accuracy_score on test : 0.477777777778
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 8)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SGDClassifier with loss : log, penalty : l1
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.504761904762
+		- Score on test : 0.477777777778
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:36,469 INFO: Done:	 Result Analysis
+2016-09-06 10:39:36,469 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:36,469 INFO: Classification on Fake database for View1 with SVMLinear
+
+accuracy_score on train : 0.485714285714
+accuracy_score on test : 0.377777777778
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 8)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7957
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.485714285714
+		- Score on test : 0.377777777778
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:36,470 INFO: Done:	 Result Analysis
+2016-09-06 10:39:36,547 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:36,547 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:36,548 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMPoly
+2016-09-06 10:39:36,548 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMRBF
+2016-09-06 10:39:36,548 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:36,548 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:36,550 DEBUG: Info:	 Shape X_train:(210, 8), Length of y_train:210
+2016-09-06 10:39:36,550 DEBUG: Info:	 Shape X_train:(210, 8), Length of y_train:210
+2016-09-06 10:39:36,550 DEBUG: Info:	 Shape X_test:(90, 8), Length of y_test:90
+2016-09-06 10:39:36,550 DEBUG: Info:	 Shape X_test:(90, 8), Length of y_test:90
+2016-09-06 10:39:36,550 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:36,550 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:36,550 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:36,550 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:36,603 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:36,603 DEBUG: Start:	 Training
+2016-09-06 10:39:36,613 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:36,614 DEBUG: Start:	 Training
+2016-09-06 10:39:36,619 DEBUG: Info:	 Time for Training: 0.0724880695343[s]
+2016-09-06 10:39:36,619 DEBUG: Done:	 Training
+2016-09-06 10:39:36,619 DEBUG: Start:	 Predicting
+2016-09-06 10:39:36,624 DEBUG: Done:	 Predicting
+2016-09-06 10:39:36,624 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:36,626 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:36,626 INFO: Classification on Fake database for View1 with SVMRBF
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.511111111111
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 8)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7957
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.511111111111
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:36,626 INFO: Done:	 Result Analysis
+2016-09-06 10:39:36,631 DEBUG: Info:	 Time for Training: 0.0851111412048[s]
+2016-09-06 10:39:36,631 DEBUG: Done:	 Training
+2016-09-06 10:39:36,632 DEBUG: Start:	 Predicting
+2016-09-06 10:39:36,635 DEBUG: Done:	 Predicting
+2016-09-06 10:39:36,635 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:36,637 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:36,637 INFO: Classification on Fake database for View1 with SVMPoly
+
+accuracy_score on train : 0.966666666667
+accuracy_score on test : 0.522222222222
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 8)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7957
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.966666666667
+		- Score on test : 0.522222222222
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:36,638 INFO: Done:	 Result Analysis
+2016-09-06 10:39:36,795 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:36,795 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-06 10:39:36,795 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:36,796 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:36,796 DEBUG: Info:	 Shape X_train:(210, 19), Length of y_train:210
+2016-09-06 10:39:36,797 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-06 10:39:36,797 DEBUG: Info:	 Shape X_test:(90, 19), Length of y_test:90
+2016-09-06 10:39:36,797 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:36,797 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:36,797 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:36,798 DEBUG: Info:	 Shape X_train:(210, 19), Length of y_train:210
+2016-09-06 10:39:36,798 DEBUG: Info:	 Shape X_test:(90, 19), Length of y_test:90
+2016-09-06 10:39:36,798 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:36,798 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:36,840 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:36,840 DEBUG: Start:	 Training
+2016-09-06 10:39:36,844 DEBUG: Info:	 Time for Training: 0.0481259822845[s]
+2016-09-06 10:39:36,844 DEBUG: Done:	 Training
+2016-09-06 10:39:36,844 DEBUG: Start:	 Predicting
+2016-09-06 10:39:36,846 DEBUG: Done:	 Predicting
+2016-09-06 10:39:36,847 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:36,848 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:36,848 INFO: Classification on Fake database for View2 with DecisionTree
+
+accuracy_score on train : 0.985714285714
+accuracy_score on test : 0.5
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 19)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 11
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.985714285714
+		- Score on test : 0.5
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:36,848 INFO: Done:	 Result Analysis
+2016-09-06 10:39:36,851 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:36,851 DEBUG: Start:	 Training
+2016-09-06 10:39:36,856 DEBUG: Info:	 Time for Training: 0.0621771812439[s]
+2016-09-06 10:39:36,856 DEBUG: Done:	 Training
+2016-09-06 10:39:36,856 DEBUG: Start:	 Predicting
+2016-09-06 10:39:36,859 DEBUG: Done:	 Predicting
+2016-09-06 10:39:36,860 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:36,862 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:36,862 INFO: Classification on Fake database for View2 with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.5
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 19)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 11, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:36,862 INFO: Done:	 Result Analysis
+2016-09-06 10:39:36,939 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:36,939 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:36,940 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-06 10:39:36,940 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-06 10:39:36,940 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:36,940 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:36,940 DEBUG: Info:	 Shape X_train:(210, 19), Length of y_train:210
+2016-09-06 10:39:36,940 DEBUG: Info:	 Shape X_train:(210, 19), Length of y_train:210
+2016-09-06 10:39:36,940 DEBUG: Info:	 Shape X_test:(90, 19), Length of y_test:90
+2016-09-06 10:39:36,940 DEBUG: Info:	 Shape X_test:(90, 19), Length of y_test:90
+2016-09-06 10:39:36,940 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:36,940 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:36,941 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:36,941 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:36,974 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:36,974 DEBUG: Start:	 Training
+2016-09-06 10:39:36,974 DEBUG: Info:	 Time for Training: 0.0355970859528[s]
+2016-09-06 10:39:36,975 DEBUG: Done:	 Training
+2016-09-06 10:39:36,975 DEBUG: Start:	 Predicting
+2016-09-06 10:39:36,983 DEBUG: Done:	 Predicting
+2016-09-06 10:39:36,983 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:36,984 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:36,984 INFO: Classification on Fake database for View2 with KNN
+
+accuracy_score on train : 0.561904761905
+accuracy_score on test : 0.555555555556
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 19)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 43
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.561904761905
+		- Score on test : 0.555555555556
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:36,984 INFO: Done:	 Result Analysis
+2016-09-06 10:39:37,218 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:37,219 DEBUG: Start:	 Training
+2016-09-06 10:39:37,260 DEBUG: Info:	 Time for Training: 0.320749998093[s]
+2016-09-06 10:39:37,260 DEBUG: Done:	 Training
+2016-09-06 10:39:37,260 DEBUG: Start:	 Predicting
+2016-09-06 10:39:37,265 DEBUG: Done:	 Predicting
+2016-09-06 10:39:37,265 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:37,267 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:37,267 INFO: Classification on Fake database for View2 with RandomForest
+
+accuracy_score on train : 0.995238095238
+accuracy_score on test : 0.533333333333
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 19)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 15, max_depth : 11
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.995238095238
+		- Score on test : 0.533333333333
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:37,267 INFO: Done:	 Result Analysis
+2016-09-06 10:39:37,387 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:37,387 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:37,387 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-09-06 10:39:37,387 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-09-06 10:39:37,387 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:37,387 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:37,388 DEBUG: Info:	 Shape X_train:(210, 19), Length of y_train:210
+2016-09-06 10:39:37,388 DEBUG: Info:	 Shape X_train:(210, 19), Length of y_train:210
+2016-09-06 10:39:37,388 DEBUG: Info:	 Shape X_test:(90, 19), Length of y_test:90
+2016-09-06 10:39:37,388 DEBUG: Info:	 Shape X_test:(90, 19), Length of y_test:90
+2016-09-06 10:39:37,388 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:37,388 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:37,388 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:37,388 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:37,439 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:37,439 DEBUG: Start:	 Training
+2016-09-06 10:39:37,440 DEBUG: Info:	 Time for Training: 0.0537350177765[s]
+2016-09-06 10:39:37,440 DEBUG: Done:	 Training
+2016-09-06 10:39:37,440 DEBUG: Start:	 Predicting
+2016-09-06 10:39:37,440 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:37,440 DEBUG: Start:	 Training
+2016-09-06 10:39:37,460 DEBUG: Done:	 Predicting
+2016-09-06 10:39:37,461 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:37,464 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:37,464 INFO: Classification on Fake database for View2 with SGD
+
+accuracy_score on train : 0.495238095238
+accuracy_score on test : 0.522222222222
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 19)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SGDClassifier with loss : log, penalty : l1
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.495238095238
+		- Score on test : 0.522222222222
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:37,465 INFO: Done:	 Result Analysis
+2016-09-06 10:39:37,469 DEBUG: Info:	 Time for Training: 0.082640171051[s]
+2016-09-06 10:39:37,469 DEBUG: Done:	 Training
+2016-09-06 10:39:37,469 DEBUG: Start:	 Predicting
+2016-09-06 10:39:37,473 DEBUG: Done:	 Predicting
+2016-09-06 10:39:37,473 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:37,474 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:37,474 INFO: Classification on Fake database for View2 with SVMLinear
+
+accuracy_score on train : 0.519047619048
+accuracy_score on test : 0.511111111111
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 19)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7957
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.519047619048
+		- Score on test : 0.511111111111
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:37,475 INFO: Done:	 Result Analysis
+2016-09-06 10:39:37,532 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:37,532 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:37,532 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMRBF
+2016-09-06 10:39:37,532 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMPoly
+2016-09-06 10:39:37,532 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:37,532 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:37,533 DEBUG: Info:	 Shape X_train:(210, 19), Length of y_train:210
+2016-09-06 10:39:37,533 DEBUG: Info:	 Shape X_train:(210, 19), Length of y_train:210
+2016-09-06 10:39:37,533 DEBUG: Info:	 Shape X_test:(90, 19), Length of y_test:90
+2016-09-06 10:39:37,533 DEBUG: Info:	 Shape X_test:(90, 19), Length of y_test:90
+2016-09-06 10:39:37,533 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:37,533 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:37,533 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:37,533 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:37,582 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:37,582 DEBUG: Start:	 Training
+2016-09-06 10:39:37,587 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:37,588 DEBUG: Start:	 Training
+2016-09-06 10:39:37,601 DEBUG: Info:	 Time for Training: 0.0697820186615[s]
+2016-09-06 10:39:37,601 DEBUG: Done:	 Training
+2016-09-06 10:39:37,601 DEBUG: Start:	 Predicting
+2016-09-06 10:39:37,607 DEBUG: Info:	 Time for Training: 0.0757231712341[s]
+2016-09-06 10:39:37,607 DEBUG: Done:	 Training
+2016-09-06 10:39:37,607 DEBUG: Start:	 Predicting
+2016-09-06 10:39:37,607 DEBUG: Done:	 Predicting
+2016-09-06 10:39:37,607 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:37,609 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:37,609 INFO: Classification on Fake database for View2 with SVMRBF
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.533333333333
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 19)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7957
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.533333333333
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:37,609 INFO: Done:	 Result Analysis
+2016-09-06 10:39:37,611 DEBUG: Done:	 Predicting
+2016-09-06 10:39:37,611 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:37,613 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:37,613 INFO: Classification on Fake database for View2 with SVMPoly
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.411111111111
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 19)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7957
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.411111111111
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:37,613 INFO: Done:	 Result Analysis
+2016-09-06 10:39:37,681 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:37,681 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:37,681 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-06 10:39:37,681 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-06 10:39:37,682 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:37,682 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:37,682 DEBUG: Info:	 Shape X_train:(210, 20), Length of y_train:210
+2016-09-06 10:39:37,682 DEBUG: Info:	 Shape X_train:(210, 20), Length of y_train:210
+2016-09-06 10:39:37,683 DEBUG: Info:	 Shape X_test:(90, 20), Length of y_test:90
+2016-09-06 10:39:37,683 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:37,683 DEBUG: Info:	 Shape X_test:(90, 20), Length of y_test:90
+2016-09-06 10:39:37,683 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:37,683 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:37,683 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:37,723 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:37,723 DEBUG: Start:	 Training
+2016-09-06 10:39:37,725 DEBUG: Info:	 Time for Training: 0.0450918674469[s]
+2016-09-06 10:39:37,726 DEBUG: Done:	 Training
+2016-09-06 10:39:37,726 DEBUG: Start:	 Predicting
+2016-09-06 10:39:37,728 DEBUG: Done:	 Predicting
+2016-09-06 10:39:37,728 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:37,730 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:37,730 INFO: Classification on Fake database for View3 with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.533333333333
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 20)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 11
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.533333333333
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:37,730 INFO: Done:	 Result Analysis
+2016-09-06 10:39:37,739 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:37,739 DEBUG: Start:	 Training
+2016-09-06 10:39:37,743 DEBUG: Info:	 Time for Training: 0.0631110668182[s]
+2016-09-06 10:39:37,744 DEBUG: Done:	 Training
+2016-09-06 10:39:37,744 DEBUG: Start:	 Predicting
+2016-09-06 10:39:37,746 DEBUG: Done:	 Predicting
+2016-09-06 10:39:37,747 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:37,748 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:37,749 INFO: Classification on Fake database for View3 with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.522222222222
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 20)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 11, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.522222222222
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:37,749 INFO: Done:	 Result Analysis
+2016-09-06 10:39:37,835 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:37,835 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:37,836 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-06 10:39:37,836 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-06 10:39:37,836 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:37,836 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:37,836 DEBUG: Info:	 Shape X_train:(210, 20), Length of y_train:210
+2016-09-06 10:39:37,837 DEBUG: Info:	 Shape X_test:(90, 20), Length of y_test:90
+2016-09-06 10:39:37,837 DEBUG: Info:	 Shape X_train:(210, 20), Length of y_train:210
+2016-09-06 10:39:37,837 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:37,837 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:37,837 DEBUG: Info:	 Shape X_test:(90, 20), Length of y_test:90
+2016-09-06 10:39:37,837 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:37,837 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:37,875 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:37,875 DEBUG: Start:	 Training
+2016-09-06 10:39:37,876 DEBUG: Info:	 Time for Training: 0.0416429042816[s]
+2016-09-06 10:39:37,876 DEBUG: Done:	 Training
+2016-09-06 10:39:37,877 DEBUG: Start:	 Predicting
+2016-09-06 10:39:37,885 DEBUG: Done:	 Predicting
+2016-09-06 10:39:37,886 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:37,887 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:37,887 INFO: Classification on Fake database for View3 with KNN
+
+accuracy_score on train : 0.52380952381
+accuracy_score on test : 0.5
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 20)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 43
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.52380952381
+		- Score on test : 0.5
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:37,887 INFO: Done:	 Result Analysis
+2016-09-06 10:39:38,178 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:38,178 DEBUG: Start:	 Training
+2016-09-06 10:39:38,218 DEBUG: Info:	 Time for Training: 0.383457183838[s]
+2016-09-06 10:39:38,218 DEBUG: Done:	 Training
+2016-09-06 10:39:38,218 DEBUG: Start:	 Predicting
+2016-09-06 10:39:38,224 DEBUG: Done:	 Predicting
+2016-09-06 10:39:38,224 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:38,225 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:38,226 INFO: Classification on Fake database for View3 with RandomForest
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.433333333333
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 20)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 15, max_depth : 11
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.433333333333
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:38,226 INFO: Done:	 Result Analysis
+2016-09-06 10:39:38,289 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:38,289 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 10:39:38,289 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-09-06 10:39:38,289 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-09-06 10:39:38,289 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:38,289 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 10:39:38,290 DEBUG: Info:	 Shape X_train:(210, 20), Length of y_train:210
+2016-09-06 10:39:38,290 DEBUG: Info:	 Shape X_train:(210, 20), Length of y_train:210
+2016-09-06 10:39:38,291 DEBUG: Info:	 Shape X_test:(90, 20), Length of y_test:90
+2016-09-06 10:39:38,291 DEBUG: Info:	 Shape X_test:(90, 20), Length of y_test:90
+2016-09-06 10:39:38,291 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:38,291 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 10:39:38,291 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:38,291 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 10:39:38,363 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:38,363 DEBUG: Start:	 Training
+2016-09-06 10:39:38,365 DEBUG: Info:	 Time for Training: 0.076936006546[s]
+2016-09-06 10:39:38,365 DEBUG: Done:	 Training
+2016-09-06 10:39:38,365 DEBUG: Start:	 Predicting
+2016-09-06 10:39:38,371 DEBUG: Done:	 RandomSearch best settings
+2016-09-06 10:39:38,371 DEBUG: Start:	 Training
+2016-09-06 10:39:38,377 DEBUG: Done:	 Predicting
+2016-09-06 10:39:38,378 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:38,380 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:38,380 INFO: Classification on Fake database for View3 with SGD
+
+accuracy_score on train : 0.495238095238
+accuracy_score on test : 0.522222222222
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 20)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SGDClassifier with loss : log, penalty : l1
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.495238095238
+		- Score on test : 0.522222222222
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:38,380 INFO: Done:	 Result Analysis
+2016-09-06 10:39:38,396 DEBUG: Info:	 Time for Training: 0.108675003052[s]
+2016-09-06 10:39:38,397 DEBUG: Done:	 Training
+2016-09-06 10:39:38,397 DEBUG: Start:	 Predicting
+2016-09-06 10:39:38,400 DEBUG: Done:	 Predicting
+2016-09-06 10:39:38,401 DEBUG: Start:	 Getting Results
+2016-09-06 10:39:38,402 DEBUG: Done:	 Getting Results
+2016-09-06 10:39:38,402 INFO: Classification on Fake database for View3 with SVMLinear
+
+accuracy_score on train : 0.409523809524
+accuracy_score on test : 0.488888888889
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 20)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7957
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.409523809524
+		- Score on test : 0.488888888889
+
+
+ Classification took 0:00:00
+2016-09-06 10:39:38,402 INFO: Done:	 Result Analysis
+2016-09-06 10:39:38,680 INFO: ### Main Programm for Multiview Classification
+2016-09-06 10:39:38,680 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Mumbo ; Cores : 1
+2016-09-06 10:39:38,681 INFO: Info:	 Shape of View0 :(300, 18)
+2016-09-06 10:39:38,681 INFO: ### Main Programm for Multiview Classification
+2016-09-06 10:39:38,682 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-06 10:39:38,682 INFO: Info:	 Shape of View1 :(300, 8)
+2016-09-06 10:39:38,683 INFO: Info:	 Shape of View0 :(300, 18)
+2016-09-06 10:39:38,683 INFO: Info:	 Shape of View2 :(300, 19)
+2016-09-06 10:39:38,684 INFO: Info:	 Shape of View1 :(300, 8)
+2016-09-06 10:39:38,684 INFO: Info:	 Shape of View3 :(300, 20)
+2016-09-06 10:39:38,684 INFO: Done:	 Read Database Files
+2016-09-06 10:39:38,684 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-06 10:39:38,684 INFO: Info:	 Shape of View2 :(300, 19)
+2016-09-06 10:39:38,685 INFO: Info:	 Shape of View3 :(300, 20)
+2016-09-06 10:39:38,685 INFO: Done:	 Read Database Files
+2016-09-06 10:39:38,685 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-06 10:39:38,691 INFO: Done:	 Determine validation split
+2016-09-06 10:39:38,691 INFO: Start:	 Determine 5 folds
+2016-09-06 10:39:38,691 INFO: Done:	 Determine validation split
+2016-09-06 10:39:38,692 INFO: Start:	 Determine 5 folds
+2016-09-06 10:39:38,707 INFO: Info:	 Length of Learning Sets: 169
+2016-09-06 10:39:38,707 INFO: Info:	 Length of Testing Sets: 42
+2016-09-06 10:39:38,707 INFO: Info:	 Length of Validation Set: 89
+2016-09-06 10:39:38,707 INFO: Info:	 Length of Learning Sets: 169
+2016-09-06 10:39:38,707 INFO: Done:	 Determine folds
+2016-09-06 10:39:38,707 INFO: Info:	 Length of Testing Sets: 42
+2016-09-06 10:39:38,707 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-06 10:39:38,707 INFO: Info:	 Length of Validation Set: 89
+2016-09-06 10:39:38,708 INFO: Done:	 Determine folds
+2016-09-06 10:39:38,707 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-06 10:39:38,708 INFO: Start:	 Learning with Mumbo and 5 folds
+2016-09-06 10:39:38,708 DEBUG: 	Start:	 Random search for Adaboost with 30 iterations
+2016-09-06 10:39:38,708 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-06 10:39:38,708 DEBUG: 	Start:	 Gridsearch for DecisionTree on View0
