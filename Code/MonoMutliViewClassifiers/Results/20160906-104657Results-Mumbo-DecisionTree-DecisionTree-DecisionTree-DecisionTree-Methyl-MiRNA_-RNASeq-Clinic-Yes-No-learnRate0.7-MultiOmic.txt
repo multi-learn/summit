@@ -1,0 +1,209 @@
+		Result for Multiview classification with Mumbo
+
+Average accuracy :
+	-On Train : 70.7142857143
+	-On Test : 68.3333333333
+	-On Validation : 69.9029126214Dataset info :
+	-Dataset name : MultiOmic
+	-Labels : No, Yes
+	-Views : Methyl of shape (347, 25978), MiRNA_ of shape (347, 1046), RANSeq of shape (347, 73599), Clinic of shape (347, 127)
+	-5 folds
+	- Validation set length : 103 for learning rate : 0.7 on a total number of examples of 347
+
+
+
+Mumbo configuration : 
+	-Used 1 core(s)
+	-Iterations : min 1, max 10, threshold 0.01
+	-Weak Classifiers : DecisionTree with depth 1.0,  sub-sampled at 0.0095 on Methyl
+		-DecisionTree with depth 1.0,  sub-sampled at 0.0095 on MiRNA_
+		-DecisionTree with depth 1.0,  sub-sampled at 0.015 on RANSeq
+		-DecisionTree with depth 1.0,  sub-sampled at 0.015 on Clinic
+
+
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:01:26        0:00:01
+	         Fold 2        0:01:29        0:00:00
+	         Fold 3        0:01:30        0:00:00
+	         Fold 4        0:01:32        0:00:00
+	         Fold 5        0:01:33        0:00:00
+	          Total        0:07:32        0:00:03
+	So a total classification time of 0:01:34.
+
+
+
+Mean average accuracies and stats for each fold :
+	- Fold 0, used 4
+		- On Methyl : 
+			- Mean average Accuracy : 0.169387755102
+			- Percentage of time chosen : 0.8
+		- On MiRNA_ : 
+			- Mean average Accuracy : 0.211734693878
+			- Percentage of time chosen : 0.1
+		- On RANSeq : 
+			- Mean average Accuracy : 0.195918367347
+			- Percentage of time chosen : 0.1
+		- On Clinic : 
+			- Mean average Accuracy : 0.192346938776
+			- Percentage of time chosen : 0.0
+	- Fold 1, used 4
+		- On Methyl : 
+			- Mean average Accuracy : 0.143367346939
+			- Percentage of time chosen : 0.7
+		- On MiRNA_ : 
+			- Mean average Accuracy : 0.119897959184
+			- Percentage of time chosen : 0.0
+		- On RANSeq : 
+			- Mean average Accuracy : 0.185714285714
+			- Percentage of time chosen : 0.3
+		- On Clinic : 
+			- Mean average Accuracy : 0.144387755102
+			- Percentage of time chosen : 0.0
+	- Fold 2, used 4
+		- On Methyl : 
+			- Mean average Accuracy : 0.138775510204
+			- Percentage of time chosen : 0.7
+		- On MiRNA_ : 
+			- Mean average Accuracy : 0.101530612245
+			- Percentage of time chosen : 0.0
+		- On RANSeq : 
+			- Mean average Accuracy : 0.197959183673
+			- Percentage of time chosen : 0.2
+		- On Clinic : 
+			- Mean average Accuracy : 0.16887755102
+			- Percentage of time chosen : 0.1
+	- Fold 3, used 4
+		- On Methyl : 
+			- Mean average Accuracy : 0.187244897959
+			- Percentage of time chosen : 0.9
+		- On MiRNA_ : 
+			- Mean average Accuracy : 0.153571428571
+			- Percentage of time chosen : 0.0
+		- On RANSeq : 
+			- Mean average Accuracy : 0.180612244898
+			- Percentage of time chosen : 0.0
+		- On Clinic : 
+			- Mean average Accuracy : 0.20306122449
+			- Percentage of time chosen : 0.1
+	- Fold 4, used 4
+		- On Methyl : 
+			- Mean average Accuracy : 0.210714285714
+			- Percentage of time chosen : 0.9
+		- On MiRNA_ : 
+			- Mean average Accuracy : 0.16887755102
+			- Percentage of time chosen : 0.1
+		- On RANSeq : 
+			- Mean average Accuracy : 0.180612244898
+			- Percentage of time chosen : 0.0
+		- On Clinic : 
+			- Mean average Accuracy : 0.154591836735
+			- Percentage of time chosen : 0.0
+
+ For each iteration : 
+	- Iteration 1
+		 Fold 1
+			Accuracy on train : 72.9591836735
+			Accuracy on test : 0.0
+			Accuracy on validation : 73.786407767
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 72.9591836735
+			Accuracy on test : 0.0
+			Accuracy on validation : 73.786407767
+			Selected View : RANSeq
+		 Fold 3
+			Accuracy on train : 72.9591836735
+			Accuracy on test : 0.0
+			Accuracy on validation : 73.786407767
+			Selected View : RANSeq
+		 Fold 4
+			Accuracy on train : 72.9591836735
+			Accuracy on test : 0.0
+			Accuracy on validation : 73.786407767
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 72.9591836735
+			Accuracy on test : 0.0
+			Accuracy on validation : 73.786407767
+			Selected View : Methyl
+	- Iteration 2
+		 Fold 1
+			Accuracy on train : 73.9795918367
+			Accuracy on test : 0.0
+			Accuracy on validation : 74.7572815534
+			Selected View : MiRNA_
+		 Fold 2
+			Accuracy on train : 72.4489795918
+			Accuracy on test : 0.0
+			Accuracy on validation : 72.8155339806
+			Selected View : RANSeq
+		 Fold 3
+			Accuracy on train : 60.7142857143
+			Accuracy on test : 0.0
+			Accuracy on validation : 55.3398058252
+			Selected View : Clinic
+		 Fold 4
+			Accuracy on train : 65.8163265306
+			Accuracy on test : 0.0
+			Accuracy on validation : 66.9902912621
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 76.0204081633
+			Accuracy on test : 0.0
+			Accuracy on validation : 72.8155339806
+			Selected View : MiRNA_
+	- Iteration 3
+		 Fold 1
+			Accuracy on train : 73.9795918367
+			Accuracy on test : 0.0
+			Accuracy on validation : 74.7572815534
+			Selected View : RANSeq
+		 Fold 2
+			Accuracy on train : 72.4489795918
+			Accuracy on test : 0.0
+			Accuracy on validation : 72.8155339806
+			Selected View : RANSeq
+		 Fold 3
+			Accuracy on train : 65.8163265306
+			Accuracy on test : 0.0
+			Accuracy on validation : 62.1359223301
+			Selected View : RANSeq
+		 Fold 4
+			Accuracy on train : 65.8163265306
+			Accuracy on test : 0.0
+			Accuracy on validation : 66.9902912621
+			Selected View : Clinic
+		 Fold 5
+			Accuracy on train : 75.5102040816
+			Accuracy on test : 0.0
+			Accuracy on validation : 72.8155339806
+			Selected View : Methyl
+	- Iteration 4
+		 Fold 1
+			Accuracy on train : 72.9591836735
+			Accuracy on test : 0.0
+			Accuracy on validation : 73.786407767
+			Selected View : Methyl
+		 Fold 2
+			Accuracy on train : 72.9591836735
+			Accuracy on test : 0.0
+			Accuracy on validation : 73.786407767
+			Selected View : Methyl
+		 Fold 3
+			Accuracy on train : 72.9591836735
+			Accuracy on test : 0.0
+			Accuracy on validation : 73.786407767
+			Selected View : Methyl
+		 Fold 4
+			Accuracy on train : 72.9591836735
+			Accuracy on test : 0.0
+			Accuracy on validation : 73.786407767
+			Selected View : Methyl
+		 Fold 5
+			Accuracy on train : 72.9591836735
+			Accuracy on test : 0.0
+			Accuracy on validation : 73.786407767
+			Selected View : Methyl

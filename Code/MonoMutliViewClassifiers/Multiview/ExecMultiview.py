@@ -26,7 +26,7 @@ def ExecMultiview_multicore(coreIndex, name, learningRate, nbFolds, databaseType
                             gridSearch=False, nbCores=1, metrics=None, nIter=30, **arguments):
     DATASET = h5py.File(path+name+str(coreIndex)+".hdf5", "r")
     return ExecMultiview(DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY,
-                         gridSearch=gridSearch, metrics=None, nIter=30, **arguments)
+                         gridSearch=gridSearch, metrics=metrics, nIter=nIter, **arguments)
 
 
 def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY,
