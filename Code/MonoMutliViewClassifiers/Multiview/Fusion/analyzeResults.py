@@ -15,10 +15,10 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
-
 def error(testLabels, computedLabels):
     error = sum(map(operator.ne, computedLabels, testLabels))
     return float(error) * 100 / len(computedLabels)
+
 
 def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
     metricModule = getattr(Metrics, metric[0])
@@ -32,6 +32,7 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
     metricScoreString += "\n"
     return metricScoreString
 
+
 def getTotalMetricScores(metric, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
                          kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds):
     labels = DATASET.get("labels").value
@@ -40,7 +41,7 @@ def getTotalMetricScores(metric, kFoldPredictedTrainLabels, kFoldPredictedTestLa
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
-    trainScore = np.mean(np.array([metricModule.score([label for index, label in enumerate(labels) if index not in fold+validationIndices], predictedLabels, **metricKWARGS) for fold, predictedLabels in zip(kFolds, kFoldPredictedTrainLabels)]))
+    trainScore = np.mean(np.array([metricModule.score([label for index, label in enumerate(labels) if (index not in fold) and (index not in validationIndices)], predictedLabels, **metricKWARGS) for fold, predictedLabels in zip(kFolds, kFoldPredictedTrainLabels)]))
     testScore = np.mean(np.array([metricModule.score(labels[fold], predictedLabels, **metricKWARGS) for fold, predictedLabels in zip(kFolds, kFoldPredictedTestLabels)]))
     validationScore = np.mean(np.array([metricModule.score(labels[validationIndices], predictedLabels, **metricKWARGS) for predictedLabels in kFoldPredictedValidationLabels]))
     return [trainScore, testScore, validationScore]
@@ -53,9 +54,6 @@ def getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabel
         metricsScores[metric[0]] = getTotalMetricScores(metric, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
                                                         kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds)
     return metricsScores
-
-
-
 
 
 def execute(kFoldClassifier, kFoldPredictedTrainLabels,
@@ -72,14 +70,14 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels,
     monoviewClassifiersConfigs = classificationKWARGS["classifiersConfigs"]
     fusionMethodConfig = classificationKWARGS["fusionMethodConfig"]
 
-    DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]-len(validationIndices)
+    DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     kFoldAccuracyOnTrain = []
     kFoldAccuracyOnTest = []
     kFoldAccuracyOnValidation = []
     for foldIdx, fold in enumerate(kFolds):
         if fold != range(DATASET_LENGTH):
-            trainIndices = [index for index in range(DATASET_LENGTH) if index not in fold]
+            trainIndices = [index for index in range(DATASET_LENGTH) if (index not in fold) and (index not in validationIndices)]
             testLabels = CLASS_LABELS[fold]
             trainLabels = CLASS_LABELS[trainIndices]
             validationLabels = CLASS_LABELS[validationIndices]

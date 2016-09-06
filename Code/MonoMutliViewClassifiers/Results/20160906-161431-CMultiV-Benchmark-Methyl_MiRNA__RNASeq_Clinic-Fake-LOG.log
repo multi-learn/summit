@@ -1,0 +1,50 @@
+2016-09-06 16:14:31,063 DEBUG: Start:	 Creating 2 temporary datasets for multiprocessing
+2016-09-06 16:14:31,063 WARNING:  WARNING : /!\ This may use a lot of HDD storage space : 0.00012634375 Gbytes /!\ 
+2016-09-06 16:14:36,078 DEBUG: Start:	 Creating datasets for multiprocessing
+2016-09-06 16:14:36,080 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-06 16:14:36,142 INFO: ### Main Programm for Multiview Classification
+2016-09-06 16:14:36,142 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-06 16:14:36,143 INFO: Info:	 Shape of View0 :(300, 9)
+2016-09-06 16:14:36,143 INFO: ### Main Programm for Multiview Classification
+2016-09-06 16:14:36,143 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-06 16:14:36,143 INFO: Info:	 Shape of View1 :(300, 13)
+2016-09-06 16:14:36,144 INFO: Info:	 Shape of View0 :(300, 9)
+2016-09-06 16:14:36,144 INFO: Info:	 Shape of View2 :(300, 12)
+2016-09-06 16:14:36,144 INFO: Info:	 Shape of View1 :(300, 13)
+2016-09-06 16:14:36,144 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-06 16:14:36,145 INFO: Done:	 Read Database Files
+2016-09-06 16:14:36,145 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-06 16:14:36,145 INFO: Info:	 Shape of View2 :(300, 12)
+2016-09-06 16:14:36,145 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-06 16:14:36,145 INFO: Done:	 Read Database Files
+2016-09-06 16:14:36,145 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-06 16:14:36,150 INFO: Done:	 Determine validation split
+2016-09-06 16:14:36,150 INFO: Start:	 Determine 5 folds
+2016-09-06 16:14:36,151 INFO: Done:	 Determine validation split
+2016-09-06 16:14:36,151 INFO: Start:	 Determine 5 folds
+2016-09-06 16:14:36,159 INFO: Info:	 Length of Learning Sets: 169
+2016-09-06 16:14:36,159 INFO: Info:	 Length of Testing Sets: 42
+2016-09-06 16:14:36,159 INFO: Info:	 Length of Validation Set: 89
+2016-09-06 16:14:36,159 INFO: Done:	 Determine folds
+2016-09-06 16:14:36,159 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-06 16:14:36,159 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-06 16:14:36,160 DEBUG: 	Start:	 Random search for DecisionTree with 30 iterations
+2016-09-06 16:14:36,162 INFO: Info:	 Length of Learning Sets: 169
+2016-09-06 16:14:36,162 INFO: Info:	 Length of Testing Sets: 42
+2016-09-06 16:14:36,162 INFO: Info:	 Length of Validation Set: 89
+2016-09-06 16:14:36,162 INFO: Done:	 Determine folds
+2016-09-06 16:14:36,162 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-06 16:14:36,162 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-06 16:14:36,162 DEBUG: 	Start:	 Random search for DecisionTree with 30 iterations
+2016-09-06 16:14:36,589 DEBUG: 	Done:	 Random search for DecisionTree
+2016-09-06 16:14:36,589 DEBUG: 	Start:	 Random search for DecisionTree with 30 iterations
+2016-09-06 16:14:36,594 DEBUG: 	Done:	 Random search for DecisionTree
+2016-09-06 16:14:36,594 DEBUG: 	Start:	 Random search for DecisionTree with 30 iterations
+2016-09-06 16:14:37,006 DEBUG: 	Done:	 Random search for DecisionTree
+2016-09-06 16:14:37,006 DEBUG: 	Start:	 Random search for DecisionTree with 30 iterations
+2016-09-06 16:14:37,012 DEBUG: 	Done:	 Random search for DecisionTree
+2016-09-06 16:14:37,012 DEBUG: 	Start:	 Random search for DecisionTree with 30 iterations
+2016-09-06 16:14:37,423 DEBUG: 	Done:	 Random search for DecisionTree
+2016-09-06 16:14:37,423 DEBUG: 	Start:	 Random search for DecisionTree with 30 iterations
+2016-09-06 16:14:37,429 DEBUG: 	Done:	 Random search for DecisionTree
+2016-09-06 16:14:37,429 DEBUG: 	Start:	 Random search for DecisionTree with 30 iterations

@@ -1,0 +1,54 @@
+Classification on Fake database for View0 with SVMRBF
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.411111111111
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 13)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 2991
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.411111111111
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.345679012346
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.345679012346
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.588888888889
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.411111111111
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : -0.189573937423
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.35
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.341463414634
+	For ROS AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.405425584868
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.588888888889
+
+
+ Classification took 0:00:00

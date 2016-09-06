@@ -329,6 +329,8 @@ try:
                     argumentDictionaries["Multiview"].append(arguments)
         except:
             pass
+#         bestClassifiers = ["DecisionTree", "DecisionTree", "DecisionTree", "DecisionTree"]
+
         try:
             if benchmark["Multiview"]["Fusion"]:
                 try:
@@ -386,7 +388,8 @@ if nbCores>1:
     logging.debug("Start:\t Deleting datasets for multiprocessing")
 
 times = [dataBaseTime, monoviewTime, multiviewTime]
+# times=[]
 results = (resultsMonoview, resultsMultiview)
-resultAnalysis(benchmark, results, args.name)
+resultAnalysis(benchmark, results, args.name, times, metrics)
 
 

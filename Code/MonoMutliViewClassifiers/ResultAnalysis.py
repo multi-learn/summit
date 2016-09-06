@@ -8,6 +8,9 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+#Import own Modules
+import Metrics
+
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
@@ -25,7 +28,11 @@ def resultAnalysis(benchmark, results, name, times, metrics):
         fig = plt.gcf()
         fig.subplots_adjust(bottom=105.0, top=105.01)
         ax = f.add_axes([0.1, 0.1, 0.8, 0.8])
-        ax.set_title(metric[0]+" on validation set for each classifier")
+        if metric[1]!=None:
+            metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+        else:
+            metricKWARGS = {}
+        ax.set_title(getattr(Metrics, metric[0]).getConfig(**metricKWARGS)+" on validation set for each classifier")
         ax.bar(range(nbResults), validationScores, align='center')
         ax.set_xticks(range(nbResults))
         ax.set_xticklabels(names, rotation="vertical")

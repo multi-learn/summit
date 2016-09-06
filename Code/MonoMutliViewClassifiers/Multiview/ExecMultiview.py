@@ -109,7 +109,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
             logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
             trainIndices = [index for index in range(datasetLength) if (index not in fold) and (index not in validationIndices)]
             DATASET_LENGTH = len(trainIndices)
-            classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("labels").value, NB_CORES=nbCores, **classificationKWARGS)
+            classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("labels").value[trainIndices], NB_CORES=nbCores, **classificationKWARGS)
 
             classifier.fit_hdf5(DATASET, trainIndices=trainIndices)
             kFoldClassifier.append(classifier)

@@ -40,5 +40,5 @@ def getConfig(**kwargs):
         average = kwargs["3"]
     except:
         average = "micro"
-    configString = "ROS AUC score using "+str(sample_weight)+" as sample_weights, "+average+" as average (higher is better)"
+    configString = "ROC AUC score using "+str(sample_weight)+" as sample_weights, "+average+" as average (higher is better)"
     return configString

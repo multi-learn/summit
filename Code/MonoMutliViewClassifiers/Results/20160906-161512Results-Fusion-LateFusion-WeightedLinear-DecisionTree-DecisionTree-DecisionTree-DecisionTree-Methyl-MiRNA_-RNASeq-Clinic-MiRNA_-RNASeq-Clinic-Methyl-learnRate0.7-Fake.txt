@@ -1,0 +1,32 @@
+		Result for Multiview classification with LateFusion
+
+Average accuracy :
+	-On Train : 53.2544378698
+	-On Test : 53.6585365854
+	-On Validation : 53.3333333333
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with Weighted linear using a weight for each view : 1.0, 0.111861495999, 0.371763764635, 0.0125470094031
+	-With monoview classifiers : 
+		- Decision Tree with max_depth : 7
+		- Decision Tree with max_depth : 3
+		- Decision Tree with max_depth : 24
+		- Decision Tree with max_depth : 4
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:04        0:00:00
+	         Fold 2        0:00:04        0:00:00
+	         Fold 3        0:00:04        0:00:00
+	         Fold 4        0:00:04        0:00:00
+	         Fold 5        0:00:04        0:00:00
+	          Total        0:00:23        0:00:00
+	So a total classification time of 0:00:04.
+

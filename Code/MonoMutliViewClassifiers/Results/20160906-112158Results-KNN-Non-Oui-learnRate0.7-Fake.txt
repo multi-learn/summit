@@ -1,0 +1,54 @@
+Classification on Fake database for View2 with KNN
+
+accuracy_score on train : 0.552380952381
+accuracy_score on test : 0.444444444444
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 8)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 47
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.552380952381
+		- Score on test : 0.444444444444
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.477777777778
+		- Score on test : 0.342105263158
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.477777777778
+		- Score on test : 0.342105263158
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.447619047619
+		- Score on test : 0.555555555556
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.552380952381
+		- Score on test : 0.444444444444
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.112597765671
+		- Score on test : -0.134753650348
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.581081081081
+		- Score on test : 0.371428571429
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.405660377358
+		- Score on test : 0.317073170732
+	For ROS AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.553791727141
+		- Score on test : 0.434046789447
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.447619047619
+		- Score on test : 0.555555555556
+
+
+ Classification took 0:00:00

@@ -44,7 +44,6 @@ def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metric=None,
                                                  nIter=nIter))
         logging.debug("\tDone:\t Random search for "+classifierName)
     classificationKWARGS["classifiersConfigs"] = bestSettings
-    print bestSettings
     fusionMethodConfig = fusionMethodModule.gridSearch(DATASET, classificationKWARGS, learningIndices, nIter=nIter)
     return bestSettings, fusionMethodConfig
 
