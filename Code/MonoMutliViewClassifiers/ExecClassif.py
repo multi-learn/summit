@@ -79,9 +79,9 @@ groupClass.add_argument('--CL_algos_multiview', metavar='STRING', action='store'
                         help='Determine which multiview classifier to use, separate with : if multiple, if empty, considering all', default='')
 groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
                         default=1)
-groupClass.add_argument('--CL_metrics', metavar='STRING', action='store',
-                        help='Determine which metric to use, separate with ":" if multiple, if empty, considering all, '
-                             'first one will be used for gridsearch', default='')
+groupClass.add_argument('--CL_metrics', metavar='STRING', action='store', nargs="+",
+                        help='Determine which metrics to use, separate metric and configuration with ":". If multiple, separate with space. If no metric is specified, considering all with accuracy for classification '
+                             'first one will be used for classification', default=[''])
 groupClass.add_argument('--CL_GS_iter', metavar='INT', action='store',
                         help='Determine how many Randomized grid search tests to do', type=int, default=30)
 groupClass.add_argument('--CL_NoGS', action='store_false',
@@ -202,11 +202,12 @@ if nbCores>1:
 NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
 views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
 NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
-metrics = args.CL_metrics.split(":")
-if metrics == [""]:
-    metrics = [["accuracy_score", None]]
-metric = metrics[0]
-
+metrics = [metric.split(":") for metric in args.CL_metrics]
+if metrics == [[""]]:
+    metricsNames = [name for _, name, isPackage
+                    in pkgutil.iter_modules(['Metrics']) if not isPackage]
+    metrics = [[metricName, None] for metricName in metricsNames]
+print metrics
 
 logging.info("Start:\t Finding all available mono- & multiview algorithms")
 benchmark = {"Monoview":{}, "Multiview":[]}
@@ -256,25 +257,24 @@ fusionMethodConfig = [["0.25", "0.25", "0.25", "0.25"], "b"]
 mumboClassifierConfig = "a"
 mumboclassifierNames = "a"
 
-RandomForestKWARGS = {"0":map(int, args.CL_RF_trees.split())[0], "1":map(int, args.CL_RF_max_depth.split(":"))[0]}
-SVMLinearKWARGS = {"0":map(int, args.CL_SVML_C.split(":"))[0]}
-SVMRBFKWARGS = {"0":map(int, args.CL_SVMR_C.split(":"))[0]}
-SVMPolyKWARGS = {"0":map(int, args.CL_SVMP_C.split(":"))[0], '1':map(int, args.CL_SVMP_deg.split(":"))[0]}
-DecisionTreeKWARGS = {"0":map(int, args.CL_DT_depth.split(":"))[0]}
-SGDKWARGS = {"2": map(float, args.CL_SGD_alpha.split(":"))[0], "1": args.CL_SGD_penalty.split(":")[0],
+RandomForestKWARGSInit = {"0":map(int, args.CL_RF_trees.split())[0], "1":map(int, args.CL_RF_max_depth.split(":"))[0]}
+SVMLinearKWARGSInit = {"0":map(int, args.CL_SVML_C.split(":"))[0]}
+SVMRBFKWARGSInit = {"0":map(int, args.CL_SVMR_C.split(":"))[0]}
+SVMPolyKWARGSInit = {"0":map(int, args.CL_SVMP_C.split(":"))[0], '1':map(int, args.CL_SVMP_deg.split(":"))[0]}
+DecisionTreeKWARGSInit = {"0":map(int, args.CL_DT_depth.split(":"))[0]}
+SGDKWARGSInit = {"2": map(float, args.CL_SGD_alpha.split(":"))[0], "1": args.CL_SGD_penalty.split(":")[0],
              "0":args.CL_SGD_loss.split(":")[0]}
-KNNKWARGS = {"0": map(float, args.CL_KNN_neigh.split(":"))[0]}
-AdaboostKWARGS = {"0": args.CL_Ada_n_est.split(":")[0], "1": args.CL_Ada_b_est.split(":")[0]}
+KNNKWARGSInit = {"0": map(float, args.CL_KNN_neigh.split(":"))[0]}
+AdaboostKWARGSInit = {"0": args.CL_Ada_n_est.split(":")[0], "1": args.CL_Ada_b_est.split(":")[0]}
 
 dataBaseTime = time.time()-start
 argumentDictionaries = {"Monoview": {}, "Multiview": []}
-print benchmark
 try:
     if benchmark["Monoview"]:
         argumentDictionaries["Monoview"] = []
         for view in views:
             for classifier in benchmark["Monoview"]:
-                arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGS"], "feat":view, "fileFeat": args.fileFeat,
+                arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGSInit"], "feat":view, "fileFeat": args.fileFeat,
                                      "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier}, "viewIndex":views.index(view)}
                 argumentDictionaries["Monoview"].append(arguments)
 except:
@@ -287,7 +287,7 @@ if nbCores>1:
     for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
         resultsMonoview+=(Parallel(n_jobs=nbCores)(
                 delayed(ExecMonoview_multicore)(args.name, args.CL_split, args.CL_nbFolds, coreIndex, args.type, args.pathF, gridSearch=gridSearch,
-                                      metric=metric, nIter=args.CL_GS_iter, **argumentDictionaries["Monoview"][coreIndex+stepIndex*nbCores])
+                                                metrics=metrics, nIter=args.CL_GS_iter, **argumentDictionaries["Monoview"][coreIndex + stepIndex * nbCores])
                 for coreIndex in range(min(nbCores, nbExperiments - (stepIndex + 1) * nbCores))))
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
@@ -298,10 +298,10 @@ if nbCores>1:
 
 else:
     resultsMonoview+=([ExecMonoview(DATASET.get("View"+str(arguments["viewIndex"])),
-                                             DATASET.get("labels").value, args.name,
-                                             args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
-                                             gridSearch=gridSearch, metric=metric, nIter=args.CL_GS_iter,
-                                             **arguments)
+                                    DATASET.get("labels").value, args.name,
+                                    args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
+                                    gridSearch=gridSearch, metrics=metrics, nIter=args.CL_GS_iter,
+                                    **arguments)
                                 for arguments in argumentDictionaries["Monoview"]])
 
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
@@ -357,7 +357,7 @@ try:
                                              "LABELS_NAMES": args.CL_classes.split(":"),
                                              "FusionKWARGS": {"fusionType":"EarlyFusion", "fusionMethod":method,
                                                               "classifiersNames": [classifier],
-                                                              "classifiersConfigs": [globals()[classifier+"KWARGS"]],
+                                                              "classifiersConfigs": [globals()[classifier+"KWARGSInit"]],
                                                               'fusionMethodConfig': fusionMethodConfig}}
                                 argumentDictionaries["Multiview"].append(arguments)
                 except:

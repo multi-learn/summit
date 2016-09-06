@@ -33,7 +33,6 @@ def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databa
                            metrics=[["accuracy_score", None]], nIter=30, **args):
     DATASET = h5py.File(path+name+str(datasetFileIndex)+".hdf5", "r")
     kwargs = args["args"]
-
     views = [DATASET.get("View"+str(viewIndex)).attrs["name"] for viewIndex in range(DATASET.get("Metadata").attrs["nbView"])]
     neededViewIndex = views.index(kwargs["feat"])
     X = DATASET.get("View"+str(neededViewIndex))
@@ -45,7 +44,6 @@ def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databa
 
 def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True,
                 metrics=[["accuracy_score", None]], nIter=30, **args):
-
     try:
         kwargs = args["args"]
     except:
@@ -189,7 +187,7 @@ if __name__=='__main__':
     groupClass.add_argument('--CL_Cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int, default=1)
     groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Split ratio for train and test', type=float, default=0.9)
     groupClass.add_argument('--CL_metrics', metavar='STRING', action='store',
-                        help='Determine which metric to use, separate with ":" if multiple, if empty, considering all', default='')
+                        help='Determine which metrics to use, separate with ":" if multiple, if empty, considering all', default='')
 
 
     groupClassifier = parser.add_argument_group('Classifier Config')

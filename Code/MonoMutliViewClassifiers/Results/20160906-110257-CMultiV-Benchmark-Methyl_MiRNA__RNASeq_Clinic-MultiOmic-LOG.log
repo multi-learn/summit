@@ -1,0 +1,18 @@
+2016-09-06 11:02:57,719 DEBUG: Start:	 Creating 2 temporary datasets for multiprocessing
+2016-09-06 11:02:57,720 WARNING:  WARNING : /!\ This may use a lot of HDD storage space : 0.273145851562 Gbytes /!\ 
+2016-09-06 11:03:04,610 DEBUG: Start:	 Creating datasets for multiprocessing
+2016-09-06 11:03:04,612 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-06 11:03:05,483 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 11:03:05,483 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-06 11:03:05,483 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 11:03:05,539 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-06 11:03:05,539 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-06 11:03:05,539 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 11:03:05,539 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-06 11:03:06,099 DEBUG: ### Main Programm for Classification MonoView
+2016-09-06 11:03:06,099 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-06 11:03:06,099 DEBUG: Start:	 Determine Train/Test split
+2016-09-06 11:03:06,130 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-06 11:03:06,130 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-06 11:03:06,130 DEBUG: Done:	 Determine Train/Test split
+2016-09-06 11:03:06,131 DEBUG: Start:	 RandomSearch best settings with 1 iterations

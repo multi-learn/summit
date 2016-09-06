@@ -26,7 +26,7 @@ def score(y_true, y_pred, **kwargs):
     try:
         average = kwargs["4"]
     except:
-        average = "binary"
+        average = "micro"
     score = metric(y_true, y_pred, beta, sample_weight=sample_weight, labels=labels, pos_label=pos_label, average=average)
     return score
 
@@ -51,7 +51,7 @@ def get_scorer(**kwargs):
     try:
         average = kwargs["4"]
     except:
-        average = "binary"
+        average = "micro"
     return make_scorer(metric, greater_is_better=True, beta=beta, sample_weight=sample_weight, labels=labels,
                        pos_label=pos_label, average=average)
 
@@ -76,7 +76,7 @@ def getConfig(**kwargs):
     try:
         average = kwargs["3"]
     except:
-        average = "binary"
+        average = "micro"
     configString = "F-beta score using "+str(sample_weight)+" as sample_weights, "+str(labels)+" as labels, "+str(pos_label) \
                    +" as pos_label, "+average+" as average, "+str(beta)+" as beta (higher is better)"
     return configString

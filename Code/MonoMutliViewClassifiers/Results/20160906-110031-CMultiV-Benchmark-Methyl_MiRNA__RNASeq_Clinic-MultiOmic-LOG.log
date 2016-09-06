@@ -1,0 +1,3 @@
+2016-09-06 11:00:31,349 DEBUG: Start:	 Creating 2 temporary datasets for multiprocessing
+2016-09-06 11:00:31,350 WARNING:  WARNING : /!\ This may use a lot of HDD storage space : 0.273145851562 Gbytes /!\ 
+2016-09-06 11:00:40,496 DEBUG: Start:	 Creating datasets for multiprocessing

@@ -14,7 +14,7 @@ def score(y_true, y_pred, **kwargs):
     try:
         average = kwargs["1"]
     except:
-        average = "binary"
+        average = "micro"
     score = metric(y_true, y_pred, sample_weight=sample_weight, average=average)
     return score
 
@@ -27,7 +27,7 @@ def get_scorer(**kwargs):
     try:
         average = kwargs["1"]
     except:
-        average = "binary"
+        average = "micro"
     return make_scorer(metric, greater_is_better=True, sample_weight=sample_weight, average=average)
 
 
@@ -39,6 +39,6 @@ def getConfig(**kwargs):
     try:
         average = kwargs["3"]
     except:
-        average = "binary"
+        average = "micro"
     configString = "ROS AUC score using "+str(sample_weight)+" as sample_weights, "+average+" as average (higher is better)"
     return configString

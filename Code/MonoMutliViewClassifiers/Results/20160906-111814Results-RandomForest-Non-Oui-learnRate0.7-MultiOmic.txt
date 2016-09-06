@@ -1,0 +1,54 @@
+Classification on MultiOmic database for Methyl with RandomForest
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.895238095238
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Methyl	 View shape : (347, 25978)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 25, max_depth : 28
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.895238095238
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.765957446809
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.765957446809
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.104761904762
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.895238095238
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.706073250625
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.857142857143
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.692307692308
+	For ROS AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.827166504382
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.104761904762
+
+
+ Classification took 0:00:01
