@@ -363,7 +363,7 @@ def makeSparseTotalMatrix(sortedRNASeq):
     overlapping = params["overlapping"]
     lenBin = params["lenBin"]
     bins = findBins(nbBins, overlapping, lenBin)
-    print len(bins), nbBins,  bins[-1][-1]
+    nbBins = nbBins+1
     sparseFull = sparse.csc_matrix((nbPatients, nbGenes*nbBins))
     for patientIndex, patient in enumerate(sortedRNASeq):
         binnedcoord = getBins(patient, bins)
