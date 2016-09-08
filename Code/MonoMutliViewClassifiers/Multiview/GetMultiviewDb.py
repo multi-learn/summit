@@ -433,13 +433,15 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     k=100
     factorizedSupBaseMatrix = np.genfromtxt(path+"factorSup--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(k)+".csv", delimiter=',')
     factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(k)+".csv", delimiter=',')
-    brnaseqDset = datasetFile.create_dataset("View5", (len(modifiedRNASeq), len(modifiedRNASeq)*k*2), dtype=bool)
+    brnaseqDset = datasetFile.create_dataset("View5", (modifiedRNASeq.shape[0], modifiedRNASeq.shape[0]*k*2), dtype=bool)
     for patientIndex, patientSortedArray in enumerate(modifiedRNASeq):
-        patientMatrix = np.zeros((len(modifiedRNASeq), k*2), dtype=bool)
+        patientMatrix = np.zeros((modifiedRNASeq.shape[0], k*2), dtype=bool)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
             print geneIndex, lineIndex
             print factorizedLeftBaseMatrix[lineIndex,:].shape
             print factorizedSupBaseMatrix[:, lineIndex].shape
+            print patientMatrix[geneIndex].shape
+            print np.concatenate(factorizedLeftBaseMatrix[lineIndex,:], factorizedSupBaseMatrix[:, lineIndex]).shape
             patientMatrix[geneIndex]= np.concatenate(factorizedLeftBaseMatrix[lineIndex,:], factorizedSupBaseMatrix[:, lineIndex])
         brnaseqDset[patientIndex] = patientMatrix.flatten()
     brnaseqDset.attrs["name"] = "bRNASeq"
