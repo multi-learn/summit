@@ -365,9 +365,9 @@ def makeSparseTotalMatrix(sortedRNASeq):
     bins = findBins(nbBins, overlapping, lenBin)
     sparseFull = sparse.csc_matrix((nbPatients, nbGenes*nbBins))
     for patientIndex, patient in enumerate(sortedRNASeq):
-        print patientIndex
         binnedcoord = getBins(patient, bins)
         columIndices = binnedcoord
+        print np.max(binnedcoord), nbGenes*nbBins
         rowIndices = np.zeros(len(binnedcoord), dtype=int)+patientIndex
         data = np.ones(len(binnedcoord), dtype=bool)
         sparseFull = sparseFull+sparse.csc_matrix((data, (rowIndices, columIndices)), shape=(nbPatients, nbGenes*nbBins))
@@ -429,22 +429,6 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     mrnaseqDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Sorted RNASeq Data")
 
-    logging.debug("Start:\t Getting Binarized RNASeq Data")
-    k=127
-    factorizedSupBaseMatrix = np.genfromtxt(path+"factorSup--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
-    print factorizedSupBaseMatrix.shape
-    factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
-    print factorizedLeftBaseMatrix.shape
-    brnaseqDset = datasetFile.create_dataset("View5", (modifiedRNASeq.shape[0], modifiedRNASeq.shape[1]*k*2), dtype=bool)
-    for patientIndex, patientSortedArray in enumerate(modifiedRNASeq):
-        patientMatrix = np.zeros((modifiedRNASeq.shape[1], k*2), dtype=bool)
-        for lineIndex, geneIndex in enumerate(patientSortedArray):
-            patientMatrix[geneIndex]= np.concatenate((factorizedLeftBaseMatrix[lineIndex,:], factorizedSupBaseMatrix[:, lineIndex]))
-        brnaseqDset[patientIndex] = patientMatrix.flatten()
-    brnaseqDset.attrs["name"] = "bRNASeq"
-    brnaseqDset.attrs["sparse"] = False
-    logging.debug("Done:\t Getting Binarized RNASeq Data")
-
     logging.debug("Start:\t Getting Binned RNASeq Data")
     sparseBinnedRNASeq = makeSparseTotalMatrix(modifiedRNASeq)
     sparseBinnedRNASeqGrp = datasetFile.create_group("View6")
@@ -455,6 +439,21 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     sparseBinnedRNASeqGrp.attrs["sparse"]=True
     sparseBinnedRNASeqGrp.attrs["shape"]=sparseBinnedRNASeq.shape
     logging.debug("Done:\t Getting Binned RNASeq Data")
+
+    logging.debug("Start:\t Getting Binarized RNASeq Data")
+    k=127
+    factorizedSupBaseMatrix = np.genfromtxt(path+"factorSup--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
+    factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
+    brnaseqDset = datasetFile.create_dataset("View5", (modifiedRNASeq.shape[0], modifiedRNASeq.shape[1]*k*2), dtype=bool)
+    for patientIndex, patientSortedArray in enumerate(modifiedRNASeq):
+        patientMatrix = np.zeros((modifiedRNASeq.shape[1], k*2), dtype=bool)
+        for lineIndex, geneIndex in enumerate(patientSortedArray):
+            patientMatrix[geneIndex]= np.concatenate((factorizedLeftBaseMatrix[lineIndex,:], factorizedSupBaseMatrix[:, lineIndex]))
+        brnaseqDset[patientIndex] = patientMatrix.flatten()
+    brnaseqDset.attrs["name"] = "bRNASeq"
+    brnaseqDset.attrs["sparse"] = False
+    logging.debug("Done:\t Getting Binarized RNASeq Data")
+
 
     labelFile = open(path+'brca_labels_triple-negatif.csv')
     labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
