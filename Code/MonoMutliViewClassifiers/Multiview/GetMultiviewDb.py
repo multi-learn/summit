@@ -437,7 +437,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     print factorizedLeftBaseMatrix.shape
     brnaseqDset = datasetFile.create_dataset("View5", (modifiedRNASeq.shape[0], modifiedRNASeq.shape[0]*k*2), dtype=bool)
     for patientIndex, patientSortedArray in enumerate(modifiedRNASeq):
-        patientMatrix = np.zeros((modifiedRNASeq.shape[0], k*2), dtype=bool)
+        patientMatrix = np.zeros((modifiedRNASeq.shape[1], k*2), dtype=bool)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
             patientMatrix[geneIndex]= np.concatenate((factorizedLeftBaseMatrix[lineIndex,:], factorizedSupBaseMatrix[:, lineIndex]))
         brnaseqDset[patientIndex] = patientMatrix.flatten()
