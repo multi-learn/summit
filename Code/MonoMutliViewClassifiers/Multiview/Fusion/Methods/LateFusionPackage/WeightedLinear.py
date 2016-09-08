@@ -26,7 +26,10 @@ class WeightedLinear(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
         LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                       NB_CORES=NB_CORES)
-        self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
+        if kwargs['fusionMethodConfig'][0]==None:
+            self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
+        else:
+            self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 
     def predict_hdf5(self, DATASET, usedIndices=None):
         self.weights = self.weights/float(max(self.weights))

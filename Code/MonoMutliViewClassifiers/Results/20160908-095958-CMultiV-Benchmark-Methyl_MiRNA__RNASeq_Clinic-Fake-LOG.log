@@ -1,0 +1,2842 @@
+2016-09-08 09:59:58,949 DEBUG: Start:	 Creating 2 temporary datasets for multiprocessing
+2016-09-08 09:59:58,950 WARNING:  WARNING : /!\ This may use a lot of HDD storage space : 0.000152125 Gbytes /!\ 
+2016-09-08 10:00:03,964 DEBUG: Start:	 Creating datasets for multiprocessing
+2016-09-08 10:00:03,968 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-08 10:00:04,015 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:04,015 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:04,015 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-08 10:00:04,015 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-08 10:00:04,016 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:04,016 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:04,016 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:04,016 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:04,017 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:04,017 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:04,017 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:04,017 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:04,017 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:04,017 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:04,051 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:04,052 DEBUG: Start:	 Training
+2016-09-08 10:00:04,053 DEBUG: Info:	 Time for Training: 0.0387499332428[s]
+2016-09-08 10:00:04,054 DEBUG: Done:	 Training
+2016-09-08 10:00:04,054 DEBUG: Start:	 Predicting
+2016-09-08 10:00:04,056 DEBUG: Done:	 Predicting
+2016-09-08 10:00:04,056 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:04,067 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:04,067 DEBUG: Start:	 Training
+2016-09-08 10:00:04,071 DEBUG: Info:	 Time for Training: 0.0559167861938[s]
+2016-09-08 10:00:04,071 DEBUG: Done:	 Training
+2016-09-08 10:00:04,071 DEBUG: Start:	 Predicting
+2016-09-08 10:00:04,073 DEBUG: Done:	 Predicting
+2016-09-08 10:00:04,074 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:04,106 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:04,106 INFO: Classification on Fake database for View0 with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.511111111111
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 25
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.511111111111
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.56862745098
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.56862745098
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.488888888889
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.511111111111
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.00503027272866
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.557692307692
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.58
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5025
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.488888888889
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:04,106 INFO: Done:	 Result Analysis
+2016-09-08 10:00:04,108 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:04,108 INFO: Classification on Fake database for View0 with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.511111111111
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 9, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.511111111111
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.576923076923
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.576923076923
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.488888888889
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.511111111111
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : -2.5337258102e-17
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.555555555556
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.6
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.488888888889
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:04,109 INFO: Done:	 Result Analysis
+2016-09-08 10:00:04,267 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:04,268 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-08 10:00:04,268 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:04,268 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:04,268 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-08 10:00:04,268 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:04,269 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:04,269 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:04,269 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:04,269 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:04,269 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:04,269 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:04,269 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:04,270 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:04,300 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:04,301 DEBUG: Start:	 Training
+2016-09-08 10:00:04,301 DEBUG: Info:	 Time for Training: 0.0347349643707[s]
+2016-09-08 10:00:04,301 DEBUG: Done:	 Training
+2016-09-08 10:00:04,301 DEBUG: Start:	 Predicting
+2016-09-08 10:00:04,307 DEBUG: Done:	 Predicting
+2016-09-08 10:00:04,307 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:04,347 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:04,347 INFO: Classification on Fake database for View0 with KNN
+
+accuracy_score on train : 0.580952380952
+accuracy_score on test : 0.6
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 24
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.580952380952
+		- Score on test : 0.6
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.661538461538
+		- Score on test : 0.678571428571
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.661538461538
+		- Score on test : 0.678571428571
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.419047619048
+		- Score on test : 0.4
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.580952380952
+		- Score on test : 0.6
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.130162282504
+		- Score on test : 0.171735516296
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.601398601399
+		- Score on test : 0.612903225806
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.735042735043
+		- Score on test : 0.76
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.561069754618
+		- Score on test : 0.58
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.419047619048
+		- Score on test : 0.4
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:04,347 INFO: Done:	 Result Analysis
+2016-09-08 10:00:04,669 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:04,669 DEBUG: Start:	 Training
+2016-09-08 10:00:04,730 DEBUG: Info:	 Time for Training: 0.462595939636[s]
+2016-09-08 10:00:04,730 DEBUG: Done:	 Training
+2016-09-08 10:00:04,730 DEBUG: Start:	 Predicting
+2016-09-08 10:00:04,737 DEBUG: Done:	 Predicting
+2016-09-08 10:00:04,737 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:04,771 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:04,771 INFO: Classification on Fake database for View0 with RandomForest
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.455555555556
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 24, max_depth : 25
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.455555555556
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.52427184466
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.52427184466
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.544444444444
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.455555555556
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : -0.111088444626
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.509433962264
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.54
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.445
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.544444444444
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:04,771 INFO: Done:	 Result Analysis
+2016-09-08 10:00:04,916 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:04,916 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-09-08 10:00:04,917 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:04,917 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:04,917 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-09-08 10:00:04,917 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:04,918 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:04,918 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:04,918 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:04,918 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:04,919 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:04,919 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:04,919 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:04,919 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:04,964 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:04,964 DEBUG: Start:	 Training
+2016-09-08 10:00:04,965 DEBUG: Info:	 Time for Training: 0.049379825592[s]
+2016-09-08 10:00:04,965 DEBUG: Done:	 Training
+2016-09-08 10:00:04,965 DEBUG: Start:	 Predicting
+2016-09-08 10:00:04,971 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:04,971 DEBUG: Start:	 Training
+2016-09-08 10:00:04,979 DEBUG: Done:	 Predicting
+2016-09-08 10:00:04,980 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:04,997 DEBUG: Info:	 Time for Training: 0.0806729793549[s]
+2016-09-08 10:00:04,997 DEBUG: Done:	 Training
+2016-09-08 10:00:04,997 DEBUG: Start:	 Predicting
+2016-09-08 10:00:05,000 DEBUG: Done:	 Predicting
+2016-09-08 10:00:05,000 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:05,005 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:05,005 INFO: Classification on Fake database for View0 with SGD
+
+accuracy_score on train : 0.57619047619
+accuracy_score on test : 0.644444444444
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SGDClassifier with loss : modified_huber, penalty : l2
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.57619047619
+		- Score on test : 0.644444444444
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.661596958175
+		- Score on test : 0.724137931034
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.661596958175
+		- Score on test : 0.724137931034
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.42380952381
+		- Score on test : 0.355555555556
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.57619047619
+		- Score on test : 0.644444444444
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.117819078215
+		- Score on test : 0.269679944985
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.595890410959
+		- Score on test : 0.636363636364
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.74358974359
+		- Score on test : 0.84
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.55459057072
+		- Score on test : 0.62
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.42380952381
+		- Score on test : 0.355555555556
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:05,005 INFO: Done:	 Result Analysis
+2016-09-08 10:00:05,029 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:05,029 INFO: Classification on Fake database for View0 with SVMLinear
+
+accuracy_score on train : 0.485714285714
+accuracy_score on test : 0.544444444444
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7704
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.485714285714
+		- Score on test : 0.544444444444
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.571428571429
+		- Score on test : 0.609523809524
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.571428571429
+		- Score on test : 0.609523809524
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.514285714286
+		- Score on test : 0.455555555556
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.485714285714
+		- Score on test : 0.544444444444
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : -0.0643090141189
+		- Score on test : 0.0662541348869
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.533333333333
+		- Score on test : 0.581818181818
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.615384615385
+		- Score on test : 0.64
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.468982630273
+		- Score on test : 0.5325
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.514285714286
+		- Score on test : 0.455555555556
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:05,030 INFO: Done:	 Result Analysis
+2016-09-08 10:00:05,163 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:05,164 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMPoly
+2016-09-08 10:00:05,164 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:05,164 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:05,164 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMRBF
+2016-09-08 10:00:05,164 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:05,164 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:05,165 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:05,165 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:05,165 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:05,165 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:05,165 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:05,165 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:05,165 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:05,212 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:05,213 DEBUG: Start:	 Training
+2016-09-08 10:00:05,218 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:05,219 DEBUG: Start:	 Training
+2016-09-08 10:00:05,230 DEBUG: Info:	 Time for Training: 0.0661790370941[s]
+2016-09-08 10:00:05,230 DEBUG: Done:	 Training
+2016-09-08 10:00:05,230 DEBUG: Start:	 Predicting
+2016-09-08 10:00:05,235 DEBUG: Done:	 Predicting
+2016-09-08 10:00:05,236 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:05,239 DEBUG: Info:	 Time for Training: 0.0759570598602[s]
+2016-09-08 10:00:05,239 DEBUG: Done:	 Training
+2016-09-08 10:00:05,239 DEBUG: Start:	 Predicting
+2016-09-08 10:00:05,243 DEBUG: Done:	 Predicting
+2016-09-08 10:00:05,243 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:05,275 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:05,275 INFO: Classification on Fake database for View0 with SVMRBF
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.6
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7704
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.6
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.714285714286
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.714285714286
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.4
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.6
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.171377655346
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.592105263158
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.9
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5625
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.4
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:05,275 INFO: Done:	 Result Analysis
+2016-09-08 10:00:05,283 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:05,283 INFO: Classification on Fake database for View0 with SVMPoly
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.533333333333
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View0	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7704
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.533333333333
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.466666666667
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.533333333333
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.0973655073258
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.617647058824
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.42
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5475
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.466666666667
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:05,283 INFO: Done:	 Result Analysis
+2016-09-08 10:00:05,410 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:05,410 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:05,411 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-08 10:00:05,411 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-08 10:00:05,411 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:05,411 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:05,411 DEBUG: Info:	 Shape X_train:(210, 15), Length of y_train:210
+2016-09-08 10:00:05,411 DEBUG: Info:	 Shape X_train:(210, 15), Length of y_train:210
+2016-09-08 10:00:05,411 DEBUG: Info:	 Shape X_test:(90, 15), Length of y_test:90
+2016-09-08 10:00:05,411 DEBUG: Info:	 Shape X_test:(90, 15), Length of y_test:90
+2016-09-08 10:00:05,412 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:05,412 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:05,412 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:05,412 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:05,447 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:05,447 DEBUG: Start:	 Training
+2016-09-08 10:00:05,450 DEBUG: Info:	 Time for Training: 0.0400369167328[s]
+2016-09-08 10:00:05,450 DEBUG: Done:	 Training
+2016-09-08 10:00:05,450 DEBUG: Start:	 Predicting
+2016-09-08 10:00:05,452 DEBUG: Done:	 Predicting
+2016-09-08 10:00:05,453 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:05,462 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:05,462 DEBUG: Start:	 Training
+2016-09-08 10:00:05,467 DEBUG: Info:	 Time for Training: 0.0573270320892[s]
+2016-09-08 10:00:05,467 DEBUG: Done:	 Training
+2016-09-08 10:00:05,467 DEBUG: Start:	 Predicting
+2016-09-08 10:00:05,471 DEBUG: Done:	 Predicting
+2016-09-08 10:00:05,471 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:05,499 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:05,499 INFO: Classification on Fake database for View1 with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.544444444444
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 15)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 25
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.544444444444
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.637168141593
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.637168141593
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.455555555556
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.544444444444
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.0487950036474
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.571428571429
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.72
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5225
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.455555555556
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:05,499 INFO: Done:	 Result Analysis
+2016-09-08 10:00:05,516 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:05,516 INFO: Classification on Fake database for View1 with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.555555555556
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 15)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 9, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.555555555556
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.655172413793
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.655172413793
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.444444444444
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.555555555556
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.0674199862463
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.575757575758
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.76
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.53
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.444444444444
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:05,517 INFO: Done:	 Result Analysis
+2016-09-08 10:00:05,656 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:05,656 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-08 10:00:05,656 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:05,656 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:05,656 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-08 10:00:05,657 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:05,657 DEBUG: Info:	 Shape X_train:(210, 15), Length of y_train:210
+2016-09-08 10:00:05,657 DEBUG: Info:	 Shape X_test:(90, 15), Length of y_test:90
+2016-09-08 10:00:05,657 DEBUG: Info:	 Shape X_train:(210, 15), Length of y_train:210
+2016-09-08 10:00:05,657 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:05,657 DEBUG: Info:	 Shape X_test:(90, 15), Length of y_test:90
+2016-09-08 10:00:05,657 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:05,657 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:05,657 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:05,688 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:05,688 DEBUG: Start:	 Training
+2016-09-08 10:00:05,689 DEBUG: Info:	 Time for Training: 0.0336298942566[s]
+2016-09-08 10:00:05,689 DEBUG: Done:	 Training
+2016-09-08 10:00:05,689 DEBUG: Start:	 Predicting
+2016-09-08 10:00:05,695 DEBUG: Done:	 Predicting
+2016-09-08 10:00:05,695 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:05,735 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:05,735 INFO: Classification on Fake database for View1 with KNN
+
+accuracy_score on train : 0.566666666667
+accuracy_score on test : 0.455555555556
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 15)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 24
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.566666666667
+		- Score on test : 0.455555555556
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.659176029963
+		- Score on test : 0.542056074766
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.659176029963
+		- Score on test : 0.542056074766
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.433333333333
+		- Score on test : 0.544444444444
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.566666666667
+		- Score on test : 0.455555555556
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.0939782359481
+		- Score on test : -0.123737644978
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.586666666667
+		- Score on test : 0.508771929825
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.752136752137
+		- Score on test : 0.58
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.542735042735
+		- Score on test : 0.44
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.433333333333
+		- Score on test : 0.544444444444
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:05,735 INFO: Done:	 Result Analysis
+2016-09-08 10:00:06,049 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:06,050 DEBUG: Start:	 Training
+2016-09-08 10:00:06,110 DEBUG: Info:	 Time for Training: 0.454261064529[s]
+2016-09-08 10:00:06,110 DEBUG: Done:	 Training
+2016-09-08 10:00:06,110 DEBUG: Start:	 Predicting
+2016-09-08 10:00:06,117 DEBUG: Done:	 Predicting
+2016-09-08 10:00:06,117 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:06,151 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:06,151 INFO: Classification on Fake database for View1 with RandomForest
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.566666666667
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 15)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 24, max_depth : 25
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.566666666667
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.621359223301
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.621359223301
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.433333333333
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.566666666667
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.116137919381
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.603773584906
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.64
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5575
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.433333333333
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:06,151 INFO: Done:	 Result Analysis
+2016-09-08 10:00:06,304 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:06,304 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-09-08 10:00:06,304 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:06,304 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:06,305 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-09-08 10:00:06,305 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:06,305 DEBUG: Info:	 Shape X_train:(210, 15), Length of y_train:210
+2016-09-08 10:00:06,305 DEBUG: Info:	 Shape X_test:(90, 15), Length of y_test:90
+2016-09-08 10:00:06,305 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:06,305 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:06,305 DEBUG: Info:	 Shape X_train:(210, 15), Length of y_train:210
+2016-09-08 10:00:06,306 DEBUG: Info:	 Shape X_test:(90, 15), Length of y_test:90
+2016-09-08 10:00:06,306 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:06,306 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:06,348 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:06,349 DEBUG: Start:	 Training
+2016-09-08 10:00:06,349 DEBUG: Info:	 Time for Training: 0.0459690093994[s]
+2016-09-08 10:00:06,349 DEBUG: Done:	 Training
+2016-09-08 10:00:06,350 DEBUG: Start:	 Predicting
+2016-09-08 10:00:06,356 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:06,356 DEBUG: Start:	 Training
+2016-09-08 10:00:06,379 DEBUG: Done:	 Predicting
+2016-09-08 10:00:06,379 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:06,381 DEBUG: Info:	 Time for Training: 0.0768840312958[s]
+2016-09-08 10:00:06,381 DEBUG: Done:	 Training
+2016-09-08 10:00:06,381 DEBUG: Start:	 Predicting
+2016-09-08 10:00:06,387 DEBUG: Done:	 Predicting
+2016-09-08 10:00:06,387 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:06,406 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:06,406 INFO: Classification on Fake database for View1 with SGD
+
+accuracy_score on train : 0.566666666667
+accuracy_score on test : 0.555555555556
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 15)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SGDClassifier with loss : modified_huber, penalty : l2
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.566666666667
+		- Score on test : 0.555555555556
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.640316205534
+		- Score on test : 0.666666666667
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.640316205534
+		- Score on test : 0.666666666667
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.433333333333
+		- Score on test : 0.444444444444
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.566666666667
+		- Score on test : 0.555555555556
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.104925880155
+		- Score on test : 0.0597614304667
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.595588235294
+		- Score on test : 0.571428571429
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.692307692308
+		- Score on test : 0.8
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.550454921423
+		- Score on test : 0.525
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.433333333333
+		- Score on test : 0.444444444444
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:06,407 INFO: Done:	 Result Analysis
+2016-09-08 10:00:06,420 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:06,420 INFO: Classification on Fake database for View1 with SVMLinear
+
+accuracy_score on train : 0.490476190476
+accuracy_score on test : 0.511111111111
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 15)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7704
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.490476190476
+		- Score on test : 0.511111111111
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.566801619433
+		- Score on test : 0.576923076923
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.566801619433
+		- Score on test : 0.576923076923
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.509523809524
+		- Score on test : 0.488888888889
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.490476190476
+		- Score on test : 0.511111111111
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : -0.0479423260647
+		- Score on test : -3.54721613428e-17
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.538461538462
+		- Score on test : 0.555555555556
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.598290598291
+		- Score on test : 0.6
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.476564653984
+		- Score on test : 0.5
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.509523809524
+		- Score on test : 0.488888888889
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:06,420 INFO: Done:	 Result Analysis
+2016-09-08 10:00:06,547 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:06,547 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:06,547 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMPoly
+2016-09-08 10:00:06,548 DEBUG: ### Classification - Database:Fake Feature:View1 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMRBF
+2016-09-08 10:00:06,548 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:06,548 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:06,548 DEBUG: Info:	 Shape X_train:(210, 15), Length of y_train:210
+2016-09-08 10:00:06,548 DEBUG: Info:	 Shape X_train:(210, 15), Length of y_train:210
+2016-09-08 10:00:06,549 DEBUG: Info:	 Shape X_test:(90, 15), Length of y_test:90
+2016-09-08 10:00:06,549 DEBUG: Info:	 Shape X_test:(90, 15), Length of y_test:90
+2016-09-08 10:00:06,549 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:06,549 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:06,549 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:06,549 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:06,595 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:06,595 DEBUG: Start:	 Training
+2016-09-08 10:00:06,601 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:06,601 DEBUG: Start:	 Training
+2016-09-08 10:00:06,614 DEBUG: Info:	 Time for Training: 0.0678429603577[s]
+2016-09-08 10:00:06,614 DEBUG: Done:	 Training
+2016-09-08 10:00:06,615 DEBUG: Start:	 Predicting
+2016-09-08 10:00:06,620 DEBUG: Info:	 Time for Training: 0.0734059810638[s]
+2016-09-08 10:00:06,620 DEBUG: Done:	 Training
+2016-09-08 10:00:06,620 DEBUG: Start:	 Predicting
+2016-09-08 10:00:06,621 DEBUG: Done:	 Predicting
+2016-09-08 10:00:06,621 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:06,624 DEBUG: Done:	 Predicting
+2016-09-08 10:00:06,624 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:06,657 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:06,657 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:06,657 INFO: Classification on Fake database for View1 with SVMRBF
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.5
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 15)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7704
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.64
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.64
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.5
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : -0.1
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.533333333333
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.8
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.4625
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.5
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:06,657 INFO: Classification on Fake database for View1 with SVMPoly
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.422222222222
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View1	 View shape : (300, 15)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7704
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.422222222222
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.0714285714286
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.0714285714286
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.577777777778
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.422222222222
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : -0.119522860933
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.333333333333
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.04
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.47
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.577777777778
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:06,657 INFO: Done:	 Result Analysis
+2016-09-08 10:00:06,657 INFO: Done:	 Result Analysis
+2016-09-08 10:00:06,793 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:06,793 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-08 10:00:06,793 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:06,794 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:06,794 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-08 10:00:06,794 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:06,794 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-08 10:00:06,794 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-08 10:00:06,794 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:06,794 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:06,795 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-08 10:00:06,795 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-08 10:00:06,795 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:06,795 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:06,834 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:06,834 DEBUG: Start:	 Training
+2016-09-08 10:00:06,837 DEBUG: Info:	 Time for Training: 0.0438461303711[s]
+2016-09-08 10:00:06,837 DEBUG: Done:	 Training
+2016-09-08 10:00:06,837 DEBUG: Start:	 Predicting
+2016-09-08 10:00:06,839 DEBUG: Done:	 Predicting
+2016-09-08 10:00:06,839 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:06,847 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:06,847 DEBUG: Start:	 Training
+2016-09-08 10:00:06,852 DEBUG: Info:	 Time for Training: 0.0599958896637[s]
+2016-09-08 10:00:06,852 DEBUG: Done:	 Training
+2016-09-08 10:00:06,852 DEBUG: Start:	 Predicting
+2016-09-08 10:00:06,855 DEBUG: Done:	 Predicting
+2016-09-08 10:00:06,855 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:06,885 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:06,885 INFO: Classification on Fake database for View2 with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.433333333333
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 25
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.433333333333
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.43956043956
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.43956043956
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.566666666667
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.433333333333
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : -0.124719695673
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.487804878049
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.4
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.4375
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.566666666667
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:06,885 INFO: Done:	 Result Analysis
+2016-09-08 10:00:06,896 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:06,896 INFO: Classification on Fake database for View2 with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.433333333333
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 9, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.433333333333
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.43956043956
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.43956043956
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.566666666667
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.433333333333
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : -0.124719695673
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.487804878049
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.4
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.4375
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.566666666667
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:06,897 INFO: Done:	 Result Analysis
+2016-09-08 10:00:07,034 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:07,034 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:07,034 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-08 10:00:07,034 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-08 10:00:07,035 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:07,035 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:07,035 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-08 10:00:07,035 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-08 10:00:07,035 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-08 10:00:07,035 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-08 10:00:07,035 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:07,035 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:07,036 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:07,036 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:07,067 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:07,067 DEBUG: Start:	 Training
+2016-09-08 10:00:07,067 DEBUG: Info:	 Time for Training: 0.0337820053101[s]
+2016-09-08 10:00:07,067 DEBUG: Done:	 Training
+2016-09-08 10:00:07,068 DEBUG: Start:	 Predicting
+2016-09-08 10:00:07,074 DEBUG: Done:	 Predicting
+2016-09-08 10:00:07,074 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:07,115 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:07,115 INFO: Classification on Fake database for View2 with KNN
+
+accuracy_score on train : 0.547619047619
+accuracy_score on test : 0.466666666667
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 24
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.547619047619
+		- Score on test : 0.466666666667
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.649446494465
+		- Score on test : 0.586206896552
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.649446494465
+		- Score on test : 0.586206896552
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.452380952381
+		- Score on test : 0.533333333333
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.547619047619
+		- Score on test : 0.466666666667
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.0476928413215
+		- Score on test : -0.134839972493
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.571428571429
+		- Score on test : 0.515151515152
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.752136752137
+		- Score on test : 0.68
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.521229666391
+		- Score on test : 0.44
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.452380952381
+		- Score on test : 0.533333333333
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:07,115 INFO: Done:	 Result Analysis
+2016-09-08 10:00:07,444 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:07,444 DEBUG: Start:	 Training
+2016-09-08 10:00:07,507 DEBUG: Info:	 Time for Training: 0.473404169083[s]
+2016-09-08 10:00:07,507 DEBUG: Done:	 Training
+2016-09-08 10:00:07,507 DEBUG: Start:	 Predicting
+2016-09-08 10:00:07,514 DEBUG: Done:	 Predicting
+2016-09-08 10:00:07,514 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:07,544 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:07,544 INFO: Classification on Fake database for View2 with RandomForest
+
+accuracy_score on train : 0.995238095238
+accuracy_score on test : 0.444444444444
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 24, max_depth : 25
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.995238095238
+		- Score on test : 0.444444444444
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.995708154506
+		- Score on test : 0.468085106383
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.995708154506
+		- Score on test : 0.468085106383
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0047619047619
+		- Score on test : 0.555555555556
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.995238095238
+		- Score on test : 0.444444444444
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.990406794809
+		- Score on test : -0.109345881217
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.991452991453
+		- Score on test : 0.44
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.995726495726
+		- Score on test : 0.445
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0047619047619
+		- Score on test : 0.555555555556
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:07,544 INFO: Done:	 Result Analysis
+2016-09-08 10:00:07,685 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:07,685 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:07,685 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-09-08 10:00:07,685 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-09-08 10:00:07,685 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:07,686 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:07,686 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-08 10:00:07,686 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-08 10:00:07,686 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-08 10:00:07,686 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-08 10:00:07,686 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:07,686 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:07,686 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:07,687 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:07,730 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:07,730 DEBUG: Start:	 Training
+2016-09-08 10:00:07,731 DEBUG: Info:	 Time for Training: 0.0463371276855[s]
+2016-09-08 10:00:07,731 DEBUG: Done:	 Training
+2016-09-08 10:00:07,731 DEBUG: Start:	 Predicting
+2016-09-08 10:00:07,737 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:07,737 DEBUG: Start:	 Training
+2016-09-08 10:00:07,744 DEBUG: Done:	 Predicting
+2016-09-08 10:00:07,744 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:07,758 DEBUG: Info:	 Time for Training: 0.0734429359436[s]
+2016-09-08 10:00:07,758 DEBUG: Done:	 Training
+2016-09-08 10:00:07,758 DEBUG: Start:	 Predicting
+2016-09-08 10:00:07,762 DEBUG: Done:	 Predicting
+2016-09-08 10:00:07,762 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:07,767 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:07,768 INFO: Classification on Fake database for View2 with SGD
+
+accuracy_score on train : 0.619047619048
+accuracy_score on test : 0.511111111111
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SGDClassifier with loss : modified_huber, penalty : l2
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.619047619048
+		- Score on test : 0.511111111111
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.701492537313
+		- Score on test : 0.592592592593
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.701492537313
+		- Score on test : 0.592592592593
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.380952380952
+		- Score on test : 0.488888888889
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.619047619048
+		- Score on test : 0.511111111111
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.210547659218
+		- Score on test : -0.0103806849817
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.622516556291
+		- Score on test : 0.551724137931
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.803418803419
+		- Score on test : 0.64
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.595257788806
+		- Score on test : 0.495
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.380952380952
+		- Score on test : 0.488888888889
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:07,768 INFO: Done:	 Result Analysis
+2016-09-08 10:00:07,797 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:07,797 INFO: Classification on Fake database for View2 with SVMLinear
+
+accuracy_score on train : 0.47619047619
+accuracy_score on test : 0.555555555556
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7704
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.47619047619
+		- Score on test : 0.555555555556
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.521739130435
+		- Score on test : 0.565217391304
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.521739130435
+		- Score on test : 0.565217391304
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.52380952381
+		- Score on test : 0.444444444444
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.47619047619
+		- Score on test : 0.555555555556
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : -0.0568633060564
+		- Score on test : 0.119522860933
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.530973451327
+		- Score on test : 0.619047619048
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.512820512821
+		- Score on test : 0.52
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.471464019851
+		- Score on test : 0.56
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.52380952381
+		- Score on test : 0.444444444444
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:07,797 INFO: Done:	 Result Analysis
+2016-09-08 10:00:07,935 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:07,935 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMPoly
+2016-09-08 10:00:07,935 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:07,935 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:07,935 DEBUG: ### Classification - Database:Fake Feature:View2 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMRBF
+2016-09-08 10:00:07,935 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:07,936 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-08 10:00:07,936 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-08 10:00:07,936 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:07,936 DEBUG: Info:	 Shape X_train:(210, 18), Length of y_train:210
+2016-09-08 10:00:07,936 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:07,936 DEBUG: Info:	 Shape X_test:(90, 18), Length of y_test:90
+2016-09-08 10:00:07,936 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:07,937 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:07,984 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:07,985 DEBUG: Start:	 Training
+2016-09-08 10:00:07,990 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:07,990 DEBUG: Start:	 Training
+2016-09-08 10:00:08,003 DEBUG: Info:	 Time for Training: 0.0686159133911[s]
+2016-09-08 10:00:08,003 DEBUG: Done:	 Training
+2016-09-08 10:00:08,003 DEBUG: Start:	 Predicting
+2016-09-08 10:00:08,007 DEBUG: Info:	 Time for Training: 0.0732269287109[s]
+2016-09-08 10:00:08,007 DEBUG: Done:	 Training
+2016-09-08 10:00:08,008 DEBUG: Start:	 Predicting
+2016-09-08 10:00:08,009 DEBUG: Done:	 Predicting
+2016-09-08 10:00:08,009 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:08,012 DEBUG: Done:	 Predicting
+2016-09-08 10:00:08,012 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:08,043 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:08,043 INFO: Classification on Fake database for View2 with SVMPoly
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.444444444444
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7704
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.444444444444
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.107142857143
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.107142857143
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.555555555556
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.444444444444
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : -0.0298807152334
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.06
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.4925
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.555555555556
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:08,044 INFO: Done:	 Result Analysis
+2016-09-08 10:00:08,044 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:08,044 INFO: Classification on Fake database for View2 with SVMRBF
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.544444444444
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View2	 View shape : (300, 18)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7704
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.544444444444
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.687022900763
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.687022900763
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.455555555556
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.544444444444
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 4.13755692208e-17
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.555555555556
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.9
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.455555555556
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:08,044 INFO: Done:	 Result Analysis
+2016-09-08 10:00:08,183 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:08,183 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:08,183 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-08 10:00:08,183 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:08,183 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-08 10:00:08,183 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:08,184 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:08,184 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:08,184 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:08,184 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:08,184 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:08,184 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:08,185 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:08,185 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:08,221 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:08,221 DEBUG: Start:	 Training
+2016-09-08 10:00:08,223 DEBUG: Info:	 Time for Training: 0.0409498214722[s]
+2016-09-08 10:00:08,223 DEBUG: Done:	 Training
+2016-09-08 10:00:08,223 DEBUG: Start:	 Predicting
+2016-09-08 10:00:08,226 DEBUG: Done:	 Predicting
+2016-09-08 10:00:08,226 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:08,235 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:08,235 DEBUG: Start:	 Training
+2016-09-08 10:00:08,239 DEBUG: Info:	 Time for Training: 0.0573840141296[s]
+2016-09-08 10:00:08,240 DEBUG: Done:	 Training
+2016-09-08 10:00:08,240 DEBUG: Start:	 Predicting
+2016-09-08 10:00:08,242 DEBUG: Done:	 Predicting
+2016-09-08 10:00:08,243 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:08,267 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:08,268 INFO: Classification on Fake database for View3 with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.588888888889
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 25
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.588888888889
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.626262626263
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.626262626263
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.411111111111
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.588888888889
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.169618786115
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.632653061224
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.62
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.585
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.411111111111
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:08,268 INFO: Done:	 Result Analysis
+2016-09-08 10:00:08,280 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:08,280 INFO: Classification on Fake database for View3 with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.577777777778
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 9, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.577777777778
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.62
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.62
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.422222222222
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.577777777778
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.145
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.62
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.62
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.5725
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.422222222222
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:08,281 INFO: Done:	 Result Analysis
+2016-09-08 10:00:08,439 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:08,439 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-08 10:00:08,439 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:08,439 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:08,439 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-08 10:00:08,440 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:08,440 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:08,440 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:08,440 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:08,441 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:08,441 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:08,441 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:08,441 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:08,441 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:08,489 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:08,489 DEBUG: Start:	 Training
+2016-09-08 10:00:08,490 DEBUG: Info:	 Time for Training: 0.0522999763489[s]
+2016-09-08 10:00:08,490 DEBUG: Done:	 Training
+2016-09-08 10:00:08,490 DEBUG: Start:	 Predicting
+2016-09-08 10:00:08,497 DEBUG: Done:	 Predicting
+2016-09-08 10:00:08,497 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:08,532 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:08,532 INFO: Classification on Fake database for View3 with KNN
+
+accuracy_score on train : 0.6
+accuracy_score on test : 0.544444444444
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 24
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.6
+		- Score on test : 0.544444444444
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.688888888889
+		- Score on test : 0.637168141593
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.688888888889
+		- Score on test : 0.637168141593
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.4
+		- Score on test : 0.455555555556
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.6
+		- Score on test : 0.544444444444
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.167225897665
+		- Score on test : 0.0487950036474
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.607843137255
+		- Score on test : 0.571428571429
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.794871794872
+		- Score on test : 0.72
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.574855252275
+		- Score on test : 0.5225
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.4
+		- Score on test : 0.455555555556
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:08,532 INFO: Done:	 Result Analysis
+2016-09-08 10:00:08,857 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:08,857 DEBUG: Start:	 Training
+2016-09-08 10:00:08,918 DEBUG: Info:	 Time for Training: 0.479932069778[s]
+2016-09-08 10:00:08,918 DEBUG: Done:	 Training
+2016-09-08 10:00:08,918 DEBUG: Start:	 Predicting
+2016-09-08 10:00:08,925 DEBUG: Done:	 Predicting
+2016-09-08 10:00:08,925 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:08,961 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:08,961 INFO: Classification on Fake database for View3 with RandomForest
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.455555555556
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 24, max_depth : 25
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.455555555556
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.533333333333
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.533333333333
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.544444444444
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.455555555556
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : -0.117218854031
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.509090909091
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.56
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.4425
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.544444444444
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:08,961 INFO: Done:	 Result Analysis
+2016-09-08 10:00:09,084 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:09,084 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SGD
+2016-09-08 10:00:09,084 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 10:00:09,084 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:09,085 DEBUG: ### Classification - Database:Fake Feature:View3 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : SVMLinear
+2016-09-08 10:00:09,085 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 10:00:09,085 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:09,086 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:09,086 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 10:00:09,086 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:09,086 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 10:00:09,086 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:09,086 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 10:00:09,086 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 10:00:09,129 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:09,129 DEBUG: Start:	 Training
+2016-09-08 10:00:09,130 DEBUG: Info:	 Time for Training: 0.0473730564117[s]
+2016-09-08 10:00:09,130 DEBUG: Done:	 Training
+2016-09-08 10:00:09,130 DEBUG: Start:	 Predicting
+2016-09-08 10:00:09,136 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 10:00:09,136 DEBUG: Start:	 Training
+2016-09-08 10:00:09,148 DEBUG: Done:	 Predicting
+2016-09-08 10:00:09,148 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:09,155 DEBUG: Info:	 Time for Training: 0.0714659690857[s]
+2016-09-08 10:00:09,155 DEBUG: Done:	 Training
+2016-09-08 10:00:09,155 DEBUG: Start:	 Predicting
+2016-09-08 10:00:09,158 DEBUG: Done:	 Predicting
+2016-09-08 10:00:09,158 DEBUG: Start:	 Getting Results
+2016-09-08 10:00:09,171 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:09,171 INFO: Classification on Fake database for View3 with SGD
+
+accuracy_score on train : 0.642857142857
+accuracy_score on test : 0.533333333333
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SGDClassifier with loss : modified_huber, penalty : l2
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.642857142857
+		- Score on test : 0.533333333333
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.701195219124
+		- Score on test : 0.596153846154
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.701195219124
+		- Score on test : 0.596153846154
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.357142857143
+		- Score on test : 0.466666666667
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.642857142857
+		- Score on test : 0.533333333333
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.266179454365
+		- Score on test : 0.0456435464588
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.65671641791
+		- Score on test : 0.574074074074
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.752136752137
+		- Score on test : 0.62
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.628756548111
+		- Score on test : 0.5225
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.357142857143
+		- Score on test : 0.466666666667
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:09,171 INFO: Done:	 Result Analysis
+2016-09-08 10:00:09,189 DEBUG: Done:	 Getting Results
+2016-09-08 10:00:09,190 INFO: Classification on Fake database for View3 with SVMLinear
+
+accuracy_score on train : 0.47619047619
+accuracy_score on test : 0.511111111111
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- SVM Linear with C : 7704
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.47619047619
+		- Score on test : 0.511111111111
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.541666666667
+		- Score on test : 0.576923076923
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.541666666667
+		- Score on test : 0.576923076923
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.52380952381
+		- Score on test : 0.488888888889
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.47619047619
+		- Score on test : 0.511111111111
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : -0.068670723144
+		- Score on test : 0.0
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.528455284553
+		- Score on test : 0.555555555556
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.555555555556
+		- Score on test : 0.6
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.465949820789
+		- Score on test : 0.5
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.52380952381
+		- Score on test : 0.488888888889
+
+
+ Classification took 0:00:00
+2016-09-08 10:00:09,190 INFO: Done:	 Result Analysis
+2016-09-08 10:00:09,488 INFO: ### Main Programm for Multiview Classification
+2016-09-08 10:00:09,488 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-08 10:00:09,489 INFO: Info:	 Shape of View0 :(300, 12)
+2016-09-08 10:00:09,490 INFO: Info:	 Shape of View1 :(300, 15)
+2016-09-08 10:00:09,491 INFO: Info:	 Shape of View2 :(300, 18)
+2016-09-08 10:00:09,492 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-08 10:00:09,493 INFO: Done:	 Read Database Files
+2016-09-08 10:00:09,493 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-08 10:00:09,496 INFO: ### Main Programm for Multiview Classification
+2016-09-08 10:00:09,497 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-08 10:00:09,498 INFO: Info:	 Shape of View0 :(300, 12)
+2016-09-08 10:00:09,498 INFO: Info:	 Shape of View1 :(300, 15)
+2016-09-08 10:00:09,499 INFO: Info:	 Shape of View2 :(300, 18)
+2016-09-08 10:00:09,500 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-08 10:00:09,500 INFO: Done:	 Read Database Files
+2016-09-08 10:00:09,500 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-08 10:00:09,502 INFO: Done:	 Determine validation split
+2016-09-08 10:00:09,502 INFO: Start:	 Determine 5 folds
+2016-09-08 10:00:09,507 INFO: Done:	 Determine validation split
+2016-09-08 10:00:09,508 INFO: Start:	 Determine 5 folds
+2016-09-08 10:00:09,515 INFO: Info:	 Length of Learning Sets: 170
+2016-09-08 10:00:09,515 INFO: Info:	 Length of Testing Sets: 41
+2016-09-08 10:00:09,516 INFO: Info:	 Length of Validation Set: 89
+2016-09-08 10:00:09,516 INFO: Done:	 Determine folds
+2016-09-08 10:00:09,516 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-08 10:00:09,516 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:09,516 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:09,519 INFO: Info:	 Length of Learning Sets: 170
+2016-09-08 10:00:09,519 INFO: Info:	 Length of Testing Sets: 41
+2016-09-08 10:00:09,519 INFO: Info:	 Length of Validation Set: 89
+2016-09-08 10:00:09,519 INFO: Done:	 Determine folds
+2016-09-08 10:00:09,519 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-08 10:00:09,520 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:09,520 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:09,608 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:09,608 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:09,610 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:09,610 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:09,693 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:09,693 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:09,696 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:09,696 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:09,780 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:09,780 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:09,783 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:09,783 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:09,866 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:09,869 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:09,946 INFO: Done:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:09,946 INFO: Start:	 Classification
+2016-09-08 10:00:09,947 INFO: 	Start:	 Fold number 1
+2016-09-08 10:00:09,974 INFO: 	Start: 	 Classification
+2016-09-08 10:00:09,986 INFO: Done:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:09,986 INFO: Start:	 Classification
+2016-09-08 10:00:09,986 INFO: 	Start:	 Fold number 1
+2016-09-08 10:00:10,000 INFO: 	Done: 	 Fold number 1
+2016-09-08 10:00:10,000 INFO: 	Start:	 Fold number 2
+2016-09-08 10:00:10,013 INFO: 	Start: 	 Classification
+2016-09-08 10:00:10,026 INFO: 	Start: 	 Classification
+2016-09-08 10:00:10,051 INFO: 	Done: 	 Fold number 2
+2016-09-08 10:00:10,052 INFO: 	Start:	 Fold number 3
+2016-09-08 10:00:10,078 INFO: 	Start: 	 Classification
+2016-09-08 10:00:10,083 INFO: 	Done: 	 Fold number 1
+2016-09-08 10:00:10,083 INFO: 	Start:	 Fold number 2
+2016-09-08 10:00:10,104 INFO: 	Done: 	 Fold number 3
+2016-09-08 10:00:10,104 INFO: 	Start:	 Fold number 4
+2016-09-08 10:00:10,109 INFO: 	Start: 	 Classification
+2016-09-08 10:00:10,130 INFO: 	Start: 	 Classification
+2016-09-08 10:00:10,156 INFO: 	Done: 	 Fold number 4
+2016-09-08 10:00:10,156 INFO: 	Start:	 Fold number 5
+2016-09-08 10:00:10,179 INFO: 	Done: 	 Fold number 2
+2016-09-08 10:00:10,179 INFO: 	Start:	 Fold number 3
+2016-09-08 10:00:10,182 INFO: 	Start: 	 Classification
+2016-09-08 10:00:10,206 INFO: 	Start: 	 Classification
+2016-09-08 10:00:10,208 INFO: 	Done: 	 Fold number 5
+2016-09-08 10:00:10,208 INFO: Done:	 Classification
+2016-09-08 10:00:10,208 INFO: Info:	 Time for Classification: 0[s]
+2016-09-08 10:00:10,208 INFO: Start:	 Result Analysis for Fusion
+2016-09-08 10:00:10,276 INFO: 	Done: 	 Fold number 3
+2016-09-08 10:00:10,276 INFO: 	Start:	 Fold number 4
+2016-09-08 10:00:10,304 INFO: 	Start: 	 Classification
+2016-09-08 10:00:10,339 INFO: 		Result for Multiview classification with LateFusion
+
+Average accuracy :
+	-On Train : 59.6470588235
+	-On Test : 50.7317073171
+	-On Validation : 47.191011236
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with Bayesian Inference using a weight for each view : 0.395042964582, 0.135468886361, 0.187401197987, 0.282086951071
+	-With monoview classifiers : 
+		- SGDClassifier with loss : modified_huber, penalty : l1
+		- SGDClassifier with loss : log, penalty : l2
+		- SGDClassifier with loss : log, penalty : elasticnet
+		- SGDClassifier with loss : modified_huber, penalty : l2
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:02        0:00:00
+	So a total classification time of 0:00:00.
+
+
+2016-09-08 10:00:10,339 INFO: Done:	 Result Analysis
+2016-09-08 10:00:10,374 INFO: 	Done: 	 Fold number 4
+2016-09-08 10:00:10,374 INFO: 	Start:	 Fold number 5
+2016-09-08 10:00:10,399 INFO: 	Start: 	 Classification
+2016-09-08 10:00:10,465 INFO: 	Done: 	 Fold number 5
+2016-09-08 10:00:10,465 INFO: Done:	 Classification
+2016-09-08 10:00:10,466 INFO: Info:	 Time for Classification: 0[s]
+2016-09-08 10:00:10,466 INFO: Start:	 Result Analysis for Fusion
+2016-09-08 10:00:10,588 INFO: 		Result for Multiview classification with LateFusion
+
+Average accuracy :
+	-On Train : 55.2941176471
+	-On Test : 56.0975609756
+	-On Validation : 56.1797752809
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with Majority Voting 
+	-With monoview classifiers : 
+		- SGDClassifier with loss : modified_huber, penalty : l1
+		- SGDClassifier with loss : log, penalty : l2
+		- SGDClassifier with loss : log, penalty : elasticnet
+		- SGDClassifier with loss : modified_huber, penalty : l2
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:03        0:00:00
+	So a total classification time of 0:00:00.
+
+
+2016-09-08 10:00:10,588 INFO: Done:	 Result Analysis
+2016-09-08 10:00:10,737 INFO: ### Main Programm for Multiview Classification
+2016-09-08 10:00:10,738 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-08 10:00:10,738 INFO: Info:	 Shape of View0 :(300, 12)
+2016-09-08 10:00:10,739 INFO: Info:	 Shape of View1 :(300, 15)
+2016-09-08 10:00:10,740 INFO: Info:	 Shape of View2 :(300, 18)
+2016-09-08 10:00:10,740 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-08 10:00:10,741 INFO: Done:	 Read Database Files
+2016-09-08 10:00:10,741 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-08 10:00:10,744 INFO: ### Main Programm for Multiview Classification
+2016-09-08 10:00:10,745 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-08 10:00:10,745 INFO: Info:	 Shape of View0 :(300, 12)
+2016-09-08 10:00:10,746 INFO: Info:	 Shape of View1 :(300, 15)
+2016-09-08 10:00:10,746 INFO: Info:	 Shape of View2 :(300, 18)
+2016-09-08 10:00:10,747 INFO: Done:	 Determine validation split
+2016-09-08 10:00:10,747 INFO: Start:	 Determine 5 folds
+2016-09-08 10:00:10,747 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-08 10:00:10,747 INFO: Done:	 Read Database Files
+2016-09-08 10:00:10,747 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-08 10:00:10,752 INFO: Done:	 Determine validation split
+2016-09-08 10:00:10,752 INFO: Start:	 Determine 5 folds
+2016-09-08 10:00:10,754 INFO: Info:	 Length of Learning Sets: 170
+2016-09-08 10:00:10,754 INFO: Info:	 Length of Testing Sets: 41
+2016-09-08 10:00:10,754 INFO: Info:	 Length of Validation Set: 89
+2016-09-08 10:00:10,755 INFO: Done:	 Determine folds
+2016-09-08 10:00:10,755 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-08 10:00:10,755 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:10,755 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:10,761 INFO: Info:	 Length of Learning Sets: 170
+2016-09-08 10:00:10,761 INFO: Info:	 Length of Testing Sets: 41
+2016-09-08 10:00:10,761 INFO: Info:	 Length of Validation Set: 89
+2016-09-08 10:00:10,761 INFO: Done:	 Determine folds
+2016-09-08 10:00:10,761 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-08 10:00:10,762 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:10,762 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:10,811 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:10,811 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:10,816 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:10,816 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:10,862 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:10,862 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:10,867 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:10,867 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:10,912 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:10,913 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:10,918 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:10,918 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:10,962 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:10,962 INFO: Done:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:10,962 INFO: Start:	 Classification
+2016-09-08 10:00:10,963 INFO: 	Start:	 Fold number 1
+2016-09-08 10:00:10,968 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:11,027 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,048 INFO: Done:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:11,048 INFO: Start:	 Classification
+2016-09-08 10:00:11,048 INFO: 	Start:	 Fold number 1
+2016-09-08 10:00:11,057 INFO: 	Done: 	 Fold number 1
+2016-09-08 10:00:11,057 INFO: 	Start:	 Fold number 2
+2016-09-08 10:00:11,074 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,103 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,104 INFO: 	Done: 	 Fold number 1
+2016-09-08 10:00:11,105 INFO: 	Start:	 Fold number 2
+2016-09-08 10:00:11,131 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,133 INFO: 	Done: 	 Fold number 2
+2016-09-08 10:00:11,133 INFO: 	Start:	 Fold number 3
+2016-09-08 10:00:11,162 INFO: 	Done: 	 Fold number 2
+2016-09-08 10:00:11,162 INFO: 	Start:	 Fold number 3
+2016-09-08 10:00:11,180 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,189 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,210 INFO: 	Done: 	 Fold number 3
+2016-09-08 10:00:11,210 INFO: 	Start:	 Fold number 4
+2016-09-08 10:00:11,220 INFO: 	Done: 	 Fold number 3
+2016-09-08 10:00:11,220 INFO: 	Start:	 Fold number 4
+2016-09-08 10:00:11,247 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,255 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,277 INFO: 	Done: 	 Fold number 4
+2016-09-08 10:00:11,277 INFO: 	Start:	 Fold number 5
+2016-09-08 10:00:11,285 INFO: 	Done: 	 Fold number 4
+2016-09-08 10:00:11,286 INFO: 	Start:	 Fold number 5
+2016-09-08 10:00:11,304 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,331 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,335 INFO: 	Done: 	 Fold number 5
+2016-09-08 10:00:11,335 INFO: Done:	 Classification
+2016-09-08 10:00:11,335 INFO: Info:	 Time for Classification: 0[s]
+2016-09-08 10:00:11,335 INFO: Start:	 Result Analysis for Fusion
+2016-09-08 10:00:11,361 INFO: 	Done: 	 Fold number 5
+2016-09-08 10:00:11,362 INFO: Done:	 Classification
+2016-09-08 10:00:11,362 INFO: Info:	 Time for Classification: 0[s]
+2016-09-08 10:00:11,362 INFO: Start:	 Result Analysis for Fusion
+2016-09-08 10:00:11,472 INFO: 		Result for Multiview classification with LateFusion
+
+Average accuracy :
+	-On Train : 25.6470588235
+	-On Test : 23.4146341463
+	-On Validation : 27.4157303371
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with Weighted linear using a weight for each view : 1.0, 0.342921905986, 0.474381813597, 0.714066510131
+	-With monoview classifiers : 
+		- SGDClassifier with loss : modified_huber, penalty : l1
+		- SGDClassifier with loss : log, penalty : l2
+		- SGDClassifier with loss : log, penalty : elasticnet
+		- SGDClassifier with loss : modified_huber, penalty : l2
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:02        0:00:00
+	So a total classification time of 0:00:00.
+
+
+2016-09-08 10:00:11,473 INFO: Done:	 Result Analysis
+2016-09-08 10:00:11,495 INFO: 		Result for Multiview classification with LateFusion
+
+Average accuracy :
+	-On Train : 60.4705882353
+	-On Test : 47.8048780488
+	-On Validation : 53.2584269663
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with SVM for linear 
+	-With monoview classifiers : 
+		- SGDClassifier with loss : modified_huber, penalty : l1
+		- SGDClassifier with loss : log, penalty : l2
+		- SGDClassifier with loss : log, penalty : elasticnet
+		- SGDClassifier with loss : modified_huber, penalty : l2
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:02        0:00:00
+	So a total classification time of 0:00:00.
+
+
+2016-09-08 10:00:11,495 INFO: Done:	 Result Analysis
+2016-09-08 10:00:11,576 INFO: ### Main Programm for Multiview Classification
+2016-09-08 10:00:11,576 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-08 10:00:11,577 INFO: ### Main Programm for Multiview Classification
+2016-09-08 10:00:11,577 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-08 10:00:11,578 INFO: Info:	 Shape of View0 :(300, 12)
+2016-09-08 10:00:11,578 INFO: Info:	 Shape of View0 :(300, 12)
+2016-09-08 10:00:11,578 INFO: Info:	 Shape of View1 :(300, 15)
+2016-09-08 10:00:11,578 INFO: Info:	 Shape of View1 :(300, 15)
+2016-09-08 10:00:11,579 INFO: Info:	 Shape of View2 :(300, 18)
+2016-09-08 10:00:11,579 INFO: Info:	 Shape of View2 :(300, 18)
+2016-09-08 10:00:11,580 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-08 10:00:11,580 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-08 10:00:11,580 INFO: Done:	 Read Database Files
+2016-09-08 10:00:11,580 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-08 10:00:11,580 INFO: Done:	 Read Database Files
+2016-09-08 10:00:11,580 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-08 10:00:11,586 INFO: Done:	 Determine validation split
+2016-09-08 10:00:11,586 INFO: Done:	 Determine validation split
+2016-09-08 10:00:11,586 INFO: Start:	 Determine 5 folds
+2016-09-08 10:00:11,586 INFO: Start:	 Determine 5 folds
+2016-09-08 10:00:11,596 INFO: Info:	 Length of Learning Sets: 170
+2016-09-08 10:00:11,596 INFO: Info:	 Length of Testing Sets: 41
+2016-09-08 10:00:11,596 INFO: Info:	 Length of Validation Set: 89
+2016-09-08 10:00:11,596 INFO: Done:	 Determine folds
+2016-09-08 10:00:11,596 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-08 10:00:11,596 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:11,597 DEBUG: 	Start:	 Random search for Adaboost with 1 iterations
+2016-09-08 10:00:11,597 INFO: Info:	 Length of Learning Sets: 170
+2016-09-08 10:00:11,597 INFO: Info:	 Length of Testing Sets: 41
+2016-09-08 10:00:11,598 INFO: Info:	 Length of Validation Set: 89
+2016-09-08 10:00:11,598 INFO: Done:	 Determine folds
+2016-09-08 10:00:11,598 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-08 10:00:11,598 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:11,598 DEBUG: 	Start:	 Random search for DecisionTree with 1 iterations
+2016-09-08 10:00:11,664 DEBUG: 	Done:	 Random search for DecisionTree
+2016-09-08 10:00:11,752 INFO: Done:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:11,752 INFO: Start:	 Classification
+2016-09-08 10:00:11,752 INFO: 	Start:	 Fold number 1
+2016-09-08 10:00:11,788 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,830 INFO: 	Done: 	 Fold number 1
+2016-09-08 10:00:11,831 INFO: 	Start:	 Fold number 2
+2016-09-08 10:00:11,864 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,867 DEBUG: 	Done:	 Random search for Adaboost
+2016-09-08 10:00:11,906 INFO: 	Done: 	 Fold number 2
+2016-09-08 10:00:11,906 INFO: 	Start:	 Fold number 3
+2016-09-08 10:00:11,940 INFO: 	Start: 	 Classification
+2016-09-08 10:00:11,944 INFO: Done:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:11,944 INFO: Start:	 Classification
+2016-09-08 10:00:11,944 INFO: 	Start:	 Fold number 1
+2016-09-08 10:00:11,980 INFO: 	Done: 	 Fold number 3
+2016-09-08 10:00:11,980 INFO: 	Start:	 Fold number 4
+2016-09-08 10:00:11,984 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,015 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,026 INFO: 	Done: 	 Fold number 1
+2016-09-08 10:00:12,026 INFO: 	Start:	 Fold number 2
+2016-09-08 10:00:12,056 INFO: 	Done: 	 Fold number 4
+2016-09-08 10:00:12,057 INFO: 	Start:	 Fold number 5
+2016-09-08 10:00:12,066 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,091 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,108 INFO: 	Done: 	 Fold number 2
+2016-09-08 10:00:12,108 INFO: 	Start:	 Fold number 3
+2016-09-08 10:00:12,133 INFO: 	Done: 	 Fold number 5
+2016-09-08 10:00:12,133 INFO: Done:	 Classification
+2016-09-08 10:00:12,133 INFO: Info:	 Time for Classification: 0[s]
+2016-09-08 10:00:12,133 INFO: Start:	 Result Analysis for Fusion
+2016-09-08 10:00:12,147 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,192 INFO: 	Done: 	 Fold number 3
+2016-09-08 10:00:12,192 INFO: 	Start:	 Fold number 4
+2016-09-08 10:00:12,232 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,263 INFO: 	Done: 	 Fold number 4
+2016-09-08 10:00:12,263 INFO: 	Start:	 Fold number 5
+2016-09-08 10:00:12,307 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,350 INFO: 	Done: 	 Fold number 5
+2016-09-08 10:00:12,351 INFO: Done:	 Classification
+2016-09-08 10:00:12,351 INFO: Info:	 Time for Classification: 0[s]
+2016-09-08 10:00:12,351 INFO: Start:	 Result Analysis for Fusion
+2016-09-08 10:00:12,358 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy :
+	-On Train : 97.4117647059
+	-On Test : 47.3170731707
+	-On Validation : 50.7865168539
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.564923899429, 0.171414234739, 1.0, 0.282773686486 with monoview classifier : 
+		- Decision Tree with max_depth : 8
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:01        0:00:00
+	So a total classification time of 0:00:00.
+
+
+2016-09-08 10:00:12,358 INFO: Done:	 Result Analysis
+2016-09-08 10:00:12,486 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy :
+	-On Train : 100.0
+	-On Test : 54.6341463415
+	-On Validation : 49.2134831461
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.444263234099, 1.0, 0.292116326168, 0.822047817174 with monoview classifier : 
+		- Adaboost with num_esimators : 8, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:02        0:00:00
+	So a total classification time of 0:00:00.
+
+
+2016-09-08 10:00:12,486 INFO: Done:	 Result Analysis
+2016-09-08 10:00:12,629 INFO: ### Main Programm for Multiview Classification
+2016-09-08 10:00:12,629 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-08 10:00:12,629 INFO: ### Main Programm for Multiview Classification
+2016-09-08 10:00:12,630 INFO: Info:	 Shape of View0 :(300, 12)
+2016-09-08 10:00:12,630 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-08 10:00:12,630 INFO: Info:	 Shape of View1 :(300, 15)
+2016-09-08 10:00:12,630 INFO: Info:	 Shape of View0 :(300, 12)
+2016-09-08 10:00:12,631 INFO: Info:	 Shape of View2 :(300, 18)
+2016-09-08 10:00:12,631 INFO: Info:	 Shape of View1 :(300, 15)
+2016-09-08 10:00:12,631 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-08 10:00:12,631 INFO: Done:	 Read Database Files
+2016-09-08 10:00:12,631 INFO: Info:	 Shape of View2 :(300, 18)
+2016-09-08 10:00:12,631 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-08 10:00:12,632 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-08 10:00:12,632 INFO: Done:	 Read Database Files
+2016-09-08 10:00:12,632 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-08 10:00:12,636 INFO: Done:	 Determine validation split
+2016-09-08 10:00:12,636 INFO: Start:	 Determine 5 folds
+2016-09-08 10:00:12,637 INFO: Done:	 Determine validation split
+2016-09-08 10:00:12,637 INFO: Start:	 Determine 5 folds
+2016-09-08 10:00:12,643 INFO: Info:	 Length of Learning Sets: 170
+2016-09-08 10:00:12,643 INFO: Info:	 Length of Testing Sets: 41
+2016-09-08 10:00:12,643 INFO: Info:	 Length of Validation Set: 89
+2016-09-08 10:00:12,643 INFO: Done:	 Determine folds
+2016-09-08 10:00:12,643 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-08 10:00:12,643 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:12,643 DEBUG: 	Start:	 Random search for KNN with 1 iterations
+2016-09-08 10:00:12,644 INFO: Info:	 Length of Learning Sets: 170
+2016-09-08 10:00:12,644 INFO: Info:	 Length of Testing Sets: 41
+2016-09-08 10:00:12,644 INFO: Info:	 Length of Validation Set: 89
+2016-09-08 10:00:12,644 INFO: Done:	 Determine folds
+2016-09-08 10:00:12,644 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-08 10:00:12,644 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:12,644 DEBUG: 	Start:	 Random search for RandomForest with 1 iterations
+2016-09-08 10:00:12,692 DEBUG: 	Done:	 Random search for KNN
+2016-09-08 10:00:12,706 DEBUG: 	Done:	 Random search for RandomForest
+2016-09-08 10:00:12,736 INFO: Done:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:12,736 INFO: Start:	 Classification
+2016-09-08 10:00:12,736 INFO: 	Start:	 Fold number 1
+2016-09-08 10:00:12,747 INFO: Done:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:12,747 INFO: Start:	 Classification
+2016-09-08 10:00:12,747 INFO: 	Start:	 Fold number 1
+2016-09-08 10:00:12,754 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,768 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,786 INFO: 	Done: 	 Fold number 1
+2016-09-08 10:00:12,786 INFO: 	Start:	 Fold number 2
+2016-09-08 10:00:12,794 INFO: 	Done: 	 Fold number 1
+2016-09-08 10:00:12,794 INFO: 	Start:	 Fold number 2
+2016-09-08 10:00:12,803 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,814 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,836 INFO: 	Done: 	 Fold number 2
+2016-09-08 10:00:12,836 INFO: 	Start:	 Fold number 3
+2016-09-08 10:00:12,839 INFO: 	Done: 	 Fold number 2
+2016-09-08 10:00:12,839 INFO: 	Start:	 Fold number 3
+2016-09-08 10:00:12,853 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,859 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,884 INFO: 	Done: 	 Fold number 3
+2016-09-08 10:00:12,884 INFO: 	Start:	 Fold number 4
+2016-09-08 10:00:12,886 INFO: 	Done: 	 Fold number 3
+2016-09-08 10:00:12,886 INFO: 	Start:	 Fold number 4
+2016-09-08 10:00:12,903 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,903 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,928 INFO: 	Done: 	 Fold number 4
+2016-09-08 10:00:12,928 INFO: 	Start:	 Fold number 5
+2016-09-08 10:00:12,935 INFO: 	Done: 	 Fold number 4
+2016-09-08 10:00:12,935 INFO: 	Start:	 Fold number 5
+2016-09-08 10:00:12,948 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,952 INFO: 	Start: 	 Classification
+2016-09-08 10:00:12,974 INFO: 	Done: 	 Fold number 5
+2016-09-08 10:00:12,974 INFO: Done:	 Classification
+2016-09-08 10:00:12,974 INFO: Info:	 Time for Classification: 0[s]
+2016-09-08 10:00:12,974 INFO: Start:	 Result Analysis for Fusion
+2016-09-08 10:00:12,985 INFO: 	Done: 	 Fold number 5
+2016-09-08 10:00:12,985 INFO: Done:	 Classification
+2016-09-08 10:00:12,985 INFO: Info:	 Time for Classification: 0[s]
+2016-09-08 10:00:12,985 INFO: Start:	 Result Analysis for Fusion
+2016-09-08 10:00:13,124 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy :
+	-On Train : 81.0588235294
+	-On Test : 43.4146341463
+	-On Validation : 48.9887640449
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.073909136797, 0.326197494021, 1.0, 0.0290483308675 with monoview classifier : 
+		- Random Forest with num_esimators : 1, max_depth : 8
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:01        0:00:00
+	So a total classification time of 0:00:00.
+
+
+2016-09-08 10:00:13,124 INFO: Done:	 Result Analysis
+2016-09-08 10:00:13,128 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy :
+	-On Train : 60.4705882353
+	-On Test : 54.6341463415
+	-On Validation : 51.9101123596
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 1.0, 0.567673336435, 0.401953729602, 0.0761117950819 with monoview classifier : 
+		- K nearest Neighbors with  n_neighbors: 40
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:01        0:00:00
+	So a total classification time of 0:00:00.
+
+
+2016-09-08 10:00:13,128 INFO: Done:	 Result Analysis
+2016-09-08 10:00:13,279 INFO: ### Main Programm for Multiview Classification
+2016-09-08 10:00:13,279 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-08 10:00:13,279 INFO: ### Main Programm for Multiview Classification
+2016-09-08 10:00:13,280 INFO: ### Classification - Database : Fake ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
+2016-09-08 10:00:13,280 INFO: Info:	 Shape of View0 :(300, 12)
+2016-09-08 10:00:13,280 INFO: Info:	 Shape of View1 :(300, 15)
+2016-09-08 10:00:13,280 INFO: Info:	 Shape of View0 :(300, 12)
+2016-09-08 10:00:13,281 INFO: Info:	 Shape of View2 :(300, 18)
+2016-09-08 10:00:13,281 INFO: Info:	 Shape of View1 :(300, 15)
+2016-09-08 10:00:13,281 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-08 10:00:13,281 INFO: Info:	 Shape of View2 :(300, 18)
+2016-09-08 10:00:13,282 INFO: Done:	 Read Database Files
+2016-09-08 10:00:13,282 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-08 10:00:13,282 INFO: Info:	 Shape of View3 :(300, 12)
+2016-09-08 10:00:13,282 INFO: Done:	 Read Database Files
+2016-09-08 10:00:13,282 INFO: Start:	 Determine validation split for ratio 0.7
+2016-09-08 10:00:13,287 INFO: Done:	 Determine validation split
+2016-09-08 10:00:13,287 INFO: Start:	 Determine 5 folds
+2016-09-08 10:00:13,287 INFO: Done:	 Determine validation split
+2016-09-08 10:00:13,287 INFO: Start:	 Determine 5 folds
+2016-09-08 10:00:13,294 INFO: Info:	 Length of Learning Sets: 170
+2016-09-08 10:00:13,294 INFO: Info:	 Length of Testing Sets: 41
+2016-09-08 10:00:13,294 INFO: Info:	 Length of Validation Set: 89
+2016-09-08 10:00:13,294 INFO: Done:	 Determine folds
+2016-09-08 10:00:13,294 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-08 10:00:13,294 INFO: Info:	 Length of Learning Sets: 170
+2016-09-08 10:00:13,294 INFO: Info:	 Length of Testing Sets: 41
+2016-09-08 10:00:13,294 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:13,294 INFO: Info:	 Length of Validation Set: 89
+2016-09-08 10:00:13,294 DEBUG: 	Start:	 Random search for SGD with 1 iterations
+2016-09-08 10:00:13,294 INFO: Done:	 Determine folds
+2016-09-08 10:00:13,295 INFO: Start:	 Learning with Fusion and 5 folds
+2016-09-08 10:00:13,295 INFO: Start:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:13,295 DEBUG: 	Start:	 Random search for SVMLinear with 1 iterations
+2016-09-08 10:00:13,348 DEBUG: 	Done:	 Random search for SVMLinear
+2016-09-08 10:00:13,351 DEBUG: 	Done:	 Random search for SGD
+2016-09-08 10:00:13,416 INFO: Done:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:13,416 INFO: Start:	 Classification
+2016-09-08 10:00:13,416 INFO: 	Start:	 Fold number 1
+2016-09-08 10:00:13,430 INFO: Done:	 Randomsearching best settings for monoview classifiers
+2016-09-08 10:00:13,430 INFO: Start:	 Classification
+2016-09-08 10:00:13,430 INFO: 	Start:	 Fold number 1
+2016-09-08 10:00:13,456 INFO: 	Start: 	 Classification
+2016-09-08 10:00:13,456 INFO: 	Start: 	 Classification
+2016-09-08 10:00:13,485 INFO: 	Done: 	 Fold number 1
+2016-09-08 10:00:13,485 INFO: 	Start:	 Fold number 2
+2016-09-08 10:00:13,492 INFO: 	Done: 	 Fold number 1
+2016-09-08 10:00:13,492 INFO: 	Start:	 Fold number 2
+2016-09-08 10:00:13,518 INFO: 	Start: 	 Classification
+2016-09-08 10:00:13,526 INFO: 	Start: 	 Classification
+2016-09-08 10:00:13,555 INFO: 	Done: 	 Fold number 2
+2016-09-08 10:00:13,555 INFO: 	Start:	 Fold number 3
+2016-09-08 10:00:13,556 INFO: 	Done: 	 Fold number 2
+2016-09-08 10:00:13,556 INFO: 	Start:	 Fold number 3
+2016-09-08 10:00:13,581 INFO: 	Start: 	 Classification
+2016-09-08 10:00:13,598 INFO: 	Start: 	 Classification
+2016-09-08 10:00:13,617 INFO: 	Done: 	 Fold number 3
+2016-09-08 10:00:13,617 INFO: 	Start:	 Fold number 4
+2016-09-08 10:00:13,627 INFO: 	Done: 	 Fold number 3
+2016-09-08 10:00:13,627 INFO: 	Start:	 Fold number 4
+2016-09-08 10:00:13,644 INFO: 	Start: 	 Classification
+2016-09-08 10:00:13,668 INFO: 	Start: 	 Classification
+2016-09-08 10:00:13,682 INFO: 	Done: 	 Fold number 4
+2016-09-08 10:00:13,682 INFO: 	Start:	 Fold number 5
+2016-09-08 10:00:13,698 INFO: 	Done: 	 Fold number 4
+2016-09-08 10:00:13,698 INFO: 	Start:	 Fold number 5
+2016-09-08 10:00:13,709 INFO: 	Start: 	 Classification
+2016-09-08 10:00:13,739 INFO: 	Start: 	 Classification
+2016-09-08 10:00:13,747 INFO: 	Done: 	 Fold number 5
+2016-09-08 10:00:13,747 INFO: Done:	 Classification
+2016-09-08 10:00:13,747 INFO: Info:	 Time for Classification: 0[s]
+2016-09-08 10:00:13,747 INFO: Start:	 Result Analysis for Fusion
+2016-09-08 10:00:13,769 INFO: 	Done: 	 Fold number 5
+2016-09-08 10:00:13,769 INFO: Done:	 Classification
+2016-09-08 10:00:13,770 INFO: Info:	 Time for Classification: 0[s]
+2016-09-08 10:00:13,770 INFO: Start:	 Result Analysis for Fusion
+2016-09-08 10:00:13,916 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy :
+	-On Train : 55.2941176471
+	-On Test : 56.0975609756
+	-On Validation : 56.1797752809
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 1.0, 0.728775264645, 0.482876097673, 0.365130635662 with monoview classifier : 
+		- SGDClassifier with loss : modified_huber, penalty : l1
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:01        0:00:00
+	So a total classification time of 0:00:00.
+
+
+2016-09-08 10:00:13,916 INFO: Done:	 Result Analysis
+2016-09-08 10:00:13,962 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy :
+	-On Train : 57.7647058824
+	-On Test : 52.1951219512
+	-On Validation : 49.2134831461
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.073909136797, 0.326197494021, 1.0, 0.0290483308675 with monoview classifier : 
+		- SVM Linear with C : 3073
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:01        0:00:00
+	So a total classification time of 0:00:00.
+
+
+2016-09-08 10:00:13,962 INFO: Done:	 Result Analysis
+2016-09-08 10:00:14,116 DEBUG: Start:	 Deleting 2 temporary datasets for multiprocessing
+2016-09-08 10:00:14,116 DEBUG: Start:	 Deleting datasets for multiprocessing
+2016-09-08 10:00:46,421 INFO: Extraction time : 5.03609514236s, Monoview time : 1473343204.39s, Multiview Time : 9.72813415527s

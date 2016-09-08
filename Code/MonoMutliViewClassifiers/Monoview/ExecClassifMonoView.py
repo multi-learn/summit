@@ -107,6 +107,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
                                          clKWARGS, classLabelsNames, X.shape,
                                          y_train, y_train_pred, y_test, y_test_pred, t_end)
     cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
+    print cl_desc
     logging.debug("Done:\t Getting Results")
     logging.info(stringAnalysis)
     labelsString = "-".join(classLabelsNames)
@@ -132,7 +133,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
 
     logging.info("Done:\t Result Analysis")
     viewIndex = args["viewIndex"]
-    return viewIndex, [CL_type, cl_desc.append(feat), metricsScores]
+    return viewIndex, [CL_type, cl_desc+[feat], metricsScores]
     # # Classification Report with Precision, Recall, F1 , Support
     # logging.debug("Info:\t Classification report:")
     # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Report"

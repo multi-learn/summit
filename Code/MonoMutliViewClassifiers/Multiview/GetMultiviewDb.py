@@ -1,4 +1,5 @@
 import numpy as np
+import math
 from string import digits
 import os
 import random
@@ -259,6 +260,54 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     return datasetFile, labelDictionary
 
 
+def findClosestPowerOfTwo(k):
+    power=1
+    while k-power>0:
+        power = 2*power
+    if abs(k-power)<abs(k-power/2):
+        return power
+    else:
+        return power/2
+
+
+def getVector(matrix):
+    argmax = [0,0]
+    n = len(matrix)
+    maxi = 0
+    for i in range(n):
+        for j in range(n):
+            if j==i+1:
+                value = (i+1)*(n-j)
+                if value>maxi:
+                    maxi= value
+                    argmax = [i,j]
+    i,j = argmax
+    vector = np.zeros(n, dtype=bool)
+    vector[:i+1]=np.ones(i+1, dtype=bool)
+    matrixSup = [i+1, j+1]
+    matrixInf = [i+1, j+1]
+    return vector, matrixSup, matrixInf
+
+
+def easyFactorize(targetMatrix, k, t=0):
+    n = len(targetMatrix)
+    if math.log(k+1, 2)%1==0.0:
+        pass
+    else:
+        k = findClosestPowerOfTwo(k)-1
+    if k==1:
+        t=1
+        return t, getVector(targetMatrix)[0]
+    vector, matrixSup, matrixInf = getVector(targetMatrix)
+    t, vectorSup = easyFactorize(targetMatrix[:matrixSup[0], :matrixSup[1]], (k-1)/2, t)
+    t, vectorInf = easyFactorize(targetMatrix[matrixInf[0]:, matrixInf[0]:], (k-1)/2, t)
+    factor = np.zeros((n,2*t+1), dtype=bool)
+    factor[:matrixSup[0], :t] = vectorSup.reshape(factor[:matrixSup[0], :t].shape)
+    factor[matrixInf[0]:, t:2*t] = vectorInf.reshape(factor[matrixInf[0]:, t:2*t].shape)
+    factor[:, 2*t] = vector
+    return 2*t+1, factor
+
+
 def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
     datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "w")
@@ -306,6 +355,16 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     mrnaseqDset = datasetFile.create_dataset("View4", modifiedRNASeq.shape, data=modifiedRNASeq)
     mrnaseqDset.attrs["name"] = "SRNASeq"
     logging.debug("Done:\t Getting Sorted RNASeq Data")
+
+    logging.debug("Start:\t Getting Binarized RNASeq Data")
+    factorizedBaseMatrix = np.genfromtxt(path+"factorMatrix.csv", delimiter=',')
+    brnaseqDset = datasetFile.create_dataset("View5", len(modifiedRNASeq), len(factorizedBaseMatrix.flatten()))
+    for patientIndex, patientSortedArray in enumerate(modifiedRNASeq):
+        patientMatrix = np.zeros(factorizedBaseMatrix.shape, dtype=bool)
+        for lineIndex, geneIndex in enumerate(patientSortedArray):
+            patientMatrix[geneIndex]=factorizedBaseMatrix[lineIndex]
+        brnaseqDset[patientIndex] = patientMatrix.flatten()
+    logging.debug("Done:\t Getting Binarized RNASeq Data")
 
     # logging.debug("Start:\t Getting Binned RNASeq Data")
     # SRNASeq = datasetFile["View4"][...]

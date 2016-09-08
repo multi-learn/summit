@@ -1,0 +1,32 @@
+2016-09-08 09:58:45,489 DEBUG: Start:	 Creating 2 temporary datasets for multiprocessing
+2016-09-08 09:58:45,489 WARNING:  WARNING : /!\ This may use a lot of HDD storage space : 0.00010759375 Gbytes /!\ 
+2016-09-08 09:58:50,503 DEBUG: Start:	 Creating datasets for multiprocessing
+2016-09-08 09:58:50,507 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-08 09:58:50,558 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 09:58:50,558 DEBUG: ### Main Programm for Classification MonoView
+2016-09-08 09:58:50,559 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-08 09:58:50,559 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-08 09:58:50,559 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 09:58:50,559 DEBUG: Start:	 Determine Train/Test split
+2016-09-08 09:58:50,559 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 09:58:50,559 DEBUG: Info:	 Shape X_train:(210, 12), Length of y_train:210
+2016-09-08 09:58:50,559 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 09:58:50,559 DEBUG: Info:	 Shape X_test:(90, 12), Length of y_test:90
+2016-09-08 09:58:50,560 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 09:58:50,560 DEBUG: Done:	 Determine Train/Test split
+2016-09-08 09:58:50,560 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 09:58:50,560 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-08 09:58:50,594 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 09:58:50,595 DEBUG: Start:	 Training
+2016-09-08 09:58:50,596 DEBUG: Info:	 Time for Training: 0.0384030342102[s]
+2016-09-08 09:58:50,596 DEBUG: Done:	 Training
+2016-09-08 09:58:50,596 DEBUG: Start:	 Predicting
+2016-09-08 09:58:50,599 DEBUG: Done:	 Predicting
+2016-09-08 09:58:50,599 DEBUG: Start:	 Getting Results
+2016-09-08 09:58:50,609 DEBUG: Done:	 RandomSearch best settings
+2016-09-08 09:58:50,609 DEBUG: Start:	 Training
+2016-09-08 09:58:50,613 DEBUG: Info:	 Time for Training: 0.0557579994202[s]
+2016-09-08 09:58:50,614 DEBUG: Done:	 Training
+2016-09-08 09:58:50,614 DEBUG: Start:	 Predicting
+2016-09-08 09:58:50,616 DEBUG: Done:	 Predicting
+2016-09-08 09:58:50,617 DEBUG: Start:	 Getting Results

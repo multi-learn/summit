@@ -50,7 +50,7 @@ def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metric=None,
     classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
-        logging.debug("\tStart:\t Gridsearch for "+classifierName+" on "+DATASET.get("View"+str(classifierIndex)).attrs["name"])
+        logging.debug("\tStart:\t Random search for "+classifierName+" on "+DATASET.get("View"+str(classifierIndex)).attrs["name"])
         classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
         classifierMethod = getattr(classifierModule, "gridSearch")
         bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[learningIndices],

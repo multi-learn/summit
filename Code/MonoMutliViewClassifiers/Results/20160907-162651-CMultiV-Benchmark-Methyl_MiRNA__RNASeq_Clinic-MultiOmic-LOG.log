@@ -1,0 +1,224 @@
+2016-09-07 16:26:51,762 DEBUG: Start:	 Creating 2 temporary datasets for multiprocessing
+2016-09-07 16:26:51,762 WARNING:  WARNING : /!\ This may use a lot of HDD storage space : 0.273145851562 Gbytes /!\ 
+2016-09-07 16:27:02,716 DEBUG: Start:	 Creating datasets for multiprocessing
+2016-09-07 16:27:02,972 INFO: Start:	 Finding all available mono- & multiview algorithms
+2016-09-07 16:27:04,713 DEBUG: ### Main Programm for Classification MonoView
+2016-09-07 16:27:04,714 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : DecisionTree
+2016-09-07 16:27:04,714 DEBUG: Start:	 Determine Train/Test split
+2016-09-07 16:27:04,911 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-07 16:27:04,911 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-07 16:27:04,911 DEBUG: Done:	 Determine Train/Test split
+2016-09-07 16:27:04,911 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-07 16:27:06,463 DEBUG: ### Main Programm for Classification MonoView
+2016-09-07 16:27:06,464 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
+2016-09-07 16:27:06,464 DEBUG: Start:	 Determine Train/Test split
+2016-09-07 16:27:06,499 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-07 16:27:06,499 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-07 16:27:06,499 DEBUG: Done:	 Determine Train/Test split
+2016-09-07 16:27:06,499 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-07 16:27:14,206 DEBUG: Done:	 RandomSearch best settings
+2016-09-07 16:27:14,206 DEBUG: Start:	 Training
+2016-09-07 16:27:15,153 DEBUG: Done:	 RandomSearch best settings
+2016-09-07 16:27:15,153 DEBUG: Start:	 Training
+2016-09-07 16:27:16,232 DEBUG: Info:	 Time for Training: 13.1729319096[s]
+2016-09-07 16:27:16,232 DEBUG: Done:	 Training
+2016-09-07 16:27:16,233 DEBUG: Start:	 Predicting
+2016-09-07 16:27:16,348 DEBUG: Done:	 Predicting
+2016-09-07 16:27:16,348 DEBUG: Start:	 Getting Results
+2016-09-07 16:27:16,926 DEBUG: Done:	 Getting Results
+2016-09-07 16:27:16,926 INFO: Classification on MultiOmic database for Methyl with DecisionTree
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.771428571429
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Methyl	 View shape : (347, 25978)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 9
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.771428571429
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.586206896552
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.586206896552
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.228571428571
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.771428571429
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.440385506051
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.68
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.515151515152
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.70202020202
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.228571428571
+
+
+ Classification took 0:00:13
+2016-09-07 16:27:16,964 INFO: Done:	 Result Analysis
+2016-09-07 16:27:17,029 DEBUG: Info:	 Time for Training: 13.9593689442[s]
+2016-09-07 16:27:17,029 DEBUG: Done:	 Training
+2016-09-07 16:27:17,029 DEBUG: Start:	 Predicting
+2016-09-07 16:27:17,043 DEBUG: Done:	 Predicting
+2016-09-07 16:27:17,043 DEBUG: Start:	 Getting Results
+2016-09-07 16:27:17,076 DEBUG: Done:	 Getting Results
+2016-09-07 16:27:17,076 INFO: Classification on MultiOmic database for Methyl with Adaboost
+
+accuracy_score on train : 1.0
+accuracy_score on test : 0.790476190476
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Methyl	 View shape : (347, 25978)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 14, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.790476190476
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.592592592593
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.592592592593
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.209523809524
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.790476190476
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.482108339669
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.761904761905
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.484848484848
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.707702020202
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.209523809524
+
+
+ Classification took 0:00:13
+2016-09-07 16:27:17,076 INFO: Done:	 Result Analysis
+2016-09-07 16:27:18,338 DEBUG: ### Main Programm for Classification MonoView
+2016-09-07 16:27:18,339 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : RandomForest
+2016-09-07 16:27:18,339 DEBUG: Start:	 Determine Train/Test split
+2016-09-07 16:27:18,379 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-07 16:27:18,379 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-07 16:27:18,379 DEBUG: Done:	 Determine Train/Test split
+2016-09-07 16:27:18,379 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-07 16:27:18,521 DEBUG: ### Main Programm for Classification MonoView
+2016-09-07 16:27:18,522 DEBUG: ### Classification - Database:MultiOmic Feature:Methyl train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : KNN
+2016-09-07 16:27:18,522 DEBUG: Start:	 Determine Train/Test split
+2016-09-07 16:27:18,570 DEBUG: Info:	 Shape X_train:(242, 25978), Length of y_train:242
+2016-09-07 16:27:18,571 DEBUG: Info:	 Shape X_test:(105, 25978), Length of y_test:105
+2016-09-07 16:27:18,571 DEBUG: Done:	 Determine Train/Test split
+2016-09-07 16:27:18,571 DEBUG: Start:	 RandomSearch best settings with 1 iterations
+2016-09-07 16:27:18,830 DEBUG: Done:	 RandomSearch best settings
+2016-09-07 16:27:18,830 DEBUG: Start:	 Training
+2016-09-07 16:27:18,913 DEBUG: Info:	 Time for Training: 1.72966194153[s]
+2016-09-07 16:27:18,914 DEBUG: Done:	 Training
+2016-09-07 16:27:18,914 DEBUG: Start:	 Predicting
+2016-09-07 16:27:18,924 DEBUG: Done:	 Predicting
+2016-09-07 16:27:18,924 DEBUG: Start:	 Getting Results
+2016-09-07 16:27:19,006 DEBUG: Done:	 Getting Results
+2016-09-07 16:27:19,006 INFO: Classification on MultiOmic database for Methyl with RandomForest
+
+accuracy_score on train : 0.97520661157
+accuracy_score on test : 0.761904761905
+
+Database configuration : 
+	- Database name : MultiOmic
+	- View name : Methyl	 View shape : (347, 25978)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 6, max_depth : 9
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.97520661157
+		- Score on test : 0.761904761905
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.949152542373
+		- Score on test : 0.468085106383
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.949152542373
+		- Score on test : 0.468085106383
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0247933884298
+		- Score on test : 0.238095238095
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.97520661157
+		- Score on test : 0.761904761905
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.932999668908
+		- Score on test : 0.398313753408
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.965517241379
+		- Score on test : 0.785714285714
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.933333333333
+		- Score on test : 0.333333333333
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.961172161172
+		- Score on test : 0.645833333333
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0247933884298
+		- Score on test : 0.238095238095
+
+
+ Classification took 0:00:01
+2016-09-07 16:27:19,007 INFO: Done:	 Result Analysis

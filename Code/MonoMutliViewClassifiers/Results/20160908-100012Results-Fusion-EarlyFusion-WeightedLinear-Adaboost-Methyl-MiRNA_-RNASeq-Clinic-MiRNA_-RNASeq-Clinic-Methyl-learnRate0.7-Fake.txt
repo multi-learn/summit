@@ -1,0 +1,31 @@
+		Result for Multiview classification with EarlyFusion
+
+Average accuracy :
+	-On Train : 100.0
+	-On Test : 54.6341463415
+	-On Validation : 49.2134831461
+
+Dataset info :
+	-Database name : Fake
+	-Labels : Methyl, MiRNA_, RNASeq, Clinic
+	-Views : Methyl, MiRNA_, RNASeq, Clinic
+	-5 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.444263234099, 1.0, 0.292116326168, 0.822047817174 with monoview classifier : 
+		- Adaboost with num_esimators : 8, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+
+Computation time on 1 cores : 
+	Database extraction time : 0:00:00
+	                         Learn     Prediction
+	         Fold 1        0:00:00        0:00:00
+	         Fold 2        0:00:00        0:00:00
+	         Fold 3        0:00:00        0:00:00
+	         Fold 4        0:00:00        0:00:00
+	         Fold 5        0:00:00        0:00:00
+	          Total        0:00:02        0:00:00
+	So a total classification time of 0:00:00.
+

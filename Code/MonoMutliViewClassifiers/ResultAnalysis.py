@@ -20,7 +20,9 @@ def resultAnalysis(benchmark, results, name, times, metrics):
     for metric in metrics:
         mono, multi = results
         names = [res[1][0]+"-"+res[1][1][-1] for res in mono]
-        names+=[type_ if type_ != "Fusion" else a["fusionType"]+"-"+a["fusionMethod"] for type_, a, b in multi]
+        names+=[type_ for type_, a, b in multi if type_ != "Fusion"]
+        names+=[ "Late-"+str(a["fusionMethod"]) for type_, a, b in multi if type_ == "Fusion" and a["fusionType"] != "EarlyFusion"]
+        names+=[ "Early-"+a["fusionMethod"]+"-"+a["classifiersNames"][0]  for type_, a, b in multi if type_ == "Fusion" and a["fusionType"] != "LateFusion"]
         nbResults = len(mono)+len(multi)
         validationScores = [float(res[1][2][metric[0]][2]) for res in mono]
         validationScores += [float(scores[metric[0]][2]) for a, b, scores in multi]

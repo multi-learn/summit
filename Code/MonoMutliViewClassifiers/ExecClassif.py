@@ -311,26 +311,29 @@ else:
         bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
         bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
 monoviewTime = time.time()-dataBaseTime
+print resultsMonoview
 try:
     if benchmark["Multiview"]:
-        try:
-            if benchmark["Multiview"]["Mumbo"]:
-                for combination in itertools.combinations_with_replacement(range(len(benchmark["Multiview"]["Mumbo"])), NB_VIEW):
-                    classifiersNames = [benchmark["Multiview"]["Mumbo"][index] for index in combination]
-                    arguments = {"CL_type": "Mumbo",
-                                 "views": args.views.split(":"),
-                                 "NB_VIEW": len(args.views.split(":")),
-                                 "NB_CLASS": len(args.CL_classes.split(":")),
-                                 "LABELS_NAMES": args.CL_classes.split(":"),
-                                 "MumboKWARGS": {"classifiersNames": classifiersNames,
-                                                 "maxIter":int(args.MU_iter[0]), "minIter":int(args.MU_iter[1]),
-                                                 "threshold":args.MU_iter[2],
-                                                 "classifiersConfigs": [argument.split(":") for argument in args.MU_config]}}
-                    argumentDictionaries["Multiview"].append(arguments)
-        except:
-            pass
-#         bestClassifiers = ["DecisionTree", "DecisionTree", "DecisionTree", "DecisionTree"]
-
+        # try:
+        #     if benchmark["Multiview"]["Mumbo"]:
+        #         for combination in itertools.combinations_with_replacement(range(len(benchmark["Multiview"]["Mumbo"])), NB_VIEW):
+        #             classifiersNames = [benchmark["Multiview"]["Mumbo"][index] for index in combination]
+        #             arguments = {"CL_type": "Mumbo",
+        #                          "views": args.views.split(":"),
+        #                          "NB_VIEW": len(args.views.split(":")),
+        #                          "NB_CLASS": len(args.CL_classes.split(":")),
+        #                          "LABELS_NAMES": args.CL_classes.split(":"),
+        #                          "MumboKWARGS": {"classifiersNames": classifiersNames,
+        #                                          "maxIter":int(args.MU_iter[0]), "minIter":int(args.MU_iter[1]),
+        #                                          "threshold":args.MU_iter[2],
+        #                                          "classifiersConfigs": [argument.split(":") for argument in args.MU_config]}}
+        #             argumentDictionaries["Multiview"].append(arguments)
+        # except:
+        #     pass
+        # bestClassifiers = ["DecisionTree", "DecisionTree", "DecisionTree", "DecisionTree"]
+        # monoviewTime = 0
+        # resultsMonoview = []
+        # bestClassifiersConfigs = []
         try:
             if benchmark["Multiview"]["Fusion"]:
                 try:
@@ -368,6 +371,7 @@ try:
             pass
 except:
     pass
+# resultsMultiview = []
 if nbCores>1:
     resultsMultiview = []
     nbExperiments = len(argumentDictionaries["Multiview"])
@@ -375,12 +379,12 @@ if nbCores>1:
         resultsMultiview += Parallel(n_jobs=nbCores)(
             delayed(ExecMultiview_multicore)(coreIndex, args.name, args.CL_split, args.CL_nbFolds, args.type, args.pathF,
                                    LABELS_DICTIONARY, gridSearch=gridSearch,
-                                   metrics=metrics, **argumentDictionaries["Multiview"][stepIndex*nbCores+coreIndex])
+                                   metrics=metrics, nIter=args.CL_GS_iter, **argumentDictionaries["Multiview"][stepIndex*nbCores+coreIndex])
             for coreIndex in range(min(nbCores, nbExperiments - (stepIndex + 1) * nbCores)))
 else:
     resultsMultiview = [ExecMultiview(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
                                LABELS_DICTIONARY, gridSearch=gridSearch,
-                               metrics=metrics, **arguments) for arguments in argumentDictionaries["Multiview"]]
+                               metrics=metrics, nIter=args.CL_GS_iter, **arguments) for arguments in argumentDictionaries["Multiview"]]
 multiviewTime = time.time()-monoviewTime
 if nbCores>1:
     logging.debug("Start:\t Deleting "+str(nbCores)+" temporary datasets for multiprocessing")
@@ -390,6 +394,7 @@ if nbCores>1:
 times = [dataBaseTime, monoviewTime, multiviewTime]
 # times=[]
 results = (resultsMonoview, resultsMultiview)
+logging.debug("Start:\t Analyze Results")
 resultAnalysis(benchmark, results, args.name, times, metrics)
-
+logging.debug("Done:\t Analyze Results")
 

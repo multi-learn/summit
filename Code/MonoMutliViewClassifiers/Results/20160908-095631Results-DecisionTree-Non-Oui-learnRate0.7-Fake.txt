@@ -1,0 +1,54 @@
+Classification on Fake database for View3 with DecisionTree
+
+accuracy_score on train : 0.985714285714
+accuracy_score on test : 0.522222222222
+
+Database configuration : 
+	- Database name : Fake
+	- View name : View3	 View shape : (300, 12)
+	- Learning Rate : 0.7
+	- Labels used : Non, Oui
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 10
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 1 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.985714285714
+		- Score on test : 0.522222222222
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, micro as average (higher is better) : 
+		- Score on train : 0.985507246377
+		- Score on test : 0.516853932584
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, micro as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.985507246377
+		- Score on test : 0.516853932584
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0142857142857
+		- Score on test : 0.477777777778
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.985714285714
+		- Score on test : 0.522222222222
+	For Log loss using None as sample_weights, 1e-15 as eps (lower is better) : 
+		- Score on train : nan
+		- Score on test : nan
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.971825315808
+		- Score on test : 0.0506833064614
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.971428571429
+		- Score on test : 0.479166666667
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.560975609756
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.986111111111
+		- Score on test : 0.525385764062
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0142857142857
+		- Score on test : 0.477777777778
+
+
+ Classification took 0:00:00

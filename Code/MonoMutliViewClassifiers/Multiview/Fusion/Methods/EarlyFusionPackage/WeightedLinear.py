@@ -34,12 +34,11 @@ class WeightedLinear(EarlyFusionClassifier):
         self.weights = self.weights/float(max(self.weights))
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=trainIndices)
         monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
-        print self.monoviewClassifiersConfig
         self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET.get("labels")[trainIndices],
-                                                                     NB_CORES=self.nbCores, **self.monoviewClassifiersConfig)
-                                                                     #**dict((str(configIndex), config) for configIndex, config in
-                                                                      #      enumerate(self.monoviewClassifiersConfig
-                                                                       #               )))
+                                                                     NB_CORES=self.nbCores, #**self.monoviewClassifiersConfig)
+                                                                     **dict((str(configIndex), config) for configIndex, config in
+                                                                           enumerate(self.monoviewClassifiersConfig
+                                                                                     )))
 
     def predict_hdf5(self, DATASET, usedIndices=None):
         self.weights = self.weights/float(max(self.weights))
