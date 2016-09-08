@@ -432,7 +432,9 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     logging.debug("Start:\t Getting Binarized RNASeq Data")
     k=100
     factorizedSupBaseMatrix = np.genfromtxt(path+"factorSup--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(k)+".csv", delimiter=',')
+    print factorizedSupBaseMatrix.shape
     factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(k)+".csv", delimiter=',')
+    print factorizedLeftBaseMatrix.shape
     brnaseqDset = datasetFile.create_dataset("View5", (modifiedRNASeq.shape[0], modifiedRNASeq.shape[0]*k*2), dtype=bool)
     for patientIndex, patientSortedArray in enumerate(modifiedRNASeq):
         patientMatrix = np.zeros((modifiedRNASeq.shape[0], k*2), dtype=bool)
