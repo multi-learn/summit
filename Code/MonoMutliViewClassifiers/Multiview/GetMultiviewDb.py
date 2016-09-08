@@ -418,7 +418,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
     logging.debug("Start:\t Getting Sorted RNASeq Data")
     RNASeq = datasetFile["View2"][...]
-    modifiedRNASeq = np.zeros((datasetFile.get("Metadata").attrs["datasetLength"], datasetFile.get("View2").shape[1]), dtype=int)
+    modifiedRNASeq = np.zeros(datasetFile.get("View2").shape, dtype=int)
     for exampleIndex, exampleArray in enumerate(RNASeq):
         RNASeqDictionary = dict((index, value) for index, value in enumerate(exampleArray))
         sorted_x = sorted(RNASeqDictionary.items(), key=operator.itemgetter(1))
