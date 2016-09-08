@@ -2,6 +2,7 @@ from ...Methods.LateFusion import LateFusionClassifier
 import MonoviewClassifiers
 import numpy as np
 from sklearn.metrics import accuracy_score
+from utils.Dataset import getV
 
 
 def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
@@ -15,7 +16,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
             classifier = MajorityVoting(1, **classificationKWARGS)
             classifier.fit_hdf5(DATASET, trainIndices)
             predictedLabels = classifier.predict_hdf5(DATASET, trainIndices)
-            accuracy = accuracy_score(DATASET.get("labels")[trainIndices], predictedLabels)
+            accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
             if accuracy > bestScore:
                 bestScore = accuracy
                 bestConfig = normalizedArray
@@ -38,7 +39,7 @@ class MajorityVoting(LateFusionClassifier):
             monoViewDecisions = np.zeros((len(usedIndices),DATASET.get("Metadata").attrs["nbView"]), dtype=int)
             for viewIndex in range(DATASET.get("Metadata").attrs["nbView"]):
                 monoViewDecisions[:, viewIndex] = self.monoviewClassifiers[viewIndex].predict(
-                    DATASET.get("View" + str(viewIndex))[usedIndices])
+                    getV(DATASET, viewIndex, usedIndices))
             for exampleIndex in range(datasetLength):
                 for viewIndex, featureClassification in enumerate(monoViewDecisions[exampleIndex, :]):
                     votes[exampleIndex, featureClassification] += self.weights[viewIndex]

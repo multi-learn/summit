@@ -38,7 +38,6 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
 
 def execute(name, learningRate, nbFolds, nbCores, gridSearch, metrics, nIter, feat, CL_type, clKWARGS, classLabelsNames,
             shape, y_train, y_train_pred, y_test, y_test_pred, time):
-    print metrics
     metricsScores = {}
     metricModule = getattr(Metrics, metrics[0][0])
     train = metricModule.score(y_train, y_train_pred)

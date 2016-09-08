@@ -7,6 +7,7 @@ from sklearn.multiclass import OneVsOneClassifier
 from sklearn.svm import SVC
 
 import MonoviewClassifiers
+from utils.Dataset import getV
 
 
 def fitMonoviewClassifier(classifierName, data, labels, classifierConfig):
@@ -34,7 +35,7 @@ class LateFusionClassifier(object):
         nbView = DATASET.get("Metadata").attrs["nbView"]
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
             delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[viewIndex],
-                                              DATASET.get("View"+str(viewIndex))[trainIndices, :],
-                                              DATASET.get("labels")[trainIndices],
+                                              getV(DATASET, viewIndex, trainIndices),
+                                              DATASET.get("Labels")[trainIndices],
                                               self.monoviewClassifiersConfigs[viewIndex])
             for viewIndex in range(nbView))

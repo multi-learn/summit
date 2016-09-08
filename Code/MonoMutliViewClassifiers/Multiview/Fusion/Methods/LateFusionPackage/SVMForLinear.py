@@ -3,6 +3,7 @@ import MonoviewClassifiers
 import numpy as np
 from sklearn.multiclass import OneVsOneClassifier
 from sklearn.svm import SVC
+from utils.Dataset import getV
 
 
 def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
@@ -22,8 +23,8 @@ class SVMForLinear(LateFusionClassifier):
         for viewIndex in range(nbViews):
             monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[viewIndex])
             self.monoviewClassifiers.append(
-                monoviewClassifier.fit(DATASET.get("View" + str(viewIndex))[trainIndices],
-                                       DATASET.get("labels")[trainIndices],
+                monoviewClassifier.fit(getV(DATASET, viewIndex, trainIndices),
+                                       DATASET.get("Labels")[trainIndices],
                                        NB_CORES=self.nbCores,
                                        **dict((str(configIndex), config) for configIndex, config in
                                               enumerate(self.monoviewClassifiersConfigs[viewIndex]))))
@@ -37,7 +38,7 @@ class SVMForLinear(LateFusionClassifier):
             for viewIndex in range(DATASET.get("Metadata").attrs["nbView"]):
                 monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[viewIndex])
                 monoviewDecisions[:, viewIndex] = self.monoviewClassifiers[viewIndex].predict(
-                    DATASET.get("View" + str(viewIndex))[usedIndices])
+                    getV(DATASET, viewIndex, usedIndices))
             predictedLabels = self.SVMClassifier.predict(monoviewDecisions)
         else:
             predictedLabels = []
@@ -48,9 +49,9 @@ class SVMForLinear(LateFusionClassifier):
         monoViewDecisions = np.zeros((len(usedIndices), DATASET.get("Metadata").attrs["nbView"]), dtype=int)
         for viewIndex in range(DATASET.get("Metadata").attrs["nbView"]):
             monoViewDecisions[:, viewIndex] = self.monoviewClassifiers[viewIndex].predict(
-                DATASET.get("View" + str(viewIndex))[usedIndices])
+                getV(DATASET, viewIndex, usedIndices))
 
-        self.SVMClassifier.fit(monoViewDecisions, DATASET.get("labels")[usedIndices])
+        self.SVMClassifier.fit(monoViewDecisions, DATASET.get("Labels")[usedIndices])
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
         configString = "with SVM for linear \n\t-With monoview classifiers : "

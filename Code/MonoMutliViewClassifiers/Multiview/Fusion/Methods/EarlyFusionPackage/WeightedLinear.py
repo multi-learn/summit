@@ -15,7 +15,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
             classifier = WeightedLinear(1, **classificationKWARGS)
             classifier.fit_hdf5(DATASET, trainIndices)
             predictedLabels = classifier.predict_hdf5(DATASET, trainIndices)
-            accuracy = accuracy_score(DATASET.get("labels")[trainIndices], predictedLabels)
+            accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
             if accuracy > bestScore:
                 bestScore = accuracy
                 bestConfig = normalizedArray
@@ -34,7 +34,7 @@ class WeightedLinear(EarlyFusionClassifier):
         self.weights = self.weights/float(max(self.weights))
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=trainIndices)
         monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
-        self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET.get("labels")[trainIndices],
+        self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET.get("Labels")[trainIndices],
                                                                      NB_CORES=self.nbCores, #**self.monoviewClassifiersConfig)
                                                                      **dict((str(configIndex), config) for configIndex, config in
                                                                            enumerate(self.monoviewClassifiersConfig

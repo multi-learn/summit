@@ -2,6 +2,7 @@ from Methods import *
 import MonoviewClassifiers
 import numpy as np
 import logging
+from utils.Dataset import getV
 
 
 # Author-Info
@@ -18,7 +19,7 @@ def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None):
         weights = np.array([1/NB_VIEW for i in range(NB_VIEW)])
     if sum(weights)!=1:
         weights = weights/sum(weights)
-    monoviewData = np.concatenate([weights[viewIndex]*DATASET.get("View"+str(viewIndex))[usedIndices, :]
+    monoviewData = np.concatenate([weights[viewIndex]*getV(DATASET, viewIndex, usedIndices)
                                         for viewIndex in np.arange(NB_VIEW)], axis=1)
     return monoviewData
 
@@ -34,13 +35,13 @@ def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metric=None,
         logging.debug("\tStart:\t Random search for "+classifierName+ " with "+str(nIter)+" iterations")
         classifierModule = getattr(MonoviewClassifiers, classifierName)
         classifierMethod = getattr(classifierModule, "gridSearch")
-        if fusionMethodModuleName == "LateFusion":
-            bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[learningIndices],
-                                                 DATASET.get("labels")[learningIndices], metric=metric,
+        if fusionTypeName == "LateFusion":
+            bestSettings.append(classifierMethod(getV(DATASET, classifierIndex, learningIndices),
+                                                 DATASET.get("Labels")[learningIndices], metric=metric,
                                                  nIter=nIter))
         else:
             bestSettings.append(classifierMethod(makeMonoviewData_hdf5(DATASET, usedIndices=learningIndices),
-                                                 DATASET.get("labels")[learningIndices], metric=metric,
+                                                 DATASET.get("Labels")[learningIndices], metric=metric,
                                                  nIter=nIter))
         logging.debug("\tDone:\t Random search for "+classifierName)
     classificationKWARGS["classifiersConfigs"] = bestSettings

@@ -22,6 +22,7 @@ import ExportResults                    # Functions to render results
 import MonoviewClassifiers
 import Metrics
 from analyzeResult import execute
+from utils.Dataset import getV, getValue
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann, Baptiste BAUVIN"
@@ -35,8 +36,8 @@ def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databa
     kwargs = args["args"]
     views = [DATASET.get("View"+str(viewIndex)).attrs["name"] for viewIndex in range(DATASET.get("Metadata").attrs["nbView"])]
     neededViewIndex = views.index(kwargs["feat"])
-    X = DATASET.get("View"+str(neededViewIndex))
-    Y = DATASET.get("labels").value
+    X = getV(DATASET, neededViewIndex)
+    Y = DATASET.get("Labels").value
     returnedViewIndex = args["viewIndex"]
     return ExecMonoview(X, Y, name, learningRate, nbFolds, 1, databaseType, path, gridSearch=gridSearch,
                         metrics=metrics, nIter=nIter, **args)
@@ -55,7 +56,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     fileCL = kwargs["fileCL"]
     fileCLD = kwargs["fileCLD"]
     CL_type = kwargs["CL_type"]
-    X = X.value
+    X = getValue(X)
     clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
 
     # Determine the Database to extract features
@@ -107,7 +108,6 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
                                          clKWARGS, classLabelsNames, X.shape,
                                          y_train, y_train_pred, y_test, y_test_pred, t_end)
     cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
-    print cl_desc
     logging.debug("Done:\t Getting Results")
     logging.info(stringAnalysis)
     labelsString = "-".join(classLabelsNames)
@@ -250,7 +250,7 @@ if __name__=='__main__':
         dataset = h5py.File(args.pathF + args.name + ".hdf5", "r")
         viewsDict = dict((dataset.get("View"+str(viewIndex)).attrs["name"], viewIndex) for viewIndex in range(dataset.get("Metadata").attrs["nbView"]))
         X = dataset["View"+str(viewsDict[args.feat])][...]
-        Y = dataset["labels"][...]
+        Y = dataset["Labels"][...]
 
     logging.debug("Info:\t Shape of Feature:" + str(X.shape) + ", Length of classLabels vector:" + str(Y.shape))
     logging.debug("Done:\t Read CSV Files")

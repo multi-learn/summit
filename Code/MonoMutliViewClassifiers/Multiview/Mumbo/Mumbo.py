@@ -5,7 +5,7 @@ from Classifiers import *
 import time
 import logging
 from sklearn.metrics import accuracy_score
-
+from utils.Dataset import getV
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -53,8 +53,8 @@ def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metric=None,
         logging.debug("\tStart:\t Random search for "+classifierName+" on "+DATASET.get("View"+str(classifierIndex)).attrs["name"])
         classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
         classifierMethod = getattr(classifierModule, "gridSearch")
-        bestSettings.append(classifierMethod(DATASET.get("View"+str(classifierIndex))[learningIndices],
-                                             DATASET.get("labels")[learningIndices], metric=metric))
+        bestSettings.append(classifierMethod(getV(DATASET, classifierIndex, learningIndices),
+                                             DATASET.get("Labels")[learningIndices], metric=metric))
         logging.debug("\tDone:\t Gridsearch for "+classifierName)
     return bestSettings, None
 
@@ -110,7 +110,7 @@ class Mumbo:
         NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
         NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
         DATASET_LENGTH = len(trainIndices)
-        LABELS = DATASET["labels"][trainIndices]
+        LABELS = DATASET["Labels"][trainIndices]
         bestViews = np.zeros(self.maxIter)
         bestClassifiers = []
 
@@ -153,7 +153,7 @@ class Mumbo:
             self.updateGeneralFs(DATASET_LENGTH, NB_CLASS, bestView)
             self.updateGeneralCostMatrix(DATASET_LENGTH, NB_CLASS,LABELS)
             predictedLabels = self.predict_hdf5(DATASET, usedIndices=trainIndices)
-            accuracy = accuracy_score(DATASET.get("labels")[trainIndices], predictedLabels)
+            accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
             self.iterAccuracies[self.iterIndex] = accuracy
 
             self.iterIndex += 1
@@ -170,7 +170,7 @@ class Mumbo:
             for labelIndex, exampleIndex in enumerate(usedIndices):
                 votes = np.zeros(NB_CLASS)
                 for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
-                    data = DATASET["/View"+str(int(view))][exampleIndex, :]
+                    data = getV(DATASET, int(view), exampleIndex)
                     votes[int(classifier.predict(np.array([data])))] += alpha[view]
                 predictedLabels[labelIndex] = np.argmax(votes)
         else:
@@ -188,7 +188,7 @@ class Mumbo:
             for labelIndex, exampleIndex in enumerate(usedIndices):
                 votes = np.zeros(NB_CLASS)
                 for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
-                    data = DATASET["/View"+str(int(view))][exampleIndex, :]
+                    data = getV(DATASET, int(view), exampleIndex)
                     predictedProbas[labelIndex, int(classifier.predict(np.array([data])))] += alpha[view]
                 predictedProbas[labelIndex,:] = predictedProbas[labelIndex,:]/np.sum(predictedProbas[labelIndex,:])
         else:
@@ -236,8 +236,8 @@ class Mumbo:
         iterIndex = self.iterIndex
         trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
             delayed(trainWeakClassifier_hdf5)(classifiersNames[viewIndex],
-                                              DATASET.get("View"+str(viewIndex))[trainIndices, :],
-                                              DATASET.get("labels")[trainIndices],
+                                              getV(DATASET,viewIndex,trainIndices),
+                                              DATASET.get("Labels")[trainIndices],
                                               DATASET_LENGTH,
                                               viewIndex, classifiersConfigs[viewIndex],
                                               DATASET.get("View"+str(viewIndex)).attrs["name"], iterIndex, costMatrices)
@@ -443,7 +443,7 @@ class Mumbo:
                 votesByIter = np.zeros((DATASET_LENGTH, NB_CLASS))
 
                 for usedExampleIndex, exampleIndex in enumerate(usedIndices):
-                    data = np.array([np.array(DATASET.get("View" + str(int(view)))[exampleIndex, :])])
+                    data = np.array([np.array(getV(DATASET,int(view), exampleIndex))])
                     votesByIter[usedExampleIndex, int(classifier.predict(data))] += alpha[view]
                     votes[usedExampleIndex] = votes[usedExampleIndex] + np.array(votesByIter[usedExampleIndex])
                     predictedLabels[usedExampleIndex, iterIndex] = np.argmax(votes[usedExampleIndex])

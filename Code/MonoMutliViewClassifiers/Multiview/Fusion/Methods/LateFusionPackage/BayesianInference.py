@@ -2,6 +2,7 @@ from ...Methods.LateFusion import LateFusionClassifier
 import MonoviewClassifiers
 import numpy as np
 from sklearn.metrics import accuracy_score
+from utils.Dataset import getV
 
 def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
     bestScore = 0.0
@@ -14,7 +15,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
             classifier = BayesianInference(1, **classificationKWARGS)
             classifier.fit_hdf5(DATASET, trainIndices)
             predictedLabels = classifier.predict_hdf5(DATASET, trainIndices)
-            accuracy = accuracy_score(DATASET.get("labels")[trainIndices], predictedLabels)
+            accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
             if accuracy > bestScore:
                 bestScore = accuracy
                 bestConfig = normalizedArray
@@ -38,8 +39,7 @@ class BayesianInference(LateFusionClassifier):
 
             viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
             for viewIndex in range(nbView):
-                viewScores[viewIndex] = np.power(self.monoviewClassifiers[viewIndex].predict_proba(DATASET.get("View" + str(viewIndex))
-                                                                                                   [usedIndices]),
+                viewScores[viewIndex] = np.power(self.monoviewClassifiers[viewIndex].predict_proba(getV(DATASET, viewIndex, usedIndices)),
                                                  self.weights[viewIndex])
             predictedLabels = np.argmax(np.prod(viewScores, axis=0), axis=1)
         else:

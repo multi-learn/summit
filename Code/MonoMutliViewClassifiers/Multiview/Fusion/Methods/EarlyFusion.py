@@ -2,6 +2,7 @@
 # -*- encoding: utf-8
 
 import numpy as np
+from utils.Dataset import getV
 
 
 class EarlyFusionClassifier(object):
@@ -20,6 +21,6 @@ class EarlyFusionClassifier(object):
             weights = np.array([1/NB_VIEW for i in range(NB_VIEW)])
         if sum(weights)!=1:
             weights = weights/sum(weights)
-        self.monoviewData = np.concatenate([weights[viewIndex]*DATASET.get("View"+str(viewIndex))[usedIndices, :]
+        self.monoviewData = np.concatenate([weights[viewIndex]*getV(DATASET, viewIndex, usedIndices)
                                                          for viewIndex in np.arange(NB_VIEW)], axis=1)
 

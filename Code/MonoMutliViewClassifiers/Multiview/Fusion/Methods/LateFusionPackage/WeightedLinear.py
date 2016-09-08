@@ -2,6 +2,7 @@ from ...Methods.LateFusion import LateFusionClassifier
 import MonoviewClassifiers
 import numpy as np
 from sklearn.metrics import accuracy_score
+from utils.Dataset import getV
 
 
 def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
@@ -15,7 +16,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30):
             classifier = WeightedLinear(1, **classificationKWARGS)
             classifier.fit_hdf5(DATASET, trainIndices)
             predictedLabels = classifier.predict_hdf5(DATASET, trainIndices)
-            accuracy = accuracy_score(DATASET.get("labels")[trainIndices], predictedLabels)
+            accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
             if accuracy > bestScore:
                 bestScore = accuracy
                 bestConfig = normalizedArray
@@ -40,7 +41,7 @@ class WeightedLinear(LateFusionClassifier):
             viewScores = np.zeros((DATASET.get("Metadata").attrs["nbView"], len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
             for viewIndex in range(DATASET.get("Metadata").attrs["nbView"]):
                 viewScores[viewIndex] = self.monoviewClassifiers[viewIndex].predict_proba(
-                    DATASET.get("View" + str(viewIndex))[usedIndices])
+                    getV(DATASET, viewIndex, usedIndices))
             for currentIndex, usedIndex in enumerate(usedIndices):
                 predictedLabel = np.argmax(np.array(
                     [max(viewScore) * weight for viewScore, weight in zip(viewScores[:, currentIndex], self.weights)],

@@ -35,7 +35,7 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
 
 def getTotalMetricScores(metric, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
                          kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds):
-    labels = DATASET.get("labels").value
+    labels = DATASET.get("Labels").value
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
@@ -62,7 +62,7 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels,
             views, nbCores, times, kFolds, name, nbFolds,
             validationIndices, gridSearch, nIter, metrics):
 
-    CLASS_LABELS = DATASET.get("labels").value
+    CLASS_LABELS = DATASET.get("Labels").value
 
     fusionType = classificationKWARGS["fusionType"]
     fusionMethod = classificationKWARGS["fusionMethod"]

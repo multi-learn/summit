@@ -9,6 +9,7 @@ import Mumbo
 from Classifiers import *
 import logging
 import Metrics
+from utils.Dataset import getV, getShape
 
 
 # Author-Info
@@ -65,7 +66,7 @@ def classifyMumbobyIter_hdf5(usedIndices, DATASET, classifiers, alphas, views, N
         votesByIter = np.zeros((DATASET_LENGTH, NB_CLASS))
 
         for usedExampleIndex, exampleIndex in enumerate(usedIndices):
-            data = np.array([np.array(DATASET.get("View" + str(int(view)))[exampleIndex, :])])
+            data = np.array([np.array(getV(DATASET,int(view), exampleIndex))])
             votesByIter[usedExampleIndex, int(classifier.predict(data))] += alpha
             votes[usedExampleIndex] = votes[usedExampleIndex] + np.array(votesByIter[usedExampleIndex])
             predictedLabels[usedExampleIndex, iterIndex] = np.argmax(votes[usedExampleIndex])
@@ -81,7 +82,7 @@ def error(testLabels, computedLabels):
 def getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices, LABELS_DICTIONARY):
     nbView = DATASET.get("Metadata").attrs["nbView"]
     viewNames = [DATASET.get("View"+str(viewIndex)).attrs["name"] for viewIndex in range(nbView)]
-    viewShapes = [DATASET.get("View"+str(viewIndex)).shape for viewIndex in range(nbView)]
+    viewShapes = [getShape(DATASET,viewIndex) for viewIndex in range(nbView)]
     DBString = "Dataset info :\n\t-Dataset name : " + databaseName
     DBString += "\n\t-Labels : " + ', '.join(LABELS_DICTIONARY.values())
     DBString += "\n\t-Views : " + ', '.join([viewName+" of shape "+str(viewShape)
@@ -235,7 +236,7 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
 
 def getTotalMetricScores(metric, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
                          kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds):
-    labels = DATASET.get("labels").value
+    labels = DATASET.get("Labels").value
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
@@ -260,7 +261,7 @@ def getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabel
 def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
             DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, databaseName,
             nbFolds, validationIndices, gridSearch, nIter, metrics):
-    CLASS_LABELS = DATASET.get("labels")[...]
+    CLASS_LABELS = DATASET.get("Labels")[...]
     maxIter = initKWARGS["maxIter"]
     minIter = initKWARGS["minIter"]
     dbConfigurationString, viewNames = getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices, LABELS_DICTIONARY)

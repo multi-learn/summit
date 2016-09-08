@@ -14,7 +14,7 @@ import os
 import logging
 import time
 import h5py
-
+from utils.Dataset import getShape
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -52,7 +52,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
     for viewIndex in range(NB_VIEW):
         logging.info("Info:\t Shape of " + str(DATASET.get("View"+str(viewIndex)).attrs["name"]) + " :" + str(
-            DATASET.get("View"+str(viewIndex)).shape))
+            getShape(DATASET, viewIndex)))
     logging.info("Done:\t Read Database Files")
 
 
@@ -64,7 +64,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
     logging.info("Start:\t Determine "+str(nbFolds)+" folds")
     if nbFolds != 1:
-        kFolds = DB.getKFoldIndices(nbFolds, DATASET.get("labels")[...], NB_CLASS, learningIndices)
+        kFolds = DB.getKFoldIndices(nbFolds, DATASET.get("Labels")[...], NB_CLASS, learningIndices)
     else:
         kFolds = [[], range(classificationSetLength)]
     logging.info("Info:\t Length of Learning Sets: " + str(classificationSetLength - len(kFolds[0])))
@@ -109,7 +109,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
             logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
             trainIndices = [index for index in range(datasetLength) if (index not in fold) and (index not in validationIndices)]
             DATASET_LENGTH = len(trainIndices)
-            classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("labels").value[trainIndices], NB_CORES=nbCores, **classificationKWARGS)
+            classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("Labels").value[trainIndices], NB_CORES=nbCores, **classificationKWARGS)
 
             classifier.fit_hdf5(DATASET, trainIndices=trainIndices)
             kFoldClassifier.append(classifier)

@@ -7,6 +7,8 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 
 def score(y_true, y_pred, **kwargs):
+    print set(y_true)
+    print set(y_pred)
     score = metric(y_true, y_pred)
     return score
 

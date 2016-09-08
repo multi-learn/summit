@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from scipy import sparse, io
 from string import digits
 import os
 import random
@@ -28,10 +29,21 @@ def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
     LABELS_DICTIONARY = dict((indx, feature) for indx, feature in enumerate(features))
     datasetFile = h5py.File(pathF+"Fake.hdf5", "w")
     for index, viewData in enumerate(DATA.values()):
-        viewDset = datasetFile.create_dataset("View"+str(index), viewData.shape)
-        viewDset[...] = viewData
-        viewDset.attrs["name"] = "View"+str(index)
-    labelsDset = datasetFile.create_dataset("labels", CLASS_LABELS.shape)
+        if index == 0:
+            viewData = sparse.csr_matrix(viewData)
+            viewGrp = datasetFile.create_group("View0")
+            dataDset = viewGrp.create_dataset("data", viewData.data.shape, data=viewData.data)
+            indicesDset = viewGrp.create_dataset("indices", viewData.indices.shape, data=viewData.indices)
+            indptrDset = viewGrp.create_dataset("indptr", viewData.indptr.shape, data=viewData.indptr)
+            viewGrp.attrs["name"] = "View"+str(index)
+            viewGrp.attrs["sparse"] = True
+            viewGrp.attrs["shape"] = viewData.shape
+        else:
+            viewDset = datasetFile.create_dataset("View"+str(index), viewData.shape)
+            viewDset[...] = viewData
+            viewDset.attrs["name"] = "View"+str(index)
+            viewDset.attrs["sparse"] = False
+    labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
     labelsDset[...] = CLASS_LABELS
     labelsDset.attrs["name"] = "Labels"
 
@@ -60,7 +72,7 @@ def isUseful (labelSupports, index, CLASS_LABELS, labelDict):
 
 
 def splitDataset(DATASET, LEARNING_RATE, DATASET_LENGTH):
-    LABELS = DATASET.get("labels")[...]
+    LABELS = DATASET.get("Labels")[...]
     NB_CLASS = int(DATASET["Metadata"].attrs["nbClass"])
     validationIndices = extractRandomTrainingSet(LABELS, 1-LEARNING_RATE, DATASET_LENGTH, NB_CLASS)
     validationIndices.sort()
@@ -215,6 +227,7 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     methylDset = datasetFile.create_dataset("View0", methylData.shape)
     methylDset[...] = methylData
     methylDset.attrs["name"] = "Methyl"
+    methylDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Methylation Data")
 
     logging.debug("Start:\t Getting MiRNA Data")
@@ -222,6 +235,7 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     mirnaDset = datasetFile.create_dataset("View1", mirnaData.shape)
     mirnaDset[...] = mirnaData
     mirnaDset.attrs["name"]="MiRNA_"
+    mirnaDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting MiRNA Data")
 
     logging.debug("Start:\t Getting RNASeq Data")
@@ -234,6 +248,7 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     rnaseqDset = datasetFile.create_dataset("View2", (rnaseqData.shape[0], len(usefulRows)))
     rnaseqDset[...] = rnaseqData[:, usefulRows]
     rnaseqDset.attrs["name"]="RNASeq_"
+    rnaseqDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting RNASeq Data")
 
     logging.debug("Start:\t Getting Clinical Data")
@@ -241,6 +256,7 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     clinicalDset = datasetFile.create_dataset("View3", clinical.shape)
     clinicalDset[...] = clinical
     clinicalDset.attrs["name"] = "Clinic"
+    clinicalDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Clinical Data")
 
     labelFile = open(path+'brca_labels_triple-negatif.csv')
@@ -308,6 +324,57 @@ def easyFactorize(targetMatrix, k, t=0):
     return 2*t+1, factor
 
 
+def findParams(arrayLen, nbPatients, maxNbBins=5000, maxLenBin=300, minOverlapping=30, minNbBinsOverlapped=20, maxNbSolutions=30):
+    results = []
+    if arrayLen*arrayLen*10/100>minNbBinsOverlapped*nbPatients:
+        for lenBin in range(arrayLen-1):
+            if lenBin+1<maxLenBin:
+                for overlapping in sorted(range(lenBin+1-1), reverse=True):
+                    if overlapping+1>minOverlapping and overlapping>lenBin/minNbBinsOverlapped:
+                        for nbBins in sorted(range(arrayLen-1), reverse=True):
+                            if nbBins+1<maxNbBins:
+                                if arrayLen == (nbBins+1-1)*(lenBin+1-overlapping+1)+lenBin+1:
+                                    results.append({"nbBins":nbBins, "overlapping":overlapping, "lenBin":lenBin})
+                                    if len(results)==maxNbSolutions:
+                                        params = results[random.randrange(len(results))]
+                                        return params
+
+
+def findBins(nbBins, overlapping, lenBin):
+    bins = []
+    for binIndex in range(nbBins+1):
+        bins.append([i+binIndex*(lenBin+1-overlapping+1) for i in range(lenBin+1)])
+    return bins
+
+
+def getBins(array, bins):
+    binnedcoord = []
+    for coordIndex, coord in enumerate(array):
+        for binIndex, bin in enumerate(bins):
+            if coordIndex in bin:
+                binnedcoord.append(binIndex+coord*len(bins))
+    return np.array(binnedcoord)
+
+
+def makeSparseTotalMatrix(sortedRNASeq):
+    nbPatients, nbGenes = sortedRNASeq.shape
+    params = findParams(nbGenes, nbPatients)
+    nbBins = params["nbBins"]
+    overlapping = params["overlapping"]
+    lenBin = params["lenBin"]
+    bins = findBins(nbBins, overlapping, lenBin)
+    sparseFull = sparse.csc_matrix((nbPatients, nbGenes*nbBins))
+    for patientIndex, patient in enumerate(sortedRNASeq):
+        print patientIndex
+        binnedcoord = getBins(patient, bins)
+        columIndices = binnedcoord
+        rowIndices = np.zeros(len(binnedcoord), dtype=int)+patientIndex
+        data = np.ones(len(binnedcoord), dtype=bool)
+        sparseFull = sparseFull+sparse.csc_matrix((data, (rowIndices, columIndices)), shape=(nbPatients, nbGenes*nbBins))
+    return sparseFull
+
+
+
 def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
     datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "w")
@@ -317,6 +384,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     methylDset = datasetFile.create_dataset("View0", methylData.shape)
     methylDset[...] = methylData
     methylDset.attrs["name"] = "Methyl_"
+    methylDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Methylation Data")
 
     logging.debug("Start:\t Getting MiRNA Data")
@@ -324,6 +392,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     mirnaDset = datasetFile.create_dataset("View1", mirnaData.shape)
     mirnaDset[...] = mirnaData
     mirnaDset.attrs["name"]="MiRNA__"
+    mirnaDset.attrs["sparse"]=False
     logging.debug("Done:\t Getting MiRNA Data")
 
     logging.debug("Start:\t Getting RNASeq Data")
@@ -336,6 +405,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     rnaseqDset = datasetFile.create_dataset("View2", (rnaseqData.shape[0], len(usefulRows)))
     rnaseqDset[...] = rnaseqData[:, usefulRows]
     rnaseqDset.attrs["name"]="RNASeq_"
+    rnaseqDset.attrs["sparse"]=False
     logging.debug("Done:\t Getting RNASeq Data")
 
     logging.debug("Start:\t Getting Clinical Data")
@@ -343,6 +413,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     clinicalDset = datasetFile.create_dataset("View3", clinical.shape)
     clinicalDset[...] = clinical
     clinicalDset.attrs["name"] = "Clinic_"
+    clinicalDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Clinical Data")
 
     logging.debug("Start:\t Getting Sorted RNASeq Data")
@@ -354,35 +425,33 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
         modifiedRNASeq[exampleIndex] = np.array([index for (index, value) in sorted_x], dtype=int)
     mrnaseqDset = datasetFile.create_dataset("View4", modifiedRNASeq.shape, data=modifiedRNASeq)
     mrnaseqDset.attrs["name"] = "SRNASeq"
+    mrnaseqDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Sorted RNASeq Data")
 
     logging.debug("Start:\t Getting Binarized RNASeq Data")
-    factorizedBaseMatrix = np.genfromtxt(path+"factorMatrix.csv", delimiter=',')
-    brnaseqDset = datasetFile.create_dataset("View5", len(modifiedRNASeq), len(factorizedBaseMatrix.flatten()))
+    k=100
+    factorizedSupBaseMatrix = np.genfromtxt(path+"factorSup--n-"+str(len(modifiedRNASeq))+"--k-"+str(k)+".csv", delimiter=',')
+    factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-73599--k-100.csv", delimiter=',')
+    brnaseqDset = datasetFile.create_dataset("View5", (len(modifiedRNASeq), len(modifiedRNASeq)*k*2), dtype=bool)
     for patientIndex, patientSortedArray in enumerate(modifiedRNASeq):
-        patientMatrix = np.zeros(factorizedBaseMatrix.shape, dtype=bool)
+        patientMatrix = np.zeros((len(modifiedRNASeq), k*2), dtype=bool)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
-            patientMatrix[geneIndex]=factorizedBaseMatrix[lineIndex]
+            patientMatrix[geneIndex]= np.concatenate(factorizedLeftBaseMatrix[lineIndex], factorizedSupBaseMatrix[:, lineIndex])
         brnaseqDset[patientIndex] = patientMatrix.flatten()
+    brnaseqDset.attrs["name"] = "bRNASeq"
+    brnaseqDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Binarized RNASeq Data")
 
-    # logging.debug("Start:\t Getting Binned RNASeq Data")
-    # SRNASeq = datasetFile["View4"][...]
-    # nbBins = 372
-    # binLen = 935
-    # binOffset = 187
-    # bins = np.zeros((nbBins, binLen), dtype=int)
-    # for binIndex in range(nbBins):
-    #     bins[binIndex] = np.arange(binLen)+binIndex*binOffset
-    # binnedRNASeq = np.zeros((datasetFile.get("Metadata").attrs["datasetLength"], datasetFile.get("View2").shape[1]*nbBins), dtype=bool)
-    # for exampleIndex, exampleArray in enumerate(SRNASeq):
-    #     for geneRank, geneIndex in enumerate(exampleArray):
-    #         for binIndex, bin in bins:
-    #             if geneRank in bin:
-    #                 binnedRNASeq[exampleIndex, geneIndex*nbBins+binIndex] = True
-    # brnaseqDset = datasetFile.create_dataset("View5", binnedRNASeq.shape, data=binnedRNASeq)
-    # brnaseqDset.attrs["name"] = "BRNASeq"
-    # logging.debug("Done:\t Getting Binned RNASeq Data")
+    logging.debug("Start:\t Getting Binned RNASeq Data")
+    sparseBinnedRNASeq = makeSparseTotalMatrix(modifiedRNASeq)
+    sparseBinnedRNASeqGrp = datasetFile.create_group("View6")
+    dataDset = sparseBinnedRNASeqGrp.create_dataset("data", sparseBinnedRNASeq.data.shape, data=sparseBinnedRNASeq.data)
+    indicesDset = sparseBinnedRNASeqGrp.create_dataset("indices", sparseBinnedRNASeq.indices.shape, data=sparseBinnedRNASeq.indices)
+    indptrDset = sparseBinnedRNASeqGrp.create_dataset("indptr", sparseBinnedRNASeq.indptr.shape, data=sparseBinnedRNASeq.indptr)
+    sparseBinnedRNASeqGrp.attrs["name"]="BRNASeq"
+    sparseBinnedRNASeqGrp.attrs["sparse"]=True
+    sparseBinnedRNASeqGrp.attrs["shape"]=sparseBinnedRNASeq.shape
+    logging.debug("Done:\t Getting Binned RNASeq Data")
 
     labelFile = open(path+'brca_labels_triple-negatif.csv')
     labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
