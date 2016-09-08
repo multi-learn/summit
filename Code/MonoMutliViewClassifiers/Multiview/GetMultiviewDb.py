@@ -397,13 +397,14 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
     logging.debug("Start:\t Getting RNASeq Data")
     rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
-    uselessRows = []
-    for rowIndex, row in enumerate(np.transpose(rnaseqData)):
-        if not row.any():
-            uselessRows.append(rowIndex)
-    usefulRows = [usefulRowIndex for usefulRowIndex in range(rnaseqData.shape[1]) if usefulRowIndex not in uselessRows]
-    rnaseqDset = datasetFile.create_dataset("View2", (rnaseqData.shape[0], len(usefulRows)))
-    rnaseqDset[...] = rnaseqData[:, usefulRows]
+    # uselessRows = []
+    # for rowIndex, row in enumerate(np.transpose(rnaseqData)):
+    #     if not row.any():
+    #         uselessRows.append(rowIndex)
+    # usefulRows = [usefulRowIndex for usefulRowIndex in range(rnaseqData.shape[1]) if usefulRowIndex not in uselessRows]
+    # rnaseqDset = datasetFile.create_dataset("View2", (rnaseqData.shape[0], len(usefulRows)))
+    # rnaseqDset[...] = rnaseqData[:, usefulRows]
+    rnaseqDset = datasetFile.create_dataset("View2", rnaseqData.shape, data=rnaseqData )
     rnaseqDset.attrs["name"]="RNASeq_"
     rnaseqDset.attrs["sparse"]=False
     logging.debug("Done:\t Getting RNASeq Data")
