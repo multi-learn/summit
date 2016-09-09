@@ -430,16 +430,6 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     mrnaseqDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Sorted RNASeq Data")
 
-    logging.debug("Start:\t Getting Binned RNASeq Data")
-    sparseBinnedRNASeq = makeSparseTotalMatrix(modifiedRNASeq)
-    sparseBinnedRNASeqGrp = datasetFile.create_group("View6")
-    dataDset = sparseBinnedRNASeqGrp.create_dataset("data", sparseBinnedRNASeq.data.shape, data=sparseBinnedRNASeq.data)
-    indicesDset = sparseBinnedRNASeqGrp.create_dataset("indices", sparseBinnedRNASeq.indices.shape, data=sparseBinnedRNASeq.indices)
-    indptrDset = sparseBinnedRNASeqGrp.create_dataset("indptr", sparseBinnedRNASeq.indptr.shape, data=sparseBinnedRNASeq.indptr)
-    sparseBinnedRNASeqGrp.attrs["name"]="BRNASeq"
-    sparseBinnedRNASeqGrp.attrs["sparse"]=True
-    sparseBinnedRNASeqGrp.attrs["shape"]=sparseBinnedRNASeq.shape
-    logging.debug("Done:\t Getting Binned RNASeq Data")
 
     logging.debug("Start:\t Getting Binarized RNASeq Data")
     k=127
@@ -455,6 +445,16 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     brnaseqDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Binarized RNASeq Data")
 
+    # logging.debug("Start:\t Getting Binned RNASeq Data")
+    # sparseBinnedRNASeq = makeSparseTotalMatrix(modifiedRNASeq)
+    # sparseBinnedRNASeqGrp = datasetFile.create_group("View6")
+    # dataDset = sparseBinnedRNASeqGrp.create_dataset("data", sparseBinnedRNASeq.data.shape, data=sparseBinnedRNASeq.data)
+    # indicesDset = sparseBinnedRNASeqGrp.create_dataset("indices", sparseBinnedRNASeq.indices.shape, data=sparseBinnedRNASeq.indices)
+    # indptrDset = sparseBinnedRNASeqGrp.create_dataset("indptr", sparseBinnedRNASeq.indptr.shape, data=sparseBinnedRNASeq.indptr)
+    # sparseBinnedRNASeqGrp.attrs["name"]="BRNASeq"
+    # sparseBinnedRNASeqGrp.attrs["sparse"]=True
+    # sparseBinnedRNASeqGrp.attrs["shape"]=sparseBinnedRNASeq.shape
+    # logging.debug("Done:\t Getting Binned RNASeq Data")
 
     labelFile = open(path+'brca_labels_triple-negatif.csv')
     labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])

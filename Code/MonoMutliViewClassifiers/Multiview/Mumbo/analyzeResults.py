@@ -221,16 +221,19 @@ def modifiedMean(surplusAccuracies):
     return meanAccuracies
 
 
-def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
-    metricModule = getattr(Metrics, metric[0])
-    if metric[1]!=None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-    else:
-        metricKWARGS = {}
-    metricScoreString = "\tFor "+metricModule.getConfig(**metricKWARGS)+" : "
-    metricScoreString += "\n\t\t- Score on train : "+str(metricModule.score(y_train, y_train_pred))
-    metricScoreString += "\n\t\t- Score on test : "+str(metricModule.score(y_test, y_test_pred))
-    metricScoreString += "\n"
+def printMetricScore(metricScores, metrics):
+    metricScoreString = "\n\n"
+    for metric in metrics:
+        metricModule = getattr(Metrics, metric[0])
+        if metric[1]!=None:
+            metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+        else:
+            metricKWARGS = {}
+        metricScoreString += "\tFor "+metricModule.getConfig(**metricKWARGS)+" : "
+        metricScoreString += "\n\t\t- Score on train : "+str(metricScores[metric[0]][0])
+        metricScoreString += "\n\t\t- Score on test : "+str(metricScores[metric[0]][1])
+        metricScoreString += "\n\t\t- Score on validation : "+str(metricScores[metric[0]][2])
+        metricScoreString += "\n\n"
     return metricScoreString
 
 
@@ -298,12 +301,15 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
                      str(totalAccuracyOnTest) + "\n\t-On Validation : " + str(totalAccuracyOnValidation)
     stringAnalysis += dbConfigurationString
     stringAnalysis += algoConfigurationString
+    metricsScores = getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
+                                     kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds)
+    stringAnalysis += printMetricScore(metricsScores, metrics)
     stringAnalysis += "Mean average accuracies and stats for each fold :"
     for foldIdx in range(nbFolds):
         stringAnalysis += "\n\t- Fold "+str(foldIdx)+", used "+str(kFoldClassifier[foldIdx].iterIndex + 1)
         for viewIndex, (meanAverageAccuracy, bestViewStat) in enumerate(zip(kFoldMeanAverageAccuracies[foldIdx], kFoldBestViewsStats[foldIdx])):
-            stringAnalysis+="\n\t\t- On "+viewNames[viewIndex]+\
-                            " : \n\t\t\t- Mean average Accuracy : "+str(meanAverageAccuracy)+\
+            stringAnalysis+="\n\t\t- On "+viewNames[viewIndex]+ \
+                            " : \n\t\t\t- Mean average Accuracy : "+str(meanAverageAccuracy)+ \
                             "\n\t\t\t- Percentage of time chosen : "+str(bestViewStat)
     stringAnalysis += "\n\n For each iteration : "
     for iterIndex in range(maxIter):
@@ -312,7 +318,7 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
             for foldIdx in [index for index, value in enumerate(iterRelevant(iterIndex, kFoldClassifier)) if value]:
                 stringAnalysis += "\n\t\t Fold " + str(foldIdx + 1) + "\n\t\t\tAccuracy on train : " + \
                                   str(kFoldAccuracyOnTrainByIter[foldIdx][iterIndex]) + '\n\t\t\tAccuracy on test : ' + \
-                                  str(kFoldAccuracyOnTestByIter[foldIdx][iterIndex]) + '\n\t\t\tAccuracy on validation : '+\
+                                  str(kFoldAccuracyOnTestByIter[foldIdx][iterIndex]) + '\n\t\t\tAccuracy on validation : '+ \
                                   str(kFoldAccuracyOnValidationByIter[foldIdx][iterIndex]) + '\n\t\t\tSelected View : ' + \
                                   str(DATASET["View"+str(int(kFoldBestViews[foldIdx][iterIndex]))].attrs["name"])
 
@@ -322,6 +328,4 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels
     name, image = plotAccuracyByIter(trainAccuracyByIter, testAccuracyByIter, validationAccuracyByIter, nbMaxIter,
                                      bestViews, views, classifierAnalysis)
     imagesAnalysis = {name: image}
-    metricsScores = getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
-                                     kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds)
     return stringAnalysis, imagesAnalysis, metricsScores

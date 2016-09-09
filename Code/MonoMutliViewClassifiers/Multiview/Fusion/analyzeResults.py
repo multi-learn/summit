@@ -20,16 +20,19 @@ def error(testLabels, computedLabels):
     return float(error) * 100 / len(computedLabels)
 
 
-def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
-    metricModule = getattr(Metrics, metric[0])
-    if metric[1]!=None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-    else:
-        metricKWARGS = {}
-    metricScoreString = "\tFor "+metricModule.getConfig(**metricKWARGS)+" : "
-    metricScoreString += "\n\t\t- Score on train : "+str(metricModule.score(y_train, y_train_pred))
-    metricScoreString += "\n\t\t- Score on test : "+str(metricModule.score(y_test, y_test_pred))
-    metricScoreString += "\n"
+def printMetricScore(metricScores, metrics):
+    metricScoreString = "\n\n"
+    for metric in metrics:
+        metricModule = getattr(Metrics, metric[0])
+        if metric[1]!=None:
+            metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+        else:
+            metricKWARGS = {}
+        metricScoreString += "\tFor "+metricModule.getConfig(**metricKWARGS)+" : "
+        metricScoreString += "\n\t\t- Score on train : "+str(metricScores[metric[0]][0])
+        metricScoreString += "\n\t\t- Score on test : "+str(metricScores[metric[0]][1])
+        metricScoreString += "\n\t\t- Score on validation : "+str(metricScores[metric[0]][2])
+        metricScoreString += "\n\n"
     return metricScoreString
 
 
@@ -104,7 +107,9 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels,
 
     if fusionType=="LateFusion":
         stringAnalysis+=Methods.LateFusion.getAccuracies(kFoldClassifier)
-
+    metricsScores = getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
+                                     kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds)
+    stringAnalysis+=printMetricScore(metricsScores, metrics)
     stringAnalysis += "\n\nComputation time on " + str(nbCores) + " cores : \n\tDatabase extraction time : " + str(
         hms(seconds=int(extractionTime))) + "\n\t"
     row_format = "{:>15}" * 3
@@ -118,6 +123,4 @@ def execute(kFoldClassifier, kFoldPredictedTrainLabels,
                                                    str(hms(seconds=int(sum(kFoldPredictionTime))))])
     stringAnalysis += "\n\tSo a total classification time of " + str(hms(seconds=int(classificationTime))) + ".\n\n"
     imagesAnalysis = {}
-    metricsScores = getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
-                                     kFoldPredictedValidationLabels, DATASET, validationIndices, kFolds)
     return stringAnalysis, imagesAnalysis, metricsScores
