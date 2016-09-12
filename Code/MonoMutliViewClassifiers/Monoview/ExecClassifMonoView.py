@@ -36,7 +36,7 @@ def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databa
     kwargs = args["args"]
     views = [DATASET.get("View"+str(viewIndex)).attrs["name"] for viewIndex in range(DATASET.get("Metadata").attrs["nbView"])]
     neededViewIndex = views.index(kwargs["feat"])
-    X = getV(DATASET, neededViewIndex)
+    X = DATASET.get("View"+str(neededViewIndex))
     Y = DATASET.get("Labels").value
     returnedViewIndex = args["viewIndex"]
     return ExecMonoview(X, Y, name, learningRate, nbFolds, 1, databaseType, path, gridSearch=gridSearch,
