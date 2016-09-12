@@ -276,52 +276,81 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     return datasetFile, labelDictionary
 
 
-def findClosestPowerOfTwo(k):
+def getVector(nbGenes):
+    argmax = [0,0]
+    maxi = 0
+    for i in range(nbGenes):
+        for j in range(nbGenes):
+            if j==i+1:
+                value = (i+1)*(nbGenes-j)
+                if value>maxi:
+                    maxi= value
+                    argmax = [i,j]
+    i,j = argmax
+    vectorLeft = np.zeros(nbGenes, dtype=bool)
+    vectorLeft[:i+1] = np.ones(i+1, dtype=bool)
+    vectorSup = np.zeros(nbGenes, dtype=bool)
+    vectorSup[j:] = np.ones(nbGenes-j, dtype=bool)
+    matrixSup = j
+    matrixInf = nbGenes-j
+    return vectorLeft, vectorSup, matrixSup, matrixInf
+
+
+def findClosestPowerOfTwo(factorizationParam):
     power=1
-    while k-power>0:
+    while factorizationParam-power>0:
         power = 2*power
-    if abs(k-power)<abs(k-power/2):
+    if abs(factorizationParam-power)<abs(factorizationParam-power/2):
         return power
     else:
         return power/2
 
 
-def getVector(matrix):
-    argmax = [0,0]
-    n = len(matrix)
-    maxi = 0
-    for i in range(n):
-        for j in range(n):
-            if j==i+1:
-                value = (i+1)*(n-j)
-                if value>maxi:
-                    maxi= value
-                    argmax = [i,j]
-    i,j = argmax
-    vector = np.zeros(n, dtype=bool)
-    vector[:i+1]=np.ones(i+1, dtype=bool)
-    matrixSup = [i+1, j+1]
-    matrixInf = [i+1, j+1]
-    return vector, matrixSup, matrixInf
-
-
-def easyFactorize(targetMatrix, k, t=0):
-    n = len(targetMatrix)
-    if math.log(k+1, 2)%1==0.0:
+def easyFactorize(nbGenes, factorizationParam, t=0):
+    if math.log(factorizationParam+1, 2)%1==0.0:
         pass
     else:
-        k = findClosestPowerOfTwo(k)-1
-    if k==1:
+        factorizationParam = findClosestPowerOfTwo(factorizationParam) - 1
+
+    if nbGenes==2:
+        return 1, np.array([True, False]), np.array([False, True])
+
+    if nbGenes==3:
+        return 1, np.array([True, True,  False]), np.array([False, True, True])
+
+    if factorizationParam==1:
         t=1
-        return t, getVector(targetMatrix)[0]
-    vector, matrixSup, matrixInf = getVector(targetMatrix)
-    t, vectorSup = easyFactorize(targetMatrix[:matrixSup[0], :matrixSup[1]], (k-1)/2, t)
-    t, vectorInf = easyFactorize(targetMatrix[matrixInf[0]:, matrixInf[0]:], (k-1)/2, t)
-    factor = np.zeros((n,2*t+1), dtype=bool)
-    factor[:matrixSup[0], :t] = vectorSup.reshape(factor[:matrixSup[0], :t].shape)
-    factor[matrixInf[0]:, t:2*t] = vectorInf.reshape(factor[matrixInf[0]:, t:2*t].shape)
-    factor[:, 2*t] = vector
-    return 2*t+1, factor
+        return t, getVector(nbGenes)[0], getVector(nbGenes)[1]
+
+    vectorLeft, vectorSup, matrixSup, matrixInf = getVector(nbGenes)
+
+    t_, vectorLeftSup, vectorSupLeft = easyFactorize(matrixSup, (factorizationParam - 1) / 2, t=t)
+    t__, vectorLeftInf, vectorSupRight = easyFactorize(matrixInf, (factorizationParam - 1) / 2, t=t)
+
+    factorLeft = np.zeros((nbGenes,t_+t__+1), dtype=bool)
+
+    factorLeft[:matrixSup, :t_] = vectorLeftSup.reshape(factorLeft[:matrixSup, :t_].shape)
+    if nbGenes%2==1:
+        factorLeft[matrixInf-1:, t_:t__+t_] = vectorLeftInf.reshape(factorLeft[matrixInf-1:, t_:t__+t_].shape)
+    else:
+        factorLeft[matrixInf:, t_:t__+t_] = vectorLeftInf.reshape(factorLeft[matrixInf:, t_:t__+t_].shape)
+    factorLeft[:, t__+t_] = vectorLeft
+
+    factorSup = np.zeros((t_+t__+1, nbGenes), dtype=bool)
+
+    factorSup[:t_, :matrixSup] = vectorSupLeft.reshape(factorSup[:t_, :matrixSup].shape)
+    if nbGenes%2==1:
+        factorSup[t_:t__+t_, matrixInf-1:] = vectorSupRight.reshape(factorSup[t_:t__+t_, matrixInf-1:].shape)
+    else:
+        factorSup[t_:t__+t_, matrixInf:] = vectorSupRight.reshape(factorSup[t_:t__+t_, matrixInf:].shape)
+    factorSup[t__+t_, :] = vectorSup
+    return t__+t_+1, factorLeft, factorSup
+
+def getBaseMatrices(nbGenes, factorizationParam):
+    t, factorLeft, factorSup = easyFactorize(nbGenes, factorizationParam)
+    np.savetxt("factorSup--n-"+str(nbGenes)+"--k-"+str(factorizationParam)+".csv", factorSup, delimiter=",")
+    np.savetxt("factorLeft--n-"+str(nbGenes)+"--k-"+str(factorizationParam)+".csv", factorLeft, delimiter=",")
+    return factorSup, factorLeft
 
 
 def findParams(arrayLen, nbPatients, maxNbBins=5000, maxLenBin=300, minOverlapping=30, minNbBinsOverlapped=20, maxNbSolutions=30):
@@ -398,13 +427,13 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
     logging.debug("Start:\t Getting RNASeq Data")
     rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
-    # uselessRows = []
-    # for rowIndex, row in enumerate(np.transpose(rnaseqData)):
-    #     if not row.any():
-    #         uselessRows.append(rowIndex)
-    # usefulRows = [usefulRowIndex for usefulRowIndex in range(rnaseqData.shape[1]) if usefulRowIndex not in uselessRows]
-    # rnaseqDset = datasetFile.create_dataset("View2", (rnaseqData.shape[0], len(usefulRows)))
-    # rnaseqDset[...] = rnaseqData[:, usefulRows]
+    uselessRows = []
+    for rowIndex, row in enumerate(np.transpose(rnaseqData)):
+        if not row.any():
+            uselessRows.append(rowIndex)
+    usefulRows = [usefulRowIndex for usefulRowIndex in range(rnaseqData.shape[1]) if usefulRowIndex not in uselessRows]
+    rnaseqDset = datasetFile.create_dataset("View2", (rnaseqData.shape[0], len(usefulRows)))
+    rnaseqDset[...] = rnaseqData[:, usefulRows]
     rnaseqDset = datasetFile.create_dataset("View2", rnaseqData.shape, data=rnaseqData )
     rnaseqDset.attrs["name"]="RNASeq_"
     rnaseqDset.attrs["sparse"]=False
@@ -432,12 +461,15 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
 
     logging.debug("Start:\t Getting Binarized RNASeq Data")
-    k=127
-    factorizedSupBaseMatrix = np.genfromtxt(path+"factorSup--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
-    factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
+    k=findClosestPowerOfTwo(100)-1
+    try:
+        factorizedSupBaseMatrix = np.genfromtxt(path+"factorSup--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
+        factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
+    except:
+        factorizedSupBaseMatrix, factorizedLeftBaseMatrix = getBaseMatrices(rnaseqData.shape[1], k)
     brnaseqDset = datasetFile.create_dataset("View5", (modifiedRNASeq.shape[0], modifiedRNASeq.shape[1]*k*2), dtype=bool)
     for patientIndex, patientSortedArray in enumerate(modifiedRNASeq):
-        patientMatrix = np.zeros((modifiedRNASeq.shape[1], k*2), dtype=bool)
+        patientMatrix = np.zeros((modifiedRNASeq.shape[1], k * 2), dtype=bool)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
             patientMatrix[geneIndex]= np.concatenate((factorizedLeftBaseMatrix[lineIndex,:], factorizedSupBaseMatrix[:, lineIndex]))
         brnaseqDset[patientIndex] = patientMatrix.flatten()
@@ -445,16 +477,16 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     brnaseqDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Binarized RNASeq Data")
 
-    # logging.debug("Start:\t Getting Binned RNASeq Data")
-    # sparseBinnedRNASeq = makeSparseTotalMatrix(modifiedRNASeq)
-    # sparseBinnedRNASeqGrp = datasetFile.create_group("View6")
-    # dataDset = sparseBinnedRNASeqGrp.create_dataset("data", sparseBinnedRNASeq.data.shape, data=sparseBinnedRNASeq.data)
-    # indicesDset = sparseBinnedRNASeqGrp.create_dataset("indices", sparseBinnedRNASeq.indices.shape, data=sparseBinnedRNASeq.indices)
-    # indptrDset = sparseBinnedRNASeqGrp.create_dataset("indptr", sparseBinnedRNASeq.indptr.shape, data=sparseBinnedRNASeq.indptr)
-    # sparseBinnedRNASeqGrp.attrs["name"]="BRNASeq"
-    # sparseBinnedRNASeqGrp.attrs["sparse"]=True
-    # sparseBinnedRNASeqGrp.attrs["shape"]=sparseBinnedRNASeq.shape
-    # logging.debug("Done:\t Getting Binned RNASeq Data")
+    logging.debug("Start:\t Getting Binned RNASeq Data")
+    sparseBinnedRNASeq = makeSparseTotalMatrix(modifiedRNASeq)
+    sparseBinnedRNASeqGrp = datasetFile.create_group("View6")
+    dataDset = sparseBinnedRNASeqGrp.create_dataset("data", sparseBinnedRNASeq.data.shape, data=sparseBinnedRNASeq.data)
+    indicesDset = sparseBinnedRNASeqGrp.create_dataset("indices", sparseBinnedRNASeq.indices.shape, data=sparseBinnedRNASeq.indices)
+    indptrDset = sparseBinnedRNASeqGrp.create_dataset("indptr", sparseBinnedRNASeq.indptr.shape, data=sparseBinnedRNASeq.indptr)
+    sparseBinnedRNASeqGrp.attrs["name"]="BRNASeq"
+    sparseBinnedRNASeqGrp.attrs["sparse"]=True
+    sparseBinnedRNASeqGrp.attrs["shape"]=sparseBinnedRNASeq.shape
+    logging.debug("Done:\t Getting Binned RNASeq Data")
 
     labelFile = open(path+'brca_labels_triple-negatif.csv')
     labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])

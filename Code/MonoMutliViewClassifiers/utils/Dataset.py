@@ -4,7 +4,7 @@ from scipy import sparse
 
 def getV(DATASET, viewIndex, usedIndices=None):
     if usedIndices==None:
-        usedIndices = DATASET.get("Metadata").attrs["datasetLength"]
+        usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
     if not DATASET.get("View"+str(viewIndex)).attrs["sparse"]:
         return DATASET.get("View"+str(viewIndex))[usedIndices, :]
     else:
