@@ -405,22 +405,23 @@ def makeSparseTotalMatrix(sortedRNASeq):
 
 
 def getAdjacenceMatrix(sortedRNASeq, k=1):
-    indices = []
-    data = []
-    indptr = [0]
+    indices = np.zeros((sortedRNASeq.shape[0]*k*sortedRNASeq.shape[1]), dtype=np.int32)
+    data = np.ones((sortedRNASeq.shape[0]*k*sortedRNASeq.shape[1]), dtype=bool)
+    indptr = np.zeros(sortedRNASeq.shape[0]+1, dtype=np.int16)
     nbGenes = sortedRNASeq.shape[1]
+    pointer = 0
     for patientIndex, patient in enumerate(sortedRNASeq):
         for i in range(nbGenes):
             # if k<=i<=nbGenes-k-1:
             for j in range(k):
                 try:
-                    indices.append(patient[(i-(j+1))]+patient[i]*nbGenes)
-                    data.append(True)
+                    indices[pointer]=patient[(i-(j+1))]+patient[i]*nbGenes
+                    pointer+=1
                 except:
                     pass
                 try:
-                    indices.append(patient[i+(j+1)]+patient[i]*nbGenes)
-                    data.append(True)
+                    indices[pointer]=patient[i+(j+1)]+patient[i]*nbGenes
+                    pointer+=1
                 except:
                     pass
                 # elif i<=k:
@@ -429,7 +430,7 @@ def getAdjacenceMatrix(sortedRNASeq, k=1):
                 # elif i==nbGenes-1:
                 # 	indices.append(patient[i-1]+patient[i]*nbGenes)
                 # 	data.append(True)
-        indptr.append(len(indices))
+        indptr[patientIndex+1] = pointer
     mat = sparse.csr_matrix((data, indices, indptr), shape=(sortedRNASeq.shape[0], sortedRNASeq.shape[1]*sortedRNASeq.shape[1]), dtype=bool)
     return mat
 
