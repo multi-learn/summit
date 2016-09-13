@@ -114,7 +114,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     timestr = time.strftime("%Y%m%d-%H%M%S")
     CL_type_string = CL_type
     outputFileName = "Results/" + timestr + "Results-" + CL_type_string + "-" + labelsString + \
-                     '-learnRate' + str(learningRate) + '-' + name
+                     '-learnRate' + str(learningRate) + '-' + name + "-" + feat
 
     outputTextFile = open(outputFileName + '.txt', 'w')
     outputTextFile.write(stringAnalysis)

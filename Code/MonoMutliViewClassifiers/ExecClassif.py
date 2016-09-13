@@ -71,8 +71,8 @@ groupClass.add_argument('--CL_classes', metavar='STRING', action='store',
 groupClass.add_argument('--CL_type', metavar='STRING', action='store',
                         help='Determine whether to use Multiview, Monoview, or Benchmark, separate with : if multiple',
                         default='Benchmark')
-groupClass.add_argument('--CL_algorithm', metavar='STRING', action='store',
-                        help='Determine which classifier to use, if empty, considering all', default='')
+# groupClass.add_argument('--CL_algorithm', metavar='STRING', action='store',
+#                         help='Determine which classifier to use, if empty, considering all', default='')
 groupClass.add_argument('--CL_algos_monoview', metavar='STRING', action='store',
                         help='Determine which monoview classifier to use, separate with : if multiple, if empty, considering all', default='')
 groupClass.add_argument('--CL_algos_multiview', metavar='STRING', action='store',
@@ -192,12 +192,15 @@ if args.log:
 DATASET, LABELS_DICTIONARY = getDatabase(args.views.split(":"), args.pathF, args.name, len(args.CL_classes), args.CL_classes)
 datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
 if nbCores>1:
-    logging.debug("Start:\t Creating "+str(nbCores)+" temporary datasets for multiprocessing")
-    logging.warning(" WARNING : /!\ This may use a lot of HDD storage space : "+
-                    str(os.path.getsize(args.pathF+args.name+".hdf5")*nbCores/float(1024)/1000/1000)+" Gbytes /!\ ")
-    time.sleep(5)
-    datasetFiles = DB.copyHDF5(args.pathF, args.name, nbCores)
-    logging.debug("Start:\t Creating datasets for multiprocessing")
+    if DB.datasetsAlreadyExist(args.pathF, args.name, nbCores):
+        pass
+    else:
+        logging.debug("Start:\t Creating "+str(nbCores)+" temporary datasets for multiprocessing")
+        logging.warning(" WARNING : /!\ This may use a lot of HDD storage space : "+
+                        str(os.path.getsize(args.pathF+args.name+".hdf5")*nbCores/float(1024)/1000/1000)+" Gbytes /!\ ")
+        time.sleep(5)
+        datasetFiles = DB.copyHDF5(args.pathF, args.name, nbCores)
+        logging.debug("Start:\t Creating datasets for multiprocessing")
 
 NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
 views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
@@ -211,27 +214,27 @@ if metrics == [[""]]:
 logging.info("Start:\t Finding all available mono- & multiview algorithms")
 benchmark = {"Monoview":{}, "Multiview":[]}
 if args.CL_type.split(":")==["Benchmark"]:
-    if args.CL_algorithm=='':
-        fusionModulesNames = [name for _, name, isPackage
-                              in pkgutil.iter_modules(['Multiview/Fusion/Methods']) if not isPackage]
-        fusionModules = [getattr(Multiview.Fusion.Methods, fusionModulesName)
-                         for fusionModulesName in fusionModulesNames]
-        fusionClasses = [getattr(fusionModule, fusionModulesName+"Classifier")
-                         for fusionModulesName, fusionModule in zip(fusionModulesNames, fusionModules)]
-        fusionMethods = dict((fusionModulesName, [name for _, name, isPackage in
-                                                  pkgutil.iter_modules(["Multiview/Fusion/Methods/"+fusionModulesName+"Package"])
-                                                  if not isPackage])
-                             for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClasses))
-        allMonoviewAlgos = [name for _, name, isPackage in
-                            pkgutil.iter_modules(['MonoviewClassifiers'])
-                            if (not isPackage) and (name!="SGD") and (name!="SVMPoly")]
-        fusionMonoviewClassifiers = allMonoviewAlgos
-        allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
-        allMumboAlgos = [name for _, name, isPackage in
-                         pkgutil.iter_modules(['Multiview/Mumbo/Classifiers'])
-                         if not isPackage and not name in ["SubSampling", "ModifiedMulticlass", "Kover"]]
-        allMultiviewAlgos = {"Fusion": allFusionAlgos, "Mumbo": allMumboAlgos}
-        benchmark = {"Monoview": allMonoviewAlgos, "Multiview": allMultiviewAlgos}
+    # if args.CL_algorithm=='':
+    fusionModulesNames = [name for _, name, isPackage
+                          in pkgutil.iter_modules(['Multiview/Fusion/Methods']) if not isPackage]
+    fusionModules = [getattr(Multiview.Fusion.Methods, fusionModulesName)
+                     for fusionModulesName in fusionModulesNames]
+    fusionClasses = [getattr(fusionModule, fusionModulesName+"Classifier")
+                     for fusionModulesName, fusionModule in zip(fusionModulesNames, fusionModules)]
+    fusionMethods = dict((fusionModulesName, [name for _, name, isPackage in
+                                              pkgutil.iter_modules(["Multiview/Fusion/Methods/"+fusionModulesName+"Package"])
+                                              if not isPackage])
+                         for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClasses))
+    allMonoviewAlgos = [name for _, name, isPackage in
+                        pkgutil.iter_modules(['MonoviewClassifiers'])
+                        if (not isPackage) and (name!="SGD") and (name!="SVMPoly")]
+    fusionMonoviewClassifiers = allMonoviewAlgos
+    allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
+    allMumboAlgos = [name for _, name, isPackage in
+                     pkgutil.iter_modules(['Multiview/Mumbo/Classifiers'])
+                     if not isPackage and not name in ["SubSampling", "ModifiedMulticlass", "Kover"]]
+    allMultiviewAlgos = {"Fusion": allFusionAlgos, "Mumbo": allMumboAlgos}
+    benchmark = {"Monoview": allMonoviewAlgos, "Multiview": allMultiviewAlgos}
 
 if "Multiview" in args.CL_type.strip(":"):
     benchmark["Multiview"] = {}
@@ -291,9 +294,9 @@ if nbCores>1:
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersConfigs = [[result[1][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
-    for viewIndex, view in enumerate(views):
-        bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
-        bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+    # for viewIndex, view in enumerate(views):
+    #     bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+    #     bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
 
 else:
     resultsMonoview+=([ExecMonoview(DATASET.get("View"+str(arguments["viewIndex"])),
@@ -306,9 +309,7 @@ else:
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersConfigs = [[result[1][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
-    for viewIndex, view in enumerate(views):
-        bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
-        bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+
 monoviewTime = time.time()-dataBaseTime
 try:
     if benchmark["Multiview"]:
@@ -332,6 +333,9 @@ try:
         monoviewTime = 0
         resultsMonoview = []
         bestClassifiersConfigs = []
+        for viewIndex, view in enumerate(views):
+            bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+            bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
         try:
             if benchmark["Multiview"]["Fusion"]:
                 try:

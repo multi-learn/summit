@@ -495,7 +495,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     labelsDset.attrs["name"] = "Labels"
 
     metaDataGrp = datasetFile.create_group("Metadata")
-    metaDataGrp.attrs["nbView"] = 5
+    metaDataGrp.attrs["nbView"] = 6
     metaDataGrp.attrs["nbClass"] = 2
     metaDataGrp.attrs["datasetLength"] = len(labels)
     labelDictionary = {0:"No", 1:"Yes"}
@@ -525,6 +525,13 @@ def copyHDF5(pathF, name, nbCores):
         for dataset in datasetFile:
             datasetFile.copy("/"+dataset, newDataSet["/"])
         newDataSet.close()
+
+def datasetsAlreadyExist(pathF, name, nbCores):
+    allDatasetExist = True
+    for coreIndex in range(nbCores):
+        import os.path
+        allDatasetExist *= os.path.isfile(pathF+name+str(coreIndex)+".hdf5")
+    return allDatasetExist
 
 
 def deleteHDF5(pathF, name, nbCores):
