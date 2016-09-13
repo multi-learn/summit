@@ -411,8 +411,8 @@ def getAdjacenceMatrix(sortedRNASeq, k=1):
     nbGenes = sortedRNASeq.shape[1]
     pointer = 0
     for patientIndex, patient in enumerate(sortedRNASeq):
+        print patientIndex
         for i in range(nbGenes):
-            # if k<=i<=nbGenes-k-1:
             for j in range(k):
                 try:
                     indices[pointer]=patient[(i-(j+1))]+patient[i]*nbGenes
