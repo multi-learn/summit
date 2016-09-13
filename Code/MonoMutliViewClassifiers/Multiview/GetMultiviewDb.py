@@ -463,7 +463,6 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     usefulRows = [usefulRowIndex for usefulRowIndex in range(rnaseqData.shape[1]) if usefulRowIndex not in uselessRows]
     rnaseqDset = datasetFile.create_dataset("View2", (rnaseqData.shape[0], len(usefulRows)))
     rnaseqDset[...] = rnaseqData[:, usefulRows]
-    rnaseqDset = datasetFile.create_dataset("View2", rnaseqData.shape, data=rnaseqData )
     rnaseqDset.attrs["name"]="RNASeq_"
     rnaseqDset.attrs["sparse"]=False
     logging.debug("Done:\t Getting RNASeq Data")
