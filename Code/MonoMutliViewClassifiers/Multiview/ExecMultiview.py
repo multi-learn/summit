@@ -41,7 +41,6 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
     CL_type = kwargs["CL_type"]
     views = kwargs["views"]
-    NB_VIEW = kwargs["NB_VIEW"]
     LABELS_NAMES = kwargs["LABELS_NAMES"]
     classificationKWARGS = kwargs[CL_type+"KWARGS"]
 
