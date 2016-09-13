@@ -404,6 +404,35 @@ def makeSparseTotalMatrix(sortedRNASeq):
     return sparseFull
 
 
+def getAdjacenceMatrix(sortedRNASeq, k=1):
+    indices = []
+    data = []
+    indptr = [0]
+    nbGenes = sortedRNASeq.shape[1]
+    for patientIndex, patient in enumerate(sortedRNASeq):
+        for i in range(nbGenes):
+            # if k<=i<=nbGenes-k-1:
+            for j in range(k):
+                try:
+                    indices.append(patient[(i-(j+1))]+patient[i]*nbGenes)
+                    data.append(True)
+                except:
+                    pass
+                try:
+                    indices.append(patient[i+(j+1)]+patient[i]*nbGenes)
+                    data.append(True)
+                except:
+                    pass
+                # elif i<=k:
+                # 	indices.append(patient[1]+patient[i]*nbGenes)
+                # 	data.append(True)
+                # elif i==nbGenes-1:
+                # 	indices.append(patient[i-1]+patient[i]*nbGenes)
+                # 	data.append(True)
+        indptr.append(len(indices))
+    mat = sparse.csr_matrix((data, indices, indptr), shape=(sortedRNASeq.shape[0], sortedRNASeq.shape[1]*sortedRNASeq.shape[1]), dtype=bool)
+    return mat
+
 
 def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
@@ -488,6 +517,17 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     # sparseBinnedRNASeqGrp.attrs["shape"]=sparseBinnedRNASeq.shape
     # logging.debug("Done:\t Getting Binned RNASeq Data")
 
+    logging.debug("Start:\t Getting Adjacence RNASeq Data")
+    sparseAdjRNASeq = getAdjacenceMatrix(modifiedRNASeq, k=findClosestPowerOfTwo(100)-1)
+    sparseAdjRNASeqGrp = datasetFile.create_group("View6")
+    dataDset = sparseAdjRNASeqGrp.create_dataset("data", sparseAdjRNASeq.data.shape, data=sparseAdjRNASeq.data)
+    indicesDset = sparseAdjRNASeqGrp.create_dataset("indices", sparseAdjRNASeq.indices.shape, data=sparseAdjRNASeq.indices)
+    indptrDset = sparseAdjRNASeqGrp.create_dataset("indptr", sparseAdjRNASeq.indptr.shape, data=sparseAdjRNASeq.indptr)
+    sparseAdjRNASeqGrp.attrs["name"]="ARNASeq"
+    sparseAdjRNASeqGrp.attrs["sparse"]=True
+    sparseAdjRNASeqGrp.attrs["shape"]=sparseAdjRNASeq.shape
+    logging.debug("Done:\t Getting Adjacence RNASeq Data")
+
     labelFile = open(path+'brca_labels_triple-negatif.csv')
     labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
     labelsDset = datasetFile.create_dataset("Labels", labels.shape)
@@ -495,7 +535,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     labelsDset.attrs["name"] = "Labels"
 
     metaDataGrp = datasetFile.create_group("Metadata")
-    metaDataGrp.attrs["nbView"] = 6
+    metaDataGrp.attrs["nbView"] = 7
     metaDataGrp.attrs["nbClass"] = 2
     metaDataGrp.attrs["datasetLength"] = len(labels)
     labelDictionary = {0:"No", 1:"Yes"}
