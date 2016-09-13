@@ -284,6 +284,7 @@ except:
 bestClassifiers = []
 bestClassifiersConfigs = []
 resultsMonoview = []
+print argumentDictionaries["Monoview"]
 if nbCores>1:
     nbExperiments = len(argumentDictionaries["Monoview"])
     for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
