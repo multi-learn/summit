@@ -73,7 +73,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     trainIndices = [i for i in range(datasetLength) if i not in testIndices]
     print "poulet"
     if feat=="ARNASeq":
-        X_train = X[trainIndices[:4], :]
+        X_train = X[trainIndices, :]
     else:
         X_train=X[trainIndices]
     print"Fromage"
