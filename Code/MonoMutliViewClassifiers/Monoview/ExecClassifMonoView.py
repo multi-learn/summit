@@ -57,8 +57,8 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     fileCLD = kwargs["fileCLD"]
     CL_type = kwargs["CL_type"]
     nbClass = kwargs["nbClass"]
-    # X = getValue(X)
-    datasetLength = getValue(X).shape[0]
+    X = getValue(X)
+    datasetLength = X.shape[0]
     clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
 
     # Determine the Database to extract features
@@ -72,9 +72,9 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     print "Jambon"
     trainIndices = [i for i in range(datasetLength) if i not in testIndices]
     print "poulet"
-    X_train = X[trainIndices, :]
+    X_train = X[trainIndices]
     print"Fromage"
-    X_test = X[testIndices, :]
+    X_test = X[testIndices]
     print "Poney"
     y_train = Y[trainIndices]
     y_test = Y[testIndices]
