@@ -69,17 +69,13 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     # Calculate Train/Test data
     logging.debug("Start:\t Determine Train/Test split")
     testIndices = ClassifMonoView.splitDataset(Y, nbClass, learningRate, datasetLength)
-    print "Jambon"
     trainIndices = [i for i in range(datasetLength) if i not in testIndices]
-    print "poulet"
     if feat=="ARNASeq":
-        print "youhou"
-        X_train = X[0, :]
+        X_train = X[0]
     else:
         X_train=X[trainIndices]
-    print"Fromage"
+    print "Done test"
     X_test = X[testIndices]
-    print "Poney"
     y_train = Y[trainIndices]
     y_test = Y[testIndices]
     # X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(X, Y, learningRate)
