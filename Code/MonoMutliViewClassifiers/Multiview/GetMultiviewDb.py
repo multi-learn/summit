@@ -14,7 +14,7 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 
 def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
-    NB_VIEW = len(features)
+    NB_VIEW = 4
     DATASET_LENGTH = 300
     NB_CLASS = 2
     VIEW_DIMENSIONS = np.random.random_integers(5, 20, NB_VIEW)
@@ -26,7 +26,6 @@ def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
                         for indx, viewDimension in enumerate(VIEW_DIMENSIONS))
 
     CLASS_LABELS = np.random.random_integers(0, NB_CLASS-1, DATASET_LENGTH)
-    LABELS_DICTIONARY = dict((indx, feature) for indx, feature in enumerate(features))
     datasetFile = h5py.File(pathF+"Fake.hdf5", "w")
     for index, viewData in enumerate(DATA.values()):
         if index == 0:
@@ -51,7 +50,7 @@ def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
     metaDataGrp.attrs["nbView"] = NB_VIEW
     metaDataGrp.attrs["nbClass"] = NB_CLASS
     metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
-    labelDictionary = {0:"No", 1:"Yes"}
+    LABELS_DICTIONARY = {0:"No", 1:"Yes"}
     datasetFile.close()
     datasetFile = h5py.File(pathF+"Fake.hdf5", "r")
     return datasetFile, LABELS_DICTIONARY
@@ -346,6 +345,7 @@ def easyFactorize(nbGenes, factorizationParam, t=0):
     factorSup[t__+t_, :] = vectorSup
     return t__+t_+1, factorLeft, factorSup
 
+
 def getBaseMatrices(nbGenes, factorizationParam):
     t, factorLeft, factorSup = easyFactorize(nbGenes, factorizationParam)
     np.savetxt("factorSup--n-"+str(nbGenes)+"--k-"+str(factorizationParam)+".csv", factorSup, delimiter=",")
@@ -397,7 +397,6 @@ def makeSparseTotalMatrix(sortedRNASeq):
     for patientIndex, patient in enumerate(sortedRNASeq):
         binnedcoord = getBins(patient, bins)
         columIndices = binnedcoord
-        print np.max(binnedcoord), nbGenes*nbBins
         rowIndices = np.zeros(len(binnedcoord), dtype=int)+patientIndex
         data = np.ones(len(binnedcoord), dtype=bool)
         sparseFull = sparseFull+sparse.csc_matrix((data, (rowIndices, columIndices)), shape=(nbPatients, nbGenes*nbBins))
@@ -502,7 +501,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
         for lineIndex, geneIndex in enumerate(patientSortedArray):
             patientMatrix[geneIndex]= np.concatenate((factorizedLeftBaseMatrix[lineIndex,:], factorizedSupBaseMatrix[:, lineIndex]))
         brnaseqDset[patientIndex] = patientMatrix.flatten()
-    brnaseqDset.attrs["name"] = "bRNASeq"
+    brnaseqDset.attrs["name"] = "BRNASeq"
     brnaseqDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Binarized RNASeq Data")
 

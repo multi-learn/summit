@@ -205,9 +205,13 @@ if nbCores>1:
 NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
 if args.views!="":
     allowedViews = args.views.split(":")
+    allViews = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
     views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW) if str(DATASET.get("View"+str(viewIndex)).attrs["name"]) in allowedViews]
 else:
     views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
+    allViews = views
+if not views:
+    raise ValueError, "Empty views list, modify selected views to match dataset "+args.views
 NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 metrics = [metric.split(":") for metric in args.CL_metrics]
 if metrics == [[""]]:
@@ -281,14 +285,13 @@ try:
         for view in views:
             for classifier in benchmark["Monoview"]:
                 arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGSInit"], "feat":view, "fileFeat": args.fileFeat,
-                                     "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier}, "viewIndex":views.index(view)}
+                                     "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier}, "viewIndex":allViews.index(view)}
                 argumentDictionaries["Monoview"].append(arguments)
 except:
     pass
 bestClassifiers = []
 bestClassifiersConfigs = []
 resultsMonoview = []
-
 if nbCores>1:
     nbExperiments = len(argumentDictionaries["Monoview"])
     for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
