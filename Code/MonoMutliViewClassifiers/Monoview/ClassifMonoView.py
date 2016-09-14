@@ -40,6 +40,7 @@ def splitDataset(LABELS, NB_CLASS, LEARNING_RATE, DATASET_LENGTH):
     print "poulet"
     validationIndices = extractRandomTrainingSet(LABELS, 1-LEARNING_RATE, DATASET_LENGTH, NB_CLASS)
     validationIndices.sort()
+    print "poney"
     return validationIndices
 
 
