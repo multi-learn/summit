@@ -37,10 +37,8 @@ def getLabelSupports(CLASS_LABELS):
 
 
 def splitDataset(LABELS, NB_CLASS, LEARNING_RATE, DATASET_LENGTH):
-    print "poulet"
     validationIndices = extractRandomTrainingSet(LABELS, 1-LEARNING_RATE, DATASET_LENGTH, NB_CLASS)
     validationIndices.sort()
-    print "poney"
     return validationIndices
 
 
@@ -49,7 +47,6 @@ def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLA
     nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
     trainingExamplesIndices = []
     usedIndices = []
-    print "Jambon"
     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
         isUseFull = False
         index = int(random.randint(0, DATASET_LENGTH-1))
@@ -58,7 +55,6 @@ def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLA
         if isUseFull:
             trainingExamplesIndices.append(index)
             usedIndices.append(index)
-    print "Fromage"
     return trainingExamplesIndices
 
 
