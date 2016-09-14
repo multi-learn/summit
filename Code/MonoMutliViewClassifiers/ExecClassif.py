@@ -291,7 +291,7 @@ if nbCores>1:
         resultsMonoview+=(Parallel(n_jobs=nbCores)(
             delayed(ExecMonoview_multicore)(args.name, args.CL_split, args.CL_nbFolds, coreIndex, args.type, args.pathF, gridSearch=gridSearch,
                                             metrics=metrics, nIter=args.CL_GS_iter, **argumentDictionaries["Monoview"][coreIndex + stepIndex * nbCores])
-            for coreIndex in range(min(nbCores, nbExperiments - (stepIndex + 1) * nbCores))))
+            for coreIndex in range(min(nbCores, nbExperiments - stepIndex  * nbCores))))
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersConfigs = [[result[1][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
@@ -384,7 +384,7 @@ if nbCores>1:
             delayed(ExecMultiview_multicore)(coreIndex, args.name, args.CL_split, args.CL_nbFolds, args.type, args.pathF,
                                    LABELS_DICTIONARY, gridSearch=gridSearch,
                                    metrics=metrics, nIter=args.CL_GS_iter, **argumentDictionaries["Multiview"][stepIndex*nbCores+coreIndex])
-            for coreIndex in range(min(nbCores, nbExperiments - (stepIndex + 1) * nbCores)))
+            for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
 else:
     resultsMultiview = [ExecMultiview(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
                                LABELS_DICTIONARY, gridSearch=gridSearch,
