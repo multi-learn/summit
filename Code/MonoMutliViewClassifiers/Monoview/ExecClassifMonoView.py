@@ -72,7 +72,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     print "Jambon"
     trainIndices = [i for i in range(datasetLength) if i not in testIndices]
     print "poulet"
-    X_train = X[trainIndices]
+    X_train = X[0]
     print"Fromage"
     X_test = X[testIndices]
     print "Poney"
