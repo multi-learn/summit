@@ -44,7 +44,7 @@ groupStandard.add_argument('--name', metavar='STRING', action='store', help='Nam
 groupStandard.add_argument('--type', metavar='STRING', action='store', help='Type of database : .hdf5 or .csv',
                            default='.hdf5')
 groupStandard.add_argument('--views', metavar='STRING', action='store',help='Name of the views selected for learning',
-                           default='Methyl:MiRNA_:RNASeq:Clinic')
+                           default='')
 groupStandard.add_argument('--pathF', metavar='STRING', action='store',help='Path to the views (default: %(default)s)',
                            default='/home/bbauvin/Documents/Data/Data_multi_omics/')
 groupStandard.add_argument('--fileCL', metavar='STRING', action='store',
@@ -203,7 +203,11 @@ if nbCores>1:
         logging.debug("Start:\t Creating datasets for multiprocessing")
 
 NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
-views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
+if args.views!="":
+    allowedViews = args.views.split(":")
+    views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW) if str(DATASET.get("View"+str(viewIndex)).attrs["name"]) in allowedViews]
+else:
+    views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
 NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 metrics = [metric.split(":") for metric in args.CL_metrics]
 if metrics == [[""]]:
@@ -284,7 +288,7 @@ except:
 bestClassifiers = []
 bestClassifiersConfigs = []
 resultsMonoview = []
-print argumentDictionaries["Monoview"]
+
 if nbCores>1:
     nbExperiments = len(argumentDictionaries["Monoview"])
     for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
