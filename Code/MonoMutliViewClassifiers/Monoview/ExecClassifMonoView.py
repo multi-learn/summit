@@ -58,6 +58,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     CL_type = kwargs["CL_type"]
     nbClass = kwargs["nbClass"]
     X = getValue(X)
+    time.sleep(20)
     datasetLength = X.shape[0]
     clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
 
@@ -70,12 +71,8 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     logging.debug("Start:\t Determine Train/Test split")
     testIndices = ClassifMonoView.splitDataset(Y, nbClass, learningRate, datasetLength)
     trainIndices = [i for i in range(datasetLength) if i not in testIndices]
-    if feat=="ARNASeq":
-        X_train = X[0]
-    else:
-        X_train=X[trainIndices]
-    print "Done test"
-    X_test = X[testIndices]
+    X_train = ClassifMonoView.extractSet(X, trainIndices)
+    X_test = ClassifMonoView.extractSet(X,testIndices)
     y_train = Y[trainIndices]
     y_test = Y[testIndices]
     # X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(X, Y, learningRate)
