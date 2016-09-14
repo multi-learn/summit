@@ -56,6 +56,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     fileCL = kwargs["fileCL"]
     fileCLD = kwargs["fileCLD"]
     CL_type = kwargs["CL_type"]
+    datasetLength = X.shape[0]
     X = getValue(X)
     clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
 
@@ -66,8 +67,13 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
 
     # Calculate Train/Test data
     logging.debug("Start:\t Determine Train/Test split")
-
-    X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(X, Y, learningRate)
+    testIndices = ClassifMonoView.splitDataset(Y, learningRate, datasetLength)
+    trainIndices = [i for i in range(datasetLength) if i not in testIndices]
+    X_train = X[trainIndices]
+    X_test = X[testIndices]
+    y_train = Y[trainIndices]
+    y_test = Y[testIndices]
+    # X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(X, Y, learningRate)
 
     logging.debug("Info:\t Shape X_train:" + str(X_train.shape) + ", Length of y_train:" + str(len(y_train)))
     logging.debug("Info:\t Shape X_test:" + str(X_test.shape) + ", Length of y_test:" + str(len(y_test)))

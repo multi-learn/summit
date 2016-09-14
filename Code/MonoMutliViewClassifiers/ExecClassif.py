@@ -193,6 +193,7 @@ DATASET, LABELS_DICTIONARY = getDatabase(args.views.split(":"), args.pathF, args
 datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
 if nbCores>1:
     if DB.datasetsAlreadyExist(args.pathF, args.name, nbCores):
+        logging.debug("Info:\t Enough copies of the dataset are already available")
         pass
     else:
         logging.debug("Start:\t Creating "+str(nbCores)+" temporary datasets for multiprocessing")

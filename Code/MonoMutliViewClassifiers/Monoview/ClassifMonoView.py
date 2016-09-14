@@ -11,6 +11,8 @@ from sklearn.pipeline import Pipeline                   # Pipelining in classifi
 from sklearn.grid_search import GridSearchCV            # GridSearch for parameters of classification
 from sklearn.ensemble import RandomForestClassifier     # RandomForest-Classifier
 import sklearn
+import numpy as np
+import random
 
 # Import own modules
 
@@ -19,10 +21,38 @@ __author__ 	= "Nikolas Huelsmann, Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 __date__	= 2016-03-25
 
+
+def getLabelSupports(CLASS_LABELS):
+    labels = set(CLASS_LABELS)
+    supports = [CLASS_LABELS.tolist().count(label) for label in labels]
+    return supports, dict((label, index) for label, index in zip(labels, range(len(labels))))
+
+def splitDataset(LABELS, NB_CLASS, LEARNING_RATE, DATASET_LENGTH):
+    validationIndices = extractRandomTrainingSet(LABELS, 1-LEARNING_RATE, DATASET_LENGTH, NB_CLASS)
+    validationIndices.sort()
+    return validationIndices
+
+def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS):
+    labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS))
+    nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
+    trainingExamplesIndices = []
+    usedIndices = []
+    while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
+        isUseFull = False
+        index = int(random.randint(0, DATASET_LENGTH-1))
+        if index not in usedIndices:
+            isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
+        if isUseFull:
+            trainingExamplesIndices.append(index)
+            usedIndices.append(index)
+    return trainingExamplesIndices
+
+
 ##### Generating Test and Train Data
 def calcTrainTestOwn(X,y,split):
 
     classLabels = pd.Series(y)
+
 
     data_train = []
     data_test = []
