@@ -57,8 +57,8 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     fileCLD = kwargs["fileCLD"]
     CL_type = kwargs["CL_type"]
     nbClass = kwargs["nbClass"]
-    X = getValue(X)
-    datasetLength = X.shape[0]
+    # X = getValue(X)
+    datasetLength = getValue(X).shape[0]
     clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
 
     # Determine the Database to extract features
