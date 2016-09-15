@@ -430,6 +430,7 @@ def getAdjacenceMatrix(sortedRNASeq, k=1):
                 # 	indices.append(patient[i-1]+patient[i]*nbGenes)
                 # 	data.append(True)
         indptr[patientIndex+1] = pointer
+
     mat = sparse.csr_matrix((data, indices, indptr), shape=(sortedRNASeq.shape[0], sortedRNASeq.shape[1]*sortedRNASeq.shape[1]), dtype=bool)
     return mat
 

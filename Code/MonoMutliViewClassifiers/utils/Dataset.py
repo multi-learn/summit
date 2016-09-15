@@ -8,6 +8,12 @@ def getV(DATASET, viewIndex, usedIndices=None):
     if not DATASET.get("View"+str(viewIndex)).attrs["sparse"]:
         return DATASET.get("View"+str(viewIndex))[usedIndices, :]
     else:
+        sparse_mat = sparse.csr_matrix((DATASET.get("View"+str(viewIndex)).get("data").value,
+                                       DATASET.get("View"+str(viewIndex)).get("indices").value,
+                                       DATASET.get("View"+str(viewIndex)).get("indptr").value),
+                                      shape=DATASET.get("View"+str(viewIndex)).attrs["shape"])[usedIndices,:]
+        print sparse_mat.shape
+        print sparse_mat.indptr
         return sparse.csr_matrix((DATASET.get("View"+str(viewIndex)).get("data").value,
                                   DATASET.get("View"+str(viewIndex)).get("indices").value,
                                   DATASET.get("View"+str(viewIndex)).get("indptr").value),
