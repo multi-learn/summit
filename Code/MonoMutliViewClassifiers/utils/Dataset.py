@@ -34,9 +34,9 @@ def extractSubset(matrix, usedIndices):
     if sparse.issparse(matrix):
         newIndptr = np.zeros(len(usedIndices)+1, dtype=np.int16)
         oldindptr = matrix.indptr
+        print oldindptr
         for exampleIndexIndex, exampleIndex in enumerate(usedIndices):
-            if exampleIndexIndex>0:
-                newIndptr[exampleIndexIndex] = newIndptr[exampleIndexIndex-1]+(oldindptr[exampleIndex]-oldindptr[exampleIndex-1])
+            newIndptr[exampleIndexIndex+1] = newIndptr[exampleIndexIndex]+(oldindptr[exampleIndex+1]-oldindptr[exampleIndex])
         newData = np.ones(newIndptr[-1], dtype=bool)
         newIndices =  np.zeros(newIndptr[-1], dtype=np.int32)
         oldIndices = matrix.indices
