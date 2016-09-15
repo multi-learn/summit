@@ -14,10 +14,7 @@ def getV(DATASET, viewIndex, usedIndices=None):
                                       shape=DATASET.get("View"+str(viewIndex)).attrs["shape"])[usedIndices,:]
         print sparse_mat.shape
         print sparse_mat.indptr
-        return sparse.csr_matrix((DATASET.get("View"+str(viewIndex)).get("data").value,
-                                  DATASET.get("View"+str(viewIndex)).get("indices").value,
-                                  DATASET.get("View"+str(viewIndex)).get("indptr").value),
-                                 shape=DATASET.get("View"+str(viewIndex)).attrs["shape"])[usedIndices,:]
+        return sparse_mat
 
 
 def getShape(DATASET, viewIndex):
@@ -31,10 +28,13 @@ def getValue(DATASET):
     if not DATASET.attrs["sparse"]:
         return DATASET.value
     else:
-        return sparse.csr_matrix((DATASET.get("data").value,
+        sparse_mat = sparse.csr_matrix((DATASET.get("data").value,
                                   DATASET.get("indices").value,
                                   DATASET.get("indptr").value),
                                  shape=DATASET.attrs["shape"])
+        print sparse_mat.shape
+        print sparse_mat.indptr
+        return sparse_mat
 
 def extractSubset(matrix, usedIndices):
     if sparse.issparse(matrix):
