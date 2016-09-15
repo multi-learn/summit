@@ -38,7 +38,7 @@ def extractSubset(matrix, usedIndices):
         oldindptr = matrix.indptr
         for exampleIndexIndex, exampleIndex in enumerate(usedIndices):
             newIndptr[exampleIndexIndex+1] = newIndptr[exampleIndexIndex]+(oldindptr[exampleIndex+1]-oldindptr[exampleIndex])
-        print newIndptr[-1]
+        print newIndptr
         newData = np.ones(newIndptr[-1], dtype=bool)
         newIndices =  np.zeros(newIndptr[-1], dtype=np.int32)
         oldIndices = matrix.indices
