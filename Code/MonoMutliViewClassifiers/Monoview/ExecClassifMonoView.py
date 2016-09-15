@@ -72,6 +72,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     logging.debug("Start:\t Determine Train/Test split")
     testIndices = ClassifMonoView.splitDataset(Y, nbClass, learningRate, datasetLength)
     trainIndices = [i for i in range(datasetLength) if i not in testIndices]
+    print "poulet"
     print sparse.eye(347)*X
     X_train = X[trainIndices]#ClassifMonoView.extractSet(X, trainIndices)
 
