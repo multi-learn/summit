@@ -405,9 +405,9 @@ def makeSparseTotalMatrix(sortedRNASeq):
 
 def getAdjacenceMatrix(RNASeqRanking, sotredRNASeq, k=2):
     k=int(k)/2*2
-    indices = np.zeros((RNASeqRanking.shape[0]*k*RNASeqRanking.shape[1]), dtype=np.int32)
+    indices = np.zeros((RNASeqRanking.shape[0]*k*RNASeqRanking.shape[1]), dtype=int)
     data = np.ones((RNASeqRanking.shape[0]*k*RNASeqRanking.shape[1]), dtype=bool)
-    indptr = np.zeros(RNASeqRanking.shape[0]+1, dtype=np.int16)
+    indptr = np.zeros(RNASeqRanking.shape[0]+1, dtype=int)
     nbGenes = RNASeqRanking.shape[1]
     pointer = 0
     for patientIndex in range(RNASeqRanking.shape[0]):

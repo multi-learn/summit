@@ -12,6 +12,7 @@ def getV(DATASET, viewIndex, usedIndices=None):
                                        DATASET.get("View"+str(viewIndex)).get("indices").value,
                                        DATASET.get("View"+str(viewIndex)).get("indptr").value),
                                       shape=DATASET.get("View"+str(viewIndex)).attrs["shape"])[usedIndices,:]
+
         return sparse_mat
 
 
