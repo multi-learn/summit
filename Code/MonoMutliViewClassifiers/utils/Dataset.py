@@ -41,6 +41,7 @@ def extractSubset(matrix, usedIndices):
         newIndices =  np.zeros(newIndptr[-1], dtype=np.int32)
         oldIndices = matrix.indices
         for exampleIndexIndex, exampleIndex in enumerate(usedIndices):
+            print newIndptr[exampleIndexIndex], newIndptr[exampleIndexIndex+1]
             newIndices[newIndptr[exampleIndexIndex]:newIndptr[exampleIndexIndex+1]] = oldIndices[oldindptr[exampleIndex]: oldindptr[exampleIndex+1]]
         return sparse.csr_matrix((newData, newIndices, newIndptr), shape=(len(usedIndices), matrix.shape))
     else:
