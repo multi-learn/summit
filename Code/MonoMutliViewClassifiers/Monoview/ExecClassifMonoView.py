@@ -12,7 +12,8 @@ import operator
 # Import 3rd party modules
 import numpy as np                      # for reading CSV-files and Series
 import pandas as pd                     # for Series and DataFrames
-import logging                          # To create Log-Files
+import logging
+from scipy import sparse # To create Log-Files
 from sklearn import metrics		# For stastics on classification
 import h5py
 
@@ -72,6 +73,7 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     testIndices = ClassifMonoView.splitDataset(Y, nbClass, learningRate, datasetLength)
     trainIndices = [i for i in range(datasetLength) if i not in testIndices]
     print X.sum(axis=1)
+    print sparse.eye(347)*X
     X_train = X[trainIndices]#ClassifMonoView.extractSet(X, trainIndices)
 
     X_test = X[testIndices]#ClassifMonoView.extractSet(X,testIndices)
