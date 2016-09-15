@@ -12,9 +12,8 @@ import operator
 # Import 3rd party modules
 import numpy as np                      # for reading CSV-files and Series
 import pandas as pd                     # for Series and DataFrames
-import logging
-from scipy import sparse # To create Log-Files
-from sklearn import metrics		# For stastics on classification
+import logging                          # To create Log-Files
+from sklearn import metrics		        # For stastics on classification
 import h5py
 
 # Import own modules
@@ -23,7 +22,7 @@ import ExportResults                    # Functions to render results
 import MonoviewClassifiers
 import Metrics
 from analyzeResult import execute
-from utils.Dataset import getV, getValue
+from utils.Dataset import getV, getValue, extractSubset
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann, Baptiste BAUVIN"
@@ -72,9 +71,9 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     logging.debug("Start:\t Determine Train/Test split")
     testIndices = ClassifMonoView.splitDataset(Y, nbClass, learningRate, datasetLength)
     trainIndices = [i for i in range(datasetLength) if i not in testIndices]
-    print sparse.eye(347)*X
-    print "poulet"
-    X_train = X[trainIndices]#ClassifMonoView.extractSet(X, trainIndices)
+
+    X_train = extractSubset(X,trainIndices) #ClassifMonoView.extractSet(X, trainIndices)
+    testIndices = np.arange(100)
 
     X_test = X[testIndices]#ClassifMonoView.extractSet(X,testIndices)
     y_train = Y[trainIndices]

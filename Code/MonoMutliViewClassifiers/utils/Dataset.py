@@ -1,5 +1,5 @@
-import h5py
 from scipy import sparse
+import numpy as np
 
 
 def getV(DATASET, viewIndex, usedIndices=None):
@@ -29,3 +29,19 @@ def getValue(DATASET):
                                   DATASET.get("indices").value,
                                   DATASET.get("indptr").value),
                                  shape=DATASET.attrs["shape"])
+
+def extractSubset(matrix, usedIndices):
+    if sparse.issparse(matrix):
+        newIndptr = np.zeros(len(usedIndices)+1, dtype=np.int16)
+        oldindptr = matrix.indptr
+        for exampleIndexIndex, exampleIndex in enumerate(usedIndices):
+            if exampleIndexIndex>0:
+                newIndptr[exampleIndexIndex] = newIndptr[exampleIndexIndex-1]+(oldindptr[exampleIndex]-oldindptr[exampleIndex-1])
+        newData = np.ones(newIndptr[-1], dtype=bool)
+        newIndices =  np.zeros(newIndptr[-1], dtype=np.int32)
+        oldIndices = matrix.indices
+        for exampleIndexIndex, exampleIndex in enumerate(usedIndices):
+            newIndices[newIndptr[exampleIndexIndex]:newIndptr[exampleIndexIndex]] = oldIndices[oldindptr[exampleIndex], oldindptr[exampleIndex+1]]
+        return sparse.csr_matrix((newData, newIndices, newIndptr), shape=(len(usedIndices), matrix.shape))
+    else:
+        return matrix[usedIndices]

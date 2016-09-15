@@ -13,7 +13,6 @@ from sklearn.ensemble import RandomForestClassifier     # RandomForest-Classifie
 import sklearn
 import numpy as np
 import random
-import scipy.sparse
 
 # Import own modules
 
@@ -58,14 +57,6 @@ def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLA
             usedIndices.append(index)
     return trainingExamplesIndices
 
-
-def extractSet(X, usedIndices):
-    if scipy.sparse.issparse(X):
-        for index in usedIndices:
-            pass
-
-    else:
-        return X[usedIndices]
 
 ##### Generating Test and Train Data
 def calcTrainTestOwn(X,y,split):
