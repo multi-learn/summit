@@ -72,9 +72,8 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     trainIndices = [i for i in range(datasetLength) if i not in testIndices]
 
     X_train = extractSubset(X,trainIndices) #ClassifMonoView.extractSet(X, trainIndices)
-    testIndices = np.arange(100)
 
-    X_test = X[testIndices]#ClassifMonoView.extractSet(X,testIndices)
+    X_test = extractSubset(X,testIndices)#ClassifMonoView.extractSet(X,testIndices)
     y_train = Y[trainIndices]
     y_test = Y[testIndices]
     # X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(X, Y, learningRate)
