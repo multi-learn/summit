@@ -39,7 +39,7 @@ def resultAnalysis(benchmark, results, name, times, metrics):
         ax.set_xticks(range(nbResults))
         ax.set_xticklabels(names, rotation="vertical")
 
-        f.savefig("Results/"+name+"-"+metric[0]+"-"+time.strftime("%Y%m%d-%H%M%S")+".png")
+        f.savefig("Results/"+time.strftime("%Y%m%d-%H%M%S")+"-"+name+"-"+metric[0]+".png")
     logging.info("Extraction time : "+str(times[0])+"s, Monoview time : "+str(times[1])+"s, Multiview Time : "+str(times[2])+"s")
 
 
