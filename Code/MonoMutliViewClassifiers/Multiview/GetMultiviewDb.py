@@ -403,35 +403,36 @@ def makeSparseTotalMatrix(sortedRNASeq):
     return sparseFull
 
 
-def getAdjacenceMatrix(sortedRNASeq, k=1):
-    indices = np.zeros((sortedRNASeq.shape[0]*k*sortedRNASeq.shape[1]), dtype=np.int32)
-    data = np.ones((sortedRNASeq.shape[0]*k*sortedRNASeq.shape[1]), dtype=bool)
-    indptr = np.zeros(sortedRNASeq.shape[0]+1, dtype=np.int16)
-    nbGenes = sortedRNASeq.shape[1]
+def getAdjacenceMatrix(RNASeqRanking, sotredRNASeq, k=2):
+    k=int(k)/2*2
+    indices = np.zeros((RNASeqRanking.shape[0]*k*RNASeqRanking.shape[1]), dtype=np.int32)
+    data = np.ones((RNASeqRanking.shape[0]*k*RNASeqRanking.shape[1]), dtype=bool)
+    indptr = np.zeros(RNASeqRanking.shape[0]+1, dtype=np.int16)
+    nbGenes = RNASeqRanking.shape[1]
     pointer = 0
-    for patientIndex, patient in enumerate(sortedRNASeq):
+    for patientIndex in range(RNASeqRanking.shape[0]):
         print patientIndex
         for i in range(nbGenes):
-            for j in range(k):
+            for j in range(k/2):
                 try:
-                    indices[pointer]=patient[(i-(j+1))]+patient[i]*nbGenes
+                    indices[pointer]=RNASeqRanking[patientIndex, (sotredRNASeq[patientIndex, i]-(j+1))]+i*nbGenes
                     pointer+=1
                 except:
                     pass
                 try:
-                    indices[pointer]=patient[i+(j+1)]+patient[i]*nbGenes
+                    indices[pointer]=RNASeqRanking[patientIndex, (sotredRNASeq[patientIndex, i]+(j+1))]+i*nbGenes
                     pointer+=1
                 except:
                     pass
-                # elif i<=k:
-                # 	indices.append(patient[1]+patient[i]*nbGenes)
-                # 	data.append(True)
-                # elif i==nbGenes-1:
-                # 	indices.append(patient[i-1]+patient[i]*nbGenes)
-                # 	data.append(True)
+                    # elif i<=k:
+                    # 	indices.append(patient[1]+patient[i]*nbGenes)
+                    # 	data.append(True)
+                    # elif i==nbGenes-1:
+                    # 	indices.append(patient[i-1]+patient[i]*nbGenes)
+                    # 	data.append(True)
         indptr[patientIndex+1] = pointer
 
-    mat = sparse.csr_matrix((data, indices, indptr), shape=(sortedRNASeq.shape[0], sortedRNASeq.shape[1]*sortedRNASeq.shape[1]), dtype=bool)
+    mat = sparse.csr_matrix((data, indices, indptr), shape=(RNASeqRanking.shape[0], RNASeqRanking.shape[1]*RNASeqRanking.shape[1]), dtype=bool)
     return mat
 
 
@@ -478,12 +479,16 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
     logging.debug("Start:\t Getting Sorted RNASeq Data")
     RNASeq = datasetFile["View2"][...]
-    modifiedRNASeq = np.zeros(datasetFile.get("View2").shape, dtype=int)
+    sortedRNASeqGeneIndices = np.zeros(datasetFile.get("View2").shape, dtype=int)
+    RNASeqRanking = np.zeros(datasetFile.get("View2").shape, dtype=int)
     for exampleIndex, exampleArray in enumerate(RNASeq):
-        RNASeqDictionary = dict((index, value) for index, value in enumerate(exampleArray))
-        sorted_x = sorted(RNASeqDictionary.items(), key=operator.itemgetter(1))
-        modifiedRNASeq[exampleIndex] = np.array([index for (index, value) in sorted_x], dtype=int)
-    mrnaseqDset = datasetFile.create_dataset("View4", modifiedRNASeq.shape, data=modifiedRNASeq)
+        sortedRNASeqDictionary = dict((index, value) for index, value in enumerate(exampleArray))
+        sortedRNASeqIndicesDict = sorted(sortedRNASeqDictionary.items(), key=operator.itemgetter(1))
+        sortedRNASeqIndicesArray = np.array([index for (index, value) in sortedRNASeqIndicesDict], dtype=int)
+        sortedRNASeqGeneIndices[exampleIndex] = sortedRNASeqIndicesArray
+        for geneIndex in range(RNASeq.shape[1]):
+            RNASeqRanking[exampleIndex, sortedRNASeqIndicesArray[geneIndex]] = geneIndex
+    mrnaseqDset = datasetFile.create_dataset("View4", sortedRNASeqGeneIndices.shape, data=sortedRNASeqGeneIndices)
     mrnaseqDset.attrs["name"] = "SRNASeq"
     mrnaseqDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Sorted RNASeq Data")
@@ -496,9 +501,9 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
         factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
     except:
         factorizedSupBaseMatrix, factorizedLeftBaseMatrix = getBaseMatrices(rnaseqData.shape[1], k)
-    brnaseqDset = datasetFile.create_dataset("View5", (modifiedRNASeq.shape[0], modifiedRNASeq.shape[1]*k*2), dtype=bool)
-    for patientIndex, patientSortedArray in enumerate(modifiedRNASeq):
-        patientMatrix = np.zeros((modifiedRNASeq.shape[1], k * 2), dtype=bool)
+    brnaseqDset = datasetFile.create_dataset("View5", (sortedRNASeqGeneIndices.shape[0], sortedRNASeqGeneIndices.shape[1]*k*2), dtype=bool)
+    for patientIndex, patientSortedArray in enumerate(sortedRNASeqGeneIndices):
+        patientMatrix = np.zeros((sortedRNASeqGeneIndices.shape[1], k * 2), dtype=bool)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
             patientMatrix[geneIndex]= np.concatenate((factorizedLeftBaseMatrix[lineIndex,:], factorizedSupBaseMatrix[:, lineIndex]))
         brnaseqDset[patientIndex] = patientMatrix.flatten()
@@ -507,7 +512,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     logging.debug("Done:\t Getting Binarized RNASeq Data")
 
     # logging.debug("Start:\t Getting Binned RNASeq Data")
-    # sparseBinnedRNASeq = makeSparseTotalMatrix(modifiedRNASeq)
+    # sparseBinnedRNASeq = makeSparseTotalMatrix(sortedRNASeqGeneIndices)
     # sparseBinnedRNASeqGrp = datasetFile.create_group("View6")
     # dataDset = sparseBinnedRNASeqGrp.create_dataset("data", sparseBinnedRNASeq.data.shape, data=sparseBinnedRNASeq.data)
     # indicesDset = sparseBinnedRNASeqGrp.create_dataset("indices", sparseBinnedRNASeq.indices.shape, data=sparseBinnedRNASeq.indices)
@@ -518,7 +523,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     # logging.debug("Done:\t Getting Binned RNASeq Data")
 
     logging.debug("Start:\t Getting Adjacence RNASeq Data")
-    sparseAdjRNASeq = getAdjacenceMatrix(modifiedRNASeq, k=findClosestPowerOfTwo(100)-1)
+    sparseAdjRNASeq = getAdjacenceMatrix(RNASeqRanking, sortedRNASeqGeneIndices, k=findClosestPowerOfTwo(100)-1)
     sparseAdjRNASeqGrp = datasetFile.create_group("View6")
     dataDset = sparseAdjRNASeqGrp.create_dataset("data", sparseAdjRNASeq.data.shape, data=sparseAdjRNASeq.data)
     indicesDset = sparseAdjRNASeqGrp.create_dataset("indices", sparseAdjRNASeq.indices.shape, data=sparseAdjRNASeq.indices)

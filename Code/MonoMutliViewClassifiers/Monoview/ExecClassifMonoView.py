@@ -58,7 +58,6 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     CL_type = kwargs["CL_type"]
     nbClass = kwargs["nbClass"]
     X = getValue(X)
-    print X.data.nbytes + X.indptr.nbytes + X.indices.nbytes
     datasetLength = X.shape[0]
     clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
 

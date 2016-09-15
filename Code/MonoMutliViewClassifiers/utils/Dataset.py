@@ -12,8 +12,6 @@ def getV(DATASET, viewIndex, usedIndices=None):
                                        DATASET.get("View"+str(viewIndex)).get("indices").value,
                                        DATASET.get("View"+str(viewIndex)).get("indptr").value),
                                       shape=DATASET.get("View"+str(viewIndex)).attrs["shape"])[usedIndices,:]
-        print sparse_mat.shape
-        print sparse_mat.indptr
         return sparse_mat
 
 
@@ -32,24 +30,19 @@ def getValue(DATASET):
                                   DATASET.get("indices").value,
                                   DATASET.get("indptr").value),
                                  shape=DATASET.attrs["shape"])
-        print sparse_mat.shape
-        print sparse_mat.indptr
         return sparse_mat
 
 def extractSubset(matrix, usedIndices):
     if sparse.issparse(matrix):
         newIndptr = np.zeros(len(usedIndices)+1, dtype=np.int16)
         oldindptr = matrix.indptr
-        print oldindptr
         for exampleIndexIndex, exampleIndex in enumerate(usedIndices):
             newIndptr[exampleIndexIndex+1] = newIndptr[exampleIndexIndex]+(oldindptr[exampleIndex+1]-oldindptr[exampleIndex])
         newData = np.ones(newIndptr[-1], dtype=bool)
         newIndices =  np.zeros(newIndptr[-1], dtype=np.int32)
         oldIndices = matrix.indices
-        print newIndptr
         for exampleIndexIndex, exampleIndex in enumerate(usedIndices):
-            print newIndptr[exampleIndexIndex], newIndptr[exampleIndexIndex+1]
             newIndices[newIndptr[exampleIndexIndex]:newIndptr[exampleIndexIndex+1]] = oldIndices[oldindptr[exampleIndex]: oldindptr[exampleIndex+1]]
-        return sparse.csr_matrix((newData, newIndices, newIndptr), shape=(len(usedIndices), matrix.shape))
+        return sparse.csr_matrix((newData, newIndices, newIndptr), shape=(len(usedIndices), matrix.shape[1]))
     else:
         return matrix[usedIndices]
