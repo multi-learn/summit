@@ -35,10 +35,10 @@ def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databa
     DATASET = h5py.File(path+name+str(datasetFileIndex)+".hdf5", "r")
     kwargs = args["args"]
     views = [DATASET.get("View"+str(viewIndex)).attrs["name"] for viewIndex in range(DATASET.get("Metadata").attrs["nbView"])]
+    print views
     neededViewIndex = views.index(kwargs["feat"])
     X = DATASET.get("View"+str(neededViewIndex))
     Y = DATASET.get("Labels").value
-    returnedViewIndex = args["viewIndex"]
     return ExecMonoview(X, Y, name, learningRate, nbFolds, 1, databaseType, path, gridSearch=gridSearch,
                         metrics=metrics, nIter=nIter, **args)
 
