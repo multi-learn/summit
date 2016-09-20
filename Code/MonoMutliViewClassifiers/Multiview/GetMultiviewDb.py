@@ -522,16 +522,16 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     # sparseBinnedRNASeqGrp.attrs["shape"]=sparseBinnedRNASeq.shape
     # logging.debug("Done:\t Getting Binned RNASeq Data")
 
-    logging.debug("Start:\t Getting Adjacence RNASeq Data")
-    sparseAdjRNASeq = getAdjacenceMatrix(RNASeqRanking, sortedRNASeqGeneIndices, k=findClosestPowerOfTwo(10)-1)
-    sparseAdjRNASeqGrp = datasetFile.create_group("View6")
-    dataDset = sparseAdjRNASeqGrp.create_dataset("data", sparseAdjRNASeq.data.shape, data=sparseAdjRNASeq.data)
-    indicesDset = sparseAdjRNASeqGrp.create_dataset("indices", sparseAdjRNASeq.indices.shape, data=sparseAdjRNASeq.indices)
-    indptrDset = sparseAdjRNASeqGrp.create_dataset("indptr", sparseAdjRNASeq.indptr.shape, data=sparseAdjRNASeq.indptr)
-    sparseAdjRNASeqGrp.attrs["name"]="ARNASeq"
-    sparseAdjRNASeqGrp.attrs["sparse"]=True
-    sparseAdjRNASeqGrp.attrs["shape"]=sparseAdjRNASeq.shape
-    logging.debug("Done:\t Getting Adjacence RNASeq Data")
+    # logging.debug("Start:\t Getting Adjacence RNASeq Data")
+    # sparseAdjRNASeq = getAdjacenceMatrix(RNASeqRanking, sortedRNASeqGeneIndices, k=findClosestPowerOfTwo(10)-1)
+    # sparseAdjRNASeqGrp = datasetFile.create_group("View6")
+    # dataDset = sparseAdjRNASeqGrp.create_dataset("data", sparseAdjRNASeq.data.shape, data=sparseAdjRNASeq.data)
+    # indicesDset = sparseAdjRNASeqGrp.create_dataset("indices", sparseAdjRNASeq.indices.shape, data=sparseAdjRNASeq.indices)
+    # indptrDset = sparseAdjRNASeqGrp.create_dataset("indptr", sparseAdjRNASeq.indptr.shape, data=sparseAdjRNASeq.indptr)
+    # sparseAdjRNASeqGrp.attrs["name"]="ARNASeq"
+    # sparseAdjRNASeqGrp.attrs["sparse"]=True
+    # sparseAdjRNASeqGrp.attrs["shape"]=sparseAdjRNASeq.shape
+    # logging.debug("Done:\t Getting Adjacence RNASeq Data")
 
     labelFile = open(path+'brca_labels_triple-negatif.csv')
     labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
