@@ -236,7 +236,7 @@ if args.CL_type.split(":")==["Benchmark"]:
                          for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClasses))
     allMonoviewAlgos = [name for _, name, isPackage in
                         pkgutil.iter_modules(['MonoviewClassifiers'])
-                        if (not isPackage) and (name!="SGD") and (name!="SVMPoly")]
+                        if (not isPackage) and (name!="SGD") and (name[:3]!="SVM")]
     fusionMonoviewClassifiers = allMonoviewAlgos
     allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
     allMumboAlgos = [name for _, name, isPackage in
