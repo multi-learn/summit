@@ -129,6 +129,10 @@ groupSGD = parser.add_argument_group('KNN arguments')
 groupSGD.add_argument('--CL_KNN_neigh', metavar='STRING', action='store',
                       help='GridSearch: Determine number of neighbors for KNN', default='1:5:10:15')
 
+groupSGD = parser.add_argument_group('SCM arguments')
+groupSGD.add_argument('--CL_SCM_max_rules', metavar='STRING', action='store',
+                      help='GridSearch: Determine number of neighbors for KNN', default='1')
+
 groupMumbo = parser.add_argument_group('Mumbo arguments')
 groupMumbo.add_argument('--MU_types', metavar='STRING', action='store',
                         help='Determine which monoview classifier to use with Mumbo',default='DecisionTree')
@@ -142,13 +146,13 @@ groupMumbo.add_argument('--MU_iter', metavar='INT', action='store', nargs=3,
 groupFusion = parser.add_argument_group('Fusion arguments')
 groupFusion.add_argument('--FU_types', metavar='STRING', action='store',
                          help='Determine which type of fusion to use, if multiple separate with :',
-                         default='LateFusion')
+                         default='LateFusion:EarlyFusion')
 groupFusion.add_argument('--FU_ealy_methods', metavar='STRING', action='store',
                          help='Determine which early fusion method of fusion to use, if multiple separate with :',
-                         default='WeightedLinear')
+                         default='')
 groupFusion.add_argument('--FU_late_methods', metavar='STRING', action='store',
                          help='Determine which late fusion method of fusion to use, if multiple separate with :',
-                         default='WeightedLinear')
+                         default='')
 groupFusion.add_argument('--FU_method_config', metavar='STRING', action='store', nargs='+',
                          help='Configuration for the fusion method', default=['1:1:1:1'])
 groupFusion.add_argument('--FU_cl_names', metavar='STRING', action='store',
@@ -253,6 +257,7 @@ if "Multiview" in args.CL_type.strip(":"):
         benchmark["Multiview"]["Fusion"]= {}
         benchmark["Multiview"]["Fusion"]["Methods"] = dict((fusionType, []) for fusionType in args.FU_types.split(":"))
         if "LateFusion" in args.FU_types.split(":"):
+
             benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = args.FU_late_methods.split(":")
         if "EarlyFusion" in args.FU_types.split(":"):
             benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = args.FU_early_methods.split(":")
@@ -277,6 +282,7 @@ SGDKWARGSInit = {"2": map(float, args.CL_SGD_alpha.split(":"))[0], "1": args.CL_
              "0":args.CL_SGD_loss.split(":")[0]}
 KNNKWARGSInit = {"0": map(float, args.CL_KNN_neigh.split(":"))[0]}
 AdaboostKWARGSInit = {"0": args.CL_Ada_n_est.split(":")[0], "1": args.CL_Ada_b_est.split(":")[0]}
+SCMKWARGSInit = {"0":args.CL_SCM_max_rules.split(":")[0]}
 
 dataBaseTime = time.time()-start
 argumentDictionaries = {"Monoview": {}, "Multiview": []}

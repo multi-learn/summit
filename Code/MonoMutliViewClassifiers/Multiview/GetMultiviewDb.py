@@ -28,9 +28,15 @@ def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
     CLASS_LABELS = np.random.random_integers(0, NB_CLASS-1, DATASET_LENGTH)
     datasetFile = h5py.File(pathF+"Fake.hdf5", "w")
     for index, viewData in enumerate(DATA.values()):
-        if index == 0:
+        if index==0:
+            viewData = np.random.randint(0, 1, (DATASET_LENGTH,300), dtype=bool)#np.zeros(viewData.shape, dtype=bool)+np.ones((viewData.shape[0], viewData.shape[1]/2), dtype=bool)
+            viewDset = datasetFile.create_dataset("View"+str(index), viewData.shape)
+            viewDset[...] = viewData
+            viewDset.attrs["name"] = "View"+str(index)
+            viewDset.attrs["sparse"] = False
+        elif index == 1:
             viewData = sparse.csr_matrix(viewData)
-            viewGrp = datasetFile.create_group("View0")
+            viewGrp = datasetFile.create_group("View"+str(index))
             dataDset = viewGrp.create_dataset("data", viewData.data.shape, data=viewData.data)
             indicesDset = viewGrp.create_dataset("indices", viewData.indices.shape, data=viewData.indices)
             indptrDset = viewGrp.create_dataset("indptr", viewData.indptr.shape, data=viewData.indptr)
@@ -359,7 +365,7 @@ def findParams(arrayLen, nbPatients, maxNbBins=5000, maxLenBin=300, minOverlappi
         for lenBin in range(arrayLen-1):
             if lenBin+1<maxLenBin:
                 for overlapping in sorted(range(lenBin+1-1), reverse=True):
-                    if overlapping+1>minOverlapping and overlapping>lenBin/minNbBinsOverlapped:
+                    if overlapping+1>minOverlapping and math.ceil(float(lenBin)/(lenBin-overlapping))>=minNbBinsOverlapped:
                         for nbBins in sorted(range(arrayLen-1), reverse=True):
                             if nbBins+1<maxNbBins:
                                 if arrayLen == (nbBins+1-1)*(lenBin+1-overlapping+1)+lenBin+1:
@@ -376,12 +382,14 @@ def findBins(nbBins, overlapping, lenBin):
     return bins
 
 
-def getBins(array, bins):
+def getBins(array, bins, lenBin, overlapping):
     binnedcoord = []
     for coordIndex, coord in enumerate(array):
+        nbBinsFull = 0
         for binIndex, bin in enumerate(bins):
-            if coordIndex in bin:
+           if coordIndex in bin:
                 binnedcoord.append(binIndex+(coord*len(bins)))
+
     return np.array(binnedcoord)
 
 
@@ -392,14 +400,12 @@ def makeSparseTotalMatrix(sortedRNASeq):
     overlapping = params["overlapping"]
     lenBin = params["lenBin"]
     bins = findBins(nbBins, overlapping, lenBin)
-    nbBins = nbBins+1
     sparseFull = sparse.csc_matrix((nbPatients, nbGenes*nbBins))
     for patientIndex, patient in enumerate(sortedRNASeq):
-        binnedcoord = getBins(patient, bins)
-        columIndices = binnedcoord
-        rowIndices = np.zeros(len(binnedcoord), dtype=int)+patientIndex
-        data = np.ones(len(binnedcoord), dtype=bool)
-        sparseFull = sparseFull+sparse.csc_matrix((data, (rowIndices, columIndices)), shape=(nbPatients, nbGenes*nbBins))
+        columnIndices = getBins(patient, bins, lenBin, overlapping)
+        rowIndices = np.zeros(len(columnIndices), dtype=int)+patientIndex
+        data = np.ones(len(columnIndices), dtype=bool)
+        sparseFull = sparseFull+sparse.csc_matrix((data, (rowIndices, columnIndices)), shape=(nbPatients, nbGenes*nbBins))
     return sparseFull
 
 

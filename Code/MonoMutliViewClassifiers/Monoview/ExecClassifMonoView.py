@@ -45,6 +45,7 @@ def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databa
 
 def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True,
                 metrics=[["accuracy_score", None]], nIter=30, **args):
+    logging.debug("Start:\t Loading data")
     try:
         kwargs = args["args"]
     except:
@@ -60,10 +61,9 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     X = getValue(X)
     datasetLength = X.shape[0]
     clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
-
+    logging.debug("Done:\t Loading data")
     # Determine the Database to extract features
-    logging.debug("### Main Programm for Classification MonoView")
-    logging.debug("### Classification - Database:" + str(name) + " Feature:" + str(feat) + " train_size:" + str(learningRate) + ", CrossValidation k-folds:" + str(nbFolds) + ", cores:" + str(nbCores)+", algorithm : "+CL_type)
+    logging.debug("Info:\t Classification - Database:" + str(name) + " Feature:" + str(feat) + " train_size:" + str(learningRate) + ", CrossValidation k-folds:" + str(nbFolds) + ", cores:" + str(nbCores)+", algorithm : "+CL_type)
 
 
     # Calculate Train/Test data

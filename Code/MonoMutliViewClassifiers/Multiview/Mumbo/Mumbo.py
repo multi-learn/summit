@@ -271,10 +271,10 @@ class Mumbo:
         else:
             return 0
 
-    def allViewsClassifyWell(self, predictions, pastIterIndice, NB_VIEW, CLASS_LABEL, exampleIndice):
+    def allViewsClassifyBadly(self, predictions, pastIterIndice, NB_VIEW, CLASS_LABEL, exampleIndice):
         boolean = True
         for viewIndice in range(NB_VIEW):
-            if predictions[pastIterIndice, viewIndice, exampleIndice] != CLASS_LABEL:
+            if predictions[pastIterIndice, viewIndice, exampleIndice] == CLASS_LABEL:
                 boolean = False
         return boolean
 
@@ -286,7 +286,7 @@ class Mumbo:
                     if self.predictions[pastIterIndice, viewIndice, exampleIndice] \
                             == \
                             CLASS_LABELS[exampleIndice] \
-                            or self.allViewsClassifyWell(self.predictions, pastIterIndice,
+                            or self.allViewsClassifyBadly(self.predictions, pastIterIndice,
                                                          NB_VIEW, CLASS_LABELS[exampleIndice],
                                                          exampleIndice):
 
