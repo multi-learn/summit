@@ -569,9 +569,9 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
         patientMatrix = np.zeros((sortedRNASeqGeneIndices.shape[1], nbBins), dtype=np.uint8)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
             patientMatrix[geneIndex]= sortedBinsMatrix[lineIndex,:]
-        brnaseqDset[patientIndex] = patientMatrix.flatten()
-    brnaseqDset.attrs["name"] = "bRNASeq"
-    brnaseqDset.attrs["sparse"] = False
+        binnedRNASeq[patientIndex] = patientMatrix.flatten()
+    binnedRNASeq.attrs["name"] = "bRNASeq"
+    binnedRNASeq.attrs["sparse"] = False
     logging.debug("Done:\t Getting Binned RNASeq Data")
 
     # logging.debug("Start:\t Getting Adjacence RNASeq Data")
