@@ -59,6 +59,7 @@ def getConfig(config):
 
 def transformData(dataArray):
     print "poulet"
+    dataArray = dataArray.astype(np.uint8)
     if isBinary(dataArray):
         print "jambon"
         nbExamples = dataArray.shape[0]
