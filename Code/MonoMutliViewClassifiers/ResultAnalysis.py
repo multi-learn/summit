@@ -15,6 +15,14 @@ import Metrics
 __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
+def autolabel(rects, ax):
+    # attach some text labels
+    for rect in rects:
+        height = rect.get_height()
+        ax.text(rect.get_x() + rect.get_width()/2., 1.01*height,
+                "%.2f" % round(height, 4),
+                ha='center', va='bottom')
+
 
 def resultAnalysis(benchmark, results, name, times, metrics):
     for metric in metrics:
@@ -35,7 +43,8 @@ def resultAnalysis(benchmark, results, name, times, metrics):
         else:
             metricKWARGS = {}
         ax.set_title(getattr(Metrics, metric[0]).getConfig(**metricKWARGS)+" on validation set for each classifier")
-        ax.bar(range(nbResults), validationScores, align='center')
+        rects = ax.bar(range(nbResults), validationScores, align='center')
+        autolabel(rects, ax)
         ax.set_xticks(range(nbResults))
         ax.set_xticklabels(names, rotation="vertical")
 
