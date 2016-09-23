@@ -29,7 +29,7 @@ def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
     datasetFile = h5py.File(pathF+"Fake.hdf5", "w")
     for index, viewData in enumerate(DATA.values()):
         if index==0:
-            viewData = np.random.randint(0, 1, (DATASET_LENGTH,300), dtype=bool)#np.zeros(viewData.shape, dtype=bool)+np.ones((viewData.shape[0], viewData.shape[1]/2), dtype=bool)
+            viewData = np.random.randint(0, 1, (DATASET_LENGTH,300)).astype(bool)#np.zeros(viewData.shape, dtype=bool)+np.ones((viewData.shape[0], viewData.shape[1]/2), dtype=bool)
             viewDset = datasetFile.create_dataset("View"+str(index), viewData.shape)
             viewDset[...] = viewData
             viewDset.attrs["name"] = "View"+str(index)

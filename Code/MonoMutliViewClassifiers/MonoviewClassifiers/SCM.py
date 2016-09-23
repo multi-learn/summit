@@ -12,7 +12,7 @@
 # # Author-Info
 # __author__ 	= "Baptiste Bauvin"
 # __status__ 	= "Prototype"                           # Production, Development, Prototype
-# 
+#
 #
 # def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
 #     try:
