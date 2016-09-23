@@ -428,7 +428,7 @@ def getBins(array, bins, lenBin, overlapping):
 def makeSortedBinsMatrix(nbBins, lenBins, overlapping, arrayLen, path):
     sortedBinsMatrix = np.zeros((arrayLen, nbBins), dtype=np.uint8)
     step = lenBins-overlapping
-    for binIndex in nbBins:
+    for binIndex in range(nbBins):
         sortedBinsMatrix[step*binIndex:lenBins+(step*binIndex)] = np.ones(lenBins, dtype=np.uint8)
     np.savetxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", sortedBinsMatrix, delimiter=",")
     return sortedBinsMatrix
