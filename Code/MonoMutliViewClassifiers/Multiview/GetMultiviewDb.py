@@ -564,7 +564,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
         sortedBinsMatrix = np.genfromtxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", delimiter=",")
     except:
         sortedBinsMatrix = makeSortedBinsMatrix(nbBins, lenBins, overlapping, datasetFile.get("View2").shape[1], path)
-    binnedRNASeq = datasetFile.create_dataset("View6", (sortedRNASeqGeneIndices.shape[0], sortedRNASeqGeneIndices.shape[1]*lenBins), dtype=np.uint8)
+    binnedRNASeq = datasetFile.create_dataset("View6", (sortedRNASeqGeneIndices.shape[0], sortedRNASeqGeneIndices.shape[1]*nbBins), dtype=np.uint8)
     for patientIndex, patientSortedArray in enumerate(sortedRNASeqGeneIndices):
         patientMatrix = np.zeros((sortedRNASeqGeneIndices.shape[1], nbBins), dtype=np.uint8)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
