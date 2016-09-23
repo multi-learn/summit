@@ -76,7 +76,7 @@ def transformData(dataArray):
 
 
 def isBinary(dataset):
-    if type(dataset[0,0]) is bool:
+    if type(dataset[0,0]) is np.uint8:
         return True
     for line in dataset:
         for data in line:
