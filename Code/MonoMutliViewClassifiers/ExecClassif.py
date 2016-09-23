@@ -165,7 +165,7 @@ args = parser.parse_args()
 os.nice(args.nice)
 nbCores = args.CL_cores
 start = time.time()
-if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake"]:
+if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake", "Plausible"]:
     getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
 else:
     getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
@@ -342,33 +342,34 @@ else:
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersConfigs = [[result[1][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
-
 monoviewTime = time.time()-dataBaseTime
 try:
     if benchmark["Multiview"]:
         try:
             if benchmark["Multiview"]["Mumbo"]:
                 for combination in itertools.combinations_with_replacement(range(len(benchmark["Multiview"]["Mumbo"])), NB_VIEW):
-                    classifiersNames = [benchmark["Multiview"]["Mumbo"][index] for index in combination]
+                    mumboClassifiersNames = [benchmark["Multiview"]["Mumbo"][index] for index in combination]
                     arguments = {"CL_type": "Mumbo",
                                  "views": args.views.split(":"),
                                  "NB_VIEW": len(args.views.split(":")),
                                  "NB_CLASS": len(args.CL_classes.split(":")),
                                  "LABELS_NAMES": args.CL_classes.split(":"),
-                                 "MumboKWARGS": {"classifiersNames": classifiersNames,
+                                 "MumboKWARGS": {"classifiersNames": mumboClassifiersNames,
                                                  "maxIter":int(args.MU_iter[0]), "minIter":int(args.MU_iter[1]),
                                                  "threshold":args.MU_iter[2],
                                                  "classifiersConfigs": [argument.split(":") for argument in args.MU_config]}}
                     argumentDictionaries["Multiview"].append(arguments)
         except:
             pass
-        bestClassifiers = ["DecisionTree", "DecisionTree", "DecisionTree", "DecisionTree"]
-        monoviewTime = 0
-        resultsMonoview = []
+        bestClassifiers = []
         bestClassifiersConfigs = []
         for viewIndex, view in enumerate(views):
+            print classifiersNames
+            print classifiersNames[viewIndex]
+            print classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))]
             bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
             bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+        print bestClassifiers
         try:
             if benchmark["Multiview"]["Fusion"]:
                 try:
@@ -430,7 +431,7 @@ if nbCores>1:
 times = [dataBaseTime, monoviewTime, multiviewTime]
 # times=[]
 results = (resultsMonoview, resultsMultiview)
-logging.debug("Start:\t Analyze Results")
+logging.debug("Start:\t Analyze Global Results")
 resultAnalysis(benchmark, results, args.name, times, metrics)
-logging.debug("Done:\t Analyze Results")
+logging.debug("Done:\t Analyze Global Results")
 

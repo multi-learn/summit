@@ -13,6 +13,28 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
+def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=4, nbClass=2, datasetLength=100):
+    nbFeatures = 300
+    datasetFile = h5py.File(pathF+"Plausible.hdf5", "w")
+    for viewIndex in range(nbView):
+        viewData = np.array([np.random.normal(float((viewIndex+1)*10), 0.42, nbFeatures) for i in range(datasetLength/2)]+[np.random.normal(-float((viewIndex+1)*10),0.42,nbFeatures) for j in range(datasetLength/2)])
+        viewDset = datasetFile.create_dataset("View"+str(viewIndex), viewData.shape)
+        viewDset.attrs["name"] = "View"+str(viewIndex)
+        viewDset.attrs["sparse"] = False
+    CLASS_LABELS = np.array([0 for i in range(datasetLength/2+5)]+[1 for i in range(datasetLength/2-5)])
+    labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
+    labelsDset[...] = CLASS_LABELS
+    labelsDset.attrs["name"] = "Labels"
+    metaDataGrp = datasetFile.create_group("Metadata")
+    metaDataGrp.attrs["nbView"] = nbView
+    metaDataGrp.attrs["nbClass"] = 2
+    metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
+    datasetFile.close()
+    datasetFile = h5py.File(pathF+"Plausible.hdf5", "r")
+    LABELS_DICTIONARY = {0:"No", 1:"Yes"}
+    return datasetFile, LABELS_DICTIONARY
+
+
 def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
     NB_VIEW = 4
     DATASET_LENGTH = 300
