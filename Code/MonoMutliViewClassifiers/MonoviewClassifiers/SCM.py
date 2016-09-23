@@ -60,7 +60,9 @@ def getConfig(config):
 def transformData(dataArray):
     if isBinary(dataArray):
         nbExamples = dataArray.shape[0]
-        featureSequence = ["" for featureIndex in range(dataArray.shape[1])]
+        print "getting string"
+        featureSequence = [str(featureIndex) for featureIndex in range(dataArray.shape[1])]
+        print "getting array"
         featureIndexByRule = np.arange(dataArray.shape[1], dtype=np.uint32)
         logging.debug("Start:\t Creating binary attributes")
         binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule)
