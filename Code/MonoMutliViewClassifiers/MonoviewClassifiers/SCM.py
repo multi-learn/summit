@@ -9,6 +9,7 @@ from scipy.stats import randint
 from utils.Dataset import getShape
 import h5py
 from pyscm.binary_attributes.base import BaseBinaryAttributeList
+import logging
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
@@ -16,15 +17,15 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     try:
+        logging.debug("Start:\t Getting pre-computed rules")
         attributeClassification = kwargs["attributeClassification"]
         binaryAttributes = kwargs["binaryAttributes"]
+        logging.debug("Done:\t Getting pre-computed rules")
     except:
+        logging.debug("Start:\t Pre-computing rules")
         attributeClassification, binaryAttributes = transformData(DATASET)
-    # featureSequence = ["" for featureIndex in range(getShape(DATASET)[1])]
-    # featureIndexByRule = np.arange(getShape(DATASET)[1], dtype=np.uint32)
-    # binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule)
-    # attributeClassification = BaptisteRuleClassifications(dataset, n_rows)
-    classifier = pyscm.scm.SetCoveringMachine(p=1.0, max_attributes=10, verbose=True)
+        logging.debug("Done:\t Pre-computing rules")
+    classifier = pyscm.scm.SetCoveringMachine(p=1.0, max_attributes=10, verbose=False)
     classifier.fit(binaryAttributes, CLASS_LABELS, X=None, attribute_classifications=attributeClassification, iteration_callback=None)
     return classifier
 
@@ -56,18 +57,23 @@ def getConfig(config):
         return "\n\t\t- SCM with max_attributes : "+str(config["0"])#+", c : "+str(config["1"])+", p : "+str(config["2"])
 
 
-def transformData(dataArray): #Je prend en entree un numpy array contenant des donnees binaires
+def transformData(dataArray):
     if isBinary(dataArray):
-        nbExamples = dataArray.shape[0] # Je recupere le nombre de lignes
-        featureSequence = ["" for featureIndex in range(dataArray.shape[1])] # je fais une fake feature sequence
-        featureIndexByRule = np.arange(dataArray.shape[1], dtype=np.uint32) # Indices des features pour la partie non virtuelle des donnees
-        binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule) # Je cree mes attributs binaires
-        packedData = _pack_binary_bytes_to_ints(dataArray, 64) #Je pack mon dataset
+        nbExamples = dataArray.shape[0]
+        featureSequence = ["" for featureIndex in range(dataArray.shape[1])]
+        featureIndexByRule = np.arange(dataArray.shape[1], dtype=np.uint32)
+        binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule)
+        logging.debug("Start:\t Packing Data")
+        packedData = _pack_binary_bytes_to_ints(dataArray, 64)
+        del dataArray
         dsetFile = h5py.File("temp_scm", "w")
-        packedDataset = dsetFile.create_dataset("temp_scm", data=packedData) # Je le met en hdf5
-        attributeClassification = BaptisteRuleClassifications(packedDataset, nbExamples) # et je pre-calcule
+        packedDataset = dsetFile.create_dataset("temp_scm", data=packedData)
+        dsetFile.close()
+        packedDataset = h5py.File("temp_scm", "r").get("temp_scm")
+        logging.debug("Done:\t Packing Data")
+        attributeClassification = BaptisteRuleClassifications(packedDataset, nbExamples)
         return attributeClassification, binaryAttributes
-# mon appel de fit : classifier.fit(binaryAttributes, labels, X=None, attribute_classifications=attributeClassification, iteration_callback=None)
+
 
 def isBinary(dataset):
     if type(dataset[0,0]) is bool:

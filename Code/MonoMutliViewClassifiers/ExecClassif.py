@@ -342,7 +342,7 @@ else:
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersConfigs = [[result[1][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
-monoviewTime = time.time()-dataBaseTime
+monoviewTime = time.time()-dataBaseTime-start
 try:
     if benchmark["Multiview"]:
         try:
@@ -422,7 +422,7 @@ else:
     resultsMultiview = [ExecMultiview(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
                                LABELS_DICTIONARY, gridSearch=gridSearch,
                                metrics=metrics, nIter=args.CL_GS_iter, **arguments) for arguments in argumentDictionaries["Multiview"]]
-multiviewTime = time.time()-monoviewTime
+multiviewTime = time.time()-monoviewTime-dataBaseTime-start
 if nbCores>1:
     logging.debug("Start:\t Deleting "+str(nbCores)+" temporary datasets for multiprocessing")
     datasetFiles = DB.deleteHDF5(args.pathF, args.name, nbCores)
