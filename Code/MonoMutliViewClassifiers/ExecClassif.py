@@ -257,21 +257,34 @@ if "Multiview" in args.CL_type.strip(":"):
         benchmark["Multiview"]["Fusion"]= {}
         benchmark["Multiview"]["Fusion"]["Methods"] = dict((fusionType, []) for fusionType in args.FU_types.split(":"))
         if "LateFusion" in args.FU_types.split(":"):
-
-            benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = args.FU_late_methods.split(":")
+            if args.FU_late_methods.split(":") == [""]:
+                benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = [name for _, name, isPackage in
+                                                                             pkgutil.iter_modules(["Multiview/Fusion/Methods/LateFusionPackage"])
+                                                                             if not isPackage]
+            else:
+                benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = args.FU_late_methods.split(":")
         if "EarlyFusion" in args.FU_types.split(":"):
-            benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = args.FU_early_methods.split(":")
-        benchmark["Multiview"]["Fusion"]["Classifiers"] = args.FU_cl_names.split(":")
+            if args.FU_late_methods.split(":") == [""]:
+                benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = [name for _, name, isPackage in
+                                                                             pkgutil.iter_modules(["Multiview/Fusion/Methods/EarlyFusion"])
+                                                                             if not isPackage]
+            else:
+                benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = args.FU_early_methods.split(":")
+        if args.FU_cl_names.split(":") == [""] and args.CL_algos_monoview.split(":")==['']:
+            benchmark["Multiview"]["Fusion"]["Classifiers"] = [name for _, name, isPackage in
+                                                               pkgutil.iter_modules(['MonoviewClassifiers'])
+                                                               if (not isPackage) and (name!="SGD") and (name[:3]!="SVM")]
+        elif args.FU_cl_names.split(":") == [""]:
+            benchmark["Multiview"]["Fusion"]["Classifiers"] = args.CL_algos_monoview.split(":")
+        else:
+            benchmark["Multiview"]["Fusion"]["Classifiers"] = args.FU_cl_names.split(":")
 
 
 if "Monoview" in args.CL_type.strip(":"):
     benchmark["Monoview"] = args.CL_algos_monoview.split(":")
 
 
-fusionClassifierConfig = "a"
 fusionMethodConfig = [["0.25", "0.25", "0.25", "0.25"], "b"]
-mumboClassifierConfig = "a"
-mumboclassifierNames = "a"
 
 RandomForestKWARGSInit = {"0":map(int, args.CL_RF_trees.split())[0], "1":map(int, args.CL_RF_max_depth.split(":"))[0]}
 SVMLinearKWARGSInit = {"0":map(int, args.CL_SVML_C.split(":"))[0]}
