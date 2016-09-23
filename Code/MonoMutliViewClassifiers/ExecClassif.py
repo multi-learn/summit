@@ -79,6 +79,8 @@ groupClass.add_argument('--CL_algos_multiview', metavar='STRING', action='store'
                         help='Determine which multiview classifier to use, separate with : if multiple, if empty, considering all', default='')
 groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
                         default=1)
+groupClass.add_argument('--CL_statsiter', metavar='INT', action='store', help='Number of iteration for each algorithm to mean results', type=int,
+                        default=1)
 groupClass.add_argument('--CL_metrics', metavar='STRING', action='store', nargs="+",
                         help='Determine which metrics to use, separate metric and configuration with ":". If multiple, separate with space. If no metric is specified, considering all with accuracy for classification '
                              'first one will be used for classification', default=[''])
@@ -164,6 +166,7 @@ groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store', nar
 args = parser.parse_args()
 os.nice(args.nice)
 nbCores = args.CL_cores
+statsIter = args.CL_statsiter
 start = time.time()
 if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake", "Plausible"]:
     getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
@@ -321,7 +324,7 @@ if nbCores>1:
     nbExperiments = len(argumentDictionaries["Monoview"])
     for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
         resultsMonoview+=(Parallel(n_jobs=nbCores)(
-            delayed(ExecMonoview_multicore)(args.name, args.CL_split, args.CL_nbFolds, coreIndex, args.type, args.pathF, gridSearch=gridSearch,
+            delayed(ExecMonoview_multicore)(args.name, args.CL_split, args.CL_nbFolds, coreIndex, args.type, args.pathF, statsIter, gridSearch=gridSearch,
                                             metrics=metrics, nIter=args.CL_GS_iter, **argumentDictionaries["Monoview"][coreIndex + stepIndex * nbCores])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex  * nbCores))))
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
@@ -334,7 +337,7 @@ if nbCores>1:
 else:
     resultsMonoview+=([ExecMonoview(DATASET.get("View"+str(arguments["viewIndex"])),
                                     DATASET.get("Labels").value, args.name,
-                                    args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
+                                    args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, statsIter,
                                     gridSearch=gridSearch, metrics=metrics, nIter=args.CL_GS_iter,
                                     **arguments)
                        for arguments in argumentDictionaries["Monoview"]])
@@ -415,12 +418,12 @@ if nbCores>1:
     for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
         resultsMultiview += Parallel(n_jobs=nbCores)(
             delayed(ExecMultiview_multicore)(coreIndex, args.name, args.CL_split, args.CL_nbFolds, args.type, args.pathF,
-                                   LABELS_DICTIONARY, gridSearch=gridSearch,
+                                   LABELS_DICTIONARY, statsIter, gridSearch=gridSearch,
                                    metrics=metrics, nIter=args.CL_GS_iter, **argumentDictionaries["Multiview"][stepIndex*nbCores+coreIndex])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
 else:
     resultsMultiview = [ExecMultiview(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
-                               LABELS_DICTIONARY, gridSearch=gridSearch,
+                               LABELS_DICTIONARY, statsIter, gridSearch=gridSearch,
                                metrics=metrics, nIter=args.CL_GS_iter, **arguments) for arguments in argumentDictionaries["Multiview"]]
 multiviewTime = time.time()-monoviewTime-dataBaseTime-start
 if nbCores>1:

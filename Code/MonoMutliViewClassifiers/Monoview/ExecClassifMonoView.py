@@ -30,7 +30,7 @@ __status__ 	= "Prototype"           # Production, Development, Prototype
 __date__	= 2016-03-25
 
 
-def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databaseType, path, gridSearch=True,
+def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databaseType, path, statsIter, gridSearch=True,
                            metrics=[["accuracy_score", None]], nIter=30, **args):
     DATASET = h5py.File(path+name+str(datasetFileIndex)+".hdf5", "r")
     kwargs = args["args"]
@@ -38,11 +38,11 @@ def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databa
     neededViewIndex = views.index(kwargs["feat"])
     X = DATASET.get("View"+str(neededViewIndex))
     Y = DATASET.get("Labels").value
-    return ExecMonoview(X, Y, name, learningRate, nbFolds, 1, databaseType, path, gridSearch=gridSearch,
+    return ExecMonoview(X, Y, name, learningRate, nbFolds, 1, databaseType, path, statsIter, gridSearch=gridSearch,
                         metrics=metrics, nIter=nIter, **args)
 
 
-def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, gridSearch=True,
+def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, statsIter, gridSearch=True,
                 metrics=[["accuracy_score", None]], nIter=30, **args):
     logging.debug("Start:\t Loading data")
     try:
@@ -64,57 +64,64 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     # Determine the Database to extract features
     logging.debug("Info:\t Classification - Database:" + str(name) + " Feature:" + str(feat) + " train_size:" + str(learningRate) + ", CrossValidation k-folds:" + str(nbFolds) + ", cores:" + str(nbCores)+", algorithm : "+CL_type)
 
+    y_trains = []
+    y_tests = []
+    y_train_preds = []
+    y_test_preds = []
+    for poulet in range(statsIter):
+        # Calculate Train/Test data
+        logging.debug("Start:\t Determine Train/Test split")
+        testIndices = ClassifMonoView.splitDataset(Y, nbClass, learningRate, datasetLength)
+        trainIndices = [i for i in range(datasetLength) if i not in testIndices]
 
-    # Calculate Train/Test data
-    logging.debug("Start:\t Determine Train/Test split")
-    testIndices = ClassifMonoView.splitDataset(Y, nbClass, learningRate, datasetLength)
-    trainIndices = [i for i in range(datasetLength) if i not in testIndices]
+        X_train = extractSubset(X,trainIndices) #ClassifMonoView.extractSet(X, trainIndices)
 
-    X_train = extractSubset(X,trainIndices) #ClassifMonoView.extractSet(X, trainIndices)
+        X_test = extractSubset(X,testIndices)#ClassifMonoView.extractSet(X,testIndices)
+        y_train = Y[trainIndices]
+        y_test = Y[testIndices]
+        # X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(X, Y, learningRate)
 
-    X_test = extractSubset(X,testIndices)#ClassifMonoView.extractSet(X,testIndices)
-    y_train = Y[trainIndices]
-    y_test = Y[testIndices]
-    # X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(X, Y, learningRate)
+        logging.debug("Info:\t Shape X_train:" + str(X_train.shape) + ", Length of y_train:" + str(len(y_train)))
+        logging.debug("Info:\t Shape X_test:" + str(X_test.shape) + ", Length of y_test:" + str(len(y_test)))
+        logging.debug("Done:\t Determine Train/Test split")
 
-    logging.debug("Info:\t Shape X_train:" + str(X_train.shape) + ", Length of y_train:" + str(len(y_train)))
-    logging.debug("Info:\t Shape X_test:" + str(X_test.shape) + ", Length of y_test:" + str(len(y_test)))
-    logging.debug("Done:\t Determine Train/Test split")
+        # Begin Classification RandomForest
 
-    # Begin Classification RandomForest
+        classifierModule = getattr(MonoviewClassifiers, CL_type)
+        classifierGridSearch = getattr(classifierModule, "gridSearch")
 
-    classifierModule = getattr(MonoviewClassifiers, CL_type)
-    classifierGridSearch = getattr(classifierModule, "gridSearch")
+        if gridSearch:
+            logging.debug("Start:\t RandomSearch best settings with "+str(nIter)+" iterations")
+            cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metric=metrics[0], nIter=nIter)
+            clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
+            logging.debug("Done:\t RandomSearch best settings")
+        logging.debug("Start:\t Training")
+        cl_res = classifierModule.fit(X_train, y_train, NB_CORES=nbCores, **clKWARGS)
 
-    if gridSearch:
-        logging.debug("Start:\t RandomSearch best settings with "+str(nIter)+" iterations")
-        cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metric=metrics[0], nIter=nIter)
-        clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
-        logging.debug("Done:\t RandomSearch best settings")
-    logging.debug("Start:\t Training")
-    cl_res = classifierModule.fit(X_train, y_train, NB_CORES=nbCores, **clKWARGS)
+        logging.debug("Done:\t Training")
+
+        logging.debug("Start:\t Predicting")
+        # Stats Result
+        y_train_pred = cl_res.predict(X_train)
+        y_test_pred = cl_res.predict(X_test)
+
+        y_trains.append(y_train)
+        y_train_preds.append(y_train_pred)
+        y_tests.append(y_test)
+        y_test_preds.append(y_test_pred)
     t_end  = time.time() - t_start
-
-    logging.debug("Info:\t Time for Training: " + str(t_end) + "[s]")
-    logging.debug("Done:\t Training")
-
-    logging.debug("Start:\t Predicting")
-    # Stats Result
-    y_train_pred = cl_res.predict(X_train)
-    y_test_pred = cl_res.predict(X_test)
+    logging.debug("Done:\t Predicting")
+    logging.debug("Info:\t Time for training and predicting: " + str(t_end) + "[s]")
     classLabelsDesc = pd.read_csv(path + fileCLD, sep=";", names=['label', 'name'])
     classLabelsNames = classLabelsDesc.name
-    logging.debug("Done:\t Predicting")
-    #logging.debug("" + str(classLabelsNames))
     classLabelsNamesList = classLabelsNames.values.tolist()
-    #logging.debug(""+ str(classLabelsNamesList))
 
     logging.debug("Start:\t Getting Results")
 
     #Accuracy classification score
     stringAnalysis, imagesAnalysis, metricsScores = execute(name, learningRate, nbFolds, nbCores, gridSearch, metrics, nIter, feat, CL_type,
                                          clKWARGS, classLabelsNames, X.shape,
-                                         y_train, y_train_pred, y_test, y_test_pred, t_end)
+                                         y_trains, y_train_preds, y_tests, y_test_preds, t_end, statsIter)
     cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
     logging.debug("Done:\t Getting Results")
     logging.info(stringAnalysis)

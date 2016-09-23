@@ -22,14 +22,14 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 
 
-def ExecMultiview_multicore(coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY ,
+def ExecMultiview_multicore(coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY , statsIter,
                             gridSearch=False, nbCores=1, metrics=None, nIter=30, **arguments):
     DATASET = h5py.File(path+name+str(coreIndex)+".hdf5", "r")
-    return ExecMultiview(DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY,
+    return ExecMultiview(DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY, statsIter,
                          gridSearch=gridSearch, metrics=metrics, nIter=nIter, **arguments)
 
 
-def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY,
+def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY, statsIter,
                   gridSearch=False, metrics=None, nIter=30, **kwargs):
 
     datasetLength = DATASET.get("Metadata").attrs["datasetLength"]

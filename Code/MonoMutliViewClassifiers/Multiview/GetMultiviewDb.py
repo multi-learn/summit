@@ -369,41 +369,45 @@ def easyFactorize(nbGenes, factorizationParam, t=0):
         factorLeft[matrixInf:, t_:t__+t_] = vectorLeftInf.reshape(factorLeft[matrixInf:, t_:t__+t_].shape)
     factorLeft[:, t__+t_] = vectorLeft
 
-    factorSup = np.zeros((t_+t__+1, nbGenes), dtype=bool)
+    # factorSup = np.zeros((t_+t__+1, nbGenes), dtype=bool)
+    #
+    # factorSup[:t_, :matrixSup] = vectorSupLeft.reshape(factorSup[:t_, :matrixSup].shape)
+    # if nbGenes%2==1:
+    #     factorSup[t_:t__+t_, matrixInf-1:] = vectorSupRight.reshape(factorSup[t_:t__+t_, matrixInf-1:].shape)
+    # else:
+    #     factorSup[t_:t__+t_, matrixInf:] = vectorSupRight.reshape(factorSup[t_:t__+t_, matrixInf:].shape)
+    # factorSup[t__+t_, :] = vectorSup
+    return t__+t_+1, factorLeft#, factorSup
 
-    factorSup[:t_, :matrixSup] = vectorSupLeft.reshape(factorSup[:t_, :matrixSup].shape)
-    if nbGenes%2==1:
-        factorSup[t_:t__+t_, matrixInf-1:] = vectorSupRight.reshape(factorSup[t_:t__+t_, matrixInf-1:].shape)
-    else:
-        factorSup[t_:t__+t_, matrixInf:] = vectorSupRight.reshape(factorSup[t_:t__+t_, matrixInf:].shape)
-    factorSup[t__+t_, :] = vectorSup
-    return t__+t_+1, factorLeft, factorSup
 
-
-def getBaseMatrices(nbGenes, factorizationParam):
+def getBaseMatrices(nbGenes, factorizationParam, path):
     t, factorLeft, factorSup = easyFactorize(nbGenes, factorizationParam)
-    np.savetxt("factorSup--n-"+str(nbGenes)+"--k-"+str(factorizationParam)+".csv", factorSup, delimiter=",")
-    np.savetxt("factorLeft--n-"+str(nbGenes)+"--k-"+str(factorizationParam)+".csv", factorLeft, delimiter=",")
-    return factorSup, factorLeft
+    np.savetxt(path+"factorLeft--n-"+str(nbGenes)+"--k-"+str(factorizationParam)+".csv", factorLeft, delimiter=",")
+    return factorLeft
 
 
-def findParams(arrayLen, nbPatients, maxNbBins=5000, maxLenBin=300, minOverlapping=30, minNbBinsOverlapped=20, maxNbSolutions=30):
+def findParams(arrayLen, nbPatients, maxNbBins=2000, minNbBins = 10, maxLenBin=70000, minOverlapping=1, minNbBinsOverlapped=0, maxNbSolutions=30):
     results = []
     if arrayLen*arrayLen*10/100>minNbBinsOverlapped*nbPatients:
         for lenBin in range(arrayLen-1):
-            if lenBin+1<maxLenBin:
-                for overlapping in sorted(range(lenBin+1-1), reverse=True):
-                    if overlapping+1>minOverlapping and math.ceil(float(lenBin)/(lenBin-overlapping))>=minNbBinsOverlapped:
+            lenBin = lenBin+1
+            if lenBin<maxLenBin and minNbBins*lenBin<arrayLen:
+                print lenBin
+                print results
+                for overlapping in sorted(range(lenBin-1), reverse=True):
+                    overlapping = overlapping+1
+                    if overlapping>minOverlapping and lenBin%(lenBin-overlapping)==0:
                         for nbBins in sorted(range(arrayLen-1), reverse=True):
-                            if nbBins+1<maxNbBins:
-                                if arrayLen == (nbBins+1-1)*(lenBin+1-overlapping+1)+lenBin+1:
+                            nbBins = nbBins+1
+                            if nbBins<maxNbBins:
+                                if arrayLen == (nbBins-1)*(lenBin-overlapping)+lenBin:
                                     results.append({"nbBins":nbBins, "overlapping":overlapping, "lenBin":lenBin})
                                     if len(results)==maxNbSolutions:
                                         params = results[random.randrange(len(results))]
                                         return params
 
 
-def findBins(nbBins, overlapping, lenBin):
+def findBins(nbBins=142, overlapping=493, lenBin=986):
     bins = []
     for binIndex in range(nbBins+1):
         bins.append([i+binIndex*(lenBin+1-overlapping+1) for i in range(lenBin+1)])
@@ -420,6 +424,14 @@ def getBins(array, bins, lenBin, overlapping):
 
     return np.array(binnedcoord)
 
+
+def makeSortedBinsMatrix(nbBins, lenBins, overlapping, arrayLen, path):
+    sortedBinsMatrix = np.zeros((arrayLen, nbBins), dtype=np.uint8)
+    step = lenBins-overlapping
+    for binIndex in nbBins:
+        sortedBinsMatrix[step*binIndex:lenBins+(step*binIndex)] = np.ones(lenBins, dtype=np.uint8)
+    np.savetxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", sortedBinsMatrix, delimiter=",")
+    return sortedBinsMatrix
 
 def makeSparseTotalMatrix(sortedRNASeq):
     nbPatients, nbGenes = sortedRNASeq.shape
@@ -533,10 +545,10 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     try:
         factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
     except:
-        factorizedSupBaseMatrix, factorizedLeftBaseMatrix = getBaseMatrices(rnaseqData.shape[1], k)
-    brnaseqDset = datasetFile.create_dataset("View5", (sortedRNASeqGeneIndices.shape[0], sortedRNASeqGeneIndices.shape[1]*k*2), dtype=bool)
+        factorizedLeftBaseMatrix = getBaseMatrices(rnaseqData.shape[1], k, path)
+    brnaseqDset = datasetFile.create_dataset("View5", (sortedRNASeqGeneIndices.shape[0], sortedRNASeqGeneIndices.shape[1]*k), dtype=np.uint8)
     for patientIndex, patientSortedArray in enumerate(sortedRNASeqGeneIndices):
-        patientMatrix = np.zeros((sortedRNASeqGeneIndices.shape[1], k * 2), dtype=bool)
+        patientMatrix = np.zeros((sortedRNASeqGeneIndices.shape[1], k), dtype=np.uint8)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
             patientMatrix[geneIndex]= factorizedLeftBaseMatrix[lineIndex,:]
         brnaseqDset[patientIndex] = patientMatrix.flatten()
@@ -544,16 +556,23 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     brnaseqDset.attrs["sparse"] = False
     logging.debug("Done:\t Getting Binarized RNASeq Data")
 
-    # logging.debug("Start:\t Getting Binned RNASeq Data")
-    # sparseBinnedRNASeq = makeSparseTotalMatrix(sortedRNASeqGeneIndices)
-    # sparseBinnedRNASeqGrp = datasetFile.create_group("View6")
-    # dataDset = sparseBinnedRNASeqGrp.create_dataset("data", sparseBinnedRNASeq.data.shape, data=sparseBinnedRNASeq.data)
-    # indicesDset = sparseBinnedRNASeqGrp.create_dataset("indices", sparseBinnedRNASeq.indices.shape, data=sparseBinnedRNASeq.indices)
-    # indptrDset = sparseBinnedRNASeqGrp.create_dataset("indptr", sparseBinnedRNASeq.indptr.shape, data=sparseBinnedRNASeq.indptr)
-    # sparseBinnedRNASeqGrp.attrs["name"]="BRNASeq"
-    # sparseBinnedRNASeqGrp.attrs["sparse"]=True
-    # sparseBinnedRNASeqGrp.attrs["shape"]=sparseBinnedRNASeq.shape
-    # logging.debug("Done:\t Getting Binned RNASeq Data")
+    logging.debug("Start:\t Getting Binned RNASeq Data")
+    lenBins = 986
+    nbBins = 142
+    overlapping = 493
+    try:
+        sortedBinsMatrix = np.genfromtxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", delimiter=",")
+    except:
+        sortedBinsMatrix = makeSortedBinsMatrix(nbBins, lenBins, overlapping, datasetFile.get("View2").shape[1], path)
+    binnedRNASeq = datasetFile.create_dataset("View6", (sortedRNASeqGeneIndices.shape[0], sortedRNASeqGeneIndices.shape[1]*lenBins), dtype=np.uint8)
+    for patientIndex, patientSortedArray in enumerate(sortedRNASeqGeneIndices):
+        patientMatrix = np.zeros((sortedRNASeqGeneIndices.shape[1], nbBins), dtype=np.uint8)
+        for lineIndex, geneIndex in enumerate(patientSortedArray):
+            patientMatrix[geneIndex]= sortedBinsMatrix[lineIndex,:]
+        brnaseqDset[patientIndex] = patientMatrix.flatten()
+    brnaseqDset.attrs["name"] = "bRNASeq"
+    brnaseqDset.attrs["sparse"] = False
+    logging.debug("Done:\t Getting Binned RNASeq Data")
 
     # logging.debug("Start:\t Getting Adjacence RNASeq Data")
     # sparseAdjRNASeq = getAdjacenceMatrix(RNASeqRanking, sortedRNASeqGeneIndices, k=findClosestPowerOfTwo(10)-1)
