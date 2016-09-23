@@ -58,7 +58,9 @@ def getConfig(config):
 
 
 def transformData(dataArray):
+    print "poulet"
     if isBinary(dataArray):
+        print "jambon"
         nbExamples = dataArray.shape[0]
         print "getting string"
         featureSequence = [str(featureIndex) for featureIndex in range(dataArray.shape[1])]
