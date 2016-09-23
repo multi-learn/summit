@@ -62,7 +62,9 @@ def transformData(dataArray):
         nbExamples = dataArray.shape[0]
         featureSequence = ["" for featureIndex in range(dataArray.shape[1])]
         featureIndexByRule = np.arange(dataArray.shape[1], dtype=np.uint32)
+        logging.debug("Start:\t Creating binary attributes")
         binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule)
+        logging.debug("Done:\t Creating binary attributes")
         logging.debug("Start:\t Packing Data")
         packedData = _pack_binary_bytes_to_ints(dataArray, 64)
         del dataArray
