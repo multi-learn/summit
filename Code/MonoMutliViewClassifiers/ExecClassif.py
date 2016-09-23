@@ -240,7 +240,7 @@ if args.CL_type.split(":")==["Benchmark"]:
                          for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClasses))
     allMonoviewAlgos = [name for _, name, isPackage in
                         pkgutil.iter_modules(['MonoviewClassifiers'])
-                        if (not isPackage) and (name!="SGD") and (name[:3]!="SVM")]
+                        if (not isPackage) and (name!="SGD") and (name[:3]!="SVM") and (name!="SCM")]
     fusionMonoviewClassifiers = allMonoviewAlgos
     allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
     allMumboAlgos = [name for _, name, isPackage in
@@ -273,7 +273,8 @@ if "Multiview" in args.CL_type.strip(":"):
         if args.FU_cl_names.split(":") == [""] and args.CL_algos_monoview.split(":")==['']:
             benchmark["Multiview"]["Fusion"]["Classifiers"] = [name for _, name, isPackage in
                                                                pkgutil.iter_modules(['MonoviewClassifiers'])
-                                                               if (not isPackage) and (name!="SGD") and (name[:3]!="SVM")]
+                                                               if (not isPackage) and (name!="SGD") and (name[:3]!="SVM")
+                                                               and (name!="SCM")]
         elif args.FU_cl_names.split(":") == [""]:
             benchmark["Multiview"]["Fusion"]["Classifiers"] = args.CL_algos_monoview.split(":")
         else:
