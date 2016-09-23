@@ -251,9 +251,13 @@ if args.CL_type.split(":")==["Benchmark"]:
 
 if "Multiview" in args.CL_type.strip(":"):
     benchmark["Multiview"] = {}
-    if "Mumbo" in args.CL_algos_multiview.split(":"):
+    if args.CL_algos_multiview.split(":") == [""]:
+        algosMutliview = ["Mumbo", "Fusion"]
+    else:
+        algosMutliview = args.CL_algos_multiview.split(":")
+    if "Mumbo" in algosMutliview:
         benchmark["Multiview"]["Mumbo"] = args.MU_types.split(":")
-    if "Fusion" in args.CL_algos_multiview.split(":"):
+    if "Fusion" in algosMutliview:
         benchmark["Multiview"]["Fusion"]= {}
         benchmark["Multiview"]["Fusion"]["Methods"] = dict((fusionType, []) for fusionType in args.FU_types.split(":"))
         if "LateFusion" in args.FU_types.split(":"):
