@@ -17,10 +17,16 @@ def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=4, 
     nbFeatures = 300
     datasetFile = h5py.File(pathF+"Plausible.hdf5", "w")
     for viewIndex in range(nbView):
-        viewData = np.array([np.random.normal(float((viewIndex+1)*10), 0.42, nbFeatures) for i in range(datasetLength/2)]+[np.random.normal(-float((viewIndex+1)*10),0.42,nbFeatures) for j in range(datasetLength/2)])
-        viewDset = datasetFile.create_dataset("View"+str(viewIndex), viewData.shape)
-        viewDset.attrs["name"] = "View"+str(viewIndex)
-        viewDset.attrs["sparse"] = False
+        if viewIndex== 0 :
+            viewData = np.array([np.zeros(nbFeatures) for i in range(datasetLength/2)]+[np.ones(nbFeatures) for i in range(datasetLength/2)]).astype(np.uint8)
+            viewDset = datasetFile.create_dataset("View"+str(viewIndex), viewData.shape)
+            viewDset.attrs["name"] = "View"+str(viewIndex)
+            viewDset.attrs["sparse"] = False
+        else:
+            viewData = np.array([np.random.normal(float((viewIndex+1)*10), 0.42, nbFeatures) for i in range(datasetLength/2)]+[np.random.normal(-float((viewIndex+1)*10),0.42,nbFeatures) for j in range(datasetLength/2)])
+            viewDset = datasetFile.create_dataset("View"+str(viewIndex), viewData.shape)
+            viewDset.attrs["name"] = "View"+str(viewIndex)
+            viewDset.attrs["sparse"] = False
     CLASS_LABELS = np.array([0 for i in range(datasetLength/2+5)]+[1 for i in range(datasetLength/2-5)])
     labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
     labelsDset[...] = CLASS_LABELS
@@ -51,7 +57,7 @@ def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
     datasetFile = h5py.File(pathF+"Fake.hdf5", "w")
     for index, viewData in enumerate(DATA.values()):
         if index==0:
-            viewData = np.random.randint(0, 1, (DATASET_LENGTH,300)).astype(bool)#np.zeros(viewData.shape, dtype=bool)+np.ones((viewData.shape[0], viewData.shape[1]/2), dtype=bool)
+            viewData = np.random.randint(0, 1, (DATASET_LENGTH,300)).astype(np.uint8)#np.zeros(viewData.shape, dtype=bool)+np.ones((viewData.shape[0], viewData.shape[1]/2), dtype=bool)
             viewDset = datasetFile.create_dataset("View"+str(index), viewData.shape)
             viewDset[...] = viewData
             viewDset.attrs["name"] = "View"+str(index)
