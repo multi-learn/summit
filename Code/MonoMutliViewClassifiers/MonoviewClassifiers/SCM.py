@@ -58,14 +58,10 @@ def getConfig(config):
 
 
 def transformData(dataArray):
-    print "poulet"
     dataArray = dataArray.astype(np.uint8)
     if isBinary(dataArray):
-        print "jambon"
         nbExamples = dataArray.shape[0]
-        print "getting string"
         featureSequence = [str(featureIndex) for featureIndex in range(dataArray.shape[1])]
-        print "getting array"
         featureIndexByRule = np.arange(dataArray.shape[1], dtype=np.uint32)
         logging.debug("Start:\t Creating binary attributes")
         binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule)
@@ -83,7 +79,6 @@ def transformData(dataArray):
 
 
 def isBinary(dataset):
-    print type(dataset[0,0])
     if type(dataset[0,0]) is np.uint8:
         return True
     for line in dataset:

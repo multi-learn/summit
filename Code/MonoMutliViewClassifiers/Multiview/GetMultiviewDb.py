@@ -531,7 +531,6 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     logging.debug("Start:\t Getting Binarized RNASeq Data")
     k=findClosestPowerOfTwo(100)-1
     try:
-        factorizedSupBaseMatrix = np.genfromtxt(path+"factorSup--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
         factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(datasetFile.get("View2").shape[1])+"--k-"+str(100)+".csv", delimiter=',')
     except:
         factorizedSupBaseMatrix, factorizedLeftBaseMatrix = getBaseMatrices(rnaseqData.shape[1], k)
@@ -539,7 +538,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     for patientIndex, patientSortedArray in enumerate(sortedRNASeqGeneIndices):
         patientMatrix = np.zeros((sortedRNASeqGeneIndices.shape[1], k * 2), dtype=bool)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
-            patientMatrix[geneIndex]= np.concatenate((factorizedLeftBaseMatrix[lineIndex,:], factorizedSupBaseMatrix[:, lineIndex]))
+            patientMatrix[geneIndex]= factorizedLeftBaseMatrix[lineIndex,:]
         brnaseqDset[patientIndex] = patientMatrix.flatten()
     brnaseqDset.attrs["name"] = "BRNASeq"
     brnaseqDset.attrs["sparse"] = False
