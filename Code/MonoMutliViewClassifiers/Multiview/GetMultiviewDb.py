@@ -484,7 +484,7 @@ def getAdjacenceMatrix(RNASeqRanking, sotredRNASeq, k=2):
 
 def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
-    datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "w")
+    datasetFile = h5py.File(path+"ModifiedMultiOmicb.hdf5", "w")
 
     logging.debug("Start:\t Getting Methylation Data")
     methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
