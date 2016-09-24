@@ -102,27 +102,39 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
     logging.info("Start:\t Classification")
     # Begin Classification
-    for foldIdx, fold in enumerate(kFolds):
-        if fold != range(classificationSetLength):
-            fold.sort()
-            logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
-            trainIndices = [index for index in range(datasetLength) if (index not in fold) and (index not in validationIndices)]
-            DATASET_LENGTH = len(trainIndices)
-            classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("Labels").value[trainIndices], NB_CORES=nbCores, **classificationKWARGS)
+    for iterIndex in range(statsIter):
+        kFoldPredictedTrainLabelsIter = []
+        kFoldPredictedTestLabelsIter = []
+        kFoldPredictedValidationLabelsIter = []
+        kFoldLearningTimeIter = []
+        kFoldPredictionTimeIter = []
+        kFoldClassifierIter = []
+        for foldIdx, fold in enumerate(kFolds):
+            if fold != range(classificationSetLength):
+                fold.sort()
+                logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
+                trainIndices = [index for index in range(datasetLength) if (index not in fold) and (index not in validationIndices)]
+                DATASET_LENGTH = len(trainIndices)
+                classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("Labels").value[trainIndices], NB_CORES=nbCores, **classificationKWARGS)
 
-            classifier.fit_hdf5(DATASET, trainIndices=trainIndices)
-            kFoldClassifier.append(classifier)
+                classifier.fit_hdf5(DATASET, trainIndices=trainIndices)
+                kFoldClassifierIter.append(classifier)
 
-            learningTime = time.time() - extractionTime - t_start
-            kFoldLearningTime.append(learningTime)
-            logging.info("\tStart: \t Classification")
-            kFoldPredictedTrainLabels.append(classifier.predict_hdf5(DATASET, usedIndices=trainIndices))
-            kFoldPredictedTestLabels.append(classifier.predict_hdf5(DATASET, usedIndices=fold))
-            kFoldPredictedValidationLabels.append(classifier.predict_hdf5(DATASET, usedIndices=validationIndices))
+                learningTime = time.time() - extractionTime - t_start
+                kFoldLearningTimeIter.append(learningTime)
+                logging.info("\tStart: \t Classification")
+                kFoldPredictedTrainLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=trainIndices))
+                kFoldPredictedTestLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=fold))
+                kFoldPredictedValidationLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=validationIndices))
 
-            kFoldPredictionTime.append(time.time() - extractionTime - t_start - learningTime)
-            logging.info("\tDone: \t Fold number " + str(foldIdx + 1))
-
+                kFoldPredictionTimeIter.append(time.time() - extractionTime - t_start - learningTime)
+                logging.info("\tDone: \t Fold number " + str(foldIdx + 1))
+        kFoldPredictedTrainLabels.append(kFoldPredictedTrainLabelsIter)
+        kFoldPredictedTestLabels.append(kFoldPredictedTestLabelsIter)
+        kFoldPredictedValidationLabels.append(kFoldPredictedValidationLabelsIter)
+        kFoldLearningTime.append(kFoldLearningTimeIter)
+        kFoldPredictionTime.append(kFoldPredictionTimeIter)
+        kFoldClassifier.append(kFoldClassifierIter)
     classificationTime = time.time() - t_start
 
     logging.info("Done:\t Classification")

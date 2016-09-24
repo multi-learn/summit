@@ -131,70 +131,105 @@ def getAlgoConfig(initKWARGS, NB_CORES, viewNames, gridSearch, nIter, times):
 
 
 def getClassificationReport(kFolds, kFoldClassifier, CLASS_LABELS, validationIndices, DATASET,
-                            kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels):
+                            kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,statsIter):
     DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]
-    nbView = DATASET.get("Metadata").attrs["nbView"]
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
-    kFoldPredictedTrainLabelsByIter = []
-    kFoldPredictedTestLabelsByIter = []
-    kFoldPredictedValidationLabelsByIter = []
-    kFoldBestViews = []
-    kFoldAccuracyOnTrain = []
-    kFoldAccuracyOnTest = []
-    kFoldAccuracyOnValidation = []
-    kFoldAccuracyOnTrainByIter = []
-    kFoldAccuracyOnTestByIter = []
-    kFoldAccuracyOnValidationByIter = []
-    kFoldMeanAverageAccuracies = []
-    kFoldBestViewsStats = []
+    nbView = 10
+    iterKFoldBestViews = []
+    iterKFoldMeanAverageAccuracies = []
+    iterKFoldAccuracyOnTrainByIter = []
+    iterKFoldAccuracyOnTestByIter = []
+    iterKFoldAccuracyOnValidationByIter = []
+    iterKFoldBestViewsStats = []
+    totalAccuracyOnTrainIter = []
+    totalAccuracyOnTestIter = []
+    totalAccuracyOnValidationIter = []
 
-    for foldIdx, fold in enumerate(kFolds):
-        if fold != range(DATASET_LENGTH):
-            mumboClassifier = kFoldClassifier[foldIdx]
-            meanAverageAccuracies = np.mean(mumboClassifier.averageAccuracies, axis=0)
-            kFoldMeanAverageAccuracies.append(meanAverageAccuracies)
-            trainIndices = [index for index in range(DATASET_LENGTH) if (index not in fold) and (index not in validationIndices)]
-            testLabels = CLASS_LABELS[fold]
-            trainLabels = CLASS_LABELS[trainIndices]
-            validationLabels = CLASS_LABELS[validationIndices]
-            PredictedTrainLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, usedIndices=trainIndices,
-                                                                                  NB_CLASS=NB_CLASS)
-            kFoldPredictedTrainLabelsByIter.append(PredictedTrainLabelsByIter)
-            PredictedTestLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, usedIndices=fold,
-                                                                                 NB_CLASS=NB_CLASS)
-            kFoldPredictedTestLabelsByIter.append(PredictedTestLabelsByIter)
-            PredictedValidationLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET,
-                                                                                       usedIndices=validationIndices,
-                                                                                       NB_CLASS=NB_CLASS)
-            kFoldPredictedValidationLabelsByIter.append(PredictedValidationLabelsByIter)
-            kFoldAccuracyOnTrainByIter.append([])
-            kFoldAccuracyOnTestByIter.append([])
-            kFoldAccuracyOnValidationByIter.append([])
-            for iterIndex in range(mumboClassifier.iterIndex+1):
-                if len(PredictedTestLabelsByIter)==mumboClassifier.iterIndex+1:
-                    kFoldAccuracyOnTestByIter[foldIdx].append(100 * accuracy_score(testLabels,
-                                                                                    PredictedTestLabelsByIter[iterIndex]))
-                else:
-                    kFoldAccuracyOnTestByIter[foldIdx].append(0.0)
-                kFoldAccuracyOnTrainByIter[foldIdx].append(100 * accuracy_score(trainLabels,
-                                                                                PredictedTrainLabelsByIter[iterIndex]))
-                kFoldAccuracyOnValidationByIter[foldIdx].append(100 * accuracy_score(validationLabels,
-                                                                                PredictedValidationLabelsByIter[iterIndex]))
-            kFoldBestViews.append(mumboClassifier.bestViews)
-            kFoldBestViewsStats.append([float(list(mumboClassifier.bestViews).count(viewIndex))/
-                                        len(mumboClassifier.bestViews)
-                                        for viewIndex in range(nbView)])
-            kFoldAccuracyOnTrain.append(100 * accuracy_score(trainLabels, kFoldPredictedTrainLabels[foldIdx]))
-            kFoldAccuracyOnTest.append(100 * accuracy_score(testLabels, kFoldPredictedTestLabels[foldIdx]))
-            kFoldAccuracyOnValidation.append(100 * accuracy_score(validationLabels,
-                                                                  kFoldPredictedValidationLabels[foldIdx]))
+    for statIterIndex in range(statsIter):
+        kFoldPredictedTrainLabelsByIter = []
+        kFoldPredictedTestLabelsByIter = []
+        kFoldPredictedValidationLabelsByIter = []
+        kFoldBestViews = []
+        kFoldAccuracyOnTrain = []
+        kFoldAccuracyOnTest = []
+        kFoldAccuracyOnValidation = []
+        kFoldAccuracyOnTrainByIter = []
+        kFoldAccuracyOnTestByIter = []
+        kFoldAccuracyOnValidationByIter = []
+        kFoldMeanAverageAccuracies = []
+        kFoldBestViewsStats = []
+        for foldIdx, fold in enumerate(kFolds):
+            if fold != range(DATASET_LENGTH):
 
-    totalAccuracyOnTrain = np.mean(kFoldAccuracyOnTrain)
-    totalAccuracyOnTest = np.mean(kFoldAccuracyOnTest)
-    totalAccuracyOnValidation = np.mean(kFoldAccuracyOnValidation)
-    return (totalAccuracyOnTrain, totalAccuracyOnTest, totalAccuracyOnValidation, kFoldMeanAverageAccuracies,
-           kFoldBestViewsStats, kFoldAccuracyOnTrainByIter, kFoldAccuracyOnTestByIter, kFoldAccuracyOnValidationByIter,
-           kFoldBestViews)
+                trainIndices = [index for index in range(DATASET_LENGTH) if (index not in fold) and (index not in validationIndices)]
+                testLabels = CLASS_LABELS[fold]
+                trainLabels = CLASS_LABELS[trainIndices]
+                validationLabels = CLASS_LABELS[validationIndices]
+
+                mumboClassifier = kFoldClassifier[statIterIndex][foldIdx]
+                kFoldBestViews.append(mumboClassifier.bestViews)
+                meanAverageAccuracies = np.mean(mumboClassifier.averageAccuracies, axis=0)
+                kFoldMeanAverageAccuracies.append(meanAverageAccuracies)
+                kFoldBestViewsStats.append([float(list(mumboClassifier.bestViews).count(viewIndex))/
+                                            len(mumboClassifier.bestViews)
+                                            for viewIndex in range(nbView)])
+
+                kFoldAccuracyOnTrain.append(100 * accuracy_score(trainLabels, kFoldPredictedTrainLabels[foldIdx]))
+                kFoldAccuracyOnTest.append(100 * accuracy_score(testLabels, kFoldPredictedTestLabels[foldIdx]))
+                kFoldAccuracyOnValidation.append(100 * accuracy_score(validationLabels,
+                                                                      kFoldPredictedValidationLabels[foldIdx]))
+
+                PredictedTrainLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, usedIndices=trainIndices,
+                                                                                      NB_CLASS=NB_CLASS)
+                kFoldPredictedTrainLabelsByIter.append(PredictedTrainLabelsByIter)
+                PredictedTestLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, usedIndices=fold,
+                                                                                     NB_CLASS=NB_CLASS)
+                kFoldPredictedTestLabelsByIter.append(PredictedTestLabelsByIter)
+                PredictedValidationLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET,
+                                                                                           usedIndices=validationIndices,
+                                                                                           NB_CLASS=NB_CLASS)
+                kFoldPredictedValidationLabelsByIter.append(PredictedValidationLabelsByIter)
+
+                kFoldAccuracyOnTrainByIter.append([])
+                kFoldAccuracyOnTestByIter.append([])
+                kFoldAccuracyOnValidationByIter.append([])
+                for iterIndex in range(mumboClassifier.iterIndex+1):
+                    if len(PredictedTestLabelsByIter)==mumboClassifier.iterIndex+1:
+                        kFoldAccuracyOnTestByIter[foldIdx].append(100 * accuracy_score(testLabels,
+                                                                                       PredictedTestLabelsByIter[iterIndex]))
+                    else:
+                        kFoldAccuracyOnTestByIter[foldIdx].append(0.0)
+                    kFoldAccuracyOnTrainByIter[foldIdx].append(100 * accuracy_score(trainLabels,
+                                                                                    PredictedTrainLabelsByIter[iterIndex]))
+                    kFoldAccuracyOnValidationByIter[foldIdx].append(100 * accuracy_score(validationLabels,
+                                                                                         PredictedValidationLabelsByIter[iterIndex]))
+
+
+        iterKFoldBestViews.append(kFoldBestViews)
+        iterKFoldMeanAverageAccuracies.append(kFoldMeanAverageAccuracies)
+        iterKFoldAccuracyOnTrainByIter.append(kFoldAccuracyOnTrainByIter)
+        iterKFoldAccuracyOnTestByIter.append(kFoldAccuracyOnTestByIter)
+        iterKFoldAccuracyOnValidationByIter.append(kFoldAccuracyOnValidationByIter)
+        iterKFoldBestViewsStats.append(kFoldBestViewsStats)
+        totalAccuracyOnTrainIter.append(np.mean(kFoldAccuracyOnTrain))
+        totalAccuracyOnTestIter.append(np.mean(kFoldAccuracyOnTest))
+        totalAccuracyOnValidationIter.append(np.mean(kFoldAccuracyOnValidation))
+    kFoldMeanAverageAccuraciesM = []
+    kFoldBestViewsStatsM = []
+    kFoldAccuracyOnTrainByIterM = []
+    kFoldAccuracyOnTestByIterM = []
+    kFoldAccuracyOnValidationByIterM = []
+    kFoldBestViewsM = []
+    for foldIdx in range(len(kFolds)):
+        kFoldBestViewsStatsM.append(np.mean(np.array([iterKFoldBestViewsStats[statIterIndex][foldIdx] for statIterIndex in range(statsIter)])))
+
+
+    totalAccuracyOnTrain = np.mean(np.array(totalAccuracyOnTrainIter))
+    totalAccuracyOnTest = np.mean(np.array(totalAccuracyOnTestIter))
+    totalAccuracyOnValidation = np.mean(np.array(totalAccuracyOnValidationIter))
+    return (totalAccuracyOnTrain, totalAccuracyOnTest, totalAccuracyOnValidation, kFoldMeanAverageAccuraciesM,
+            kFoldBestViewsStatsM, kFoldAccuracyOnTrainByIterM, kFoldAccuracyOnTestByIterM, kFoldAccuracyOnValidationByIterM,
+            kFoldBestViewsM)
 
 def iterRelevant(iterIndex, kFoldClassifier):
     relevants = np.zeros(len(kFoldClassifier), dtype=bool)

@@ -359,8 +359,8 @@ try:
                 for combination in itertools.combinations_with_replacement(range(len(benchmark["Multiview"]["Mumbo"])), NB_VIEW):
                     mumboClassifiersNames = [benchmark["Multiview"]["Mumbo"][index] for index in combination]
                     arguments = {"CL_type": "Mumbo",
-                                 "views": args.views.split(":"),
-                                 "NB_VIEW": len(args.views.split(":")),
+                                 "views": views,
+                                 "NB_VIEW": len(views),
                                  "NB_CLASS": len(args.CL_classes.split(":")),
                                  "LABELS_NAMES": args.CL_classes.split(":"),
                                  "MumboKWARGS": {"classifiersNames": mumboClassifiersNames,
@@ -385,8 +385,8 @@ try:
                     if benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
                         for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]:
                             arguments = {"CL_type": "Fusion",
-                                         "views": args.views.split(":"),
-                                         "NB_VIEW": len(args.views.split(":")),
+                                         "views": views,
+                                         "NB_VIEW": len(views),
                                          "NB_CLASS": len(args.CL_classes.split(":")),
                                          "LABELS_NAMES": args.CL_classes.split(":"),
                                          "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,

@@ -381,7 +381,7 @@ def easyFactorize(nbGenes, factorizationParam, t=0):
 
 
 def getBaseMatrices(nbGenes, factorizationParam, path):
-    t, factorLeft, factorSup = easyFactorize(nbGenes, factorizationParam)
+    t, factorLeft = easyFactorize(nbGenes, factorizationParam)
     np.savetxt(path+"factorLeft--n-"+str(nbGenes)+"--k-"+str(factorizationParam)+".csv", factorLeft, delimiter=",")
     return factorLeft
 
