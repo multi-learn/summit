@@ -312,9 +312,15 @@ try:
         argumentDictionaries["Monoview"] = []
         for view in views:
             for classifier in benchmark["Monoview"]:
-                arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGSInit"], "feat":view, "fileFeat": args.fileFeat,
-                                     "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier, "nbClass":NB_CLASS}, "viewIndex":allViews.index(view)}
-                argumentDictionaries["Monoview"].append(arguments)
+                if classifier=="SCM":
+                    if DATASET.get("View"+str(allViews.index(view))).attrs["binary"]:
+                        arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGSInit"], "feat":view, "fileFeat": args.fileFeat,
+                                             "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier, "nbClass":NB_CLASS}, "viewIndex":allViews.index(view)}
+                        argumentDictionaries["Monoview"].append(arguments)
+                else:
+                    arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGSInit"], "feat":view, "fileFeat": args.fileFeat,
+                                         "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier, "nbClass":NB_CLASS}, "viewIndex":allViews.index(view)}
+                    argumentDictionaries["Monoview"].append(arguments)
 except:
     pass
 bestClassifiers = []
