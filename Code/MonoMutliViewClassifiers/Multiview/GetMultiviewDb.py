@@ -326,7 +326,7 @@ def getVector(nbGenes):
     vectorSup[j:] = np.ones(nbGenes-j, dtype=bool)
     matrixSup = j
     matrixInf = nbGenes-j
-    return vectorLeft, vectorSup, matrixSup, matrixInf
+    return vectorLeft, matrixSup, matrixInf
 
 
 def findClosestPowerOfTwo(factorizationParam):
@@ -346,19 +346,19 @@ def easyFactorize(nbGenes, factorizationParam, t=0):
         factorizationParam = findClosestPowerOfTwo(factorizationParam) - 1
 
     if nbGenes==2:
-        return 1, np.array([True, False]), np.array([False, True])
+        return 1, np.array([True, False])
 
     if nbGenes==3:
-        return 1, np.array([True, True,  False]), np.array([False, True, True])
+        return 1, np.array([True, True,  False])
 
     if factorizationParam==1:
         t=1
-        return t, getVector(nbGenes)[0], getVector(nbGenes)[1]
+        return t, getVector(nbGenes)[0]
 
-    vectorLeft, vectorSup, matrixSup, matrixInf = getVector(nbGenes)
+    vectorLeft, matrixSup, matrixInf = getVector(nbGenes)
 
-    t_, vectorLeftSup, vectorSupLeft = easyFactorize(matrixSup, (factorizationParam - 1) / 2, t=t)
-    t__, vectorLeftInf, vectorSupRight = easyFactorize(matrixInf, (factorizationParam - 1) / 2, t=t)
+    t_, vectorLeftSup = easyFactorize(matrixSup, (factorizationParam - 1) / 2, t=t)
+    t__, vectorLeftInf = easyFactorize(matrixInf, (factorizationParam - 1) / 2, t=t)
 
     factorLeft = np.zeros((nbGenes,t_+t__+1), dtype=bool)
 
