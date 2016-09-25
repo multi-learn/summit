@@ -32,21 +32,20 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
 
 def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
 
-    pipeline = Pipeline([('classifier',  pyscm.scm.SetCoveringMachine())])
-
-    param= {"classifier__max_attributes": randint(1, 15),
-            "classifier__c":[1.0] ,
-            "classifier__p":[1.0] }
-    metricModule = getattr(Metrics, metric[0])
-    if metric[1]!=None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-    else:
-        metricKWARGS = {}
-    scorer = metricModule.get_scorer(**metricKWARGS)
-    grid = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=param,refit=True,n_jobs=nbCores,scoring=scorer,cv=nbFolds)
-    detector = grid.fit(X_train, y_train)
-    desc_estimators = [detector.best_params_["classifier__max_attributes"],
-                       detector.best_params_["classifier__c"], detector.best_params_["classifier__p"]]
+    # pipeline = Pipeline([('classifier',  pyscm.scm.SetCoveringMachine())])
+    #
+    # param= {"classifier__max_attributes": randint(1, 15),
+    #         "classifier__c":[1.0] ,
+    #         "classifier__p":[1.0] }
+    # metricModule = getattr(Metrics, metric[0])
+    # if metric[1]!=None:
+    #     metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+    # else:
+    #     metricKWARGS = {}
+    # scorer = metricModule.get_scorer(**metricKWARGS)
+    # grid = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=param,refit=True,n_jobs=nbCores,scoring=scorer,cv=nbFolds)
+    # detector = grid.fit(X_train, y_train)
+    desc_estimators = [5]
     return desc_estimators
 
 

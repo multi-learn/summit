@@ -50,7 +50,7 @@ def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices,
     classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
-        logging.debug("\tStart:\t Random search for "+classifierName+" on "+DATASET.get("View"+str(classifierIndex)).attrs["name"])
+        logging.debug("\tStart:\t Random search for "+classifierName+" on "+DATASET.get("View"+str(viewIndices[classifierIndex])).attrs["name"])
         classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
         classifierGridSearch = getattr(classifierModule, "gridSearch")
         bestSettings.append(classifierGridSearch(getV(DATASET, viewIndices[classifierIndex], learningIndices),
@@ -103,14 +103,14 @@ class Mumbo:
         self.iterAccuracies = np.zeros(self.maxIter)
 
 
-    def fit_hdf5(self, DATASET, trainIndices=None, viewIndices=None):
+    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
         # Initialization
         if not trainIndices:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if not viewIndices:
-            viewIndices = range(DATASET.get("Metadata").attrs["nbView"])
+        if type(viewsIndices)==type(None):
+            viewsIndices = range(DATASET.get("Metadata").attrs["nbView"])
         NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
-        NB_VIEW = len(viewIndices)
+        NB_VIEW = len(viewsIndices)
         DATASET_LENGTH = len(trainIndices)
         LABELS = DATASET["Labels"][trainIndices]
 
@@ -125,7 +125,7 @@ class Mumbo:
 
             logging.debug('\t\tStart:\t Iteration ' + str(self.iterIndex + 1))
             classifiers, predictedLabels, areBad = self.trainWeakClassifiers_hdf5(DATASET, trainIndices, NB_CLASS,
-                                                                                  DATASET_LENGTH, viewIndices)
+                                                                                  DATASET_LENGTH, viewsIndices)
             if areBad.all():
                 logging.warning("\t\tWARNING:\tAll bad for iteration " + str(self.iterIndex))
 
@@ -142,7 +142,7 @@ class Mumbo:
             self.updateFs(NB_VIEW, DATASET_LENGTH, NB_CLASS)
 
             self.updateCostmatrices(NB_VIEW, DATASET_LENGTH, NB_CLASS, LABELS)
-            bestView, edge, bestFakeView = self.chooseView(viewIndices, LABELS, DATASET_LENGTH)
+            bestView, edge, bestFakeView = self.chooseView(viewsIndices, LABELS, DATASET_LENGTH)
             self.bestViews[self.iterIndex] = bestView
             logging.debug("\t\t\t Best view : \t\t"+DATASET["View"+str(bestView)].attrs["name"])
             if areBad.all():
@@ -152,20 +152,21 @@ class Mumbo:
             self.bestClassifiers.append(classifiers[bestFakeView])
             self.updateGeneralFs(DATASET_LENGTH, NB_CLASS, bestFakeView)
             self.updateGeneralCostMatrix(DATASET_LENGTH, NB_CLASS,LABELS)
-            predictedLabels = self.predict_hdf5(DATASET, usedIndices=trainIndices)
+            predictedLabels = self.predict_hdf5(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
             accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
             self.iterAccuracies[self.iterIndex] = accuracy
 
             self.iterIndex += 1
 
 
-    def predict_hdf5(self, DATASET, usedIndices=None, viewIndices=None):
+    def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if not viewIndices:
-            viewIndices = range(DATASET.get("Metadata").attrs["nbView"])
-        viewDict = dict((viewIndex, index) for index, viewIndex in enumerate(viewIndices))
+        if type(viewsIndices)==type(None):
+            viewsIndices = range(DATASET.get("Metadata").attrs["nbView"])
+
+        viewDict = dict((viewIndex, index) for index, viewIndex in enumerate(viewsIndices))
         if usedIndices:
             DATASET_LENGTH = len(usedIndices)
             predictedLabels = np.zeros(DATASET_LENGTH)

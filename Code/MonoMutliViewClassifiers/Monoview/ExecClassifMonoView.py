@@ -30,7 +30,7 @@ __status__ 	= "Prototype"           # Production, Development, Prototype
 __date__	= 2016-03-25
 
 
-def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databaseType, path, statsIter, gridSearch=True,
+def ExecMonoview_multicore(name, labelsNames, learningRate, nbFolds, datasetFileIndex, databaseType, path, statsIter, gridSearch=True,
                            metrics=[["accuracy_score", None]], nIter=30, **args):
     DATASET = h5py.File(path+name+str(datasetFileIndex)+".hdf5", "r")
     kwargs = args["args"]
@@ -42,7 +42,7 @@ def ExecMonoview_multicore(name, learningRate, nbFolds, datasetFileIndex, databa
                         metrics=metrics, nIter=nIter, **args)
 
 
-def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path, statsIter, gridSearch=True,
+def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databaseType, path, statsIter, gridSearch=True,
                 metrics=[["accuracy_score", None]], nIter=30, **args):
     logging.debug("Start:\t Loading data")
     try:
@@ -112,20 +112,17 @@ def ExecMonoview(X, Y, name, learningRate, nbFolds, nbCores, databaseType, path,
     t_end  = time.time() - t_start
     logging.debug("Done:\t Predicting")
     logging.debug("Info:\t Time for training and predicting: " + str(t_end) + "[s]")
-    classLabelsDesc = pd.read_csv(path + fileCLD, sep=";", names=['label', 'name'])
-    classLabelsNames = classLabelsDesc.name
-    classLabelsNamesList = classLabelsNames.values.tolist()
 
     logging.debug("Start:\t Getting Results")
 
     #Accuracy classification score
     stringAnalysis, imagesAnalysis, metricsScores = execute(name, learningRate, nbFolds, nbCores, gridSearch, metrics, nIter, feat, CL_type,
-                                         clKWARGS, classLabelsNames, X.shape,
+                                         clKWARGS, labelsNames, X.shape,
                                          y_trains, y_train_preds, y_tests, y_test_preds, t_end, statsIter)
     cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
     logging.debug("Done:\t Getting Results")
     logging.info(stringAnalysis)
-    labelsString = "-".join(classLabelsNames)
+    labelsString = "-".join(labelsNames)
     timestr = time.strftime("%Y%m%d-%H%M%S")
     CL_type_string = CL_type
     outputFileName = "Results/" + timestr + "Results-" + CL_type_string + "-" + labelsString + \

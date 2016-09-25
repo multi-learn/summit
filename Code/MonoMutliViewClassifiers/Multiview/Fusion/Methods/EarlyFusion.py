@@ -13,14 +13,16 @@ class EarlyFusionClassifier(object):
         self.nbCores = NB_CORES
         self.monoviewData = None
 
-    def makeMonoviewData_hdf5(self, DATASET, weights=None, usedIndices=None):
+    def makeMonoviewData_hdf5(self, DATASET, weights=None, usedIndices=None, viewsIndices=None):
+        if type(viewsIndices)==type(None):
+            viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
+        nbView = len(viewsIndices)
         if not usedIndices:
             uesdIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
         if weights== None:
-            weights = np.array([1/NB_VIEW for i in range(NB_VIEW)])
+            weights = np.array([1/nbView for i in range(nbView)])
         if sum(weights)!=1:
             weights = weights/sum(weights)
-        self.monoviewData = np.concatenate([weights[viewIndex]*getV(DATASET, viewIndex, usedIndices)
-                                                         for viewIndex in np.arange(NB_VIEW)], axis=1)
+        self.monoviewData = np.concatenate([weights[index]*getV(DATASET, viewIndex, usedIndices)
+                                                         for index, viewIndex in enumerate(viewsIndices)], axis=1)
 

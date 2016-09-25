@@ -222,6 +222,7 @@ else:
     allViews = views
 if not views:
     raise ValueError, "Empty views list, modify selected views to match dataset "+args.views
+NB_VIEW = len(views)
 NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 metrics = [metric.split(":") for metric in args.CL_metrics]
 if metrics == [[""]]:
@@ -289,6 +290,7 @@ if "Multiview" in args.CL_type.strip(":"):
         else:
             benchmark["Multiview"]["Fusion"]["Classifiers"] = args.FU_cl_names.split(":")
 
+print benchmark
 
 if "Monoview" in args.CL_type.strip(":"):
     benchmark["Monoview"] = args.CL_algos_monoview.split(":")
@@ -319,6 +321,8 @@ try:
                         arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGSInit"], "feat":view, "fileFeat": args.fileFeat,
                                              "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier, "nbClass":NB_CLASS}, "viewIndex":allViews.index(view)}
                         argumentDictionaries["Monoview"].append(arguments)
+                    else:
+                        pass
                 else:
                     arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGSInit"], "feat":view, "fileFeat": args.fileFeat,
                                          "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier, "nbClass":NB_CLASS}, "viewIndex":allViews.index(view)}
@@ -328,11 +332,12 @@ except:
 bestClassifiers = []
 bestClassifiersConfigs = []
 resultsMonoview = []
+labelsNames = LABELS_DICTIONARY.values()
 if nbCores>1:
     nbExperiments = len(argumentDictionaries["Monoview"])
     for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
         resultsMonoview+=(Parallel(n_jobs=nbCores)(
-            delayed(ExecMonoview_multicore)(args.name, args.CL_split, args.CL_nbFolds, coreIndex, args.type, args.pathF, statsIter, gridSearch=gridSearch,
+            delayed(ExecMonoview_multicore)(args.name, labelsNames, args.CL_split, args.CL_nbFolds, coreIndex, args.type, args.pathF, statsIter, gridSearch=gridSearch,
                                             metrics=metrics, nIter=args.CL_GS_iter, **argumentDictionaries["Monoview"][coreIndex + stepIndex * nbCores])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex  * nbCores))))
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
@@ -344,17 +349,17 @@ if nbCores>1:
 
 else:
     resultsMonoview+=([ExecMonoview(DATASET.get("View"+str(arguments["viewIndex"])),
-                                    DATASET.get("Labels").value, args.name,
+                                    DATASET.get("Labels").value, args.name, labelsNames,
                                     args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, statsIter,
                                     gridSearch=gridSearch, metrics=metrics, nIter=args.CL_GS_iter,
                                     **arguments)
                        for arguments in argumentDictionaries["Monoview"]])
 
-    accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
-    classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
-    classifiersConfigs = [[result[1][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
+    accuracies = [[result[1][2][metrics[0][0]][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
+    classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
+    classifiersConfigs = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
 monoviewTime = time.time()-dataBaseTime-start
-try:
+if True:
     if benchmark["Multiview"]:
         try:
             if benchmark["Multiview"]["Mumbo"]:
@@ -376,17 +381,16 @@ try:
         bestClassifiers = []
         bestClassifiersConfigs = []
         for viewIndex, view in enumerate(views):
-            print classifiersNames
-            print classifiersNames[viewIndex]
-            print classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))]
+            print classifiersNames, viewIndex
+            print accuracies
             bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
             bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
-        print bestClassifiers
-        try:
+        if True:
             if benchmark["Multiview"]["Fusion"]:
-                try:
+                if True:
                     if benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
                         for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]:
+                            print "Poulet _______________________________________________________________________________________ "
                             arguments = {"CL_type": "Fusion",
                                          "views": views,
                                          "NB_VIEW": len(views),
@@ -398,7 +402,7 @@ try:
                                                           "classifiersConfigs": bestClassifiersConfigs,
                                                           'fusionMethodConfig': fusionMethodConfig}}
                             argumentDictionaries["Multiview"].append(arguments)
-                except:
+                else:
                     pass
                     # try:
                     #     if benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
@@ -417,12 +421,12 @@ try:
                     #                 argumentDictionaries["Multiview"].append(arguments)
                     # except:
                     #     pass
-        except:
+        else:
             pass
-except:
+else:
     pass
 # resultsMultiview = []
-
+print argumentDictionaries["Multiview"]
 if nbCores>1:
     resultsMultiview = []
     nbExperiments = len(argumentDictionaries["Multiview"])

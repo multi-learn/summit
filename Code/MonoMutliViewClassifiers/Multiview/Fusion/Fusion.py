@@ -11,20 +11,24 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 
 
-def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None):
+def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None, viewsIndices=None):
+    if type(viewsIndices)==type(None):
+        viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
     if not usedIndices:
         uesdIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-    NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
+    NB_VIEW = len(viewsIndices)
     if weights==None:
         weights = np.array([1/NB_VIEW for i in range(NB_VIEW)])
     if sum(weights)!=1:
         weights = weights/sum(weights)
-    monoviewData = np.concatenate([weights[viewIndex]*getV(DATASET, viewIndex, usedIndices)
-                                        for viewIndex in np.arange(NB_VIEW)], axis=1)
+    monoviewData = np.concatenate([weights[index]*getV(DATASET, viewIndex, usedIndices)
+                                        for index, viewIndex in enumerate(viewsIndices)], axis=1)
     return monoviewData
 
 
-def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metric=None, nIter=30):
+def gridSearch_hdf5(DATASET, viewsIndices, classificationKWARGS, learningIndices, metric=None, nIter=30):
+    if type(viewsIndices)==type(None):
+        viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
     fusionTypeName = classificationKWARGS["fusionType"]
     fusionTypePackage = globals()[fusionTypeName+"Package"]
     fusionMethodModuleName = classificationKWARGS["fusionMethod"]
@@ -36,16 +40,16 @@ def gridSearch_hdf5(DATASET, classificationKWARGS, learningIndices, metric=None,
         classifierModule = getattr(MonoviewClassifiers, classifierName)
         classifierMethod = getattr(classifierModule, "gridSearch")
         if fusionTypeName == "LateFusion":
-            bestSettings.append(classifierMethod(getV(DATASET, classifierIndex, learningIndices),
+            bestSettings.append(classifierMethod(getV(DATASET, viewsIndices[classifierIndex], learningIndices),
                                                  DATASET.get("Labels")[learningIndices], metric=metric,
                                                  nIter=nIter))
         else:
-            bestSettings.append(classifierMethod(makeMonoviewData_hdf5(DATASET, usedIndices=learningIndices),
+            bestSettings.append(classifierMethod(makeMonoviewData_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices),
                                                  DATASET.get("Labels")[learningIndices], metric=metric,
                                                  nIter=nIter))
         logging.debug("\tDone:\t Random search for "+classifierName)
     classificationKWARGS["classifiersConfigs"] = bestSettings
-    fusionMethodConfig = fusionMethodModule.gridSearch(DATASET, classificationKWARGS, learningIndices, nIter=nIter)
+    fusionMethodConfig = fusionMethodModule.gridSearch(DATASET, classificationKWARGS, learningIndices, nIter=nIter, viewsIndices=viewsIndices)
     return bestSettings, fusionMethodConfig
 
 
@@ -60,8 +64,8 @@ class Fusion:
         classifierKWARGS = dict((key, value) for key, value in kwargs.iteritems() if key not in ['fusionType', 'fusionMethod'])
         self.classifier = fusionMethodClass(NB_CORES=nbCores, **classifierKWARGS)
 
-    def fit_hdf5(self, DATASET, trainIndices=None):
-        self.classifier.fit_hdf5(DATASET, trainIndices=trainIndices)
+    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
+        self.classifier.fit_hdf5(DATASET, trainIndices=trainIndices, viewsIndices=viewsIndices)
 
     def fit(self, DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES, trainArguments):
         fusionType, fusionMethod, fusionConfig, monoviewClassifier, monoviewClassifierConfig = trainArguments
@@ -71,11 +75,13 @@ class Fusion:
                                  monoviewClassifierConfig, fusionConfig)
         return fusionType, fusionMethod, classifier
 
-    def predict_hdf5(self, DATASET, usedIndices=None):
+    def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
+        if type(viewsIndices)==type(None):
+            viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if usedIndices:
-            predictedLabels = self.classifier.predict_hdf5(DATASET, usedIndices=usedIndices)
+            predictedLabels = self.classifier.predict_hdf5(DATASET, usedIndices=usedIndices, viewsIndices=viewsIndices)
         else:
             predictedLabels = []
         return predictedLabels

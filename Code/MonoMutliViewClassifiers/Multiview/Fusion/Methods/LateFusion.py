@@ -29,13 +29,14 @@ class LateFusionClassifier(object):
         self.nbCores = NB_CORES
         self.accuracies = np.zeros(len(monoviewClassifiersNames))
 
-    def fit_hdf5(self, DATASET, trainIndices=None):
+    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
+        if type(viewsIndices)==type(None):
+            viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices == None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        nbView = DATASET.get("Metadata").attrs["nbView"]
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
-            delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[viewIndex],
+            delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[index],
                                               getV(DATASET, viewIndex, trainIndices),
                                               DATASET.get("Labels")[trainIndices],
-                                              self.monoviewClassifiersConfigs[viewIndex])
-            for viewIndex in range(nbView))
+                                              self.monoviewClassifiersConfigs[index])
+            for index, viewIndex in enumerate(viewsIndices))

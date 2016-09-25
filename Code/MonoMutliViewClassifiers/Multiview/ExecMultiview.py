@@ -51,58 +51,66 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
     for viewIndex, viewName in zip(viewsIndices, views):
         logging.info("Info:\t Shape of " + str(viewName) + " :" + str(
-            getShape(DATASET, viewIndex)))
+                getShape(DATASET, viewIndex)))
     logging.info("Done:\t Read Database Files")
 
-
-    logging.info("Start:\t Determine validation split for ratio " + str(learningRate))
-    validationIndices = DB.splitDataset(DATASET, learningRate, datasetLength)
-    learningIndices = [index for index in range(datasetLength) if index not in validationIndices]
-    classificationSetLength = len(learningIndices)
-    logging.info("Done:\t Determine validation split")
-
-    logging.info("Start:\t Determine "+str(nbFolds)+" folds")
-    if nbFolds != 1:
-        kFolds = DB.getKFoldIndices(nbFolds, DATASET.get("Labels")[...], NB_CLASS, learningIndices)
-    else:
-        kFolds = [[], range(classificationSetLength)]
-    logging.info("Info:\t Length of Learning Sets: " + str(classificationSetLength - len(kFolds[0])))
-    logging.info("Info:\t Length of Testing Sets: " + str(len(kFolds[0])))
-    logging.info("Info:\t Length of Validation Set: " + str(len(validationIndices)))
-    logging.info("Done:\t Determine folds")
-
-
-    logging.info("Start:\t Learning with " + CL_type + " and " + str(len(kFolds)) + " folds")
     extractionTime = time.time() - t_start
-
-    classifierPackage = globals()[CL_type]  # Permet d'appeler un module avec une string
-    classifierModule = getattr(classifierPackage, CL_type)
-    classifierClass = getattr(classifierModule, CL_type)
-    classifierGridSearch = getattr(classifierModule, "gridSearch_hdf5")
-    analysisModule = getattr(classifierPackage, "analyzeResults")
-
     kFoldPredictedTrainLabels = []
     kFoldPredictedTestLabels = []
     kFoldPredictedValidationLabels = []
     kFoldLearningTime = []
     kFoldPredictionTime = []
     kFoldClassifier = []
-
-    gridSearch=True
-    if gridSearch:
-        logging.info("Start:\t Randomsearching best settings for monoview classifiers")
-        bestSettings, fusionConfig = classifierGridSearch(DATASET, viewsIndices ,classificationKWARGS, learningIndices
-                                                          , metric=metrics[0], nIter=nIter)
-        classificationKWARGS["classifiersConfigs"] = bestSettings
-        try:
-            classificationKWARGS["fusionMethodConfig"] = fusionConfig
-        except:
-            pass
-        logging.info("Done:\t Randomsearching best settings for monoview classifiers")
-
-    logging.info("Start:\t Classification")
-    # Begin Classification
+    ivalidationIndices = []
+    ikFolds = []
+    classifierPackage = globals()[CL_type]  # Permet d'appeler un module avec une string
+    classifierModule = getattr(classifierPackage, CL_type)
+    classifierClass = getattr(classifierModule, CL_type)
+    classifierGridSearch = getattr(classifierModule, "gridSearch_hdf5")
+    analysisModule = getattr(classifierPackage, "analyzeResults")
     for iterIndex in range(statsIter):
+
+        logging.info("Start:\t Determine validation split for ratio " + str(learningRate))
+        validationIndices = DB.splitDataset(DATASET, learningRate, datasetLength)
+        learningIndices = [index for index in range(datasetLength) if index not in validationIndices]
+        classificationSetLength = len(learningIndices)
+        logging.info("Done:\t Determine validation split")
+
+        logging.info("Start:\t Determine "+str(nbFolds)+" folds")
+        if nbFolds != 1:
+            kFolds = DB.getKFoldIndices(nbFolds, DATASET.get("Labels")[...], NB_CLASS, learningIndices)
+        else:
+            kFolds = [[], range(classificationSetLength)]
+        logging.info("Info:\t Length of Learning Sets: " + str(classificationSetLength - len(kFolds[0])))
+        logging.info("Info:\t Length of Testing Sets: " + str(len(kFolds[0])))
+        logging.info("Info:\t Length of Validation Set: " + str(len(validationIndices)))
+        logging.info("Done:\t Determine folds")
+
+
+        logging.info("Start:\t Learning with " + CL_type + " and " + str(len(kFolds)) + " folds")
+
+
+
+
+
+
+        gridSearch=True
+        if gridSearch:
+            logging.info("Start:\t Randomsearching best settings for monoview classifiers")
+            print metrics[0]
+            print classificationKWARGS
+            bestSettings, fusionConfig = classifierGridSearch(DATASET, viewsIndices, classificationKWARGS, learningIndices
+                                                              , metric=metrics[0], nIter=nIter)
+            classificationKWARGS["classifiersConfigs"] = bestSettings
+            try:
+                classificationKWARGS["fusionMethodConfig"] = fusionConfig
+            except:
+                pass
+            logging.info("Done:\t Randomsearching best settings for monoview classifiers")
+
+        logging.info("Start:\t Classification")
+        # Begin Classification
+
         kFoldPredictedTrainLabelsIter = []
         kFoldPredictedTestLabelsIter = []
         kFoldPredictedValidationLabelsIter = []
@@ -135,6 +143,8 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
         kFoldLearningTime.append(kFoldLearningTimeIter)
         kFoldPredictionTime.append(kFoldPredictionTimeIter)
         kFoldClassifier.append(kFoldClassifierIter)
+        ikFolds.append(kFolds)
+        ivalidationIndices.append(validationIndices)
     classificationTime = time.time() - t_start
 
     logging.info("Done:\t Classification")
@@ -144,10 +154,10 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     times = (extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime)
 
     stringAnalysis, imagesAnalysis, metricsScores = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
-                                                            kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
-                                                            DATASET, classificationKWARGS, learningRate, LABELS_DICTIONARY,
-                                                            views, nbCores, times, kFolds, name, nbFolds,
-                                                            validationIndices, gridSearch, nIter, metrics, statsIter, viewsIndices)
+                                                                           kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
+                                                                           DATASET, classificationKWARGS, learningRate, LABELS_DICTIONARY,
+                                                                           views, nbCores, times, ikFolds, name, nbFolds,
+                                                                           ivalidationIndices, gridSearch, nIter, metrics, statsIter, viewsIndices)
     labelsSet = set(LABELS_DICTIONARY.values())
     logging.info(stringAnalysis)
     featureString = "-".join(views)
@@ -243,9 +253,7 @@ if __name__=='__main__':
     groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store', nargs='+',
                              help='Configuration for the monoview classifiers used', default=['3:4', 'log:l2', '10:linear',
                                                                                               '4'])
-    print parser
     args = parser.parse_args()
-    print args
     views = args.views.split(":")
     dataBaseType = args.type
     NB_VIEW = len(views)
