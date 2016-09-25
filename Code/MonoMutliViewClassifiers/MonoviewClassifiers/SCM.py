@@ -45,7 +45,7 @@ def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIt
     # scorer = metricModule.get_scorer(**metricKWARGS)
     # grid = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=param,refit=True,n_jobs=nbCores,scoring=scorer,cv=nbFolds)
     # detector = grid.fit(X_train, y_train)
-    desc_estimators = [5]
+    desc_estimators = [4]
     return desc_estimators
 
 
