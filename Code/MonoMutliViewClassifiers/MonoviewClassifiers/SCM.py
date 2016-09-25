@@ -22,14 +22,10 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     p = kwargs['1']
     model_type = kwargs['2']
     try:
-        logging.debug("Start:\t Getting pre-computed rules")
         attributeClassification = kwargs["attributeClassification"]
         binaryAttributes = kwargs["binaryAttributes"]
-        logging.debug("Done:\t Getting pre-computed rules")
     except:
-        logging.debug("Start:\t Pre-computing rules")
         attributeClassification, binaryAttributes = transformData(DATASET)
-        logging.debug("Done:\t Pre-computing rules")
     classifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=max_attrtibutes, model_type=model_type, verbose=False)
     classifier.fit(binaryAttributes, CLASS_LABELS, X=None, attribute_classifications=attributeClassification, iteration_callback=None)
     return classifier
@@ -58,7 +54,7 @@ def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIt
             kFolds = DB.getKFoldIndices(nbFolds, y_train, len(set(y_train)), range(len(y_train)))
         else:
             kFolds = [[], range(len(y_train))]
-
+        scores = []
         for foldIdx, fold in enumerate(kFolds):
             if fold != range(len(y_train)):
                 fold.sort()
@@ -68,33 +64,19 @@ def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIt
 
                 predictedLabels = classifier.predict(X_train[fold])
                 score = metricModule.score(y_train[fold], predictedLabels)
-                print score
+                scores.append(score)
                 dsetFile.close()
-                if isBetter=="higher" and score>baseScore:
-                    baseScore = score
-                    config = [max_attributes, p, model]
-                if isBetter=="lower" and score<baseScore:
-                    baseScore = score
-                    config = [max_attributes, p, model]
+        score = np.mean(np.array(scores))
+
+        if isBetter=="higher" and score>baseScore:
+            baseScore = score
+            config = [max_attributes, p, model]
+        if isBetter=="lower" and score<baseScore:
+            baseScore = score
+            config = [max_attributes, p, model]
 
     assert config!=[], "No good configuration found for SCM"
     return config
-
-    # pipeline = Pipeline([('classifier',  pyscm.scm.SetCoveringMachine())])
-    #
-    # param= {"classifier__max_attributes": randint(1, 15),
-    #         "classifier__c":[1.0] ,
-    #         "classifier__p":[1.0] }
-    # metricModule = getattr(Metrics, metric[0])
-    # if metric[1]!=None:
-    #     metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-    # else:
-    #     metricKWARGS = {}
-    # scorer = metricModule.get_scorer(**metricKWARGS)
-    # grid = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=param,refit=True,n_jobs=nbCores,scoring=scorer,cv=nbFolds)
-    # detector = grid.fit(X_train, y_train)
-    desc_estimators = [4]
-    return desc_estimators
 
 
 def getConfig(config):
@@ -110,10 +92,7 @@ def transformData(dataArray):
         nbExamples = dataArray.shape[0]
         featureSequence = [str(featureIndex) for featureIndex in range(dataArray.shape[1])]
         featureIndexByRule = np.arange(dataArray.shape[1], dtype=np.uint32)
-        logging.debug("Start:\t Creating binary attributes")
         binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule)
-        logging.debug("Done:\t Creating binary attributes")
-        logging.debug("Start:\t Packing Data")
         packedData = _pack_binary_bytes_to_ints(dataArray, 64)
         del dataArray
         dsetFile = h5py.File("temp_scm", "w")
@@ -121,7 +100,6 @@ def transformData(dataArray):
         dsetFile.close()
         dsetFile = h5py.File("temp_scm", "r")
         packedDataset = dsetFile.get("temp_scm")
-        logging.debug("Done:\t Packing Data")
         attributeClassification = BaptisteRuleClassifications(packedDataset, nbExamples)
         return attributeClassification, binaryAttributes, dsetFile
 
