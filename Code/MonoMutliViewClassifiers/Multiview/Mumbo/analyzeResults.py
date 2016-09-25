@@ -224,8 +224,49 @@ def getClassificationReport(kFolds, kFoldClassifier, CLASS_LABELS, validationInd
     for foldIdx in range(len(kFolds)):
         kFoldBestViewsStatsM.append(np.mean(np.array([iterKFoldBestViewsStats[statIterIndex][foldIdx] for statIterIndex in range(statsIter)])))
         bestViewVotes = np.zeros(nbView)
+        MeanAverageAccuraciesM = np.zeros((statsIter, nbView))
+        AccuracyOnValidationByIterM = []
+        AccuracyOnTrainByIterM = []
+        AccuracyOnTestByIterM = []
+        nbTrainIterations = []
+        nbTestIterations = []
+        nbValidationIterations = np.zeros(statsIter)
         for statIterIndex in range(statsIter):
             bestViewVotes[viewsDict[iterKFoldBestViews[statIterIndex][foldIdx]]]+=1
+            MeanAverageAccuraciesM[statIterIndex] = np.array(iterKFoldMeanAverageAccuracies[statIterIndex][foldIdx])
+
+            nbTrainIterations[statIterIndex] = len(iterKFoldAccuracyOnTrainByIter[statIterIndex][foldIdx])
+            nbTestIterations[statIterIndex] = len(iterKFoldAccuracyOnTestByIter[statIterIndex][foldIdx])
+            nbValidationIterations[statIterIndex] = len(iterKFoldAccuracyOnValidationByIter[statIterIndex][foldIdx])
+
+            for valdiationAccuracyIndex, valdiationAccuracy in enumerate(iterKFoldAccuracyOnValidationByIter[statIterIndex][foldIdx]):
+                if statIterIndex==0:
+                    AccuracyOnValidationByIterM.append([])
+                    AccuracyOnValidationByIterM[valdiationAccuracyIndex].append(valdiationAccuracy)
+                else:
+                    AccuracyOnValidationByIterM[valdiationAccuracyIndex].append(valdiationAccuracy)
+            for trainAccuracyIndex, trainAccuracy in enumerate(iterKFoldAccuracyOnTrainByIter[statIterIndex][foldIdx]):
+                if statIterIndex==0:
+                    AccuracyOnTrainByIterM.append([])
+                    AccuracyOnTrainByIterM[trainAccuracyIndex].append(trainAccuracy)
+                else:
+                    AccuracyOnTestByIterM[trainAccuracyIndex].append(trainAccuracy)
+            for testAccuracyIndex, testAccuracy in enumerate(iterKFoldAccuracyOnTestByIter[statIterIndex][foldIdx]):
+                if statIterIndex==0:
+                    AccuracyOnTestByIterM.append([])
+                    AccuracyOnTestByIterM[testAccuracyIndex].append(testAccuracy)
+                else:
+                    AccuracyOnTestByIterM[testAccuracyIndex].append(testAccuracy)
+
+            AccuracyOnValidationByIterM.append(iterKFoldAccuracyOnValidationByIter[statIterIndex][foldIdx])
+            AccuracyOnTrainByIterM.append(iterKFoldAccuracyOnTrainByIter[statIterIndex][foldIdx])
+            AccuracyOnTestByIterM.append(iterKFoldAccuracyOnTestByIter[statIterIndex][foldIdx])
+
+        kFoldAccuracyOnTrainByIterM.append([np.mean(np.array(accuracies)) for accuracies in AccuracyOnTrainByIterM])
+        kFoldAccuracyOnTestByIterM.append([np.mean(np.array(accuracies)) for accuracies in AccuracyOnTestByIterM])
+        kFoldAccuracyOnValidationByIterM.append([np.mean(np.array(accuracies)) for accuracies in AccuracyOnValidationByIterM])
+
+        kFoldMeanAverageAccuraciesM.append(np.mean(MeanAverageAccuraciesM, axis=0))
         kFoldBestViewsM.append(viewIndices[np.argmax(bestViewVotes)])
 
 

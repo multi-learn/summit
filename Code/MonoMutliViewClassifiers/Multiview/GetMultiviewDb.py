@@ -733,7 +733,7 @@ def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
 
 def getModifiedMultiOmicDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
-    datasetFile = h5py.File(path+"ModifiedMultiOmicb.hdf5", "r")
+    datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "r")
     labelDictionary = {0:"No", 1:"Yes"}
     return datasetFile, labelDictionary
 
