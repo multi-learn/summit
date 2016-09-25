@@ -215,8 +215,10 @@ if args.views!="":
     allowedViews = args.views.split(":")
     allViews = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
     views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW) if str(DATASET.get("View"+str(viewIndex)).attrs["name"]) in allowedViews]
+    viewsIndices = [viewIndex for viewIndex in range(NB_VIEW) if str(DATASET.get("View"+str(viewIndex)).attrs["name"]) in allowedViews]
 else:
     views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
+    viewsIndices = np.arange(NB_VIEW)
     allViews = views
 if not views:
     raise ValueError, "Empty views list, modify selected views to match dataset "+args.views
@@ -361,6 +363,7 @@ try:
                     arguments = {"CL_type": "Mumbo",
                                  "views": views,
                                  "NB_VIEW": len(views),
+                                 "viewsIndices": viewsIndices,
                                  "NB_CLASS": len(args.CL_classes.split(":")),
                                  "LABELS_NAMES": args.CL_classes.split(":"),
                                  "MumboKWARGS": {"classifiersNames": mumboClassifiersNames,
@@ -387,6 +390,7 @@ try:
                             arguments = {"CL_type": "Fusion",
                                          "views": views,
                                          "NB_VIEW": len(views),
+                                         "viewsIndices": viewsIndices,
                                          "NB_CLASS": len(args.CL_classes.split(":")),
                                          "LABELS_NAMES": args.CL_classes.split(":"),
                                          "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,
@@ -401,8 +405,9 @@ try:
                     #         for method in benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"]:
                     #             for classifier in benchmark["Multiview"]["Fusion"]["Classifiers"]:
                     #                 arguments = {"CL_type": "Fusion",
-                    #                              "views": args.views.split(":"),
-                    #                              "NB_VIEW": len(args.views.split(":")),
+                    #                              "views": views,
+                    #                              "NB_VIEW": len(views),
+                    #                              "viewsIndices": viewsIndices,
                     #                              "NB_CLASS": len(args.CL_classes.split(":")),
                     #                              "LABELS_NAMES": args.CL_classes.split(":"),
                     #                              "FusionKWARGS": {"fusionType":"EarlyFusion", "fusionMethod":method,

@@ -33,14 +33,14 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
                   gridSearch=False, metrics=None, nIter=30, **kwargs):
 
     datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
-    NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
-    views = [str(DATASET.get("View"+str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
+    NB_VIEW = kwargs["NB_VIEW"]
+    views = kwargs["views"]
+    viewsIndices = kwargs["viewsIndices"]
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     if not metrics:
         metrics = [["accuracy_score", None]]
 
     CL_type = kwargs["CL_type"]
-    views = kwargs["views"]
     LABELS_NAMES = kwargs["LABELS_NAMES"]
     classificationKWARGS = kwargs[CL_type+"KWARGS"]
 
@@ -49,8 +49,8 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     logging.info("### Classification - Database : " + str(name) + " ; Views : " + ", ".join(views) +
                  " ; Algorithm : " + CL_type + " ; Cores : " + str(nbCores))
 
-    for viewIndex in range(NB_VIEW):
-        logging.info("Info:\t Shape of " + str(DATASET.get("View"+str(viewIndex)).attrs["name"]) + " :" + str(
+    for viewIndex, viewName in zip(viewsIndices, views):
+        logging.info("Info:\t Shape of " + str(viewName) + " :" + str(
             getShape(DATASET, viewIndex)))
     logging.info("Done:\t Read Database Files")
 
@@ -91,7 +91,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     gridSearch=True
     if gridSearch:
         logging.info("Start:\t Randomsearching best settings for monoview classifiers")
-        bestSettings, fusionConfig = classifierGridSearch(DATASET, classificationKWARGS, learningIndices
+        bestSettings, fusionConfig = classifierGridSearch(DATASET, viewsIndices ,classificationKWARGS, learningIndices
                                                           , metric=metrics[0], nIter=nIter)
         classificationKWARGS["classifiersConfigs"] = bestSettings
         try:
@@ -117,15 +117,15 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
                 DATASET_LENGTH = len(trainIndices)
                 classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("Labels").value[trainIndices], NB_CORES=nbCores, **classificationKWARGS)
 
-                classifier.fit_hdf5(DATASET, trainIndices=trainIndices)
+                classifier.fit_hdf5(DATASET, trainIndices=trainIndices, viewsIndices=viewsIndices)
                 kFoldClassifierIter.append(classifier)
 
                 learningTime = time.time() - extractionTime - t_start
                 kFoldLearningTimeIter.append(learningTime)
                 logging.info("\tStart: \t Classification")
-                kFoldPredictedTrainLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=trainIndices))
-                kFoldPredictedTestLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=fold))
-                kFoldPredictedValidationLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=validationIndices))
+                kFoldPredictedTrainLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices))
+                kFoldPredictedTestLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=fold, viewsIndices=viewsIndices))
+                kFoldPredictedValidationLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices))
 
                 kFoldPredictionTimeIter.append(time.time() - extractionTime - t_start - learningTime)
                 logging.info("\tDone: \t Fold number " + str(foldIdx + 1))
@@ -147,7 +147,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
                                                             kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
                                                             DATASET, classificationKWARGS, learningRate, LABELS_DICTIONARY,
                                                             views, nbCores, times, kFolds, name, nbFolds,
-                                                            validationIndices, gridSearch, nIter, metrics)
+                                                            validationIndices, gridSearch, nIter, metrics, statsIter, viewsIndices)
     labelsSet = set(LABELS_DICTIONARY.values())
     logging.info(stringAnalysis)
     featureString = "-".join(views)

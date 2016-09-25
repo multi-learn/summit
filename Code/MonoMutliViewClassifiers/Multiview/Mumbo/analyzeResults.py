@@ -131,10 +131,11 @@ def getAlgoConfig(initKWARGS, NB_CORES, viewNames, gridSearch, nIter, times):
 
 
 def getClassificationReport(kFolds, kFoldClassifier, CLASS_LABELS, validationIndices, DATASET,
-                            kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,statsIter):
+                            kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,statsIter, viewIndices):
+    nbView = len(viewIndices)
+    viewsDict = dict((viewIndex, index) for index, viewIndex in enumerate(viewIndices))
     DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
-    nbView = 10
     iterKFoldBestViews = []
     iterKFoldMeanAverageAccuracies = []
     iterKFoldAccuracyOnTrainByIter = []
@@ -222,6 +223,10 @@ def getClassificationReport(kFolds, kFoldClassifier, CLASS_LABELS, validationInd
     kFoldBestViewsM = []
     for foldIdx in range(len(kFolds)):
         kFoldBestViewsStatsM.append(np.mean(np.array([iterKFoldBestViewsStats[statIterIndex][foldIdx] for statIterIndex in range(statsIter)])))
+        bestViewVotes = np.zeros(nbView)
+        for statIterIndex in range(statsIter):
+            bestViewVotes[viewsDict[iterKFoldBestViews[statIterIndex][foldIdx]]]+=1
+        kFoldBestViewsM.append(viewIndices[np.argmax(bestViewVotes)])
 
 
     totalAccuracyOnTrain = np.mean(np.array(totalAccuracyOnTrainIter))
@@ -298,17 +303,18 @@ def getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabel
 
 def execute(kFoldClassifier, kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
             DATASET, initKWARGS, LEARNING_RATE, LABELS_DICTIONARY, views, NB_CORES, times, kFolds, databaseName,
-            nbFolds, validationIndices, gridSearch, nIter, metrics):
+            nbFolds, validationIndices, gridSearch, nIter, metrics, statsIter, viewindices):
     CLASS_LABELS = DATASET.get("Labels")[...]
     maxIter = initKWARGS["maxIter"]
     minIter = initKWARGS["minIter"]
+    nbView = len(viewindices)
     dbConfigurationString, viewNames = getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices, LABELS_DICTIONARY)
     algoConfigurationString, classifierAnalysis = getAlgoConfig(initKWARGS, NB_CORES, viewNames, gridSearch, nIter, times)
     (totalAccuracyOnTrain, totalAccuracyOnTest, totalAccuracyOnValidation, kFoldMeanAverageAccuracies,
      kFoldBestViewsStats, kFoldAccuracyOnTrainByIter, kFoldAccuracyOnTestByIter, kFoldAccuracyOnValidationByIter,
      kFoldBestViews) = getClassificationReport(kFolds, kFoldClassifier, CLASS_LABELS, validationIndices, DATASET,
                                                kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
-                                               kFoldPredictedValidationLabels)
+                                               kFoldPredictedValidationLabels, nbView)
     nbMinIter = maxIter
     nbMaxIter = minIter
     for classifier in kFoldClassifier:
