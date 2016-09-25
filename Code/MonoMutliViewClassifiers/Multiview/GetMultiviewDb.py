@@ -394,8 +394,6 @@ def findParams(arrayLen, nbPatients, maxNbBins=2000, minNbBins = 10, maxLenBin=7
         for lenBin in range(arrayLen-1):
             lenBin = lenBin+1
             if lenBin<maxLenBin and minNbBins*lenBin<arrayLen:
-                print lenBin
-                print results
                 for overlapping in sorted(range(lenBin-1), reverse=True):
                     overlapping = overlapping+1
                     if overlapping>minOverlapping and lenBin%(lenBin-overlapping)==0:
@@ -411,8 +409,8 @@ def findParams(arrayLen, nbPatients, maxNbBins=2000, minNbBins = 10, maxLenBin=7
 
 def findBins(nbBins=142, overlapping=493, lenBin=986):
     bins = []
-    for binIndex in range(nbBins+1):
-        bins.append([i+binIndex*(lenBin+1-overlapping+1) for i in range(lenBin+1)])
+    for binIndex in range(nbBins):
+        bins.append([i+binIndex*(lenBin-overlapping) for i in range(lenBin)])
     return bins
 
 

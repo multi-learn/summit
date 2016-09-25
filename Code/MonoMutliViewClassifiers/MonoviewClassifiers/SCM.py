@@ -3,11 +3,13 @@ from sklearn.pipeline import Pipeline
 from sklearn.grid_search import RandomizedSearchCV
 from sklearn.tree import DecisionTreeClassifier
 import Metrics
+import random
 from pyscm.utils import _pack_binary_bytes_to_ints
 import pyscm
 from scipy.stats import randint
 from utils.Dataset import getShape
 import h5py
+from Multiview import GetMultiviewDb as DB
 from pyscm.binary_attributes.base import BaseBinaryAttributeList
 import logging
 # Author-Info
@@ -16,6 +18,9 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
+    max_attrtibutes = kwargs['0']
+    p = kwargs['1']
+    model_type = kwargs['2']
     try:
         logging.debug("Start:\t Getting pre-computed rules")
         attributeClassification = kwargs["attributeClassification"]
@@ -25,12 +30,55 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
         logging.debug("Start:\t Pre-computing rules")
         attributeClassification, binaryAttributes = transformData(DATASET)
         logging.debug("Done:\t Pre-computing rules")
-    classifier = pyscm.scm.SetCoveringMachine(p=1.0, max_attributes=10, verbose=False)
+    classifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=max_attrtibutes, model_type=model_type, verbose=False)
     classifier.fit(binaryAttributes, CLASS_LABELS, X=None, attribute_classifications=attributeClassification, iteration_callback=None)
     return classifier
 
 
 def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
+
+    metricModule = getattr(Metrics, metric[0])
+    if metric[1]!=None:
+        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+    else:
+        metricKWARGS = {}
+    if metricModule.getConfig()[-14]=="h":
+        baseScore = -1000.0
+        isBetter = "higher"
+    else:
+        baseScore = 1000.0
+        isBetter = "lower"
+    config = []
+    for iterIndex in range(nIter):
+        max_attributes = random.randint(1, 20)
+        p = random.random()
+        model = random.choice(["conjunction", "disjunction"])
+        classifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=max_attributes, model_type=model, verbose=False)
+        if nbFolds != 1:
+            kFolds = DB.getKFoldIndices(nbFolds, y_train, len(set(y_train)), range(len(y_train)))
+        else:
+            kFolds = [[], range(len(y_train))]
+
+        for foldIdx, fold in enumerate(kFolds):
+            if fold != range(len(y_train)):
+                fold.sort()
+                trainIndices = [index for index in range(len(y_train)) if (index not in fold)]
+                attributeClassification, binaryAttributes, dsetFile = transformData(X_train[trainIndices])
+                classifier.fit(binaryAttributes, y_train[trainIndices], X=None, attribute_classifications=attributeClassification, iteration_callback=None)
+
+                predictedLabels = classifier.predict(X_train[fold])
+                score = metricModule.score(y_train[fold], predictedLabels)
+                print score
+                dsetFile.close()
+                if isBetter=="higher" and score>baseScore:
+                    baseScore = score
+                    config = [max_attributes, p, model]
+                if isBetter=="lower" and score<baseScore:
+                    baseScore = score
+                    config = [max_attributes, p, model]
+
+    assert config!=[], "No good configuration found for SCM"
+    return config
 
     # pipeline = Pipeline([('classifier',  pyscm.scm.SetCoveringMachine())])
     #
@@ -71,10 +119,11 @@ def transformData(dataArray):
         dsetFile = h5py.File("temp_scm", "w")
         packedDataset = dsetFile.create_dataset("temp_scm", data=packedData)
         dsetFile.close()
-        packedDataset = h5py.File("temp_scm", "r").get("temp_scm")
+        dsetFile = h5py.File("temp_scm", "r")
+        packedDataset = dsetFile.get("temp_scm")
         logging.debug("Done:\t Packing Data")
         attributeClassification = BaptisteRuleClassifications(packedDataset, nbExamples)
-        return attributeClassification, binaryAttributes
+        return attributeClassification, binaryAttributes, dsetFile
 
 
 def isBinary(dataset):

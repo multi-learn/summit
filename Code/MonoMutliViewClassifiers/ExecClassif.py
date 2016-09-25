@@ -290,7 +290,6 @@ if "Multiview" in args.CL_type.strip(":"):
         else:
             benchmark["Multiview"]["Fusion"]["Classifiers"] = args.FU_cl_names.split(":")
 
-print benchmark
 
 if "Monoview" in args.CL_type.strip(":"):
     benchmark["Monoview"] = args.CL_algos_monoview.split(":")
@@ -381,8 +380,6 @@ if True:
         bestClassifiers = []
         bestClassifiersConfigs = []
         for viewIndex, view in enumerate(views):
-            print classifiersNames, viewIndex
-            print accuracies
             bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
             bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
         if True:
@@ -390,7 +387,6 @@ if True:
                 if True:
                     if benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
                         for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]:
-                            print "Poulet _______________________________________________________________________________________ "
                             arguments = {"CL_type": "Fusion",
                                          "views": views,
                                          "NB_VIEW": len(views),
@@ -426,7 +422,6 @@ if True:
 else:
     pass
 # resultsMultiview = []
-print argumentDictionaries["Multiview"]
 if nbCores>1:
     resultsMultiview = []
     nbExperiments = len(argumentDictionaries["Multiview"])
