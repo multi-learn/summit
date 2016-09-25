@@ -68,18 +68,17 @@ def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databa
     y_tests = []
     y_train_preds = []
     y_test_preds = []
-    for poulet in range(statsIter):
+    for iterationStat in range(statsIter):
         # Calculate Train/Test data
         logging.debug("Start:\t Determine Train/Test split")
         testIndices = ClassifMonoView.splitDataset(Y, nbClass, learningRate, datasetLength)
         trainIndices = [i for i in range(datasetLength) if i not in testIndices]
 
-        X_train = extractSubset(X,trainIndices) #ClassifMonoView.extractSet(X, trainIndices)
+        X_train = extractSubset(X,trainIndices)
 
-        X_test = extractSubset(X,testIndices)#ClassifMonoView.extractSet(X,testIndices)
+        X_test = extractSubset(X,testIndices)
         y_train = Y[trainIndices]
         y_test = Y[testIndices]
-        # X_train, X_test, y_train, y_test = ClassifMonoView.calcTrainTest(X, Y, learningRate)
 
         logging.debug("Info:\t Shape X_train:" + str(X_train.shape) + ", Length of y_train:" + str(len(y_train)))
         logging.debug("Info:\t Shape X_test:" + str(X_test.shape) + ", Length of y_test:" + str(len(y_test)))
@@ -91,7 +90,7 @@ def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databa
         classifierGridSearch = getattr(classifierModule, "gridSearch")
 
         if gridSearch:
-            logging.debug("Start:\t RandomSearch best settings with "+str(nIter)+" iterations")
+            logging.debug("Start:\t RandomSearch best settings with "+str(nIter)+" iterations for "+CL_type)
             cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metric=metrics[0], nIter=nIter)
             clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
             logging.debug("Done:\t RandomSearch best settings")
@@ -115,7 +114,6 @@ def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databa
 
     logging.debug("Start:\t Getting Results")
 
-    #Accuracy classification score
     stringAnalysis, imagesAnalysis, metricsScores = execute(name, learningRate, nbFolds, nbCores, gridSearch, metrics, nIter, feat, CL_type,
                                          clKWARGS, labelsNames, X.shape,
                                          y_trains, y_train_preds, y_tests, y_test_preds, t_end, statsIter)
