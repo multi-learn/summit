@@ -559,7 +559,7 @@ def getKMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
 
     logging.debug("Start:\t Getting Binarized MiRNA Data")
-    k=findClosestPowerOfTwo(2)-1
+    k=findClosestPowerOfTwo(4)-1
     try:
         factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(mirnaData.shape[1])+"--k-"+str(k)+".csv", delimiter=',')
     except:
