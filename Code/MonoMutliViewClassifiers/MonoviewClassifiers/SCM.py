@@ -111,10 +111,24 @@ def transformData(dataArray):
         binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule)
         packedData = _pack_binary_bytes_to_ints(dataArray, 64)
         del dataArray
-        dsetFile = h5py.File("temp_scm", "w")
+        nameb = "temp_scm"
+        try:
+            dsetFile = h5py.File(nameb, "w")
+            name=nameb
+        except:
+            fail=True
+            i=0
+            while fail:
+                try:
+                    name = nameb+str(i)
+                    dsetFile = h5py.File(name, "w")
+                    fail=False
+                except:
+                    i+=1
+
         packedDataset = dsetFile.create_dataset("temp_scm", data=packedData)
         dsetFile.close()
-        dsetFile = h5py.File("temp_scm", "r")
+        dsetFile = h5py.File(name, "r")
         packedDataset = dsetFile.get("temp_scm")
         attributeClassification = BaptisteRuleClassifications(packedDataset, nbExamples)
         return attributeClassification, binaryAttributes, dsetFile
