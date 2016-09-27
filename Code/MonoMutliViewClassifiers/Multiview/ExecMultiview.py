@@ -94,7 +94,6 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
 
 
-        gridSearch=True
         if gridSearch:
             logging.info("Start:\t Randomsearching best settings for monoview classifiers")
             bestSettings, fusionConfig = classifierGridSearch(DATASET, viewsIndices, classificationKWARGS, learningIndices
