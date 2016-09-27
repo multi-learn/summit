@@ -356,7 +356,7 @@ else:
 
     accuracies = [[result[1][2][metrics[0][0]][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
-    classifiersConfigs = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
+    classifiersConfigs = [[result[1][1][:-1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
 monoviewTime = time.time()-dataBaseTime-start
 if True:
     if benchmark["Multiview"]:
