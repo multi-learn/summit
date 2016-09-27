@@ -113,7 +113,7 @@ def transformData(dataArray):
         packedData = _pack_binary_bytes_to_ints(dataArray, 64)
         del dataArray
         nameb = "temp_scm"
-        if not os.psth.isfile(nameb):
+        if not os.path.isfile(nameb):
             dsetFile = h5py.File(nameb, "w")
             name=nameb
         else:
