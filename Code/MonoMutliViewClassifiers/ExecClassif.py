@@ -381,7 +381,7 @@ if True:
 
         if True:
             if benchmark["Multiview"]["Fusion"]:
-                if True:
+                try:
                     if benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
                         bestClassifiers = []
                         bestClassifiersConfigs = []
@@ -400,7 +400,7 @@ if True:
                                                           "classifiersConfigs": bestClassifiersConfigs,
                                                           'fusionMethodConfig': fusionMethodConfig}}
                             argumentDictionaries["Multiview"].append(arguments)
-                else:
+                except:
                     pass
                     if True:
                         if benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
