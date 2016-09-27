@@ -400,7 +400,6 @@ if True:
                                                           "classifiersConfigs": bestClassifiersConfigs,
                                                           'fusionMethodConfig': fusionMethodConfig}}
                             argumentDictionaries["Multiview"].append(arguments)
-                            print bestClassifiersConfigs
                 except:
                     pass
                 try:
