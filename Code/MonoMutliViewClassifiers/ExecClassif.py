@@ -358,6 +358,7 @@ else:
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
     classifiersConfigs = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
 monoviewTime = time.time()-dataBaseTime-start
+print benchmark
 if True:
     if benchmark["Multiview"]:
         try:
@@ -400,7 +401,7 @@ if True:
                             argumentDictionaries["Multiview"].append(arguments)
                 else:
                     pass
-                    try:
+                    if True:
                         if benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
                             for method in benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"]:
                                 for classifier in benchmark["Multiview"]["Fusion"]["Classifiers"]:
@@ -415,13 +416,14 @@ if True:
                                                                   "classifiersConfigs": [globals()[classifier+"KWARGSInit"]],
                                                                   'fusionMethodConfig': fusionMethodConfig}}
                                     argumentDictionaries["Multiview"].append(arguments)
-                    except:
+                    else:
                         pass
         else:
             pass
 else:
     pass
 # resultsMultiview = []
+print argumentDictionaries
 if nbCores>1:
     resultsMultiview = []
     nbExperiments = len(argumentDictionaries["Multiview"])
