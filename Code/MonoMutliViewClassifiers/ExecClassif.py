@@ -384,9 +384,10 @@ if True:
                     if benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
                         bestClassifiers = []
                         bestClassifiersConfigs = []
-                        for viewIndex, view in enumerate(views):
-                            bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
-                            bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+                        if argumentDictionaries["Monoview"] != []:
+                            for viewIndex, view in enumerate(views):
+                                bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+                                bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
                         for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]:
                             arguments = {"CL_type": "Fusion",
                                          "views": views,
@@ -399,6 +400,7 @@ if True:
                                                           "classifiersConfigs": bestClassifiersConfigs,
                                                           'fusionMethodConfig': fusionMethodConfig}}
                             argumentDictionaries["Multiview"].append(arguments)
+                            print bestClassifiersConfigs
                 except:
                     pass
                 try:
@@ -423,7 +425,6 @@ if True:
 else:
     pass
 # resultsMultiview = []
-print argumentDictionaries
 if nbCores>1:
     resultsMultiview = []
     nbExperiments = len(argumentDictionaries["Multiview"])

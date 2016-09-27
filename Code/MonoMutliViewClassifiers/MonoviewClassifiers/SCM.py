@@ -122,6 +122,7 @@ def transformData(dataArray):
             i=0
             name=nameb
             while fail:
+                print name
                 if not os.path.isfile(name):
                     name = nameb+str(i)
                     dsetFile = h5py.File(name, "w")
