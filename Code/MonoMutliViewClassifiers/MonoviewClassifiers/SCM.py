@@ -124,11 +124,11 @@ def transformData(dataArray):
             while fail:
                 print name
                 if not os.path.isfile(name):
-                    name = nameb+str(i)
                     dsetFile = h5py.File(name, "w")
                     fail=False
                 else:
                     i+=1
+                    name = nameb+str(i)
 
         packedDataset = dsetFile.create_dataset("temp_scm", data=packedData)
         dsetFile.close()
