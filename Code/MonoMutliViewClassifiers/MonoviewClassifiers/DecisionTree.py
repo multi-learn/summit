@@ -11,6 +11,7 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 
 def fit(DATASET, CLASS_LABELS, NB_CORES=1, **kwargs):
+    print kwargs
     maxDepth = int(kwargs['0'])
     classifier = DecisionTreeClassifier(max_depth=maxDepth)
     classifier.fit(DATASET, CLASS_LABELS)

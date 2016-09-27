@@ -37,6 +37,9 @@ class WeightedLinear(EarlyFusionClassifier):
         if not trainIndices:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         self.weights = self.weights/float(max(self.weights))
+        print dict((str(configIndex), config) for configIndex, config in
+                   enumerate(self.monoviewClassifiersConfig
+                             ))
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=trainIndices, viewsIndices=viewsIndices)
         monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
         self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET.get("Labels")[trainIndices],
