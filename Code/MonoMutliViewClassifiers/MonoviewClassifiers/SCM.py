@@ -12,6 +12,7 @@ import h5py
 from Multiview import GetMultiviewDb as DB
 from pyscm.binary_attributes.base import BaseBinaryAttributeList
 import logging
+import os
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
@@ -112,18 +113,18 @@ def transformData(dataArray):
         packedData = _pack_binary_bytes_to_ints(dataArray, 64)
         del dataArray
         nameb = "temp_scm"
-        try:
+        if not os.psth.isfile(nameb):
             dsetFile = h5py.File(nameb, "w")
             name=nameb
-        except:
+        else:
             fail=True
             i=0
             while fail:
-                try:
+                if not os.path.isfile(name):
                     name = nameb+str(i)
                     dsetFile = h5py.File(name, "w")
                     fail=False
-                except:
+                else:
                     i+=1
 
         packedDataset = dsetFile.create_dataset("temp_scm", data=packedData)
