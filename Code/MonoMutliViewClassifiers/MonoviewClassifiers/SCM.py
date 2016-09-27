@@ -32,11 +32,12 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
         attributeClassification = kwargs["attributeClassification"]
         binaryAttributes = kwargs["binaryAttributes"]
     except:
-        attributeClassification, binaryAttributes, dsetFile = transformData(DATASET)
+        attributeClassification, binaryAttributes, dsetFile, name = transformData(DATASET)
     classifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=max_attrtibutes, model_type=model_type, verbose=False)
     classifier.fit(binaryAttributes, CLASS_LABELS, X=None, attribute_classifications=attributeClassification, iteration_callback=None)
     try:
         dsetFile.close()
+        os.remove(name)
     except:
         pass
     return classifier
@@ -133,7 +134,7 @@ def transformData(dataArray):
         dsetFile = h5py.File(name, "r")
         packedDataset = dsetFile.get("temp_scm")
         attributeClassification = BaptisteRuleClassifications(packedDataset, nbExamples)
-        return attributeClassification, binaryAttributes, dsetFile
+        return attributeClassification, binaryAttributes, dsetFile, name
 
 
 def isBinary(dataset):
