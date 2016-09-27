@@ -263,6 +263,7 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     methylDset[...] = methylData
     methylDset.attrs["name"] = "Methyl"
     methylDset.attrs["sparse"] = False
+    methylDset.attrs["binary"] = False
     logging.debug("Done:\t Getting Methylation Data")
 
     logging.debug("Start:\t Getting MiRNA Data")
@@ -271,6 +272,7 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     mirnaDset[...] = mirnaData
     mirnaDset.attrs["name"]="MiRNA_"
     mirnaDset.attrs["sparse"] = False
+    mirnaDset.attrs["binary"] = False
     logging.debug("Done:\t Getting MiRNA Data")
 
     logging.debug("Start:\t Getting RNASeq Data")
@@ -284,6 +286,7 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     rnaseqDset[...] = rnaseqData[:, usefulRows]
     rnaseqDset.attrs["name"]="RNASeq_"
     rnaseqDset.attrs["sparse"] = False
+    rnaseqDset.attrs["binary"] = False
     logging.debug("Done:\t Getting RNASeq Data")
 
     logging.debug("Start:\t Getting Clinical Data")
@@ -292,6 +295,7 @@ def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     clinicalDset[...] = clinical
     clinicalDset.attrs["name"] = "Clinic"
     clinicalDset.attrs["sparse"] = False
+    clinicalDset.attrs["binary"] = False
     logging.debug("Done:\t Getting Clinical Data")
 
     labelFile = open(path+'brca_labels_triple-negatif.csv')
