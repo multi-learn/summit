@@ -8,8 +8,13 @@ from utils.Dataset import getV
 class EarlyFusionClassifier(object):
     def __init__(self, monoviewClassifierName, monoviewClassifierConfig, NB_CORES=1):
         self.monoviewClassifierName = monoviewClassifierName[0]
+        if type(monoviewClassifierConfig[0])==dict:
+            pass
+        else:
+            monoviewClassifierConfig[0] = dict((str(configIndex), config) for configIndex, config in
+                                               enumerate(self.monoviewClassifiersConfig
+                                                         ))
         self.monoviewClassifiersConfig = monoviewClassifierConfig[0]
-        print monoviewClassifierConfig
         self.monoviewClassifier = None
         self.nbCores = NB_CORES
         self.monoviewData = None
