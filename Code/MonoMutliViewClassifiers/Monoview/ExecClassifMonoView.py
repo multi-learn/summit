@@ -108,8 +108,8 @@ def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databa
         y_train_preds.append(y_train_pred)
         y_tests.append(y_test)
         y_test_preds.append(y_test_pred)
+        logging.debug("Done:\t Predicting")
     t_end  = time.time() - t_start
-    logging.debug("Done:\t Predicting")
     logging.debug("Info:\t Time for training and predicting: " + str(t_end) + "[s]")
 
     logging.debug("Start:\t Getting Results")
