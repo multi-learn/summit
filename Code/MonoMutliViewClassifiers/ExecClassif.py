@@ -358,7 +358,7 @@ else:
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
     classifiersConfigs = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
 monoviewTime = time.time()-dataBaseTime-start
-print benchmark
+
 if True:
     if benchmark["Multiview"]:
         try:
@@ -378,15 +378,16 @@ if True:
                     argumentDictionaries["Multiview"].append(arguments)
         except:
             pass
-        bestClassifiers = []
-        bestClassifiersConfigs = []
-        for viewIndex, view in enumerate(views):
-            bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
-            bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+
         if True:
             if benchmark["Multiview"]["Fusion"]:
                 if True:
                     if benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
+                        bestClassifiers = []
+                        bestClassifiersConfigs = []
+                        for viewIndex, view in enumerate(views):
+                            bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
+                            bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
                         for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]:
                             arguments = {"CL_type": "Fusion",
                                          "views": views,
