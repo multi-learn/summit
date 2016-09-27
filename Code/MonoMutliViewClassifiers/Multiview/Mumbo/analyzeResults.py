@@ -319,9 +319,9 @@ def printMetricScore(metricScores, metrics):
         else:
             metricKWARGS = {}
         metricScoreString += "\tFor "+metricModule.getConfig(**metricKWARGS)+" : "
-        metricScoreString += "\n\t\t- Score on train : "+str(metricScores[metric[0]][0])
-        metricScoreString += "\n\t\t- Score on test : "+str(metricScores[metric[0]][1])
-        metricScoreString += "\n\t\t- Score on validation : "+str(metricScores[metric[0]][2])
+        metricScoreString += "\n\t\t- Score on train : "+str(metricScores[metric[0]][0]) +" with STD : "+str(metricScores[metric[0]][3])
+        metricScoreString += "\n\t\t- Score on test : "+str(metricScores[metric[0]][1]) +" with STD : "+str(metricScores[metric[0]][4])
+        metricScoreString += "\n\t\t- Score on validation : "+str(metricScores[metric[0]][2]) +" with STD : "+str(metricScores[metric[0]][5])
         metricScoreString += "\n\n"
     return metricScoreString
 
@@ -341,7 +341,7 @@ def getTotalMetricScores(metric, kFoldPredictedTrainLabels, kFoldPredictedTestLa
         trainScores.append(np.mean(np.array([metricModule.score([label for index, label in enumerate(labels) if (index not in fold) and (index not in validationIndices[statsIterIndex])], predictedLabels, **metricKWARGS) for fold, predictedLabels in zip(kFolds[statsIterIndex], kFoldPredictedTrainLabels[statsIterIndex])])))
         testScores.append(np.mean(np.array([metricModule.score(labels[fold], predictedLabels, **metricKWARGS) for fold, predictedLabels in zip(kFolds[statsIterIndex], kFoldPredictedTestLabels[statsIterIndex])])))
         validationScores.append(np.mean(np.array([metricModule.score(labels[validationIndices[statsIterIndex]], predictedLabels, **metricKWARGS) for predictedLabels in kFoldPredictedValidationLabels[statsIterIndex]])))
-    return [np.mean(np.array(trainScores)), np.mean(np.array(testScores)), np.mean(np.array(validationScores))]
+    return [np.mean(np.array(trainScores)), np.mean(np.array(testScores)), np.mean(np.array(validationScores)), np.std(np.array(testScores)),np.std(np.array(validationScores)), np.std(np.array(trainScores))]
 
 
 def getMetricsScores(metrics, kFoldPredictedTrainLabels, kFoldPredictedTestLabels,
