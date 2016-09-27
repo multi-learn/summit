@@ -168,7 +168,7 @@ os.nice(args.nice)
 nbCores = args.CL_cores
 statsIter = args.CL_statsiter
 start = time.time()
-if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake", "Plausible"]:
+if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake", "Plausible", "KMultiOmic"]:
     getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
 else:
     getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])

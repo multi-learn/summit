@@ -482,6 +482,275 @@ def getAdjacenceMatrix(RNASeqRanking, sotredRNASeq, k=2):
     return mat
 
 
+def getKMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
+
+    datasetFile = h5py.File(path+"KMultiOmic.hdf5", "w")
+
+    # logging.debug("Start:\t Getting Methylation Data")
+    # methylData = np.genfromtxt(path+"matching_methyl.csv", delimiter=',')
+    # logging.debug("Done:\t Getting Methylation Data")
+    #
+    # logging.debug("Start:\t Getting Sorted Methyl Data")
+    # Methyl = methylData
+    # sortedMethylGeneIndices = np.zeros(methylData.shape, dtype=int)
+    # MethylRanking = np.zeros(methylData.shape, dtype=int)
+    # for exampleIndex, exampleArray in enumerate(Methyl):
+    #     sortedMethylDictionary = dict((index, value) for index, value in enumerate(exampleArray))
+    #     sortedMethylIndicesDict = sorted(sortedMethylDictionary.items(), key=operator.itemgetter(1))
+    #     sortedMethylIndicesArray = np.array([index for (index, value) in sortedMethylIndicesDict], dtype=int)
+    #     sortedMethylGeneIndices[exampleIndex] = sortedMethylIndicesArray
+    #     for geneIndex in range(Methyl.shape[1]):
+    #         MethylRanking[exampleIndex, sortedMethylIndicesArray[geneIndex]] = geneIndex
+    # logging.debug("Done:\t Getting Sorted Methyl Data")
+    #
+    #
+    # logging.debug("Start:\t Getting Binarized Methyl Data")
+    # k=findClosestPowerOfTwo(58)-1
+    # try:
+    #     factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(methylData.shape[1])+"--k-"+str(k)+".csv", delimiter=',')
+    # except:
+    #     factorizedLeftBaseMatrix = getBaseMatrices(methylData.shape[1], k, path)
+    # bMethylDset = datasetFile.create_dataset("View0", (sortedMethylGeneIndices.shape[0], sortedMethylGeneIndices.shape[1]*k), dtype=np.uint8)
+    # for patientIndex, patientSortedArray in enumerate(sortedMethylGeneIndices):
+    #     patientMatrix = np.zeros((sortedMethylGeneIndices.shape[1], k), dtype=np.uint8)
+    #     for lineIndex, geneIndex in enumerate(patientSortedArray):
+    #         patientMatrix[geneIndex]= factorizedLeftBaseMatrix[lineIndex,:]
+    #     bMethylDset[patientIndex] = patientMatrix.flatten()
+    # bMethylDset.attrs["name"] = "BMethyl"+str(k)
+    # bMethylDset.attrs["sparse"] = False
+    # bMethylDset.attrs["binary"] = True
+    # logging.debug("Done:\t Getting Binarized Methyl Data")
+    #
+    # logging.debug("Start:\t Getting Binned Methyl Data")
+    # lenBins = 2095
+    # nbBins = 58
+    # overlapping = 1676
+    # try:
+    #     sortedBinsMatrix = np.genfromtxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", delimiter=",")
+    # except:
+    #     sortedBinsMatrix = makeSortedBinsMatrix(nbBins, lenBins, overlapping, methylData.shape[1], path)
+    # binnedMethyl = datasetFile.create_dataset("View1", (sortedMethylGeneIndices.shape[0], sortedMethylGeneIndices.shape[1]*nbBins), dtype=np.uint8)
+    # for patientIndex, patientSortedArray in enumerate(sortedMethylGeneIndices):
+    #     patientMatrix = np.zeros((sortedMethylGeneIndices.shape[1], nbBins), dtype=np.uint8)
+    #     for lineIndex, geneIndex in enumerate(patientSortedArray):
+    #         patientMatrix[geneIndex]= sortedBinsMatrix[lineIndex,:]
+    #     binnedMethyl[patientIndex] = patientMatrix.flatten()
+    # binnedMethyl.attrs["name"] = "bMethyl"+str(nbBins)
+    # binnedMethyl.attrs["sparse"] = False
+    # binnedMethyl.attrs["binary"] = True
+    # logging.debug("Done:\t Getting Binned Methyl Data")
+
+    logging.debug("Start:\t Getting MiRNA Data")
+    mirnaData = np.genfromtxt(path+"matching_mirna.csv", delimiter=',')
+    logging.debug("Done:\t Getting MiRNA Data")
+
+    logging.debug("Start:\t Getting Sorted MiRNA Data")
+    MiRNA = mirnaData
+    sortedMiRNAGeneIndices = np.zeros(mirnaData.shape, dtype=int)
+    MiRNARanking = np.zeros(mirnaData.shape, dtype=int)
+    for exampleIndex, exampleArray in enumerate(MiRNA):
+        sortedMiRNADictionary = dict((index, value) for index, value in enumerate(exampleArray))
+        sortedMiRNAIndicesDict = sorted(sortedMiRNADictionary.items(), key=operator.itemgetter(1))
+        sortedMiRNAIndicesArray = np.array([index for (index, value) in sortedMiRNAIndicesDict], dtype=int)
+        sortedMiRNAGeneIndices[exampleIndex] = sortedMiRNAIndicesArray
+        for geneIndex in range(MiRNA.shape[1]):
+            MiRNARanking[exampleIndex, sortedMiRNAIndicesArray[geneIndex]] = geneIndex
+    logging.debug("Done:\t Getting Sorted MiRNA Data")
+
+
+    logging.debug("Start:\t Getting Binarized MiRNA Data")
+    k=findClosestPowerOfTwo(517)-1
+    try:
+        factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(mirnaData.shape[1])+"--k-"+str(k)+".csv", delimiter=',')
+    except:
+        factorizedLeftBaseMatrix = getBaseMatrices(mirnaData.shape[1], k, path)
+    bmirnaDset = datasetFile.create_dataset("View0", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*k), dtype=np.uint8)
+    for patientIndex, patientSortedArray in enumerate(sortedMiRNAGeneIndices):
+        patientMatrix = np.zeros((sortedMiRNAGeneIndices.shape[1], k), dtype=np.uint8)
+        for lineIndex, geneIndex in enumerate(patientSortedArray):
+            patientMatrix[geneIndex]= factorizedLeftBaseMatrix[lineIndex,:]
+        bmirnaDset[patientIndex] = patientMatrix.flatten()
+    bmirnaDset.attrs["name"] = "BMiRNA_"+str(k)
+    bmirnaDset.attrs["sparse"] = False
+    bmirnaDset.attrs["binary"] = True
+    logging.debug("Done:\t Getting Binarized MiRNA Data")
+
+    logging.debug("Start:\t Getting Binned MiRNA Data")
+    lenBins = 14
+    nbBins = 517
+    overlapping = 12
+    try:
+        sortedBinsMatrix = np.genfromtxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", delimiter=",")
+    except:
+        sortedBinsMatrix = makeSortedBinsMatrix(nbBins, lenBins, overlapping, mirnaData.shape[1], path)
+    binnedMiRNA = datasetFile.create_dataset("View1", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*nbBins), dtype=np.uint8)
+    for patientIndex, patientSortedArray in enumerate(sortedMiRNAGeneIndices):
+        patientMatrix = np.zeros((sortedMiRNAGeneIndices.shape[1], nbBins), dtype=np.uint8)
+        for lineIndex, geneIndex in enumerate(patientSortedArray):
+            patientMatrix[geneIndex]= sortedBinsMatrix[lineIndex,:]
+        binnedMiRNA[patientIndex] = patientMatrix.flatten()
+    binnedMiRNA.attrs["name"] = "bMiRNA_517"
+    binnedMiRNA.attrs["sparse"] = False
+    binnedMiRNA.attrs["binary"] = True
+    logging.debug("Done:\t Getting Binned MiRNA Data")
+
+    logging.debug("Start:\t Getting Binarized MiRNA Data")
+    k=findClosestPowerOfTwo(1044)-1
+    try:
+        factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(mirnaData.shape[1])+"--k-"+str(k)+".csv", delimiter=',')
+    except:
+        factorizedLeftBaseMatrix = getBaseMatrices(mirnaData.shape[1], k, path)
+    bmirnaDset = datasetFile.create_dataset("View2", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*k), dtype=np.uint8)
+    for patientIndex, patientSortedArray in enumerate(sortedMiRNAGeneIndices):
+        patientMatrix = np.zeros((sortedMiRNAGeneIndices.shape[1], k), dtype=np.uint8)
+        for lineIndex, geneIndex in enumerate(patientSortedArray):
+            patientMatrix[geneIndex]= factorizedLeftBaseMatrix[lineIndex,:]
+        bmirnaDset[patientIndex] = patientMatrix.flatten()
+    bmirnaDset.attrs["name"] = "BMiRNA_"+str(k)
+    bmirnaDset.attrs["sparse"] = False
+    bmirnaDset.attrs["binary"] = True
+    logging.debug("Done:\t Getting Binarized MiRNA Data")
+
+    logging.debug("Start:\t Getting Binned MiRNA Data")
+    lenBins = 3
+    nbBins = 1044
+    overlapping = 2
+    try:
+        sortedBinsMatrix = np.genfromtxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", delimiter=",")
+    except:
+        sortedBinsMatrix = makeSortedBinsMatrix(nbBins, lenBins, overlapping, mirnaData.shape[1], path)
+    binnedMiRNA = datasetFile.create_dataset("View3", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*nbBins), dtype=np.uint8)
+    for patientIndex, patientSortedArray in enumerate(sortedMiRNAGeneIndices):
+        patientMatrix = np.zeros((sortedMiRNAGeneIndices.shape[1], nbBins), dtype=np.uint8)
+        for lineIndex, geneIndex in enumerate(patientSortedArray):
+            patientMatrix[geneIndex]= sortedBinsMatrix[lineIndex,:]
+        binnedMiRNA[patientIndex] = patientMatrix.flatten()
+    binnedMiRNA.attrs["name"] = "bMiRNA_1044"
+    binnedMiRNA.attrs["sparse"] = False
+    binnedMiRNA.attrs["binary"] = True
+    logging.debug("Done:\t Getting Binned MiRNA Data")
+
+    logging.debug("Start:\t Getting Binarized MiRNA Data")
+    k=findClosestPowerOfTwo(1026)-1
+    try:
+        factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(mirnaData.shape[1])+"--k-"+str(k)+".csv", delimiter=',')
+    except:
+        factorizedLeftBaseMatrix = getBaseMatrices(mirnaData.shape[1], k, path)
+    bmirnaDset = datasetFile.create_dataset("View4", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*k), dtype=np.uint8)
+    for patientIndex, patientSortedArray in enumerate(sortedMiRNAGeneIndices):
+        patientMatrix = np.zeros((sortedMiRNAGeneIndices.shape[1], k), dtype=np.uint8)
+        for lineIndex, geneIndex in enumerate(patientSortedArray):
+            patientMatrix[geneIndex]= factorizedLeftBaseMatrix[lineIndex,:]
+        bmirnaDset[patientIndex] = patientMatrix.flatten()
+    bmirnaDset.attrs["name"] = "BMiRNA_"+str(k)
+    bmirnaDset.attrs["sparse"] = False
+    bmirnaDset.attrs["binary"] = True
+    logging.debug("Done:\t Getting Binarized MiRNA Data")
+
+    logging.debug("Start:\t Getting Binned MiRNA Data")
+    lenBins = 16
+    nbBins = 1026
+    overlapping = 14
+    try:
+        sortedBinsMatrix = np.genfromtxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", delimiter=",")
+    except:
+        sortedBinsMatrix = makeSortedBinsMatrix(nbBins, lenBins, overlapping, mirnaData.shape[1], path)
+    binnedMiRNA = datasetFile.create_dataset("View5", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*nbBins), dtype=np.uint8)
+    for patientIndex, patientSortedArray in enumerate(sortedMiRNAGeneIndices):
+        patientMatrix = np.zeros((sortedMiRNAGeneIndices.shape[1], nbBins), dtype=np.uint8)
+        for lineIndex, geneIndex in enumerate(patientSortedArray):
+            patientMatrix[geneIndex]= sortedBinsMatrix[lineIndex,:]
+        binnedMiRNA[patientIndex] = patientMatrix.flatten()
+    binnedMiRNA.attrs["name"] = "bMiRNA_1026"
+    binnedMiRNA.attrs["sparse"] = False
+    binnedMiRNA.attrs["binary"] = True
+    logging.debug("Done:\t Getting Binned MiRNA Data")
+
+    # logging.debug("Start:\t Getting RNASeq Data")
+    # rnaseqData = np.genfromtxt(path+"matching_rnaseq.csv", delimiter=',')
+    # uselessRows = []
+    # for rowIndex, row in enumerate(np.transpose(rnaseqData)):
+    #     if not row.any():
+    #         uselessRows.append(rowIndex)
+    # usefulRows = [usefulRowIndex for usefulRowIndex in range(rnaseqData.shape[1]) if usefulRowIndex not in uselessRows]
+    # rnaseqData = rnaseqData[:, usefulRows]
+    # logging.debug("Done:\t Getting RNASeq Data")
+    #
+    # logging.debug("Start:\t Getting Sorted RNASeq Data")
+    # RNASeq = rnaseqData
+    # sortedRNASeqGeneIndices = np.zeros(rnaseqData.shape, dtype=int)
+    # RNASeqRanking = np.zeros(rnaseqData.shape, dtype=int)
+    # for exampleIndex, exampleArray in enumerate(RNASeq):
+    #     sortedRNASeqDictionary = dict((index, value) for index, value in enumerate(exampleArray))
+    #     sortedRNASeqIndicesDict = sorted(sortedRNASeqDictionary.items(), key=operator.itemgetter(1))
+    #     sortedRNASeqIndicesArray = np.array([index for (index, value) in sortedRNASeqIndicesDict], dtype=int)
+    #     sortedRNASeqGeneIndices[exampleIndex] = sortedRNASeqIndicesArray
+    #     for geneIndex in range(RNASeq.shape[1]):
+    #         RNASeqRanking[exampleIndex, sortedRNASeqIndicesArray[geneIndex]] = geneIndex
+    # logging.debug("Done:\t Getting Sorted RNASeq Data")
+    #
+    # logging.debug("Start:\t Getting Binarized RNASeq Data")
+    # k=findClosestPowerOfTwo(100)-1
+    # try:
+    #     factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(rnaseqData.shape[1])+"--k-"+str(k)+".csv", delimiter=',')
+    # except:
+    #     factorizedLeftBaseMatrix = getBaseMatrices(rnaseqData.shape[1], k, path)
+    # brnaseqDset = datasetFile.create_dataset("View5", (sortedRNASeqGeneIndices.shape[0], sortedRNASeqGeneIndices.shape[1]*k), dtype=np.uint8)
+    # for patientIndex, patientSortedArray in enumerate(sortedRNASeqGeneIndices):
+    #     patientMatrix = np.zeros((sortedRNASeqGeneIndices.shape[1], k), dtype=np.uint8)
+    #     for lineIndex, geneIndex in enumerate(patientSortedArray):
+    #         patientMatrix[geneIndex]= factorizedLeftBaseMatrix[lineIndex,:]
+    #     brnaseqDset[patientIndex] = patientMatrix.flatten()
+    # brnaseqDset.attrs["name"] = "BRNASeq"
+    # brnaseqDset.attrs["sparse"] = False
+    # brnaseqDset.attrs["binary"] = True
+    # logging.debug("Done:\t Getting Binarized RNASeq Data")
+    #
+    # logging.debug("Start:\t Getting Binned RNASeq Data")
+    # lenBins = 986
+    # nbBins = 142
+    # overlapping = 493
+    # try:
+    #     sortedBinsMatrix = np.genfromtxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", delimiter=",")
+    # except:
+    #     sortedBinsMatrix = makeSortedBinsMatrix(nbBins, lenBins, overlapping, rnaseqData.shape[1], path)
+    # binnedRNASeq = datasetFile.create_dataset("View6", (sortedRNASeqGeneIndices.shape[0], sortedRNASeqGeneIndices.shape[1]*nbBins), dtype=np.uint8)
+    # for patientIndex, patientSortedArray in enumerate(sortedRNASeqGeneIndices):
+    #     patientMatrix = np.zeros((sortedRNASeqGeneIndices.shape[1], nbBins), dtype=np.uint8)
+    #     for lineIndex, geneIndex in enumerate(patientSortedArray):
+    #         patientMatrix[geneIndex]= sortedBinsMatrix[lineIndex,:]
+    #     binnedRNASeq[patientIndex] = patientMatrix.flatten()
+    # binnedRNASeq.attrs["name"] = "bRNASeq"
+    # binnedRNASeq.attrs["sparse"] = False
+    # binnedRNASeq.attrs["binary"] = True
+    # logging.debug("Done:\t Getting Binned RNASeq Data")
+
+
+
+    labelFile = open(path+'brca_labels_triple-negatif.csv')
+    labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
+    labelsDset = datasetFile.create_dataset("Labels", labels.shape)
+    labelsDset[...] = labels
+    labelsDset.attrs["name"] = "Labels"
+
+    metaDataGrp = datasetFile.create_group("Metadata")
+    metaDataGrp.attrs["nbView"] = 14
+    metaDataGrp.attrs["nbClass"] = 2
+    metaDataGrp.attrs["datasetLength"] = len(labels)
+    labelDictionary = {0:"No", 1:"Yes"}
+
+    datasetFile.close()
+    datasetFile = h5py.File(path+"KMultiOmic.hdf5", "r")
+
+    return datasetFile, labelDictionary
+
+
+def getKMultiOmicDBhdf5(features, path, name, NB_CLASS, LABELS_NAMES):
+    datasetFile = h5py.File(path+"KMultiOmic.hdf5", "r")
+    labelDictionary = {0:"No", 1:"Yes"}
+    return datasetFile, labelDictionary
+
+
 def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 
     datasetFile = h5py.File(path+"ModifiedMultiOmic.hdf5", "w")
