@@ -119,6 +119,7 @@ def transformData(dataArray):
         else:
             fail=True
             i=0
+            name=nameb
             while fail:
                 if not os.path.isfile(name):
                     name = nameb+str(i)
