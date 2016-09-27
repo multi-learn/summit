@@ -590,7 +590,7 @@ def getKMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     labelsDset.attrs["name"] = "Labels"
 
     metaDataGrp = datasetFile.create_group("Metadata")
-    metaDataGrp.attrs["nbView"] = 16
+    metaDataGrp.attrs["nbView"] = 4
     metaDataGrp.attrs["nbClass"] = 2
     metaDataGrp.attrs["datasetLength"] = len(labels)
     labelDictionary = {0:"No", 1:"Yes"}
