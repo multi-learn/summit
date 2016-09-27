@@ -401,23 +401,23 @@ if True:
                             argumentDictionaries["Multiview"].append(arguments)
                 except:
                     pass
-                    if True:
-                        if benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
-                            for method in benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"]:
-                                for classifier in benchmark["Multiview"]["Fusion"]["Classifiers"]:
-                                    arguments = {"CL_type": "Fusion",
-                                                 "views": views,
-                                                 "NB_VIEW": len(views),
-                                                 "viewsIndices": viewsIndices,
-                                                 "NB_CLASS": len(args.CL_classes.split(":")),
-                                                 "LABELS_NAMES": args.CL_classes.split(":"),
-                                                 "FusionKWARGS": {"fusionType":"EarlyFusion", "fusionMethod":method,
-                                                                  "classifiersNames": [classifier],
-                                                                  "classifiersConfigs": [globals()[classifier+"KWARGSInit"]],
-                                                                  'fusionMethodConfig': fusionMethodConfig}}
-                                    argumentDictionaries["Multiview"].append(arguments)
-                    else:
-                        pass
+                try:
+                    if benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
+                        for method in benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"]:
+                            for classifier in benchmark["Multiview"]["Fusion"]["Classifiers"]:
+                                arguments = {"CL_type": "Fusion",
+                                             "views": views,
+                                             "NB_VIEW": len(views),
+                                             "viewsIndices": viewsIndices,
+                                             "NB_CLASS": len(args.CL_classes.split(":")),
+                                             "LABELS_NAMES": args.CL_classes.split(":"),
+                                             "FusionKWARGS": {"fusionType":"EarlyFusion", "fusionMethod":method,
+                                                              "classifiersNames": [classifier],
+                                                              "classifiersConfigs": [globals()[classifier+"KWARGSInit"]],
+                                                              'fusionMethodConfig': fusionMethodConfig}}
+                                argumentDictionaries["Multiview"].append(arguments)
+                except:
+                    pass
         else:
             pass
 else:
