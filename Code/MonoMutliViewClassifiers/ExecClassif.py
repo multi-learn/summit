@@ -302,6 +302,7 @@ SVMLinearKWARGSInit = {"0":map(int, args.CL_SVML_C.split(":"))[0]}
 SVMRBFKWARGSInit = {"0":map(int, args.CL_SVMR_C.split(":"))[0]}
 SVMPolyKWARGSInit = {"0":map(int, args.CL_SVMP_C.split(":"))[0], '1':map(int, args.CL_SVMP_deg.split(":"))[0]}
 DecisionTreeKWARGSInit = {"0":map(int, args.CL_DT_depth.split(":"))[0]}
+print DecisionTreeKWARGSInit
 SGDKWARGSInit = {"2": map(float, args.CL_SGD_alpha.split(":"))[0], "1": args.CL_SGD_penalty.split(":")[0],
              "0":args.CL_SGD_loss.split(":")[0]}
 KNNKWARGSInit = {"0": map(float, args.CL_KNN_neigh.split(":"))[0]}

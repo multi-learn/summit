@@ -9,6 +9,7 @@ class EarlyFusionClassifier(object):
     def __init__(self, monoviewClassifierName, monoviewClassifierConfig, NB_CORES=1):
         self.monoviewClassifierName = monoviewClassifierName[0]
         self.monoviewClassifiersConfig = monoviewClassifierConfig[0]
+        print monoviewClassifierConfig
         self.monoviewClassifier = None
         self.nbCores = NB_CORES
         self.monoviewData = None

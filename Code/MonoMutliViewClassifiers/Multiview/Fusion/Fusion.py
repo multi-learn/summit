@@ -64,6 +64,7 @@ class Fusion:
         fusionMethodClass = getattr(fusionMethodModule, fusionMethod)
         nbCores = NB_CORES
         classifierKWARGS = dict((key, value) for key, value in kwargs.iteritems() if key not in ['fusionType', 'fusionMethod'])
+        print classifierKWARGS
         self.classifier = fusionMethodClass(NB_CORES=nbCores, **classifierKWARGS)
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
