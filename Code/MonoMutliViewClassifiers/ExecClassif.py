@@ -276,7 +276,7 @@ if "Multiview" in args.CL_type.strip(":"):
         if "EarlyFusion" in args.FU_types.split(":"):
             if args.FU_late_methods.split(":") == [""]:
                 benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = [name for _, name, isPackage in
-                                                                             pkgutil.iter_modules(["Multiview/Fusion/Methods/EarlyFusion"])
+                                                                             pkgutil.iter_modules(["Multiview/Fusion/Methods/EarlyFusionPackage"])
                                                                              if not isPackage]
             else:
                 benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = args.FU_early_methods.split(":")
