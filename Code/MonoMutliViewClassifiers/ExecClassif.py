@@ -358,7 +358,7 @@ else:
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
     classifiersConfigs = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
 monoviewTime = time.time()-dataBaseTime-start
-
+print benchmark
 if True:
     if benchmark["Multiview"]:
         try:
