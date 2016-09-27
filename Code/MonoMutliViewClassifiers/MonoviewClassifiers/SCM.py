@@ -19,8 +19,14 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     max_attrtibutes = kwargs['0']
-    p = kwargs['1']
-    model_type = kwargs['2']
+    try:
+        p = kwargs['1']
+    except:
+        p=1.0
+    try:
+        model_type = kwargs['2']
+    except:
+        model_type="conjunction"
     try:
         attributeClassification = kwargs["attributeClassification"]
         binaryAttributes = kwargs["binaryAttributes"]

@@ -648,9 +648,9 @@ def getKMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
     logging.debug("Done:\t Getting Binarized MiRNA Data")
 
     logging.debug("Start:\t Getting Binned MiRNA Data")
-    lenBins = 16
+    lenBins = 21
     nbBins = 1026
-    overlapping = 14
+    overlapping = 20
     try:
         sortedBinsMatrix = np.genfromtxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", delimiter=",")
     except:
