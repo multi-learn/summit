@@ -672,7 +672,7 @@ def getKMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
         factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(mirnaData.shape[1])+"--k-"+str(k)+".csv", delimiter=',')
     except:
         factorizedLeftBaseMatrix = getBaseMatrices(mirnaData.shape[1], k, path)
-    bmirnaDset = datasetFile.create_dataset("View4", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*k), dtype=np.uint8)
+    bmirnaDset = datasetFile.create_dataset("View6", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*k), dtype=np.uint8)
     for patientIndex, patientSortedArray in enumerate(sortedMiRNAGeneIndices):
         patientMatrix = np.zeros((sortedMiRNAGeneIndices.shape[1], k), dtype=np.uint8)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
@@ -691,7 +691,7 @@ def getKMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
         sortedBinsMatrix = np.genfromtxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", delimiter=",")
     except:
         sortedBinsMatrix = makeSortedBinsMatrix(nbBins, lenBins, overlapping, mirnaData.shape[1], path)
-    binnedMiRNA = datasetFile.create_dataset("View5", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*nbBins), dtype=np.uint8)
+    binnedMiRNA = datasetFile.create_dataset("View7", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*nbBins), dtype=np.uint8)
     for patientIndex, patientSortedArray in enumerate(sortedMiRNAGeneIndices):
         patientMatrix = np.zeros((sortedMiRNAGeneIndices.shape[1], nbBins), dtype=np.uint8)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
@@ -708,7 +708,7 @@ def getKMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
         factorizedLeftBaseMatrix = np.genfromtxt(path+"factorLeft--n-"+str(mirnaData.shape[1])+"--k-"+str(k)+".csv", delimiter=',')
     except:
         factorizedLeftBaseMatrix = getBaseMatrices(mirnaData.shape[1], k, path)
-    bmirnaDset = datasetFile.create_dataset("View4", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*k), dtype=np.uint8)
+    bmirnaDset = datasetFile.create_dataset("View8", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*k), dtype=np.uint8)
     for patientIndex, patientSortedArray in enumerate(sortedMiRNAGeneIndices):
         patientMatrix = np.zeros((sortedMiRNAGeneIndices.shape[1], k), dtype=np.uint8)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
@@ -727,7 +727,7 @@ def getKMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
         sortedBinsMatrix = np.genfromtxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", delimiter=",")
     except:
         sortedBinsMatrix = makeSortedBinsMatrix(nbBins, lenBins, overlapping, mirnaData.shape[1], path)
-    binnedMiRNA = datasetFile.create_dataset("View5", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*nbBins), dtype=np.uint8)
+    binnedMiRNA = datasetFile.create_dataset("View9", (sortedMiRNAGeneIndices.shape[0], sortedMiRNAGeneIndices.shape[1]*nbBins), dtype=np.uint8)
     for patientIndex, patientSortedArray in enumerate(sortedMiRNAGeneIndices):
         patientMatrix = np.zeros((sortedMiRNAGeneIndices.shape[1], nbBins), dtype=np.uint8)
         for lineIndex, geneIndex in enumerate(patientSortedArray):
