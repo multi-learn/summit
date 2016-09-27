@@ -19,7 +19,7 @@ class EarlyFusionClassifier(object):
         nbView = len(viewsIndices)
         if not usedIndices:
             uesdIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if weights== None:
+        if type(weights)== type(None):
             weights = np.array([1/nbView for i in range(nbView)])
         if sum(weights)!=1:
             weights = weights/sum(weights)
