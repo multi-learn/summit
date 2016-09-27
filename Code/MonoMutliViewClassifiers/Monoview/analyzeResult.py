@@ -50,7 +50,7 @@ def execute(name, learningRate, nbFolds, nbCores, gridSearch, metrics, nIter, fe
     stdTrain = np.std(trainScores)
     stdTest = np.std(testScores)
     stringAnalysis = "Classification on "+name+" database for "+feat+" with "+CL_type+", and "+str(statsIter)+" statistical iterations\n\n"
-    stringAnalysis += metrics[0][0]+" on train : "+str(train)+", with STD : "+stdTrain+"\n"+metrics[0][0]+" on test : "+str(val)+", with STD : "+stdTest+"\n\n"
+    stringAnalysis += metrics[0][0]+" on train : "+str(train)+", with STD : "+str(stdTrain)+"\n"+metrics[0][0]+" on test : "+str(val)+", with STD : "+str(stdTest)+"\n\n"
     stringAnalysis += getDBConfigString(name, feat, learningRate, shape, classLabelsNames, nbFolds)
     stringAnalysis += getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS)
     for metric in metrics:
