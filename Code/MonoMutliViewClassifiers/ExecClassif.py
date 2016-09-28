@@ -159,6 +159,8 @@ groupFusion.add_argument('--FU_method_config', metavar='STRING', action='store',
                          help='Configuration for the fusion method', default=[''])
 groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store', nargs='+',
                          help='Configuration for the monoview classifiers used', default=[''])
+groupFusion.add_argument('--FU_cl_names', metavar='STRING', action='store',
+                         help='Names of the classifier used for fusion, one per view separated by :', default='')
 groupFusion.add_argument('--FU_fixed', action='store_true',
                         help='Determine if you want fusion for the monoview classifier in the same order as written')
 
@@ -387,7 +389,7 @@ if True:
                     elif not gridSearch:
                         raise ValueError("No config for fusion method given and no gridearch wanted")
                     else:
-                        fusionMethodConfigs = ["config" for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]]
+                        fusionMethodConfigs = [["config"] for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]]
                     for methodIndex, method in enumerate(benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]):
                         if args.FU_fixed:
                             arguments = {"CL_type": "Fusion",
@@ -397,7 +399,7 @@ if True:
                                          "NB_CLASS": len(args.CL_classes.split(":")),
                                          "LABELS_NAMES": args.CL_classes.split(":"),
                                          "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,
-                                                          "classifiersNames": monoClassifiers,
+                                                          "classifiersNames": args.FU_cl_names.split(":"),
                                                           "classifiersConfigs": monoClassifiersConfigs,
                                                           'fusionMethodConfig': fusionMethodConfigs[methodIndex]}}
                             argumentDictionaries["Multiview"].append(arguments)
