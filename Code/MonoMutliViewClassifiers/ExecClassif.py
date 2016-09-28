@@ -387,7 +387,7 @@ if True:
                     elif not gridSearch:
                         raise ValueError("No config for fusion method given and no gridearch wanted")
                     else:
-                        fusionMethodConfigs = ["" for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]]
+                        fusionMethodConfigs = ["config" for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]]
                     for methodIndex, method in enumerate(benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]):
                         if args.FU_fixed:
                             arguments = {"CL_type": "Fusion",
