@@ -7,6 +7,7 @@ import logging
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import numpy as np
 
 #Import own Modules
 import Metrics
@@ -20,7 +21,7 @@ def autolabel(rects, ax):
     for rect in rects:
         height = rect.get_height()
         ax.text(rect.get_x() + rect.get_width()/2., 1.01*height,
-                "%.2f" % round(height, 4),
+                "%.2f" % height,
                 ha='center', va='bottom')
 
 
@@ -34,7 +35,10 @@ def resultAnalysis(benchmark, results, name, times, metrics):
         nbResults = len(mono)+len(multi)
         validationScores = [float(res[1][2][metric[0]][2]) for res in mono]
         validationScores += [float(scores[metric[0]][2]) for a, b, scores in multi]
+        trainScores = [float(res[1][2][metric[0]][0]) for res in mono]
+        trainScores += [float(scores[metric[0]][0]) for a, b, scores in multi]
         f = pylab.figure(figsize=(40, 30))
+        width = 0.35       # the width of the bars
         fig = plt.gcf()
         fig.subplots_adjust(bottom=105.0, top=105.01)
         ax = f.add_axes([0.1, 0.1, 0.8, 0.8])
@@ -43,9 +47,12 @@ def resultAnalysis(benchmark, results, name, times, metrics):
         else:
             metricKWARGS = {}
         ax.set_title(getattr(Metrics, metric[0]).getConfig(**metricKWARGS)+" on validation set for each classifier")
-        rects = ax.bar(range(nbResults), validationScores, align='center')
+        rects = ax.bar(range(nbResults), validationScores, width, color="r")
+        rect2 = ax.bar(np.arange(nbResults)+width, trainScores, width, color="0.3")
         autolabel(rects, ax)
-        ax.set_xticks(range(nbResults))
+        autolabel(rect2, ax)
+        ax.legend((rects[0], rect2[0]), ('Train', 'Test'))
+        ax.set_xticks(np.arange(nbResults)+width)
         ax.set_xticklabels(names, rotation="vertical")
 
         f.savefig("Results/"+time.strftime("%Y%m%d-%H%M%S")+"-"+name+"-"+metric[0]+".png")

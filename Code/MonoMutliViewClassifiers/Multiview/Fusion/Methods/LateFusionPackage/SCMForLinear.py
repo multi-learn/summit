@@ -112,6 +112,11 @@ class SCMForLinear(LateFusionClassifier):
         packedDataset = dsetFile.get("temp_scm")
         attributeClassification = BaptisteRuleClassifications(packedDataset, monoViewDecisions.shape[0])
         self.SCMClassifier.fit(binaryAttributes, DATASET.get("Labels")[usedIndices], attribute_classifications=attributeClassification)
+        try:
+            dsetFile.close()
+            os.remove(name)
+        except:
+            pass
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
         configString = "with SCM for linear with max_attributes : "+str(self.config[1])+", p : "+str(self.config[0])+\

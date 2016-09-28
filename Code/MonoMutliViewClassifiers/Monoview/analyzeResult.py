@@ -59,7 +59,7 @@ def execute(name, learningRate, nbFolds, nbCores, gridSearch, metrics, nIter, fe
             metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
         else:
             metricKWARGS = {}
-        metricsScores[metric[0]] = [np.mean(np.array([getattr(Metrics, metric[0]).score(y_test, y_test_pred) for y_test, y_test_pred in zip(y_tests, y_test_preds)])), "",
+        metricsScores[metric[0]] = [np.mean(np.array([getattr(Metrics, metric[0]).score(y_train, y_train_pred) for y_train, y_train_pred in zip(y_trains, y_train_preds)])), "",
                                     np.mean(np.array([getattr(Metrics, metric[0]).score(y_test, y_test_pred) for y_test, y_test_pred in zip(y_tests, y_test_preds)]))]
     stringAnalysis += "\n\n Classification took "+ str(hms(seconds=int(time)))
 
