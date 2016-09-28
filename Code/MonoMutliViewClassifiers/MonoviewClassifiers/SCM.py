@@ -71,7 +71,7 @@ def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIt
             if fold != range(len(y_train)):
                 fold.sort()
                 trainIndices = [index for index in range(len(y_train)) if (index not in fold)]
-                attributeClassification, binaryAttributes, dsetFile = transformData(X_train[trainIndices])
+                attributeClassification, binaryAttributes, dsetFile, name = transformData(X_train[trainIndices])
                 try:
                     classifier.fit(binaryAttributes, y_train[trainIndices], X=None, attribute_classifications=attributeClassification, iteration_callback=None)
 
@@ -81,6 +81,7 @@ def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIt
                 except:
                     pass
                 dsetFile.close()
+                os.remove(name)
         if scores==[]:
             score = baseScore
         else:
