@@ -13,23 +13,27 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
-def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=4, nbClass=2, datasetLength=100):
-    nbFeatures = 300
+def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=4, nbClass=2, datasetLength=500):
+    nbFeatures = 150
     datasetFile = h5py.File(pathF+"Plausible.hdf5", "w")
+    CLASS_LABELS = np.array([0 for i in range(datasetLength/2)]+[1 for i in range(datasetLength/2)])
     for viewIndex in range(nbView):
-        if viewIndex== 0 :
-            viewData = np.array([np.zeros(nbFeatures) for i in range(datasetLength/2)]+[np.ones(nbFeatures) for i in range(datasetLength/2)]).astype(np.uint8)
-            viewDset = datasetFile.create_dataset("View"+str(viewIndex), viewData.shape)
-            viewDset.attrs["name"] = "View"+str(viewIndex)
-            viewDset.attrs["sparse"] = False
-            viewDset.attrs["binary"] = True
-        else:
-            viewData = np.array([np.random.normal(float((viewIndex+1)*10), 0.42, nbFeatures) for i in range(datasetLength/2)]+[np.random.normal(-float((viewIndex+1)*10),0.42,nbFeatures) for j in range(datasetLength/2)])
-            viewDset = datasetFile.create_dataset("View"+str(viewIndex), viewData.shape)
-            viewDset.attrs["name"] = "View"+str(viewIndex)
-            viewDset.attrs["sparse"] = False
-            viewDset.attrs["binary"] = False
-    CLASS_LABELS = np.array([0 for i in range(datasetLength/2+5)]+[1 for i in range(datasetLength/2-5)])
+        # if viewIndex== 0 :
+        viewData = np.array([np.zeros(nbFeatures) for i in range(datasetLength/2)]+[np.ones(nbFeatures) for i in range(datasetLength/2)]).astype(np.uint8)
+        fakeTrueIndices = np.random.randint(0, datasetLength/2-1, datasetLength/5)
+        fakeFalseIndices = np.random.randint(datasetLength/2, datasetLength, datasetLength/5)
+        viewData[fakeTrueIndices] = np.ones((len(fakeTrueIndices), nbFeatures))
+        viewData[fakeFalseIndices] = np.zeros((len(fakeFalseIndices), nbFeatures))
+        viewDset = datasetFile.create_dataset("View"+str(viewIndex), viewData.shape, data=viewData)
+        viewDset.attrs["name"] = "View"+str(viewIndex)
+        viewDset.attrs["sparse"] = False
+        viewDset.attrs["binary"] = True
+        # else:
+        #     viewData = np.array([np.random.normal(float((viewIndex+1)*10), 0.42, nbFeatures) for i in range(datasetLength/2)]+[np.random.normal(-float((viewIndex+1)*10),0.42,nbFeatures) for j in range(datasetLength/2)])
+        #     viewDset = datasetFile.create_dataset("View"+str(viewIndex), viewData.shape)
+        #     viewDset.attrs["name"] = "View"+str(viewIndex)
+        #     viewDset.attrs["sparse"] = False
+        #     viewDset.attrs["binary"] = False
     labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
     labelsDset[...] = CLASS_LABELS
     labelsDset.attrs["name"] = "Labels"

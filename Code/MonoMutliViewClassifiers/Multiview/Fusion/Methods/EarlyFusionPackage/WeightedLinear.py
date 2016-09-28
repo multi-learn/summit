@@ -22,7 +22,7 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndic
             if accuracy > bestScore:
                 bestScore = accuracy
                 bestConfig = normalizedArray
-        return [bestConfig]
+        return [np.array([1.0 for i in range(nbView)])]
 
 
 class WeightedLinear(EarlyFusionClassifier):

@@ -100,9 +100,9 @@ def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIt
 
 def getConfig(config):
     try :
-        return "\n\t\t- SCM with max_attributes : "+str(config[0])+", c : "+str(config[1])+", p : "+str(config[2])
+        return "\n\t\t- SCM with max_attributes : "+str(config[0])#+", c : "+str(config[1])+", p : "+str(config[2])
     except:
-        return "\n\t\t- SCM with max_attributes : "+str(config["0"])+", c : "+str(config["1"])+", p : "+str(config["2"])
+        return "\n\t\t- SCM with max_attributes : "+str(config["0"])#+", c : "+str(config["1"])+", p : "+str(config["2"])
 
 
 def transformData(dataArray):

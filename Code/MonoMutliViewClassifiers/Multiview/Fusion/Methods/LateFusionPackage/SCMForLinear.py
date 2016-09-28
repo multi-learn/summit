@@ -11,6 +11,7 @@ from pyscm.utils import _unpack_binary_bytes_from_ints
 from math import ceil
 import random
 from sklearn.metrics import accuracy_score
+import itertools
 
 
 def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
@@ -23,16 +24,17 @@ def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndic
         max_attributes = random.randint(1, 20)
         p = random.random()
         model = random.choice(["conjunction", "disjunction"])
+        order = random.randint(1,nbView)
         randomWeightsArray = np.random.random_sample(nbView)
         normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
-        classificationKWARGS["fusionMethodConfig"][0] = [p, max_attributes, model]
+        classificationKWARGS["fusionMethodConfig"][0] = [p, max_attributes, model, order]
         classifier = SCMForLinear(1, **classificationKWARGS)
         classifier.fit_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
         predictedLabels = classifier.predict_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
         accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
         if accuracy > bestScore:
             bestScore = accuracy
-            bestConfig = [p, max_attributes, model]
+            bestConfig = [p, max_attributes, model, order]
         return [bestConfig]
 
 
@@ -69,7 +71,8 @@ class SCMForLinear(LateFusionClassifier):
             for index, viewIndex in enumerate(viewsIndices):
                 monoviewDecisions[:, index] = self.monoviewClassifiers[index].predict(
                     getV(DATASET, viewIndex, usedIndices))
-            predictedLabels = self.SCMClassifier.predict(monoviewDecisions)
+            features = self.generateInteractions(monoviewDecisions, order=self.order)
+            predictedLabels = self.SCMClassifier.predict(features)
         else:
             predictedLabels = []
         return predictedLabels
@@ -80,16 +83,19 @@ class SCMForLinear(LateFusionClassifier):
         p = float(self.config[0])
         maxAttributes = int(self.config[1])
         modelType = self.config[2]
+        self.order = self.config[3]
         nbView = len(viewsIndices)
+
         self.SCMClassifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=maxAttributes, model_type=modelType, verbose=False)
         monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
                 getV(DATASET, viewIndex, usedIndices))
-        featureSequence = [str(featureIndex) for featureIndex in range(monoViewDecisions.shape[1])]
-        featureIndexByRule = np.arange(monoViewDecisions.shape[1], dtype=np.uint32)
+        features = self.generateInteractions(monoViewDecisions, order=self.order)
+        featureSequence = [str(featureIndex) for featureIndex in range(features.shape[1])]
+        featureIndexByRule = np.arange(features.shape[1], dtype=np.uint32)
         binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule)
-        packedData = _pack_binary_bytes_to_ints(monoViewDecisions, 64)
+        packedData = _pack_binary_bytes_to_ints(features, 64)
         nameb = "temp_scm_fusion"
         if not os.path.isfile(nameb):
             dsetFile = h5py.File(nameb, "w")
@@ -110,13 +116,35 @@ class SCMForLinear(LateFusionClassifier):
         dsetFile.close()
         dsetFile = h5py.File(name, "r")
         packedDataset = dsetFile.get("temp_scm")
-        attributeClassification = BaptisteRuleClassifications(packedDataset, monoViewDecisions.shape[0])
+        attributeClassification = BaptisteRuleClassifications(packedDataset, features.shape[0])
         self.SCMClassifier.fit(binaryAttributes, DATASET.get("Labels")[usedIndices], attribute_classifications=attributeClassification)
         try:
             dsetFile.close()
             os.remove(name)
         except:
             pass
+
+    def generateInteractions(self, monoViewDecisions, order=None):
+        if type(order)==type(None):
+            order = monoViewDecisions.shape[1]
+        genratedIntercations = [monoViewDecisions[:,i] for i in range(monoViewDecisions.shape[1])]
+        if order==1:
+            return monoViewDecisions
+        else:
+            for orderIndex in range(order-1):
+                combins = itertools.combinations(range(monoViewDecisions.shape[1]), orderIndex+2)
+                for combin in combins:
+                    generatedDecision = monoViewDecisions[:,combin[0]]
+                    for index in range(len(combin)-1):
+                        if self.config[2]=="disjunction":
+                            generatedDecision = np.logical_and(generatedDecision, monoViewDecisions[:,combin[index+1]])
+                        else:
+                            generatedDecision = np.logical_or(generatedDecision, monoViewDecisions[:,combin[index+1]])
+                    genratedIntercations.append(generatedDecision)
+            return np.transpose(np.array(genratedIntercations).astype(np.uint8))
+
+
+
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
         configString = "with SCM for linear with max_attributes : "+str(self.config[1])+", p : "+str(self.config[0])+\

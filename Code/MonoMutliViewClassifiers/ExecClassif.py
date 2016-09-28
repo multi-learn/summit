@@ -149,7 +149,7 @@ groupFusion = parser.add_argument_group('Fusion arguments')
 groupFusion.add_argument('--FU_types', metavar='STRING', action='store',
                          help='Determine which type of fusion to use, if multiple separate with :',
                          default='LateFusion:EarlyFusion')
-groupFusion.add_argument('--FU_ealy_methods', metavar='STRING', action='store',
+groupFusion.add_argument('--FU_early_methods', metavar='STRING', action='store',
                          help='Determine which early fusion method of fusion to use, if multiple separate with :',
                          default='')
 groupFusion.add_argument('--FU_late_methods', metavar='STRING', action='store',
@@ -276,7 +276,7 @@ if "Multiview" in args.CL_type.strip(":"):
             else:
                 benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = args.FU_late_methods.split(":")
         if "EarlyFusion" in args.FU_types.split(":"):
-            if args.FU_late_methods.split(":") == [""]:
+            if args.FU_early_methods.split(":") == [""]:
                 benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = [name for _, name, isPackage in
                                                                              pkgutil.iter_modules(["Multiview/Fusion/Methods/EarlyFusionPackage"])
                                                                              if not isPackage]
@@ -379,7 +379,7 @@ if True:
         except:
             pass
 
-        if True:
+        try:
             if benchmark["Multiview"]["Fusion"]:
                 if args.CL_algos_monoview !=['']:
                     monoClassifiers = args.CL_algos_monoview.split(":")
@@ -389,24 +389,13 @@ if True:
                     elif not gridSearch:
                         raise ValueError("No config for fusion method given and no gridearch wanted")
                     else:
-                        fusionMethodConfigs = [["config"] for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]]
-                    for methodIndex, method in enumerate(benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]):
-                        if args.FU_fixed:
-                            arguments = {"CL_type": "Fusion",
-                                         "views": views,
-                                         "NB_VIEW": len(views),
-                                         "viewsIndices": viewsIndices,
-                                         "NB_CLASS": len(args.CL_classes.split(":")),
-                                         "LABELS_NAMES": args.CL_classes.split(":"),
-                                         "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,
-                                                          "classifiersNames": args.FU_cl_names.split(":"),
-                                                          "classifiersConfigs": monoClassifiersConfigs,
-                                                          'fusionMethodConfig': fusionMethodConfigs[methodIndex]}}
-                            argumentDictionaries["Multiview"].append(arguments)
-                        else:
-                            for combination in itertools.combinations_with_replacement(range(len(monoClassifiers)), NB_VIEW):
-                                monoClassifiersNamesComb = [monoClassifiers[index] for index in combination]
-                                monoClassifiersConfigsComb = [monoClassifiersConfigs[index] for index in combination]
+                        try:
+                            fusionMethodConfigs = [["config"] for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]]
+                        except:
+                            pass
+                    try:
+                        for methodIndex, method in enumerate(benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]):
+                            if args.FU_fixed:
                                 arguments = {"CL_type": "Fusion",
                                              "views": views,
                                              "NB_VIEW": len(views),
@@ -414,10 +403,27 @@ if True:
                                              "NB_CLASS": len(args.CL_classes.split(":")),
                                              "LABELS_NAMES": args.CL_classes.split(":"),
                                              "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,
-                                                              "classifiersNames": monoClassifiersNamesComb,
-                                                              "classifiersConfigs": monoClassifiersConfigsComb,
+                                                              "classifiersNames": args.FU_cl_names.split(":"),
+                                                              "classifiersConfigs": monoClassifiersConfigs,
                                                               'fusionMethodConfig': fusionMethodConfigs[methodIndex]}}
                                 argumentDictionaries["Multiview"].append(arguments)
+                            else:
+                                for combination in itertools.combinations_with_replacement(range(len(monoClassifiers)), NB_VIEW):
+                                    monoClassifiersNamesComb = [monoClassifiers[index] for index in combination]
+                                    monoClassifiersConfigsComb = [monoClassifiersConfigs[index] for index in combination]
+                                    arguments = {"CL_type": "Fusion",
+                                                 "views": views,
+                                                 "NB_VIEW": len(views),
+                                                 "viewsIndices": viewsIndices,
+                                                 "NB_CLASS": len(args.CL_classes.split(":")),
+                                                 "LABELS_NAMES": args.CL_classes.split(":"),
+                                                 "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,
+                                                                  "classifiersNames": monoClassifiersNamesComb,
+                                                                  "classifiersConfigs": monoClassifiersConfigsComb,
+                                                                  'fusionMethodConfig': fusionMethodConfigs[methodIndex]}}
+                                    argumentDictionaries["Multiview"].append(arguments)
+                    except:
+                        pass
                 else:
                     try:
                         if benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] and benchmark["Multiview"]["Fusion"]["Classifiers"]:
@@ -458,7 +464,7 @@ if True:
                                 argumentDictionaries["Multiview"].append(arguments)
                 except:
                     pass
-        else:
+        except:
             pass
 else:
     pass
