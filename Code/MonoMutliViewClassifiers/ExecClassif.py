@@ -227,7 +227,7 @@ NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 metrics = [metric.split(":") for metric in args.CL_metrics]
 if metrics == [[""]]:
     metricsNames = [name for _, name, isPackage
-                    in pkgutil.iter_modules(['Metrics']) if not isPackage]
+                    in pkgutil.iter_modules(['Metrics']) if not isPackage and name!="log_loss"]
     metrics = [[metricName, None] for metricName in metricsNames]
 
 logging.info("Start:\t Finding all available mono- & multiview algorithms")
