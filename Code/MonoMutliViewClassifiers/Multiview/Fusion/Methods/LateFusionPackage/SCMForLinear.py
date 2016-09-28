@@ -89,7 +89,7 @@ class SCMForLinear(LateFusionClassifier):
         self.SCMClassifier.fit(binaryAttributes, DATASET.get("Labels")[usedIndices], attribute_classifications=attributeClassification)
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
-        configString = "with SVM for linear \n\t-With monoview classifiers : "
+        configString = "with SCM for linear and "+str(self.SCMClassifier.attribute_importances)+" \n\t-With monoview classifiers : "
         for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
             configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
