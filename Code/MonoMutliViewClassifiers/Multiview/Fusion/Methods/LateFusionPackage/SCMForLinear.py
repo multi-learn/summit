@@ -9,10 +9,31 @@ import h5py
 from pyscm.binary_attributes.classifications.popcount import inplace_popcount_32, inplace_popcount_64
 from pyscm.utils import _unpack_binary_bytes_from_ints
 from math import ceil
+import random
+from sklearn.metrics import accuracy_score
 
 
 def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
-    return None
+    if type(viewsIndices)==type(None):
+        viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
+    nbView = len(viewsIndices)
+    bestScore = 0.0
+    bestConfig = None
+    for i in range(nIter):
+        max_attributes = random.randint(1, 20)
+        p = random.random()
+        model = random.choice(["conjunction", "disjunction"])
+        randomWeightsArray = np.random.random_sample(nbView)
+        normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
+        classificationKWARGS["fusionMethodConfig"][0] = [p, max_attributes, model]
+        classifier = SCMForLinear(1, **classificationKWARGS)
+        classifier.fit_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
+        predictedLabels = classifier.predict_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
+        accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
+        if accuracy > bestScore:
+            bestScore = accuracy
+            bestConfig = [p, max_attributes, model]
+        return [bestConfig]
 
 
 class SCMForLinear(LateFusionClassifier):
@@ -20,6 +41,7 @@ class SCMForLinear(LateFusionClassifier):
         LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                       NB_CORES=NB_CORES)
         self.SCMClassifier = None
+        self.config = kwargs['fusionMethodConfig'][0]
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
@@ -55,8 +77,11 @@ class SCMForLinear(LateFusionClassifier):
     def SCMForLinearFusionFit(self, DATASET, usedIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
+        p = float(self.config[0])
+        maxAttributes = int(self.config[1])
+        modelType = self.config[2]
         nbView = len(viewsIndices)
-        self.SCMClassifier = pyscm.scm.SetCoveringMachine(p=1.0, max_attributes=5, model_type="conjunction", verbose=False)
+        self.SCMClassifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=maxAttributes, model_type=modelType, verbose=False)
         monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
@@ -65,7 +90,7 @@ class SCMForLinear(LateFusionClassifier):
         featureIndexByRule = np.arange(monoViewDecisions.shape[1], dtype=np.uint32)
         binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule)
         packedData = _pack_binary_bytes_to_ints(monoViewDecisions, 64)
-        nameb = "temp_scm"
+        nameb = "temp_scm_fusion"
         if not os.path.isfile(nameb):
             dsetFile = h5py.File(nameb, "w")
             name=nameb
@@ -89,7 +114,9 @@ class SCMForLinear(LateFusionClassifier):
         self.SCMClassifier.fit(binaryAttributes, DATASET.get("Labels")[usedIndices], attribute_classifications=attributeClassification)
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
-        configString = "with SCM for linear and "+str(self.SCMClassifier.attribute_importances)+" \n\t-With monoview classifiers : "
+        configString = "with SCM for linear with max_attributes : "+str(self.config[1])+", p : "+str(self.config[0])+\
+                       " model_type : "+str(self.config[2])+" has chosen "+\
+                       str(len(self.SCMClassifier.attribute_importances))+" rule(s) \n\t-With monoview classifiers : "
         for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
             configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
