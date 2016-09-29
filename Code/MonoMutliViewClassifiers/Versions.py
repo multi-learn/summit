@@ -21,6 +21,11 @@ def testVersions():
     except:
         print "Please install Python 2.7"
         raise
+    try:
+        import pyscm
+    except:
+        print "Please install pyscm"
+        raise
 
     try:
         import cv2

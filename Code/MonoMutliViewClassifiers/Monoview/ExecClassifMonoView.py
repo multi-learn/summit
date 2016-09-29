@@ -70,7 +70,7 @@ def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databa
     y_test_preds = []
     for iterationStat in range(statsIter):
         # Calculate Train/Test data
-        logging.debug("Start:\t Determine Train/Test split")
+        logging.debug("Start:\t Determine Train/Test split"+" for iteration "+str(iterationStat+1))
         testIndices = ClassifMonoView.splitDataset(Y, nbClass, learningRate, datasetLength)
         trainIndices = [i for i in range(datasetLength) if i not in testIndices]
 

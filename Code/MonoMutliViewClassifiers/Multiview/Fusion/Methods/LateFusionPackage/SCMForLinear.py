@@ -68,11 +68,15 @@ class SCMForLinear(LateFusionClassifier):
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if usedIndices:
             monoviewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
+            accus=[]
             for index, viewIndex in enumerate(viewsIndices):
-                monoviewDecisions[:, index] = self.monoviewClassifiers[index].predict(
+                monoviewDecision = self.monoviewClassifiers[index].predict(
                     getV(DATASET, viewIndex, usedIndices))
-            features = self.generateInteractions(monoviewDecisions, order=self.order)
+                accus.append(accuracy_score(DATASET.get("Labels").value[usedIndices], monoviewDecision))
+                monoviewDecisions[:, index] = monoviewDecision
+            features = self.generateInteractions(monoviewDecisions)
             predictedLabels = self.SCMClassifier.predict(features)
+            print str(np.array([accuracy_score(DATASET.get("Labels").value[usedIndices], predictedLabels)>acc for acc in accus]).all()), len(self.SCMClassifier.model)
         else:
             predictedLabels = []
         return predictedLabels
@@ -91,8 +95,10 @@ class SCMForLinear(LateFusionClassifier):
         for index, viewIndex in enumerate(viewsIndices):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
                 getV(DATASET, viewIndex, usedIndices))
-        features = self.generateInteractions(monoViewDecisions, order=self.order)
-        featureSequence = [str(featureIndex) for featureIndex in range(features.shape[1])]
+        features = self.generateInteractions(monoViewDecisions)
+        featureSequence=[str(index) for index in range(nbView)]
+        for orderIndex in range(self.order-1):
+            featureSequence += [str(featureIndex) for featureIndex in itertools.combinations(range(monoViewDecisions.shape[1]), orderIndex+2)]
         featureIndexByRule = np.arange(features.shape[1], dtype=np.uint32)
         binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule)
         packedData = _pack_binary_bytes_to_ints(features, 64)
@@ -124,14 +130,14 @@ class SCMForLinear(LateFusionClassifier):
         except:
             pass
 
-    def generateInteractions(self, monoViewDecisions, order=None):
-        if type(order)==type(None):
+    def generateInteractions(self, monoViewDecisions):
+        if type(self.order)==type(None):
             order = monoViewDecisions.shape[1]
         genratedIntercations = [monoViewDecisions[:,i] for i in range(monoViewDecisions.shape[1])]
-        if order==1:
+        if self.order==1:
             return monoViewDecisions
         else:
-            for orderIndex in range(order-1):
+            for orderIndex in range(self.order-1):
                 combins = itertools.combinations(range(monoViewDecisions.shape[1]), orderIndex+2)
                 for combin in combins:
                     generatedDecision = monoViewDecisions[:,combin[0]]

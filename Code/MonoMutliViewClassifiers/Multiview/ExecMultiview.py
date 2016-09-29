@@ -68,9 +68,10 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     classifierClass = getattr(classifierModule, CL_type)
     classifierGridSearch = getattr(classifierModule, "gridSearch_hdf5")
     analysisModule = getattr(classifierPackage, "analyzeResults")
+
     for iterIndex in range(statsIter):
 
-        logging.info("Start:\t Determine validation split for ratio " + str(learningRate))
+        logging.info("Start:\t Determine validation split for ratio " + str(learningRate)+" for iteration "+str(iterIndex+1))
         validationIndices = DB.splitDataset(DATASET, learningRate, datasetLength)
         learningIndices = [index for index in range(datasetLength) if index not in validationIndices]
         classificationSetLength = len(learningIndices)
@@ -88,23 +89,6 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
 
         logging.info("Start:\t Learning with " + CL_type + " and " + str(len(kFolds)) + " folds")
-
-
-
-
-
-
-        if gridSearch:
-            logging.info("Start:\t Randomsearching best settings for monoview classifiers")
-            bestSettings, fusionConfig = classifierGridSearch(DATASET, viewsIndices, classificationKWARGS, learningIndices
-                                                              , metric=metrics[0], nIter=nIter)
-            classificationKWARGS["classifiersConfigs"] = bestSettings
-            try:
-                classificationKWARGS["fusionMethodConfig"] = fusionConfig
-            except:
-                pass
-            logging.info("Done:\t Randomsearching best settings for monoview classifiers")
-
         logging.info("Start:\t Classification")
         # Begin Classification
 
@@ -119,6 +103,16 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
                 fold.sort()
                 logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
                 trainIndices = [index for index in range(datasetLength) if (index not in fold) and (index not in validationIndices)]
+                if gridSearch:
+                    logging.info("Start:\t Randomsearching best settings for monoview classifiers")
+                    bestSettings, fusionConfig = classifierGridSearch(DATASET, viewsIndices, classificationKWARGS, trainIndices
+                                                                      , metric=metrics[0], nIter=nIter)
+                    classificationKWARGS["classifiersConfigs"] = bestSettings
+                    try:
+                        classificationKWARGS["fusionMethodConfig"] = fusionConfig
+                    except:
+                        pass
+                    logging.info("Done:\t Randomsearching best settings for monoview classifiers")
                 DATASET_LENGTH = len(trainIndices)
                 classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("Labels").value[trainIndices], NB_CORES=nbCores, **classificationKWARGS)
 
@@ -127,7 +121,6 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
 
                 learningTime = time.time() - extractionTime - t_start
                 kFoldLearningTimeIter.append(learningTime)
-                logging.info("\tStart: \t Classification")
                 kFoldPredictedTrainLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices))
                 kFoldPredictedTestLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=fold, viewsIndices=viewsIndices))
                 kFoldPredictedValidationLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices))

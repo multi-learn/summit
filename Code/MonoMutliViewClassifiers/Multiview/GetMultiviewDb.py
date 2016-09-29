@@ -13,18 +13,33 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
-def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=4, nbClass=2, datasetLength=500):
+def makeMeNoisy(viewData, percentage=5):
+    viewData = viewData.astype(bool)
+    nbNoisyCoord = int(percentage/100.0*viewData.shape[0]*viewData.shape[1])
+    rows = range(viewData.shape[0])
+    cols = range(viewData.shape[1])
+    for _ in range(nbNoisyCoord):
+        rowIdx = random.choice(rows)
+        colIdx = random.choice(cols)
+        viewData[rowIdx, colIdx] = not viewData[rowIdx, colIdx]
+    noisyViewData = viewData.astype(np.uint8)
+    return noisyViewData
+
+
+def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=10, nbClass=2, datasetLength=500):
     nbFeatures = 150
     datasetFile = h5py.File(pathF+"Plausible.hdf5", "w")
     CLASS_LABELS = np.array([0 for i in range(datasetLength/2)]+[1 for i in range(datasetLength/2)])
     for viewIndex in range(nbView):
         # if viewIndex== 0 :
-        viewData = np.array([np.zeros(nbFeatures) for i in range(datasetLength/2)]+[np.ones(nbFeatures) for i in range(datasetLength/2)]).astype(np.uint8)
-        fakeTrueIndices = np.random.randint(0, datasetLength/2-1, datasetLength/5)
-        fakeFalseIndices = np.random.randint(datasetLength/2, datasetLength, datasetLength/5)
+        viewData = np.array([np.zeros(nbFeatures) for i in range(datasetLength/2)]+[np.ones(nbFeatures) for i in range(datasetLength/2)])
+        fakeTrueIndices = np.random.randint(0, datasetLength/2-1, datasetLength/10)
+        fakeFalseIndices = np.random.randint(datasetLength/2, datasetLength, datasetLength/10)
+
         viewData[fakeTrueIndices] = np.ones((len(fakeTrueIndices), nbFeatures))
         viewData[fakeFalseIndices] = np.zeros((len(fakeFalseIndices), nbFeatures))
-        viewDset = datasetFile.create_dataset("View"+str(viewIndex), viewData.shape, data=viewData)
+        viewData = makeMeNoisy(viewData)
+        viewDset = datasetFile.create_dataset("View"+str(viewIndex), viewData.shape, data=viewData.astype(np.uint8))
         viewDset.attrs["name"] = "View"+str(viewIndex)
         viewDset.attrs["sparse"] = False
         viewDset.attrs["binary"] = True
@@ -49,7 +64,7 @@ def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=4, 
 
 def getFakeDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME):
     NB_VIEW = 4
-    DATASET_LENGTH = 300
+    DATASET_LENGTH = 30
     NB_CLASS = 2
     VIEW_DIMENSIONS = np.random.random_integers(5, 20, NB_VIEW)
 

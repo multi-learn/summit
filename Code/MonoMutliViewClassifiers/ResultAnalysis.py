@@ -48,7 +48,7 @@ def resultAnalysis(benchmark, results, name, times, metrics):
             metricKWARGS = {}
         ax.set_title(getattr(Metrics, metric[0]).getConfig(**metricKWARGS)+" on validation set for each classifier")
         rects = ax.bar(range(nbResults), validationScores, width, color="r")
-        rect2 = ax.bar(np.arange(nbResults)+width, trainScores, width, color="0.3")
+        rect2 = ax.bar(np.arange(nbResults)+width, trainScores, width, color="0.7")
         autolabel(rects, ax)
         autolabel(rect2, ax)
         ax.legend((rects[0], rect2[0]), ('Train', 'Test'))
