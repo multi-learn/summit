@@ -14,6 +14,18 @@ from sklearn.metrics import accuracy_score
 import itertools
 
 
+def genParamsSets(classificationKWARGS, nIter=1):
+    nbView = classificationKWARGS["nbView"]
+    paramsSets = []
+    for _ in range(nIter):
+        max_attributes = random.randint(1, 20)
+        p = random.random()
+        model = random.choice(["conjunction", "disjunction"])
+        order = random.randint(1,nbView)
+        paramsSets.append([p, max_attributes, model, order])
+    return paramsSets
+
+
 def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
     if type(viewsIndices)==type(None):
         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
@@ -44,6 +56,16 @@ class SCMForLinear(LateFusionClassifier):
                                       NB_CORES=NB_CORES)
         self.SCMClassifier = None
         self.config = kwargs['fusionMethodConfig'][0]
+        self.p = None
+        self.maxAttributes = None
+        self.order = None
+        self.modelType = None
+
+    def setParams(self, paramsSet):
+        self.p = paramsSet[0]
+        self.maxAttributes = paramsSet[1]
+        self.order = paramsSet[2]
+        self.modelType = paramsSet[3]
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
@@ -84,13 +106,17 @@ class SCMForLinear(LateFusionClassifier):
     def SCMForLinearFusionFit(self, DATASET, usedIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-        p = float(self.config[0])
-        maxAttributes = int(self.config[1])
-        modelType = self.config[2]
-        self.order = self.config[3]
+        if self.p is None:
+            self.p = float(self.config[0])
+        if self.maxAttributes is None:
+            self.maxAttributes = int(self.config[1])
+        if self.modelType is None:
+            self.modelType = self.config[2]
+        if self.order is None:
+            self.order = self.config[3]
         nbView = len(viewsIndices)
 
-        self.SCMClassifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=maxAttributes, model_type=modelType, verbose=False)
+        self.SCMClassifier = pyscm.scm.SetCoveringMachine(p=self.p, max_attributes=self.maxAttributes, model_type=self.modelType, verbose=False)
         monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(

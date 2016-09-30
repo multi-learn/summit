@@ -50,11 +50,7 @@ def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databa
     except:
         kwargs = args
     t_start = time.time()
-    directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
     feat = X.attrs["name"]
-    fileFeat = kwargs["fileFeat"]
-    fileCL = kwargs["fileCL"]
-    fileCLD = kwargs["fileCLD"]
     CL_type = kwargs["CL_type"]
     nbClass = kwargs["nbClass"]
     X = getValue(X)
@@ -96,7 +92,6 @@ def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databa
             logging.debug("Done:\t RandomSearch best settings")
         logging.debug("Start:\t Training")
         cl_res = classifierModule.fit(X_train, y_train, NB_CORES=nbCores, **clKWARGS)
-
         logging.debug("Done:\t Training")
 
         logging.debug("Start:\t Predicting")

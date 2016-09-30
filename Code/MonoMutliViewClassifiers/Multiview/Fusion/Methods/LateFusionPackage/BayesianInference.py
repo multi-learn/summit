@@ -4,6 +4,16 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 from utils.Dataset import getV
 
+
+def genParamsSets(classificationKWARGS, nIter=1):
+    nbView = classificationKWARGS["nbView"]
+    paramsSets = []
+    for _ in range(nIter):
+        randomWeightsArray = np.random.random_sample(nbView)
+        normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
+        paramsSets.append([normalizedArray])
+    return paramsSets
+
 def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
     if type(viewsIndices)==type(None):
         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
@@ -29,7 +39,11 @@ class BayesianInference(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
         LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                       NB_CORES=NB_CORES)
-        self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
+
+        # self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
+        self.weights = None #A modifier !!
+    def setParams(self, paramsSet):
+        self.weights = paramsSet[0]
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):

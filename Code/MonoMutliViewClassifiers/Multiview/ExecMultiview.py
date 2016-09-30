@@ -15,6 +15,7 @@ import logging
 import time
 import h5py
 from utils.Dataset import getShape
+from utils.HyperParameterSearch import searchBestSettings
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -39,7 +40,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     if not metrics:
         metrics = [["accuracy_score", None]]
-
+    metric = metrics[0]
     CL_type = kwargs["CL_type"]
     LABELS_NAMES = kwargs["LABELS_NAMES"]
     classificationKWARGS = kwargs[CL_type+"KWARGS"]
@@ -55,14 +56,10 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     logging.info("Done:\t Read Database Files")
 
     extractionTime = time.time() - t_start
-    kFoldPredictedTrainLabels = []
-    kFoldPredictedTestLabels = []
-    kFoldPredictedValidationLabels = []
-    kFoldLearningTime = []
-    kFoldPredictionTime = []
-    kFoldClassifier = []
     ivalidationIndices = []
-    ikFolds = []
+    trainLabelsIterations = []
+    testLabelsIterations = []
+    classifiersIterations = []
     classifierPackage = globals()[CL_type]  # Permet d'appeler un module avec une string
     classifierModule = getattr(classifierPackage, CL_type)
     classifierClass = getattr(classifierModule, CL_type)
@@ -91,63 +88,30 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
         logging.info("Start:\t Learning with " + CL_type + " and " + str(len(kFolds)) + " folds")
         logging.info("Start:\t Classification")
         # Begin Classification
-
-        kFoldPredictedTrainLabelsIter = []
-        kFoldPredictedTestLabelsIter = []
-        kFoldPredictedValidationLabelsIter = []
-        kFoldLearningTimeIter = []
-        kFoldPredictionTimeIter = []
-        kFoldClassifierIter = []
-        for foldIdx, fold in enumerate(kFolds):
-            if fold != range(classificationSetLength):
-                fold.sort()
-                logging.info("\tStart:\t Fold number " + str(foldIdx + 1))
-                trainIndices = [index for index in range(datasetLength) if (index not in fold) and (index not in validationIndices)]
-                if gridSearch:
-                    logging.info("Start:\t Randomsearching best settings for monoview classifiers")
-                    bestSettings, fusionConfig = classifierGridSearch(DATASET, viewsIndices, classificationKWARGS, trainIndices
-                                                                      , metric=metrics[0], nIter=nIter)
-                    classificationKWARGS["classifiersConfigs"] = bestSettings
-                    try:
-                        classificationKWARGS["fusionMethodConfig"] = fusionConfig
-                    except:
-                        pass
-                    logging.info("Done:\t Randomsearching best settings for monoview classifiers")
-                DATASET_LENGTH = len(trainIndices)
-                classifier = classifierClass(NB_VIEW, DATASET_LENGTH, DATASET.get("Labels").value[trainIndices], NB_CORES=nbCores, **classificationKWARGS)
-
-                classifier.fit_hdf5(DATASET, trainIndices=trainIndices, viewsIndices=viewsIndices)
-                kFoldClassifierIter.append(classifier)
-
-                learningTime = time.time() - extractionTime - t_start
-                kFoldLearningTimeIter.append(learningTime)
-                kFoldPredictedTrainLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices))
-                kFoldPredictedTestLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=fold, viewsIndices=viewsIndices))
-                kFoldPredictedValidationLabelsIter.append(classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices))
-
-                kFoldPredictionTimeIter.append(time.time() - extractionTime - t_start - learningTime)
-                logging.info("\tDone: \t Fold number " + str(foldIdx + 1))
-        kFoldPredictedTrainLabels.append(kFoldPredictedTrainLabelsIter)
-        kFoldPredictedTestLabels.append(kFoldPredictedTestLabelsIter)
-        kFoldPredictedValidationLabels.append(kFoldPredictedValidationLabelsIter)
-        kFoldLearningTime.append(kFoldLearningTimeIter)
-        kFoldPredictionTime.append(kFoldPredictionTimeIter)
-        kFoldClassifier.append(kFoldClassifierIter)
-        ikFolds.append(kFolds)
+        classifier = searchBestSettings(DATASET, CL_type, metrics, viewsIndices=viewsIndices, usedIndices=learningIndices, kFolds=kFolds, searchingTool=gridSearch, nIter=1, **classificationKWARGS)
+        classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices)
+        trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
+        testLabels = classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices)
+        trainLabelsIterations.append(trainLabels)
+        testLabelsIterations.append(testLabels)
         ivalidationIndices.append(validationIndices)
+        classifiersIterations.append(classifier)
+        logging.info("Done:\t Classification")
+
     classificationTime = time.time() - t_start
 
-    logging.info("Done:\t Classification")
     logging.info("Info:\t Time for Classification: " + str(int(classificationTime)) + "[s]")
     logging.info("Start:\t Result Analysis for " + CL_type)
 
-    times = (extractionTime, kFoldLearningTime, kFoldPredictionTime, classificationTime)
+    times = (extractionTime, classificationTime)
 
-    stringAnalysis, imagesAnalysis, metricsScores = analysisModule.execute(kFoldClassifier, kFoldPredictedTrainLabels,
-                                                                           kFoldPredictedTestLabels, kFoldPredictedValidationLabels,
-                                                                           DATASET, classificationKWARGS, learningRate, LABELS_DICTIONARY,
-                                                                           views, nbCores, times, ikFolds, name, nbFolds,
-                                                                           ivalidationIndices, gridSearch, nIter, metrics, statsIter, viewsIndices)
+    stringAnalysis, imagesAnalysis, metricsScores = analysisModule.execute(classifiersIterations, trainLabelsIterations,
+                                                                           testLabelsIterations, DATASET,
+                                                                           classificationKWARGS, learningRate,
+                                                                           LABELS_DICTIONARY,views, nbCores, times,
+                                                                           name, nbFolds, ivalidationIndices,
+                                                                           gridSearch, nIter, metrics, statsIter,
+                                                                           viewsIndices)
     labelsSet = set(LABELS_DICTIONARY.values())
     logging.info(stringAnalysis)
     featureString = "-".join(views)

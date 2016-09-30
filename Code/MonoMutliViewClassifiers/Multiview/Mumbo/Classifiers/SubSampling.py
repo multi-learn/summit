@@ -16,7 +16,7 @@ def isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict):
 
 
 def subSample(data, labels, subSampling, weights=None):
-    if weights == None:
+    if weights is None:
         weights = np.ones(len(labels))/len(labels)
     nbExamples = len(labels)
     labelSupports, labelDict = getLabelSupports(labels)

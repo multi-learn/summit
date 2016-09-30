@@ -6,6 +6,13 @@ from sklearn.svm import SVC
 from utils.Dataset import getV
 
 
+def genParamsSets(classificationKWARGS, nIter=1):
+    nbView = classificationKWARGS["nbView"]
+    paramsSets = []
+    for _ in range(nIter):
+        paramsSets.append([])
+    return paramsSets
+
 def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
     return None
 
@@ -30,6 +37,9 @@ class SVMForLinear(LateFusionClassifier):
                                        **dict((str(configIndex), config) for configIndex, config in
                                               enumerate(self.monoviewClassifiersConfigs[index]))))
         self.SVMForLinearFusionFit(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
+
+    def setParams(self, paramsSet):
+        pass
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):

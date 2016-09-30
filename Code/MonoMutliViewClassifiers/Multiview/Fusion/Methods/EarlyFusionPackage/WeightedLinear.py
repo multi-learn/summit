@@ -4,6 +4,16 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 
 
+def genParamsSets(classificationKWARGS, nIter=1):
+    nbView = classificationKWARGS["nbView"]
+    paramsSets = []
+    for _ in range(nIter):
+        randomWeightsArray = np.random.random_sample(nbView)
+        normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
+        paramsSets.append([normalizedArray])
+    return paramsSets
+
+
 def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
     if type(viewsIndices)==type(None):
         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
@@ -42,6 +52,9 @@ class WeightedLinear(EarlyFusionClassifier):
         self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET.get("Labels")[trainIndices],
                                                                      NB_CORES=self.nbCores, #**self.monoviewClassifiersConfig)
                                                                      **self.monoviewClassifiersConfig)
+
+    def setParams(self, paramsSet):
+        self.weights = paramsSet[0]
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):

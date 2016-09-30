@@ -47,13 +47,6 @@ groupStandard.add_argument('--views', metavar='STRING', action='store',help='Nam
                            default='')
 groupStandard.add_argument('--pathF', metavar='STRING', action='store',help='Path to the views (default: %(default)s)',
                            default='/home/bbauvin/Documents/Data/Data_multi_omics/')
-groupStandard.add_argument('--fileCL', metavar='STRING', action='store',
-                           help='Name of classLabels CSV-file  (default: %(default)s)', default='classLabels.csv')
-groupStandard.add_argument('--fileCLD', metavar='STRING', action='store',
-                           help='Name of classLabels-Description CSV-file  (default: %(default)s)',
-                           default='classLabels-Description.csv')
-groupStandard.add_argument('--fileFeat', metavar='STRING', action='store',
-                           help='Name of feature CSV-file  (default: %(default)s)', default='feature.csv')
 groupStandard.add_argument('--nice', metavar='INT', action='store', type=int,
                            help='Niceness for the process', default=0)
 
@@ -86,8 +79,8 @@ groupClass.add_argument('--CL_metrics', metavar='STRING', action='store', nargs=
                              'first one will be used for classification', default=[''])
 groupClass.add_argument('--CL_GS_iter', metavar='INT', action='store',
                         help='Determine how many Randomized grid search tests to do', type=int, default=30)
-groupClass.add_argument('--CL_NoGS', action='store_false',
-                        help='Determine how many Randomized grid search tests to do')
+groupClass.add_argument('--CL_GS_type', metavar='STRING', action='store',
+                        help='Determine which hyperparamter search function use', default="randomizedSearch")
 
 groupRF = parser.add_argument_group('Random Forest arguments')
 groupRF.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='GridSearch: Determine the trees',
@@ -176,9 +169,9 @@ else:
     getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
 
 try:
-    gridSearch = args.CL_NoGS
+    gridSearch = args.CL_GS_type
 except:
-    gridSearch = True
+    gridSearch = "None"
 
 directory = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
 logFileName = time.strftime("%Y%m%d-%H%M%S") + "-CMultiV-" + args.CL_type + "-" + "_".join(args.views.split(":")) + "-" + args.name + \
@@ -318,14 +311,14 @@ try:
             for classifier in benchmark["Monoview"]:
                 if classifier=="SCM":
                     if DATASET.get("View"+str(allViews.index(view))).attrs["binary"]:
-                        arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGSInit"], "feat":view, "fileFeat": args.fileFeat,
-                                             "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier, "nbClass":NB_CLASS}, "viewIndex":allViews.index(view)}
+                        arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGSInit"], "feat":view,
+                                             "CL_type": classifier, "nbClass":NB_CLASS}, "viewIndex":allViews.index(view)}
                         argumentDictionaries["Monoview"].append(arguments)
                     else:
                         pass
                 else:
-                    arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGSInit"], "feat":view, "fileFeat": args.fileFeat,
-                                         "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": classifier, "nbClass":NB_CLASS}, "viewIndex":allViews.index(view)}
+                    arguments = {"args":{classifier+"KWARGS": globals()[classifier+"KWARGSInit"], "feat":view,
+                                         "CL_type": classifier, "nbClass":NB_CLASS}, "viewIndex":allViews.index(view)}
                     argumentDictionaries["Monoview"].append(arguments)
 except:
     pass
@@ -343,10 +336,6 @@ if nbCores>1:
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersConfigs = [[result[1][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
-    # for viewIndex, view in enumerate(views):
-    #     bestClassifiers.append(classifiersNames[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
-    #     bestClassifiersConfigs.append(classifiersConfigs[viewIndex][np.argmax(np.array(accuracies[viewIndex]))])
-
 else:
     resultsMonoview+=([ExecMonoview(DATASET.get("View"+str(arguments["viewIndex"])),
                                     DATASET.get("Labels").value, args.name, labelsNames,
@@ -359,6 +348,7 @@ else:
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
     classifiersConfigs = [[result[1][1][:-1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
 monoviewTime = time.time()-dataBaseTime-start
+print classifiersConfigs
 if True:
     if benchmark["Multiview"]:
         try:
@@ -374,16 +364,16 @@ if True:
                                  "MumboKWARGS": {"classifiersNames": mumboClassifiersNames,
                                                  "maxIter":int(args.MU_iter[0]), "minIter":int(args.MU_iter[1]),
                                                  "threshold":args.MU_iter[2],
-                                                 "classifiersConfigs": [argument.split(":") for argument in args.MU_config]}}
+                                                 "classifiersConfigs": [argument.split(":") for argument in args.MU_config], "nbView":(len(viewsIndices))}}
                     argumentDictionaries["Multiview"].append(arguments)
         except:
             pass
 
         try:
             if benchmark["Multiview"]["Fusion"]:
-                if args.CL_algos_monoview !=['']:
-                    monoClassifiers = args.CL_algos_monoview.split(":")
-                    monoClassifiersConfigs = [classifier+"KWARGS" for classifier in monoClassifiers]
+                if args.FU_cl_names.split(':') !=['']:
+                    monoClassifiers = args.FU_cl_names.split(":")
+                    monoClassifiersConfigs = [globals()[classifier+"KWARGS"] for classifier in monoClassifiers]
                     if args.FU_method_config != [""]:
                         fusionMethodConfigs = [map(float,config.split(":")) for config in args.FU_method_config]
                     elif not gridSearch:
@@ -405,7 +395,7 @@ if True:
                                              "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,
                                                               "classifiersNames": args.FU_cl_names.split(":"),
                                                               "classifiersConfigs": monoClassifiersConfigs,
-                                                              'fusionMethodConfig': fusionMethodConfigs[methodIndex]}}
+                                                              'fusionMethodConfig': fusionMethodConfigs[methodIndex], "nbView":(len(viewsIndices))}}
                                 argumentDictionaries["Multiview"].append(arguments)
                             else:
                                 for combination in itertools.combinations_with_replacement(range(len(monoClassifiers)), NB_VIEW):
@@ -420,7 +410,7 @@ if True:
                                                  "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,
                                                                   "classifiersNames": monoClassifiersNamesComb,
                                                                   "classifiersConfigs": monoClassifiersConfigsComb,
-                                                                  'fusionMethodConfig': fusionMethodConfigs[methodIndex]}}
+                                                                  'fusionMethodConfig': fusionMethodConfigs[methodIndex], "nbView":(len(viewsIndices))}}
                                     argumentDictionaries["Multiview"].append(arguments)
                     except:
                         pass
@@ -469,6 +459,7 @@ if True:
 else:
     pass
 # resultsMultiview = []
+print argumentDictionaries["Multiview"]
 if nbCores>1:
     resultsMultiview = []
     nbExperiments = len(argumentDictionaries["Multiview"])

@@ -61,49 +61,51 @@ def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices,
 
 class Mumbo:
 
-    def __init__(self, NB_VIEW, DATASET_LENGTH, CLASS_LABELS, NB_CORES=1,**kwargs):
+    def __init__(self, NB_CORES=1, **kwargs):
         self.maxIter = kwargs["maxIter"]
         self.minIter = kwargs["minIter"]
         self.threshold = kwargs["threshold"]
         self.classifiersNames = kwargs["classifiersNames"]
         self.classifiersConfigs = kwargs["classifiersConfigs"]
-        nbClass = len(set(CLASS_LABELS))
-        self.costMatrices = np.array([
-                                         np.array([
-                                                      np.array([
-                                                                   np.array([1 if CLASS_LABELS[exampleIndice] != classe
-                                                                             else -(nbClass - 1)
-                                                                             for classe in range(nbClass)
-                                                                             ]) for exampleIndice in range(DATASET_LENGTH)
-                                                                   ]) for viewIndice in range(NB_VIEW)])
-                                         if iteration == 0
-                                         else np.zeros((NB_VIEW, DATASET_LENGTH, nbClass))
-                                         for iteration in range(self.maxIter + 1)
-                                         ])
-        self.generalCostMatrix = np.array([
-                                              np.array([
-                                                           np.array([1 if CLASS_LABELS[exampleIndice] != classe
-                                                                     else -(nbClass - 1)
-                                                                     for classe in range(nbClass)
-                                                                     ]) for exampleIndice in range(DATASET_LENGTH)
-                                                           ]) for iteration in range(self.maxIter)
-                                              ])
-        self.fs = np.zeros((self.maxIter, NB_VIEW, DATASET_LENGTH, nbClass))
-        self.ds = np.zeros((self.maxIter, NB_VIEW, DATASET_LENGTH))
-        self.edges = np.zeros((self.maxIter, NB_VIEW))
-        self.alphas = np.zeros((self.maxIter, NB_VIEW))
-        self.predictions = np.zeros((self.maxIter, NB_VIEW, DATASET_LENGTH))
+        nbView = kwargs["nbView"]
+        self.edges = np.zeros((self.maxIter, nbView))
+        self.alphas = np.zeros((self.maxIter, nbView))
         self.generalAlphas = np.zeros(self.maxIter)
-        self.generalFs = np.zeros((self.maxIter, DATASET_LENGTH, nbClass))
         self.nbCores = NB_CORES
         self.iterIndex = 0
         self.bestClassifiers = []
         self.bestViews = np.zeros(self.maxIter, dtype=int)
-        self.averageAccuracies = np.zeros((self.maxIter, NB_VIEW))
+        self.averageAccuracies = np.zeros((self.maxIter, nbView))
         self.iterAccuracies = np.zeros(self.maxIter)
 
+    def initDataDependant(self, datasetLength, nbView, nbClass, labels):
+        self.costMatrices = np.array([
+                                         np.array([
+                                                      np.array([
+                                                                   np.array([1 if labels[exampleIndice] != classe
+                                                                             else -(nbClass - 1)
+                                                                             for classe in range(nbClass)
+                                                                             ]) for exampleIndice in range(datasetLength)
+                                                                   ]) for viewIndice in range(nbView)])
+                                         if iteration == 0
+                                         else np.zeros((nbView, datasetLength, nbClass))
+                                         for iteration in range(self.maxIter + 1)
+                                         ])
+        self.generalCostMatrix = np.array([
+                                              np.array([
+                                                           np.array([1 if labels[exampleIndice] != classe
+                                                                     else -(nbClass - 1)
+                                                                     for classe in range(nbClass)
+                                                                     ]) for exampleIndice in range(datasetLength)
+                                                           ]) for iteration in range(self.maxIter)
+                                              ])
+        self.fs = np.zeros((self.maxIter, nbView, datasetLength, nbClass))
+        self.ds = np.zeros((self.maxIter, nbView, datasetLength))
+        self.predictions = np.zeros((self.maxIter, nbView, datasetLength))
+        self.generalFs = np.zeros((self.maxIter, datasetLength, nbClass))
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
+
         # Initialization
         if not trainIndices:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
@@ -113,7 +115,7 @@ class Mumbo:
         NB_VIEW = len(viewsIndices)
         DATASET_LENGTH = len(trainIndices)
         LABELS = DATASET["Labels"][trainIndices]
-
+        self.initDataDependant(DATASET_LENGTH, NB_VIEW, NB_CLASS, LABELS)
         # Learning
         isStabilized=False
         self.iterIndex = 0

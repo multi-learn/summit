@@ -26,6 +26,15 @@ def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None, viewsIndices=
     return monoviewData
 
 
+def genParamsSets(classificationKWARGS, nIter=1):
+    fusionTypeName = classificationKWARGS["fusionType"]
+    fusionTypePackage = globals()[fusionTypeName+"Package"]
+    fusionMethodModuleName = classificationKWARGS["fusionMethod"]
+    fusionMethodModule = getattr(fusionTypePackage, fusionMethodModuleName)
+    fusionMethodConfig = fusionMethodModule.genParamsSets(classificationKWARGS, nIter=nIter)
+    return fusionMethodConfig
+
+
 def gridSearch_hdf5(DATASET, viewsIndices, classificationKWARGS, learningIndices, metric=None, nIter=30):
     if type(viewsIndices)==type(None):
         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
@@ -56,7 +65,7 @@ def gridSearch_hdf5(DATASET, viewsIndices, classificationKWARGS, learningIndices
 
 
 class Fusion:
-    def __init__(self, NB_VIEW, DATASET_LENGTH, CLASS_LABELS, NB_CORES=1,**kwargs):
+    def __init__(self, NB_CORES=1,**kwargs):
         fusionType = kwargs['fusionType']
         fusionMethod = kwargs['fusionMethod']
         fusionTypePackage = globals()[fusionType+"Package"]
@@ -66,16 +75,20 @@ class Fusion:
         classifierKWARGS = dict((key, value) for key, value in kwargs.iteritems() if key not in ['fusionType', 'fusionMethod'])
         self.classifier = fusionMethodClass(NB_CORES=nbCores, **classifierKWARGS)
 
+    def setParams(self, paramsSet):
+        self.classifier.setParams(paramsSet)
+
+
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
         self.classifier.fit_hdf5(DATASET, trainIndices=trainIndices, viewsIndices=viewsIndices)
 
-    def fit(self, DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES, trainArguments):
-        fusionType, fusionMethod, fusionConfig, monoviewClassifier, monoviewClassifierConfig = trainArguments
-        fusionTypeModule = globals()[fusionType]  # Early/late fusion
-        trainFusion = getattr(fusionTypeModule, fusionMethod+"Train")  # linearWeighted for example
-        classifier = trainFusion(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, monoviewClassifier,
-                                 monoviewClassifierConfig, fusionConfig)
-        return fusionType, fusionMethod, classifier
+    # def fit(self, DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES, trainArguments):
+    #     fusionType, fusionMethod, fusionConfig, monoviewClassifier, monoviewClassifierConfig = trainArguments
+    #     fusionTypeModule = globals()[fusionType]  # Early/late fusion
+    #     trainFusion = getattr(fusionTypeModule, fusionMethod+"Train")  # linearWeighted for example
+    #     classifier = trainFusion(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, monoviewClassifier,
+    #                              monoviewClassifierConfig, fusionConfig)
+    #     return fusionType, fusionMethod, classifier
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if usedIndices == None:
@@ -97,12 +110,12 @@ class Fusion:
             predictedLabels = []
         return predictedLabels
 
-    def predict(self, DATASET, classifier, NB_CLASS):
-        fusionType, fusionMethod, fusionClassifier = classifier
-        fusionType = globals()[fusionType]  # Early/late fusion
-        predictFusion = getattr(fusionType, fusionMethod+"Predict")  # linearWeighted for example
-        predictedLabels = predictFusion(DATASET, fusionClassifier)
-        return predictedLabels
+    # def predict(self, DATASET, classifier, NB_CLASS):
+    #     fusionType, fusionMethod, fusionClassifier = classifier
+    #     fusionType = globals()[fusionType]  # Early/late fusion
+    #     predictFusion = getattr(fusionType, fusionMethod+"Predict")  # linearWeighted for example
+    #     predictedLabels = predictFusion(DATASET, fusionClassifier)
+    #     return predictedLabels
 
 
 

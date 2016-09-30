@@ -13,7 +13,7 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
-def makeMeNoisy(viewData, percentage=5):
+def makeMeNoisy(viewData, percentage=25):
     viewData = viewData.astype(bool)
     nbNoisyCoord = int(percentage/100.0*viewData.shape[0]*viewData.shape[1])
     rows = range(viewData.shape[0])
@@ -26,7 +26,7 @@ def makeMeNoisy(viewData, percentage=5):
     return noisyViewData
 
 
-def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=10, nbClass=2, datasetLength=500):
+def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=3, nbClass=2, datasetLength=500):
     nbFeatures = 150
     datasetFile = h5py.File(pathF+"Plausible.hdf5", "w")
     CLASS_LABELS = np.array([0 for i in range(datasetLength/2)]+[1 for i in range(datasetLength/2)])
