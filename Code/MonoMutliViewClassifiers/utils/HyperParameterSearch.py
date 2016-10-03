@@ -70,6 +70,7 @@ def randomizedSearch(dataset, classifierName, metrics, viewsIndices=None, usedIn
         bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, viewsIndices, classificationKWARGS, usedIndices, metric=metric, nIter=nIter)
         classificationKWARGS["classifiersConfigs"] = bestConfigs
         classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
+
     return classifier
 
 

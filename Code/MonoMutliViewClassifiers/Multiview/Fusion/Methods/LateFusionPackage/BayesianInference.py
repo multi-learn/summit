@@ -6,6 +6,7 @@ from utils.Dataset import getV
 
 
 def genParamsSets(classificationKWARGS, nIter=1):
+    print classificationKWARGS
     nbView = classificationKWARGS["nbView"]
     paramsSets = []
     for _ in range(nIter):

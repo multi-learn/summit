@@ -33,10 +33,14 @@ def resultAnalysis(benchmark, results, name, times, metrics):
         names+=[ "Late-"+str(a["fusionMethod"]) for type_, a, b in multi if type_ == "Fusion" and a["fusionType"] != "EarlyFusion"]
         names+=[ "Early-"+a["fusionMethod"]+"-"+a["classifiersNames"][0]  for type_, a, b in multi if type_ == "Fusion" and a["fusionType"] != "LateFusion"]
         nbResults = len(mono)+len(multi)
-        validationScores = [float(res[1][2][metric[0]][2]) for res in mono]
-        validationScores += [float(scores[metric[0]][2]) for a, b, scores in multi]
+        validationScores = [float(res[1][2][metric[0]][1]) for res in mono]
+        validationSTD = [float(res[1][2][metric[0]][3]) for res in mono]
+        validationScores += [float(scores[metric[0]][1]) for a, b, scores in multi]
+        validationSTD += [float(scores[metric[0]][3]) for a, b, scores in multi]
         trainScores = [float(res[1][2][metric[0]][0]) for res in mono]
         trainScores += [float(scores[metric[0]][0]) for a, b, scores in multi]
+        trainSTD = [float(res[1][2][metric[0]][2]) for res in mono]
+        trainSTD += [float(scores[metric[0]][2]) for a, b, scores in multi]
         f = pylab.figure(figsize=(40, 30))
         width = 0.35       # the width of the bars
         fig = plt.gcf()
@@ -47,8 +51,8 @@ def resultAnalysis(benchmark, results, name, times, metrics):
         else:
             metricKWARGS = {}
         ax.set_title(getattr(Metrics, metric[0]).getConfig(**metricKWARGS)+" on validation set for each classifier")
-        rects = ax.bar(range(nbResults), validationScores, width, color="r")
-        rect2 = ax.bar(np.arange(nbResults)+width, trainScores, width, color="0.7")
+        rects = ax.bar(range(nbResults), validationScores, width, color="r", yerr=validationSTD)
+        rect2 = ax.bar(np.arange(nbResults)+width, trainScores, width, color="0.7", yerr=trainSTD)
         autolabel(rects, ax)
         autolabel(rect2, ax)
         ax.legend((rects[0], rect2[0]), ('Train', 'Test'))

@@ -39,7 +39,12 @@ class WeightedLinear(EarlyFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
         EarlyFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                        NB_CORES=NB_CORES)
-        self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
+        if kwargs['fusionMethodConfig'][0]==None:
+            self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
+        elif kwargs['fusionMethodConfig'][0]==['']:
+            pass
+        else:
+            self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):

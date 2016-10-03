@@ -88,7 +88,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
         logging.info("Start:\t Learning with " + CL_type + " and " + str(len(kFolds)) + " folds")
         logging.info("Start:\t Classification")
         # Begin Classification
-        classifier = searchBestSettings(DATASET, CL_type, metrics, viewsIndices=viewsIndices, usedIndices=learningIndices, kFolds=kFolds, searchingTool=gridSearch, nIter=1, **classificationKWARGS)
+        classifier = searchBestSettings(DATASET, CL_type, metrics, viewsIndices=viewsIndices, usedIndices=learningIndices, kFolds=kFolds, searchingTool=gridSearch, nIter=nIter, **classificationKWARGS)
         classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices)
         trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
         testLabels = classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices)

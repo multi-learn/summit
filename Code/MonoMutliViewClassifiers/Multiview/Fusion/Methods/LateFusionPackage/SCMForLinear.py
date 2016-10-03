@@ -64,8 +64,8 @@ class SCMForLinear(LateFusionClassifier):
     def setParams(self, paramsSet):
         self.p = paramsSet[0]
         self.maxAttributes = paramsSet[1]
-        self.order = paramsSet[2]
-        self.modelType = paramsSet[3]
+        self.order = paramsSet[3]
+        self.modelType = paramsSet[2]
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
@@ -114,8 +114,8 @@ class SCMForLinear(LateFusionClassifier):
             self.modelType = self.config[2]
         if self.order is None:
             self.order = self.config[3]
-        nbView = len(viewsIndices)
 
+        nbView = len(viewsIndices)
         self.SCMClassifier = pyscm.scm.SetCoveringMachine(p=self.p, max_attributes=self.maxAttributes, model_type=self.modelType, verbose=False)
         monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
@@ -168,7 +168,7 @@ class SCMForLinear(LateFusionClassifier):
                 for combin in combins:
                     generatedDecision = monoViewDecisions[:,combin[0]]
                     for index in range(len(combin)-1):
-                        if self.config[2]=="disjunction":
+                        if self.modelType=="disjunction":
                             generatedDecision = np.logical_and(generatedDecision, monoViewDecisions[:,combin[index+1]])
                         else:
                             generatedDecision = np.logical_or(generatedDecision, monoViewDecisions[:,combin[index+1]])
@@ -179,8 +179,8 @@ class SCMForLinear(LateFusionClassifier):
 
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
-        configString = "with SCM for linear with max_attributes : "+str(self.config[1])+", p : "+str(self.config[0])+\
-                       " model_type : "+str(self.config[2])+" has chosen "+\
+        configString = "with SCM for linear with max_attributes : "+str(self.maxAttributes)+", p : "+str(self.p)+\
+                       " model_type : "+str(self.modelType)+" has chosen "+\
                        str(len(self.SCMClassifier.attribute_importances))+" rule(s) \n\t-With monoview classifiers : "
         for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)

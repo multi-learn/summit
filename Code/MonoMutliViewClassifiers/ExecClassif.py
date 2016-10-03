@@ -433,7 +433,7 @@ if True:
                                              "FusionKWARGS": {"fusionType":"LateFusion", "fusionMethod":method,
                                                               "classifiersNames": bestClassifiers,
                                                               "classifiersConfigs": bestClassifiersConfigs,
-                                                              'fusionMethodConfig': fusionMethodConfig}}
+                                                              'fusionMethodConfig': fusionMethodConfig, "nbView":(len(viewsIndices))}}
                                 argumentDictionaries["Multiview"].append(arguments)
                     except:
                         pass
@@ -450,7 +450,7 @@ if True:
                                              "FusionKWARGS": {"fusionType":"EarlyFusion", "fusionMethod":method,
                                                               "classifiersNames": [classifier],
                                                               "classifiersConfigs": [globals()[classifier+"KWARGSInit"]],
-                                                              'fusionMethodConfig': fusionMethodConfig}}
+                                                              'fusionMethodConfig': fusionMethodConfig, "nbView":(len(viewsIndices))}}
                                 argumentDictionaries["Multiview"].append(arguments)
                 except:
                     pass
@@ -459,7 +459,6 @@ if True:
 else:
     pass
 # resultsMultiview = []
-print argumentDictionaries["Multiview"]
 if nbCores>1:
     resultsMultiview = []
     nbExperiments = len(argumentDictionaries["Multiview"])

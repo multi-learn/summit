@@ -42,6 +42,8 @@ class WeightedLinear(LateFusionClassifier):
                                       NB_CORES=NB_CORES)
         if kwargs['fusionMethodConfig'][0]==None:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
+        elif kwargs['fusionMethodConfig'][0]==['']:
+            pass
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 
