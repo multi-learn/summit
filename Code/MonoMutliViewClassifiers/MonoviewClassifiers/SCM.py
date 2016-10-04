@@ -18,6 +18,10 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
+
+def canProbas():
+    return False
+
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     max_attrtibutes = kwargs['0']
     try:
@@ -33,7 +37,6 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
         binaryAttributes = kwargs["binaryAttributes"]
     except:
         attributeClassification, binaryAttributes, dsetFile, name = transformData(DATASET)
-    print kwargs
     classifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=max_attrtibutes, model_type=model_type, verbose=False)
     classifier.fit(binaryAttributes, CLASS_LABELS, X=None, attribute_classifications=attributeClassification, iteration_callback=None)
     try:

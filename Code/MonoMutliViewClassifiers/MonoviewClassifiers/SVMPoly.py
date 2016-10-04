@@ -10,6 +10,8 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
+def canProbas():
+    return True
 
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     C = int(kwargs['0'])

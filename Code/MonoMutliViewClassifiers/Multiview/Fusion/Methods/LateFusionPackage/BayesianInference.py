@@ -6,7 +6,6 @@ from utils.Dataset import getV
 
 
 def genParamsSets(classificationKWARGS, nIter=1):
-    print classificationKWARGS
     nbView = classificationKWARGS["nbView"]
     paramsSets = []
     for _ in range(nIter):
@@ -43,6 +42,7 @@ class BayesianInference(LateFusionClassifier):
 
         # self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
         self.weights = None #A modifier !!
+        self.needProbas = True
     def setParams(self, paramsSet):
         self.weights = paramsSet[0]
 

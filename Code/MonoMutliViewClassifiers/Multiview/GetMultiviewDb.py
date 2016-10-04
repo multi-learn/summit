@@ -480,7 +480,6 @@ def getAdjacenceMatrix(RNASeqRanking, sotredRNASeq, k=2):
     nbGenes = RNASeqRanking.shape[1]
     pointer = 0
     for patientIndex in range(RNASeqRanking.shape[0]):
-        print patientIndex
         for i in range(nbGenes):
             for j in range(k/2):
                 try:

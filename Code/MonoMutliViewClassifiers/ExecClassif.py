@@ -40,7 +40,7 @@ parser = argparse.ArgumentParser(
 groupStandard = parser.add_argument_group('Standard arguments')
 groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
 groupStandard.add_argument('--name', metavar='STRING', action='store', help='Name of Database (default: %(default)s)',
-                           default='MultiOmic')
+                           default='Plausible')
 groupStandard.add_argument('--type', metavar='STRING', action='store', help='Type of database : .hdf5 or .csv',
                            default='.hdf5')
 groupStandard.add_argument('--views', metavar='STRING', action='store',help='Name of the views selected for learning',
@@ -55,7 +55,7 @@ groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
                         help='Determine the learning rate if > 1.0, number of fold for cross validation', type=float,
                         default=0.7)
 groupClass.add_argument('--CL_nbFolds', metavar='INT', action='store', help='Number of folds in cross validation',
-                        type=int, default=5 )
+                        type=int, default=2 )
 groupClass.add_argument('--CL_nb_class', metavar='INT', action='store', help='Number of classes, -1 for all', type=int,
                         default=2)
 groupClass.add_argument('--CL_classes', metavar='STRING', action='store',
@@ -73,12 +73,12 @@ groupClass.add_argument('--CL_algos_multiview', metavar='STRING', action='store'
 groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
                         default=1)
 groupClass.add_argument('--CL_statsiter', metavar='INT', action='store', help='Number of iteration for each algorithm to mean results', type=int,
-                        default=1)
+                        default=2)
 groupClass.add_argument('--CL_metrics', metavar='STRING', action='store', nargs="+",
                         help='Determine which metrics to use, separate metric and configuration with ":". If multiple, separate with space. If no metric is specified, considering all with accuracy for classification '
                              'first one will be used for classification', default=[''])
 groupClass.add_argument('--CL_GS_iter', metavar='INT', action='store',
-                        help='Determine how many Randomized grid search tests to do', type=int, default=30)
+                        help='Determine how many Randomized grid search tests to do', type=int, default=2)
 groupClass.add_argument('--CL_GS_type', metavar='STRING', action='store',
                         help='Determine which hyperparamter search function use', default="randomizedSearch")
 
@@ -241,7 +241,7 @@ if args.CL_type.split(":")==["Benchmark"]:
                          for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClasses))
     allMonoviewAlgos = [name for _, name, isPackage in
                         pkgutil.iter_modules(['MonoviewClassifiers'])
-                        if (not isPackage) and (name!="SGD") and (name[:3]!="SVM") and (name!="SCM")]
+                        if (not isPackage) and (name!="SGD") and (name[:3]!="SVM")]
     fusionMonoviewClassifiers = allMonoviewAlgos
     allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
     allMumboAlgos = [name for _, name, isPackage in
@@ -335,7 +335,7 @@ if nbCores>1:
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex  * nbCores))))
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
-    classifiersConfigs = [[result[1][2] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
+    classifiersConfigs = [[result[1][1][:-1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
 else:
     resultsMonoview+=([ExecMonoview(DATASET.get("View"+str(arguments["viewIndex"])),
                                     DATASET.get("Labels").value, args.name, labelsNames,
@@ -348,27 +348,8 @@ else:
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
     classifiersConfigs = [[result[1][1][:-1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in viewsIndices]
 monoviewTime = time.time()-dataBaseTime-start
-print classifiersConfigs
 if True:
     if benchmark["Multiview"]:
-        try:
-            if benchmark["Multiview"]["Mumbo"]:
-                for combination in itertools.combinations_with_replacement(range(len(benchmark["Multiview"]["Mumbo"])), NB_VIEW):
-                    mumboClassifiersNames = [benchmark["Multiview"]["Mumbo"][index] for index in combination]
-                    arguments = {"CL_type": "Mumbo",
-                                 "views": views,
-                                 "NB_VIEW": len(views),
-                                 "viewsIndices": viewsIndices,
-                                 "NB_CLASS": len(args.CL_classes.split(":")),
-                                 "LABELS_NAMES": args.CL_classes.split(":"),
-                                 "MumboKWARGS": {"classifiersNames": mumboClassifiersNames,
-                                                 "maxIter":int(args.MU_iter[0]), "minIter":int(args.MU_iter[1]),
-                                                 "threshold":args.MU_iter[2],
-                                                 "classifiersConfigs": [argument.split(":") for argument in args.MU_config], "nbView":(len(viewsIndices))}}
-                    argumentDictionaries["Multiview"].append(arguments)
-        except:
-            pass
-
         try:
             if benchmark["Multiview"]["Fusion"]:
                 if args.FU_cl_names.split(':') !=['']:
@@ -456,9 +437,25 @@ if True:
                     pass
         except:
             pass
+        try:
+            if benchmark["Multiview"]["Mumbo"]:
+                for combination in itertools.combinations_with_replacement(range(len(benchmark["Multiview"]["Mumbo"])), NB_VIEW):
+                    mumboClassifiersNames = [benchmark["Multiview"]["Mumbo"][index] for index in combination]
+                    arguments = {"CL_type": "Mumbo",
+                                 "views": views,
+                                 "NB_VIEW": len(views),
+                                 "viewsIndices": viewsIndices,
+                                 "NB_CLASS": len(args.CL_classes.split(":")),
+                                 "LABELS_NAMES": args.CL_classes.split(":"),
+                                 "MumboKWARGS": {"classifiersNames": mumboClassifiersNames,
+                                                 "maxIter":int(args.MU_iter[0]), "minIter":int(args.MU_iter[1]),
+                                                 "threshold":args.MU_iter[2],
+                                                 "classifiersConfigs": [argument.split(":") for argument in args.MU_config], "nbView":(len(viewsIndices))}}
+                    argumentDictionaries["Multiview"].append(arguments)
+        except:
+            pass
 else:
     pass
-# resultsMultiview = []
 if nbCores>1:
     resultsMultiview = []
     nbExperiments = len(argumentDictionaries["Multiview"])

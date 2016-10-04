@@ -10,8 +10,10 @@ import MonoviewClassifiers
 from utils.Dataset import getV
 
 
-def fitMonoviewClassifier(classifierName, data, labels, classifierConfig):
+def fitMonoviewClassifier(classifierName, data, labels, classifierConfig, needProbas):
     monoviewClassifier = getattr(MonoviewClassifiers, classifierName)
+    if needProbas and not monoviewClassifier.canProbas():
+        monoviewClassifier = getattr(MonoviewClassifiers, "DecisionTree")
     classifier = monoviewClassifier.fit(data,labels,**dict((str(configIndex), config) for configIndex, config in
                                       enumerate(classifierConfig
                                                 )))
@@ -28,6 +30,7 @@ class LateFusionClassifier(object):
         self.monoviewClassifiers = []
         self.nbCores = NB_CORES
         self.accuracies = np.zeros(len(monoviewClassifiersNames))
+        self.needProbas = False
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
@@ -38,5 +41,5 @@ class LateFusionClassifier(object):
             delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[index],
                                               getV(DATASET, viewIndex, trainIndices),
                                               DATASET.get("Labels")[trainIndices],
-                                              self.monoviewClassifiersConfigs[index])
+                                              self.monoviewClassifiersConfigs[index], self.needProbas)
             for index, viewIndex in enumerate(viewsIndices))

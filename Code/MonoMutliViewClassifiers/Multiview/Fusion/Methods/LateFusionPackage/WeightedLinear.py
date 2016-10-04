@@ -46,6 +46,7 @@ class WeightedLinear(LateFusionClassifier):
             pass
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
+        self.needProbas = True
 
     def setParams(self, paramsSet):
         self.weights = paramsSet[0]
