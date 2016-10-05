@@ -51,6 +51,7 @@ def initLogFile(args):
     if args.log:
         logging.getLogger().addHandler(logging.StreamHandler())
 
+
 def initMultipleDatasets(args, nbCores):
     if nbCores>1:
         if DB.datasetsAlreadyExist(args.pathF, args.name, nbCores):
@@ -65,6 +66,7 @@ def initMultipleDatasets(args, nbCores):
             logging.debug("Start:\t Creating datasets for multiprocessing")
             return datasetFiles
 
+
 def initViews(DATASET, args):
     NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
     if args.views!="":
@@ -78,6 +80,7 @@ def initViews(DATASET, args):
         viewsIndices = np.arange(NB_VIEW)
         allViews = views
         return views, viewsIndices, allViews
+
 
 def initBenchmark(args):
     benchmark = {"Monoview":{}, "Multiview":[]}
@@ -140,6 +143,7 @@ def initBenchmark(args):
         benchmark["Monoview"] = args.CL_algos_monoview.split(":")
     return benchmark
 
+
 def initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, DATASET, NB_CLASS, kwargsInit):
     try:
         if benchmark["Monoview"]:
@@ -161,6 +165,7 @@ def initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, DATA
         pass
     return argumentDictionaries
 
+
 def initKWARGS(args):
     kwargsInit={
         "RandomForestKWARGSInit" : {"0":map(int, args.CL_RF_trees.split())[0], "1":map(int, args.CL_RF_max_depth.split(":"))[0]},
@@ -175,6 +180,7 @@ def initKWARGS(args):
         "SCMKWARGSInit" : {"0":args.CL_SCM_max_rules.split(":")[0]},
     }
     return kwargsInit
+
 
 def initMultiviewArguments(args, benchmark, views, viewsIndices, accuracies, classifiersConfigs, classifiersNames, fusionMethodConfig, NB_VIEW):
     if benchmark["Multiview"]:
@@ -428,7 +434,6 @@ except:
 initLogFile(args)
 
 DATASET, LABELS_DICTIONARY = getDatabase(args.views.split(":"), args.pathF, args.name, len(args.CL_classes), args.CL_classes)
-# datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
 
 datasetFiles = initMultipleDatasets(args, nbCores)
 
