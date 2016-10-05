@@ -66,29 +66,32 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
     classifierGridSearch = getattr(classifierModule, "gridSearch_hdf5")
     analysisModule = getattr(classifierPackage, "analyzeResults")
 
-    for iterIndex in range(statsIter):
-
-        logging.info("Start:\t Determine validation split for ratio " + str(learningRate)+" for iteration "+str(iterIndex+1))
-        validationIndices = DB.splitDataset(DATASET, learningRate, datasetLength)
-        learningIndices = [index for index in range(datasetLength) if index not in validationIndices]
-        classificationSetLength = len(learningIndices)
-        logging.info("Done:\t Determine validation split")
-
-        logging.info("Start:\t Determine "+str(nbFolds)+" folds")
-        if nbFolds != 1:
-            kFolds = DB.getKFoldIndices(nbFolds, DATASET.get("Labels")[...], NB_CLASS, learningIndices)
-        else:
-            kFolds = [[], range(classificationSetLength)]
-        logging.info("Info:\t Length of Learning Sets: " + str(classificationSetLength - len(kFolds[0])))
-        logging.info("Info:\t Length of Testing Sets: " + str(len(kFolds[0])))
-        logging.info("Info:\t Length of Validation Set: " + str(len(validationIndices)))
-        logging.info("Done:\t Determine folds")
 
 
-        logging.info("Start:\t Learning with " + CL_type + " and " + str(len(kFolds)) + " folds")
-        logging.info("Start:\t Classification")
+
+    logging.info("Start:\t Determine validation split for ratio " + str(learningRate))
+    iValidationIndices = [DB.splitDataset(DATASET, learningRate, datasetLength) for iterIndex in range(statsIter)]
+    iLearningIndices = [[index for index in range(datasetLength) if index not in validationIndices] for validationIndices in iValidationIndices]
+    iClassificationSetLength = [len(learningIndices) for learningIndices in iLearningIndices]
+    logging.info("Done:\t Determine validation split")
+
+    logging.info("Start:\t Determine "+str(nbFolds)+" folds")
+    if nbFolds != 1:
+        iKFolds = [DB.getKFoldIndices(nbFolds, DATASET.get("Labels")[...], NB_CLASS, learningIndices) for learningIndices in iLearningIndices]
+    else:
+        iKFolds = [[[], range(classificationSetLength)] for classificationSetLength in iClassificationSetLength]
+
+        # logging.info("Info:\t Length of Learning Sets: " + str(classificationSetLength - len(kFolds[0])))
+        # logging.info("Info:\t Length of Testing Sets: " + str(len(kFolds[0])))
+        # logging.info("Info:\t Length of Validation Set: " + str(len(validationIndices)))
+        # logging.info("Done:\t Determine folds")
+
+
+        # logging.info("Start:\t Learning with " + CL_type + " and " + str(len(kFolds)) + " folds")
+        # logging.info("Start:\t Classification")
         # Begin Classification
-        classifier = searchBestSettings(DATASET, CL_type, metrics, viewsIndices=viewsIndices, usedIndices=learningIndices, kFolds=kFolds, searchingTool=gridSearch, nIter=nIter, **classificationKWARGS)
+    classifier = searchBestSettings(DATASET, CL_type, metrics, iLearningIndices, iKFolds,viewsIndices=viewsIndices, searchingTool=gridSearch, nIter=nIter, **classificationKWARGS)
+    for _ in range(statsIter):
         classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices)
         trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
         testLabels = classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices)

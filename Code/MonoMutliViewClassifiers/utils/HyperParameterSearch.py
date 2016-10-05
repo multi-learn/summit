@@ -4,12 +4,12 @@ import sys
 import Multiview
 import Metrics
 
-def searchBestSettings(dataset, classifierName, metrics,viewsIndices=None, usedIndices=None, kFolds=None, searchingTool="gridSearch", nIter=1, **kwargs):
+def searchBestSettings(dataset, classifierName, metrics, iLearningIndices, iKFolds, viewsIndices=None, searchingTool="gridSearch", nIter=1, **kwargs):
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
     thismodule = sys.modules[__name__]
     searchingToolMethod = getattr(thismodule, searchingTool)
-    bestSettings = searchingToolMethod(dataset, classifierName, metrics, viewsIndices=viewsIndices, usedIndices=usedIndices, kFolds=kFolds, nIter=nIter, **kwargs)
+    bestSettings = searchingToolMethod(dataset, classifierName, metrics, iLearningIndices, iKFolds, viewsIndices=viewsIndices, nIter=nIter, **kwargs)
     return bestSettings # or well set clasifier ?
 
 
@@ -18,7 +18,7 @@ def gridSearch(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1,
     pass
 
 
-def randomizedSearch(dataset, classifierName, metrics, viewsIndices=None, usedIndices=None, kFolds=None, nIter=1, nbCores=1, **classificationKWARGS):
+def randomizedSearch(dataset, classifierName, metrics, iLearningIndices, iKFolds, viewsIndices=None, nIter=1, nbCores=1, **classificationKWARGS):
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
     metric = metrics[0]
@@ -36,6 +36,7 @@ def randomizedSearch(dataset, classifierName, metrics, viewsIndices=None, usedIn
     classifierPackage =getattr(Multiview,classifierName)  # Permet d'appeler un module avec une string
     classifierModule = getattr(classifierPackage, classifierName)
     classifierClass = getattr(classifierModule, classifierName)
+    statsIter = len(iLearningIndices)
 
     if classifierName != "Mumbo":
         datasetLength = dataset.get("Metadata").attrs["datasetLength"]
@@ -44,17 +45,18 @@ def randomizedSearch(dataset, classifierName, metrics, viewsIndices=None, usedIn
         bestSettings = []
         for paramsSet in paramsSets:
             scores = []
-            for fold in kFolds:
-                fold.sort()
-                trainIndices = [index for index in range(datasetLength) if (index not in fold) and (index in usedIndices)]
-                classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
-                classifier.setParams(paramsSet)
-                classifier.fit_hdf5(dataset, trainIndices=trainIndices, viewsIndices=viewsIndices)
-                trainLabels = classifier.predict_hdf5(dataset, usedIndices=trainIndices, viewsIndices=viewsIndices)
-                testLabels = classifier.predict_hdf5(dataset, usedIndices=fold, viewsIndices=viewsIndices)
-                trainScore = metricModule.score(dataset.get("Labels").value[trainIndices], trainLabels)
-                testScore = metricModule.score(dataset.get("Labels").value[fold], testLabels)
-                scores.append(testScore)
+            for statsIterIndex in range(statsIter):
+                for fold in iKFolds[statsIterIndex]:
+                    fold.sort()
+                    trainIndices = [index for index in range(datasetLength) if (index not in fold) and (index in iLearningIndices[statsIterIndex])]
+                    classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
+                    classifier.setParams(paramsSet)
+                    classifier.fit_hdf5(dataset, trainIndices=trainIndices, viewsIndices=viewsIndices)
+                    trainLabels = classifier.predict_hdf5(dataset, usedIndices=trainIndices, viewsIndices=viewsIndices)
+                    testLabels = classifier.predict_hdf5(dataset, usedIndices=fold, viewsIndices=viewsIndices)
+                    trainScore = metricModule.score(dataset.get("Labels").value[trainIndices], trainLabels)
+                    testScore = metricModule.score(dataset.get("Labels").value[fold], testLabels)
+                    scores.append(testScore)
             crossValScore = np.mean(np.array(scores))
 
         if isBetter=="higher" and crossValScore>bestScore:
@@ -67,7 +69,7 @@ def randomizedSearch(dataset, classifierName, metrics, viewsIndices=None, usedIn
         classifier.setParams(paramsSet)
 
     else:
-        bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, viewsIndices, classificationKWARGS, usedIndices, metric=metric, nIter=nIter)
+        bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, viewsIndices, classificationKWARGS, iLearningIndices[0], metric=metric, nIter=nIter)
         classificationKWARGS["classifiersConfigs"] = bestConfigs
         classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
 
