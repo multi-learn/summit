@@ -42,7 +42,6 @@ def randomizedSearch(dataset, classifierName, metrics, iLearningIndices, iKFolds
         datasetLength = dataset.get("Metadata").attrs["datasetLength"]
         paramsSets = classifierModule.genParamsSets(classificationKWARGS, nIter=nIter)
         bestScore = 0
-        bestSettings = []
         for paramsSet in paramsSets:
             scores = []
             for statsIterIndex in range(statsIter):
@@ -66,7 +65,7 @@ def randomizedSearch(dataset, classifierName, metrics, iLearningIndices, iKFolds
             baseScore = crossValScore
             bestSettings = paramsSet
         classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
-        classifier.setParams(paramsSet)
+        classifier.setParams(bestSettings)
 
     else:
         bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, viewsIndices, classificationKWARGS, iLearningIndices[0], metric=metric, nIter=nIter)
