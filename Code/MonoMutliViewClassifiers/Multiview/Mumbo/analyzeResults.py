@@ -89,7 +89,7 @@ def getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices
     return DBString, viewNames
 
 
-def getAlgoConfig(initKWARGS, NB_CORES, viewNames, gridSearch, nIter, times):
+def getAlgoConfig(classifiersIterations, initKWARGS, NB_CORES, viewNames, gridSearch, nIter, times):
     classifierNames = initKWARGS["classifiersNames"]
     maxIter = initKWARGS["maxIter"]
     minIter = initKWARGS["minIter"]
@@ -102,13 +102,14 @@ def getAlgoConfig(initKWARGS, NB_CORES, viewNames, gridSearch, nIter, times):
     # kFoldPredictionTime = [np.mean(np.array([kFoldPredictionTime[statsIterIndex][foldIdx]
     #                                        for statsIterIndex in range(len(kFoldPredictionTime))]))
     #                                       for foldIdx in range(len(kFoldPredictionTime[0]))]
+
     weakClassifierConfigs = [getattr(globals()[classifierName], 'getConfig')(classifiersConfig) for classifiersConfig,
                                                                                                    classifierName
-                             in zip(classifiersConfig, classifierNames)]
+                             in zip(classifiersIterations[0].classifiersConfigs, classifiersIterations[0].classifiersNames)]
     classifierAnalysis = [classifierName + " " + weakClassifierConfig + "on " + feature for classifierName,
                                                                                             weakClassifierConfig,
                                                                                             feature
-                          in zip(classifierNames, weakClassifierConfigs, viewNames)]
+                          in zip(classifiersIterations[0].classifiersNames, weakClassifierConfigs, viewNames)]
     gridSearchString = ""
     if gridSearch:
         gridSearchString += "Configurations found by randomized search with "+str(nIter)+" iterations"
@@ -423,7 +424,7 @@ def execute(classifiersIterations, trainLabelsIterations,testLabelsIterations, D
     CLASS_LABELS = DATASET.get("Labels")[...]
 
     dbConfigurationString, viewNames = getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices, LABELS_DICTIONARY)
-    algoConfigurationString, classifierAnalysis = getAlgoConfig(initKWARGS, NB_CORES, viewNames, gridSearch, nIter, times)
+    algoConfigurationString, classifierAnalysis = getAlgoConfig(classifiersIterations, initKWARGS, NB_CORES, viewNames, gridSearch, nIter, times)
 
 
     (totalScoreOnTrain, totalScoreOnTest, meanAverageAccuracies, viewsStats, scoresOnTainByIter,
