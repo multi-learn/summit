@@ -98,7 +98,6 @@ class SCMForLinear(LateFusionClassifier):
                 monoviewDecisions[:, index] = monoviewDecision
             features = self.generateInteractions(monoviewDecisions)
             predictedLabels = self.SCMClassifier.predict(features)
-            print str(np.array([accuracy_score(DATASET.get("Labels").value[usedIndices], predictedLabels)>acc for acc in accus]).all()), len(self.SCMClassifier.model)
         else:
             predictedLabels = []
         return predictedLabels

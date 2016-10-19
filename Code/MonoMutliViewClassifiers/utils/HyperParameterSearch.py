@@ -27,22 +27,20 @@ def randomizedSearch(dataset, classifierName, metrics, iLearningIndices, iKFolds
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
-    if metricModule.getConfig()[-14]=="h":
-        baseScore = -1000.0
-        isBetter = "higher"
-    else:
-        baseScore = 1000.0
-        isBetter = "lower"
     classifierPackage =getattr(Multiview,classifierName)  # Permet d'appeler un module avec une string
     classifierModule = getattr(classifierPackage, classifierName)
     classifierClass = getattr(classifierModule, classifierName)
     statsIter = len(iLearningIndices)
-
     if classifierName != "Mumbo":
         datasetLength = dataset.get("Metadata").attrs["datasetLength"]
         paramsSets = classifierModule.genParamsSets(classificationKWARGS, nIter=nIter)
-        bestScore = 0
         for paramsSet in paramsSets:
+            if metricModule.getConfig()[-14]=="h":
+                baseScore = -1000.0
+                isBetter = "higher"
+            else:
+                baseScore = 1000.0
+                isBetter = "lower"
             scores = []
             for statsIterIndex in range(statsIter):
                 for fold in iKFolds[statsIterIndex]:
@@ -58,12 +56,12 @@ def randomizedSearch(dataset, classifierName, metrics, iLearningIndices, iKFolds
                     scores.append(testScore)
             crossValScore = np.mean(np.array(scores))
 
-        if isBetter=="higher" and crossValScore>bestScore:
-            baseScore = crossValScore
-            bestSettings = paramsSet
-        if isBetter=="lower" and crossValScore<bestScore:
-            baseScore = crossValScore
-            bestSettings = paramsSet
+            if isBetter=="higher" and crossValScore>baseScore:
+                baseScore = crossValScore
+                bestSettings = paramsSet
+            elif isBetter=="lower" and crossValScore<baseScore:
+                baseScore = crossValScore
+                bestSettings = paramsSet
         classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
         classifier.setParams(bestSettings)
 

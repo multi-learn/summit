@@ -26,15 +26,15 @@ def makeMeNoisy(viewData, percentage=25):
     return noisyViewData
 
 
-def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=3, nbClass=2, datasetLength=500):
-    nbFeatures = 150
+def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=3, nbClass=2, datasetLength=347):
+    nbFeatures = 250
     datasetFile = h5py.File(pathF+"Plausible.hdf5", "w")
     CLASS_LABELS = np.array([0 for i in range(datasetLength/2)]+[1 for i in range(datasetLength/2)])
     for viewIndex in range(nbView):
         # if viewIndex== 0 :
         viewData = np.array([np.zeros(nbFeatures) for i in range(datasetLength/2)]+[np.ones(nbFeatures) for i in range(datasetLength/2)])
         fakeTrueIndices = np.random.randint(0, datasetLength/2-1, datasetLength/10)
-        fakeFalseIndices = np.random.randint(datasetLength/2, datasetLength, datasetLength/10)
+        fakeFalseIndices = np.random.randint(datasetLength/2, datasetLength-1, datasetLength/10)
 
         viewData[fakeTrueIndices] = np.ones((len(fakeTrueIndices), nbFeatures))
         viewData[fakeFalseIndices] = np.zeros((len(fakeFalseIndices), nbFeatures))

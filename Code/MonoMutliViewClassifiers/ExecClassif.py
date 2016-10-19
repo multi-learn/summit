@@ -98,7 +98,7 @@ def initBenchmark(args):
                              for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClasses))
         allMonoviewAlgos = [name for _, name, isPackage in
                             pkgutil.iter_modules(['MonoviewClassifiers'])
-                            if (not isPackage) and (name!="SGD") and (name[:3]!="SVM")]
+                            if (not isPackage)]
         fusionMonoviewClassifiers = allMonoviewAlgos
         allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
         allMumboAlgos = [name for _, name, isPackage in
@@ -264,7 +264,7 @@ def initMultiviewArguments(args, benchmark, views, viewsIndices, accuracies, cla
                                              "LABELS_NAMES": args.CL_classes.split(":"),
                                              "FusionKWARGS": {"fusionType":"EarlyFusion", "fusionMethod":method,
                                                               "classifiersNames": [classifier],
-                                                              "classifiersConfigs": [globals()[classifier+"KWARGSInit"]],
+                                                              "classifiersConfigs": [initKWARGS[classifier+"KWARGSInit"]],
                                                               'fusionMethodConfig': fusionMethodConfig, "nbView":(len(viewsIndices))}}
                                 argumentDictionaries["Multiview"].append(arguments)
                 except:
@@ -448,7 +448,10 @@ metrics = [metric.split(":") for metric in args.CL_metrics]
 if metrics == [[""]]:
     metricsNames = [name for _, name, isPackage
                     in pkgutil.iter_modules(['Metrics']) if not isPackage and name!="log_loss"]
-    metrics = [[metricName, None] for metricName in metricsNames]
+    metrics = [[metricName] for metricName in metricsNames]
+for metricIndex, metric in enumerate(metrics):
+    if len(metric)==1:
+        metrics[metricIndex]=[metric[0], None]
 
 
 logging.info("Start:\t Finding all available mono- & multiview algorithms")
