@@ -10,6 +10,7 @@ import Methods.LateFusion
 import Metrics
 
 
+
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
@@ -18,6 +19,7 @@ __status__ 	= "Prototype"                           # Production, Development, P
 def error(testLabels, computedLabels):
     error = sum(map(operator.ne, computedLabels, testLabels))
     return float(error) * 100 / len(computedLabels)
+
 
 
 def printMetricScore(metricScores, metrics):

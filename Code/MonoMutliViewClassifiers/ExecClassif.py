@@ -25,6 +25,11 @@ from ResultAnalysis import resultAnalysis
 from Versions import testVersions
 import MonoviewClassifiers
 
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from numpy.random import randint
+import random
+
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
@@ -104,7 +109,7 @@ def initBenchmark(args):
         allMumboAlgos = [name for _, name, isPackage in
                          pkgutil.iter_modules(['Multiview/Mumbo/Classifiers'])
                          if not isPackage and not name in ["SubSampling", "ModifiedMulticlass", "Kover"]]
-        allMultiviewAlgos = {"Fusion": allFusionAlgos, "Mumbo": allMumboAlgos}
+        allMultiviewAlgos = {"Fusion": allFusionAlgos}#, "Mumbo": allMumboAlgos}
         benchmark = {"Monoview": allMonoviewAlgos, "Multiview": allMultiviewAlgos}
 
     if "Multiview" in args.CL_type.strip(":"):
@@ -289,6 +294,24 @@ def initMultiviewArguments(args, benchmark, views, viewsIndices, accuracies, cla
         except:
             pass
     return argumentDictionaries
+
+
+def analyzeLabels(labelsArrays, realLabels, classifiersNames):
+    nbClassifiers = len(classifiersNames)
+    nbExamples = realLabels.shape[0]
+    nbIter = nbExamples/nbClassifiers
+    data = np.zeros((nbExamples, nbClassifiers*nbIter))
+    tempData = np.array([labelsArray == realLabels for labelsArray in labelsArrays]).astype(int)
+    for classifierIndex in range(nbClassifiers):
+        for iterIndex in range(nbIter):
+            data[:,classifierIndex*nbIter+iterIndex] = tempData[:,classifierIndex]
+    fig, ax = plt.subplots()
+    cax = ax.imshow(data, interpolation='nearest', cmap=cm.coolwarm)
+    ax.set_title('Gaussian noise with vertical colorbar')
+    cbar = fig.colorbar(cax, ticks=[0, 1])
+    cbar.ax.set_yticklabels(['Wrong', ' Right'])
+    fig.savefig("test.png")
+
 
 parser = argparse.ArgumentParser(
     description='This file is used to benchmark the accuracies fo multiple classification algorithm on multiview data.',
@@ -480,6 +503,7 @@ if nbCores>1:
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersNames = [[result[1][0] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
     classifiersConfigs = [[result[1][1][:-1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
+
 else:
     resultsMonoview+=([ExecMonoview(DATASET.get("View"+str(arguments["viewIndex"])),
                                     DATASET.get("Labels").value, args.name, labelsNames,
@@ -513,7 +537,9 @@ if nbCores>1:
     logging.debug("Start:\t Deleting "+str(nbCores)+" temporary datasets for multiprocessing")
     datasetFiles = DB.deleteHDF5(args.pathF, args.name, nbCores)
     logging.debug("Start:\t Deleting datasets for multiprocessing")
-
+labels = np.array([resultMonoview[1][3] for resultMonoview in resultsMonoview]+[resultMultiview[3] for resultMultiview in resultsMultiview]).transpose()
+trueLabels = DATASET.get("Labels").value
+analyzeLabels(labels, trueLabels, ["" in range(labels.shape[1])])
 times = [dataBaseTime, monoviewTime, multiviewTime]
 # times=[]
 results = (resultsMonoview, resultsMultiview)

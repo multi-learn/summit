@@ -1,8 +1,0 @@
-2016-09-06 09:25:57,714 INFO: Start:	 Finding all available mono- & multiview algorithms
-2016-09-06 09:25:57,717 DEBUG: ### Main Programm for Classification MonoView
-2016-09-06 09:25:57,717 DEBUG: ### Classification - Database:Fake Feature:View0 train_size:0.7, CrossValidation k-folds:5, cores:1, algorithm : Adaboost
-2016-09-06 09:25:57,717 DEBUG: Start:	 Determine Train/Test split
-2016-09-06 09:25:57,717 DEBUG: Info:	 Shape X_train:(210, 10), Length of y_train:210
-2016-09-06 09:25:57,717 DEBUG: Info:	 Shape X_test:(90, 10), Length of y_test:90
-2016-09-06 09:25:57,717 DEBUG: Done:	 Determine Train/Test split
-2016-09-06 09:25:57,717 DEBUG: Start:	 RandomSearch best settings with 30 iterations

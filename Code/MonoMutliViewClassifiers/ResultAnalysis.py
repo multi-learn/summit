@@ -8,9 +8,11 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import cm
 
 #Import own Modules
 import Metrics
+from utils.Transformations import signLabels
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -26,8 +28,10 @@ def autolabel(rects, ax):
 
 
 def resultAnalysis(benchmark, results, name, times, metrics):
+    mono, multi = results
+    labelsByView = np.array([res[0][3] for res in mono]+[res[3] for res in multi])
+    makeColorMap(labelsByView, name)
     for metric in metrics:
-        mono, multi = results
         names = [res[1][0]+"-"+res[1][1][-1] for res in mono]
         names+=[type_ for type_, a, b in multi if type_ != "Fusion"]
         names+=[ "Late-"+str(a["fusionMethod"]) for type_, a, b in multi if type_ == "Fusion" and a["fusionType"] != "EarlyFusion"]
@@ -63,3 +67,21 @@ def resultAnalysis(benchmark, results, name, times, metrics):
     logging.info("Extraction time : "+str(times[0])+"s, Monoview time : "+str(times[1])+"s, Multiview Time : "+str(times[2])+"s")
 
 
+def makeColorMap(labelsByView, name):
+    nb_view = labelsByView.shape[1]
+    nbExamples = labelsByView.shape[0]
+    # Make plot with vertical (default) colorbar
+    fig, ax = plt.subplots()
+    data = np.zeros((nbExamples,nbExamples), dtype=int)
+    datap = np.array([signLabels(labels) for labels in labelsByView])
+    nbRepet = nbExamples/nb_view
+    for j in range(nb_view):
+        for i in range(nbRepet):
+            data[:, j*50+i] = datap[:, j]
+
+    cax = ax.imshow(data, interpolation='nearest', cmap=cm.coolwarm)
+    ax.set_title('Labels per view')
+    cbar = fig.colorbar(cax, ticks=[0, 1])
+    cbar.ax.set_yticklabels(['-1', ' 1'])  # vertically oriented colorbar
+    plt.show()
+    fig.savefig("Results/"+time.strftime("%Y%m%d-%H%M%S")+"-"+name+"-labels.png")

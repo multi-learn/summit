@@ -103,6 +103,7 @@ def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databa
         y_train_preds.append(y_train_pred)
         y_tests.append(y_test)
         y_test_preds.append(y_test_pred)
+        full_labels = cl_res.predict(X)
         logging.debug("Done:\t Predicting")
     t_end  = time.time() - t_start
     logging.debug("Info:\t Time for training and predicting: " + str(t_end) + "[s]")
@@ -138,7 +139,7 @@ def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databa
 
     logging.info("Done:\t Result Analysis")
     viewIndex = args["viewIndex"]
-    return viewIndex, [CL_type, cl_desc+[feat], metricsScores]
+    return viewIndex, [CL_type, cl_desc+[feat], metricsScores, full_labels]
     # # Classification Report with Precision, Recall, F1 , Support
     # logging.debug("Info:\t Classification report:")
     # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Report"

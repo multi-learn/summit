@@ -95,6 +95,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
         classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices)
         trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
         testLabels = classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices)
+        fullLabels = classifier.predict_hdf5(DATASET, viewsIndices=viewsIndices)
         trainLabelsIterations.append(trainLabels)
         testLabelsIterations.append(testLabels)
         ivalidationIndices.append(validationIndices)
@@ -144,7 +145,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
             imagesAnalysis[imageName].savefig(outputFileName + imageName + '.png')
 
     logging.info("Done:\t Result Analysis")
-    return CL_type, classificationKWARGS, metricsScores
+    return CL_type, classificationKWARGS, metricsScores, fullLabels
 
 
 if __name__=='__main__':
