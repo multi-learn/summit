@@ -1,0 +1,56 @@
+		Result for Multiview classification with EarlyFusion
+
+Average accuracy_score :
+	-On Train : 1.0
+	-On Test : 0.782208588957
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.789058101091, 1.0 with monoview classifier : 
+		- SVM Poly with C : 1
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.782208588957 with STD : 0.0
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.781538461538 with STD : 0.0
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.781538461538 with STD : 0.0
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.217791411043 with STD : 0.0
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.782208588957 with STD : 0.0
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.564427799938 with STD : 0.0
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.783950617284 with STD : 0.0
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.779141104294 with STD : 0.0
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.782208588957 with STD : 0.0
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.217791411043 with STD : 0.0
+

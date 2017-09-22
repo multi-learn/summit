@@ -13,7 +13,7 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
-def makeMeNoisy(viewData, percentage=25):
+def makeMeNoisy(viewData, percentage=15):
     viewData = viewData.astype(bool)
     nbNoisyCoord = int(percentage/100.0*viewData.shape[0]*viewData.shape[1])
     rows = range(viewData.shape[0])
@@ -33,8 +33,8 @@ def getPlausibleDBhdf5(features, pathF, name , NB_CLASS, LABELS_NAME, nbView=3, 
     for viewIndex in range(nbView):
         # if viewIndex== 0 :
         viewData = np.array([np.zeros(nbFeatures) for i in range(datasetLength/2)]+[np.ones(nbFeatures) for i in range(datasetLength/2)])
-        fakeTrueIndices = np.random.randint(0, datasetLength/2-1, datasetLength/10)
-        fakeFalseIndices = np.random.randint(datasetLength/2, datasetLength-1, datasetLength/10)
+        fakeTrueIndices = np.random.randint(0, datasetLength/2-1, datasetLength/5)
+        fakeFalseIndices = np.random.randint(datasetLength/2, datasetLength-1, datasetLength/5)
 
         viewData[fakeTrueIndices] = np.ones((len(fakeTrueIndices), nbFeatures))
         viewData[fakeFalseIndices] = np.zeros((len(fakeFalseIndices), nbFeatures))
@@ -175,32 +175,35 @@ def getPositions(labelsUsed, fullLabels):
 
 
 def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES):
-    datasetFile = h5py.File(pathF+nameDB+".hdf5", "w")
     labelsNamesFile = open(pathF+nameDB+'-ClassLabels-Description.csv')
+    datasetFile = h5py.File(pathF+nameDB+".hdf5", "w")
     if len(LABELS_NAMES)!=NB_CLASS:
         nbLabelsAvailable = 0
         for l in labelsNamesFile:
             nbLabelsAvailable+=1
         LABELS_NAMES = [line.strip().split(";")[1] for lineIdx, line in enumerate(labelsNamesFile) if lineIdx in np.random.randint(nbLabelsAvailable, size=NB_CLASS)]
-    fullLabels = np.genfromtxt(pathF + nameDB + '-ClassLabels.csv', delimiter=';').astype(int)
+    fullLabels = np.genfromtxt(pathF + nameDB + '-ClassLabels.csv', delimiter=',').astype(int)
     labelsDictionary = dict((classIndice, labelName) for (classIndice, labelName) in
-                        [(int(line.strip().split(";")[0]),line.strip().split(";")[1])for lineIndex, line in labelsNamesFile if line.strip().split(";")[0] in LABELS_NAMES])
+                        [(int(line.strip().split(";")[0]),line.strip().split(";")[1])for lineIndex, line in enumerate(labelsNamesFile) if line.strip().split(";")[0] in LABELS_NAMES])
     if len(set(fullLabels))>NB_CLASS:
         usedIndices = getPositions(labelsDictionary.keys(), fullLabels)
     else:
         usedIndices = range(len(fullLabels))
     for viewIndex, view in enumerate(views):
         viewFile = pathF + nameDB + "-" + view + '.csv'
-        viewMatrix = np.array(np.genfromtxt(viewFile, delimiter=';'))[usedIndices, :]
+        viewMatrix = np.array(np.genfromtxt(viewFile, delimiter=','))[usedIndices, :]
         viewDset = datasetFile.create_dataset("View"+str(viewIndex), viewMatrix.shape, data=viewMatrix)
         viewDset.attrs["name"] = view
+        viewDset.attrs["sparse"] = False
+        viewDset.attrs["binary"] = False
 
     labelsDset = datasetFile.create_dataset("Labels", fullLabels[usedIndices].shape, data=fullLabels[usedIndices])
-    labelsDset.attrs["labelsDictionary"] = labelsDictionary
+    #labelsDset.attrs["labelsDictionary"] = labelsDictionary
 
     metaDataGrp = datasetFile.create_group("Metadata")
     metaDataGrp.attrs["nbView"] = len(views)
     metaDataGrp.attrs["nbClass"] = NB_CLASS
+    print NB_CLASS
     metaDataGrp.attrs["datasetLength"] = len(fullLabels[usedIndices])
     datasetFile.close()
     datasetFile = h5py.File(pathF+nameDB+".hdf5", "r")
@@ -455,6 +458,7 @@ def makeSortedBinsMatrix(nbBins, lenBins, overlapping, arrayLen, path):
         sortedBinsMatrix[step*binIndex:lenBins+(step*binIndex), binIndex] = np.ones(lenBins, dtype=np.uint8)
     np.savetxt(path+"sortedBinsMatrix--t-"+str(lenBins)+"--n-"+str(nbBins)+"--c-"+str(overlapping)+".csv", sortedBinsMatrix, delimiter=",")
     return sortedBinsMatrix
+
 
 def makeSparseTotalMatrix(sortedRNASeq):
     nbPatients, nbGenes = sortedRNASeq.shape
@@ -894,6 +898,7 @@ def copyHDF5(pathF, name, nbCores):
         for dataset in datasetFile:
             datasetFile.copy("/"+dataset, newDataSet["/"])
         newDataSet.close()
+
 
 def datasetsAlreadyExist(pathF, name, nbCores):
     allDatasetExist = True

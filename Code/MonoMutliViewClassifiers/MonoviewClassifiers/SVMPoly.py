@@ -39,6 +39,6 @@ def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score",
 
 def getConfig(config):
     try:
-        return "\n\t\t- SVM Linear with C : "+str(config[0])
+        return "\n\t\t- SVM Poly with C : "+str(config[0])
     except:
-        return "\n\t\t- SVM Linear with C : "+str(config["0"])
+        return "\n\t\t- SVM Poly with C : "+str(config["0"])

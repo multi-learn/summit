@@ -1,0 +1,2095 @@
+2017-09-22 15:07:57,293 DEBUG: Start:	 Creating 2 temporary datasets for multiprocessing
+2017-09-22 15:07:57,293 WARNING:  WARNING : /!\ This may use a lot of HDD storage space : 0.08002225 Gbytes /!\ 
+2017-09-22 15:08:00,633 DEBUG: Start:	 Creating datasets for multiprocessing
+2017-09-22 15:08:00,636 INFO: Start:	 Finding all available mono- & multiview algorithms
+2017-09-22 15:08:00,708 DEBUG: Start:	 Loading data
+2017-09-22 15:08:00,708 DEBUG: Start:	 Loading data
+2017-09-22 15:08:00,727 DEBUG: Done:	 Loading data
+2017-09-22 15:08:00,727 DEBUG: Done:	 Loading data
+2017-09-22 15:08:00,727 DEBUG: Info:	 Classification - Database:awaexp Feature:cq-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2017-09-22 15:08:00,727 DEBUG: Info:	 Classification - Database:awaexp Feature:cq-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : Adaboost
+2017-09-22 15:08:00,727 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:00,727 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:00,753 DEBUG: Info:	 Shape X_train:(766, 2688), Length of y_train:766
+2017-09-22 15:08:00,753 DEBUG: Info:	 Shape X_test:(326, 2688), Length of y_test:326
+2017-09-22 15:08:00,753 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:00,753 DEBUG: Start:	 RandomSearch best settings with 2 iterations for DecisionTree
+2017-09-22 15:08:00,758 DEBUG: Info:	 Shape X_train:(766, 2688), Length of y_train:766
+2017-09-22 15:08:00,758 DEBUG: Info:	 Shape X_test:(326, 2688), Length of y_test:326
+2017-09-22 15:08:00,758 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:00,758 DEBUG: Start:	 RandomSearch best settings with 2 iterations for Adaboost
+2017-09-22 15:08:02,439 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:02,439 DEBUG: Start:	 Training
+2017-09-22 15:08:02,938 DEBUG: Done:	 Training
+2017-09-22 15:08:02,939 DEBUG: Start:	 Predicting
+2017-09-22 15:08:02,952 DEBUG: Done:	 Predicting
+2017-09-22 15:08:02,952 DEBUG: Info:	 Time for training and predicting: 2.24309301376[s]
+2017-09-22 15:08:02,952 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:02,980 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:02,980 INFO: Classification on awaexp database for cq-hist with DecisionTree, and 2 statistical iterations
+
+accuracy_score on train : 0.891644908616, with STD : 0.0
+accuracy_score on test : 0.662576687117, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : cq-hist	 View shape : (1092, 2688)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 5
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.891644908616
+		- Score on test : 0.662576687117
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.890932982917
+		- Score on test : 0.658385093168
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.890932982917
+		- Score on test : 0.658385093168
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.108355091384
+		- Score on test : 0.337423312883
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.891644908616
+		- Score on test : 0.662576687117
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.783356573256
+		- Score on test : 0.325251323062
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.896825396825
+		- Score on test : 0.666666666667
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.885117493473
+		- Score on test : 0.650306748466
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.891644908616
+		- Score on test : 0.662576687117
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.108355091384
+		- Score on test : 0.337423312883
+
+
+ Classification took 0:00:02
+2017-09-22 15:08:02,980 INFO: Done:	 Result Analysis
+2017-09-22 15:08:03,017 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:03,017 DEBUG: Start:	 Training
+2017-09-22 15:08:03,899 DEBUG: Done:	 Training
+2017-09-22 15:08:03,899 DEBUG: Start:	 Predicting
+2017-09-22 15:08:03,916 DEBUG: Done:	 Predicting
+2017-09-22 15:08:03,916 DEBUG: Info:	 Time for training and predicting: 3.20808506012[s]
+2017-09-22 15:08:03,916 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:03,946 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:03,946 INFO: Classification on awaexp database for cq-hist with Adaboost, and 2 statistical iterations
+
+accuracy_score on train : 1.0, with STD : 0.0
+accuracy_score on test : 0.656441717791, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : cq-hist	 View shape : (1092, 2688)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 13, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None,
+            min_impurity_split=1e-07, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.656441717791
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.658536585366
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.658536585366
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.343558282209
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.656441717791
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.312906990761
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.654545454545
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.662576687117
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.656441717791
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.343558282209
+
+
+ Classification took 0:00:03
+2017-09-22 15:08:03,946 INFO: Done:	 Result Analysis
+2017-09-22 15:08:04,069 DEBUG: Start:	 Loading data
+2017-09-22 15:08:04,069 DEBUG: Start:	 Loading data
+2017-09-22 15:08:04,090 DEBUG: Done:	 Loading data
+2017-09-22 15:08:04,090 DEBUG: Info:	 Classification - Database:awaexp Feature:cq-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : KNN
+2017-09-22 15:08:04,090 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:04,090 DEBUG: Done:	 Loading data
+2017-09-22 15:08:04,091 DEBUG: Info:	 Classification - Database:awaexp Feature:cq-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : RandomForest
+2017-09-22 15:08:04,091 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:04,124 DEBUG: Info:	 Shape X_train:(766, 2688), Length of y_train:766
+2017-09-22 15:08:04,125 DEBUG: Info:	 Shape X_test:(326, 2688), Length of y_test:326
+2017-09-22 15:08:04,125 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:04,125 DEBUG: Info:	 Shape X_train:(766, 2688), Length of y_train:766
+2017-09-22 15:08:04,125 DEBUG: Start:	 RandomSearch best settings with 2 iterations for KNN
+2017-09-22 15:08:04,125 DEBUG: Info:	 Shape X_test:(326, 2688), Length of y_test:326
+2017-09-22 15:08:04,125 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:04,125 DEBUG: Start:	 RandomSearch best settings with 2 iterations for RandomForest
+2017-09-22 15:08:04,865 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:04,865 DEBUG: Start:	 Training
+2017-09-22 15:08:05,151 DEBUG: Done:	 Training
+2017-09-22 15:08:05,152 DEBUG: Start:	 Predicting
+2017-09-22 15:08:05,218 DEBUG: Done:	 Predicting
+2017-09-22 15:08:05,218 DEBUG: Info:	 Time for training and predicting: 1.14848995209[s]
+2017-09-22 15:08:05,218 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:05,261 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:05,262 INFO: Classification on awaexp database for cq-hist with RandomForest, and 2 statistical iterations
+
+accuracy_score on train : 0.993472584856, with STD : 0.0
+accuracy_score on test : 0.693251533742, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : cq-hist	 View shape : (1092, 2688)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 13, max_depth : 13
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.993472584856
+		- Score on test : 0.693251533742
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.993481095176
+		- Score on test : 0.685534591195
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.993481095176
+		- Score on test : 0.685534591195
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0065274151436
+		- Score on test : 0.306748466258
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.993472584856
+		- Score on test : 0.693251533742
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.986948533804
+		- Score on test : 0.386969418778
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.9921875
+		- Score on test : 0.703225806452
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.994778067885
+		- Score on test : 0.668711656442
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.993472584856
+		- Score on test : 0.693251533742
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0065274151436
+		- Score on test : 0.306748466258
+
+
+ Classification took 0:00:01
+2017-09-22 15:08:05,262 INFO: Done:	 Result Analysis
+2017-09-22 15:08:07,198 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:07,198 DEBUG: Start:	 Training
+2017-09-22 15:08:07,261 DEBUG: Done:	 Training
+2017-09-22 15:08:07,261 DEBUG: Start:	 Predicting
+2017-09-22 15:08:14,703 DEBUG: Done:	 Predicting
+2017-09-22 15:08:14,703 DEBUG: Info:	 Time for training and predicting: 10.6334049702[s]
+2017-09-22 15:08:14,703 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:14,730 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:14,730 INFO: Classification on awaexp database for cq-hist with KNN, and 2 statistical iterations
+
+accuracy_score on train : 0.661879895561, with STD : 0.0
+accuracy_score on test : 0.610429447853, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : cq-hist	 View shape : (1092, 2688)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 31
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.661879895561
+		- Score on test : 0.610429447853
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.715071507151
+		- Score on test : 0.661333333333
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.715071507151
+		- Score on test : 0.661333333333
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.338120104439
+		- Score on test : 0.389570552147
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.661879895561
+		- Score on test : 0.610429447853
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.348998204171
+		- Score on test : 0.231569919477
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.617870722433
+		- Score on test : 0.584905660377
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.848563968668
+		- Score on test : 0.760736196319
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.661879895561
+		- Score on test : 0.610429447853
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.338120104439
+		- Score on test : 0.389570552147
+
+
+ Classification took 0:00:10
+2017-09-22 15:08:14,730 INFO: Done:	 Result Analysis
+2017-09-22 15:08:14,856 DEBUG: Start:	 Loading data
+2017-09-22 15:08:14,857 DEBUG: Start:	 Loading data
+2017-09-22 15:08:14,870 DEBUG: Done:	 Loading data
+2017-09-22 15:08:14,870 DEBUG: Done:	 Loading data
+2017-09-22 15:08:14,870 DEBUG: Info:	 Classification - Database:awaexp Feature:cq-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : SGD
+2017-09-22 15:08:14,871 DEBUG: Info:	 Classification - Database:awaexp Feature:cq-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : SVMLinear
+2017-09-22 15:08:14,871 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:14,871 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:14,896 DEBUG: Info:	 Shape X_train:(766, 2688), Length of y_train:766
+2017-09-22 15:08:14,897 DEBUG: Info:	 Shape X_test:(326, 2688), Length of y_test:326
+2017-09-22 15:08:14,897 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:14,897 DEBUG: Start:	 RandomSearch best settings with 2 iterations for SVMLinear
+2017-09-22 15:08:14,899 DEBUG: Info:	 Shape X_train:(766, 2688), Length of y_train:766
+2017-09-22 15:08:14,899 DEBUG: Info:	 Shape X_test:(326, 2688), Length of y_test:326
+2017-09-22 15:08:14,899 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:14,899 DEBUG: Start:	 RandomSearch best settings with 2 iterations for SGD
+2017-09-22 15:08:15,451 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:15,451 DEBUG: Start:	 Training
+2017-09-22 15:08:15,614 DEBUG: Done:	 Training
+2017-09-22 15:08:15,615 DEBUG: Start:	 Predicting
+2017-09-22 15:08:15,628 DEBUG: Done:	 Predicting
+2017-09-22 15:08:15,628 DEBUG: Info:	 Time for training and predicting: 0.771407842636[s]
+2017-09-22 15:08:15,628 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:15,671 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:15,671 INFO: Classification on awaexp database for cq-hist with SGD, and 2 statistical iterations
+
+accuracy_score on train : 0.5, with STD : 0.0
+accuracy_score on test : 0.5, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : cq-hist	 View shape : (1092, 2688)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- SGDClassifier with loss : log, penalty : l1
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.5
+		- Score on test : 0.5
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.666666666667
+		- Score on test : 0.666666666667
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.666666666667
+		- Score on test : 0.666666666667
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.5
+		- Score on test : 0.5
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.5
+		- Score on test : 0.5
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.0
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.5
+		- Score on test : 0.5
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 1.0
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.5
+		- Score on test : 0.5
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.5
+		- Score on test : 0.5
+
+
+ Classification took 0:00:00
+2017-09-22 15:08:15,672 INFO: Done:	 Result Analysis
+2017-09-22 15:08:18,394 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:18,394 DEBUG: Start:	 Training
+2017-09-22 15:08:24,042 DEBUG: Done:	 Training
+2017-09-22 15:08:24,042 DEBUG: Start:	 Predicting
+2017-09-22 15:08:27,009 DEBUG: Done:	 Predicting
+2017-09-22 15:08:27,009 DEBUG: Info:	 Time for training and predicting: 12.1518828869[s]
+2017-09-22 15:08:27,009 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:27,036 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:27,036 INFO: Classification on awaexp database for cq-hist with SVMLinear, and 2 statistical iterations
+
+accuracy_score on train : 1.0, with STD : 0.0
+accuracy_score on test : 0.662576687117, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : cq-hist	 View shape : (1092, 2688)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- SVM Linear with C : 2527
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.662576687117
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.68023255814
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.68023255814
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.337423312883
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.662576687117
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.327154260952
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.646408839779
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.717791411043
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.662576687117
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.337423312883
+
+
+ Classification took 0:00:12
+2017-09-22 15:08:27,036 INFO: Done:	 Result Analysis
+2017-09-22 15:08:27,157 DEBUG: Start:	 Loading data
+2017-09-22 15:08:27,158 DEBUG: Start:	 Loading data
+2017-09-22 15:08:27,173 DEBUG: Done:	 Loading data
+2017-09-22 15:08:27,173 DEBUG: Info:	 Classification - Database:awaexp Feature:cq-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : SVMPoly
+2017-09-22 15:08:27,173 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:27,173 DEBUG: Done:	 Loading data
+2017-09-22 15:08:27,174 DEBUG: Info:	 Classification - Database:awaexp Feature:cq-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : SVMRBF
+2017-09-22 15:08:27,174 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:27,198 DEBUG: Info:	 Shape X_train:(766, 2688), Length of y_train:766
+2017-09-22 15:08:27,198 DEBUG: Info:	 Shape X_test:(326, 2688), Length of y_test:326
+2017-09-22 15:08:27,198 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:27,199 DEBUG: Start:	 RandomSearch best settings with 2 iterations for SVMRBF
+2017-09-22 15:08:27,199 DEBUG: Info:	 Shape X_train:(766, 2688), Length of y_train:766
+2017-09-22 15:08:27,199 DEBUG: Info:	 Shape X_test:(326, 2688), Length of y_test:326
+2017-09-22 15:08:27,199 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:27,199 DEBUG: Start:	 RandomSearch best settings with 2 iterations for SVMPoly
+2017-09-22 15:08:32,137 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:32,138 DEBUG: Start:	 Training
+2017-09-22 15:08:33,190 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:33,190 DEBUG: Start:	 Training
+2017-09-22 15:08:40,811 DEBUG: Done:	 Training
+2017-09-22 15:08:40,811 DEBUG: Start:	 Predicting
+2017-09-22 15:08:43,216 DEBUG: Done:	 Training
+2017-09-22 15:08:43,216 DEBUG: Start:	 Predicting
+2017-09-22 15:08:45,312 DEBUG: Done:	 Predicting
+2017-09-22 15:08:45,312 DEBUG: Info:	 Time for training and predicting: 18.1537029743[s]
+2017-09-22 15:08:45,312 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:45,341 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:45,341 INFO: Classification on awaexp database for cq-hist with SVMRBF, and 2 statistical iterations
+
+accuracy_score on train : 0.835509138381, with STD : 0.0
+accuracy_score on test : 0.720858895706, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : cq-hist	 View shape : (1092, 2688)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- SVM RBF with C : 580
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.835509138381
+		- Score on test : 0.720858895706
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.831550802139
+		- Score on test : 0.723404255319
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.831550802139
+		- Score on test : 0.723404255319
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.164490861619
+		- Score on test : 0.279141104294
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.835509138381
+		- Score on test : 0.720858895706
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.671760563981
+		- Score on test : 0.441792624306
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.852054794521
+		- Score on test : 0.71686746988
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.812010443864
+		- Score on test : 0.730061349693
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.835509138381
+		- Score on test : 0.720858895706
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.164490861619
+		- Score on test : 0.279141104294
+
+
+ Classification took 0:00:18
+2017-09-22 15:08:45,342 INFO: Done:	 Result Analysis
+2017-09-22 15:08:48,580 DEBUG: Done:	 Predicting
+2017-09-22 15:08:48,580 DEBUG: Info:	 Time for training and predicting: 21.422506094[s]
+2017-09-22 15:08:48,580 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:48,608 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:48,608 INFO: Classification on awaexp database for cq-hist with SVMPoly, and 2 statistical iterations
+
+accuracy_score on train : 0.93864229765, with STD : 0.0
+accuracy_score on test : 0.539877300613, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : cq-hist	 View shape : (1092, 2688)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- SVM Poly with C : 8352
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.93864229765
+		- Score on test : 0.539877300613
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.93657219973
+		- Score on test : 0.385245901639
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.93657219973
+		- Score on test : 0.385245901639
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0613577023499
+		- Score on test : 0.460122699387
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.93864229765
+		- Score on test : 0.539877300613
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.879159518567
+		- Score on test : 0.0922821705
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.969273743017
+		- Score on test : 0.58024691358
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.906005221932
+		- Score on test : 0.288343558282
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.93864229765
+		- Score on test : 0.539877300613
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0613577023499
+		- Score on test : 0.460122699387
+
+
+ Classification took 0:00:21
+2017-09-22 15:08:48,608 INFO: Done:	 Result Analysis
+2017-09-22 15:08:48,770 DEBUG: Start:	 Loading data
+2017-09-22 15:08:48,770 DEBUG: Start:	 Loading data
+2017-09-22 15:08:48,782 DEBUG: Done:	 Loading data
+2017-09-22 15:08:48,782 DEBUG: Done:	 Loading data
+2017-09-22 15:08:48,782 DEBUG: Info:	 Classification - Database:awaexp Feature:lss-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2017-09-22 15:08:48,782 DEBUG: Info:	 Classification - Database:awaexp Feature:lss-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : Adaboost
+2017-09-22 15:08:48,782 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:48,782 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:48,803 DEBUG: Info:	 Shape X_train:(766, 2000), Length of y_train:766
+2017-09-22 15:08:48,803 DEBUG: Info:	 Shape X_test:(326, 2000), Length of y_test:326
+2017-09-22 15:08:48,803 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:48,803 DEBUG: Start:	 RandomSearch best settings with 2 iterations for DecisionTree
+2017-09-22 15:08:48,804 DEBUG: Info:	 Shape X_train:(766, 2000), Length of y_train:766
+2017-09-22 15:08:48,804 DEBUG: Info:	 Shape X_test:(326, 2000), Length of y_test:326
+2017-09-22 15:08:48,804 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:48,804 DEBUG: Start:	 RandomSearch best settings with 2 iterations for Adaboost
+2017-09-22 15:08:49,867 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:49,867 DEBUG: Start:	 Training
+2017-09-22 15:08:50,106 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:50,106 DEBUG: Start:	 Training
+2017-09-22 15:08:50,150 DEBUG: Done:	 Training
+2017-09-22 15:08:50,150 DEBUG: Start:	 Predicting
+2017-09-22 15:08:50,160 DEBUG: Done:	 Predicting
+2017-09-22 15:08:50,160 DEBUG: Info:	 Time for training and predicting: 1.3892531395[s]
+2017-09-22 15:08:50,160 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:50,188 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:50,188 INFO: Classification on awaexp database for lss-hist with DecisionTree, and 2 statistical iterations
+
+accuracy_score on train : 0.881201044386, with STD : 0.0
+accuracy_score on test : 0.736196319018, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : lss-hist	 View shape : (1092, 2000)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- Decision Tree with max_depth : 5
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.881201044386
+		- Score on test : 0.736196319018
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.873082287308
+		- Score on test : 0.727848101266
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.873082287308
+		- Score on test : 0.727848101266
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.118798955614
+		- Score on test : 0.263803680982
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.881201044386
+		- Score on test : 0.736196319018
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.768719228721
+		- Score on test : 0.473284147545
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.937125748503
+		- Score on test : 0.751633986928
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.817232375979
+		- Score on test : 0.705521472393
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.881201044386
+		- Score on test : 0.736196319018
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.118798955614
+		- Score on test : 0.263803680982
+
+
+ Classification took 0:00:01
+2017-09-22 15:08:50,189 INFO: Done:	 Result Analysis
+2017-09-22 15:08:50,541 DEBUG: Done:	 Training
+2017-09-22 15:08:50,542 DEBUG: Start:	 Predicting
+2017-09-22 15:08:50,554 DEBUG: Done:	 Predicting
+2017-09-22 15:08:50,554 DEBUG: Info:	 Time for training and predicting: 1.78375315666[s]
+2017-09-22 15:08:50,554 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:50,582 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:50,582 INFO: Classification on awaexp database for lss-hist with Adaboost, and 2 statistical iterations
+
+accuracy_score on train : 1.0, with STD : 0.0
+accuracy_score on test : 0.671779141104, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : lss-hist	 View shape : (1092, 2000)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- Adaboost with num_esimators : 13, base_estimators : DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None,
+            min_impurity_split=1e-07, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.671779141104
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.662460567823
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.662460567823
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.328220858896
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.671779141104
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.344083179874
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.681818181818
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.644171779141
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.671779141104
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.328220858896
+
+
+ Classification took 0:00:01
+2017-09-22 15:08:50,582 INFO: Done:	 Result Analysis
+2017-09-22 15:08:50,738 DEBUG: Start:	 Loading data
+2017-09-22 15:08:50,739 DEBUG: Start:	 Loading data
+2017-09-22 15:08:50,750 DEBUG: Done:	 Loading data
+2017-09-22 15:08:50,750 DEBUG: Done:	 Loading data
+2017-09-22 15:08:50,750 DEBUG: Info:	 Classification - Database:awaexp Feature:lss-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : RandomForest
+2017-09-22 15:08:50,751 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:50,751 DEBUG: Info:	 Classification - Database:awaexp Feature:lss-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : KNN
+2017-09-22 15:08:50,751 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:50,771 DEBUG: Info:	 Shape X_train:(766, 2000), Length of y_train:766
+2017-09-22 15:08:50,771 DEBUG: Info:	 Shape X_train:(766, 2000), Length of y_train:766
+2017-09-22 15:08:50,771 DEBUG: Info:	 Shape X_test:(326, 2000), Length of y_test:326
+2017-09-22 15:08:50,771 DEBUG: Info:	 Shape X_test:(326, 2000), Length of y_test:326
+2017-09-22 15:08:50,771 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:50,772 DEBUG: Start:	 RandomSearch best settings with 2 iterations for RandomForest
+2017-09-22 15:08:50,772 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:50,772 DEBUG: Start:	 RandomSearch best settings with 2 iterations for KNN
+2017-09-22 15:08:51,207 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:51,207 DEBUG: Start:	 Training
+2017-09-22 15:08:51,362 DEBUG: Done:	 Training
+2017-09-22 15:08:51,362 DEBUG: Start:	 Predicting
+2017-09-22 15:08:51,407 DEBUG: Done:	 Predicting
+2017-09-22 15:08:51,407 DEBUG: Info:	 Time for training and predicting: 0.66797709465[s]
+2017-09-22 15:08:51,407 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:51,436 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:51,436 INFO: Classification on awaexp database for lss-hist with RandomForest, and 2 statistical iterations
+
+accuracy_score on train : 0.996083550914, with STD : 0.0
+accuracy_score on test : 0.71472392638, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : lss-hist	 View shape : (1092, 2000)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- Random Forest with num_esimators : 13, max_depth : 13
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.996083550914
+		- Score on test : 0.71472392638
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.996068152031
+		- Score on test : 0.710280373832
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.996068152031
+		- Score on test : 0.710280373832
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.00391644908616
+		- Score on test : 0.28527607362
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.996083550914
+		- Score on test : 0.71472392638
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.992197540084
+		- Score on test : 0.429650039123
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.721518987342
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.992167101828
+		- Score on test : 0.699386503067
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.996083550914
+		- Score on test : 0.71472392638
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.00391644908616
+		- Score on test : 0.28527607362
+
+
+ Classification took 0:00:00
+2017-09-22 15:08:51,437 INFO: Done:	 Result Analysis
+2017-09-22 15:08:52,686 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:52,686 DEBUG: Start:	 Training
+2017-09-22 15:08:52,725 DEBUG: Done:	 Training
+2017-09-22 15:08:52,725 DEBUG: Start:	 Predicting
+2017-09-22 15:08:58,030 DEBUG: Done:	 Predicting
+2017-09-22 15:08:58,030 DEBUG: Info:	 Time for training and predicting: 7.29149198532[s]
+2017-09-22 15:08:58,030 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:58,057 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:58,057 INFO: Classification on awaexp database for lss-hist with KNN, and 2 statistical iterations
+
+accuracy_score on train : 0.674934725849, with STD : 0.0
+accuracy_score on test : 0.647239263804, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : lss-hist	 View shape : (1092, 2000)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 45
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.674934725849
+		- Score on test : 0.647239263804
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.627802690583
+		- Score on test : 0.625407166124
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.627802690583
+		- Score on test : 0.625407166124
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.325065274151
+		- Score on test : 0.352760736196
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.674934725849
+		- Score on test : 0.647239263804
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.361660570561
+		- Score on test : 0.296499726664
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.734265734266
+		- Score on test : 0.666666666667
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.548302872063
+		- Score on test : 0.588957055215
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.674934725849
+		- Score on test : 0.647239263804
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.325065274151
+		- Score on test : 0.352760736196
+
+
+ Classification took 0:00:07
+2017-09-22 15:08:58,057 INFO: Done:	 Result Analysis
+2017-09-22 15:08:58,213 DEBUG: Start:	 Loading data
+2017-09-22 15:08:58,213 DEBUG: Start:	 Loading data
+2017-09-22 15:08:58,226 DEBUG: Done:	 Loading data
+2017-09-22 15:08:58,226 DEBUG: Done:	 Loading data
+2017-09-22 15:08:58,226 DEBUG: Info:	 Classification - Database:awaexp Feature:lss-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : SGD
+2017-09-22 15:08:58,226 DEBUG: Info:	 Classification - Database:awaexp Feature:lss-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : SVMLinear
+2017-09-22 15:08:58,226 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:58,226 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:08:58,247 DEBUG: Info:	 Shape X_train:(766, 2000), Length of y_train:766
+2017-09-22 15:08:58,247 DEBUG: Info:	 Shape X_test:(326, 2000), Length of y_test:326
+2017-09-22 15:08:58,247 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:58,247 DEBUG: Start:	 RandomSearch best settings with 2 iterations for SGD
+2017-09-22 15:08:58,248 DEBUG: Info:	 Shape X_train:(766, 2000), Length of y_train:766
+2017-09-22 15:08:58,248 DEBUG: Info:	 Shape X_test:(326, 2000), Length of y_test:326
+2017-09-22 15:08:58,248 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:08:58,248 DEBUG: Start:	 RandomSearch best settings with 2 iterations for SVMLinear
+2017-09-22 15:08:58,785 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:08:58,786 DEBUG: Start:	 Training
+2017-09-22 15:08:58,946 DEBUG: Done:	 Training
+2017-09-22 15:08:58,946 DEBUG: Start:	 Predicting
+2017-09-22 15:08:58,955 DEBUG: Done:	 Predicting
+2017-09-22 15:08:58,955 DEBUG: Info:	 Time for training and predicting: 0.741857051849[s]
+2017-09-22 15:08:58,955 DEBUG: Start:	 Getting Results
+2017-09-22 15:08:59,005 DEBUG: Done:	 Getting Results
+2017-09-22 15:08:59,005 INFO: Classification on awaexp database for lss-hist with SGD, and 2 statistical iterations
+
+accuracy_score on train : 0.8772845953, with STD : 0.0
+accuracy_score on test : 0.711656441718, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : lss-hist	 View shape : (1092, 2000)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- SGDClassifier with loss : log, penalty : elasticnet
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.8772845953
+		- Score on test : 0.711656441718
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.887290167866
+		- Score on test : 0.744565217391
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.887290167866
+		- Score on test : 0.744565217391
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.1227154047
+		- Score on test : 0.288343558282
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.8772845953
+		- Score on test : 0.711656441718
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.766750900883
+		- Score on test : 0.438106276437
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.820399113082
+		- Score on test : 0.668292682927
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.966057441253
+		- Score on test : 0.840490797546
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.8772845953
+		- Score on test : 0.711656441718
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.1227154047
+		- Score on test : 0.288343558282
+
+
+ Classification took 0:00:00
+2017-09-22 15:08:59,005 INFO: Done:	 Result Analysis
+2017-09-22 15:09:00,848 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:09:00,848 DEBUG: Start:	 Training
+2017-09-22 15:09:04,812 DEBUG: Done:	 Training
+2017-09-22 15:09:04,813 DEBUG: Start:	 Predicting
+2017-09-22 15:09:06,645 DEBUG: Done:	 Predicting
+2017-09-22 15:09:06,645 DEBUG: Info:	 Time for training and predicting: 8.4313750267[s]
+2017-09-22 15:09:06,645 DEBUG: Start:	 Getting Results
+2017-09-22 15:09:06,673 DEBUG: Done:	 Getting Results
+2017-09-22 15:09:06,674 INFO: Classification on awaexp database for lss-hist with SVMLinear, and 2 statistical iterations
+
+accuracy_score on train : 1.0, with STD : 0.0
+accuracy_score on test : 0.779141104294, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : lss-hist	 View shape : (1092, 2000)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- SVM Linear with C : 2527
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.779141104294
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.77358490566
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.77358490566
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.220858895706
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.779141104294
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.558955827124
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.793548387097
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.754601226994
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.779141104294
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.220858895706
+
+
+ Classification took 0:00:08
+2017-09-22 15:09:06,674 INFO: Done:	 Result Analysis
+2017-09-22 15:09:06,790 DEBUG: Start:	 Loading data
+2017-09-22 15:09:06,790 DEBUG: Start:	 Loading data
+2017-09-22 15:09:06,804 DEBUG: Done:	 Loading data
+2017-09-22 15:09:06,804 DEBUG: Info:	 Classification - Database:awaexp Feature:lss-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : SVMRBF
+2017-09-22 15:09:06,804 DEBUG: Done:	 Loading data
+2017-09-22 15:09:06,804 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:09:06,804 DEBUG: Info:	 Classification - Database:awaexp Feature:lss-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : SVMPoly
+2017-09-22 15:09:06,804 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 15:09:06,824 DEBUG: Info:	 Shape X_train:(766, 2000), Length of y_train:766
+2017-09-22 15:09:06,825 DEBUG: Info:	 Shape X_test:(326, 2000), Length of y_test:326
+2017-09-22 15:09:06,825 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:09:06,825 DEBUG: Start:	 RandomSearch best settings with 2 iterations for SVMRBF
+2017-09-22 15:09:06,827 DEBUG: Info:	 Shape X_train:(766, 2000), Length of y_train:766
+2017-09-22 15:09:06,827 DEBUG: Info:	 Shape X_test:(326, 2000), Length of y_test:326
+2017-09-22 15:09:06,827 DEBUG: Done:	 Determine Train/Test split
+2017-09-22 15:09:06,827 DEBUG: Start:	 RandomSearch best settings with 2 iterations for SVMPoly
+2017-09-22 15:09:09,053 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:09:09,053 DEBUG: Start:	 Training
+2017-09-22 15:09:11,190 DEBUG: Done:	 RandomSearch best settings
+2017-09-22 15:09:11,191 DEBUG: Start:	 Training
+2017-09-22 15:09:13,006 DEBUG: Done:	 Training
+2017-09-22 15:09:13,006 DEBUG: Start:	 Predicting
+2017-09-22 15:09:14,995 DEBUG: Done:	 Predicting
+2017-09-22 15:09:14,995 DEBUG: Info:	 Time for training and predicting: 8.20430922508[s]
+2017-09-22 15:09:14,995 DEBUG: Start:	 Getting Results
+2017-09-22 15:09:15,027 DEBUG: Done:	 Getting Results
+2017-09-22 15:09:15,027 INFO: Classification on awaexp database for lss-hist with SVMPoly, and 2 statistical iterations
+
+accuracy_score on train : 0.513054830287, with STD : 0.0
+accuracy_score on test : 0.407975460123, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : lss-hist	 View shape : (1092, 2000)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- SVM Poly with C : 8352
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.513054830287
+		- Score on test : 0.407975460123
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.504648074369
+		- Score on test : 0.398753894081
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.504648074369
+		- Score on test : 0.398753894081
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.486945169713
+		- Score on test : 0.592024539877
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.513054830287
+		- Score on test : 0.407975460123
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.0261247140176
+		- Score on test : -0.184135731053
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.513513513514
+		- Score on test : 0.405063291139
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.496083550914
+		- Score on test : 0.39263803681
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.513054830287
+		- Score on test : 0.407975460123
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.486945169713
+		- Score on test : 0.592024539877
+
+
+ Classification took 0:00:08
+2017-09-22 15:09:15,027 INFO: Done:	 Result Analysis
+2017-09-22 15:09:18,175 DEBUG: Done:	 Training
+2017-09-22 15:09:18,175 DEBUG: Start:	 Predicting
+2017-09-22 15:09:21,715 DEBUG: Done:	 Predicting
+2017-09-22 15:09:21,715 DEBUG: Info:	 Time for training and predicting: 14.9248487949[s]
+2017-09-22 15:09:21,716 DEBUG: Start:	 Getting Results
+2017-09-22 15:09:21,742 DEBUG: Done:	 Getting Results
+2017-09-22 15:09:21,742 INFO: Classification on awaexp database for lss-hist with SVMRBF, and 2 statistical iterations
+
+accuracy_score on train : 1.0, with STD : 0.0
+accuracy_score on test : 0.530674846626, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : lss-hist	 View shape : (1092, 2000)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- SVM RBF with C : 2527
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.530674846626
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.670967741935
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.670967741935
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.469325153374
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.530674846626
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.117460246434
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.516556291391
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.957055214724
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.530674846626
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.469325153374
+
+
+ Classification took 0:00:14
+2017-09-22 15:09:21,742 INFO: Done:	 Result Analysis
+2017-09-22 15:09:21,885 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:09:21,886 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:09:21,886 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:09:21,887 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:09:21,887 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:09:21,888 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:09:21,888 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:09:21,888 INFO: Done:	 Read Database Files
+2017-09-22 15:09:21,888 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:09:21,889 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:09:21,889 INFO: Done:	 Read Database Files
+2017-09-22 15:09:21,889 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:09:21,911 INFO: Done:	 Determine validation split
+2017-09-22 15:09:21,912 INFO: Start:	 Determine 2 folds
+2017-09-22 15:09:21,914 INFO: Done:	 Determine validation split
+2017-09-22 15:09:21,914 INFO: Start:	 Determine 2 folds
+2017-09-22 15:09:25,241 INFO: Done:	 Classification
+2017-09-22 15:09:25,541 INFO: Done:	 Classification
+2017-09-22 15:09:25,841 INFO: Done:	 Classification
+2017-09-22 15:09:25,842 INFO: Info:	 Time for Classification: 3[s]
+2017-09-22 15:09:25,842 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:09:26,111 INFO: 		Result for Multiview classification with LateFusion
+
+Average accuracy_score :
+	-On Train : 0.926240208877
+	-On Test : 0.774539877301
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with Bayesian Inference using a weight for each view : 0.441046660592, 0.558953339408
+	-With monoview classifiers : 
+		- SGDClassifier with loss : log, penalty : l1
+		- SGDClassifier with loss : log, penalty : elasticnet
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.926240208877 with STD : 0.00456919060052
+		- Score on test : 0.774539877301 with STD : 0.00153374233129
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.927666429118 with STD : 0.00323317974772
+		- Score on test : 0.776252872711 with STD : 0.00186262880866
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.927666429118 with STD : 0.00323317974772
+		- Score on test : 0.776252872711 with STD : 0.00186262880866
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0737597911227 with STD : 0.00456919060052
+		- Score on test : 0.225460122699 with STD : 0.00153374233129
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.926240208877 with STD : 0.00456919060052
+		- Score on test : 0.774539877301 with STD : 0.00153374233129
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.853613263379 with STD : 0.00800847248104
+		- Score on test : 0.549147078209 with STD : 0.00309370217429
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.911315769465 with STD : 0.0183717305353
+		- Score on test : 0.770390653523 with STD : 0.000693683826214
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.945169712794 with STD : 0.0130548302872
+		- Score on test : 0.782208588957 with STD : 0.00306748466258
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.926240208877 with STD : 0.00456919060052
+		- Score on test : 0.774539877301 with STD : 0.00153374233129
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0737597911227 with STD : 0.00456919060052
+		- Score on test : 0.225460122699 with STD : 0.00153374233129
+
+
+2017-09-22 15:09:26,113 INFO: Done:	 Result Analysis
+2017-09-22 15:09:26,222 INFO: Done:	 Classification
+2017-09-22 15:09:26,222 INFO: Info:	 Time for Classification: 4[s]
+2017-09-22 15:09:26,222 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:09:26,400 INFO: 		Result for Multiview classification with LateFusion
+
+Average accuracy_score :
+	-On Train : 0.916449086162
+	-On Test : 0.751533742331
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with Majority Voting 
+	-With monoview classifiers : 
+		- SGDClassifier with loss : log, penalty : l1
+		- SGDClassifier with loss : log, penalty : elasticnet
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.916449086162 with STD : 0.0117493472585
+		- Score on test : 0.751533742331 with STD : 0.0153374233129
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.915544159287 with STD : 0.0127478876491
+		- Score on test : 0.732724817009 with STD : 0.0156195538515
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.915544159287 with STD : 0.0127478876491
+		- Score on test : 0.732724817009 with STD : 0.0156195538515
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0835509138381 with STD : 0.0117493472585
+		- Score on test : 0.248466257669 with STD : 0.0153374233129
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.916449086162 with STD : 0.0117493472585
+		- Score on test : 0.751533742331 with STD : 0.0153374233129
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.833210365221 with STD : 0.023189420725
+		- Score on test : 0.508189397466 with STD : 0.0314343445442
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.924139492754 with STD : 0.00294384057971
+		- Score on test : 0.792999642839 with STD : 0.0199499974488
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.907310704961 with STD : 0.0221932114883
+		- Score on test : 0.680981595092 with STD : 0.0122699386503
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.916449086162 with STD : 0.0117493472585
+		- Score on test : 0.751533742331 with STD : 0.0153374233129
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0835509138381 with STD : 0.0117493472585
+		- Score on test : 0.248466257669 with STD : 0.0153374233129
+
+
+2017-09-22 15:09:26,400 INFO: Done:	 Result Analysis
+2017-09-22 15:09:26,539 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:09:26,540 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:09:26,540 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:09:26,540 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:09:26,541 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:09:26,541 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:09:26,542 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:09:26,542 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:09:26,542 INFO: Done:	 Read Database Files
+2017-09-22 15:09:26,542 INFO: Done:	 Read Database Files
+2017-09-22 15:09:26,542 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:09:26,542 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:09:26,584 INFO: Done:	 Determine validation split
+2017-09-22 15:09:26,584 INFO: Start:	 Determine 2 folds
+2017-09-22 15:09:26,584 INFO: Done:	 Determine validation split
+2017-09-22 15:09:26,584 INFO: Start:	 Determine 2 folds
+2017-09-22 15:09:30,774 INFO: Done:	 Classification
+2017-09-22 15:09:31,496 INFO: Done:	 Classification
+2017-09-22 15:09:31,496 INFO: Info:	 Time for Classification: 4[s]
+2017-09-22 15:09:31,496 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:09:31,622 INFO: Done:	 Classification
+2017-09-22 15:09:31,788 INFO: 		Result for Multiview classification with LateFusion
+
+Average accuracy_score :
+	-On Train : 0.848563968668
+	-On Test : 0.739263803681
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with SVM for linear 
+	-With monoview classifiers : 
+		- SGDClassifier with loss : log, penalty : l1
+		- SGDClassifier with loss : log, penalty : elasticnet
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.848563968668 with STD : 0.0
+		- Score on test : 0.739263803681 with STD : 0.0
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.865740740741 with STD : 0.0
+		- Score on test : 0.768392370572 with STD : 0.0
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.865740740741 with STD : 0.0
+		- Score on test : 0.768392370572 with STD : 0.0
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.151436031332 with STD : 0.0
+		- Score on test : 0.260736196319 with STD : 0.0
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.848563968668 with STD : 0.0
+		- Score on test : 0.739263803681 with STD : 0.0
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.72113453306 with STD : 0.0
+		- Score on test : 0.494424068096 with STD : 0.0
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.777546777547 with STD : 0.0
+		- Score on test : 0.691176470588 with STD : 0.0
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.976501305483 with STD : 0.0
+		- Score on test : 0.865030674847 with STD : 0.0
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.848563968668 with STD : 0.0
+		- Score on test : 0.739263803681 with STD : 0.0
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.151436031332 with STD : 0.0
+		- Score on test : 0.260736196319 with STD : 0.0
+
+
+2017-09-22 15:09:31,793 INFO: Done:	 Result Analysis
+2017-09-22 15:09:32,441 INFO: Done:	 Classification
+2017-09-22 15:09:32,441 INFO: Info:	 Time for Classification: 5[s]
+2017-09-22 15:09:32,442 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:09:32,617 INFO: 		Result for Multiview classification with LateFusion
+
+Average accuracy_score :
+	-On Train : 0.946475195822
+	-On Test : 0.763803680982
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with SCM for linear with max_attributes : 17, p : 0.153950583132 model_type : conjunction has chosen 1 rule(s) 
+	-With monoview classifiers : 
+		- SGDClassifier with loss : log, penalty : l1
+		- SGDClassifier with loss : log, penalty : elasticnet
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.946475195822 with STD : 0.0
+		- Score on test : 0.763803680982 with STD : 0.0
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.948685857322 with STD : 0.0
+		- Score on test : 0.772861356932 with STD : 0.0
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.948685857322 with STD : 0.0
+		- Score on test : 0.772861356932 with STD : 0.0
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0535248041775 with STD : 0.0
+		- Score on test : 0.236196319018 with STD : 0.0
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.946475195822 with STD : 0.0
+		- Score on test : 0.763803680982 with STD : 0.0
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.896283535397 with STD : 0.0
+		- Score on test : 0.529293411211 with STD : 0.0
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.911057692308 with STD : 0.0
+		- Score on test : 0.744318181818 with STD : 0.0
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.98955613577 with STD : 0.0
+		- Score on test : 0.803680981595 with STD : 0.0
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.946475195822 with STD : 0.0
+		- Score on test : 0.763803680982 with STD : 0.0
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0535248041775 with STD : 0.0
+		- Score on test : 0.236196319018 with STD : 0.0
+
+
+2017-09-22 15:09:32,618 INFO: Done:	 Result Analysis
+2017-09-22 15:09:32,730 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:09:32,730 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:09:32,730 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:09:32,730 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:09:32,732 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:09:32,732 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:09:32,733 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:09:32,733 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:09:32,733 INFO: Done:	 Read Database Files
+2017-09-22 15:09:32,733 INFO: Done:	 Read Database Files
+2017-09-22 15:09:32,733 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:09:32,733 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:09:32,773 INFO: Done:	 Determine validation split
+2017-09-22 15:09:32,773 INFO: Done:	 Determine validation split
+2017-09-22 15:09:32,773 INFO: Start:	 Determine 2 folds
+2017-09-22 15:09:32,773 INFO: Start:	 Determine 2 folds
+2017-09-22 15:09:36,126 INFO: Done:	 Classification
+2017-09-22 15:09:36,734 INFO: Done:	 Classification
+2017-09-22 15:09:36,734 INFO: Info:	 Time for Classification: 4[s]
+2017-09-22 15:09:36,734 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:09:37,017 INFO: 		Result for Multiview classification with LateFusion
+
+Average accuracy_score :
+	-On Train : 0.5
+	-On Test : 0.5
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with Weighted linear using a weight for each view : 0.789058101091, 1.0
+	-With monoview classifiers : 
+		- SGDClassifier with loss : log, penalty : l1
+		- SGDClassifier with loss : log, penalty : elasticnet
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.5 with STD : 0.0
+		- Score on test : 0.5 with STD : 0.0
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.666666666667 with STD : 0.0
+		- Score on test : 0.666666666667 with STD : 0.0
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.666666666667 with STD : 0.0
+		- Score on test : 0.666666666667 with STD : 0.0
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.5 with STD : 0.0
+		- Score on test : 0.5 with STD : 0.0
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.5 with STD : 0.0
+		- Score on test : 0.5 with STD : 0.0
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.0 with STD : 0.0
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.5 with STD : 0.0
+		- Score on test : 0.5 with STD : 0.0
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 1.0 with STD : 0.0
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.5 with STD : 0.0
+		- Score on test : 0.5 with STD : 0.0
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.5 with STD : 0.0
+		- Score on test : 0.5 with STD : 0.0
+
+
+2017-09-22 15:09:37,017 INFO: Done:	 Result Analysis
+2017-09-22 15:09:39,975 INFO: Done:	 Classification
+2017-09-22 15:09:41,416 INFO: Done:	 Classification
+2017-09-22 15:09:41,416 INFO: Info:	 Time for Classification: 8[s]
+2017-09-22 15:09:41,416 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:09:41,568 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy_score :
+	-On Train : 1.0
+	-On Test : 0.716257668712
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.789058101091, 1.0 with monoview classifier : 
+		- Adaboost with num_esimators : 2, base_estimators : DecisionTreeClassifier
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.716257668712 with STD : 0.0138036809816
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.710462382445 with STD : 0.0145376175549
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.710462382445 with STD : 0.0145376175549
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.283742331288 with STD : 0.0138036809816
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.716257668712 with STD : 0.0138036809816
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.43285830522 with STD : 0.027576435819
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.725195982362 with STD : 0.0136575208231
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.696319018405 with STD : 0.0153374233129
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.716257668712 with STD : 0.0138036809816
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.283742331288 with STD : 0.0138036809816
+
+
+2017-09-22 15:09:41,569 INFO: Done:	 Result Analysis
+2017-09-22 15:09:41,711 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:09:41,711 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:09:41,712 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:09:41,713 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:09:41,714 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:09:41,715 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:09:41,715 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:09:41,716 INFO: Done:	 Read Database Files
+2017-09-22 15:09:41,716 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:09:41,716 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:09:41,716 INFO: Done:	 Read Database Files
+2017-09-22 15:09:41,716 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:09:41,756 INFO: Done:	 Determine validation split
+2017-09-22 15:09:41,756 INFO: Start:	 Determine 2 folds
+2017-09-22 15:09:41,757 INFO: Done:	 Determine validation split
+2017-09-22 15:09:41,757 INFO: Start:	 Determine 2 folds
+2017-09-22 15:09:47,210 INFO: Done:	 Classification
+2017-09-22 15:09:48,077 INFO: Done:	 Classification
+2017-09-22 15:09:48,077 INFO: Info:	 Time for Classification: 6[s]
+2017-09-22 15:09:48,077 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:09:48,243 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy_score :
+	-On Train : 0.81592689295
+	-On Test : 0.742331288344
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.789058101091, 1.0 with monoview classifier : 
+		- Decision Tree with max_depth : 3
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.81592689295 with STD : 0.0
+		- Score on test : 0.742331288344 with STD : 0.0
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.80971659919 with STD : 0.0
+		- Score on test : 0.727272727273 with STD : 0.0
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.80971659919 with STD : 0.0
+		- Score on test : 0.727272727273 with STD : 0.0
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.18407310705 with STD : 0.0
+		- Score on test : 0.257668711656 with STD : 0.0
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.81592689295 with STD : 0.0
+		- Score on test : 0.742331288344 with STD : 0.0
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.633204177063 with STD : 0.0
+		- Score on test : 0.487645030476 with STD : 0.0
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.837988826816 with STD : 0.0
+		- Score on test : 0.772413793103 with STD : 0.0
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.783289817232 with STD : 0.0
+		- Score on test : 0.687116564417 with STD : 0.0
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.81592689295 with STD : 0.0
+		- Score on test : 0.742331288344 with STD : 0.0
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.18407310705 with STD : 0.0
+		- Score on test : 0.257668711656 with STD : 0.0
+
+
+2017-09-22 15:09:48,243 INFO: Done:	 Result Analysis
+2017-09-22 15:10:01,353 INFO: Done:	 Classification
+2017-09-22 15:10:06,701 INFO: Done:	 Classification
+2017-09-22 15:10:06,702 INFO: Info:	 Time for Classification: 24[s]
+2017-09-22 15:10:06,702 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:10:06,854 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy_score :
+	-On Train : 1.0
+	-On Test : 0.613496932515
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.789058101091, 1.0 with monoview classifier : 
+		- K nearest Neighbors with  n_neighbors: 1.0
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.613496932515 with STD : 0.0
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.590909090909 with STD : 0.0
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.590909090909 with STD : 0.0
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.386503067485 with STD : 0.0
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.613496932515 with STD : 0.0
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.228390710476 with STD : 0.0
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.627586206897 with STD : 0.0
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.558282208589 with STD : 0.0
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.613496932515 with STD : 0.0
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.386503067485 with STD : 0.0
+
+
+2017-09-22 15:10:06,854 INFO: Done:	 Result Analysis
+2017-09-22 15:10:07,017 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:10:07,017 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:10:07,017 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:10:07,017 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:10:07,020 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:10:07,020 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:10:07,021 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:10:07,021 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:10:07,022 INFO: Done:	 Read Database Files
+2017-09-22 15:10:07,022 INFO: Done:	 Read Database Files
+2017-09-22 15:10:07,022 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:10:07,022 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:10:07,061 INFO: Done:	 Determine validation split
+2017-09-22 15:10:07,061 INFO: Start:	 Determine 2 folds
+2017-09-22 15:10:07,061 INFO: Done:	 Determine validation split
+2017-09-22 15:10:07,061 INFO: Start:	 Determine 2 folds
+2017-09-22 15:10:10,817 INFO: Done:	 Classification
+2017-09-22 15:10:10,958 INFO: Done:	 Classification
+2017-09-22 15:10:11,574 INFO: Done:	 Classification
+2017-09-22 15:10:11,574 INFO: Info:	 Time for Classification: 4[s]
+2017-09-22 15:10:11,574 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:10:11,657 INFO: Done:	 Classification
+2017-09-22 15:10:11,657 INFO: Info:	 Time for Classification: 4[s]
+2017-09-22 15:10:11,657 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:10:11,794 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy_score :
+	-On Train : 0.5
+	-On Test : 0.5
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.789058101091, 1.0 with monoview classifier : 
+		- SCM with max_attributes : 1
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.5 with STD : 0.0
+		- Score on test : 0.5 with STD : 0.0
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.0 with STD : 0.0
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.0 with STD : 0.0
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.5 with STD : 0.0
+		- Score on test : 0.5 with STD : 0.0
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.5 with STD : 0.0
+		- Score on test : 0.5 with STD : 0.0
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.0 with STD : 0.0
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.0 with STD : 0.0
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.0 with STD : 0.0
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.5 with STD : 0.0
+		- Score on test : 0.5 with STD : 0.0
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.5 with STD : 0.0
+		- Score on test : 0.5 with STD : 0.0
+
+
+2017-09-22 15:10:11,794 INFO: Done:	 Result Analysis
+2017-09-22 15:10:11,831 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy_score :
+	-On Train : 0.92362924282
+	-On Test : 0.75
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.789058101091, 1.0 with monoview classifier : 
+		- Random Forest with num_esimators : 25, max_depth : 5
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.92362924282 with STD : 0.0032637075718
+		- Score on test : 0.75 with STD : 0.0138036809816
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.920665563523 with STD : 0.00365876080162
+		- Score on test : 0.74323439546 with STD : 0.0153862941947
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.920665563523 with STD : 0.00365876080162
+		- Score on test : 0.74323439546 with STD : 0.0153862941947
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0763707571802 with STD : 0.0032637075718
+		- Score on test : 0.25 with STD : 0.0138036809816
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.92362924282 with STD : 0.0032637075718
+		- Score on test : 0.75 with STD : 0.0138036809816
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.849629310887 with STD : 0.00613070449175
+		- Score on test : 0.500689352322 with STD : 0.0274052047766
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.957684778457 with STD : 0.000298414820474
+		- Score on test : 0.763637506285 with STD : 0.0120035193565
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.886422976501 with STD : 0.0065274151436
+		- Score on test : 0.723926380368 with STD : 0.0184049079755
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.92362924282 with STD : 0.0032637075718
+		- Score on test : 0.75 with STD : 0.0138036809816
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0763707571802 with STD : 0.0032637075718
+		- Score on test : 0.25 with STD : 0.0138036809816
+
+
+2017-09-22 15:10:11,831 INFO: Done:	 Result Analysis
+2017-09-22 15:10:11,994 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:10:11,994 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:10:11,994 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:10:11,994 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:10:11,996 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:10:11,996 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:10:11,996 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:10:11,996 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:10:11,997 INFO: Done:	 Read Database Files
+2017-09-22 15:10:11,997 INFO: Done:	 Read Database Files
+2017-09-22 15:10:11,997 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:10:11,997 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:10:12,039 INFO: Done:	 Determine validation split
+2017-09-22 15:10:12,039 INFO: Done:	 Determine validation split
+2017-09-22 15:10:12,040 INFO: Start:	 Determine 2 folds
+2017-09-22 15:10:12,040 INFO: Start:	 Determine 2 folds
+2017-09-22 15:10:14,368 INFO: Done:	 Classification
+2017-09-22 15:10:14,889 INFO: Done:	 Classification
+2017-09-22 15:10:14,889 INFO: Info:	 Time for Classification: 2[s]
+2017-09-22 15:10:14,889 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:10:15,167 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy_score :
+	-On Train : 0.885770234987
+	-On Test : 0.693251533742
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.789058101091, 1.0 with monoview classifier : 
+		- SGDClassifier with loss : log, penalty : l2
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.885770234987 with STD : 0.0319843342037
+		- Score on test : 0.693251533742 with STD : 0.021472392638
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.875370404976 with STD : 0.0455831709336
+		- Score on test : 0.672814010822 with STD : 0.0291358499023
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.875370404976 with STD : 0.0455831709336
+		- Score on test : 0.672814010822 with STD : 0.0291358499023
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.114229765013 with STD : 0.0319843342037
+		- Score on test : 0.306748466258 with STD : 0.021472392638
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.885770234987 with STD : 0.0319843342037
+		- Score on test : 0.693251533742 with STD : 0.021472392638
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.787879889409 with STD : 0.0503795952072
+		- Score on test : 0.409558056757 with STD : 0.058734849034
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.939600351339 with STD : 0.0531269213878
+		- Score on test : 0.75 with STD : 0.107142857143
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.835509138381 with STD : 0.1227154047
+		- Score on test : 0.644171779141 with STD : 0.128834355828
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.885770234987 with STD : 0.0319843342037
+		- Score on test : 0.693251533742 with STD : 0.021472392638
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.114229765013 with STD : 0.0319843342037
+		- Score on test : 0.306748466258 with STD : 0.021472392638
+
+
+2017-09-22 15:10:15,167 INFO: Done:	 Result Analysis
+2017-09-22 15:10:58,738 INFO: Done:	 Classification
+2017-09-22 15:11:12,864 INFO: Done:	 Classification
+2017-09-22 15:11:12,865 INFO: Info:	 Time for Classification: 60[s]
+2017-09-22 15:11:12,865 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:11:13,016 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy_score :
+	-On Train : 0.998694516971
+	-On Test : 0.782208588957
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.789058101091, 1.0 with monoview classifier : 
+		- SVM Linear with C : 1
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.998694516971 with STD : 0.0
+		- Score on test : 0.782208588957 with STD : 0.0
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.998692810458 with STD : 0.0
+		- Score on test : 0.784194528875 with STD : 0.0
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.998692810458 with STD : 0.0
+		- Score on test : 0.784194528875 with STD : 0.0
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.00130548302872 with STD : 0.0
+		- Score on test : 0.217791411043 with STD : 0.0
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.998694516971 with STD : 0.0
+		- Score on test : 0.782208588957 with STD : 0.0
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.997392433632 with STD : 0.0
+		- Score on test : 0.564512797725 with STD : 0.0
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.777108433735 with STD : 0.0
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.997389033943 with STD : 0.0
+		- Score on test : 0.791411042945 with STD : 0.0
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.998694516971 with STD : 0.0
+		- Score on test : 0.782208588957 with STD : 0.0
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.00130548302872 with STD : 0.0
+		- Score on test : 0.217791411043 with STD : 0.0
+
+
+2017-09-22 15:11:13,016 INFO: Done:	 Result Analysis
+2017-09-22 15:11:13,084 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:11:13,084 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:11:13,085 INFO: ### Main Programm for Multiview Classification
+2017-09-22 15:11:13,085 INFO: ### Classification - Database : awaexp ; Views : cq-hist, lss-hist ; Algorithm : Fusion ; Cores : 1
+2017-09-22 15:11:13,086 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:11:13,087 INFO: Info:	 Shape of cq-hist :(1092, 2688)
+2017-09-22 15:11:13,087 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:11:13,088 INFO: Done:	 Read Database Files
+2017-09-22 15:11:13,088 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:11:13,088 INFO: Info:	 Shape of lss-hist :(1092, 2000)
+2017-09-22 15:11:13,089 INFO: Done:	 Read Database Files
+2017-09-22 15:11:13,089 INFO: Start:	 Determine validation split for ratio 0.7
+2017-09-22 15:11:13,127 INFO: Done:	 Determine validation split
+2017-09-22 15:11:13,127 INFO: Start:	 Determine 2 folds
+2017-09-22 15:11:13,127 INFO: Done:	 Determine validation split
+2017-09-22 15:11:13,127 INFO: Start:	 Determine 2 folds
+2017-09-22 15:12:40,984 INFO: Done:	 Classification
+2017-09-22 15:13:07,285 INFO: Done:	 Classification
+2017-09-22 15:13:07,285 INFO: Info:	 Time for Classification: 114[s]
+2017-09-22 15:13:07,285 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:13:07,521 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy_score :
+	-On Train : 1.0
+	-On Test : 0.782208588957
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.789058101091, 1.0 with monoview classifier : 
+		- SVM Poly with C : 1
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.782208588957 with STD : 0.0
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.781538461538 with STD : 0.0
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.781538461538 with STD : 0.0
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.217791411043 with STD : 0.0
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.782208588957 with STD : 0.0
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.564427799938 with STD : 0.0
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.783950617284 with STD : 0.0
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.779141104294 with STD : 0.0
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.782208588957 with STD : 0.0
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.217791411043 with STD : 0.0
+
+
+2017-09-22 15:13:07,539 INFO: Done:	 Result Analysis
+2017-09-22 15:13:08,268 INFO: Done:	 Classification
+2017-09-22 15:13:31,009 INFO: Done:	 Classification
+2017-09-22 15:13:31,009 INFO: Info:	 Time for Classification: 137[s]
+2017-09-22 15:13:31,009 INFO: Start:	 Result Analysis for Fusion
+2017-09-22 15:13:31,162 INFO: 		Result for Multiview classification with EarlyFusion
+
+Average accuracy_score :
+	-On Train : 1.0
+	-On Test : 0.549079754601
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : EarlyFusion with weighted concatenation, using weights : 0.789058101091, 1.0 with monoview classifier : 
+		- SVM RBF with C : 1
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.549079754601 with STD : 0.0
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.669662921348 with STD : 0.0
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.669662921348 with STD : 0.0
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.450920245399 with STD : 0.0
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.549079754601 with STD : 0.0
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.143637914281 with STD : 0.0
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.528368794326 with STD : 0.0
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.914110429448 with STD : 0.0
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0 with STD : 0.0
+		- Score on test : 0.549079754601 with STD : 0.0
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0 with STD : 0.0
+		- Score on test : 0.450920245399 with STD : 0.0
+
+
+2017-09-22 15:13:31,184 INFO: Done:	 Result Analysis
+2017-09-22 15:13:31,229 DEBUG: Start:	 Deleting 2 temporary datasets for multiprocessing
+2017-09-22 15:13:31,288 DEBUG: Start:	 Deleting datasets for multiprocessing
+2017-09-22 15:13:33,167 DEBUG: Start:	 Analyze Global Results
+2017-09-22 15:14:02,028 INFO: Extraction time : 9.24384999275s, Monoview time : 81.18699193s, Multiview Time : 249.405200005s
+2017-09-22 15:14:02,029 DEBUG: Done:	 Analyze Global Results

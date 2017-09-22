@@ -1,0 +1,51 @@
+Classification on awaexp database for cq-hist with KNN, and 2 statistical iterations
+
+accuracy_score on train : 1.0, with STD : 0.0
+accuracy_score on test : 0.610429447853, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : cq-hist	 View shape : (1092, 2688)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- K nearest Neighbors with  n_neighbors: 1
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.610429447853
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.609230769231
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.609230769231
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.389570552147
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.610429447853
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.22086305215
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.611111111111
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.60736196319
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 1.0
+		- Score on test : 0.610429447853
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0
+		- Score on test : 0.389570552147
+
+
+ Classification took 0:00:05

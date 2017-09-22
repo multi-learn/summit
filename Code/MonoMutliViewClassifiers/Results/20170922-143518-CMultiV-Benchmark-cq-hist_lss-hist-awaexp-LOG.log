@@ -1,0 +1,10 @@
+2017-09-22 14:35:24,223 DEBUG: Info:	 Enough copies of the dataset are already available
+2017-09-22 14:35:24,225 INFO: Start:	 Finding all available mono- & multiview algorithms
+2017-09-22 14:35:24,302 DEBUG: Start:	 Loading data
+2017-09-22 14:35:24,303 DEBUG: Start:	 Loading data
+2017-09-22 14:35:24,316 DEBUG: Done:	 Loading data
+2017-09-22 14:35:24,316 DEBUG: Done:	 Loading data
+2017-09-22 14:35:24,316 DEBUG: Info:	 Classification - Database:awaexp Feature:cq-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : DecisionTree
+2017-09-22 14:35:24,316 DEBUG: Info:	 Classification - Database:awaexp Feature:cq-hist train_size:0.7, CrossValidation k-folds:2, cores:1, algorithm : Adaboost
+2017-09-22 14:35:24,316 DEBUG: Start:	 Determine Train/Test split for iteration 1
+2017-09-22 14:35:24,316 DEBUG: Start:	 Determine Train/Test split for iteration 1

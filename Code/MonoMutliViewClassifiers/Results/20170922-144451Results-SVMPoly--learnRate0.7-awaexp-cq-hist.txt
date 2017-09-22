@@ -1,0 +1,51 @@
+Classification on awaexp database for cq-hist with SVMPoly, and 2 statistical iterations
+
+accuracy_score on train : 0.936031331593, with STD : 0.0
+accuracy_score on test : 0.564417177914, with STD : 0.0
+
+Database configuration : 
+	- Database name : awaexp
+	- View name : cq-hist	 View shape : (1092, 2688)
+	- Learning Rate : 0.7
+	- Labels used : 
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- SVM Poly with C : 3089
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.936031331593
+		- Score on test : 0.564417177914
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.932784636488
+		- Score on test : 0.403361344538
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.932784636488
+		- Score on test : 0.403361344538
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.0639686684073
+		- Score on test : 0.435582822086
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.936031331593
+		- Score on test : 0.564417177914
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.8761607063
+		- Score on test : 0.153056508587
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.982658959538
+		- Score on test : 0.64
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.88772845953
+		- Score on test : 0.294478527607
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.936031331593
+		- Score on test : 0.564417177914
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.0639686684073
+		- Score on test : 0.435582822086
+
+
+ Classification took 0:00:21

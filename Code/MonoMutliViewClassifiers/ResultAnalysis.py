@@ -9,6 +9,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
+import matplotlib as mpl
 
 #Import own Modules
 import Metrics
@@ -27,24 +28,27 @@ def autolabel(rects, ax):
                 ha='center', va='bottom')
 
 
+def genNamesFromRes(mono, multi):
+    names = [res[1][0]+"-"+res[1][1][-1] for res in mono]
+    names+=[type_ for type_, a, b, c in multi if type_ != "Fusion"]
+    names+=[ "Late-"+str(a["fusionMethod"]) for type_, a, b, c in multi if type_ == "Fusion" and a["fusionType"] != "EarlyFusion"]
+    names+=[ "Early-"+a["fusionMethod"]+"-"+a["classifiersNames"][0]  for type_, a, b, c in multi if type_ == "Fusion" and a["fusionType"] != "LateFusion"]
+    return names
+
+
 def resultAnalysis(benchmark, results, name, times, metrics):
     mono, multi = results
-    labelsByView = np.array([res[0][3] for res in mono]+[res[3] for res in multi])
-    makeColorMap(labelsByView, name)
     for metric in metrics:
-        names = [res[1][0]+"-"+res[1][1][-1] for res in mono]
-        names+=[type_ for type_, a, b in multi if type_ != "Fusion"]
-        names+=[ "Late-"+str(a["fusionMethod"]) for type_, a, b in multi if type_ == "Fusion" and a["fusionType"] != "EarlyFusion"]
-        names+=[ "Early-"+a["fusionMethod"]+"-"+a["classifiersNames"][0]  for type_, a, b in multi if type_ == "Fusion" and a["fusionType"] != "LateFusion"]
+        names = genNamesFromRes(mono, multi)
         nbResults = len(mono)+len(multi)
-        validationScores = [float(res[1][2][metric[0]][1]) for res in mono]
-        validationSTD = [float(res[1][2][metric[0]][3]) for res in mono]
-        validationScores += [float(scores[metric[0]][1]) for a, b, scores in multi]
-        validationSTD += [float(scores[metric[0]][3]) for a, b, scores in multi]
-        trainScores = [float(res[1][2][metric[0]][0]) for res in mono]
-        trainScores += [float(scores[metric[0]][0]) for a, b, scores in multi]
-        trainSTD = [float(res[1][2][metric[0]][2]) for res in mono]
-        trainSTD += [float(scores[metric[0]][2]) for a, b, scores in multi]
+        validationScores = [float(res[1][2][metric[0]][0]) for res in mono]
+        validationScores += [float(scores[metric[0]][0]) for a, b, scores, c in multi]
+        validationSTD = [float(res[1][2][metric[0]][2]) for res in mono]
+        validationSTD += [float(scores[metric[0]][2]) for a, b, scores, c in multi]
+        trainScores = [float(res[1][2][metric[0]][1]) for res in mono]
+        trainScores += [float(scores[metric[0]][1]) for a, b, scores, c in multi]
+        trainSTD = [float(res[1][2][metric[0]][3]) for res in mono]
+        trainSTD += [float(scores[metric[0]][3]) for a, b, scores, c in multi]
         f = pylab.figure(figsize=(40, 30))
         width = 0.35       # the width of the bars
         fig = plt.gcf()
@@ -67,21 +71,27 @@ def resultAnalysis(benchmark, results, name, times, metrics):
     logging.info("Extraction time : "+str(times[0])+"s, Monoview time : "+str(times[1])+"s, Multiview Time : "+str(times[2])+"s")
 
 
-def makeColorMap(labelsByView, name):
-    nb_view = labelsByView.shape[1]
-    nbExamples = labelsByView.shape[0]
-    # Make plot with vertical (default) colorbar
-    fig, ax = plt.subplots()
-    data = np.zeros((nbExamples,nbExamples), dtype=int)
-    datap = np.array([signLabels(labels) for labels in labelsByView])
-    nbRepet = nbExamples/nb_view
-    for j in range(nb_view):
-        for i in range(nbRepet):
-            data[:, j*50+i] = datap[:, j]
+def analyzeLabels(labelsArrays, realLabels, results):
+    mono, multi = results
+    classifiersNames = genNamesFromRes(mono, multi)
+    nbClassifiers = len(classifiersNames)
+    nbExamples = realLabels.shape[0]
+    nbIter = 20
+    data = np.zeros((nbExamples, nbClassifiers*nbIter))
+    tempData = np.array([labelsArray == realLabels for labelsArray in np.transpose(labelsArrays)]).astype(int)
+    for classifierIndex in range(nbClassifiers):
+        for iterIndex in range(nbIter):
+            data[:,classifierIndex*nbIter+iterIndex] = tempData[classifierIndex,:]
+    fig = pylab.figure(figsize=(30,20))
+    cmap = mpl.colors.ListedColormap(['red','green'])
+    bounds=[-0.5,0.5,1.5]
+    norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
-    cax = ax.imshow(data, interpolation='nearest', cmap=cm.coolwarm)
-    ax.set_title('Labels per view')
+    cax = plt.imshow(data, interpolation='nearest', cmap=cmap, norm=norm)
+    plt.title('Error on examples depending on the classifier')
+    ticks = np.arange(0, nbClassifiers*nbIter, nbIter)
+    labels = classifiersNames
+    plt.xticks(ticks, labels, rotation="vertical")
     cbar = fig.colorbar(cax, ticks=[0, 1])
-    cbar.ax.set_yticklabels(['-1', ' 1'])  # vertically oriented colorbar
-    plt.show()
-    fig.savefig("Results/"+time.strftime("%Y%m%d-%H%M%S")+"-"+name+"-labels.png")
+    cbar.ax.set_yticklabels(['Wrong', ' Right'])
+    fig.savefig("Results/"+time.strftime("%Y%m%d-%H%M%S")+"error_analysis.png")

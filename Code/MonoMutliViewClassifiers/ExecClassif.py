@@ -5,6 +5,8 @@ import os
 import time                             # for time calculations
 import operator
 import itertools
+import sys
+import select
 
 # Import 3rd party modules
 from joblib import Parallel, delayed
@@ -21,7 +23,7 @@ from Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 import Multiview.GetMultiviewDb as DB
 import Monoview
-from ResultAnalysis import resultAnalysis
+from ResultAnalysis import resultAnalysis, analyzeLabels
 from Versions import testVersions
 import MonoviewClassifiers
 
@@ -57,7 +59,31 @@ def initLogFile(args):
         logging.getLogger().addHandler(logging.StreamHandler())
 
 
+def input(timeout=15):
+    print "You have " + str(timeout) + " seconds to stop the script by typing n"
+
+    i, o, e = select.select( [sys.stdin], [], [], timeout)
+
+    if (i):
+        return sys.stdin.readline().strip()
+    else:
+        return "y"
+
+
+def confirm(prompt=None, resp=True, timeout = 15):
+    ans = input(timeout)
+    if not ans:
+        return resp
+    if ans not in ['y', 'Y', 'n', 'N']:
+        print 'please enter y or n.'
+    if ans == 'y' or ans == 'Y':
+        return True
+    if ans == 'n' or ans == 'N':
+        return False
+
 def initMultipleDatasets(args, nbCores):
+    """Used to create copies of the dataset if multicore computation is used
+    Needs arg.pathF and arg.name"""
     if nbCores>1:
         if DB.datasetsAlreadyExist(args.pathF, args.name, nbCores):
             logging.debug("Info:\t Enough copies of the dataset are already available")
@@ -66,13 +92,18 @@ def initMultipleDatasets(args, nbCores):
             logging.debug("Start:\t Creating "+str(nbCores)+" temporary datasets for multiprocessing")
             logging.warning(" WARNING : /!\ This may use a lot of HDD storage space : "+
                             str(os.path.getsize(args.pathF+args.name+".hdf5")*nbCores/float(1024)/1000/1000)+" Gbytes /!\ ")
-            time.sleep(5)
-            datasetFiles = DB.copyHDF5(args.pathF, args.name, nbCores)
-            logging.debug("Start:\t Creating datasets for multiprocessing")
-            return datasetFiles
+            confirmation = confirm()
+            if not confirmation:
+                sys.exit(0)
+            else:
+                datasetFiles = DB.copyHDF5(args.pathF, args.name, nbCores)
+                logging.debug("Start:\t Creating datasets for multiprocessing")
+                return datasetFiles
 
 
 def initViews(DATASET, args):
+    """Used to return the views names that will be used by the algos, their indices and all the views names
+    Needs args.views"""
     NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
     if args.views!="":
         allowedViews = args.views.split(":")
@@ -88,6 +119,9 @@ def initViews(DATASET, args):
 
 
 def initBenchmark(args):
+    """Used to create a list of all the algorithm packages names used for the benchmark
+    Needs args.CL_type, args.CL_algos_multiview, args.MU_types, args.FU_types, args.FU_late_methods,
+    args.FU_early_methods, args.CL_algos_monoview"""
     benchmark = {"Monoview":{}, "Multiview":[]}
     if args.CL_type.split(":")==["Benchmark"]:
         # if args.CL_algorithm=='':
@@ -109,7 +143,7 @@ def initBenchmark(args):
         allMumboAlgos = [name for _, name, isPackage in
                          pkgutil.iter_modules(['Multiview/Mumbo/Classifiers'])
                          if not isPackage and not name in ["SubSampling", "ModifiedMulticlass", "Kover"]]
-        allMultiviewAlgos = {"Fusion": allFusionAlgos}#, "Mumbo": allMumboAlgos}
+        allMultiviewAlgos = {"Fusion": allFusionAlgos}#, "Mumbo": allMumboAlgos
         benchmark = {"Monoview": allMonoviewAlgos, "Multiview": allMultiviewAlgos}
 
     if "Multiview" in args.CL_type.strip(":"):
@@ -296,21 +330,21 @@ def initMultiviewArguments(args, benchmark, views, viewsIndices, accuracies, cla
     return argumentDictionaries
 
 
-def analyzeLabels(labelsArrays, realLabels, classifiersNames):
-    nbClassifiers = len(classifiersNames)
-    nbExamples = realLabels.shape[0]
-    nbIter = nbExamples/nbClassifiers
-    data = np.zeros((nbExamples, nbClassifiers*nbIter))
-    tempData = np.array([labelsArray == realLabels for labelsArray in labelsArrays]).astype(int)
-    for classifierIndex in range(nbClassifiers):
-        for iterIndex in range(nbIter):
-            data[:,classifierIndex*nbIter+iterIndex] = tempData[:,classifierIndex]
-    fig, ax = plt.subplots()
-    cax = ax.imshow(data, interpolation='nearest', cmap=cm.coolwarm)
-    ax.set_title('Gaussian noise with vertical colorbar')
-    cbar = fig.colorbar(cax, ticks=[0, 1])
-    cbar.ax.set_yticklabels(['Wrong', ' Right'])
-    fig.savefig("test.png")
+# def analyzeLabels(labelsArrays, realLabels, classifiersNames):
+#     nbClassifiers = len(classifiersNames)
+#     nbExamples = realLabels.shape[0]
+#     nbIter = nbExamples/nbClassifiers
+#     data = np.zeros((nbExamples, nbClassifiers*nbIter))
+#     tempData = np.array([labelsArray == realLabels for labelsArray in np.transpose(labelsArrays)]).astype(int)
+#     for classifierIndex in range(nbClassifiers):
+#         for iterIndex in range(nbIter):
+#             data[:,classifierIndex*nbIter+iterIndex] = tempData[classifierIndex,:]
+#     fig, ax = plt.subplots()
+#     cax = ax.imshow(data, interpolation='nearest', cmap=cm.coolwarm)
+#     ax.set_title('Error on examples depending on the classifier')
+#     cbar = fig.colorbar(cax, ticks=[0, 1])
+#     cbar.ax.set_yticklabels(['Wrong', ' Right'])
+#     fig.savefig("Results/"+time.strftime("%Y%m%d-%H%M%S")+"error_analysis.png")
 
 
 parser = argparse.ArgumentParser(
@@ -351,7 +385,7 @@ groupClass.add_argument('--CL_algos_monoview', metavar='STRING', action='store',
 groupClass.add_argument('--CL_algos_multiview', metavar='STRING', action='store',
                         help='Determine which multiview classifier to use, separate with : if multiple, if empty, considering all', default='')
 groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
-                        default=1)
+                        default=2)
 groupClass.add_argument('--CL_statsiter', metavar='INT', action='store', help='Number of iteration for each algorithm to mean results', type=int,
                         default=2)
 groupClass.add_argument('--CL_metrics', metavar='STRING', action='store', nargs="+",
@@ -456,7 +490,7 @@ except:
 
 initLogFile(args)
 
-DATASET, LABELS_DICTIONARY = getDatabase(args.views.split(":"), args.pathF, args.name, len(args.CL_classes), args.CL_classes)
+DATASET, LABELS_DICTIONARY = getDatabase(args.views.split(":"), args.pathF, args.name, args.CL_nb_class, args.CL_classes)
 
 datasetFiles = initMultipleDatasets(args, nbCores)
 
@@ -539,10 +573,10 @@ if nbCores>1:
     logging.debug("Start:\t Deleting datasets for multiprocessing")
 labels = np.array([resultMonoview[1][3] for resultMonoview in resultsMonoview]+[resultMultiview[3] for resultMultiview in resultsMultiview]).transpose()
 trueLabels = DATASET.get("Labels").value
-analyzeLabels(labels, trueLabels, ["" in range(labels.shape[1])])
 times = [dataBaseTime, monoviewTime, multiviewTime]
 # times=[]
 results = (resultsMonoview, resultsMultiview)
+analyzeLabels(labels, trueLabels, results)
 logging.debug("Start:\t Analyze Global Results")
 resultAnalysis(benchmark, results, args.name, times, metrics)
 logging.debug("Done:\t Analyze Global Results")

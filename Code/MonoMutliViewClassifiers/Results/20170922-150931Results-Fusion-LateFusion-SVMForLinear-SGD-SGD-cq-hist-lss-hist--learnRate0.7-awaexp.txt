@@ -1,0 +1,58 @@
+		Result for Multiview classification with LateFusion
+
+Average accuracy_score :
+	-On Train : 0.848563968668
+	-On Test : 0.739263803681
+
+Dataset info :
+	-Database name : awaexp
+	-Labels : 
+	-Views : cq-hist, lss-hist
+	-2 folds
+
+Classification configuration : 
+	-Algorithm used : LateFusion with SVM for linear 
+	-With monoview classifiers : 
+		- SGDClassifier with loss : log, penalty : l1
+		- SGDClassifier with loss : log, penalty : elasticnet
+
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.848563968668 with STD : 0.0
+		- Score on test : 0.739263803681 with STD : 0.0
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.865740740741 with STD : 0.0
+		- Score on test : 0.768392370572 with STD : 0.0
+
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.865740740741 with STD : 0.0
+		- Score on test : 0.768392370572 with STD : 0.0
+
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.151436031332 with STD : 0.0
+		- Score on test : 0.260736196319 with STD : 0.0
+
+	For Jaccard similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.848563968668 with STD : 0.0
+		- Score on test : 0.739263803681 with STD : 0.0
+
+	For Matthews correlation coefficient (higher is better) : 
+		- Score on train : 0.72113453306 with STD : 0.0
+		- Score on test : 0.494424068096 with STD : 0.0
+
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.777546777547 with STD : 0.0
+		- Score on test : 0.691176470588 with STD : 0.0
+
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.976501305483 with STD : 0.0
+		- Score on test : 0.865030674847 with STD : 0.0
+
+	For ROC AUC score using None as sample_weights, micro as average (higher is better) : 
+		- Score on train : 0.848563968668 with STD : 0.0
+		- Score on test : 0.739263803681 with STD : 0.0
+
+	For Zero one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.151436031332 with STD : 0.0
+		- Score on test : 0.260736196319 with STD : 0.0
+
