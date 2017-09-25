@@ -11,7 +11,6 @@ import operator
 
 # Import 3rd party modules
 import numpy as np                      # for reading CSV-files and Series
-import pandas as pd                     # for Series and DataFrames
 import logging                          # To create Log-Files
 from sklearn import metrics		        # For stastics on classification
 import h5py

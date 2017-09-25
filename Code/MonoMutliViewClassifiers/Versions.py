@@ -34,7 +34,7 @@ def testVersions():
         print "Please install cv2 module"
 
     try:
-        import pandas as pd
+        import pandas
         # print("Pandas-V.: " + pd.__version__)
     except:
         print "Please install pandas module"

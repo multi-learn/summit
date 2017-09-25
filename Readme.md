@@ -1,88 +1,45 @@
-# Project Title
+# Benchmark de classification mono et multi-vue
 
-One Paragraph of project description goes here
+This project aims to be an easy-to use solution to run a prior benchmark on a dataset abd evaluate mono- and multi-view algorithms capacity to classify it correctly.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+In order to run it you'll need to try on simulated data with the command
+```
+python multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/ExecClassif.py -log
+```
+Results will be stored in multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+To be able to use this project, you'll need :
 
-```
-Give examples
-```
+* [Python 2.7](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+
+And the following python modules :
+* [pyscm](https://github.com/aldro61/pyscm) - Set Covering Machine, Marchand, M., & Taylor, J. S. (2003) by A.Drouin, F.Brochu, G.Letarte St-Pierre, M.Osseni, P-L.Plante
+* [numpy](http://www.numpy.org/), [scipy](https://scipy.org/)
+* [matplotlib](http://matplotlib.org/) - Used to plot results
+* [sklearn](http://scikit-learn.org/stable/) - Used for the monoview classifiers
+* [joblib](https://pypi.python.org/pypi/joblib) - Used to compute on multiple threads
+* [h5py](www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to sapre RAM
+* ([argparse](https://docs.python.org/3/library/argparse.html) - Used to parse the input args)
+* ([logging](https://docs.python.org/2/library/logging.html) - Used to generate log)
+
+They are all tested in  `multiview-machine-mearning-omis/Code/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `ExecClassif` script
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+No installation is needed, just the prerequisites.
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+In order to run it you'll need to try on simulated data with the command
 ```
-Give an example
+python multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/ExecClassif.py -log
 ```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+Results will be stored in multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
-
+* **Baptiste BAUVIN** 
