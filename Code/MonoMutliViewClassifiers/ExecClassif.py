@@ -330,23 +330,6 @@ def initMultiviewArguments(args, benchmark, views, viewsIndices, accuracies, cla
     return argumentDictionaries
 
 
-# def analyzeLabels(labelsArrays, realLabels, classifiersNames):
-#     nbClassifiers = len(classifiersNames)
-#     nbExamples = realLabels.shape[0]
-#     nbIter = nbExamples/nbClassifiers
-#     data = np.zeros((nbExamples, nbClassifiers*nbIter))
-#     tempData = np.array([labelsArray == realLabels for labelsArray in np.transpose(labelsArrays)]).astype(int)
-#     for classifierIndex in range(nbClassifiers):
-#         for iterIndex in range(nbIter):
-#             data[:,classifierIndex*nbIter+iterIndex] = tempData[classifierIndex,:]
-#     fig, ax = plt.subplots()
-#     cax = ax.imshow(data, interpolation='nearest', cmap=cm.coolwarm)
-#     ax.set_title('Error on examples depending on the classifier')
-#     cbar = fig.colorbar(cax, ticks=[0, 1])
-#     cbar.ax.set_yticklabels(['Wrong', ' Right'])
-#     fig.savefig("Results/"+time.strftime("%Y%m%d-%H%M%S")+"error_analysis.png")
-
-
 parser = argparse.ArgumentParser(
     description='This file is used to benchmark the accuracies fo multiple classification algorithm on multiview data.',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
