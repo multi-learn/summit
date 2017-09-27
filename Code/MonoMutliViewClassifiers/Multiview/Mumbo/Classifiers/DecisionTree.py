@@ -26,7 +26,6 @@ def DecisionTree(data, labels, arg, weights):
 
 
 def getConfig(classifierConfig):
-    print classifierConfig
     depth = classifierConfig[0]
     subSampling = classifierConfig[1]
     return 'with depth ' + str(depth) + ', ' + ' sub-sampled at ' + str(subSampling) + ' '
@@ -46,7 +45,7 @@ def gridSearch(data, labels, metric="accuracy_score"):
     preliminary_accuracy = np.mean(preliminary_accuracies)
     if preliminary_accuracy < 0.50:
         for max_depth in np.arange(10)+1:
-            for subSampling in sorted(np.arange(20, dtype=float)+1/20, reverse=True):
+            for subSampling in sorted((np.arange(20, dtype=float)+1)/20, reverse=True):
                 if subSampling > minSubSampling:
                     accuracies = np.zeros(50)
                     for i in range(50):

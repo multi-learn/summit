@@ -96,8 +96,6 @@ class SCMForLinear(LateFusionClassifier):
                     getV(DATASET, viewIndex, usedIndices))
                 accus.append(accuracy_score(DATASET.get("Labels").value[usedIndices], monoviewDecision))
                 monoviewDecisions[:, index] = monoviewDecision
-            print monoviewDecisions
-            exit()
             features = self.generateInteractions(monoviewDecisions)
             predictedLabels = self.SCMClassifier.predict(features)
         else:
@@ -161,7 +159,6 @@ class SCMForLinear(LateFusionClassifier):
         if type(self.order)==type(None):
             order = monoViewDecisions.shape[1]
         if self.order==1:
-            print monoViewDecisions
             return monoViewDecisions
 
         else:

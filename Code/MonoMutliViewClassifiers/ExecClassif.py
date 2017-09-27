@@ -46,7 +46,6 @@ def initLogFile(args):
     directory = "../../Results/"+args.name+"/started_"+time.strftime("%Y_%m_%d-%H_%M")+"/"
     logFileName = time.strftime("%Y%m%d-%H%M%S") + "-CMultiV-" + args.CL_type + "-" + "_".join(args.views.split(":")) + "-" + args.name + \
                   "-LOG"
-    print logFileName
     if not os.path.exists(os.path.dirname(directory+logFileName)):
         try:
             os.makedirs(os.path.dirname(directory+logFileName))
@@ -154,7 +153,7 @@ def initBenchmark(args):
         allMumboAlgos = [name for _, name, isPackage in
                          pkgutil.iter_modules(['Multiview/Mumbo/Classifiers'])
                          if not isPackage and not name in ["SubSampling", "ModifiedMulticlass", "Kover"]]
-        allMultiviewAlgos = {"Fusion": allFusionAlgos}#, "Mumbo": allMumboAlgos
+        allMultiviewAlgos = {"Fusion": allFusionAlgos, "Mumbo": allMumboAlgos}
         benchmark = {"Monoview": allMonoviewAlgos, "Multiview": allMultiviewAlgos}
 
     if "Multiview" in args.CL_type.strip(":"):

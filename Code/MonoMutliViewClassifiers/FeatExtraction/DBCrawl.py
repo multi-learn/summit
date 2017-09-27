@@ -29,7 +29,6 @@ def imgCrawl(path, sClassLabels, nameDB, nbClasses):
                 
                 # if the amount of classes to be evalauated is limited
                 if(i>nbClasses):
-                        print i
                         break
                         
                 # loop througe files and create df        
