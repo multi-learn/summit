@@ -55,20 +55,15 @@ class WeightedLinear(LateFusionClassifier):
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         nbView = len(viewsIndices)
-        self.weights = self.weights/float(max(self.weights))
+        self.weights = self.weights/float(sum(self.weights))
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if usedIndices:
-            predictedLabels = []
             viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
             for index, viewIndex in enumerate(viewsIndices):
-                viewScores[index] = self.monoviewClassifiers[index].predict_proba(
-                    getV(DATASET, viewIndex, usedIndices))
-            for currentIndex, usedIndex in enumerate(usedIndices):
-                predictedLabel = np.argmax(np.array(
-                    [max(viewScore) * weight for viewScore, weight in zip(viewScores[:, currentIndex], self.weights)],
-                    dtype=float))
-                predictedLabels.append(predictedLabel)
+                viewScores[index] = np.array(self.monoviewClassifiers[index].predict_proba(
+                    getV(DATASET, viewIndex, usedIndices)))*self.weights[index]
+            predictedLabels = np.argmax(np.sum(viewScores, axis=0), axis=1)
         else:
             predictedLabels = []
 

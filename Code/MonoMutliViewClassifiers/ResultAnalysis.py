@@ -36,19 +36,26 @@ def genNamesFromRes(mono, multi):
     return names
 
 
-def resultAnalysis(benchmark, results, name, times, metrics):
+def resultAnalysis(benchmark, results, name, times, metrics, directory):
     mono, multi = results
     for metric in metrics:
         names = genNamesFromRes(mono, multi)
         nbResults = len(mono)+len(multi)
-        validationScores = [float(res[1][2][metric[0]][0]) for res in mono]
-        validationScores += [float(scores[metric[0]][0]) for a, b, scores, c in multi]
-        validationSTD = [float(res[1][2][metric[0]][2]) for res in mono]
-        validationSTD += [float(scores[metric[0]][2]) for a, b, scores, c in multi]
-        trainScores = [float(res[1][2][metric[0]][1]) for res in mono]
-        trainScores += [float(scores[metric[0]][1]) for a, b, scores, c in multi]
-        trainSTD = [float(res[1][2][metric[0]][3]) for res in mono]
-        trainSTD += [float(scores[metric[0]][3]) for a, b, scores, c in multi]
+        validationScores = [float(res[1][2][metric[0]][1]) for res in mono]
+        validationScores += [float(scores[metric[0]][1]) for a, b, scores, c in multi]
+        validationSTD = [float(res[1][2][metric[0]][3]) for res in mono]
+        validationSTD += [float(scores[metric[0]][3]) for a, b, scores, c in multi]
+        trainScores = [float(res[1][2][metric[0]][0]) for res in mono]
+        trainScores += [float(scores[metric[0]][0]) for a, b, scores, c in multi]
+        trainSTD = [float(res[1][2][metric[0]][2]) for res in mono]
+        trainSTD += [float(scores[metric[0]][2]) for a, b, scores, c in multi]
+
+        validationScores = np.array(validationScores)
+        validationSTD = np.array(validationSTD)
+        trainScores = np.array(trainScores)
+        trainSTD = np.array(trainSTD)
+        names = np.array(names)
+
         f = pylab.figure(figsize=(40, 30))
         width = 0.35       # the width of the bars
         fig = plt.gcf()
@@ -58,20 +65,27 @@ def resultAnalysis(benchmark, results, name, times, metrics):
             metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
         else:
             metricKWARGS = {}
+        sorted_indices = np.argsort(validationScores)
+        validationScores = validationScores[sorted_indices]
+        validationSTD = validationSTD[sorted_indices]
+        trainScores = trainScores[sorted_indices]
+        trainSTD = trainSTD[sorted_indices]
+        names = names[sorted_indices]
+
         ax.set_title(getattr(Metrics, metric[0]).getConfig(**metricKWARGS)+" on validation set for each classifier")
         rects = ax.bar(range(nbResults), validationScores, width, color="r", yerr=validationSTD)
         rect2 = ax.bar(np.arange(nbResults)+width, trainScores, width, color="0.7", yerr=trainSTD)
         autolabel(rects, ax)
         autolabel(rect2, ax)
-        ax.legend((rects[0], rect2[0]), ('Train', 'Test'))
+        ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
         ax.set_xticks(np.arange(nbResults)+width)
         ax.set_xticklabels(names, rotation="vertical")
 
-        f.savefig("Results/"+time.strftime("%Y%m%d-%H%M%S")+"-"+name+"-"+metric[0]+".png")
+        f.savefig(directory+time.strftime("%Y%m%d-%H%M%S")+"-"+name+"-"+metric[0]+".png")
     logging.info("Extraction time : "+str(times[0])+"s, Monoview time : "+str(times[1])+"s, Multiview Time : "+str(times[2])+"s")
 
 
-def analyzeLabels(labelsArrays, realLabels, results):
+def analyzeLabels(labelsArrays, realLabels, results, directory):
     mono, multi = results
     classifiersNames = genNamesFromRes(mono, multi)
     nbClassifiers = len(classifiersNames)
@@ -94,4 +108,4 @@ def analyzeLabels(labelsArrays, realLabels, results):
     plt.xticks(ticks, labels, rotation="vertical")
     cbar = fig.colorbar(cax, ticks=[0, 1])
     cbar.ax.set_yticklabels(['Wrong', ' Right'])
-    fig.savefig("Results/"+time.strftime("%Y%m%d-%H%M%S")+"error_analysis.png")
+    fig.savefig(directory+time.strftime("%Y%m%d-%H%M%S")+"-error_analysis.png")

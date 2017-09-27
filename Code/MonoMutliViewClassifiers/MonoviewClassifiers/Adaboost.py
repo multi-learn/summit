@@ -1,6 +1,6 @@
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.pipeline import Pipeline
-from sklearn.grid_search import RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV
 from sklearn.tree import DecisionTreeClassifier
 import Metrics
 from scipy.stats import randint

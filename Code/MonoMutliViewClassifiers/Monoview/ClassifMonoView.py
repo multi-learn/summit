@@ -6,9 +6,9 @@
 import pandas as pd                                     # For DataFrames
 
 # Import sci-kit learn party modules
-from sklearn.cross_validation import train_test_split   # For calculating the train/test split
+#from sklearn.tests import train_test_split   # For calculating the train/test split
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
-from sklearn.grid_search import GridSearchCV            # GridSearch for parameters of classification
+from sklearn.model_selection import GridSearchCV            # GridSearch for parameters of classification
 from sklearn.ensemble import RandomForestClassifier     # RandomForest-Classifier
 import sklearn
 import numpy as np
@@ -59,43 +59,43 @@ def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLA
 
 
 ##### Generating Test and Train Data
-def calcTrainTestOwn(X,y,split):
+# def calcTrainTestOwn(X,y,split):
+#
+#     classLabels = pd.Series(y)
+#
+#
+#     data_train = []
+#     data_test = []
+#     label_train = []
+#     label_test = []
+#
+#     # Reminder to store position in array
+#     reminder = 0
+#
+#     for i in classLabels.unique():
+#         # Calculate the number of samples per class
+#         count = (len(classLabels[classLabels==i]))
+#
+#         # Min/Max: To determine the range to read from array
+#         min_train = reminder
+#         max_train = int(round(count * split)) +1 +reminder
+#         min_test = max_train
+#         max_test = count + reminder
+#
+#         #Extend the respective list with ClassLabels(y)/Features(X)
+#         label_train.extend(classLabels[min_train:max_train])
+#         label_test.extend(classLabels[min_test:max_test])
+#         data_train.extend(X[min_train:max_train])
+#         data_test.extend(X[min_test:max_test])
+#
+#         reminder = reminder + count
+#
+#     return np.array(data_train), np.array(data_test), np.array(label_train).astype(int), np.array(label_test).astype(int)
 
-    classLabels = pd.Series(y)
-
-
-    data_train = []
-    data_test = []
-    label_train = []
-    label_test = []
-
-    # Reminder to store position in array
-    reminder = 0
-
-    for i in classLabels.unique():
-        # Calculate the number of samples per class
-        count = (len(classLabels[classLabels==i]))
-
-        # Min/Max: To determine the range to read from array
-        min_train = reminder
-        max_train = int(round(count * split)) +1 +reminder
-        min_test = max_train
-        max_test = count + reminder
-
-        #Extend the respective list with ClassLabels(y)/Features(X)
-        label_train.extend(classLabels[min_train:max_train])
-        label_test.extend(classLabels[min_test:max_test])
-        data_train.extend(X[min_train:max_train])
-        data_test.extend(X[min_test:max_test])
-
-        reminder = reminder + count
-
-    return np.array(data_train), np.array(data_test), np.array(label_train).astype(int), np.array(label_test).astype(int)
-
-def calcTrainTest(X,y,split):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=split)
-
-    return (X_train, X_test, y_train, y_test)
+# def calcTrainTest(X,y,split):
+#     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=split)
+#
+#     return (X_train, X_test, y_train, y_test)
 
 # Classifiers
 

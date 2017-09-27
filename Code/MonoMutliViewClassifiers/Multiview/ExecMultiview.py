@@ -23,14 +23,14 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 
 
-def ExecMultiview_multicore(coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY , statsIter,
+def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY , statsIter,
                             gridSearch=False, nbCores=1, metrics=None, nIter=30, **arguments):
     DATASET = h5py.File(path+name+str(coreIndex)+".hdf5", "r")
-    return ExecMultiview(DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY, statsIter,
+    return ExecMultiview(directory, DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY, statsIter,
                          gridSearch=gridSearch, metrics=metrics, nIter=nIter, **arguments)
 
 
-def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY, statsIter,
+def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY, statsIter,
                   gridSearch=False, metrics=None, nIter=30, **kwargs):
 
     datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
@@ -126,7 +126,7 @@ def ExecMultiview(DATASET, name, learningRate, nbFolds, nbCores, databaseType, p
         CL_type_string += "-"+classificationKWARGS["fusionType"]+"-"+classificationKWARGS["fusionMethod"]+"-"+"-".join(classificationKWARGS["classifiersNames"])
     elif CL_type=="Mumbo":
         CL_type_string += "-"+"-".join(classificationKWARGS["classifiersNames"])
-    outputFileName = "Results/" + timestr + "Results-" + CL_type_string + "-" + featureString + '-' + labelsString + \
+    outputFileName = directory + timestr + "Results-" + CL_type_string + "-" + featureString + '-' + labelsString + \
                      '-learnRate' + str(learningRate) + '-' + name
 
     outputTextFile = open(outputFileName + '.txt', 'w')

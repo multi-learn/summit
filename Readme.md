@@ -1,4 +1,4 @@
-# Benchmark de classification mono et multi-vue
+# Mono- and Multi-view classification benchmark
 
 This project aims to be an easy-to use solution to run a prior benchmark on a dataset abd evaluate mono- and multi-view algorithms capacity to classify it correctly.
 
@@ -42,4 +42,4 @@ Results will be stored in multiview-machine-learning-omis/Code/MonoMultiViewClas
 
 ## Authors
 
-* **Baptiste BAUVIN** 
+* **Baptiste BAUVIN**

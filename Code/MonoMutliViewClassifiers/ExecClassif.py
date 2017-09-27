@@ -7,11 +7,12 @@ import operator
 import itertools
 import sys
 import select
+import logging
+import errno
 
 # Import 3rd party modules
 from joblib import Parallel, delayed
 import numpy as np
-import logging
 import matplotlib
 matplotlib.use('Agg')
 import math
@@ -41,9 +42,17 @@ __status__ 	= "Prototype"                           # Production, Development, P
 testVersions()
 
 def initLogFile(args):
-    directory = os.path.dirname(os.path.abspath(__file__)) + "/Results/"
+    # os.path.dirname(os.path.abspath(__file__)) +
+    directory = "../../Results/"+args.name+"/started_"+time.strftime("%Y_%m_%d-%H_%M")+"/"
     logFileName = time.strftime("%Y%m%d-%H%M%S") + "-CMultiV-" + args.CL_type + "-" + "_".join(args.views.split(":")) + "-" + args.name + \
                   "-LOG"
+    print logFileName
+    if not os.path.exists(os.path.dirname(directory+logFileName)):
+        try:
+            os.makedirs(os.path.dirname(directory+logFileName))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
     logFile = directory + logFileName
     if os.path.isfile(logFile + ".log"):
         for i in range(1, 20):
@@ -57,6 +66,8 @@ def initLogFile(args):
                         filemode='w')
     if args.log:
         logging.getLogger().addHandler(logging.StreamHandler())
+
+    return directory
 
 
 def input(timeout=15):
@@ -471,7 +482,7 @@ try:
 except:
     gridSearch = False
 
-initLogFile(args)
+directory = initLogFile(args)
 
 DATASET, LABELS_DICTIONARY = getDatabase(args.views.split(":"), args.pathF, args.name, args.CL_nb_class, args.CL_classes)
 
@@ -514,7 +525,7 @@ if nbCores>1:
     nbExperiments = len(argumentDictionaries["Monoview"])
     for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
         resultsMonoview+=(Parallel(n_jobs=nbCores)(
-            delayed(ExecMonoview_multicore)(args.name, labelsNames, args.CL_split, args.CL_nbFolds, coreIndex, args.type, args.pathF, statsIter, gridSearch=gridSearch,
+            delayed(ExecMonoview_multicore)(directory, args.name, labelsNames, args.CL_split, args.CL_nbFolds, coreIndex, args.type, args.pathF, statsIter, gridSearch=gridSearch,
                                             metrics=metrics, nIter=args.CL_GS_iter, **argumentDictionaries["Monoview"][coreIndex + stepIndex * nbCores])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex  * nbCores))))
     accuracies = [[result[1][1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
@@ -522,7 +533,7 @@ if nbCores>1:
     classifiersConfigs = [[result[1][1][:-1] for result in resultsMonoview if result[0]==viewIndex] for viewIndex in range(NB_VIEW)]
 
 else:
-    resultsMonoview+=([ExecMonoview(DATASET.get("View"+str(arguments["viewIndex"])),
+    resultsMonoview+=([ExecMonoview(directory, DATASET.get("View"+str(arguments["viewIndex"])),
                                     DATASET.get("Labels").value, args.name, labelsNames,
                                     args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, statsIter,
                                     gridSearch=gridSearch, metrics=metrics, nIter=args.CL_GS_iter,
@@ -541,12 +552,12 @@ if nbCores>1:
     nbExperiments = len(argumentDictionaries["Multiview"])
     for stepIndex in range(int(math.ceil(float(nbExperiments)/nbCores))):
         resultsMultiview += Parallel(n_jobs=nbCores)(
-            delayed(ExecMultiview_multicore)(coreIndex, args.name, args.CL_split, args.CL_nbFolds, args.type, args.pathF,
+            delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, args.CL_split, args.CL_nbFolds, args.type, args.pathF,
                                    LABELS_DICTIONARY, statsIter, gridSearch=gridSearch,
                                    metrics=metrics, nIter=args.CL_GS_iter, **argumentDictionaries["Multiview"][stepIndex*nbCores+coreIndex])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
 else:
-    resultsMultiview = [ExecMultiview(DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
+    resultsMultiview = [ExecMultiview(directory, DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
                                LABELS_DICTIONARY, statsIter, gridSearch=gridSearch,
                                metrics=metrics, nIter=args.CL_GS_iter, **arguments) for arguments in argumentDictionaries["Multiview"]]
 multiviewTime = time.time()-monoviewTime-dataBaseTime-start
@@ -559,8 +570,8 @@ trueLabels = DATASET.get("Labels").value
 times = [dataBaseTime, monoviewTime, multiviewTime]
 # times=[]
 results = (resultsMonoview, resultsMultiview)
-analyzeLabels(labels, trueLabels, results)
+analyzeLabels(labels, trueLabels, results, directory)
 logging.debug("Start:\t Analyze Global Results")
-resultAnalysis(benchmark, results, args.name, times, metrics)
+resultAnalysis(benchmark, results, args.name, times, metrics, directory)
 logging.debug("Done:\t Analyze Global Results")
 

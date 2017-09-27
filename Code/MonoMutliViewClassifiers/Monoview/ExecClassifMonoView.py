@@ -29,7 +29,7 @@ __status__ 	= "Prototype"           # Production, Development, Prototype
 __date__	= 2016-03-25
 
 
-def ExecMonoview_multicore(name, labelsNames, learningRate, nbFolds, datasetFileIndex, databaseType, path, statsIter, gridSearch=True,
+def ExecMonoview_multicore(directory, name, labelsNames, learningRate, nbFolds, datasetFileIndex, databaseType, path, statsIter, gridSearch=True,
                            metrics=[["accuracy_score", None]], nIter=30, **args):
     DATASET = h5py.File(path+name+str(datasetFileIndex)+".hdf5", "r")
     kwargs = args["args"]
@@ -37,11 +37,11 @@ def ExecMonoview_multicore(name, labelsNames, learningRate, nbFolds, datasetFile
     neededViewIndex = views.index(kwargs["feat"])
     X = DATASET.get("View"+str(neededViewIndex))
     Y = DATASET.get("Labels").value
-    return ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, 1, databaseType, path, statsIter, gridSearch=gridSearch,
+    return ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, 1, databaseType, path, statsIter, gridSearch=gridSearch,
                         metrics=metrics, nIter=nIter, **args)
 
 
-def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databaseType, path, statsIter, gridSearch=True,
+def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databaseType, path, statsIter, gridSearch=True,
                 metrics=[["accuracy_score", None]], nIter=30, **args):
     logging.debug("Start:\t Loading data")
     try:
@@ -63,7 +63,7 @@ def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databa
     y_tests = []
     y_train_preds = []
     y_test_preds = []
-    for iterationStat in range(1):
+    for iterationStat in range(statsIter):
         # Calculate Train/Test data
         logging.debug("Start:\t Determine Train/Test split"+" for iteration "+str(iterationStat+1))
         testIndices = ClassifMonoView.splitDataset(Y, nbClass, learningRate, datasetLength)
@@ -116,7 +116,7 @@ def ExecMonoview(X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databa
     labelsString = "-".join(labelsNames)
     timestr = time.strftime("%Y%m%d-%H%M%S")
     CL_type_string = CL_type
-    outputFileName = "Results/" + timestr + "Results-" + CL_type_string + "-" + labelsString + \
+    outputFileName = directory + timestr + "Results-" + CL_type_string + "-" + labelsString + \
                      '-learnRate' + str(learningRate) + '-' + name + "-" + feat
 
     outputTextFile = open(outputFileName + '.txt', 'w')

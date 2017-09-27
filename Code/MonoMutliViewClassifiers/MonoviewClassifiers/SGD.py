@@ -1,6 +1,6 @@
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
-from sklearn.grid_search import RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV
 import Metrics
 from scipy.stats import uniform
 
