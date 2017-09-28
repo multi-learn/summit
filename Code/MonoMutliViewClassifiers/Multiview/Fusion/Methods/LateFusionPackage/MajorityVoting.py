@@ -14,25 +14,25 @@ def genParamsSets(classificationKWARGS, nIter=1):
         paramsSets.append([normalizedArray])
     return paramsSets
 
-def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
-    if type(viewsIndices)==type(None):
-        viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-    nbView = len(viewsIndices)
-    bestScore = 0.0
-    bestConfig = None
-    if classificationKWARGS["fusionMethodConfig"][0] is not None:
-        for i in range(nIter):
-            randomWeightsArray = np.random.random_sample(nbView)
-            normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
-            classificationKWARGS["fusionMethodConfig"][0] = normalizedArray
-            classifier = MajorityVoting(1, **classificationKWARGS)
-            classifier.fit_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
-            predictedLabels = classifier.predict_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
-            accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
-            if accuracy > bestScore:
-                bestScore = accuracy
-                bestConfig = normalizedArray
-        return [bestConfig]
+# def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
+#     if type(viewsIndices)==type(None):
+#         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
+#     nbView = len(viewsIndices)
+#     bestScore = 0.0
+#     bestConfig = None
+#     if classificationKWARGS["fusionMethodConfig"][0] is not None:
+#         for i in range(nIter):
+#             randomWeightsArray = np.random.random_sample(nbView)
+#             normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
+#             classificationKWARGS["fusionMethodConfig"][0] = normalizedArray
+#             classifier = MajorityVoting(1, **classificationKWARGS)
+#             classifier.fit_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
+#             predictedLabels = classifier.predict_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
+#             accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
+#             if accuracy > bestScore:
+#                 bestScore = accuracy
+#                 bestConfig = normalizedArray
+#         return [bestConfig]
 
 
 class MajorityVoting(LateFusionClassifier):

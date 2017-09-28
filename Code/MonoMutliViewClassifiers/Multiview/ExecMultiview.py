@@ -62,8 +62,8 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
     classifiersIterations = []
     classifierPackage = globals()[CL_type]  # Permet d'appeler un module avec une string
     classifierModule = getattr(classifierPackage, CL_type)
-    classifierClass = getattr(classifierModule, CL_type)
-    classifierGridSearch = getattr(classifierModule, "gridSearch_hdf5")
+    # classifierClass = getattr(classifierModule, CL_type)
+    # classifierGridSearch = getattr(classifierModule, "gridSearch_hdf5")
     analysisModule = getattr(classifierPackage, "analyzeResults")
 
 

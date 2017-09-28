@@ -140,6 +140,7 @@ def getReport(classifiersIterations, CLASS_LABELS, iterationValidationIndices, D
     DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     metricModule = getattr(Metrics, metric[0])
+    fakeViewsIndicesDict = dict((viewIndex, fakeViewIndex) for viewIndex, fakeViewIndex in zip(viewIndices, range(nbView)))
     if metric[1]!=None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
@@ -165,9 +166,9 @@ def getReport(classifiersIterations, CLASS_LABELS, iterationValidationIndices, D
         meanAverageAccuraciesIterations.append(np.mean(mumboClassifier.averageAccuracies, axis=0))
         viewsStatsIteration[statIterIndex, :] = np.array([float(list(mumboClassifier.bestViews).count(viewIndex))/
                                                       len(mumboClassifier.bestViews)for viewIndex in range(nbView)])
-        PredictedTrainLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, usedIndices=learningIndices,
+        PredictedTrainLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, fakeViewsIndicesDict, usedIndices=learningIndices,
                                                                               NB_CLASS=NB_CLASS)
-        PredictedTestLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, usedIndices=validationIndices,
+        PredictedTestLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, fakeViewsIndicesDict, usedIndices=validationIndices,
                                                                               NB_CLASS=NB_CLASS)
         scoresByIter = np.zeros((len(PredictedTestLabelsByIter),2))
         for iterIndex,(iterPredictedTrainLabels, iterPredictedTestLabels) in enumerate(zip(PredictedTrainLabelsByIter, PredictedTestLabelsByIter)):

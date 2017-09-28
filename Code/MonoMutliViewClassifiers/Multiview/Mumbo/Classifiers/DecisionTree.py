@@ -4,7 +4,9 @@ import numpy as np
 from ModifiedMulticlass import OneVsRestClassifier
 from SubSampling import subSample
 import logging
-# Add weights 
+# Add weights
+
+import Metrics
 
 def DecisionTree(data, labels, arg, weights):
     depth = int(arg[0])
@@ -37,6 +39,17 @@ def gridSearch(data, labels, metric="accuracy_score"):
     bestResults = []
     classifier = tree.DecisionTreeClassifier(max_depth=1)
     preliminary_accuracies = np.zeros(50)
+    # metricModule = getattr(Metrics, metric[0])
+    # if metric[1]!=None:
+    #     metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+    # else:
+    #     metricKWARGS = {}
+    # if metricModule.getConfig()[-14]=="h":
+    #     baseScore = -1000.0
+    #     isBetter = "higher"
+    # else:
+    #     baseScore = 1000.0
+    #     isBetter = "lower"
     for i in range(50):
         subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, 0.05)
         classifier.fit(subSampledData, subSampledLabels)
@@ -112,7 +125,7 @@ def getBestSetting(bestSettings, bestResults):
             diffTo52 = abs(0.55-result)
             bestResult = result
             bestSettingsIndex = resultIndex
-    logging.debug("\t\tInfo:\t Best Reslut : "+str(result))
+    logging.debug("\t\tInfo:\t Best Result : "+str(result))
 
     return map(lambda p: round(p, 4), bestSettings[bestSettingsIndex])
     #    return map(round(,4), bestSettings[bestSettingsIndex])

@@ -13,8 +13,8 @@ def genParamsSets(classificationKWARGS, nIter=1):
         paramsSets.append([])
     return paramsSets
 
-def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
-    return None
+# def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
+#     return None
 
 
 class SVMForLinear(LateFusionClassifier):

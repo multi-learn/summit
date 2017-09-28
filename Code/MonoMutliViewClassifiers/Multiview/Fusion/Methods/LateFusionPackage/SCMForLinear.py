@@ -26,28 +26,28 @@ def genParamsSets(classificationKWARGS, nIter=1):
     return paramsSets
 
 
-def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
-    if type(viewsIndices)==type(None):
-        viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-    nbView = len(viewsIndices)
-    bestScore = 0.0
-    bestConfig = None
-    for i in range(nIter):
-        max_attributes = random.randint(1, 20)
-        p = random.random()
-        model = random.choice(["conjunction", "disjunction"])
-        order = random.randint(1,nbView)
-        randomWeightsArray = np.random.random_sample(nbView)
-        normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
-        classificationKWARGS["fusionMethodConfig"][0] = [p, max_attributes, model, order]
-        classifier = SCMForLinear(1, **classificationKWARGS)
-        classifier.fit_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
-        predictedLabels = classifier.predict_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
-        accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
-        if accuracy > bestScore:
-            bestScore = accuracy
-            bestConfig = [p, max_attributes, model, order]
-        return [bestConfig]
+# def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
+#     if type(viewsIndices)==type(None):
+#         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
+#     nbView = len(viewsIndices)
+#     bestScore = 0.0
+#     bestConfig = None
+#     for i in range(nIter):
+#         max_attributes = random.randint(1, 20)
+#         p = random.random()
+#         model = random.choice(["conjunction", "disjunction"])
+#         order = random.randint(1,nbView)
+#         randomWeightsArray = np.random.random_sample(nbView)
+#         normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
+#         classificationKWARGS["fusionMethodConfig"][0] = [p, max_attributes, model, order]
+#         classifier = SCMForLinear(1, **classificationKWARGS)
+#         classifier.fit_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
+#         predictedLabels = classifier.predict_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
+#         accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
+#         if accuracy > bestScore:
+#             bestScore = accuracy
+#             bestConfig = [p, max_attributes, model, order]
+#         return [bestConfig]
 
 
 class SCMForLinear(LateFusionClassifier):

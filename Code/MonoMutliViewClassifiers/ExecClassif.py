@@ -499,6 +499,8 @@ if metrics == [[""]]:
     metricsNames = [name for _, name, isPackage
                     in pkgutil.iter_modules(['Metrics']) if not isPackage and name!="log_loss"]
     metrics = [[metricName] for metricName in metricsNames]
+    metrics[0]=metrics[1]
+    metrics[1]=["accuracy_score"]
 for metricIndex, metric in enumerate(metrics):
     if len(metric)==1:
         metrics[metricIndex]=[metric[0], None]
