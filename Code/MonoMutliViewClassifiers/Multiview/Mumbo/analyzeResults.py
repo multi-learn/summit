@@ -440,7 +440,7 @@ def execute(classifiersIterations, trainLabelsIterations,testLabelsIterations, D
     metricsScores = getMetricsScores(metrics, trainLabelsIterations, testLabelsIterations,
                                      DATASET, validationIndices, statsIter)
     stringAnalysis += printMetricScore(metricsScores, metrics)
-    stringAnalysis += "Mean average accuracies and stats :"
+    stringAnalysis += "Mean average scores and stats :"
     for viewIndex, (meanAverageAccuracy, bestViewStat) in enumerate(zip(meanAverageAccuracies,viewsStats)):
         stringAnalysis+="\n\t- On "+viewNames[viewIndex]+ \
                         " : \n\t\t- Mean average Accuracy : "+str(meanAverageAccuracy)+ \

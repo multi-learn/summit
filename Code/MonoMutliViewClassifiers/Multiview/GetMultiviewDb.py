@@ -215,35 +215,6 @@ def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, LABELS_NAMES):
     fullLabels = datasetFile.get("Labels")
     labelsDictionary = dict((labelIndex, labelName) for labelIndex, labelName in
                                 zip(fullLabels.attrs["labels_indices"], fullLabels.attrs["labels"]))
-    # #datasetFile.get("Labels").attrs["labelsDictionary"]
-    #
-    # fullNbClass = datasetFile.get("Metadata").attrs["nbClass"]
-    # if len(LABELS_NAMES)!=NB_CLASS:
-    #     LABELS_NAMES = [value for index, value in fullLabelsDictionary.iteritems()
-    #                     if index in np.random.randint(fullNbClass, size=NB_CLASS)]
-    # usableLabels = [labelName for index, labelName in fullLabelsDictionary.iteritems() if labelName in LABELS_NAMES]
-    # labelsDictionary = dict((classIndex, labelName) for classIndex, labelName
-    #                         in enumerate(usableLabels))
-    # if len(set(fullLabels))>NB_CLASS:
-    #     usedIndices = getPositions(labelsDictionary.keys(), fullLabels)
-    # else:
-    #     usedIndices = range(len(fullLabels))
-    # tempDatasetFile = datasetFile = h5py.File(pathF+nameDB+"_temp.hdf5", "w")
-    # for viewIndex, view in enumerate(views):
-    #     viewMatrix = datasetFile.get("View"+str(viewIndex)).value[:, usedIndices]
-    #     viewDset = tempDatasetFile.create_dataset("View"+str(viewIndex), viewMatrix.shape, data=viewMatrix)
-    #     viewDset.attrs["name"] = view
-    #
-    # labelsDset = tempDatasetFile.create_dataset("Labels", fullLabels[usedIndices].shape, data=fullLabels[usedIndices])
-    # labelsDset.attrs["labelsDictionary"] = labelsDictionary
-    #
-    # metaDataGrp = tempDatasetFile.create_group("Metadata")
-    # metaDataGrp.attrs["nbView"] = len(views)
-    # metaDataGrp.attrs["nbClass"] = NB_CLASS
-    # metaDataGrp.attrs["datasetLength"] = len(fullLabels[usedIndices])
-    # datasetFile.close()
-    # tempDatasetFile.close()
-    # datasetFile = h5py.File(pathF+nameDB+"_temp.hdf5", "r")
     return datasetFile, labelsDictionary
 
 
