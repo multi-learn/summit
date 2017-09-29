@@ -1,9 +1,0 @@
-2016-08-23 11:08:59,084 INFO: Begginging
-2016-08-23 11:08:59,088 INFO: ### Main Programm for Multiview Classification
-2016-08-23 11:08:59,089 INFO: ### Classification - Database : MultiOmic ; Views : Methyl, MiRNA_, RNASeq, Clinic ; Algorithm : Fusion ; Cores : 1
-2016-08-23 11:08:59,089 INFO: Info:	 Shape of Methyl :(347, 25978)
-2016-08-23 11:08:59,089 INFO: Info:	 Shape of MiRNA_ :(347, 1046)
-2016-08-23 11:08:59,090 INFO: Info:	 Shape of RANSeq :(347, 73599)
-2016-08-23 11:08:59,090 INFO: Info:	 Shape of Clinic :(347, 127)
-2016-08-23 11:08:59,090 INFO: Done:	 Read Database Files
-2016-08-23 11:08:59,090 INFO: Start:	 Determine validation split for ratio 0.9

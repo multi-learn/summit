@@ -1,4 +1,0 @@
-2016-09-02 15:02:35,409 DEBUG: Start:	 Creating 2 temporary datasets for multiprocessing
-2016-09-02 15:02:35,409 WARNING: This may use a lot of HDD storage space : 0 Gbytes
-2016-09-02 15:02:37,811 DEBUG: Start:	 Creating datasets for multiprocessing
-2016-09-02 15:02:37,814 INFO: Start:	 Finding all available mono- & multiview algorithms

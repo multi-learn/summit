@@ -2,3 +2,5 @@ TODO
 *.pyc
 .idea/**
 .ipynb_checkpoints/**
+Results/**
+Code/MonoMultiviewClassifiers/Results/*

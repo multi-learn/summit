@@ -64,7 +64,7 @@ class WeightedLinear(EarlyFusionClassifier):
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-        self.weights = self.weights/float(max(self.weights))
+        self.weights = self.weights/float(np.sum(self.weights))
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if usedIndices:
