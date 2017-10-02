@@ -30,7 +30,7 @@ def plotAccuracyByIter(scoresOnTainByIter, scoresOnTestByIter, features, classif
     figure = plt.figure()
     ax1 = figure.add_subplot(111)
     axes = figure.gca()
-    axes.set_ylim([40,100])
+    axes.set_ylim([0.40,1.00])
     titleString = ""
     for view, classifierConfig in zip(features, classifierAnalysis):
         titleString += "\n" + view + " : " + classifierConfig
