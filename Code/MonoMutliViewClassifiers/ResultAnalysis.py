@@ -28,11 +28,16 @@ def autolabel(rects, ax):
                 ha='center', va='bottom')
 
 
+def genFusionName(type_, a, b, c):
+    if type_ == "Fusion" and a["fusionType"] != "EarlyFusion":
+        return "Late-"+str(a["fusionMethod"])
+    elif type_ == "Fusion" and a["fusionType"] != "LateFusion":
+        return "Early-"+a["fusionMethod"]+"-"+a["classifiersNames"][0]
+
+
 def genNamesFromRes(mono, multi):
     names = [res[1][0]+"-"+res[1][1][-1] for res in mono]
-    names+=[type_ for type_, a, b, c in multi if type_ != "Fusion"]
-    names+=[ "Late-"+str(a["fusionMethod"]) for type_, a, b, c in multi if type_ == "Fusion" and a["fusionType"] != "EarlyFusion"]
-    names+=[ "Early-"+a["fusionMethod"]+"-"+a["classifiersNames"][0]  for type_, a, b, c in multi if type_ == "Fusion" and a["fusionType"] != "LateFusion"]
+    names += [type_ if type_ != "Fusion" else genFusionName(type_, a, b, c) for type_, a, b, c in multi]
     return names
 
 
