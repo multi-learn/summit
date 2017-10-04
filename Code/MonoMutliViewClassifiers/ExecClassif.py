@@ -34,7 +34,7 @@ matplotlib.use('Agg')  # Anti-Grain Geometry C++ library to make a raster (pixel
 
 def initLogFile(args):
     resultDirectory = "../../Results/" + args.name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
-    logFileName = time.strftime("%Y%m%d-%H%M%S") + "-CMultiV-" + args.CL_type + "-" + "_".join(
+    logFileName = time.strftime("%Y%m%d-%H%M%S") + "-" + ''.join(args.CL_type) + "-" + "_".join(
         args.views) + "-" + args.name + \
                   "-LOG"
     if not os.path.exists(os.path.dirname(resultDirectory + logFileName)):
@@ -127,21 +127,20 @@ def initBenchmark(args):
     """Used to create a list of all the algorithm packages names used for the benchmark
     Needs args.CL_type, args.CL_algos_multiview, args.MU_types, args.FU_types, args.FU_late_methods,
     args.FU_early_methods, args.CL_algos_monoview"""
-    benchmark = {"Monoview": {}, "Multiview": []}
-    if args.CL_type.split(":") == ["Benchmark"]:
+    benchmark = {"Monoview": {}, "Multiview": {}}
+    allMultiviewPackages = [name for _, name, isPackage
+                            in pkgutil.iter_modules(['Multiview/']) if isPackage]
+    if args.CL_type == ["Benchmark"]:
 
         allMonoviewAlgos = [name for _, name, isPackage in
                             pkgutil.iter_modules(['MonoviewClassifiers'])
                             if (not isPackage)]
         benchmark["Monoview"] = allMonoviewAlgos
-        allMultiviewPackages = [name for _, name, isPackage
-                                in pkgutil.iter_modules(['Multiview/']) if isPackage]
         benchmark["Multiview"]=dict((multiviewPackageName, "_") for multiviewPackageName in allMultiviewPackages)
         for multiviewPackageName in allMultiviewPackages:
             multiviewPackage = getattr(Multiview, multiviewPackageName)
             multiviewModule = getattr(multiviewPackage, multiviewPackageName)
-            benchmark = multiviewModule.getBenchmark(args, benchmark)
-            print benchmark
+            benchmark = multiviewModule.getBenchmark(benchmark, args=args)
             # fusionModulesNames = [name for _, name, isPackage
             #                       in pkgutil.iter_modules(['Multiview/Fusion/Methods']) if not isPackage]
             # fusionModules = [getattr(Multiview.Fusion.Methods, fusionModulesName)
@@ -159,47 +158,52 @@ def initBenchmark(args):
             # allMultiviewAlgos = {"Fusion": allFusionAlgos, "Mumbo": allMumboAlgos}
             # benchmark = {"Monoview": allMonoviewAlgos, "Multiview": allMultiviewAlgos}
 
-    if "Multiview" in args.CL_type.strip(":"):
+    if "Multiview" in args.CL_type:
         benchmark["Multiview"] = {}
         if args.CL_algos_multiview == [""]:
-            algosMutliview = ["Mumbo", "Fusion"]
+            algosMutliview = allMultiviewPackages
         else:
             algosMutliview = args.CL_algos_multiview
-        if "Mumbo" in algosMutliview:
-            benchmark["Multiview"]["Mumbo"] = args.MU_types
-        if "Fusion" in algosMutliview:
-            benchmark["Multiview"]["Fusion"] = {}
-            benchmark["Multiview"]["Fusion"]["Methods"] = dict(
-                (fusionType, []) for fusionType in args.FU_types)
-            if "LateFusion" in args.FU_types:
-                if args.FU_late_methods== [""]:
-                    benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = [name for _, name, isPackage in
-                                                                                 pkgutil.iter_modules([
-                                                                                     "Multiview/Fusion/Methods/LateFusionPackage"])
-                                                                                 if not isPackage]
-                else:
-                    benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = args.FU_late_methods
-            if "EarlyFusion" in args.FU_types:
-                if args.FU_early_methods == [""]:
-                    benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = [name for _, name, isPackage in
-                                                                                  pkgutil.iter_modules([
-                                                                                      "Multiview/Fusion/Methods/EarlyFusionPackage"])
-                                                                                  if not isPackage]
-                else:
-                    benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = args.FU_early_methods
-            if args.CL_algos_monoview == ['']:
-                benchmark["Multiview"]["Fusion"]["Classifiers"] = [name for _, name, isPackage in
-                                                                   pkgutil.iter_modules(['MonoviewClassifiers'])
-                                                                   if (not isPackage) and (name != "SGD") and (
-                                                                       name[:3] != "SVM")
-                                                                   and (name != "SCM")]
-            else:
-                benchmark["Multiview"]["Fusion"]["Classifiers"] = args.CL_algos_monoview
+        for multiviewPackageName in allMultiviewPackages:
+            if multiviewPackageName in algosMutliview:
+                multiviewPackage = getattr(Multiview, multiviewPackageName)
+                multiviewModule = getattr(multiviewPackage, multiviewPackageName)
+                benchmark = multiviewModule.getBenchmark(benchmark, args=args)
+        # if "Mumbo" in algosMutliview:
+        #     benchmark["Multiview"]["Mumbo"] = args.MU_types
+        # if "Fusion" in algosMutliview:
+        #     benchmark["Multiview"]["Fusion"] = {}
+        #     benchmark["Multiview"]["Fusion"]["Methods"] = dict(
+        #         (fusionType, []) for fusionType in args.FU_types)
+        #     if "LateFusion" in args.FU_types:
+        #         if args.FU_late_methods== [""]:
+        #             benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = [name for _, name, isPackage in
+        #                                                                          pkgutil.iter_modules([
+        #                                                                              "Multiview/Fusion/Methods/LateFusionPackage"])
+        #                                                                          if not isPackage]
+        #         else:
+        #             benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = args.FU_late_methods
+        #     if "EarlyFusion" in args.FU_types:
+        #         if args.FU_early_methods == [""]:
+        #             benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = [name for _, name, isPackage in
+        #                                                                           pkgutil.iter_modules([
+        #                                                                               "Multiview/Fusion/Methods/EarlyFusionPackage"])
+        #                                                                           if not isPackage]
+        #         else:
+        #             benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = args.FU_early_methods
+        #     if args.CL_algos_monoview == ['']:
+        #         benchmark["Multiview"]["Fusion"]["Classifiers"] = [name for _, name, isPackage in
+        #                                                            pkgutil.iter_modules(['MonoviewClassifiers'])
+        #                                                            if (not isPackage) and (name != "SGD") and (
+        #                                                                name[:3] != "SVM")
+        #                                                            and (name != "SCM")]
+        #     else:
+        #         benchmark["Multiview"]["Fusion"]["Classifiers"] = args.CL_algos_monoview
 
-    if "Monoview" in args.CL_type.strip(":"):
+    if "Monoview" in args.CL_type:
         if args.CL_algos_monoview == ['']:
             benchmark["Monoview"] = [name for _, name, isPackage in pkgutil.iter_modules(["MonoviewClassifiers"])
-                                      if not isPackage]
+                                     if not isPackage]
 
         else:
             benchmark["Monoview"] = args.CL_algos_monoview
@@ -425,9 +429,9 @@ groupClass.add_argument('--CL_nb_class', metavar='INT', action='store', help='Nu
 groupClass.add_argument('--CL_classes', metavar='STRING', action='store', nargs="+",
                         help='Classes used in the dataset (names of the folders) if not filled, random classes will be '
                              'selected ex. walrus mole leopard', default=["yes","no"])
-groupClass.add_argument('--CL_type', metavar='STRING', action='store',
-                        help='Determine whether to use Multiview, Monoview, or Benchmark, separate with : if multiple',
-                        default='Benchmark')
+groupClass.add_argument('--CL_type', metavar='STRING', action='store', nargs ="+",
+                        help='Determine whether to use Multiview and/or Monoview, or Benchmark',
+                        default=['Benchmark'])
 groupClass.add_argument('--CL_algos_monoview', metavar='STRING', action='store', nargs="+",
                         help='Determine which monoview classifier to use if empty, considering all',
                         default=[''])

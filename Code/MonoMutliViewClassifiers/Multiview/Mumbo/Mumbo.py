@@ -17,11 +17,17 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 # Data shape : ((Views, Examples, Corrdinates))
 
-def getBenchmark(args, benchmark):
+def getBenchmark(benchmark, args=None):
     allAlgos = [name for _, name, isPackage in
                 pkgutil.iter_modules(['Multiview/Mumbo/Classifiers'])
                 if not isPackage and not name in ["SubSampling", "ModifiedMulticlass", "Kover"]]
-    benchmark["Multiview"]["Mumbo"] = allAlgos
+    if args is None:
+        benchmark["Multiview"]["Mumbo"] = allAlgos
+    else:
+        if args.MU_types != ['']:
+            benchmark["Multiview"]["Mumbo"] = args.MU_types
+        else :
+            benchmark["Multiview"]["Mumbo"] = allAlgos
     return benchmark
 
 

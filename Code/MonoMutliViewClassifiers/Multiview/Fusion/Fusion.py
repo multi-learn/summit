@@ -13,24 +13,56 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
-def getBenchmark(args, benchmark):
+def getBenchmark(benchmark, args=None):
     fusionModulesNames = [name for _, name, isPackage
                           in pkgutil.iter_modules(['Multiview/Fusion/Methods']) if not isPackage]
     fusionModules = [getattr(Methods, fusionModulesName)
                      for fusionModulesName in fusionModulesNames]
     fusionClassifiers = [getattr(fusionModule, fusionModulesName + "Classifier")
-                     for fusionModulesName, fusionModule in zip(fusionModulesNames, fusionModules)]
+                         for fusionModulesName, fusionModule in zip(fusionModulesNames, fusionModules)]
     fusionMethods = dict((fusionModulesName, [name for _, name, isPackage in
                                               pkgutil.iter_modules(
                                                   ["Multiview/Fusion/Methods/" + fusionModulesName + "Package"])
                                               if not isPackage])
                          for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClassifiers))
-    allMonoviewAlgos = [name for _, name, isPackage in
-                        pkgutil.iter_modules(['MonoviewClassifiers'])
-                        if (not isPackage)]
-    fusionMonoviewClassifiers = allMonoviewAlgos
-    allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
-    benchmark["Multiview"]["Fusion"]=allFusionAlgos
+    if args is None:
+        allMonoviewAlgos = [name for _, name, isPackage in
+                            pkgutil.iter_modules(['MonoviewClassifiers'])
+                            if (not isPackage)]
+        fusionMonoviewClassifiers = allMonoviewAlgos
+        allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
+        benchmark["Multiview"]["Fusion"]=allFusionAlgos
+    else:
+        benchmark["Multiview"]["Fusion"] = {}
+        if args.FU_types != [""]:
+            benchmark["Multiview"]["Fusion"]["Methods"] = dict(
+                (fusionType, []) for fusionType in args.FU_types)
+        else:
+            benchmark["Multiview"]["Fusion"]["Methods"] = dict((fusionModulesName, "_") for fusionModulesName in fusionModulesNames)
+        if "LateFusion" in benchmark["Multiview"]["Fusion"]["Methods"]:
+            if args.FU_late_methods== [""]:
+                benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = [name for _, name, isPackage in
+                                                                             pkgutil.iter_modules([
+                                                                                 "Multiview/Fusion/Methods/LateFusionPackage"])
+                                                                             if not isPackage]
+            else:
+                benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = args.FU_late_methods
+        if "EarlyFusion" in args.FU_types:
+            if args.FU_early_methods == [""]:
+                benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = [name for _, name, isPackage in
+                                                                              pkgutil.iter_modules([
+                                                                                  "Multiview/Fusion/Methods/EarlyFusionPackage"])
+                                                                              if not isPackage]
+            else:
+                benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = args.FU_early_methods
+        if args.CL_algos_monoview == ['']:
+            benchmark["Multiview"]["Fusion"]["Classifiers"] = [name for _, name, isPackage in
+                                                               pkgutil.iter_modules(['MonoviewClassifiers'])
+                                                               if (not isPackage) and (name != "SGD") and (
+                                                                   name[:3] != "SVM")
+                                                               and (name != "SCM")]
+        else:
+            benchmark["Multiview"]["Fusion"]["Classifiers"] = args.CL_algos_monoview
     return benchmark
 
 
@@ -39,7 +71,8 @@ def getArgs(args, benchmark, views, viewsIndices):
         args.FU_L_select_monoview = "randomClf"
     argumentsList = []
     for fusionType in benchmark["Multiview"]["Fusion"]["Methods"]:
-        fusionTypePackage = globals()[fusionType+"Package"]
+        # import pdb;pdb.set_trace()
+        fusionTypePackage = getattr(Methods, fusionType+"Package")
         for fusionMethod in benchmark["Multiview"]["Fusion"]["Methods"][fusionType]:
             fusionMethodModule = getattr(fusionTypePackage, fusionMethod)
             arguments = fusionMethodModule.getArgs(args, views, viewsIndices)

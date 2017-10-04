@@ -1,8 +1,10 @@
-from ...Methods.LateFusion import LateFusionClassifier
-import MonoviewClassifiers
 import numpy as np
 from sklearn.metrics import accuracy_score
+import pkgutil
+
 from utils.Dataset import getV
+import MonoviewClassifiers
+from ...Methods.LateFusion import LateFusionClassifier
 
 
 def genParamsSets(classificationKWARGS, nIter=1):
@@ -24,7 +26,17 @@ def genParamsSets(classificationKWARGS, nIter=1):
 #     return classifiersNames, classifiersConfig, fusionMethodConfig
 
 def getArgs(args, views, viewsIndices):
-    monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName) for classifierName in args.FU_L_cl_names]
+    if args.FU_L_cl_names!=['']:
+        monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName) for classifierName in args.FU_L_cl_names]
+    else:
+        monoviewClassifierModulesNames = [name for _, name, isPackage in pkgutil.iter_modules(['MonoviewClassifiers'])
+                                          if (not isPackage)]
+        monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
+                                     for classifierName in monoviewClassifierModulesNames]
+    if args.FU_L_cl_config != ['']:
+        classifierConfig = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
+                            for monoviewClassifierModule,classifierConfig
+                            in zip(monoviewClassifierModules,args.FU_L_cl_config)]
     arguments = {"CL_type": "Fusion",
                  "views": views,
                  "NB_VIEW": len(views),
