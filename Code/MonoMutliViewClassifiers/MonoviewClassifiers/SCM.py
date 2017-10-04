@@ -60,7 +60,7 @@ def getKWARGS(kwargsList):
 
 
 
-def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
+def randomizedSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
 
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:

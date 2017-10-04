@@ -37,7 +37,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SGD = Pipeline([('classifier', SGDClassifier())])
     losses = ['log', 'modified_huber']
     penalties = ["l1", "l2", "elasticnet"]

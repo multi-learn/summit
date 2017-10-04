@@ -32,7 +32,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
     param_rf = {"classifier__n_estimators": randint(1, 30),
                 "classifier__max_depth":randint(1, 30)}

@@ -28,7 +28,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SVMLinear = Pipeline([('classifier', SVC(kernel="linear", max_iter=1000))])
     param_SVMLinear = {"classifier__C":randint(1, 10000)}
     metricModule = getattr(Metrics, metric[0])

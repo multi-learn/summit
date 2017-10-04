@@ -32,7 +32,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
+def randomizedSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
     pipeline = Pipeline([('classifier', AdaBoostClassifier())])
 
     param= {"classifier__n_estimators": randint(1, 15),

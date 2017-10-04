@@ -28,7 +28,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30 ):
+def randomizedSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30 ):
     pipeline_KNN = Pipeline([('classifier', KNeighborsClassifier())])
     param_KNN = {"classifier__n_neighbors": randint(1, 50)}
     metricModule = getattr(Metrics, metric[0])
