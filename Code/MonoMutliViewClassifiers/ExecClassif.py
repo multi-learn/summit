@@ -471,6 +471,11 @@ groupAdaboost.add_argument('--CL_Adaboost_b_est', metavar='STRING', action='stor
 groupDT = parser.add_argument_group('Decision Trees arguments')
 groupDT.add_argument('--CL_DecisionTree_depth', metavar='INT', type=int, action='store',
                      help='Determine max depth for Decision Trees', default=3)
+groupDT.add_argument('--CL_DecisionTree_criterion', metavar='STRING', action='store',
+                     help='Determine max depth for Decision Trees', default="entropy")
+groupDT.add_argument('--CL_DecisionTree_splitter', metavar='STRING', action='store',
+                     help='Determine max depth for Decision Trees', default="random")
+
 
 groupSGD = parser.add_argument_group('SGD arguments')
 groupSGD.add_argument('--CL_SGD_alpha', metavar='FLOAT', type=float, action='store',
