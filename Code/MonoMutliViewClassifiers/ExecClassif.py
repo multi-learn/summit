@@ -447,6 +447,8 @@ groupRF.add_argument('--CL_RandomForest_trees', metavar='INT', type=int, action=
                      default=25)
 groupRF.add_argument('--CL_RandomForest_max_depth', metavar='INT', type=int, action='store', help='Max depth for the trees',
                      default=5)
+groupRF.add_argument('--CL_RandomForest_criterion', metavar='STRING', action='store', help='Criterion for the trees',
+                     default="entropy")
 
 groupSVMLinear = parser.add_argument_group('Linear SVM arguments')
 groupSVMLinear.add_argument('--CL_SVMLinear_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
@@ -474,7 +476,7 @@ groupDT.add_argument('--CL_DecisionTree_depth', metavar='INT', type=int, action=
 groupDT.add_argument('--CL_DecisionTree_criterion', metavar='STRING', action='store',
                      help='Determine max depth for Decision Trees', default="entropy")
 groupDT.add_argument('--CL_DecisionTree_splitter', metavar='STRING', action='store',
-                     help='Determine max depth for Decision Trees', default="random")
+                     help='Determine criterion for Decision Trees', default="random")
 
 
 groupSGD = parser.add_argument_group('SGD arguments')
