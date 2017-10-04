@@ -490,6 +490,12 @@ groupSGD.add_argument('--CL_SGD_penalty', metavar='STRING', action='store',
 groupKNN = parser.add_argument_group('KNN arguments')
 groupKNN.add_argument('--CL_KNN_neigh', metavar='INT', type=int, action='store',
                       help='Determine number of neighbors for KNN', default=1)
+groupKNN.add_argument('--CL_KNN_weights', metavar='STRING', action='store',
+                      help='Determine number of neighbors for KNN', default="distance")
+groupKNN.add_argument('--CL_KNN_algo', metavar='STRING', action='store',
+                      help='Determine number of neighbors for KNN', default="auto")
+groupKNN.add_argument('--CL_KNN_p', metavar='INT', type=int, action='store',
+                      help='Determine number of neighbors for KNN', default=1)
 
 groupSCM = parser.add_argument_group('SCM arguments')
 groupSCM.add_argument('--CL_SCM_max_rules', metavar='INT', type=int, action='store',
