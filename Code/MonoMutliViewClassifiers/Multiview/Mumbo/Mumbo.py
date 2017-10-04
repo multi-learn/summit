@@ -4,6 +4,7 @@ from joblib import Parallel, delayed
 import itertools
 from Classifiers import *
 import time
+import pkgutil
 import logging
 from sklearn.metrics import accuracy_score
 from utils.Dataset import getV
@@ -15,6 +16,14 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 
 # Data shape : ((Views, Examples, Corrdinates))
+
+def getBenchmark(args, benchmark):
+    allAlgos = [name for _, name, isPackage in
+                pkgutil.iter_modules(['Multiview/Mumbo/Classifiers'])
+                if not isPackage and not name in ["SubSampling", "ModifiedMulticlass", "Kover"]]
+    benchmark["Multiview"]["Mumbo"] = allAlgos
+    return benchmark
+
 
 def getArgs(args, benchmark, views, viewsIndices):
     argumentsList = []

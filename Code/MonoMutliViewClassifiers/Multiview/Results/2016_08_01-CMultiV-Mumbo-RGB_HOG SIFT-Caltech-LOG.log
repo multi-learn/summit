@@ -1,3 +1,0 @@
-2016-08-01 10:14:40,495 DEBUG: ### Main Programm for Multiview Classification
-2016-08-01 10:14:40,496 DEBUG: ### Classification - Database : Caltech ; Features : RGB, HOG SIFT ; Algorithm : Mumbo ; Cores : 1
-2016-08-01 10:14:40,496 DEBUG: Start:	 Read CSV Database Files for Caltech

@@ -18,6 +18,13 @@ Define a fit function
         kwargs : Any argument specific to the classifier
     Output :
         classifier : A classifier object, similar to the sk-learn classifier object
-Define a
-
+Define a ***Search that search hyper parameters for the algorithm. Check HP optimization methods to get all the
+different functions to provide (returning the parameters in the order of the kwargs dict for the fit function)
+Define a getKWARGS function
+    Input :
+        KWARGSList : The list of all the arguments as written in the argument parser
+    Output :
+        KWARGSDict : a dictionnary of arguments matching the kwargs needed in train
+Define a getConfig function that returns a string explaining the algorithm's config using a config dict or list
+Add the arguments to configure the classifier in the parser in ExecClassif.py
 """

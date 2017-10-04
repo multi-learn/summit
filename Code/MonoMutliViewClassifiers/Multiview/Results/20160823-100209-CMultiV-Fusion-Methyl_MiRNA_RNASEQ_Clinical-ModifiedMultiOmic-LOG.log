@@ -1,4 +1,0 @@
-2016-08-23 10:02:09,222 INFO: ### Main Programm for Multiview Classification
-2016-08-23 10:02:09,224 INFO: ### Classification - Database : ModifiedMultiOmic ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Fusion ; Cores : 4
-2016-08-23 10:02:09,225 INFO: Start:	 Read CSV Database Files for ModifiedMultiOmic
-2016-08-23 10:02:09,239 DEBUG: Start:	 Getting Methylation Data

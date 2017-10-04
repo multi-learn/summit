@@ -1,3 +1,0 @@
-2016-08-01 10:54:49,138 DEBUG: ### Main Programm for Multiview Classification
-2016-08-01 10:54:49,139 DEBUG: ### Classification - Database : MultiOmic ; Features : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Mumbo ; Cores : 1
-2016-08-01 10:54:49,140 DEBUG: Start:	 Read CSV Database Files for MultiOmic

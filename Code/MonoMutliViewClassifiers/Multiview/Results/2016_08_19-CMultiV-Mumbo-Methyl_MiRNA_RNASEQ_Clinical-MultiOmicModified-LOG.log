@@ -1,3 +1,0 @@
-2016-08-19 08:30:28,211 INFO: ### Main Programm for Multiview Classification
-2016-08-19 08:30:28,211 INFO: ### Classification - Database : MultiOmicModified ; Views : Methyl, MiRNA, RNASEQ, Clinical ; Algorithm : Mumbo ; Cores : 1
-2016-08-19 08:30:28,211 INFO: Start:	 Read HDF5 Database Files for MultiOmicModified

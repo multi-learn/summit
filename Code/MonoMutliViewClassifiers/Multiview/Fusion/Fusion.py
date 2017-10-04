@@ -1,7 +1,10 @@
-from Methods import *
-import MonoviewClassifiers
 import numpy as np
 import logging
+import pkgutil
+
+# from Methods import *
+import Methods
+import MonoviewClassifiers
 from utils.Dataset import getV
 
 
@@ -10,11 +13,31 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
+def getBenchmark(args, benchmark):
+    fusionModulesNames = [name for _, name, isPackage
+                          in pkgutil.iter_modules(['Multiview/Fusion/Methods']) if not isPackage]
+    fusionModules = [getattr(Methods, fusionModulesName)
+                     for fusionModulesName in fusionModulesNames]
+    fusionClassifiers = [getattr(fusionModule, fusionModulesName + "Classifier")
+                     for fusionModulesName, fusionModule in zip(fusionModulesNames, fusionModules)]
+    fusionMethods = dict((fusionModulesName, [name for _, name, isPackage in
+                                              pkgutil.iter_modules(
+                                                  ["Multiview/Fusion/Methods/" + fusionModulesName + "Package"])
+                                              if not isPackage])
+                         for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClassifiers))
+    allMonoviewAlgos = [name for _, name, isPackage in
+                        pkgutil.iter_modules(['MonoviewClassifiers'])
+                        if (not isPackage)]
+    fusionMonoviewClassifiers = allMonoviewAlgos
+    allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
+    benchmark["Multiview"]["Fusion"]=allFusionAlgos
+    return benchmark
+
+
 def getArgs(args, benchmark, views, viewsIndices):
     if not "Monoview" in benchmark and not args.FU_L_select_monoview in ["randomClf", "Determined"]:
         args.FU_L_select_monoview = "randomClf"
     argumentsList = []
-    # import pdb; pdb.set_trace()
     for fusionType in benchmark["Multiview"]["Fusion"]["Methods"]:
         fusionTypePackage = globals()[fusionType+"Package"]
         for fusionMethod in benchmark["Multiview"]["Fusion"]["Methods"][fusionType]:

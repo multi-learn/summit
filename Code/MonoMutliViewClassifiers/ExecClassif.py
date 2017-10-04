@@ -129,28 +129,35 @@ def initBenchmark(args):
     args.FU_early_methods, args.CL_algos_monoview"""
     benchmark = {"Monoview": {}, "Multiview": []}
     if args.CL_type.split(":") == ["Benchmark"]:
-        # if args.CL_algorithm=='':
-        fusionModulesNames = [name for _, name, isPackage
-                              in pkgutil.iter_modules(['Multiview/Fusion/Methods']) if not isPackage]
-        fusionModules = [getattr(Multiview.Fusion.Methods, fusionModulesName)
-                         for fusionModulesName in fusionModulesNames]
-        fusionClasses = [getattr(fusionModule, fusionModulesName + "Classifier")
-                         for fusionModulesName, fusionModule in zip(fusionModulesNames, fusionModules)]
-        fusionMethods = dict((fusionModulesName, [name for _, name, isPackage in
-                                                  pkgutil.iter_modules(
-                                                      ["Multiview/Fusion/Methods/" + fusionModulesName + "Package"])
-                                                  if not isPackage])
-                             for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClasses))
+
         allMonoviewAlgos = [name for _, name, isPackage in
                             pkgutil.iter_modules(['MonoviewClassifiers'])
                             if (not isPackage)]
-        fusionMonoviewClassifiers = allMonoviewAlgos
-        allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
-        allMumboAlgos = [name for _, name, isPackage in
-                         pkgutil.iter_modules(['Multiview/Mumbo/Classifiers'])
-                         if not isPackage and not name in ["SubSampling", "ModifiedMulticlass", "Kover"]]
-        allMultiviewAlgos = {"Fusion": allFusionAlgos, "Mumbo": allMumboAlgos}
-        benchmark = {"Monoview": allMonoviewAlgos, "Multiview": allMultiviewAlgos}
+        benchmark["Monoview"] = allMonoviewAlgos
+        allMultiviewPackages = [name for _, name, isPackage
+                                in pkgutil.iter_modules(['Multiview/']) if isPackage]
+        benchmark["Multiview"]=dict((multiviewPackageName, "_") for multiviewPackageName in allMultiviewPackages)
+        for multiviewPackageName in allMultiviewPackages:
+            multiviewPackage = getattr(Multiview, multiviewPackageName)
+            multiviewModule = getattr(multiviewPackage, multiviewPackageName)
+            benchmark = multiviewModule.getBenchmark(args, benchmark)
+            print benchmark
+            # fusionModulesNames = [name for _, name, isPackage
+            #                       in pkgutil.iter_modules(['Multiview/Fusion/Methods']) if not isPackage]
+            # fusionModules = [getattr(Multiview.Fusion.Methods, fusionModulesName)
+            #                  for fusionModulesName in fusionModulesNames]
+            # fusionClasses = [getattr(fusionModule, fusionModulesName + "Classifier")
+            #                  for fusionModulesName, fusionModule in zip(fusionModulesNames, fusionModules)]
+            # fusionMethods = dict((fusionModulesName, [name for _, name, isPackage in
+            #                                           pkgutil.iter_modules(
+            #                                               ["Multiview/Fusion/Methods/" + fusionModulesName + "Package"])
+            #                                           if not isPackage])
+            #                      for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClasses))
+            # fusionMonoviewClassifiers = allMonoviewAlgos
+            # allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
+            # # allMumboAlgos =
+            # allMultiviewAlgos = {"Fusion": allFusionAlgos, "Mumbo": allMumboAlgos}
+            # benchmark = {"Monoview": allMonoviewAlgos, "Multiview": allMultiviewAlgos}
 
     if "Multiview" in args.CL_type.strip(":"):
         benchmark["Multiview"] = {}
