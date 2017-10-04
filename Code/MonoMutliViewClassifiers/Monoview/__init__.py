@@ -1,1 +1,1 @@
-from . import ExecClassifMonoView, ClassifMonoView
+from . import ExecClassifMonoView, MonoviewUtils

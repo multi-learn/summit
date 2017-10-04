@@ -13,6 +13,36 @@ def genParamsSets(classificationKWARGS, nIter=1):
         normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
         paramsSets.append([normalizedArray])
     return paramsSets
+
+
+# def getArgs(args, benchmark):
+#     classifiersNames = args.FU_cl_names
+#     classifiersConfig = [getattr(MonoviewClassifiers, name).getKWARGS([arg.split(":")
+#                                                                        for arg in config.split(";")])
+#                          for config, name in zip(args.FU_cl_config, classifiersNames)]
+#     fusionMethodConfig = args.FU_method_config
+#     return classifiersNames, classifiersConfig, fusionMethodConfig
+
+def getArgs(args, views, viewsIndices):
+    monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName) for classifierName in args.FU_L_cl_names]
+    arguments = {"CL_type": "Fusion",
+                 "views": views,
+                 "NB_VIEW": len(views),
+                 "viewsIndices": viewsIndices,
+                 "NB_CLASS": len(args.CL_classes),
+                 "LABELS_NAMES": args.CL_classes,
+                 "FusionKWARGS": {"fusionType": "LateFusion",
+                                  "fusionMethod": "BayesianInference",
+                                  "classifiersNames": args.FU_L_cl_names,
+                                  "classifiersConfigs": [monoviewClassifierModule.getKWARGS([arg.split(":")
+                                                                                            for arg in
+                                                                                            classifierConfig.split(",")])
+                                                         for monoviewClassifierModule,classifierConfig
+                                                         in zip(monoviewClassifierModules,args.FU_L_cl_config)],
+                                  'fusionMethodConfig': args.FU_L_method_config,
+                                  'monoviewSelection': args.FU_L_select_monoview,
+                                  "nbView": (len(viewsIndices))}}
+    return [arguments]
 #
 # def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
 #     if type(viewsIndices)==type(None):
@@ -37,12 +67,16 @@ def genParamsSets(classificationKWARGS, nIter=1):
 
 class BayesianInference(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
+        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
 
         # self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
-        self.weights = None #A modifier !!
+        if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig']==['']:
+            self.weights = [1.0 for classifier in kwargs['classifiersNames']]
+        else:
+            self.weights = np.array(map(float, kwargs['fusionMethodConfig']))
         self.needProbas = True
+
     def setParams(self, paramsSet):
         self.weights = paramsSet[0]
 

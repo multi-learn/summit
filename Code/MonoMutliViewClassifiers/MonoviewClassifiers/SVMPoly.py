@@ -21,6 +21,16 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     return classifier
 
 
+def getKWARGS(kwargsList):
+    kwargsDict = {}
+    for (kwargName, kwargValue) in kwargsList:
+        if kwargName == "CL_SVMPoly_C":
+            kwargsDict['0'] = int(kwargValue)
+        elif kwargName == "CL_SVMPoly_deg":
+            kwargsDict['1'] = int(kwargValue)
+    return kwargsDict
+
+
 def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SVMPoly = Pipeline([('classifier', SVC(kernel="poly", max_iter=1000))])
     param_SVMPoly = {"classifier__C": randint(1, 10000), "classifier__degree":randint(1, 30)}

@@ -4,7 +4,7 @@ import sys
 import Multiview
 import Metrics
 
-def searchBestSettings(dataset, classifierName, metrics, iLearningIndices, iKFolds, viewsIndices=None, searchingTool="gridSearch", nIter=1, **kwargs):
+def searchBestSettings(dataset, classifierName, metrics, iLearningIndices, iKFolds, viewsIndices=None, searchingTool="hyperParamSearch", nIter=1, **kwargs):
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
     thismodule = sys.modules[__name__]

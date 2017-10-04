@@ -13,11 +13,20 @@ __status__ 	= "Prototype"                           # Production, Development, P
 def canProbas():
     return True
 
+
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     C = int(kwargs['0'])
     classifier = SVC(C=C, kernel='rbf', probability=True, max_iter=1000)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
+
+
+def getKWARGS(kwargsList):
+    kwargsDict = {}
+    for (kwargName, kwargValue) in kwargsList:
+        if kwargName == "CL_SVMRBF_C":
+            kwargsDict['0'] = int(kwargValue)
+    return kwargsDict
 
 
 def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):

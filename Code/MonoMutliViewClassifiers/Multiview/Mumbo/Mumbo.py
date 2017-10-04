@@ -1,11 +1,13 @@
 import numpy as np
 import math
 from joblib import Parallel, delayed
+import itertools
 from Classifiers import *
 import time
 import logging
 from sklearn.metrics import accuracy_score
 from utils.Dataset import getV
+
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -13,6 +15,24 @@ __status__ 	= "Prototype"                           # Production, Development, P
 
 
 # Data shape : ((Views, Examples, Corrdinates))
+
+def getArgs(args, benchmark, views, viewsIndices):
+    argumentsList = []
+
+    arguments = {"CL_type": "Mumbo",
+                 "views": views,
+                 "NB_VIEW": len(views),
+                 "viewsIndices": viewsIndices,
+                 "NB_CLASS": len(args.CL_classes),
+                 "LABELS_NAMES": args.CL_classes,
+                 "MumboKWARGS": {"classifiersNames": args.MU_types,
+                                 "maxIter": int(args.MU_iter[0]), "minIter": int(args.MU_iter[1]),
+                                 "threshold": args.MU_iter[2],
+                                 "classifiersConfigs": [map(float, argument.split(":")) for argument in
+                                                        args.MU_config], "nbView": (len(viewsIndices))}}
+    argumentsList.append(arguments)
+    return argumentsList
+
 
 def computeWeights(DATASET_LENGTH, iterIndex, viewIndice, CLASS_LABELS, costMatrices):
     dist = np.sum(costMatrices[iterIndex, viewIndice])
@@ -52,7 +72,7 @@ def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices,
     for classifierIndex, classifierName in enumerate(classifiersNames):
         logging.debug("\tStart:\t Random search for "+classifierName+" on "+DATASET.get("View"+str(viewIndices[classifierIndex])).attrs["name"])
         classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
-        classifierGridSearch = getattr(classifierModule, "gridSearch")
+        classifierGridSearch = getattr(classifierModule, "hyperParamSearch")
         bestSettings.append(classifierGridSearch(getV(DATASET, viewIndices[classifierIndex], learningIndices),
                                              DATASET.get("Labels")[learningIndices], metric=metric))
         logging.debug("\tDone:\t Gridsearch for "+classifierName)

@@ -18,6 +18,7 @@ import matplotlib
 # Import own modules
 import Multiview
 import Metrics
+import MonoviewClassifiers
 from Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 import Multiview.GetMultiviewDb as DB
@@ -158,7 +159,7 @@ def initBenchmark(args):
         else:
             algosMutliview = args.CL_algos_multiview
         if "Mumbo" in algosMutliview:
-            benchmark["Multiview"]["Mumbo"] = args.MU_types.split(":")
+            benchmark["Multiview"]["Mumbo"] = args.MU_types
         if "Fusion" in algosMutliview:
             benchmark["Multiview"]["Fusion"] = {}
             benchmark["Multiview"]["Fusion"]["Methods"] = dict(
@@ -219,22 +220,35 @@ def initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, DATA
     return argumentDictionaries
 
 
-def initKWARGS(args):
-    kwargsInit = {
-        "RandomForestKWARGSInit": {"0": map(int, args.CL_RF_trees.split())[0],
-                                   "1": map(int, args.CL_RF_max_depth.split(":"))[0]},
-        "SVMLinearKWARGSInit": {"0": map(int, args.CL_SVML_C.split(":"))[0]},
-        "SVMRBFKWARGSInit": {"0": map(int, args.CL_SVMR_C.split(":"))[0]},
-        "SVMPolyKWARGSInit": {"0": map(int, args.CL_SVMP_C.split(":"))[0],
-                              '1': map(int, args.CL_SVMP_deg.split(":"))[0]},
-        "DecisionTreeKWARGSInit": {"0": map(int, args.CL_DT_depth.split(":"))[0]},
-        "SGDKWARGSInit": {"2": map(float, args.CL_SGD_alpha.split(":"))[0], "1": args.CL_SGD_penalty.split(":")[0],
-                          "0": args.CL_SGD_loss.split(":")[0]},
-        "KNNKWARGSInit": {"0": map(float, args.CL_KNN_neigh.split(":"))[0]},
-        "AdaboostKWARGSInit": {"0": args.CL_Ada_n_est.split(":")[0], "1": args.CL_Ada_b_est.split(":")[0]},
-        "SCMKWARGSInit": {"0": args.CL_SCM_max_rules.split(":")[0]},
-    }
-    return kwargsInit
+def initMonoviewKWARGS(args, classifiersNames):
+    monoviewKWARGS = {}
+    for classifiersName in classifiersNames:
+        classifierModule = getattr(MonoviewClassifiers, classifiersName)
+        monoviewKWARGS[classifiersName+"KWARGSInit"] = classifierModule.getKWARGS([(key, value) for key, value in vars(args).iteritems() if key.startswith("CL_"+classifiersName)])
+    return monoviewKWARGS
+
+
+def initKWARGS(args, benchmark):
+    if "Monoview" in benchmark:
+        monoviewKWARGS = initMonoviewKWARGS(args, benchmark["Monoview"])
+
+
+
+    # kwargsInit = {
+    #     "RandomForestKWARGSInit": {"0": map(int, args.CL_RF_trees.split())[0],
+    #                                "1": map(int, args.CL_RF_max_depth.split(":"))[0]},
+    #     "SVMLinearKWARGSInit": {"0": map(int, args.CL_SVML_C.split(":"))[0]},
+    #     "SVMRBFKWARGSInit": {"0": map(int, args.CL_SVMR_C.split(":"))[0]},
+    #     "SVMPolyKWARGSInit": {"0": map(int, args.CL_SVMP_C.split(":"))[0],
+    #                           '1': map(int, args.CL_SVMP_deg.split(":"))[0]},
+    #     "DecisionTreeKWARGSInit": {"0": map(int, args.CL_DT_depth.split(":"))[0]},
+    #     "SGDKWARGSInit": {"2": map(float, args.CL_SGD_alpha.split(":"))[0], "1": args.CL_SGD_penalty.split(":")[0],
+    #                       "0": args.CL_SGD_loss.split(":")[0]},
+    #     "KNNKWARGSInit": {"0": map(float, args.CL_KNN_neigh.split(":"))[0]},
+    #     "AdaboostKWARGSInit": {"0": args.CL_Ada_n_est.split(":")[0], "1": args.CL_Ada_b_est.split(":")[0]},
+    #     "SCMKWARGSInit": {"0": args.CL_SCM_max_rules.split(":")[0]},
+    # }
+    return monoviewKWARGS
 
 
 def lateFusionSetArgs(views, viewsIndices, classes, method,
@@ -254,101 +268,111 @@ def lateFusionSetArgs(views, viewsIndices, classes, method,
 
 
 def initMultiviewArguments(args, benchmark, views, viewsIndices, scores, classifiersConfigs, classifiersNames,
-                           fusionMethodConfig, NB_VIEW, metrics):
-    metricModule = getattr(Metrics, metrics[0])
-    if benchmark["Multiview"]:
-        if "Fusion" in benchmark["Multiview"]:
-            if args.FU_cl_names != ['']:
-                print "Formage"
-                exit()
-                monoClassifiers = args.FU_cl_names
-                monoClassifiersConfigs = [globals()[classifier + "KWARGS"] for classifier in monoClassifiers]
-                if args.FU_method_config != [""]:
-                    fusionMethodConfigs = [map(float, config.split(":")) for config in args.FU_method_config]
-                elif not gridSearch:
-                    raise ValueError("No config for fusion method given and no gridearch wanted")
-                else:
-                    try:
-                        fusionMethodConfigs = [["config"] for method in
-                                               benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]]
-                    except:
-                        pass
-                try:
-                    for methodIndex, method in enumerate(benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]):
-                        if args.FU_fixed:
-                            arguments = lateFusionSetArgs(views, viewsIndices, args.CL_classes, method,
-                                                          args.FU_cl_names, monoClassifiersConfigs,
-                                                          fusionMethodConfigs[methodIndex])
-                            argumentDictionaries["Multiview"].append(arguments)
-                        else:
-                            for combination in itertools.combinations_with_replacement(range(len(monoClassifiers)),
-                                                                                       NB_VIEW):
-                                monoClassifiersNamesComb = [monoClassifiers[index] for index in combination]
-                                monoClassifiersConfigsComb = [monoClassifiersConfigs[index] for index in
-                                                              combination]
-                                arguments = lateFusionSetArgs(views, viewsIndices, args.CL_classes, method,
-                                                              monoClassifiersNamesComb, monoClassifiersConfigsComb,
-                                                              fusionMethodConfigs[methodIndex])
-                                argumentDictionaries["Multiview"].append(arguments)
-                except:
-                    pass
-            else:
-                if "LateFusion" in benchmark["Multiview"]["Fusion"]["Methods"] and \
-                                "Classifiers" in benchmark["Multiview"]["Fusion"]:
-                    bestClassifiers = []
-                    bestClassifiersConfigs = []
-                    if argumentDictionaries["Monoview"] != {}:
-                        for viewIndex, view in enumerate(views):
-                            if metricModule.getConfig()[-14] == "h":
-                                bestClassifiers.append(
-                                    classifiersNames[viewIndex][np.argmax(np.array(scores[viewIndex]))])
-                                bestClassifiersConfigs.append(
-                                    classifiersConfigs[viewIndex][np.argmax(np.array(scores[viewIndex]))])
-                            else:
-                                bestClassifiers.append(
-                                    classifiersNames[viewIndex][np.argmin(np.array(scores[viewIndex]))])
-                                bestClassifiersConfigs.append(
-                                    classifiersConfigs[viewIndex][np.argmin(np.array(scores[viewIndex]))])
-                    else:
-                        raise AttributeError("No Monoview classifiers asked in args and no monoview benchmark done.")
-                    for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]:
-                        arguments = lateFusionSetArgs(views, viewsIndices, args.CL_classes, method,
-                                                      bestClassifiers, bestClassifiersConfigs,
-                                                      fusionMethodConfig)
-                        argumentDictionaries["Multiview"].append(arguments)
-            if "EarlyFusion" in benchmark["Multiview"]["Fusion"]["Methods"] and \
-                            "Classifiers" in benchmark["Multiview"]["Fusion"]:
-                for method in benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"]:
-                    for classifier in benchmark["Multiview"]["Fusion"]["Classifiers"]:
-                        arguments = {"CL_type": "Fusion",
-                                     "views": views,
-                                     "NB_VIEW": len(views),
-                                     "viewsIndices": viewsIndices,
-                                     "NB_CLASS": len(args.CL_classes),
-                                     "LABELS_NAMES": args.CL_classes,
-                                     "FusionKWARGS": {"fusionType": "EarlyFusion", "fusionMethod": method,
-                                                      "classifiersNames": [classifier],
-                                                      "classifiersConfigs": [
-                                                          initKWARGS[classifier + "KWARGSInit"]],
-                                                      'fusionMethodConfig': fusionMethodConfig,
-                                                      "nbView": (len(viewsIndices))}}
-                        argumentDictionaries["Multiview"].append(arguments)
-        if "Mumbo" in benchmark["Multiview"]:
-            for combination in itertools.combinations_with_replacement(range(len(benchmark["Multiview"]["Mumbo"])),
-                                                                       NB_VIEW):
-                mumboClassifiersNames = [benchmark["Multiview"]["Mumbo"][index] for index in combination]
-                arguments = {"CL_type": "Mumbo",
-                             "views": views,
-                             "NB_VIEW": len(views),
-                             "viewsIndices": viewsIndices,
-                             "NB_CLASS": len(args.CL_classes),
-                             "LABELS_NAMES": args.CL_classes,
-                             "MumboKWARGS": {"classifiersNames": mumboClassifiersNames,
-                                             "maxIter": int(args.MU_iter[0]), "minIter": int(args.MU_iter[1]),
-                                             "threshold": args.MU_iter[2],
-                                             "classifiersConfigs": [argument.split(":") for argument in
-                                                                    args.MU_config], "nbView": (len(viewsIndices))}}
-                argumentDictionaries["Multiview"].append(arguments)
+                           NB_VIEW, metrics, argumentDictionaries):
+    # metricModule = getattr(Metrics, metrics[0])
+    multiviewArguments = []
+    if "Multiview" in benchmark:
+        for multiviewAlgoName in benchmark["Multiview"]:
+            multiviewPackage = getattr(Multiview, multiviewAlgoName)
+            mutliviewModule = getattr(multiviewPackage, multiviewAlgoName)
+            multiviewArguments+= mutliviewModule.getArgs(args, benchmark, views, viewsIndices)
+    # if benchmark["Multiview"]:
+    #     for multiviewAlgoName in benchmark["Multiview"]:
+    #         multiviewPackage = getattr(Multiview, multiviewAlgoName)
+    #         multiviewArguments[]
+    #     if "Fusion" in benchmark["Multiview"]:
+    #         for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]:
+    #             import pdb; pdb.set_trace()
+    #         if args.FU_cl_names != ['']:
+    #             monoClassifiers = args.FU_cl_names
+    #             monoClassifiersConfigs = [globals()[classifier + "KWARGS"] for classifier in monoClassifiers]
+    #             if args.FU_method_config != [""]:
+    #                 fusionMethodConfigs = [map(float, config.split(":")) for config in args.FU_method_config]
+    #             elif not hyperParamSearch:
+    #                 raise ValueError("No config for fusion method given and no gridearch wanted")
+    #             else:
+    #                 try:
+    #                     fusionMethodConfigs = [["config"] for method in
+    #                                            benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]]
+    #                 except:
+    #                     pass
+    #             try:
+    #                 for methodIndex, method in enumerate(benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]):
+    #                     if args.FU_fixed:
+    #                         arguments = lateFusionSetArgs(views, viewsIndices, args.CL_classes, method,
+    #                                                       args.FU_cl_names, monoClassifiersConfigs,
+    #                                                       fusionMethodConfigs[methodIndex])
+    #                         argumentDictionaries["Multiview"].append(arguments)
+    #                     else:
+    #                         for combination in itertools.combinations_with_replacement(range(len(monoClassifiers)),
+    #                                                                                    NB_VIEW):
+    #                             monoClassifiersNamesComb = [monoClassifiers[index] for index in combination]
+    #                             monoClassifiersConfigsComb = [monoClassifiersConfigs[index] for index in
+    #                                                           combination]
+    #                             arguments = lateFusionSetArgs(views, viewsIndices, args.CL_classes, method,
+    #                                                           monoClassifiersNamesComb, monoClassifiersConfigsComb,
+    #                                                           fusionMethodConfigs[methodIndex])
+    #                             argumentDictionaries["Multiview"].append(arguments)
+    #             except:
+    #                 pass
+    #         else:
+    #             if "LateFusion" in benchmark["Multiview"]["Fusion"]["Methods"] and \
+    #                             "Classifiers" in benchmark["Multiview"]["Fusion"]:
+    #                 bestClassifiers = []
+    #                 bestClassifiersConfigs = []
+    #                 if argumentDictionaries["Monoview"] != {}:
+    #                     for viewIndex, view in enumerate(views):
+    #                         if metricModule.getConfig()[-14] == "h":
+    #                             bestClassifiers.append(
+    #                                 classifiersNames[viewIndex][np.argmax(np.array(scores[viewIndex]))])
+    #                             bestClassifiersConfigs.append(
+    #                                 classifiersConfigs[viewIndex][np.argmax(np.array(scores[viewIndex]))])
+    #                         else:
+    #                             bestClassifiers.append(
+    #                                 classifiersNames[viewIndex][np.argmin(np.array(scores[viewIndex]))])
+    #                             bestClassifiersConfigs.append(
+    #                                 classifiersConfigs[viewIndex][np.argmin(np.array(scores[viewIndex]))])
+    #                 else:
+    #                     raise AttributeError("No Monoview classifiers asked in args and no monoview benchmark done.")
+    #                 for method in benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"]:
+    #                     arguments = lateFusionSetArgs(views, viewsIndices, args.CL_classes, method,
+    #                                                   bestClassifiers, bestClassifiersConfigs,
+    #                                                   fusionMethodConfig)
+    #                     argumentDictionaries["Multiview"].append(arguments)
+    #         if "EarlyFusion" in benchmark["Multiview"]["Fusion"]["Methods"] and \
+    #                         "Classifiers" in benchmark["Multiview"]["Fusion"]:
+    #             for method in benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"]:
+    #                 for classifier in benchmark["Multiview"]["Fusion"]["Classifiers"]:
+    #                     arguments = {"CL_type": "Fusion",
+    #                                  "views": views,
+    #                                  "NB_VIEW": len(views),
+    #                                  "viewsIndices": viewsIndices,
+    #                                  "NB_CLASS": len(args.CL_classes),
+    #                                  "LABELS_NAMES": args.CL_classes,
+    #                                  "FusionKWARGS": {"fusionType": "EarlyFusion", "fusionMethod": method,
+    #                                                   "classifiersNames": [classifier],
+    #                                                   "classifiersConfigs": [
+    #                                                       initKWARGS[classifier + "KWARGSInit"]],
+    #                                                   'fusionMethodConfig': fusionMethodConfig,
+    #                                                   "nbView": (len(viewsIndices))}}
+    #                     argumentDictionaries["Multiview"].append(arguments)
+    #     if "Mumbo" in benchmark["Multiview"]:
+    #         for combination in itertools.combinations_with_replacement(range(len(benchmark["Multiview"]["Mumbo"])),
+    #                                                                    NB_VIEW):
+    #             mumboClassifiersNames = [benchmark["Multiview"]["Mumbo"][index] for index in combination]
+    #             arguments = {"CL_type": "Mumbo",
+    #                          "views": views,
+    #                          "NB_VIEW": len(views),
+    #                          "viewsIndices": viewsIndices,
+    #                          "NB_CLASS": len(args.CL_classes),
+    #                          "LABELS_NAMES": args.CL_classes,
+    #                          "MumboKWARGS": {"classifiersNames": mumboClassifiersNames,
+    #                                          "maxIter": int(args.MU_iter[0]), "minIter": int(args.MU_iter[1]),
+    #                                          "threshold": args.MU_iter[2],
+    #                                          "classifiersConfigs": [argument.split(":") for argument in
+    #                                                                 args.MU_config], "nbView": (len(viewsIndices))}}
+    #             argumentDictionaries["Multiview"].append(arguments)
+    argumentDictionaries["Multiview"] = multiviewArguments
     return argumentDictionaries
 
 
@@ -415,61 +439,66 @@ groupClass.add_argument('--CL_metric_princ', metavar='STRING', action='store',
                         help='Determine which metric to use for randomSearch and optimization' , default="f1_score")
 groupClass.add_argument('--CL_GS_iter', metavar='INT', action='store',
                         help='Determine how many Randomized grid search tests to do', type=int, default=2)
-groupClass.add_argument('--CL_GS_type', metavar='STRING', action='store',
+groupClass.add_argument('--CL_HPS_type', metavar='STRING', action='store',
                         help='Determine which hyperparamter search function use', default="randomizedSearch")
 
 groupRF = parser.add_argument_group('Random Forest arguments')
-groupRF.add_argument('--CL_RF_trees', metavar='STRING', action='store', help='Number max trees',
-                     default='25')
-groupRF.add_argument('--CL_RF_max_depth', metavar='STRING', action='store', help='Max depth for the trees',
-                     default='5')
+groupRF.add_argument('--CL_RandomForest_trees', metavar='INT', type=int, action='store', help='Number max trees',
+                     default=25)
+groupRF.add_argument('--CL_RandomForest_max_depth', metavar='INT', type=int, action='store', help='Max depth for the trees',
+                     default=5)
 
 groupSVMLinear = parser.add_argument_group('Linear SVM arguments')
-groupSVMLinear.add_argument('--CL_SVML_C', metavar='STRING', action='store', help='Penalty parameter used',
-                            default='1')
+groupSVMLinear.add_argument('--CL_SVMLinear_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
+                            default=1)
 
 groupSVMRBF = parser.add_argument_group('SVW-RBF arguments')
-groupSVMRBF.add_argument('--CL_SVMR_C', metavar='STRING', action='store', help='Penalty parameter used',
-                         default='1')
+groupSVMRBF.add_argument('--CL_SVMRBF_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
+                         default=1)
 
 groupSVMPoly = parser.add_argument_group('Poly SVM arguments')
-groupSVMPoly.add_argument('--CL_SVMP_C', metavar='STRING', action='store', help='Penalty parameter used',
-                          default='1')
-groupSVMPoly.add_argument('--CL_SVMP_deg', metavar='STRING', action='store', help='Degree parameter used',
-                          default='2')
+groupSVMPoly.add_argument('--CL_SVMPoly_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
+                          default=1)
+groupSVMPoly.add_argument('--CL_SVMPoly_deg', metavar='INT', type=int, action='store', help='Degree parameter used',
+                          default=2)
 
 groupAdaboost = parser.add_argument_group('Adaboost arguments')
-groupAdaboost.add_argument('--CL_Ada_n_est', metavar='STRING', action='store', help='Number of estimators',
-                           default='2')
-groupAdaboost.add_argument('--CL_Ada_b_est', metavar='STRING', action='store', help='Estimators',
+groupAdaboost.add_argument('--CL_Adaboost_n_est', metavar='INT', type=int, action='store', help='Number of estimators',
+                           default=2)
+groupAdaboost.add_argument('--CL_Adaboost_b_est', metavar='STRING', action='store', help='Estimators',
                            default='DecisionTreeClassifier')
 
-groupRF = parser.add_argument_group('Decision Trees arguments')
-groupRF.add_argument('--CL_DT_depth', metavar='STRING', action='store',
-                     help='Determine max depth for Decision Trees', default='3')
+groupDT = parser.add_argument_group('Decision Trees arguments')
+groupDT.add_argument('--CL_DecisionTree_depth', metavar='INT', type=int, action='store',
+                     help='Determine max depth for Decision Trees', default=3)
 
 groupSGD = parser.add_argument_group('SGD arguments')
-groupSGD.add_argument('--CL_SGD_alpha', metavar='STRING', action='store',
-                      help='Determine alpha for SGDClassifier', default='0.1')
+groupSGD.add_argument('--CL_SGD_alpha', metavar='FLOAT', type=float, action='store',
+                      help='Determine alpha for SGDClassifier', default=0.1)
 groupSGD.add_argument('--CL_SGD_loss', metavar='STRING', action='store',
                       help='Determine loss for SGDClassifier', default='log')
 groupSGD.add_argument('--CL_SGD_penalty', metavar='STRING', action='store',
                       help='Determine penalty for SGDClassifier', default='l2')
 
-groupSGD = parser.add_argument_group('KNN arguments')
-groupSGD.add_argument('--CL_KNN_neigh', metavar='STRING', action='store',
-                      help='Determine number of neighbors for KNN', default='1')
+groupKNN = parser.add_argument_group('KNN arguments')
+groupKNN.add_argument('--CL_KNN_neigh', metavar='INT', type=int, action='store',
+                      help='Determine number of neighbors for KNN', default=1)
 
-groupSGD = parser.add_argument_group('SCM arguments')
-groupSGD.add_argument('--CL_SCM_max_rules', metavar='STRING', action='store',
-                      help='Max number of rules for SCM', default='1')
+groupSCM = parser.add_argument_group('SCM arguments')
+groupSCM.add_argument('--CL_SCM_max_rules', metavar='INT', type=int, action='store',
+                      help='Max number of rules for SCM', default=1)
+groupSCM.add_argument('--CL_SCM_p', metavar='FLOAT', type=float, action='store',
+                      help='Max number of rules for SCM', default=1.0)
+groupSCM.add_argument('--CL_SCM_model_type', metavar='STRING', action='store',
+                      help='Max number of rules for SCM', default="conjunction")
+
 
 groupMumbo = parser.add_argument_group('Mumbo arguments')
-groupMumbo.add_argument('--MU_types', metavar='STRING', action='store',
-                        help='Determine which monoview classifier to use with Mumbo', default='DecisionTree')
+groupMumbo.add_argument('--MU_types', metavar='STRING', action='store', nargs="+",
+                        help='Determine which monoview classifier to use with Mumbo', default=['DecisionTree', 'DecisionTree', 'DecisionTree'])
 groupMumbo.add_argument('--MU_config', metavar='STRING', action='store', nargs='+',
                         help='Configuration for the monoview classifier in Mumbo',
-                        default=[''])
+                        default=['2:0.5', '2:0.5', '2:0.5'])
 groupMumbo.add_argument('--MU_iter', metavar='INT', action='store', nargs=3,
                         help='Max number of iteration, min number of iteration, convergence threshold', type=float,
                         default=[10, 1, 0.01])
@@ -477,21 +506,34 @@ groupMumbo.add_argument('--MU_iter', metavar='INT', action='store', nargs=3,
 groupFusion = parser.add_argument_group('Fusion arguments')
 groupFusion.add_argument('--FU_types', metavar='STRING', action='store', nargs="+",
                          help='Determine which type of fusion to use',
-                         default=['LateFusion','EarlyFusion'])
-groupFusion.add_argument('--FU_early_methods', metavar='STRING', action='store', nargs="+",
+                         default=[''])
+groupEarlyFusion = parser.add_argument_group('Early Fusion arguments')
+groupEarlyFusion.add_argument('--FU_early_methods', metavar='STRING', action='store', nargs="+",
                          help='Determine which early fusion method of fusion to use',
                          default=[''])
-groupFusion.add_argument('--FU_late_methods', metavar='STRING', action='store', nargs="+",
+groupEarlyFusion.add_argument('--FU_E_method_configs', metavar='STRING', action='store', nargs='+',
+                         help='Configuration for the early fusion methods separate method by space and values by :',
+                              default=[''])
+groupEarlyFusion.add_argument('--FU_E_cl_config', metavar='STRING', action='store', nargs='+',
+                         help='Configuration for the monoview classifiers used separate classifier by space '
+                              'and configs must be of form argument1_name:value,argument2_name:value',
+                              default=[''])
+groupEarlyFusion.add_argument('--FU_E_cl_names', metavar='STRING', action='store', nargs='+',
+                         help='Name of the classifiers used for each early fusion method', default=[''])
+
+
+groupLateFusion = parser.add_argument_group('Late Early Fusion arguments')
+groupLateFusion.add_argument('--FU_late_methods', metavar='STRING', action='store', nargs="+",
                          help='Determine which late fusion method of fusion to use',
                          default=[''])
-groupFusion.add_argument('--FU_method_config', metavar='STRING', action='store', nargs='+',
+groupLateFusion.add_argument('--FU_L_method_config', metavar='STRING', action='store', nargs='+',
                          help='Configuration for the fusion method', default=[''])
-groupFusion.add_argument('--FU_cl_config', metavar='STRING', action='store', nargs='+',
+groupLateFusion.add_argument('--FU_L_cl_config', metavar='STRING', action='store', nargs='+',
                          help='Configuration for the monoview classifiers used', default=[''])
-groupFusion.add_argument('--FU_cl_names', metavar='STRING', action='store', nargs="+",
+groupLateFusion.add_argument('--FU_L_cl_names', metavar='STRING', action='store', nargs="+",
                          help='Names of the classifier used for late fusion', default=[''])
-groupFusion.add_argument('--FU_fixed', action='store_true',
-                         help='Determine if you want fusion for the monoview classifier in the same order as written')
+groupLateFusion.add_argument('--FU_L_select_monoview', metavar='STRING', action='store',
+                         help='Determine which method to use to select the monoview classifiers', default="intersect")
 
 args = parser.parse_args()
 os.nice(args.nice)
@@ -504,10 +546,7 @@ if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake", "Plaus
 else:
     getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
 
-try:
-    gridSearch = args.CL_GS_type
-except:
-    gridSearch = False
+hyperParamSearch = args.CL_HPS_type
 
 directory = initLogFile(args)
 
@@ -537,12 +576,13 @@ logging.info("Start:\t Finding all available mono- & multiview algorithms")
 
 benchmark = initBenchmark(args)
 
-fusionMethodConfig = [args.FU_method_config[0].split(":"), "b"]
+# fusionMethodConfig = [args.FU_method_config[0].split(":"), "b"]
 
-initKWARGS = initKWARGS(args)
+initKWARGS = initKWARGS(args, benchmark)
 
 dataBaseTime = time.time() - start
-argumentDictionaries = {"Monoview": {}, "Multiview": []}
+
+argumentDictionaries = {"Monoview": [], "Multiview": []}
 argumentDictionaries = initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, DATASET, NB_CLASS,
                                              initKWARGS)
 
@@ -555,7 +595,7 @@ if nbCores > 1:
     for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
         resultsMonoview += (Parallel(n_jobs=nbCores)(
             delayed(ExecMonoview_multicore)(directory, args.name, labelsNames, args.CL_split, args.CL_nbFolds,
-                                            coreIndex, args.type, args.pathF, statsIter, gridSearch=gridSearch,
+                                            coreIndex, args.type, args.pathF, statsIter, hyperParamSearch=hyperParamSearch,
                                             metrics=metrics, nIter=args.CL_GS_iter,
                                             **argumentDictionaries["Monoview"][coreIndex + stepIndex * nbCores])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores))))
@@ -570,7 +610,7 @@ else:
     resultsMonoview += ([ExecMonoview(directory, DATASET.get("View" + str(arguments["viewIndex"])),
                                       DATASET.get("Labels").value, args.name, labelsNames,
                                       args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, statsIter,
-                                      gridSearch=gridSearch, metrics=metrics, nIter=args.CL_GS_iter,
+                                      hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=args.CL_GS_iter,
                                       **arguments)
                          for arguments in argumentDictionaries["Monoview"]])
     scores = [[result[1][2][metrics[0][0]][1] for result in resultsMonoview if result[0] == viewIndex] for viewIndex
@@ -581,8 +621,9 @@ else:
                           viewsIndices]
 monoviewTime = time.time() - dataBaseTime - start
 
+
 argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, scores, classifiersConfigs,
-                                              classifiersNames, fusionMethodConfig, NB_VIEW, metrics[0])
+                                              classifiersNames, NB_VIEW, metrics[0], argumentDictionaries)
 
 if nbCores > 1:
     resultsMultiview = []
@@ -591,14 +632,14 @@ if nbCores > 1:
         resultsMultiview += Parallel(n_jobs=nbCores)(
             delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, args.CL_split, args.CL_nbFolds, args.type,
                                              args.pathF,
-                                             LABELS_DICTIONARY, statsIter, gridSearch=gridSearch,
+                                             LABELS_DICTIONARY, statsIter, hyperParamSearch=hyperParamSearch,
                                              metrics=metrics, nIter=args.CL_GS_iter,
                                              **argumentDictionaries["Multiview"][stepIndex * nbCores + coreIndex])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
 else:
     resultsMultiview = [
         ExecMultiview(directory, DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
-                      LABELS_DICTIONARY, statsIter, gridSearch=gridSearch,
+                      LABELS_DICTIONARY, statsIter, hyperParamSearch=hyperParamSearch,
                       metrics=metrics, nIter=args.CL_GS_iter, **arguments) for arguments in
         argumentDictionaries["Multiview"]]
 multiviewTime = time.time() - monoviewTime - dataBaseTime - start

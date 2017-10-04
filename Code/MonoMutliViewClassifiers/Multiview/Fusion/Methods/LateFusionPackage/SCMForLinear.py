@@ -26,6 +26,27 @@ def genParamsSets(classificationKWARGS, nIter=1):
     return paramsSets
 
 
+def getArgs(args, views, viewsIndices):
+    monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName) for classifierName in args.FU_L_cl_names]
+    arguments = {"CL_type": "Fusion",
+                 "views": views,
+                 "NB_VIEW": len(views),
+                 "viewsIndices": viewsIndices,
+                 "NB_CLASS": len(args.CL_classes),
+                 "LABELS_NAMES": args.CL_classes,
+                 "FusionKWARGS": {"fusionType": "LateFusion",
+                                  "fusionMethod": "BayesianInference",
+                                  "classifiersNames": args.FU_L_cl_names,
+                                  "classifiersConfigs": [monoviewClassifierModule.getKWARGS([arg.split(":")
+                                                                                             for arg in
+                                                                                             classifierConfig.split(";")])
+                                                         for monoviewClassifierModule,classifierConfig
+                                                         in zip(args.FU_L_cl_config,monoviewClassifierModules)],
+                                  'fusionMethodConfig': args.FU_L_method_config[0],
+                                  'monoviewSelection': args.FU_L_select_monoview,
+                                  "nbView": (len(viewsIndices))}}
+    return [arguments]
+
 # def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
 #     if type(viewsIndices)==type(None):
 #         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
@@ -52,14 +73,20 @@ def genParamsSets(classificationKWARGS, nIter=1):
 
 class SCMForLinear(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
+        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
         self.SCMClassifier = None
-        self.config = kwargs['fusionMethodConfig'][0]
-        self.p = None
-        self.maxAttributes = None
-        self.order = None
-        self.modelType = None
+        # self.config = kwargs['fusionMethodConfig'][0]
+        if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig'][0]==['']:
+            self.p = 1
+            self.maxAttributes = 5
+            self.order = 1
+            self.modelType = "conjunction"
+        else:
+            self.p = kwargs['fusionMethodConfig'][0]
+            self.maxAttributes = kwargs['fusionMethodConfig'][1]
+            self.order = kwargs['fusionMethodConfig'][2]
+            self.modelType = kwargs['fusionMethodConfig'][3]
 
     def setParams(self, paramsSet):
         self.p = paramsSet[0]
@@ -105,14 +132,14 @@ class SCMForLinear(LateFusionClassifier):
     def SCMForLinearFusionFit(self, DATASET, usedIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-        if self.p is None:
-            self.p = float(self.config[0])
-        if self.maxAttributes is None:
-            self.maxAttributes = int(self.config[1])
-        if self.modelType is None:
-            self.modelType = self.config[2]
-        if self.order is None:
-            self.order = self.config[3]
+        # if self.p is None:
+        #     self.p = float(self.config[0])
+        # if self.maxAttributes is None:
+        #     self.maxAttributes = int(self.config[1])
+        # if self.modelType is None:
+        #     self.modelType = self.config[2]
+        # if self.order is None:
+        #     self.order = self.config[3]
 
         nbView = len(viewsIndices)
         self.SCMClassifier = pyscm.scm.SetCoveringMachine(p=self.p, max_attributes=self.maxAttributes, model_type=self.modelType, verbose=False)

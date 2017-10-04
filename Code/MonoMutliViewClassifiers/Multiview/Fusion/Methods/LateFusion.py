@@ -19,24 +19,33 @@ def fitMonoviewClassifier(classifierName, data, labels, classifierConfig, needPr
                                                 )))
     return classifier
 
+
 def getAccuracies(LateFusionClassifiers):
     return ""
 
+def Intersect(resMono):
+    pass
+
+
+
 
 class LateFusionClassifier(object):
-    def __init__(self, monoviewClassifiersNames, monoviewClassifiersConfigs, NB_CORES=1):
+    def __init__(self, monoviewClassifiersNames, monoviewClassifiersConfigs, monoviewSelection, NB_CORES=1):
         self.monoviewClassifiersNames = monoviewClassifiersNames
         self.monoviewClassifiersConfigs = monoviewClassifiersConfigs
         self.monoviewClassifiers = []
         self.nbCores = NB_CORES
         self.accuracies = np.zeros(len(monoviewClassifiersNames))
         self.needProbas = False
+        self.monoviewSelection = monoviewSelection
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices == None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
+        monoviewSelectionMethod = locals()[self.monoviewSelection]
+        self.monoviewClassifiers = monoviewSelectionMethod()
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
             delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[index],
                                               getV(DATASET, viewIndex, trainIndices),

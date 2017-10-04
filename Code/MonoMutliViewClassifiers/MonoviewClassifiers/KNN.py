@@ -20,6 +20,14 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     return classifier
 
 
+def getKWARGS(kwargsList):
+    kwargsDict = {}
+    for (kwargName, kwargValue) in kwargsList:
+        if kwargName == "CL_KNN_neigh":
+            kwargsDict['0'] = int(kwargValue)
+    return kwargsDict
+
+
 def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30 ):
     pipeline_KNN = Pipeline([('classifier', KNeighborsClassifier())])
     param_KNN = {"classifier__n_neighbors": randint(1, 50)}

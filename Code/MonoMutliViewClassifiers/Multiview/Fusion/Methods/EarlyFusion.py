@@ -7,14 +7,14 @@ from utils.Dataset import getV
 
 class EarlyFusionClassifier(object):
     def __init__(self, monoviewClassifierName, monoviewClassifierConfig, NB_CORES=1):
-        self.monoviewClassifierName = monoviewClassifierName[0]
-        if type(monoviewClassifierConfig[0])==dict:
+        self.monoviewClassifierName = monoviewClassifierName
+        if type(monoviewClassifierConfig)==dict:
             pass
         else:
-            monoviewClassifierConfig[0] = dict((str(configIndex), config[0]) for configIndex, config in
+            monoviewClassifierConfig = dict((str(configIndex), config[0]) for configIndex, config in
                                                enumerate(monoviewClassifierConfig
                                                          ))
-        self.monoviewClassifiersConfig = monoviewClassifierConfig[0]
+        self.monoviewClassifiersConfig = monoviewClassifierConfig
         self.monoviewClassifier = None
         self.nbCores = NB_CORES
         self.monoviewData = None

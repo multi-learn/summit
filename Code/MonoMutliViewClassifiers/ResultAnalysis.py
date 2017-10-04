@@ -95,18 +95,18 @@ def analyzeLabels(labelsArrays, realLabels, results, directory):
     classifiersNames = genNamesFromRes(mono, multi)
     nbClassifiers = len(classifiersNames)
     nbExamples = realLabels.shape[0]
-    nbIter = 20
+    nbIter = 2
     data = np.zeros((nbExamples, nbClassifiers*nbIter))
     tempData = np.array([labelsArray == realLabels for labelsArray in np.transpose(labelsArrays)]).astype(int)
     for classifierIndex in range(nbClassifiers):
         for iterIndex in range(nbIter):
             data[:,classifierIndex*nbIter+iterIndex] = tempData[classifierIndex,:]
-    fig = pylab.figure(figsize=(30,20))
+    fig = pylab.figure(figsize=(10,20))
     cmap = mpl.colors.ListedColormap(['red','green'])
     bounds=[-0.5,0.5,1.5]
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
-    cax = plt.imshow(data, interpolation='nearest', cmap=cmap, norm=norm)
+    cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm, aspect='auto')
     plt.title('Error on examples depending on the classifier')
     ticks = np.arange(0, nbClassifiers*nbIter, nbIter)
     labels = classifiersNames

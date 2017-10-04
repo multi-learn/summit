@@ -10,6 +10,19 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
+def getArgs(args, benchmark, views, viewsIndices):
+    if not "Monoview" in benchmark and not args.FU_L_select_monoview in ["randomClf", "Determined"]:
+        args.FU_L_select_monoview = "randomClf"
+    argumentsList = []
+    # import pdb; pdb.set_trace()
+    for fusionType in benchmark["Multiview"]["Fusion"]["Methods"]:
+        fusionTypePackage = globals()[fusionType+"Package"]
+        for fusionMethod in benchmark["Multiview"]["Fusion"]["Methods"][fusionType]:
+            fusionMethodModule = getattr(fusionTypePackage, fusionMethod)
+            arguments = fusionMethodModule.getArgs(args, views, viewsIndices)
+            argumentsList+= arguments
+    return argumentsList
+
 
 def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None, viewsIndices=None):
     if type(viewsIndices)==type(None):
@@ -47,7 +60,7 @@ def gridSearch_hdf5(DATASET, viewsIndices, classificationKWARGS, learningIndices
     for classifierIndex, classifierName in enumerate(classifiersNames):
         logging.debug("\tStart:\t Random search for "+classifierName+ " with "+str(nIter)+" iterations")
         classifierModule = getattr(MonoviewClassifiers, classifierName)
-        classifierMethod = getattr(classifierModule, "gridSearch")
+        classifierMethod = getattr(classifierModule, "hyperParamSearch")
         if fusionTypeName == "LateFusion":
             bestSettings.append(classifierMethod(getV(DATASET, viewsIndices[classifierIndex], learningIndices),
                                                  DATASET.get("Labels")[learningIndices], metric=metric,

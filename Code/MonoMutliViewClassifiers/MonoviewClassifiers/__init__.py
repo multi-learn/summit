@@ -5,3 +5,19 @@ for module in os.listdir(os.path.dirname(os.path.realpath(__file__))):
     __import__(module[:-3], locals(), globals())
 del module
 del os
+
+"""
+To be able to add a Monoview Classifier to the benchmark, one has to :
+Create a .py file named after the classifier
+Define a canProbas function returning True or False whether the classifier is able to predict class probabilities
+Define a fit function
+    Input :
+        DATASET : The data matrix used to fit the classifier
+        CLASS_LABELS : The labels' array of the training set
+        NB_CORES : The number of cores the classifier can use to train
+        kwargs : Any argument specific to the classifier
+    Output :
+        classifier : A classifier object, similar to the sk-learn classifier object
+Define a
+
+"""

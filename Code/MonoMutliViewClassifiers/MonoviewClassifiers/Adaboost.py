@@ -13,12 +13,23 @@ __status__ 	= "Prototype"                           # Production, Development, P
 def canProbas():
     return True
 
+
 def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     num_estimators = int(kwargs['0'])
     base_estimators = DecisionTreeClassifier()#kwargs['1']
     classifier = AdaBoostClassifier(n_estimators=num_estimators, base_estimator=base_estimators)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
+
+
+def getKWARGS(kwargsList):
+    kwargsDict = {}
+    for (kwargName, kwargValue) in kwargsList:
+        if kwargName == "CL_Adaboost_n_est":
+            kwargsDict['0'] = int(kwargValue)
+        elif kwargName == "CL_Adaboost_b_est":
+            kwargsDict['1'] = kwargValue
+    return kwargsDict
 
 
 def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):

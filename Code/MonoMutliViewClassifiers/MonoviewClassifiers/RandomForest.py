@@ -22,6 +22,16 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     return classifier
 
 
+def getKWARGS(kwargsList):
+    kwargsDict = {}
+    for (kwargName, kwargValue) in kwargsList:
+        if kwargName == "CL_RandomForest_trees":
+            kwargsDict['0'] = int(kwargValue)
+        elif kwargName == "CL_RandomForest_max_depth":
+            kwargsDict['1'] = kwargValue
+    return kwargsDict
+
+
 def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
     param_rf = {"classifier__n_estimators": randint(1, 30),

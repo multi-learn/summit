@@ -20,6 +20,14 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1, **kwargs):
     return classifier
 
 
+def getKWARGS(kwargsList):
+    kwargsDict = {}
+    for (kwargName, kwargValue) in kwargsList:
+        if kwargName == "CL_DecisionTree_depth":
+            kwargsDict['0'] = int(kwargValue)
+    return kwargsDict
+
+
 def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_DT = Pipeline([('classifier', DecisionTreeClassifier())])
     param_DT = {"classifier__max_depth": randint(1, 30)}

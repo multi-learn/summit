@@ -5,3 +5,27 @@ for module in os.listdir(os.path.dirname(os.path.realpath(__file__))):
     __import__(module[:-3], locals(), globals())
 del module
 del os
+
+"""
+To be able to add another metric to the benchmark you must :
+
+Create a .py file named after the metric
+Define a score function
+    Input :
+        y_true : np array with the real labels
+        y_pred : np array with the predicted labels
+        kwargs : every argument that is specific to the metric
+    Returns:
+        score : the metric's score (float)
+Define a get_scorer function
+    Input :
+        kwargs : every argument that is specific to the metric
+    Returns :
+        scorer : an object similar to an sk-learn scorer
+Define a getConfig function
+    Input :
+        kwargs : every argument that is specific to the metric
+    Output :
+        configString : A string that gives the name of the metric and explains how it is configured. Must end by
+                        (lower is better) or (higher is better) to be able to analyze the results
+"""

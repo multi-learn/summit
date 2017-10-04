@@ -16,7 +16,7 @@ from sklearn import metrics		        # For stastics on classification
 import h5py
 
 # Import own modules
-import ClassifMonoView	                # Functions for classification
+import MonoviewUtils	                # Functions for classification
 import ExportResults                    # Functions to render results
 import MonoviewClassifiers
 import Metrics
@@ -29,7 +29,7 @@ __status__ 	= "Prototype"           # Production, Development, Prototype
 __date__	= 2016-03-25
 
 
-def ExecMonoview_multicore(directory, name, labelsNames, learningRate, nbFolds, datasetFileIndex, databaseType, path, statsIter, gridSearch=True,
+def ExecMonoview_multicore(directory, name, labelsNames, learningRate, nbFolds, datasetFileIndex, databaseType, path, statsIter, hyperParamSearch="randomizedSearch",
                            metrics=[["accuracy_score", None]], nIter=30, **args):
     DATASET = h5py.File(path+name+str(datasetFileIndex)+".hdf5", "r")
     kwargs = args["args"]
@@ -37,12 +37,12 @@ def ExecMonoview_multicore(directory, name, labelsNames, learningRate, nbFolds, 
     neededViewIndex = views.index(kwargs["feat"])
     X = DATASET.get("View"+str(neededViewIndex))
     Y = DATASET.get("Labels").value
-    return ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, 1, databaseType, path, statsIter, gridSearch=gridSearch,
+    return ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, 1, databaseType, path, statsIter, hyperParamSearch=hyperParamSearch,
                         metrics=metrics, nIter=nIter, **args)
 
 
-def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databaseType, path, statsIter, gridSearch=True,
-                metrics=[["accuracy_score", None]], nIter=30, **args):
+def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databaseType, path, statsIter, hyperParamSearch="randomizedSearch",
+                 metrics=[["accuracy_score", None]], nIter=30, **args):
     logging.debug("Start:\t Loading data")
     try:
         kwargs = args["args"]
@@ -54,7 +54,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCo
     nbClass = kwargs["nbClass"]
     X = getValue(X)
     datasetLength = X.shape[0]
-    clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
+
     logging.debug("Done:\t Loading data")
     # Determine the Database to extract features
     logging.debug("Info:\t Classification - Database:" + str(name) + " Feature:" + str(feat) + " train_size:" + str(learningRate) + ", CrossValidation k-folds:" + str(nbFolds) + ", cores:" + str(nbCores)+", algorithm : "+CL_type)
@@ -66,7 +66,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCo
     for iterationStat in range(statsIter):
         # Calculate Train/Test data
         logging.debug("Start:\t Determine Train/Test split"+" for iteration "+str(iterationStat+1))
-        testIndices = ClassifMonoView.splitDataset(Y, nbClass, learningRate, datasetLength)
+        testIndices = MonoviewUtils.splitDataset(Y, nbClass, learningRate, datasetLength)
         trainIndices = [i for i in range(datasetLength) if i not in testIndices]
         X_train = extractSubset(X,trainIndices)
         X_test = extractSubset(X,testIndices)
@@ -80,13 +80,15 @@ def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCo
         # Begin Classification RandomForest
 
         classifierModule = getattr(MonoviewClassifiers, CL_type)
-        classifierGridSearch = getattr(classifierModule, "gridSearch")
 
-        if gridSearch:
+        if hyperParamSearch != "None":
+            classifierGridSearch = getattr(classifierModule, hyperParamSearch)
             logging.debug("Start:\t RandomSearch best settings with "+str(nIter)+" iterations for "+CL_type)
             cl_desc = classifierGridSearch(X_train, y_train, nbFolds=nbFolds, nbCores=nbCores, metric=metrics[0], nIter=nIter)
             clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
             logging.debug("Done:\t RandomSearch best settings")
+        else:
+            clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
         logging.debug("Start:\t Training")
         cl_res = classifierModule.fit(X_train, y_train, NB_CORES=nbCores, **clKWARGS)
         logging.debug("Done:\t Training")
@@ -107,9 +109,9 @@ def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCo
 
     logging.debug("Start:\t Getting Results")
 
-    stringAnalysis, imagesAnalysis, metricsScores = execute(name, learningRate, nbFolds, nbCores, gridSearch, metrics, nIter, feat, CL_type,
-                                         clKWARGS, labelsNames, X.shape,
-                                         y_trains, y_train_preds, y_tests, y_test_preds, t_end, statsIter)
+    stringAnalysis, imagesAnalysis, metricsScores = execute(name, learningRate, nbFolds, nbCores, hyperParamSearch, metrics, nIter, feat, CL_type,
+                                                            clKWARGS, labelsNames, X.shape,
+                                                            y_trains, y_train_preds, y_tests, y_test_preds, t_end, statsIter)
     cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
     logging.debug("Done:\t Getting Results")
     logging.info(stringAnalysis)

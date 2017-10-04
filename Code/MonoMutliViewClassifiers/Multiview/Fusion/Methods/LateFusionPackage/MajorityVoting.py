@@ -14,6 +14,28 @@ def genParamsSets(classificationKWARGS, nIter=1):
         paramsSets.append([normalizedArray])
     return paramsSets
 
+
+def getArgs(args, views, viewsIndices):
+    monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName) for classifierName in args.FU_L_cl_names]
+    arguments = {"CL_type": "Fusion",
+                 "views": views,
+                 "NB_VIEW": len(views),
+                 "viewsIndices": viewsIndices,
+                 "NB_CLASS": len(args.CL_classes),
+                 "LABELS_NAMES": args.CL_classes,
+                 "FusionKWARGS": {"fusionType": "LateFusion",
+                                  "fusionMethod": "BayesianInference",
+                                  "classifiersNames": args.FU_L_cl_names,
+                                  "classifiersConfigs": [monoviewClassifierModule.getKWARGS([arg.split(":")
+                                                                                             for arg in
+                                                                                             classifierConfig.split(";")])
+                                                         for monoviewClassifierModule,classifierConfig
+                                                         in zip(args.FU_L_cl_config,monoviewClassifierModules)],
+                                  'fusionMethodConfig': args.FU_L_method_config[0],
+                                  'monoviewSelection': args.FU_L_select_monoview,
+                                  "nbView": (len(viewsIndices))}}
+    return [arguments]
+
 # def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
 #     if type(viewsIndices)==type(None):
 #         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
@@ -37,12 +59,10 @@ def genParamsSets(classificationKWARGS, nIter=1):
 
 class MajorityVoting(LateFusionClassifier):
     def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
+        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
-        if kwargs['fusionMethodConfig'][0]==None:
+        if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig'][0]==['']:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
-        elif kwargs['fusionMethodConfig'][0]==['']:
-            pass
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 

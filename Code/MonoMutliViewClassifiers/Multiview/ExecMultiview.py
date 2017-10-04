@@ -21,14 +21,14 @@ __status__ = "Prototype"                           # Production, Development, Pr
 
 
 def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY, statsIter,
-                            gridSearch=False, nbCores=1, metrics=None, nIter=30, **arguments):
+                            hyperParamSearch=False, nbCores=1, metrics=None, nIter=30, **arguments):
     DATASET = h5py.File(path+name+str(coreIndex)+".hdf5", "r")
     return ExecMultiview(directory, DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY, statsIter,
-                         gridSearch=gridSearch, metrics=metrics, nIter=nIter, **arguments)
+                         hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=nIter, **arguments)
 
 
 def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY, statsIter,
-                  gridSearch=False, metrics=None, nIter=30, **kwargs):
+                  hyperParamSearch=False, metrics=None, nIter=30, **kwargs):
 
     datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
     NB_VIEW = kwargs["NB_VIEW"]
@@ -59,8 +59,7 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
     classifiersIterations = []
     classifierPackage = globals()[CL_type]  # Permet d'appeler un module avec une string
     classifierModule = getattr(classifierPackage, CL_type)
-    # classifierClass = getattr(classifierModule, CL_type)
-    # classifierGridSearch = getattr(classifierModule, "gridSearch_hdf5")
+    classifierClass = getattr(classifierModule, CL_type)
     analysisModule = getattr(classifierPackage, "analyzeResults")
 
     logging.info("Start:\t Determine validation split for ratio " + str(learningRate))
@@ -84,7 +83,11 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
         # logging.info("Start:\t Learning with " + CL_type + " and " + str(len(kFolds)) + " folds")
         # logging.info("Start:\t Classification")
         # Begin Classification
-    classifier = searchBestSettings(DATASET, CL_type, metrics, iLearningIndices, iKFolds,viewsIndices=viewsIndices, searchingTool=gridSearch, nIter=nIter, **classificationKWARGS)
+    if hyperParamSearch != "None":
+        classifier = searchBestSettings(DATASET, CL_type, metrics, iLearningIndices, iKFolds, viewsIndices=viewsIndices, searchingTool=hyperParamSearch, nIter=nIter, **classificationKWARGS)
+    else:
+        classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
+        # classifier.setParams(classificationKWARGS)
     for _ in range(statsIter):
         classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices)
         trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
@@ -106,9 +109,9 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
     stringAnalysis, imagesAnalysis, metricsScores = analysisModule.execute(classifiersIterations, trainLabelsIterations,
                                                                            testLabelsIterations, DATASET,
                                                                            classificationKWARGS, learningRate,
-                                                                           LABELS_DICTIONARY,views, nbCores, times,
+                                                                           LABELS_DICTIONARY, views, nbCores, times,
                                                                            name, nbFolds, ivalidationIndices,
-                                                                           gridSearch, nIter, metrics, statsIter,
+                                                                           hyperParamSearch, nIter, metrics, statsIter,
                                                                            viewsIndices)
     labelsSet = set(LABELS_DICTIONARY.values())
     logging.info(stringAnalysis)

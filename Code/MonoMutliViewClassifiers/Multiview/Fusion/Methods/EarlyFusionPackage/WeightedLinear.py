@@ -14,6 +14,27 @@ def genParamsSets(classificationKWARGS, nIter=1):
     return paramsSets
 
 
+def getArgs(args, views, viewsIndices):
+    argumentsList = []
+    for classifierName, classifierConfig in zip(args.FU_E_cl_names, args.FU_E_cl_config):
+        monoviewClassifierModule = getattr(MonoviewClassifiers, classifierName)
+        arguments = {"CL_type": "Fusion",
+                     "views": views,
+                     "NB_VIEW": len(views),
+                     "viewsIndices": viewsIndices,
+                     "NB_CLASS": len(args.CL_classes),
+                     "LABELS_NAMES": args.CL_classes,
+                     "FusionKWARGS": {"fusionType": "EarlyFusion",
+                                      "fusionMethod": "WeightedLinear",
+                                      "classifiersNames": classifierName,
+                                      "classifiersConfigs": monoviewClassifierModule.getKWARGS([arg.split(":")
+                                                                                                for arg in
+                                                                                                classifierConfig.split(",")]),
+                                      'fusionMethodConfig': args.FU_E_method_configs,
+                                      "nbView": (len(viewsIndices))}}
+        argumentsList.append(arguments)
+    return argumentsList
+
 # def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
 #     if type(viewsIndices)==type(None):
 #         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
@@ -42,9 +63,9 @@ class WeightedLinear(EarlyFusionClassifier):
         if kwargs['fusionMethodConfig'][0]==None:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
         elif kwargs['fusionMethodConfig'][0]==['']:
-            pass
+            self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
         else:
-            self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
+            self.weights = np.array(map(float, kwargs['fusionMethodConfig']))
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
@@ -87,8 +108,8 @@ class WeightedLinear(EarlyFusionClassifier):
     def getConfig(self, fusionMethodConfig ,monoviewClassifiersNames, monoviewClassifiersConfigs):
         configString = "with weighted concatenation, using weights : "+", ".join(map(str, self.weights))+ \
                        " with monoview classifier : "
-        monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifiersNames[0])
-        configString += monoviewClassifierModule.getConfig(monoviewClassifiersConfigs[0])
+        monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifiersNames)
+        configString += monoviewClassifierModule.getConfig(monoviewClassifiersConfigs)
         return configString
 
     def gridSearch(self, classificationKWARGS):

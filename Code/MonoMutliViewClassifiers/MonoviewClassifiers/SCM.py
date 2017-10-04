@@ -46,6 +46,19 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
         pass
     return classifier
 
+def getKWARGS(kwargsList):
+    kwargsDict = {}
+    for (kwargName, kwargValue) in kwargsList:
+        if kwargName == "CL_SCM_max_rules":
+            kwargsDict['0'] = int(kwargValue)
+        elif kwargName == "CL_SCM_p":
+            kwargsDict['1'] = int(kwargValue)
+        elif kwargName == "CL_SCM_model_type":
+            kwargsDict['2'] = kwargValue
+    return kwargsDict
+
+
+
 
 def gridSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
 

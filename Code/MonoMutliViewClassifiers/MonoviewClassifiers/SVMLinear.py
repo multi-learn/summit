@@ -20,6 +20,14 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     return classifier
 
 
+def getKWARGS(kwargsList):
+    kwargsDict = {}
+    for (kwargName, kwargValue) in kwargsList:
+        if kwargName == "CL_SVMLinear_C":
+            kwargsDict['0'] = int(kwargValue)
+    return kwargsDict
+
+
 def gridSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SVMLinear = Pipeline([('classifier', SVC(kernel="linear", max_iter=1000))])
     param_SVMLinear = {"classifier__C":randint(1, 10000)}
