@@ -29,7 +29,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SVMRBF = Pipeline([('classifier', SVC(kernel="rbf", max_iter=1000))])
     param_SVMRBF = {"classifier__C": randint(1, 10000)}
     metricModule = getattr(Metrics, metric[0])
@@ -39,7 +39,7 @@ def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
     grid_SVMRBF = RandomizedSearchCV(pipeline_SVMRBF, n_iter=nIter, param_distributions=param_SVMRBF, refit=True,
-                                     n_jobs=nbCores, scoring=scorer, cv=nbFolds, random_state=randomState)
+                                     n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
     SVMRBF_detector = grid_SVMRBF.fit(X_train, y_train)
     desc_params = [SVMRBF_detector.best_params_["classifier__C"]]
     return desc_params

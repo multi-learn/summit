@@ -13,6 +13,7 @@ from joblib import Parallel, delayed
 import numpy as np
 import math
 import matplotlib
+import sklearn
 
 # Import own modules
 import Multiview
@@ -263,7 +264,7 @@ groupStandard.add_argument('--randomState', metavar='INT', action='store', type=
 groupClass = parser.add_argument_group('Classification arguments')
 groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
                         help='Determine the split between learning and validation sets', type=float,
-                        default=0.7)
+                        default=0.3)
 groupClass.add_argument('--CL_nbFolds', metavar='INT', action='store', help='Number of folds in cross validation',
                         type=int, default=2)
 groupClass.add_argument('--CL_nb_class', metavar='INT', action='store', help='Number of classes, -1 for all', type=int,
@@ -424,6 +425,15 @@ directory = initLogFile(args)
 DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nb_class,
                                          args.CL_classes, randomState)
 
+datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
+indices = np.arange(datasetLength)
+trainIndices, testIndices, a, aa = sklearn.model_selection.train_test_split(indices, DATASET.get("Labels").value,
+                                                                            test_size=args.CL_split,
+                                                                            random_state=randomState)
+classificationIndices = (trainIndices, testIndices)
+kFolds = sklearn.model_selection.KFold(n_splits=args.CL_nbFolds, random_state=randomState)
+kFoldsIndices = kFolds.split(trainIndices)
+
 datasetFiles = initMultipleDatasets(args, nbCores)
 
 views, viewsIndices, allViews = initViews(DATASET, args)
@@ -465,7 +475,7 @@ if nbCores > 1:
     nbExperiments = len(argumentDictionaries["Monoview"])
     for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
         resultsMonoview += (Parallel(n_jobs=nbCores)(
-            delayed(ExecMonoview_multicore)(directory, args.name, labelsNames, args.CL_split, args.CL_nbFolds,
+            delayed(ExecMonoview_multicore)(directory, args.name, labelsNames, classificationIndices, kFolds,
                                             coreIndex, args.type, args.pathF, statsIter, randomState,
                                             hyperParamSearch=hyperParamSearch,
                                             metrics=metrics, nIter=args.CL_GS_iter,
@@ -481,7 +491,7 @@ if nbCores > 1:
 else:
     resultsMonoview += ([ExecMonoview(directory, DATASET.get("View" + str(arguments["viewIndex"])),
                                       DATASET.get("Labels").value, args.name, labelsNames,
-                                      args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF, statsIter, randomState,
+                                      classificationIndices, kFolds, 1, args.type, args.pathF, statsIter, randomState,
                                       hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=args.CL_GS_iter,
                                       **arguments)
                          for arguments in argumentDictionaries["Monoview"]])
@@ -501,7 +511,7 @@ if nbCores > 1:
     nbExperiments = len(argumentDictionaries["Multiview"])
     for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
         resultsMultiview += Parallel(n_jobs=nbCores)(
-            delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, args.CL_split, args.CL_nbFolds, args.type,
+            delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
                                              args.pathF,
                                              LABELS_DICTIONARY, statsIter, randomState, hyperParamSearch=hyperParamSearch,
                                              metrics=metrics, nIter=args.CL_GS_iter,
@@ -509,7 +519,7 @@ if nbCores > 1:
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
 else:
     resultsMultiview = [
-        ExecMultiview(directory, DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
+        ExecMultiview(directory, DATASET, args.name, classificationIndices, kFolds, 1, args.type, args.pathF,
                       LABELS_DICTIONARY, statsIter, randomState, hyperParamSearch=hyperParamSearch,
                       metrics=metrics, nIter=args.CL_GS_iter, **arguments) for arguments in
         argumentDictionaries["Multiview"]]

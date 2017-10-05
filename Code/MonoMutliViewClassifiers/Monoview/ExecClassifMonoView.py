@@ -29,7 +29,7 @@ __status__ 	= "Prototype"           # Production, Development, Prototype
 __date__	= 2016-03-25
 
 
-def ExecMonoview_multicore(directory, name, labelsNames, learningRate, nbFolds, datasetFileIndex, databaseType, path, statsIter, randomState, hyperParamSearch="randomizedSearch",
+def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices, KFolds, datasetFileIndex, databaseType, path, statsIter, randomState, hyperParamSearch="randomizedSearch",
                            metrics=[["accuracy_score", None]], nIter=30, **args):
     DATASET = h5py.File(path+name+str(datasetFileIndex)+".hdf5", "r")
     kwargs = args["args"]
@@ -37,11 +37,11 @@ def ExecMonoview_multicore(directory, name, labelsNames, learningRate, nbFolds, 
     neededViewIndex = views.index(kwargs["feat"])
     X = DATASET.get("View"+str(neededViewIndex))
     Y = DATASET.get("Labels").value
-    return ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, 1, databaseType, path, statsIter, randomState, hyperParamSearch=hyperParamSearch,
+    return ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFolds, 1, databaseType, path, statsIter, randomState, hyperParamSearch=hyperParamSearch,
                         metrics=metrics, nIter=nIter, **args)
 
 
-def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCores, databaseType, path, statsIter, randomState, hyperParamSearch="randomizedSearch",
+def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFolds, nbCores, databaseType, path, statsIter, randomState, hyperParamSearch="randomizedSearch",
                  metrics=[["accuracy_score", None]], nIter=30, **args):
     logging.debug("Start:\t Loading data")
     try:
@@ -57,62 +57,64 @@ def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCo
 
     logging.debug("Done:\t Loading data")
     # Determine the Database to extract features
-    logging.debug("Info:\t Classification - Database:" + str(name) + " Feature:" + str(feat) + " train_size:" + str(learningRate) + ", CrossValidation k-folds:" + str(nbFolds) + ", cores:" + str(nbCores)+", algorithm : "+CL_type)
+    print KFolds
+    logging.debug("Info:\t Classification - Database:" + str(name) + " Feature:" + str(feat) + " train_size:"
+                  + str(len(classificationIndices[0])) + ", CrossValidation k-folds: " + str(KFolds.n_splits) + ", cores:"
+                  + str(nbCores) + ", algorithm : " + CL_type)
 
-    y_trains = []
-    y_tests = []
-    y_train_preds = []
-    y_test_preds = []
-    for iterationStat in range(statsIter):
-        # Calculate Train/Test data
-        logging.debug("Start:\t Determine Train/Test split"+" for iteration "+str(iterationStat+1))
-        testIndices = MonoviewUtils.splitDataset(Y, nbClass, learningRate, datasetLength, randomState)
-        trainIndices = [i for i in range(datasetLength) if i not in testIndices]
-        X_train = extractSubset(X,trainIndices)
-        X_test = extractSubset(X,testIndices)
-        y_train = Y[trainIndices]
-        y_test = Y[testIndices]
+    # y_trains = []
+    # y_tests = []
+    # y_train_preds = []
+    # y_test_preds = []
+    trainIndices, testIndices = classificationIndices
+    # for iterationStat in range(statsIter):
+    # Calculate Train/Test data
+    logging.debug("Start:\t Determine Train/Test split") #+" for iteration "+str(iterationStat+1)
+    # testIndices = MonoviewUtils.splitDataset(Y, nbClass, classificationIndices, datasetLength, randomState)
+    # trainIndices = [i for i in range(datasetLength) if i not in testIndices]
+    X_train = extractSubset(X, trainIndices)
+    X_test = extractSubset(X, testIndices)
+    y_train = Y[trainIndices]
+    y_test = Y[testIndices]
 
-        logging.debug("Info:\t Shape X_train:" + str(X_train.shape) + ", Length of y_train:" + str(len(y_train)))
-        logging.debug("Info:\t Shape X_test:" + str(X_test.shape) + ", Length of y_test:" + str(len(y_test)))
-        logging.debug("Done:\t Determine Train/Test split")
+    logging.debug("Info:\t Shape X_train:" + str(X_train.shape) + ", Length of y_train:" + str(len(y_train)))
+    logging.debug("Info:\t Shape X_test:" + str(X_test.shape) + ", Length of y_test:" + str(len(y_test)))
+    logging.debug("Done:\t Determine Train/Test split")
 
-        # Begin Classification RandomForest
+    classifierModule = getattr(MonoviewClassifiers, CL_type)
 
-        classifierModule = getattr(MonoviewClassifiers, CL_type)
+    if hyperParamSearch != "None":
+        classifierHPSearch = getattr(classifierModule, hyperParamSearch)
+        logging.debug("Start:\t RandomSearch best settings with "+str(nIter)+" iterations for "+CL_type)
+        cl_desc = classifierHPSearch(X_train, y_train, randomState, KFolds=KFolds, nbCores=nbCores,
+                                       metric=metrics[0], nIter=nIter)
+        clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
+        logging.debug("Done:\t RandomSearch best settings")
+    else:
+        clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
+    logging.debug("Start:\t Training")
+    cl_res = classifierModule.fit(X_train, y_train, randomState, NB_CORES=nbCores, **clKWARGS)
+    logging.debug("Done:\t Training")
 
-        if hyperParamSearch != "None":
-            classifierGridSearch = getattr(classifierModule, hyperParamSearch)
-            logging.debug("Start:\t RandomSearch best settings with "+str(nIter)+" iterations for "+CL_type)
-            cl_desc = classifierGridSearch(X_train, y_train, randomState, nbFolds=nbFolds, nbCores=nbCores,
-                                           metric=metrics[0], nIter=nIter)
-            clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
-            logging.debug("Done:\t RandomSearch best settings")
-        else:
-            clKWARGS = kwargs[kwargs["CL_type"]+"KWARGS"]
-        logging.debug("Start:\t Training")
-        cl_res = classifierModule.fit(X_train, y_train, randomState, NB_CORES=nbCores, **clKWARGS)
-        logging.debug("Done:\t Training")
+    logging.debug("Start:\t Predicting")
+    # Stats Result
+    y_train_pred = cl_res.predict(X_train)
+    y_test_pred = cl_res.predict(X_test)
 
-        logging.debug("Start:\t Predicting")
-        # Stats Result
-        y_train_pred = cl_res.predict(X_train)
-        y_test_pred = cl_res.predict(X_test)
-
-        y_trains.append(y_train)
-        y_train_preds.append(y_train_pred)
-        y_tests.append(y_test)
-        y_test_preds.append(y_test_pred)
-        full_labels = cl_res.predict(X)
-        logging.debug("Done:\t Predicting")
-    t_end  = time.time() - t_start
+    # y_trains.append(y_train)
+    # y_train_preds.append(y_train_pred)
+    # y_tests.append(y_test)
+    # y_test_preds.append(y_test_pred)
+    full_labels = cl_res.predict(X)
+    logging.debug("Done:\t Predicting")
+    t_end = time.time() - t_start
     logging.debug("Info:\t Time for training and predicting: " + str(t_end) + "[s]")
 
     logging.debug("Start:\t Getting Results")
 
-    stringAnalysis, imagesAnalysis, metricsScores = execute(name, learningRate, nbFolds, nbCores, hyperParamSearch, metrics, nIter, feat, CL_type,
+    stringAnalysis, imagesAnalysis, metricsScores = execute(name, classificationIndices, KFolds, nbCores, hyperParamSearch, metrics, nIter, feat, CL_type,
                                                             clKWARGS, labelsNames, X.shape,
-                                                            y_trains, y_train_preds, y_tests, y_test_preds, t_end, statsIter, randomState)
+                                                            y_train, y_train_pred, y_test, y_test_pred, t_end, statsIter, randomState)
     cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
     logging.debug("Done:\t Getting Results")
     logging.info(stringAnalysis)
@@ -120,7 +122,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCo
     timestr = time.strftime("%Y%m%d-%H%M%S")
     CL_type_string = CL_type
     outputFileName = directory + timestr + "Results-" + CL_type_string + "-" + labelsString + \
-                     '-learnRate' + str(learningRate) + '-' + name + "-" + feat
+                     '-learnRate' + str(len(classificationIndices)) + '-' + name + "-" + feat
 
     outputTextFile = open(outputFileName + '.txt', 'w')
     outputTextFile.write(stringAnalysis)
@@ -131,7 +133,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCo
             if os.path.isfile(outputFileName + imageName + ".png"):
                 for i in range(1,20):
                     testFileName = outputFileName + imageName + "-" + str(i) + ".png"
-                    if os.path.isfile(testFileName )!=True:
+                    if os.path.isfile(testFileName ) != True:
                         imagesAnalysis[imageName].savefig(testFileName)
                         break
 
@@ -140,6 +142,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, learningRate, nbFolds, nbCo
     logging.info("Done:\t Result Analysis")
     viewIndex = args["viewIndex"]
     return viewIndex, [CL_type, cl_desc+[feat], metricsScores, full_labels]
+
     # # Classification Report with Precision, Recall, F1 , Support
     # logging.debug("Info:\t Classification report:")
     # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Report"

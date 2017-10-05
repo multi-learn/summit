@@ -53,6 +53,7 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
 
     extractionTime = time.time() - t_start
     ivalidationIndices = []
+
     trainLabelsIterations = []
     testLabelsIterations = []
     classifiersIterations = []
@@ -87,6 +88,7 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
     else:
         classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
     for _ in range(statsIter):
+        learningIndices, validationIndices = learningRate
         classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices)
         trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
         testLabels = classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices)

@@ -39,7 +39,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SGD = Pipeline([('classifier', SGDClassifier())])
     losses = ['log', 'modified_huber']
     penalties = ["l1", "l2", "elasticnet"]
@@ -53,7 +53,7 @@ def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
     grid_SGD = RandomizedSearchCV(pipeline_SGD, n_iter=nIter, param_distributions=param_SGD, refit=True,
-                                  n_jobs=nbCores, scoring=scorer, cv=nbFolds, random_state=randomState)
+                                  n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
     SGD_detector = grid_SGD.fit(X_train, y_train)
     desc_params = [SGD_detector.best_params_["classifier__loss"], SGD_detector.best_params_["classifier__penalty"],
                    SGD_detector.best_params_["classifier__alpha"]]

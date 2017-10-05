@@ -35,7 +35,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
     param_rf = {"classifier__n_estimators": randint(1, 30),
                 "classifier__max_depth": randint(1, 30),
@@ -46,8 +46,8 @@ def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric
     else:
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
-    grid_rf = RandomizedSearchCV(pipeline_rf, n_iter=nIter,param_distributions=param_rf,refit=True,n_jobs=nbCores,
-                                 scoring=scorer,cv=nbFolds, random_state=randomState)
+    grid_rf = RandomizedSearchCV(pipeline_rf, n_iter=nIter, param_distributions=param_rf, refit=True, n_jobs=nbCores,
+                                 scoring=scorer, cv=KFolds, random_state=randomState)
     rf_detector = grid_rf.fit(X_train, y_train)
 
     desc_estimators = [rf_detector.best_params_["classifier__n_estimators"],

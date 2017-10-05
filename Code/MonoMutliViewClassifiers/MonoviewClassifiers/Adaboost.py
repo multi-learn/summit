@@ -32,7 +32,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
+def randomizedSearch(X_train, y_train, randomState, KFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
     pipeline = Pipeline([('classifier', AdaBoostClassifier())])
 
     param= {"classifier__n_estimators": randint(1, 15),
@@ -44,7 +44,7 @@ def randomizedSearch(X_train, y_train, randomState, nbFolds=4, metric=["accuracy
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
     grid = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=param, refit=True, n_jobs=nbCores,
-                              scoring=scorer, cv=nbFolds, random_state=randomState)
+                              scoring=scorer, cv=KFolds, random_state=randomState)
     detector = grid.fit(X_train, y_train)
     desc_estimators = [detector.best_params_["classifier__n_estimators"],
                        detector.best_params_["classifier__base_estimator"]]

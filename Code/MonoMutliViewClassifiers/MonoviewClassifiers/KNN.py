@@ -39,7 +39,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30 ):
+def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_KNN = Pipeline([('classifier', KNeighborsClassifier())])
     param_KNN = {"classifier__n_neighbors": randint(1, 50),
                  "classifier__weights": ["uniform", "distance"],
@@ -53,7 +53,7 @@ def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
     grid_KNN = RandomizedSearchCV(pipeline_KNN, n_iter=nIter, param_distributions=param_KNN, refit=True, n_jobs=nbCores, scoring=scorer,
-                            cv=nbFolds, random_state=randomState)
+                                  cv=KFolds, random_state=randomState)
     KNN_detector = grid_KNN.fit(X_train, y_train)
     desc_params = [KNN_detector.best_params_["classifier__n_neighbors"],
                    KNN_detector.best_params_["classifier__weights"],

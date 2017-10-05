@@ -35,7 +35,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_DT = Pipeline([('classifier', DecisionTreeClassifier())])
     param_DT = {"classifier__max_depth": randint(1, 30),
                 "classifier__criterion": ["gini", "entropy"],
@@ -47,7 +47,7 @@ def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
     grid_DT = RandomizedSearchCV(pipeline_DT, n_iter=nIter, param_distributions=param_DT, refit=True, n_jobs=nbCores, scoring=scorer,
-                           cv=nbFolds, random_state=randomState)
+                                 cv=KFolds, random_state=randomState)
     DT_detector = grid_DT.fit(X_train, y_train)
     desc_params = [DT_detector.best_params_["classifier__max_depth"], DT_detector.best_params_["classifier__criterion"],
                    DT_detector.best_params_["classifier__splitter"]]
