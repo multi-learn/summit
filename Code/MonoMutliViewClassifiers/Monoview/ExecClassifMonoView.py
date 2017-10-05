@@ -8,6 +8,7 @@ import datetime                         # for TimeStamp in CSVFile
 import os                               # to geth path of the running script
 import time                             # for time calculations
 import operator
+import errno
 
 # Import 3rd party modules
 import numpy as np                      # for reading CSV-files and Series
@@ -87,7 +88,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
         classifierHPSearch = getattr(classifierModule, hyperParamSearch)
         logging.debug("Start:\t RandomSearch best settings with "+str(nIter)+" iterations for "+CL_type)
         cl_desc = classifierHPSearch(X_train, y_train, randomState, KFolds=KFolds, nbCores=nbCores,
-                                       metric=metrics[0], nIter=nIter)
+                                     metric=metrics[0], nIter=nIter)
         clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
         logging.debug("Done:\t RandomSearch best settings")
     else:
@@ -121,12 +122,21 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     labelsString = "-".join(labelsNames)
     timestr = time.strftime("%Y%m%d-%H%M%S")
     CL_type_string = CL_type
-    outputFileName = directory + timestr + "Results-" + CL_type_string + "-" + labelsString + \
-                     '-learnRate' + str(len(classificationIndices)) + '-' + name + "-" + feat
+    outputFileName = directory + "/"+CL_type_string+"/"+"/"+feat+"/"+timestr +"Results-" + CL_type_string + "-" + labelsString + \
+                     '-learnRate' + str(len(classificationIndices)) + '-' + name + "-" + feat + "-"
+    if not os.path.exists(os.path.dirname(outputFileName)):
+        try:
+            os.makedirs(os.path.dirname(outputFileName))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
 
     outputTextFile = open(outputFileName + '.txt', 'w')
     outputTextFile.write(stringAnalysis)
     outputTextFile.close()
+    np.savetxt(outputFileName+"full_pred.csv", full_labels.astype(np.int16), delimiter=",")
+    np.savetxt(outputFileName+"train_pred.csv", y_train_pred.astype(np.int16), delimiter=",")
+    np.savetxt(outputFileName+"test_pred.csv", y_test_pred.astype(np.int16), delimiter=",")
 
     if imagesAnalysis is not None:
         for imageName in imagesAnalysis:
@@ -141,7 +151,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
     logging.info("Done:\t Result Analysis")
     viewIndex = args["viewIndex"]
-    return viewIndex, [CL_type, cl_desc+[feat], metricsScores, full_labels]
+    return viewIndex, [CL_type, cl_desc+[feat], metricsScores, full_labels, y_train_pred]
 
     # # Classification Report with Precision, Recall, F1 , Support
     # logging.debug("Info:\t Classification report:")
