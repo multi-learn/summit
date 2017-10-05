@@ -2,7 +2,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
-from scipy.stats import randint
 
 
 # Author-Info
@@ -13,12 +12,14 @@ __status__ 	= "Prototype"                           # Production, Development, P
 def canProbas():
     return True
 
-def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
+
+def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     nNeighbors = int(kwargs['0'])
     weights = kwargs["1"]
     algorithm = kwargs["2"]
     p = int(kwargs["3"])
-    classifier = KNeighborsClassifier(n_neighbors=nNeighbors, weights=weights, algorithm=algorithm, p=p, n_jobs=NB_CORES)
+    classifier = KNeighborsClassifier(n_neighbors=nNeighbors, weights=weights, algorithm=algorithm, p=p,
+                                      n_jobs=NB_CORES, )
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
 
@@ -37,9 +38,9 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30 ):
+def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30 ):
     pipeline_KNN = Pipeline([('classifier', KNeighborsClassifier())])
-    param_KNN = {"classifier__n_neighbors": randint(1, 50),
+    param_KNN = {"classifier__n_neighbors": randomState.randint(1, 50),
                  "classifier__weights": ["uniform", "distance"],
                  "classifier__algorithm": ["auto", "ball_tree", "kd_tree", "brute"],
                  "classifier__p": [1,2],
@@ -51,7 +52,7 @@ def randomizedSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_s
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
     grid_KNN = RandomizedSearchCV(pipeline_KNN, n_iter=nIter, param_distributions=param_KNN, refit=True, n_jobs=nbCores, scoring=scorer,
-                            cv=nbFolds)
+                            cv=nbFolds, random_state=randomState)
     KNN_detector = grid_KNN.fit(X_train, y_train)
     desc_params = [KNN_detector.best_params_["classifier__n_neighbors"],
                    KNN_detector.best_params_["classifier__weights"],

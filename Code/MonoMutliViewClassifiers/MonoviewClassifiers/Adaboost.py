@@ -3,7 +3,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.tree import DecisionTreeClassifier
 import Metrics
-from scipy.stats import randint
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -14,10 +13,11 @@ def canProbas():
     return True
 
 
-def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
+def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     num_estimators = int(kwargs['0'])
     base_estimators = DecisionTreeClassifier()#kwargs['1']
-    classifier = AdaBoostClassifier(n_estimators=num_estimators, base_estimator=base_estimators)
+    classifier = AdaBoostClassifier(n_estimators=num_estimators, base_estimator=base_estimators,
+                                    random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
 
@@ -32,10 +32,10 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
+def randomizedSearch(X_train, y_train, randomState, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
     pipeline = Pipeline([('classifier', AdaBoostClassifier())])
 
-    param= {"classifier__n_estimators": randint(1, 15),
+    param= {"classifier__n_estimators": randomState.randint(1, 15),
             "classifier__base_estimator": [DecisionTreeClassifier()]}
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:
@@ -43,7 +43,8 @@ def randomizedSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None
     else:
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
-    grid = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=param, refit=True, n_jobs=nbCores, scoring=scorer, cv=nbFolds)
+    grid = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=param, refit=True, n_jobs=nbCores,
+                              scoring=scorer, cv=nbFolds, random_state=randomState)
     detector = grid.fit(X_train, y_train)
     desc_estimators = [detector.best_params_["classifier__n_estimators"],
                        detector.best_params_["classifier__base_estimator"]]

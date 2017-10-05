@@ -2,7 +2,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
-from scipy.stats import randint
 
 
 # Author-Info
@@ -14,11 +13,12 @@ def canProbas():
     return True
 
 
-def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
+def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     num_estimators = int(kwargs['0'])
     maxDepth = int(kwargs['1'])
     criterion = kwargs["2"]
-    classifier = RandomForestClassifier(n_estimators=num_estimators, max_depth=maxDepth, criterion=criterion, n_jobs=NB_CORES)
+    classifier = RandomForestClassifier(n_estimators=num_estimators, max_depth=maxDepth, criterion=criterion,
+                                        n_jobs=NB_CORES, random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
 
@@ -35,18 +35,19 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
-    param_rf = {"classifier__n_estimators": randint(1, 30),
-                "classifier__max_depth":randint(1, 30),
-                "classifier__criterion":["gini", "entropy"]}
+    param_rf = {"classifier__n_estimators": randomState.randint(1, 30),
+                "classifier__max_depth": randomState.randint(1, 30),
+                "classifier__criterion": ["gini", "entropy"]}
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
-    grid_rf = RandomizedSearchCV(pipeline_rf, n_iter=nIter,param_distributions=param_rf,refit=True,n_jobs=nbCores,scoring=scorer,cv=nbFolds)
+    grid_rf = RandomizedSearchCV(pipeline_rf, n_iter=nIter,param_distributions=param_rf,refit=True,n_jobs=nbCores,
+                                 scoring=scorer,cv=nbFolds, random_state=randomState)
     rf_detector = grid_rf.fit(X_train, y_train)
 
     desc_estimators = [rf_detector.best_params_["classifier__n_estimators"],

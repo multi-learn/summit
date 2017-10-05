@@ -3,7 +3,6 @@
 """ Library: MultiClass Classification with MonoView """
 
 # Import built-in modules
-import pandas as pd                                     # For DataFrames
 
 # Import sci-kit learn party modules
 #from sklearn.tests import train_test_split   # For calculating the train/test split
@@ -12,7 +11,6 @@ from sklearn.model_selection import GridSearchCV            # GridSearch for par
 from sklearn.ensemble import RandomForestClassifier     # RandomForest-Classifier
 import sklearn
 import numpy as np
-import random
 
 # Import own modules
 
@@ -36,20 +34,20 @@ def getLabelSupports(CLASS_LABELS):
     return supports, dict((label, index) for label, index in zip(labels, range(len(labels))))
 
 
-def splitDataset(LABELS, NB_CLASS, LEARNING_RATE, DATASET_LENGTH):
-    validationIndices = extractRandomTrainingSet(LABELS, 1-LEARNING_RATE, DATASET_LENGTH, NB_CLASS)
+def splitDataset(LABELS, NB_CLASS, LEARNING_RATE, DATASET_LENGTH, randomState):
+    validationIndices = extractRandomTrainingSet(LABELS, 1-LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState)
     validationIndices.sort()
     return validationIndices
 
 
-def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS):
+def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState):
     labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS))
     nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
     trainingExamplesIndices = []
     usedIndices = []
     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
         isUseFull = False
-        index = int(random.randint(0, DATASET_LENGTH-1))
+        index = int(randomState.randint(0, DATASET_LENGTH-1))
         if index not in usedIndices:
             isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
         if isUseFull:

@@ -2,7 +2,6 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
-from scipy.stats import uniform
 
 
 # Author-Info
@@ -13,14 +12,15 @@ __status__ 	= "Prototype"                           # Production, Development, P
 def canProbas():
     return True
 
-def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
+
+def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     loss = kwargs['0']
     penalty = kwargs['1']
     try:
         alpha = float(kwargs['2'])
     except:
         alpha = 0.15
-    classifier = SGDClassifier(loss=loss, penalty=penalty, alpha=alpha)
+    classifier = SGDClassifier(loss=loss, penalty=penalty, alpha=alpha, random_state=randomState, n_jobs=NB_CORES)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
 
@@ -37,11 +37,11 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SGD = Pipeline([('classifier', SGDClassifier())])
     losses = ['log', 'modified_huber']
     penalties = ["l1", "l2", "elasticnet"]
-    alphas = uniform()
+    alphas = randomState.uniform()
     param_SGD = {"classifier__loss": losses, "classifier__penalty": penalties,
                  "classifier__alpha": alphas}
     metricModule = getattr(Metrics, metric[0])
@@ -50,8 +50,8 @@ def randomizedSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_s
     else:
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
-    grid_SGD = RandomizedSearchCV(pipeline_SGD, n_iter=nIter, param_distributions=param_SGD, refit=True, n_jobs=nbCores, scoring=scorer,
-                            cv=nbFolds)
+    grid_SGD = RandomizedSearchCV(pipeline_SGD, n_iter=nIter, param_distributions=param_SGD, refit=True,
+                                  n_jobs=nbCores, scoring=scorer, cv=nbFolds, random_state=randomState)
     SGD_detector = grid_SGD.fit(X_train, y_train)
     desc_params = [SGD_detector.best_params_["classifier__loss"], SGD_detector.best_params_["classifier__penalty"],
                    SGD_detector.best_params_["classifier__alpha"]]

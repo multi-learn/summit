@@ -1,17 +1,10 @@
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.pipeline import Pipeline
-from sklearn.grid_search import RandomizedSearchCV
-from sklearn.tree import DecisionTreeClassifier
 import Metrics
-import random
 from pyscm.utils import _pack_binary_bytes_to_ints
 import pyscm
-from scipy.stats import randint
-from utils.Dataset import getShape
+from ..utils.Dataset import getShape
 import h5py
 from Multiview import GetMultiviewDb as DB
 from pyscm.binary_attributes.base import BaseBinaryAttributeList
-import logging
 import os
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -38,7 +31,8 @@ def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
     except:
         attributeClassification, binaryAttributes, dsetFile, name = transformData(DATASET)
     classifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=max_attrtibutes, model_type=model_type, verbose=False)
-    classifier.fit(binaryAttributes, CLASS_LABELS, X=None, attribute_classifications=attributeClassification, iteration_callback=None)
+    classifier.fit(binaryAttributes, CLASS_LABELS, X=None, attribute_classifications=attributeClassification,
+                   iteration_callback=None)
     try:
         dsetFile.close()
         os.remove(name)
@@ -58,9 +52,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-
-
-def randomizedSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
+def randomizedSearch(X_train, y_train, randomState, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
 
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:
@@ -75,9 +67,9 @@ def randomizedSearch(X_train, y_train, nbFolds=4, metric=["accuracy_score", None
         isBetter = "lower"
     config = []
     for iterIndex in range(nIter):
-        max_attributes = random.randint(1, 20)
-        p = random.random()
-        model = random.choice(["conjunction", "disjunction"])
+        max_attributes = randomState.randint(1, 20)
+        p = randomState.random()
+        model = randomState.choice(["conjunction", "disjunction"])
         classifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=max_attributes, model_type=model, verbose=False)
         if nbFolds != 1:
             kFolds = DB.getKFoldIndices(nbFolds, y_train, len(set(y_train)), range(len(y_train)))

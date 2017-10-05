@@ -2,7 +2,6 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
-from scipy.stats import randint
 
 
 # Author-Info
@@ -14,11 +13,12 @@ def canProbas():
     return True
 
 
-def fit(DATASET, CLASS_LABELS, NB_CORES=1, **kwargs):
+def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
     maxDepth = int(kwargs['0'])
     criterion = kwargs['1']
     splitter = kwargs['2']
-    classifier = DecisionTreeClassifier(max_depth=maxDepth, criterion=criterion, splitter=splitter)
+    classifier = DecisionTreeClassifier(max_depth=maxDepth, criterion=criterion, splitter=splitter,
+                                        random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
 
@@ -35,9 +35,9 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_DT = Pipeline([('classifier', DecisionTreeClassifier())])
-    param_DT = {"classifier__max_depth": randint(1, 30),
+    param_DT = {"classifier__max_depth": randomState.randint(1, 30),
                 "classifier__criterion": ["gini", "entropy"],
                 "classifier__splitter": ["best", "random"]}
     metricModule = getattr(Metrics, metric[0])
@@ -47,7 +47,7 @@ def randomizedSearch(X_train, y_train, nbFolds=4, nbCores=1, metric=["accuracy_s
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
     grid_DT = RandomizedSearchCV(pipeline_DT, n_iter=nIter, param_distributions=param_DT, refit=True, n_jobs=nbCores, scoring=scorer,
-                           cv=nbFolds)
+                           cv=nbFolds, random_state=randomState)
     DT_detector = grid_DT.fit(X_train, y_train)
     desc_params = [DT_detector.best_params_["classifier__max_depth"], DT_detector.best_params_["classifier__criterion"],
                    DT_detector.best_params_["classifier__splitter"]]
