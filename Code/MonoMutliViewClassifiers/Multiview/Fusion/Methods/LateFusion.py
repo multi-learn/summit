@@ -2,9 +2,11 @@
 # -*- encoding: utf-8
 
 import numpy as np
+import itertools
 from joblib import Parallel, delayed
-from sklearn.multiclass import OneVsOneClassifier
-from sklearn.svm import SVC
+# from sklearn.multiclass import OneVsOneClassifier
+# from sklearn.svm import SVC
+import os
 
 import MonoviewClassifiers
 from utils.Dataset import getV
@@ -24,8 +26,43 @@ def getAccuracies(LateFusionClassifiers):
     return ""
 
 
-def Intersect(resMono):
-    pass
+def intersect(allClassifersNames, directory):
+    wrongSets = []
+    nbViews = 0
+    for classifierIndex, classifierName in enumerate(allClassifersNames):
+        wrongSets[classifierIndex]=[]
+        classifierDirectory = directory+"/"+classifierName+"/"
+        for viewIndex, viewDirectory in enumerate(os.listdir(classifierDirectory)):
+            nbViews+=1
+            for resultFileName in os.listdir(classifierDirectory+"/"+viewDirectory+"/"):
+                if resultFileName.endswith("train_labels.csv"):
+                    yTrainFileName = classifierDirectory+"/"+viewDirectory+"/"+resultFileName
+                elif resultFileName.endswith("train_pred.csv"):
+                    yTrainPredFileName = classifierDirectory+"/"+viewDirectory+"/"+resultFileName
+            train = np.genfromtxt(yTrainFileName, delimiter=",").astype(np.int16)
+            pred = np.genfromtxt(yTrainPredFileName, delimiter=",").astype(np.int16)
+            length = len(train)
+            wrongLabelsIndices = np.where(train+pred == 1)
+            wrongSets[classifierIndex][viewIndex]=wrongLabelsIndices
+    combinations = itertools.combinations_with_replacement(range(nbViews), len(allClassifersNames))
+    bestLen = length
+    bestCombination = None
+    for combination in combinations:
+        intersect = np.arange(length, dtype=np.int16)
+        for viewIndex, classifierindex in enumerate(combination):
+            intersect = np.intersect1d(intersect, wrongSets[classifierIndex][viewIndex])
+        if len(intersect) < bestLen:
+            bestLen = len(intersect)
+            bestCombination = combination
+    return [allClassifersNames[index] for index in bestCombination]
+
+
+
+
+def getClassifiers(selectionMethodName, allClassifiersNames, directory):
+    selectionMethod = locals()[selectionMethodName]
+    classifiersNames = selectionMethod(allClassifiersNames, directory)
+    return classifiersNames
 
 
 class LateFusionClassifier(object):

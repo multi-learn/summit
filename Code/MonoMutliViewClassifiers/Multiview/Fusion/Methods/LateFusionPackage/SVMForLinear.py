@@ -16,7 +16,7 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 # def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
 #     return None
 
-def getArgs(args, views, viewsIndices):
+def getArgs(args, views, viewsIndices, directory):
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName) for classifierName in args.FU_L_cl_names]
     arguments = {"CL_type": "Fusion",
                  "views": views,

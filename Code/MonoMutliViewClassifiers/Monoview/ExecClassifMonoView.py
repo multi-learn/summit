@@ -136,7 +136,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     outputTextFile.close()
     np.savetxt(outputFileName+"full_pred.csv", full_labels.astype(np.int16), delimiter=",")
     np.savetxt(outputFileName+"train_pred.csv", y_train_pred.astype(np.int16), delimiter=",")
-    np.savetxt(outputFileName+"test_pred.csv", y_test_pred.astype(np.int16), delimiter=",")
+    np.savetxt(outputFileName+"train_labels.csv", y_train.astype(np.int16), delimiter=",")
 
     if imagesAnalysis is not None:
         for imageName in imagesAnalysis:

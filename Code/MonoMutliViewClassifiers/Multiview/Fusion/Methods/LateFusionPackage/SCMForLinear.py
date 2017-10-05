@@ -26,7 +26,7 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     return paramsSets
 
 
-def getArgs(args, views, viewsIndices):
+def getArgs(args, views, viewsIndices, directory):
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName) for classifierName in args.FU_L_cl_names]
     arguments = {"CL_type": "Fusion",
                  "views": views,

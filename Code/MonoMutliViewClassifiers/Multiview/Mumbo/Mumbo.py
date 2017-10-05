@@ -31,7 +31,7 @@ def getBenchmark(benchmark, args=None):
     return benchmark
 
 
-def getArgs(args, benchmark, views, viewsIndices, randomState):
+def getArgs(args, benchmark, views, viewsIndices, randomState, directory):
     argumentsList = []
 
     arguments = {"CL_type": "Mumbo",

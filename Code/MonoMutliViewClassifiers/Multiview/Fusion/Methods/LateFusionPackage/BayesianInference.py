@@ -4,7 +4,8 @@ import pkgutil
 
 from utils.Dataset import getV
 import MonoviewClassifiers
-from ...Methods.LateFusion import LateFusionClassifier
+from ..LateFusion import LateFusionClassifier
+from ..LateFusion import getClassifiers
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
@@ -25,7 +26,7 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 #     fusionMethodConfig = args.FU_method_config
 #     return classifiersNames, classifiersConfig, fusionMethodConfig
 
-def getArgs(args, views, viewsIndices):
+def getArgs(args, views, viewsIndices, directory):
     if args.FU_L_cl_names!=['']:
         monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName) for classifierName in args.FU_L_cl_names]
     else:
@@ -33,6 +34,7 @@ def getArgs(args, views, viewsIndices):
                                           if (not isPackage)]
         monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
                                      for classifierName in monoviewClassifierModulesNames]
+        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory)
     if args.FU_L_cl_config != ['']:
         classifierConfig = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
                             for monoviewClassifierModule,classifierConfig
