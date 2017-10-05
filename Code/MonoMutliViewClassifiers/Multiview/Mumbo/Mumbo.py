@@ -81,7 +81,7 @@ def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, DATA
     return classifier, classes, isBad, averageAccuracy
 
 
-def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices, metric=None, nIter=None):
+def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices, randomState, metric=None, nIter=None):
     classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
@@ -96,7 +96,7 @@ def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices,
 
 class Mumbo:
 
-    def __init__(self, NB_CORES=1, **kwargs):
+    def __init__(self, randomState, NB_CORES=1, **kwargs):
         self.maxIter = kwargs["maxIter"]
         self.minIter = kwargs["minIter"]
         self.threshold = kwargs["threshold"]
@@ -112,6 +112,7 @@ class Mumbo:
         self.bestViews = np.zeros(self.maxIter, dtype=int)-1
         self.averageAccuracies = np.zeros((self.maxIter, nbView))
         self.iterAccuracies = np.zeros(self.maxIter)
+        self.randomState = randomState
 
     def initDataDependant(self, datasetLength, nbView, nbClass, labels):
         self.edges = np.zeros((self.maxIter, nbView))
@@ -242,7 +243,6 @@ class Mumbo:
         else:
             predictedProbas = []
         return predictedProbas
-
 
     def trainWeakClassifiers(self, DATASET, CLASS_LABELS, NB_CLASS, DATASET_LENGTH, NB_VIEW):
         trainedClassifiers = []

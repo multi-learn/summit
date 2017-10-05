@@ -95,12 +95,12 @@ def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None, viewsIndices=
     return monoviewData
 
 
-def genParamsSets(classificationKWARGS, nIter=1):
+def genParamsSets(classificationKWARGS, randomState, nIter=1):
     fusionTypeName = classificationKWARGS["fusionType"]
     fusionTypePackage = globals()[fusionTypeName+"Package"]
     fusionMethodModuleName = classificationKWARGS["fusionMethod"]
     fusionMethodModule = getattr(fusionTypePackage, fusionMethodModuleName)
-    fusionMethodConfig = fusionMethodModule.genParamsSets(classificationKWARGS, nIter=nIter)
+    fusionMethodConfig = fusionMethodModule.genParamsSets(classificationKWARGS, randomState, nIter=nIter)
     return fusionMethodConfig
 
 
@@ -134,7 +134,7 @@ def gridSearch_hdf5(DATASET, viewsIndices, classificationKWARGS, learningIndices
 
 
 class Fusion:
-    def __init__(self, NB_CORES=1,**kwargs):
+    def __init__(self, randomState, NB_CORES=1, **kwargs):
         fusionType = kwargs['fusionType']
         fusionMethod = kwargs['fusionMethod']
         fusionTypePackage = globals()[fusionType+"Package"]
@@ -142,7 +142,7 @@ class Fusion:
         fusionMethodClass = getattr(fusionMethodModule, fusionMethod)
         nbCores = NB_CORES
         classifierKWARGS = dict((key, value) for key, value in kwargs.iteritems() if key not in ['fusionType', 'fusionMethod'])
-        self.classifier = fusionMethodClass(NB_CORES=nbCores, **classifierKWARGS)
+        self.classifier = fusionMethodClass(randomState, NB_CORES=nbCores, **classifierKWARGS)
 
     def setParams(self, paramsSet):
         self.classifier.setParams(paramsSet)

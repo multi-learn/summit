@@ -194,7 +194,6 @@ def getReport(classifiersIterations, CLASS_LABELS, iterationValidationIndices, D
             scoresOnTestByIter)
 
 
-
 def getClassificationReport(kFolds, kFoldClassifier, CLASS_LABELS, validationIndices, DATASET,
                             kFoldPredictedTrainLabels, kFoldPredictedTestLabels, kFoldPredictedValidationLabels,statsIter, viewIndices):
     nbView = len(viewIndices)
@@ -344,6 +343,7 @@ def getClassificationReport(kFolds, kFoldClassifier, CLASS_LABELS, validationInd
             kFoldBestViewsStatsM, kFoldAccuracyOnTrainByIterM, kFoldAccuracyOnTestByIterM, kFoldAccuracyOnValidationByIterM,
             kFoldBestViewsM)
 
+
 def iterRelevant(iterIndex, kFoldClassifierStats):
     relevants = np.zeros(len(kFoldClassifierStats[0]), dtype=bool)
     for statsIterIndex, kFoldClassifier in enumerate(kFoldClassifierStats):
@@ -420,7 +420,7 @@ def getMeanIterations(kFoldClassifierStats, foldIndex):
 
 def execute(classifiersIterations, trainLabelsIterations,testLabelsIterations, DATASET,initKWARGS,
             LEARNING_RATE,LABELS_DICTIONARY,views, NB_CORES, times,databaseName, nbFolds, validationIndices, gridSearch,
-            nIter, metrics, statsIter,viewIndices):
+            nIter, metrics, statsIter,viewIndices, randomState):
 
     CLASS_LABELS = DATASET.get("Labels")[...]
 
@@ -432,7 +432,7 @@ def execute(classifiersIterations, trainLabelsIterations,testLabelsIterations, D
      scoresOnTestByIter) = getReport(classifiersIterations, CLASS_LABELS, validationIndices, DATASET,
                                                   trainLabelsIterations, testLabelsIterations, statsIter, viewIndices, metrics[0])
 
-    stringAnalysis = "\t\tResult for Multiview classification with Mumbo" \
+    stringAnalysis = "\t\tResult for Multiview classification with Mumbo with random state : "+str(randomState) + \
                      "\n\nAverage "+metrics[0][0]+" :\n\t-On Train : " + str(totalScoreOnTrain) + "\n\t-On Test : " + \
                      str(totalScoreOnTest)
     stringAnalysis += dbConfigurationString

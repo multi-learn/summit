@@ -6,7 +6,7 @@ from utils.Dataset import getV
 
 
 class EarlyFusionClassifier(object):
-    def __init__(self, monoviewClassifierName, monoviewClassifierConfig, NB_CORES=1):
+    def __init__(self, randomState, monoviewClassifierName, monoviewClassifierConfig, NB_CORES=1):
         self.monoviewClassifierName = monoviewClassifierName
         if type(monoviewClassifierConfig)==dict:
             pass
@@ -18,6 +18,7 @@ class EarlyFusionClassifier(object):
         self.monoviewClassifier = None
         self.nbCores = NB_CORES
         self.monoviewData = None
+        self.randomState = randomState
 
     def makeMonoviewData_hdf5(self, DATASET, weights=None, usedIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):

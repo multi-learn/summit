@@ -33,7 +33,7 @@ def getConfig(classifierConfig):
     return 'with depth ' + str(depth) + ', ' + ' sub-sampled at ' + str(subSampling) + ' '
 
 
-def gridSearch(data, labels, metric="accuracy_score"):
+def gridSearch(data, labels, randomState, metric="accuracy_score"):
     minSubSampling = 1.0/(len(labels)/2)
     bestSettings = []
     bestResults = []
@@ -51,7 +51,7 @@ def gridSearch(data, labels, metric="accuracy_score"):
     #     baseScore = 1000.0
     #     isBetter = "lower"
     for i in range(50):
-        subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, 0.05)
+        subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, 0.05, randomState)
         classifier.fit(subSampledData, subSampledLabels)
         prediction = classifier.predict(data)
         preliminary_accuracies[i] = accuracy_score(labels, prediction)

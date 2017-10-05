@@ -4,11 +4,11 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 
 
-def genParamsSets(classificationKWARGS, nIter=1):
+def genParamsSets(classificationKWARGS, randomState, nIter=1):
     nbView = classificationKWARGS["nbView"]
     paramsSets = []
     for _ in range(nIter):
-        randomWeightsArray = np.random.random_sample(nbView)
+        randomWeightsArray = randomState.random_sample(nbView)
         normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
         paramsSets.append([normalizedArray])
     return paramsSets
@@ -57,8 +57,8 @@ def getArgs(args, views, viewsIndices):
 
 
 class WeightedLinear(EarlyFusionClassifier):
-    def __init__(self, NB_CORES=1, **kwargs):
-        EarlyFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
+    def __init__(self, randomState, NB_CORES=1, **kwargs):
+        EarlyFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                        NB_CORES=NB_CORES)
         if kwargs['fusionMethodConfig'][0]==None:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)

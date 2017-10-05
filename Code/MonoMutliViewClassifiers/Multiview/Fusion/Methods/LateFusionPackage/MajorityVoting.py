@@ -5,11 +5,11 @@ from sklearn.metrics import accuracy_score
 from utils.Dataset import getV
 
 
-def genParamsSets(classificationKWARGS, nIter=1):
+def genParamsSets(classificationKWARGS, randomState, nIter=1):
     nbView = classificationKWARGS["nbView"]
     paramsSets = []
     for _ in range(nIter):
-        randomWeightsArray = np.random.random_sample(nbView)
+        randomWeightsArray = randomState.random_sample(nbView)
         normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
         paramsSets.append([normalizedArray])
     return paramsSets
@@ -58,8 +58,8 @@ def getArgs(args, views, viewsIndices):
 
 
 class MajorityVoting(LateFusionClassifier):
-    def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
+    def __init__(self, randomState, NB_CORES=1, **kwargs):
+        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
         if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig'][0]==['']:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)

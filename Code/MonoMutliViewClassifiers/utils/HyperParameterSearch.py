@@ -4,12 +4,12 @@ import sys
 import Multiview
 import Metrics
 
-def searchBestSettings(dataset, classifierName, metrics, iLearningIndices, iKFolds, viewsIndices=None, searchingTool="hyperParamSearch", nIter=1, **kwargs):
+def searchBestSettings(dataset, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=None, searchingTool="hyperParamSearch", nIter=1, **kwargs):
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
     thismodule = sys.modules[__name__]
     searchingToolMethod = getattr(thismodule, searchingTool)
-    bestSettings = searchingToolMethod(dataset, classifierName, metrics, iLearningIndices, iKFolds, viewsIndices=viewsIndices, nIter=nIter, **kwargs)
+    bestSettings = searchingToolMethod(dataset, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=viewsIndices, nIter=nIter, **kwargs)
     return bestSettings # or well set clasifier ?
 
 
@@ -18,7 +18,7 @@ def gridSearch(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1,
     pass
 
 
-def randomizedSearch(dataset, classifierName, metrics, iLearningIndices, iKFolds, viewsIndices=None, nIter=1, nbCores=1, **classificationKWARGS):
+def randomizedSearch(dataset, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=None, nIter=1, nbCores=1, **classificationKWARGS):
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
     metric = metrics[0]
@@ -33,40 +33,41 @@ def randomizedSearch(dataset, classifierName, metrics, iLearningIndices, iKFolds
     statsIter = len(iLearningIndices)
     if classifierName != "Mumbo":
         datasetLength = dataset.get("Metadata").attrs["datasetLength"]
-        paramsSets = classifierModule.genParamsSets(classificationKWARGS, nIter=nIter)
+        paramsSets = classifierModule.genParamsSets(classificationKWARGS, randomState, nIter=nIter)
+        if metricModule.getConfig()[-14]=="h":
+            baseScore = -1000.0
+            isBetter = "higher"
+        else:
+            baseScore = 1000.0
+            isBetter = "lower"
+        bestSettings = None
         for paramsSet in paramsSets:
-            if metricModule.getConfig()[-14]=="h":
-                baseScore = -1000.0
-                isBetter = "higher"
-            else:
-                baseScore = 1000.0
-                isBetter = "lower"
             scores = []
             for statsIterIndex in range(statsIter):
                 for fold in iKFolds[statsIterIndex]:
                     fold.sort()
                     trainIndices = [index for index in range(datasetLength) if (index not in fold) and (index in iLearningIndices[statsIterIndex])]
-                    classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
+                    classifier = classifierClass(randomState, NB_CORES=nbCores, **classificationKWARGS)
                     classifier.setParams(paramsSet)
                     classifier.fit_hdf5(dataset, trainIndices=trainIndices, viewsIndices=viewsIndices)
-                    trainLabels = classifier.predict_hdf5(dataset, usedIndices=trainIndices, viewsIndices=viewsIndices)
+                    # trainLabels = classifier.predict_hdf5(dataset, usedIndices=trainIndices, viewsIndices=viewsIndices)
                     testLabels = classifier.predict_hdf5(dataset, usedIndices=fold, viewsIndices=viewsIndices)
-                    trainScore = metricModule.score(dataset.get("Labels").value[trainIndices], trainLabels)
+                    # trainScore = metricModule.score(dataset.get("Labels").value[trainIndices], trainLabels)
                     testScore = metricModule.score(dataset.get("Labels").value[fold], testLabels)
                     scores.append(testScore)
             crossValScore = np.mean(np.array(scores))
 
-            if isBetter=="higher" and crossValScore>baseScore:
+            if isBetter=="higher" and crossValScore > baseScore:
                 baseScore = crossValScore
                 bestSettings = paramsSet
-            elif isBetter=="lower" and crossValScore<baseScore:
+            elif isBetter=="lower" and crossValScore < baseScore:
                 baseScore = crossValScore
                 bestSettings = paramsSet
         classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
         classifier.setParams(bestSettings)
 
     else:
-        bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, viewsIndices, classificationKWARGS, iLearningIndices[0], metric=metric, nIter=nIter)
+        bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, viewsIndices, classificationKWARGS, iLearningIndices[0], randomState, metric=metric, nIter=nIter)
         classificationKWARGS["classifiersConfigs"] = bestConfigs
         classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
 

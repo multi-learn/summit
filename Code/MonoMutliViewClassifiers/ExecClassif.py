@@ -216,13 +216,13 @@ def lateFusionSetArgs(views, viewsIndices, classes, method,
 
 
 def initMultiviewArguments(args, benchmark, views, viewsIndices, scores, classifiersConfigs, classifiersNames,
-                           NB_VIEW, metrics, argumentDictionaries):
+                           NB_VIEW, metrics, argumentDictionaries, randomState):
     multiviewArguments = []
     if "Multiview" in benchmark:
         for multiviewAlgoName in benchmark["Multiview"]:
             multiviewPackage = getattr(Multiview, multiviewAlgoName)
             mutliviewModule = getattr(multiviewPackage, multiviewAlgoName)
-            multiviewArguments += mutliviewModule.getArgs(args, benchmark, views, viewsIndices)
+            multiviewArguments += mutliviewModule.getArgs(args, benchmark, views, viewsIndices, randomState)
     argumentDictionaries["Multiview"] = multiviewArguments
     return argumentDictionaries
 
@@ -494,7 +494,7 @@ else:
 monoviewTime = time.time() - dataBaseTime - start
 
 argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, scores, classifiersConfigs,
-                                              classifiersNames, NB_VIEW, metrics[0], argumentDictionaries)
+                                              classifiersNames, NB_VIEW, metrics[0], argumentDictionaries, randomState)
 
 if nbCores > 1:
     resultsMultiview = []
@@ -503,14 +503,14 @@ if nbCores > 1:
         resultsMultiview += Parallel(n_jobs=nbCores)(
             delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, args.CL_split, args.CL_nbFolds, args.type,
                                              args.pathF,
-                                             LABELS_DICTIONARY, statsIter, hyperParamSearch=hyperParamSearch,
+                                             LABELS_DICTIONARY, statsIter, randomState, hyperParamSearch=hyperParamSearch,
                                              metrics=metrics, nIter=args.CL_GS_iter,
                                              **argumentDictionaries["Multiview"][stepIndex * nbCores + coreIndex])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
 else:
     resultsMultiview = [
         ExecMultiview(directory, DATASET, args.name, args.CL_split, args.CL_nbFolds, 1, args.type, args.pathF,
-                      LABELS_DICTIONARY, statsIter, hyperParamSearch=hyperParamSearch,
+                      LABELS_DICTIONARY, statsIter, randomState, hyperParamSearch=hyperParamSearch,
                       metrics=metrics, nIter=args.CL_GS_iter, **arguments) for arguments in
         argumentDictionaries["Multiview"]]
 multiviewTime = time.time() - monoviewTime - dataBaseTime - start
@@ -523,7 +523,6 @@ labels = np.array(
                                                                     resultsMultiview]).transpose()
 trueLabels = DATASET.get("Labels").value
 times = [dataBaseTime, monoviewTime, multiviewTime]
-# times=[]
 results = (resultsMonoview, resultsMultiview)
 analyzeLabels(labels, trueLabels, results, directory)
 logging.debug("Start:\t Analyze Global Results")

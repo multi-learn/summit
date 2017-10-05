@@ -7,11 +7,11 @@ import MonoviewClassifiers
 from ...Methods.LateFusion import LateFusionClassifier
 
 
-def genParamsSets(classificationKWARGS, nIter=1):
+def genParamsSets(classificationKWARGS, randomState, nIter=1):
     nbView = classificationKWARGS["nbView"]
     paramsSets = []
     for _ in range(nIter):
-        randomWeightsArray = np.random.random_sample(nbView)
+        randomWeightsArray = randomState.random_sample(nbView)
         normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
         paramsSets.append([normalizedArray])
     return paramsSets
@@ -78,8 +78,8 @@ def getArgs(args, views, viewsIndices):
 
 
 class BayesianInference(LateFusionClassifier):
-    def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
+    def __init__(self, randomState, NB_CORES=1, **kwargs):
+        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
 
         # self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))

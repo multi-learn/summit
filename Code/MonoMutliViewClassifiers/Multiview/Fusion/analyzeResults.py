@@ -68,7 +68,7 @@ def getMetricsScores(metrics, trainLabelsIterations, testLabelsIterations,
 
 def execute(classifiersIterations, trainLabelsIterations,testLabelsIterations, DATASET, classificationKWARGS,
             learningRate, LABELS_DICTIONARY,views, nbCores, times, name, nbFolds, ivalidationIndices,
-            gridSearch, nIter, metrics, statsIter, viewsIndices):
+            gridSearch, nIter, metrics, statsIter, viewsIndices, randomState):
 
     CLASS_LABELS = DATASET.get("Labels").value
 
@@ -112,7 +112,7 @@ def execute(classifiersIterations, trainLabelsIterations,testLabelsIterations, D
     scoreOnTrain = np.mean(np.array([metricModule.score(CLASS_LABELS[learningIndices[statsIterIndex]], trainLabelsIterations[statsIterIndex], **metricKWARGS) for statsIterIndex in range(statsIter)]))
     scoreOnTest = np.mean(np.array([metricModule.score(CLASS_LABELS[ivalidationIndices[statsIterIndex]], testLabelsIterations[statsIterIndex], **metricKWARGS) for statsIterIndex in range(statsIter)]))
     fusionConfiguration = classifiersIterations[0].classifier.getConfig(fusionMethodConfig,monoviewClassifiersNames, monoviewClassifiersConfigs)
-    stringAnalysis = "\t\tResult for Multiview classification with "+ fusionType + \
+    stringAnalysis = "\t\tResult for Multiview classification with "+ fusionType + "and random state : "+str(randomState)+\
                      "\n\nAverage "+metrics[0][0]+" :\n\t-On Train : " + str(scoreOnTrain) + "\n\t-On Test : " + str(scoreOnTest) + \
                      "\n\nDataset info :\n\t-Database name : " + name + "\n\t-Labels : " + \
                      ', '.join(LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(views) + "\n\t-" + str(nbFolds) + \

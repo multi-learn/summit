@@ -14,14 +14,14 @@ from sklearn.metrics import accuracy_score
 import itertools
 
 
-def genParamsSets(classificationKWARGS, nIter=1):
+def genParamsSets(classificationKWARGS, randomState, nIter=1):
     nbView = classificationKWARGS["nbView"]
     paramsSets = []
     for _ in range(nIter):
-        max_attributes = random.randint(1, 20)
-        p = random.random()
-        model = random.choice(["conjunction", "disjunction"])
-        order = random.randint(1,nbView)
+        max_attributes = randomState.randint(1, 20)
+        p = randomState.random()
+        model = randomState.choice(["conjunction", "disjunction"])
+        order = randomState.randint(1,nbView)
         paramsSets.append([p, max_attributes, model, order])
     return paramsSets
 
@@ -72,8 +72,8 @@ def getArgs(args, views, viewsIndices):
 
 
 class SCMForLinear(LateFusionClassifier):
-    def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
+    def __init__(self, randomState, NB_CORES=1, **kwargs):
+        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
         self.SCMClassifier = None
         # self.config = kwargs['fusionMethodConfig'][0]

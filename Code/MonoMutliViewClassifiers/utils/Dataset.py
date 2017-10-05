@@ -33,6 +33,7 @@ def getValue(DATASET):
                                  shape=DATASET.attrs["shape"])
         return sparse_mat
 
+
 def extractSubset(matrix, usedIndices):
     if sparse.issparse(matrix):
         newIndptr = np.zeros(len(usedIndices)+1, dtype=int)

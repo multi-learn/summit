@@ -5,11 +5,11 @@ from sklearn.metrics import accuracy_score
 from utils.Dataset import getV
 
 
-def genParamsSets(classificationKWARGS, nIter=1):
+def genParamsSets(classificationKWARGS, randomState, nIter=1):
     nbView = classificationKWARGS["nbView"]
     paramsSets = []
     for _ in range(nIter):
-        randomWeightsArray = np.random.random_sample(nbView)
+        randomWeightsArray = randomState.random_sample(nbView)
         normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
         paramsSets.append([normalizedArray])
     return paramsSets
@@ -36,30 +36,10 @@ def getArgs(args, views, viewsIndices):
                                   "nbView": (len(viewsIndices))}}
     return [arguments]
 
-# def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
-#     if type(viewsIndices)==type(None):
-#         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-#     nbView = len(viewsIndices)
-#     bestScore = 0.0
-#     bestConfig = None
-#     if classificationKWARGS["fusionMethodConfig"][0] is not None:
-#         for i in range(nIter):
-#             randomWeightsArray = np.random.random_sample(nbView)
-#             normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
-#             classificationKWARGS["fusionMethodConfig"][0] = normalizedArray
-#             classifier = WeightedLinear(1, **classificationKWARGS)
-#             classifier.fit_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
-#             predictedLabels = classifier.predict_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
-#             accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
-#             if accuracy > bestScore:
-#                 bestScore = accuracy
-#                 bestConfig = normalizedArray
-#         return [bestConfig]
-
 
 class WeightedLinear(LateFusionClassifier):
-    def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
+    def __init__(self, randomState, NB_CORES=1, **kwargs):
+        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
         if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig'][0]==['']:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)

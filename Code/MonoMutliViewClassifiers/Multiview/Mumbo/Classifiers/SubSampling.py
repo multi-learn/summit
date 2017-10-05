@@ -1,5 +1,4 @@
 import numpy as np
-import random
 
 def getLabelSupports(CLASS_LABELS):
     labels = set(CLASS_LABELS)
@@ -15,7 +14,7 @@ def isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict):
         return False, nbTrainingExamples
 
 
-def subSample(data, labels, subSampling, weights=None):
+def subSample(data, labels, subSampling, randomState, weights=None):
     if weights is None:
         weights = np.ones(len(labels))/len(labels)
     nbExamples = len(labels)
@@ -26,7 +25,7 @@ def subSample(data, labels, subSampling, weights=None):
     trainingExamplesIndices = []
     usedIndices = []
     while nbTrainingExamples != [0 for i in range(len(labelSupports))]:
-        index = int(random.randint(0, nbExamples - 1))
+        index = int(randomState.randint(0, nbExamples - 1))
         isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, labels, labelDict)
         if isUseFull and index not in usedIndices:
             trainingExamplesIndices.append(index)

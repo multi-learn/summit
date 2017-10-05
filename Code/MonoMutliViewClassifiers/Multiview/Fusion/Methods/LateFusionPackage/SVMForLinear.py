@@ -6,7 +6,7 @@ from sklearn.svm import SVC
 from utils.Dataset import getV
 
 
-def genParamsSets(classificationKWARGS, nIter=1):
+def genParamsSets(classificationKWARGS, randomState, nIter=1):
     nbView = classificationKWARGS["nbView"]
     paramsSets = []
     for _ in range(nIter):
@@ -38,8 +38,8 @@ def getArgs(args, views, viewsIndices):
     return [arguments]
 
 class SVMForLinear(LateFusionClassifier):
-    def __init__(self, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
+    def __init__(self, randomState, NB_CORES=1, **kwargs):
+        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
         self.SVMClassifier = None
 

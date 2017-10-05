@@ -7,27 +7,26 @@ sys.path.append(
 from Multiview import *
 
 import GetMultiviewDb as DB
-import argparse
 import os
 import logging
 import time
 import h5py
-from utils.Dataset import getShape
-from utils.HyperParameterSearch import searchBestSettings
+from ..utils.Dataset import getShape
+from ..utils.HyperParameterSearch import searchBestSettings
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"                           # Production, Development, Prototype
 
 
-def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY, statsIter,
+def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY, statsIter, randomState,
                             hyperParamSearch=False, nbCores=1, metrics=None, nIter=30, **arguments):
     DATASET = h5py.File(path+name+str(coreIndex)+".hdf5", "r")
-    return ExecMultiview(directory, DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY, statsIter,
+    return ExecMultiview(directory, DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY, statsIter, randomState,
                          hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=nIter, **arguments)
 
 
-def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY, statsIter,
+def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY, statsIter, randomState,
                   hyperParamSearch=False, metrics=None, nIter=30, **kwargs):
 
     datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
@@ -36,7 +35,7 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
     viewsIndices = kwargs["viewsIndices"]
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     if not metrics:
-        metrics = [["accuracy_score", None]]
+        metrics = [["f1_score", None]]
     metric = metrics[0]
     CL_type = kwargs["CL_type"]
     LABELS_NAMES = kwargs["LABELS_NAMES"]
@@ -63,14 +62,14 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
     analysisModule = getattr(classifierPackage, "analyzeResults")
 
     logging.info("Start:\t Determine validation split for ratio " + str(learningRate))
-    iValidationIndices = [DB.splitDataset(DATASET, learningRate, datasetLength) for iterIndex in range(statsIter)]
+    iValidationIndices = [DB.splitDataset(DATASET, learningRate, datasetLength, randomState) for _ in range(statsIter)]
     iLearningIndices = [[index for index in range(datasetLength) if index not in validationIndices] for validationIndices in iValidationIndices]
     iClassificationSetLength = [len(learningIndices) for learningIndices in iLearningIndices]
     logging.info("Done:\t Determine validation split")
 
     logging.info("Start:\t Determine "+str(nbFolds)+" folds")
     if nbFolds != 1:
-        iKFolds = [DB.getKFoldIndices(nbFolds, DATASET.get("Labels")[...], NB_CLASS, learningIndices) for learningIndices in iLearningIndices]
+        iKFolds = [DB.getKFoldIndices(nbFolds, DATASET.get("Labels")[...], NB_CLASS, learningIndices, randomState) for learningIndices in iLearningIndices]
     else:
         iKFolds = [[[], range(classificationSetLength)] for classificationSetLength in iClassificationSetLength]
 
@@ -84,10 +83,9 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
         # logging.info("Start:\t Classification")
         # Begin Classification
     if hyperParamSearch != "None":
-        classifier = searchBestSettings(DATASET, CL_type, metrics, iLearningIndices, iKFolds, viewsIndices=viewsIndices, searchingTool=hyperParamSearch, nIter=nIter, **classificationKWARGS)
+        classifier = searchBestSettings(DATASET, CL_type, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=viewsIndices, searchingTool=hyperParamSearch, nIter=nIter, **classificationKWARGS)
     else:
         classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
-        # classifier.setParams(classificationKWARGS)
     for _ in range(statsIter):
         classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices)
         trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
@@ -112,7 +110,7 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
                                                                            LABELS_DICTIONARY, views, nbCores, times,
                                                                            name, nbFolds, ivalidationIndices,
                                                                            hyperParamSearch, nIter, metrics, statsIter,
-                                                                           viewsIndices)
+                                                                           viewsIndices, randomState)
     labelsSet = set(LABELS_DICTIONARY.values())
     logging.info(stringAnalysis)
     featureString = "-".join(views)
