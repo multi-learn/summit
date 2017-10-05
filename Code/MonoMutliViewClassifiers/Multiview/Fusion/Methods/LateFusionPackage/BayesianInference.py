@@ -4,8 +4,7 @@ import pkgutil
 
 from utils.Dataset import getV
 import MonoviewClassifiers
-from ..LateFusion import LateFusionClassifier
-from ..LateFusion import getClassifiers
+from ..LateFusion import LateFusionClassifier, getClassifiers#, getConfig
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
@@ -28,17 +27,19 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 
 def getArgs(args, views, viewsIndices, directory):
     if args.FU_L_cl_names!=['']:
-        monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName) for classifierName in args.FU_L_cl_names]
+       pass
     else:
         monoviewClassifierModulesNames = [name for _, name, isPackage in pkgutil.iter_modules(['MonoviewClassifiers'])
                                           if (not isPackage)]
-        monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
-                                     for classifierName in monoviewClassifierModulesNames]
-        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory)
+        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices)
+    monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
+                                     for classifierName in args.FU_L_cl_names]
     if args.FU_L_cl_config != ['']:
         classifierConfig = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
                             for monoviewClassifierModule,classifierConfig
                             in zip(monoviewClassifierModules,args.FU_L_cl_config)]
+    else:
+        # args.FU_L_cl_config = getConfig(args.FU_L_cl_names, directory)
     arguments = {"CL_type": "Fusion",
                  "views": views,
                  "NB_VIEW": len(views),

@@ -9,6 +9,7 @@ from joblib import Parallel, delayed
 import os
 
 import MonoviewClassifiers
+import Metrics
 from utils.Dataset import getV
 
 
@@ -26,14 +27,13 @@ def getAccuracies(LateFusionClassifiers):
     return ""
 
 
-def intersect(allClassifersNames, directory):
+def intersect(allClassifersNames, directory, viewsIndices):
     wrongSets = []
-    nbViews = 0
+    nbViews = len(viewsIndices)
     for classifierIndex, classifierName in enumerate(allClassifersNames):
         wrongSets[classifierIndex]=[]
         classifierDirectory = directory+"/"+classifierName+"/"
         for viewIndex, viewDirectory in enumerate(os.listdir(classifierDirectory)):
-            nbViews+=1
             for resultFileName in os.listdir(classifierDirectory+"/"+viewDirectory+"/"):
                 if resultFileName.endswith("train_labels.csv"):
                     yTrainFileName = classifierDirectory+"/"+viewDirectory+"/"+resultFileName
@@ -57,12 +57,53 @@ def intersect(allClassifersNames, directory):
     return [allClassifersNames[index] for index in bestCombination]
 
 
+def getFormFile(directory, viewDirectory, resultFileName):
+    file = open(directory+"/"+viewDirectory+"/"+resultFileName)
+    for line in file:
+        if "Score on train" in line:
+            score = float(line.strip().split(":")[1])
+            break
+        elif "train" in line:
+            metricName = line.strip().split(" ")[0]
+    metricModule = getattr(Metrics, metricName)
+    if metricModule.getConfig()[-14]=="h":
+        betterHigh = True
+    else:
+        betterHigh = False
+    return score, betterHigh
 
 
-def getClassifiers(selectionMethodName, allClassifiersNames, directory):
+def bestScore(allClassifersNames, directory, viewsIndices):
+    nbViews = len(viewsIndices)
+    nbClassifiers = len(allClassifersNames)
+    scores = np.zeros((nbViews, nbClassifiers))
+    for classifierIndex, classifierName in enumerate(allClassifersNames):
+        classifierDirectory = directory+"/"+classifierName+"/"
+        for viewIndex, viewDirectory in enumerate(os.listdir(classifierDirectory)):
+            for resultFileName in os.listdir(classifierDirectory+"/"+viewDirectory+"/"):
+                if resultFileName.endswith(".txt"):
+                    scores[viewIndex, classifierIndex], betterHigh = getFormFile(directory, viewDirectory, resultFileName)
+    if betterHigh:
+        classifierIndices = np.argmax(scores, axis=1)
+    else:
+        classifierIndices = np.argmin(scores, axis=1)
+    return [allClassifersNames[index] for index in classifierIndices]
+
+
+def getClassifiers(selectionMethodName, allClassifiersNames, directory, viewsIndices):
     selectionMethod = locals()[selectionMethodName]
-    classifiersNames = selectionMethod(allClassifiersNames, directory)
+    classifiersNames = selectionMethod(allClassifiersNames, directory, viewsIndices)
     return classifiersNames
+
+
+# def getConfig(classifiersNames, directory):
+#     for classifierIndex, classifierName in classifiersNames:
+#         classifierDirectory = directory+"/"+classifierName+"/"
+#         viewName = os.listdir(classifierDirectory)[classifierIndex]
+#         viewDirectory = classifierDirectory+"/"+viewName+"/"
+#         for resultFileName in os.listdir(classifierDirectory+"/"+viewDirectory+"/"):
+#             if resultFileName.endswith(".txt"):
+#                 pass
 
 
 class LateFusionClassifier(object):
