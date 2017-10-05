@@ -2,6 +2,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
+from scipy.stats import randint
 
 
 # Author-Info
@@ -40,7 +41,7 @@ def getKWARGS(kwargsList):
 
 def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30 ):
     pipeline_KNN = Pipeline([('classifier', KNeighborsClassifier())])
-    param_KNN = {"classifier__n_neighbors": randomState.randint(1, 50),
+    param_KNN = {"classifier__n_neighbors": randint(1, 50),
                  "classifier__weights": ["uniform", "distance"],
                  "classifier__algorithm": ["auto", "ball_tree", "kd_tree", "brute"],
                  "classifier__p": [1,2],

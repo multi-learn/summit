@@ -21,7 +21,7 @@ import ExportResults                    # Functions to render results
 import MonoviewClassifiers
 import Metrics
 from analyzeResult import execute
-from ..utils.Dataset import getV, getValue, extractSubset
+from utils.Dataset import getV, getValue, extractSubset
 
 # Author-Info
 __author__ 	= "Nikolas Huelsmann, Baptiste BAUVIN"

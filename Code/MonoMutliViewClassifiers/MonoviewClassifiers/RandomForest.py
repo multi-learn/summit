@@ -2,7 +2,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
-
+from scipy.stats import randint
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -37,8 +37,8 @@ def getKWARGS(kwargsList):
 
 def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
-    param_rf = {"classifier__n_estimators": randomState.randint(1, 30),
-                "classifier__max_depth": randomState.randint(1, 30),
+    param_rf = {"classifier__n_estimators": randint(1, 30),
+                "classifier__max_depth": randint(1, 30),
                 "classifier__criterion": ["gini", "entropy"]}
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:

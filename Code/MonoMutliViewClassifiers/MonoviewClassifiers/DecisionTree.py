@@ -2,7 +2,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
-
+from scipy.stats import randint
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -37,7 +37,7 @@ def getKWARGS(kwargsList):
 
 def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_DT = Pipeline([('classifier', DecisionTreeClassifier())])
-    param_DT = {"classifier__max_depth": randomState.randint(1, 30),
+    param_DT = {"classifier__max_depth": randint(1, 30),
                 "classifier__criterion": ["gini", "entropy"],
                 "classifier__splitter": ["best", "random"]}
     metricModule = getattr(Metrics, metric[0])

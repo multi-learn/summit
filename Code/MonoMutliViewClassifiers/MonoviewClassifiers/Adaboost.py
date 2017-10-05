@@ -3,6 +3,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.tree import DecisionTreeClassifier
 import Metrics
+from scipy.stats import randint
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -16,8 +17,7 @@ def canProbas():
 def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     num_estimators = int(kwargs['0'])
     base_estimators = DecisionTreeClassifier()#kwargs['1']
-    classifier = AdaBoostClassifier(n_estimators=num_estimators, base_estimator=base_estimators,
-                                    random_state=randomState)
+    classifier = AdaBoostClassifier(n_estimators=num_estimators, base_estimator=base_estimators, random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
 
@@ -35,7 +35,7 @@ def getKWARGS(kwargsList):
 def randomizedSearch(X_train, y_train, randomState, nbFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
     pipeline = Pipeline([('classifier', AdaBoostClassifier())])
 
-    param= {"classifier__n_estimators": randomState.randint(1, 15),
+    param= {"classifier__n_estimators": randint(1, 15),
             "classifier__base_estimator": [DecisionTreeClassifier()]}
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:

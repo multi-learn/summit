@@ -155,7 +155,7 @@ def getKFoldIndices(nbFolds, CLASS_LABELS, NB_CLASS, learningIndices, randomStat
     for foldIndex, fold in enumerate(nbTrainingExamples):
         trainingExamplesIndices.append([])
         while fold != [0 for i in range(NB_CLASS)]:
-            index = randomState.randint(0, len(learningIndices) - 1)
+            index = randomState.randint(0, len(learningIndices))
             if learningIndices[index] not in usedIndices:
                 isUseFull, fold = isUseful(fold, learningIndices[index], CLASS_LABELS, labelDict)
                 if isUseFull:

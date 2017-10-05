@@ -1,11 +1,13 @@
 import Metrics
 from pyscm.utils import _pack_binary_bytes_to_ints
 import pyscm
-from ..utils.Dataset import getShape
+from utils.Dataset import getShape
 import h5py
 from Multiview import GetMultiviewDb as DB
 from pyscm.binary_attributes.base import BaseBinaryAttributeList
 import os
+
+
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
@@ -15,7 +17,7 @@ __status__ 	= "Prototype"                           # Production, Development, P
 def canProbas():
     return False
 
-def fit(DATASET, CLASS_LABELS, NB_CORES=1,**kwargs):
+def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     max_attrtibutes = kwargs['0']
     try:
         p = kwargs['1']
@@ -68,11 +70,11 @@ def randomizedSearch(X_train, y_train, randomState, nbFolds=4, metric=["accuracy
     config = []
     for iterIndex in range(nIter):
         max_attributes = randomState.randint(1, 20)
-        p = randomState.random()
+        p = randomState.random_sample()
         model = randomState.choice(["conjunction", "disjunction"])
         classifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=max_attributes, model_type=model, verbose=False)
         if nbFolds != 1:
-            kFolds = DB.getKFoldIndices(nbFolds, y_train, len(set(y_train)), range(len(y_train)))
+            kFolds = DB.getKFoldIndices(nbFolds, y_train, len(set(y_train)), range(len(y_train)), randomState)
         else:
             kFolds = [[], range(len(y_train))]
         scores = []

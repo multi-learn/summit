@@ -11,8 +11,8 @@ import os
 import logging
 import time
 import h5py
-from ..utils.Dataset import getShape
-from ..utils.HyperParameterSearch import searchBestSettings
+from utils.Dataset import getShape
+from utils.HyperParameterSearch import searchBestSettings
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

@@ -2,6 +2,8 @@ from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
+from scipy.stats import randint
+
 
 
 # Author-Info
@@ -33,8 +35,8 @@ def getKWARGS(kwargsList):
 
 def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SVMPoly = Pipeline([('classifier', SVC(kernel="poly", max_iter=1000))])
-    param_SVMPoly = {"classifier__C": randomState.randint(1, 10000),
-                     "classifier__degree": randomState.randint(1, 30)}
+    param_SVMPoly = {"classifier__C": randint(1, 10000),
+                     "classifier__degree": randint(1, 30)}
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))

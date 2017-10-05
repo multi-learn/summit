@@ -2,6 +2,8 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline                   # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
+from scipy.stats import uniform
+
 
 
 # Author-Info
@@ -41,7 +43,7 @@ def randomizedSearch(X_train, y_train, randomState, nbFolds=4, nbCores=1, metric
     pipeline_SGD = Pipeline([('classifier', SGDClassifier())])
     losses = ['log', 'modified_huber']
     penalties = ["l1", "l2", "elasticnet"]
-    alphas = randomState.uniform()
+    alphas = uniform()
     param_SGD = {"classifier__loss": losses, "classifier__penalty": penalties,
                  "classifier__alpha": alphas}
     metricModule = getattr(Metrics, metric[0])

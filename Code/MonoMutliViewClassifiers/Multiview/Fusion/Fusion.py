@@ -66,7 +66,7 @@ def getBenchmark(benchmark, args=None):
     return benchmark
 
 
-def getArgs(args, benchmark, views, viewsIndices):
+def getArgs(args, benchmark, views, viewsIndices, randomState):
     if not "Monoview" in benchmark and not args.FU_L_select_monoview in ["randomClf", "Determined"]:
         args.FU_L_select_monoview = "randomClf"
     argumentsList = []
