@@ -7,44 +7,68 @@ from joblib import Parallel, delayed
 # from sklearn.multiclass import OneVsOneClassifier
 # from sklearn.svm import SVC
 import os
+import sys
 
 import MonoviewClassifiers
 import Metrics
 from utils.Dataset import getV
 
 
-def fitMonoviewClassifier(classifierName, data, labels, classifierConfig, needProbas):
-    monoviewClassifier = getattr(MonoviewClassifiers, classifierName)
-    if needProbas and not monoviewClassifier.canProbas():
-        monoviewClassifier = getattr(MonoviewClassifiers, "DecisionTree")
-    classifier = monoviewClassifier.fit(data,labels,**dict((str(configIndex), config) for configIndex, config in
-                                      enumerate(classifierConfig
-                                                )))
-    return classifier
+def canProbasClassifier(classifierConfig):
+    try:
+        _ = getattr(classifierConfig, "predict_proba")
+        return True
+    except AttributeError:
+        return False
 
 
-def getAccuracies(LateFusionClassifiers):
+def fitMonoviewClassifier(classifierName, data, labels, classifierConfig, needProbas, randomState):
+    if type(classifierConfig[0])==dict:
+        monoviewClassifier = getattr(MonoviewClassifiers, classifierName)
+        if needProbas and not monoviewClassifier.canProbas():
+            monoviewClassifier = getattr(MonoviewClassifiers, "DecisionTree")
+            DTConfig = {"0":300, "1":"entropy", "2":"random"}
+            classifier = monoviewClassifier.fit(data,labels, randomState,DTConfig)
+            return classifier
+        else:
+            classifier = monoviewClassifier.fit(data,labels, randomState,**dict((str(configIndex), config) for configIndex, config in
+                                              enumerate(classifierConfig
+                                                        )))
+            return classifier
+    else:
+        if needProbas and not canProbasClassifier(classifierConfig):
+            monoviewClassifier = getattr(MonoviewClassifiers, "DecisionTree")
+            DTConfig = {"0":300, "1":"entropy", "2":"random"}
+            classifier = monoviewClassifier.fit(data,labels, randomState,DTConfig)
+            return classifier
+        else:
+            return classifierConfig
+
+
+
+def getScores(LateFusionClassifiers):
     return ""
 
 
 def intersect(allClassifersNames, directory, viewsIndices):
-    wrongSets = []
+    wrongSets = [0 for _ in allClassifersNames]
     nbViews = len(viewsIndices)
     for classifierIndex, classifierName in enumerate(allClassifersNames):
-        wrongSets[classifierIndex]=[]
         classifierDirectory = directory+"/"+classifierName+"/"
-        for viewIndex, viewDirectory in enumerate(os.listdir(classifierDirectory)):
-            for resultFileName in os.listdir(classifierDirectory+"/"+viewDirectory+"/"):
+        viewDirectoryNames = os.listdir(classifierDirectory)
+        wrongSets[classifierIndex]=[0 for _ in viewDirectoryNames]
+        for viewIndex, viewDirectoryName in enumerate(viewDirectoryNames):
+            for resultFileName in os.listdir(classifierDirectory+"/"+viewDirectoryName+"/"):
                 if resultFileName.endswith("train_labels.csv"):
-                    yTrainFileName = classifierDirectory+"/"+viewDirectory+"/"+resultFileName
+                    yTrainFileName = classifierDirectory+"/"+viewDirectoryName+"/"+resultFileName
                 elif resultFileName.endswith("train_pred.csv"):
-                    yTrainPredFileName = classifierDirectory+"/"+viewDirectory+"/"+resultFileName
+                    yTrainPredFileName = classifierDirectory+"/"+viewDirectoryName+"/"+resultFileName
             train = np.genfromtxt(yTrainFileName, delimiter=",").astype(np.int16)
             pred = np.genfromtxt(yTrainPredFileName, delimiter=",").astype(np.int16)
             length = len(train)
             wrongLabelsIndices = np.where(train+pred == 1)
             wrongSets[classifierIndex][viewIndex]=wrongLabelsIndices
-    combinations = itertools.combinations_with_replacement(range(nbViews), len(allClassifersNames))
+    combinations = itertools.combinations_with_replacement(range(len(allClassifersNames)), nbViews)
     bestLen = length
     bestCombination = None
     for combination in combinations:
@@ -91,26 +115,31 @@ def bestScore(allClassifersNames, directory, viewsIndices):
 
 
 def getClassifiers(selectionMethodName, allClassifiersNames, directory, viewsIndices):
-    selectionMethod = locals()[selectionMethodName]
+    thismodule = sys.modules[__name__]
+    selectionMethod = getattr(thismodule, selectionMethodName)
     classifiersNames = selectionMethod(allClassifiersNames, directory, viewsIndices)
     return classifiersNames
 
 
-# def getConfig(classifiersNames, directory):
-#     for classifierIndex, classifierName in classifiersNames:
-#         classifierDirectory = directory+"/"+classifierName+"/"
-#         viewName = os.listdir(classifierDirectory)[classifierIndex]
-#         viewDirectory = classifierDirectory+"/"+viewName+"/"
-#         for resultFileName in os.listdir(classifierDirectory+"/"+viewDirectory+"/"):
-#             if resultFileName.endswith(".txt"):
-#                 pass
+def getConfig(classifiersNames, resultsMonoview):
+    classifiers = [0 for _ in range(len(classifiersNames))]
+    for viewIndex, classifierName in enumerate(classifiersNames):
+        for resultMonoview in resultsMonoview:
+            if resultMonoview[0]==viewIndex and resultMonoview[1][0]==classifierName:
+                classifiers[viewIndex]=resultMonoview[1][4]
+    return classifiers
 
+def jambon(fromage):
+    pass
 
 class LateFusionClassifier(object):
     def __init__(self, randomState, monoviewClassifiersNames, monoviewClassifiersConfigs, monoviewSelection, NB_CORES=1):
         self.monoviewClassifiersNames = monoviewClassifiersNames
-        self.monoviewClassifiersConfigs = monoviewClassifiersConfigs
-        self.monoviewClassifiers = []
+        if type(monoviewClassifiersConfigs[0])==dict:
+            self.monoviewClassifiersConfigs = monoviewClassifiersConfigs
+            self.monoviewClassifiers = []
+        else:
+            self.monoviewClassifiersConfigs = monoviewClassifiersConfigs
         self.nbCores = NB_CORES
         self.accuracies = np.zeros(len(monoviewClassifiersNames))
         self.needProbas = False
@@ -122,11 +151,17 @@ class LateFusionClassifier(object):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices == None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        monoviewSelectionMethod = locals()[self.monoviewSelection]
-        self.monoviewClassifiers = monoviewSelectionMethod()
+        # monoviewSelectionMethod = locals()[self.monoviewSelection]
+        # self.monoviewClassifiers = monoviewSelectionMethod()
+        # a = Parallel(n_jobs=self.nbCores)(
+        #     delayed(jambon)(DATASET.get("Labels").value[trainIndices],
+        #                                    )
+        #     for index, viewIndex in enumerate(viewsIndices))
+        # import pdb;pdb.set_trace()
+
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
-            delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[index],
-                                              getV(DATASET, viewIndex, trainIndices),
-                                              DATASET.get("Labels")[trainIndices],
-                                              self.monoviewClassifiersConfigs[index], self.needProbas)
-            for index, viewIndex in enumerate(viewsIndices))
+                delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[index],
+                                                  getV(DATASET, viewIndex, trainIndices),
+                                                  DATASET.get("Labels").value[trainIndices],
+                                                  self.monoviewClassifiersConfigs[index], self.needProbas, self.randomState)
+                for index, viewIndex in enumerate(viewsIndices))

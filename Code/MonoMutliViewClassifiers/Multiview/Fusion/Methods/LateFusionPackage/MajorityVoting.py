@@ -1,8 +1,9 @@
-from ...Methods.LateFusion import LateFusionClassifier
+from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
 import MonoviewClassifiers
 import numpy as np
 from sklearn.metrics import accuracy_score
 from utils.Dataset import getV
+import pkgutil
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
@@ -15,8 +16,21 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     return paramsSets
 
 
-def getArgs(args, views, viewsIndices, directory):
-    monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName) for classifierName in args.FU_L_cl_names]
+def getArgs(args, views, viewsIndices, directory, resultsMonoview):
+    if args.FU_L_cl_names!=['']:
+        pass
+    else:
+        monoviewClassifierModulesNames = [name for _, name, isPackage in pkgutil.iter_modules(['MonoviewClassifiers'])
+                                          if (not isPackage)]
+        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices)
+    monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
+                                 for classifierName in args.FU_L_cl_names]
+    if args.FU_L_cl_config != ['']:
+        classifiersConfigs = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
+                              for monoviewClassifierModule,classifierConfig
+                              in zip(monoviewClassifierModules,args.FU_L_cl_config)]
+    else:
+        classifiersConfigs = getConfig(args.FU_L_cl_names, resultsMonoview)
     arguments = {"CL_type": "Fusion",
                  "views": views,
                  "NB_VIEW": len(views),
@@ -24,14 +38,10 @@ def getArgs(args, views, viewsIndices, directory):
                  "NB_CLASS": len(args.CL_classes),
                  "LABELS_NAMES": args.CL_classes,
                  "FusionKWARGS": {"fusionType": "LateFusion",
-                                  "fusionMethod": "BayesianInference",
+                                  "fusionMethod": "MajorityVoting",
                                   "classifiersNames": args.FU_L_cl_names,
-                                  "classifiersConfigs": [monoviewClassifierModule.getKWARGS([arg.split(":")
-                                                                                             for arg in
-                                                                                             classifierConfig.split(";")])
-                                                         for monoviewClassifierModule,classifierConfig
-                                                         in zip(args.FU_L_cl_config,monoviewClassifierModules)],
-                                  'fusionMethodConfig': args.FU_L_method_config[0],
+                                  "classifiersConfigs": classifiersConfigs,
+                                  'fusionMethodConfig': args.FU_L_method_config,
                                   'monoviewSelection': args.FU_L_select_monoview,
                                   "nbView": (len(viewsIndices))}}
     return [arguments]
@@ -61,7 +71,7 @@ class MajorityVoting(LateFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
         LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
-        if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig'][0]==['']:
+        if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig']==['']:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
@@ -76,31 +86,29 @@ class MajorityVoting(LateFusionClassifier):
         self.weights = self.weights/float(max(self.weights))
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if usedIndices:
-            datasetLength = len(usedIndices)
-            votes = np.zeros((datasetLength, DATASET.get("Metadata").attrs["nbClass"]), dtype=int)
-            monoViewDecisions = np.zeros((len(usedIndices),nbView), dtype=int)
-            for index, viewIndex in enumerate(viewsIndices):
-                monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
-                    getV(DATASET, viewIndex, usedIndices))
-            for exampleIndex in range(datasetLength):
-                for viewIndex, featureClassification in enumerate(monoViewDecisions[exampleIndex, :]):
-                    votes[exampleIndex, featureClassification] += self.weights[viewIndex]
-                nbMaximum = len(np.where(votes[exampleIndex] == max(votes[exampleIndex]))[0])
-                try:
-                    assert nbMaximum != nbView
-                except:
-                    print "Majority voting can't decide, each classifier has voted for a different class"
-                    raise
-            predictedLabels = np.argmax(votes, axis=1)
-            # Can be upgraded by restarting a new classification process if
-            # there are multiple maximums ?:
-            # 	while nbMaximum>1:
-            # 		relearn with only the classes that have a maximum number of vote
-            # 		votes = revote
-            # 		nbMaximum = len(np.where(votes==max(votes))[0])
-        else:
-            predictedLabels = []
+
+        datasetLength = len(usedIndices)
+        votes = np.zeros((datasetLength, DATASET.get("Metadata").attrs["nbClass"]), dtype=int)
+        monoViewDecisions = np.zeros((len(usedIndices),nbView), dtype=int)
+        for index, viewIndex in enumerate(viewsIndices):
+            monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
+                getV(DATASET, viewIndex, usedIndices))
+        for exampleIndex in range(datasetLength):
+            for viewIndex, featureClassification in enumerate(monoViewDecisions[exampleIndex, :]):
+                votes[exampleIndex, featureClassification] += self.weights[viewIndex]
+            nbMaximum = len(np.where(votes[exampleIndex] == max(votes[exampleIndex]))[0])
+            try:
+                assert nbMaximum != nbView
+            except:
+                print "Majority voting can't decide, each classifier has voted for a different class"
+                raise
+        predictedLabels = np.argmax(votes, axis=1)
+        # Can be upgraded by restarting a new classification process if
+        # there are multiple maximums ?:
+        # 	while nbMaximum>1:
+        # 		relearn with only the classes that have a maximum number of vote
+        # 		votes = revote
+        # 		nbMaximum = len(np.where(votes==max(votes))[0])
         return predictedLabels
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):

@@ -22,6 +22,13 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     return classifier
 
 
+def paramsToSet(nIter, randomState):
+    paramsSet = []
+    for _ in range(nIter):
+        paramsSet.append([randomState.randint(1, 15), DecisionTreeClassifier()])
+    return paramsSet
+
+
 def getKWARGS(kwargsList):
     kwargsDict = {}
     for (kwargName, kwargValue) in kwargsList:
@@ -52,7 +59,10 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, metric=["accuracy_
 
 
 def getConfig(config):
-    try :
-        return "\n\t\t- Adaboost with num_esimators : "+str(config[0])+", base_estimators : "+str(config[1])
-    except:
-        return "\n\t\t- Adaboost with num_esimators : "+str(config["0"])+", base_estimators : "+str(config["1"])
+    if type(config) not in [list, dict]:
+        return "\n\t\t- Adaboost with num_esimators : "+str(config.n_estimators)+", base_estimators : "+str(config.base_estimator)
+    else:
+        try:
+            return "\n\t\t- Adaboost with num_esimators : "+str(config[0])+", base_estimators : "+str(config[1])
+        except:
+            return "\n\t\t- Adaboost with num_esimators : "+str(config["0"])+", base_estimators : "+str(config["1"])

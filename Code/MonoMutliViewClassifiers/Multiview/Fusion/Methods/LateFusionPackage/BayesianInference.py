@@ -4,7 +4,7 @@ import pkgutil
 
 from utils.Dataset import getV
 import MonoviewClassifiers
-from ..LateFusion import LateFusionClassifier, getClassifiers#, getConfig
+from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
@@ -25,9 +25,9 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 #     fusionMethodConfig = args.FU_method_config
 #     return classifiersNames, classifiersConfig, fusionMethodConfig
 
-def getArgs(args, views, viewsIndices, directory):
+def getArgs(args, views, viewsIndices, directory, resultsMonoview):
     if args.FU_L_cl_names!=['']:
-       pass
+       args.FU_L_select_monoview = "user_defined"
     else:
         monoviewClassifierModulesNames = [name for _, name, isPackage in pkgutil.iter_modules(['MonoviewClassifiers'])
                                           if (not isPackage)]
@@ -35,11 +35,14 @@ def getArgs(args, views, viewsIndices, directory):
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
                                      for classifierName in args.FU_L_cl_names]
     if args.FU_L_cl_config != ['']:
-        classifierConfig = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
+        classifiersConfigs = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
                             for monoviewClassifierModule,classifierConfig
                             in zip(monoviewClassifierModules,args.FU_L_cl_config)]
     else:
-        # args.FU_L_cl_config = getConfig(args.FU_L_cl_names, directory)
+        classifiersConfigs = getConfig(args.FU_L_cl_names, resultsMonoview)
+    if args.FU_L_cl_names==[""] and args.CL_type == ["Multiview"]:
+        raise AttributeError("You must perform Monoview classification or specify "
+                             "which monoview classifier to use Late Fusion")
     arguments = {"CL_type": "Fusion",
                  "views": views,
                  "NB_VIEW": len(views),
@@ -49,11 +52,7 @@ def getArgs(args, views, viewsIndices, directory):
                  "FusionKWARGS": {"fusionType": "LateFusion",
                                   "fusionMethod": "BayesianInference",
                                   "classifiersNames": args.FU_L_cl_names,
-                                  "classifiersConfigs": [monoviewClassifierModule.getKWARGS([arg.split(":")
-                                                                                            for arg in
-                                                                                            classifierConfig.split(",")])
-                                                         for monoviewClassifierModule,classifierConfig
-                                                         in zip(monoviewClassifierModules,args.FU_L_cl_config)],
+                                  "classifiersConfigs": classifiersConfigs,
                                   'fusionMethodConfig': args.FU_L_method_config,
                                   'monoviewSelection': args.FU_L_select_monoview,
                                   "nbView": (len(viewsIndices))}}
@@ -89,7 +88,7 @@ class BayesianInference(LateFusionClassifier):
         if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig']==['']:
             self.weights = [1.0 for classifier in kwargs['classifiersNames']]
         else:
-            self.weights = np.array(map(float, kwargs['fusionMethodConfig']))
+            self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
         self.needProbas = True
 
     def setParams(self, paramsSet):
@@ -104,15 +103,12 @@ class BayesianInference(LateFusionClassifier):
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if sum(self.weights)!=1.0:
             self.weights = self.weights/sum(self.weights)
-        if usedIndices:
 
-            viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
-            for index, viewIndex in enumerate(viewsIndices):
-                viewScores[index] = np.power(self.monoviewClassifiers[index].predict_proba(getV(DATASET, viewIndex, usedIndices)),
-                                                 self.weights[index])
-            predictedLabels = np.argmax(np.prod(viewScores, axis=0), axis=1)
-        else:
-            predictedLabels = []
+        viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
+        for index, viewIndex in enumerate(viewsIndices):
+            viewScores[index] = np.power(self.monoviewClassifiers[index].predict_proba(getV(DATASET, viewIndex, usedIndices)),
+                                             self.weights[index])
+        predictedLabels = np.argmax(np.prod(viewScores, axis=0), axis=1)
         return predictedLabels
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
@@ -121,4 +117,5 @@ class BayesianInference(LateFusionClassifier):
         for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
             configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
+        configString+="\n\t -Method used to select monoview classifiers : "+self.monoviewSelection
         return configString

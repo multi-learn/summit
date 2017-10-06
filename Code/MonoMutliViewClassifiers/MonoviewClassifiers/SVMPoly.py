@@ -23,6 +23,13 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     return classifier
 
 
+def paramsToSet(nIter, randomState):
+    paramsSet = []
+    for _ in range(nIter):
+        paramsSet.append([randomState.randint(1, 10000), randomState.randint(1, 30)])
+    return paramsSet
+
+
 def getKWARGS(kwargsList):
     kwargsDict = {}
     for (kwargName, kwargValue) in kwargsList:
@@ -51,7 +58,10 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=
 
 
 def getConfig(config):
-    try:
-        return "\n\t\t- SVM Poly with C : "+str(config[0])
-    except:
-        return "\n\t\t- SVM Poly with C : "+str(config["0"])
+    if type(config) not in [list, dict]:
+        return "\n\t\t- SVM Poly with C : "+str(config.C)+", degree : "+str(config.degree)
+    else:
+        try:
+            return "\n\t\t- SVM Poly with C : "+str(config[0])+", degree : "+str(config[1])
+        except:
+            return "\n\t\t- SVM Poly with C : "+str(config["0"])+", degree : "+str(config["1"])

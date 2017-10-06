@@ -1,10 +1,12 @@
 import sys
 import os.path
+import errno
 
 sys.path.append(
         os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-from Multiview import *
+# from Multiview import *
+import Multiview
 
 import GetMultiviewDb as DB
 import os
@@ -26,7 +28,7 @@ def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds, d
                          hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=nIter, **arguments)
 
 
-def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, databaseType, path, LABELS_DICTIONARY, statsIter, randomState,
+def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCores, databaseType, path, LABELS_DICTIONARY, statsIter, randomState,
                   hyperParamSearch=False, metrics=None, nIter=30, **kwargs):
 
     datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
@@ -40,11 +42,12 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
     CL_type = kwargs["CL_type"]
     LABELS_NAMES = kwargs["LABELS_NAMES"]
     classificationKWARGS = kwargs[CL_type+"KWARGS"]
-
+    learningRate = len(classificationIndices[0])/(len(classificationIndices[0])+len(classificationIndices[1]))
     t_start = time.time()
     logging.info("### Main Programm for Multiview Classification")
     logging.info("### Classification - Database : " + str(name) + " ; Views : " + ", ".join(views) +
-                 " ; Algorithm : " + CL_type + " ; Cores : " + str(nbCores))
+                 " ; Algorithm : " + CL_type + " ; Cores : " + str(nbCores)+", Train ratio : " + str(learningRate)+
+                 ", CV on " + str(KFolds.n_splits) + " folds")
 
     for viewIndex, viewName in zip(viewsIndices, views):
         logging.info("Info:\t Shape of " + str(viewName) + " :" + str(
@@ -52,27 +55,27 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
     logging.info("Done:\t Read Database Files")
 
     extractionTime = time.time() - t_start
-    ivalidationIndices = []
-
-    trainLabelsIterations = []
-    testLabelsIterations = []
-    classifiersIterations = []
-    classifierPackage = globals()[CL_type]  # Permet d'appeler un module avec une string
+    # ivalidationIndices = []
+    learningIndices, validationIndices = classificationIndices
+    # trainLabelsIterations = []
+    # testLabelsIterations = []
+    # classifiersIterations = []
+    classifierPackage = getattr(Multiview, CL_type)  # Permet d'appeler un module avec une string
     classifierModule = getattr(classifierPackage, CL_type)
     classifierClass = getattr(classifierModule, CL_type)
     analysisModule = getattr(classifierPackage, "analyzeResults")
 
-    logging.info("Start:\t Determine validation split for ratio " + str(learningRate))
-    iValidationIndices = [DB.splitDataset(DATASET, learningRate, datasetLength, randomState) for _ in range(statsIter)]
-    iLearningIndices = [[index for index in range(datasetLength) if index not in validationIndices] for validationIndices in iValidationIndices]
-    iClassificationSetLength = [len(learningIndices) for learningIndices in iLearningIndices]
-    logging.info("Done:\t Determine validation split")
+    logging.info("Train ratio : " + str(learningRate))
+    # iValidationIndices = [DB.splitDataset(DATASET, classificationIndices, datasetLength, randomState) for _ in range(statsIter)]
+    # iLearningIndices = [[index for index in range(datasetLength) if index not in validationIndices] for validationIndices in iValidationIndices]
+    # iClassificationSetLength = [len(learningIndices) for learningIndices in iLearningIndices]
+    # logging.info("Done:\t Determine validation split")
 
-    logging.info("Start:\t Determine "+str(nbFolds)+" folds")
-    if nbFolds != 1:
-        iKFolds = [DB.getKFoldIndices(nbFolds, DATASET.get("Labels")[...], NB_CLASS, learningIndices, randomState) for learningIndices in iLearningIndices]
-    else:
-        iKFolds = [[[], range(classificationSetLength)] for classificationSetLength in iClassificationSetLength]
+    logging.info("CV On " + str(KFolds.n_splits) + " folds")
+    # if KFolds != 1:
+    #     iKFolds = [DB.getKFoldIndices(KFolds, DATASET.get("Labels")[...], NB_CLASS, learningIndices, randomState) for learningIndices in iLearningIndices]
+    # else:
+    #     iKFolds = [[[], range(classificationSetLength)] for classificationSetLength in iClassificationSetLength]
 
         # logging.info("Info:\t Length of Learning Sets: " + str(classificationSetLength - len(kFolds[0])))
         # logging.info("Info:\t Length of Testing Sets: " + str(len(kFolds[0])))
@@ -84,20 +87,19 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
         # logging.info("Start:\t Classification")
         # Begin Classification
     if hyperParamSearch != "None":
-        classifier = searchBestSettings(DATASET, CL_type, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=viewsIndices, searchingTool=hyperParamSearch, nIter=nIter, **classificationKWARGS)
+        classifier = searchBestSettings(DATASET, CL_type, metrics, learningIndices, KFolds, randomState, viewsIndices=viewsIndices, searchingTool=hyperParamSearch, nIter=nIter, **classificationKWARGS)
     else:
         classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
-    for _ in range(statsIter):
-        learningIndices, validationIndices = learningRate
-        classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices)
-        trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
-        testLabels = classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices)
-        fullLabels = classifier.predict_hdf5(DATASET, viewsIndices=viewsIndices)
-        trainLabelsIterations.append(trainLabels)
-        testLabelsIterations.append(testLabels)
-        ivalidationIndices.append(validationIndices)
-        classifiersIterations.append(classifier)
-        logging.info("Done:\t Classification")
+
+    classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices)
+    trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
+    testLabels = classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices)
+    fullLabels = classifier.predict_hdf5(DATASET, viewsIndices=viewsIndices)
+    # trainLabelsIterations.append(trainLabels)
+    # testLabelsIterations.append(testLabels)
+    # ivalidationIndices.append(validationIndices)
+    # classifiersIterations.append(classifier)
+    logging.info("Done:\t Classification")
 
     classificationTime = time.time() - t_start
 
@@ -106,11 +108,11 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
 
     times = (extractionTime, classificationTime)
 
-    stringAnalysis, imagesAnalysis, metricsScores = analysisModule.execute(classifiersIterations, trainLabelsIterations,
-                                                                           testLabelsIterations, DATASET,
-                                                                           classificationKWARGS, learningRate,
+    stringAnalysis, imagesAnalysis, metricsScores = analysisModule.execute(classifier, trainLabels,
+                                                                           testLabels, DATASET,
+                                                                           classificationKWARGS, classificationIndices,
                                                                            LABELS_DICTIONARY, views, nbCores, times,
-                                                                           name, nbFolds, ivalidationIndices,
+                                                                           name, KFolds,
                                                                            hyperParamSearch, nIter, metrics, statsIter,
                                                                            viewsIndices, randomState)
     labelsSet = set(LABELS_DICTIONARY.values())
@@ -118,14 +120,19 @@ def ExecMultiview(directory, DATASET, name, learningRate, nbFolds, nbCores, data
     featureString = "-".join(views)
     labelsString = "-".join(labelsSet)
     timestr = time.strftime("%Y%m%d-%H%M%S")
-    CL_type_string = CL_type
-    if CL_type=="Fusion":
-        CL_type_string += "-"+classificationKWARGS["fusionType"]+"-"+classificationKWARGS["fusionMethod"]+"-"+"-".join(classificationKWARGS["classifiersNames"])
-    elif CL_type=="Mumbo":
-        CL_type_string += "-"+"-".join(classificationKWARGS["classifiersNames"])
-    outputFileName = directory + timestr + "Results-" + CL_type_string + "-" + featureString + '-' + labelsString + \
+    CL_type_string = classifierModule.getCLString(classificationKWARGS)
+    # if CL_type=="Fusion":
+    #     CL_type_string += "-"+classificationKWARGS["fusionType"]+"-"+classificationKWARGS["fusionMethod"]+"-"+"-".join(classificationKWARGS["classifiersNames"])
+    # elif CL_type=="Mumbo":
+    #     CL_type_string += "-"+"-".join(classificationKWARGS["classifiersNames"])
+    outputFileName = directory + "/" + CL_type_string + "/" + timestr + "Results-" + CL_type_string + "-" + featureString + '-' + labelsString + \
                      '-learnRate' + str(learningRate) + '-' + name
-
+    if not os.path.exists(os.path.dirname(outputFileName)):
+        try:
+            os.makedirs(os.path.dirname(outputFileName))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
     outputTextFile = open(outputFileName + '.txt', 'w')
     outputTextFile.write(stringAnalysis)
     outputTextFile.close()

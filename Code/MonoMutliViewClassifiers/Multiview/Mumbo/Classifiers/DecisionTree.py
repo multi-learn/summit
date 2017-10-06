@@ -8,11 +8,11 @@ import logging
 
 import Metrics
 
-def DecisionTree(data, labels, arg, weights):
+def DecisionTree(data, labels, arg, weights, randomState):
     depth = int(arg[0])
     subSampling = float(arg[1])
     if subSampling != 1.0:
-        subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling, weights=weights)
+        subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling, randomState, weights=weights)
     else:
         subSampledData, subSampledLabels, subSampledWeights = data, labels, weights
     isBad = False
@@ -33,7 +33,7 @@ def getConfig(classifierConfig):
     return 'with depth ' + str(depth) + ', ' + ' sub-sampled at ' + str(subSampling) + ' '
 
 
-def gridSearch(data, labels, randomState, metric="accuracy_score"):
+def hyperParamSearch(data, labels, randomState, metric="accuracy_score"):
     minSubSampling = 1.0/(len(labels)/2)
     bestSettings = []
     bestResults = []
@@ -63,7 +63,7 @@ def gridSearch(data, labels, randomState, metric="accuracy_score"):
                     accuracies = np.zeros(50)
                     for i in range(50):
                         if subSampling != 1.0:
-                            subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling)
+                            subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling, randomState)
                         else:
                             subSampledData, subSampledLabels, = data, labels
                         classifier = tree.DecisionTreeClassifier(max_depth=max_depth)
@@ -78,7 +78,7 @@ def gridSearch(data, labels, randomState, metric="accuracy_score"):
         preliminary_accuracies = np.zeros(50)
         if minSubSampling < 0.01:
             for i in range(50):
-                subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, 0.01)
+                subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, 0.01, randomState)
                 classifier.fit(subSampledData, subSampledLabels)
                 prediction = classifier.predict(data)
                 preliminary_accuracies[i] = accuracy_score(labels, prediction)
@@ -88,7 +88,7 @@ def gridSearch(data, labels, randomState, metric="accuracy_score"):
                 if minSubSampling < subSampling:
                     accuracies = np.zeros(50)
                     for i in range(50):
-                        subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling)
+                        subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling, randomState )
                         classifier = tree.DecisionTreeClassifier(max_depth=1)
                         classifier.fit(subSampledData, subSampledLabels)
                         prediction = classifier.predict(data)
@@ -101,7 +101,7 @@ def gridSearch(data, labels, randomState, metric="accuracy_score"):
             for subSampling in sorted((np.arange(19, dtype=float)+1)/2000, reverse=True):
                 accuracies = np.zeros(50)
                 for i in range(50):
-                    subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling)
+                    subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling, randomState)
                     if minSubSampling < subSampling:
                         classifier1 = tree.DecisionTreeClassifier(max_depth=1)
                         classifier1.fit(subSampledData, subSampledLabels)

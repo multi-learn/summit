@@ -25,6 +25,14 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     return classifier
 
 
+def paramsToSet(nIter, randomState):
+    paramsSet = []
+    for _ in range(nIter):
+        paramsSet.append([randomState.randint(1, 50), randomState.choice(["uniform", "distance"]),
+                          randomState.choice(["auto", "ball_tree", "kd_tree", "brute"]), randomState.choice([1,2])])
+    return paramsSet
+
+
 def getKWARGS(kwargsList):
     kwargsDict = {}
     for (kwargName, kwargValue) in kwargsList:
@@ -64,7 +72,10 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=
 
 
 def getConfig(config):
-    try:
-        return "\n\t\t- K nearest Neighbors with  n_neighbors : "+str(config[0])+", weights : "+config[1]+", algorithm : "+config[2]+", p : "+str(config[3])
-    except:
-        return "\n\t\t- K nearest Neighbors with  n_neighbors : "+str(config["0"])+", weights : "+config["1"]+", algorithm : "+config["2"]+", p : "+str(config["3"])
+    if type(config) not in [list, dict]:
+        return "\n\t\t- K nearest Neighbors with  n_neighbors : "+str(config.n_neighbors)+", weights : "+config.weights+", algorithm : "+config.algorithm+", p : "+str(config.p)
+    else:
+        try:
+            return "\n\t\t- K nearest Neighbors with  n_neighbors : "+str(config[0])+", weights : "+config[1]+", algorithm : "+config[2]+", p : "+str(config[3])
+        except:
+            return "\n\t\t- K nearest Neighbors with  n_neighbors : "+str(config["0"])+", weights : "+config["1"]+", algorithm : "+config["2"]+", p : "+str(config["3"])

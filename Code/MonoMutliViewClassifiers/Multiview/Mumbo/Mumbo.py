@@ -21,17 +21,14 @@ def getBenchmark(benchmark, args=None):
     allAlgos = [name for _, name, isPackage in
                 pkgutil.iter_modules(['Multiview/Mumbo/Classifiers'])
                 if not isPackage and not name in ["SubSampling", "ModifiedMulticlass", "Kover"]]
-    if args is None:
+    if args is None or args.MU_types != ['']:
         benchmark["Multiview"]["Mumbo"] = allAlgos
     else:
-        if args.MU_types != ['']:
-            benchmark["Multiview"]["Mumbo"] = args.MU_types
-        else :
-            benchmark["Multiview"]["Mumbo"] = allAlgos
+        benchmark["Multiview"]["Mumbo"] = args.MU_types
     return benchmark
 
 
-def getArgs(args, benchmark, views, viewsIndices, randomState, directory):
+def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview):
     argumentsList = []
 
     arguments = {"CL_type": "Mumbo",
@@ -72,11 +69,11 @@ def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS,
 
 
 def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, DATASET_LENGTH,
-                             viewIndice, classifier_config, viewName, iterIndex, costMatrices, classifierIndex):
+                             viewIndice, classifier_config, viewName, iterIndex, costMatrices, classifierIndex, randomState):
     weights = computeWeights(DATASET_LENGTH, iterIndex, classifierIndex, CLASS_LABELS, costMatrices)
     classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
     classifierMethod = getattr(classifierModule, classifierName)
-    classifier, classes, isBad, averageAccuracy = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights)
+    classifier, classes, isBad, averageAccuracy = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config, weights, randomState)
     logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(averageAccuracy))
     return classifier, classes, isBad, averageAccuracy
 
@@ -89,10 +86,13 @@ def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices,
         classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
         classifierGridSearch = getattr(classifierModule, "hyperParamSearch")
         bestSettings.append(classifierGridSearch(getV(DATASET, viewIndices[classifierIndex], learningIndices),
-                                             DATASET.get("Labels")[learningIndices], metric=metric))
+                                             DATASET.get("Labels").value[learningIndices], randomState, metric=metric))
         logging.debug("\tDone:\t Gridsearch for "+classifierName)
     return bestSettings, None
 
+
+def getCLString(classificationKWARGS):
+    return "Mumbo-"+"-".join(classificationKWARGS["classifiersNames"])
 
 class Mumbo:
 
@@ -149,14 +149,14 @@ class Mumbo:
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
 
         # Initialization
-        if not trainIndices:
+        if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if type(viewsIndices)==type(None):
             viewsIndices = range(DATASET.get("Metadata").attrs["nbView"])
         NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
         NB_VIEW = len(viewsIndices)
         DATASET_LENGTH = len(trainIndices)
-        LABELS = DATASET["Labels"][trainIndices]
+        LABELS = DATASET.get("Labels").value[trainIndices]
         self.initDataDependant(DATASET_LENGTH, NB_VIEW, NB_CLASS, LABELS)
         # Learning
         isStabilized=False
@@ -188,7 +188,7 @@ class Mumbo:
             self.updateCostmatrices(NB_VIEW, DATASET_LENGTH, NB_CLASS, LABELS)
             bestView, edge, bestFakeView = self.chooseView(viewsIndices, LABELS, DATASET_LENGTH)
             self.bestViews[self.iterIndex] = bestView
-            logging.debug("\t\t\t Best view : \t\t"+DATASET["View"+str(bestView)].attrs["name"])
+            logging.debug("\t\t\t Best view : \t\t"+DATASET.get("View"+str(bestView)).attrs["name"])
             if areBad.all():
                 self.generalAlphas[self.iterIndex] = 0.
             else:
@@ -197,7 +197,7 @@ class Mumbo:
             self.updateGeneralFs(DATASET_LENGTH, NB_CLASS, bestFakeView)
             self.updateGeneralCostMatrix(DATASET_LENGTH, NB_CLASS,LABELS)
             predictedLabels = self.predict_hdf5(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
-            accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
+            accuracy = accuracy_score(DATASET.get("Labels").value[trainIndices], predictedLabels)
             self.iterAccuracies[self.iterIndex] = accuracy
 
             self.iterIndex += 1
@@ -210,7 +210,7 @@ class Mumbo:
             viewsIndices = range(DATASET.get("Metadata").attrs["nbView"])
 
         viewDict = dict((viewIndex, index) for index, viewIndex in enumerate(viewsIndices))
-        if usedIndices:
+        if usedIndices is not None:
             DATASET_LENGTH = len(usedIndices)
             predictedLabels = np.zeros(DATASET_LENGTH)
 
@@ -218,7 +218,7 @@ class Mumbo:
                 votes = np.zeros(NB_CLASS)
                 for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
                     if view != -1:
-                        data = getV(DATASET, int(view), exampleIndex)
+                        data = getV(DATASET, int(view), int(exampleIndex))
                         votes[int(classifier.predict(np.array([data])))] += alpha[viewDict[view]]
                     else:
                         pass
@@ -231,7 +231,7 @@ class Mumbo:
         NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if usedIndices:
+        if usedIndices is not None:
             DATASET_LENGTH = len(usedIndices)
             predictedProbas = np.zeros((DATASET_LENGTH, NB_CLASS))
 
@@ -286,10 +286,10 @@ class Mumbo:
         trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
             delayed(trainWeakClassifier_hdf5)(classifiersNames[classifierIndex],
                                               getV(DATASET,viewIndex,trainIndices),
-                                              DATASET.get("Labels")[trainIndices],
+                                              DATASET.get("Labels").value[trainIndices],
                                               DATASET_LENGTH,
                                               viewIndex, classifiersConfigs[classifierIndex],
-                                              DATASET.get("View"+str(viewIndex)).attrs["name"], iterIndex, costMatrices, classifierIndex)
+                                              DATASET.get("View"+str(viewIndex)).attrs["name"], iterIndex, costMatrices, classifierIndex, self.randomState)
             for classifierIndex, viewIndex in enumerate(viewIndices))
 
         for viewFakeIndex, (classifier, labelsArray, isBad, averageAccuracy) in enumerate(trainedClassifiersAndLabels):

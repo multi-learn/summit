@@ -27,6 +27,14 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     return classifier
 
 
+def paramsToSet(nIter, randomState):
+    paramsSet = []
+    for _ in range(nIter):
+        paramsSet.append([randomState.choice(['log', 'modified_huber']),
+                          randomState.choice(["l1", "l2", "elasticnet"]), randomState.random_sample()])
+    return paramsSet
+
+
 def getKWARGS(kwargsList):
     kwargsDict = {}
     for (kwargName, kwargValue) in kwargsList:
@@ -59,8 +67,12 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=
                    SGD_detector.best_params_["classifier__alpha"]]
     return desc_params
 
+
 def getConfig(config):
-    try:
-        return "\n\t\t- SGDClassifier with loss : "+config[0]+", penalty : "+config[1]
-    except:
-        return "\n\t\t- SGDClassifier with loss : "+config["0"]+", penalty : "+config["1"]
+    if type(config) not in [list, dict]:
+        return "\n\t\t- SGDClassifier with loss : "+config.loss+", penalty : "+config.penalty+", alpha : "+str(config.alpha)
+    else:
+        try:
+            return "\n\t\t- SGDClassifier with loss : "+config[0]+", penalty : "+config[1]+", alpha : "+str(config[2])
+        except:
+            return "\n\t\t- SGDClassifier with loss : "+config["0"]+", penalty : "+config["1"]+", alpha : "+str(config["2"])

@@ -13,9 +13,9 @@ __author__ 	= "Baptiste Bauvin"
 __status__ 	= "Prototype"                           # Production, Development, Prototype
 
 
-
 def canProbas():
     return False
+
 
 def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     max_attrtibutes = kwargs['0']
@@ -41,6 +41,15 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     except:
         pass
     return classifier
+
+
+def paramsToSet(nIter, randomState):
+    paramsSet = []
+    for _ in range(nIter):
+        paramsSet.append([randomState.randint(1, 20), randomState.random_sample(),
+                          randomState.choice(["conjunction", "disjunction"])])
+    return paramsSet
+
 
 def getKWARGS(kwargsList):
     kwargsDict = {}
@@ -78,8 +87,8 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=None, metric=["accura
         # else:
         #     kFolds = [[], range(len(y_train))]
         scores = []
-        KFolds = KFolds.split(X_train, y_train)
-        for foldIdx, (trainIndices, testIndices) in enumerate(KFolds):
+        kFolds = KFolds.split(X_train, y_train)
+        for foldIdx, (trainIndices, testIndices) in enumerate(kFolds):
             # if fold != range(len(y_train)):
             # fold.sort()
             # trainIndices = [index for index in range(len(y_train)) if (index not in fold)]
@@ -112,10 +121,13 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=None, metric=["accura
 
 
 def getConfig(config):
-    try :
-        return "\n\t\t- SCM with max_attributes : "+str(config[0])#+", c : "+str(config[1])+", p : "+str(config[2])
-    except:
-        return "\n\t\t- SCM with max_attributes : "+str(config["0"])#+", c : "+str(config["1"])+", p : "+str(config["2"])
+    if type(config) not in [list, dict]:
+        return "\n\t\t- SCM with max_attributes : "+str(config.max_attributes)+", model type : "+config.model_type+", p : "+str(config.p)
+    else:
+        try :
+            return "\n\t\t- SCM with max_attributes : "+str(config[0])+", p : "+str(config[1])+", model type : "+str(config[2])
+        except:
+            return "\n\t\t- SCM with max_attributes : "+str(config["0"])+", p : "+str(config["1"])+", model type : "+str(config["2"])
 
 
 def transformData(dataArray):

@@ -5,15 +5,22 @@ import numpy as np
 def getV(DATASET, viewIndex, usedIndices=None):
     if usedIndices==None:
         usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-    if not DATASET.get("View"+str(viewIndex)).attrs["sparse"]:
+    if type(usedIndices) is int:
         return DATASET.get("View"+str(viewIndex))[usedIndices, :]
     else:
-        sparse_mat = sparse.csr_matrix((DATASET.get("View"+str(viewIndex)).get("data").value,
-                                       DATASET.get("View"+str(viewIndex)).get("indices").value,
-                                       DATASET.get("View"+str(viewIndex)).get("indptr").value),
-                                      shape=DATASET.get("View"+str(viewIndex)).attrs["shape"])[usedIndices,:]
+        usedIndices=np.array(usedIndices)
+        sortedIndices = np.argsort(usedIndices)
+        usedIndices = usedIndices[sortedIndices]
 
-        return sparse_mat
+        if not DATASET.get("View"+str(viewIndex)).attrs["sparse"]:
+            return DATASET.get("View"+str(viewIndex))[usedIndices, :][np.argsort(sortedIndices),:]
+        else:
+            sparse_mat = sparse.csr_matrix((DATASET.get("View"+str(viewIndex)).get("data").value,
+                                            DATASET.get("View"+str(viewIndex)).get("indices").value,
+                                            DATASET.get("View"+str(viewIndex)).get("indptr").value),
+                                           shape=DATASET.get("View"+str(viewIndex)).attrs["shape"])[usedIndices,:][np.argsort(sortedIndices),:]
+
+            return sparse_mat
 
 
 def getShape(DATASET, viewIndex):

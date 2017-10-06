@@ -23,6 +23,14 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
     return classifier
 
 
+def paramsToSet(nIter, randomState):
+    paramsSet = []
+    for _ in range(nIter):
+        paramsSet.append([randomState.randint(1, 300), randomState.randint(1, 300),
+                          randomState.choice(["gini", "entropy"])])
+    return paramsSet
+
+
 def getKWARGS(kwargsList):
     kwargsDict = {}
     for (kwargName, kwargValue) in kwargsList:
@@ -37,8 +45,8 @@ def getKWARGS(kwargsList):
 
 def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
-    param_rf = {"classifier__n_estimators": randint(1, 30),
-                "classifier__max_depth": randint(1, 30),
+    param_rf = {"classifier__n_estimators": randint(1, 300),
+                "classifier__max_depth": randint(1, 300),
                 "classifier__criterion": ["gini", "entropy"]}
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:
@@ -57,7 +65,10 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=
 
 
 def getConfig(config):
-    try:
-        return "\n\t\t- Random Forest with num_esimators : "+str(config[0])+", max_depth : "+str(config[1])+ ", criterion : "+config[2]
-    except:
-        return "\n\t\t- Random Forest with num_esimators : "+str(config["0"])+", max_depth : "+str(config["1"])+ ", criterion : "+config["2"]
+    if type(config) not in [list, dict]:
+        return "\n\t\t- Random Forest with num_esimators : "+str(config.n_estimators)+", max_depth : "+str(config.max_depth)+ ", criterion : "+config.criterion
+    else:
+        try:
+            return "\n\t\t- Random Forest with num_esimators : "+str(config[0])+", max_depth : "+str(config[1])+ ", criterion : "+config[2]
+        except:
+            return "\n\t\t- Random Forest with num_esimators : "+str(config["0"])+", max_depth : "+str(config["1"])+ ", criterion : "+config["2"]

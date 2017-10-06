@@ -55,12 +55,12 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     nbClass = kwargs["nbClass"]
     X = getValue(X)
     datasetLength = X.shape[0]
+    learningRate = len(classificationIndices[0])/(len(classificationIndices[0])+len(classificationIndices[1]))
 
     logging.debug("Done:\t Loading data")
     # Determine the Database to extract features
-    print KFolds
-    logging.debug("Info:\t Classification - Database:" + str(name) + " Feature:" + str(feat) + " train_size:"
-                  + str(len(classificationIndices[0])) + ", CrossValidation k-folds: " + str(KFolds.n_splits) + ", cores:"
+    logging.debug("Info:\t Classification - Database:" + str(name) + " Feature:" + str(feat) + " train ratio:"
+                  + str(learningRate) + ", CrossValidation k-folds: " + str(KFolds.n_splits) + ", cores:"
                   + str(nbCores) + ", algorithm : " + CL_type)
 
     # y_trains = []
@@ -123,7 +123,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     timestr = time.strftime("%Y%m%d-%H%M%S")
     CL_type_string = CL_type
     outputFileName = directory + "/"+CL_type_string+"/"+"/"+feat+"/"+timestr +"Results-" + CL_type_string + "-" + labelsString + \
-                     '-learnRate' + str(len(classificationIndices)) + '-' + name + "-" + feat + "-"
+                     '-learnRate' + str(learningRate) + '-' + name + "-" + feat + "-"
     if not os.path.exists(os.path.dirname(outputFileName)):
         try:
             os.makedirs(os.path.dirname(outputFileName))
@@ -151,7 +151,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
     logging.info("Done:\t Result Analysis")
     viewIndex = args["viewIndex"]
-    return viewIndex, [CL_type, cl_desc+[feat], metricsScores, full_labels, y_train_pred]
+    return viewIndex, [CL_type, cl_desc+[feat], metricsScores, full_labels, cl_res]
 
     # # Classification Report with Precision, Recall, F1 , Support
     # logging.debug("Info:\t Classification report:")

@@ -10,6 +10,8 @@ class EarlyFusionClassifier(object):
         self.monoviewClassifierName = monoviewClassifierName
         if type(monoviewClassifierConfig)==dict:
             pass
+        elif monoviewClassifierConfig is None:
+            pass
         else:
             monoviewClassifierConfig = dict((str(configIndex), config[0]) for configIndex, config in
                                                enumerate(monoviewClassifierConfig
@@ -24,7 +26,7 @@ class EarlyFusionClassifier(object):
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         nbView = len(viewsIndices)
-        if not usedIndices:
+        if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if type(weights)== type(None):
             weights = np.array([1/nbView for i in range(nbView)])

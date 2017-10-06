@@ -216,14 +216,13 @@ def lateFusionSetArgs(views, viewsIndices, classes, method,
     return arguments
 
 
-def initMultiviewArguments(args, benchmark, views, viewsIndices, scores, classifiersConfigs, classifiersNames,
-                           NB_VIEW, metrics, argumentDictionaries, randomState, directory):
+def initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory, resultsMonoview):
     multiviewArguments = []
     if "Multiview" in benchmark:
         for multiviewAlgoName in benchmark["Multiview"]:
             multiviewPackage = getattr(Multiview, multiviewAlgoName)
             mutliviewModule = getattr(multiviewPackage, multiviewAlgoName)
-            multiviewArguments += mutliviewModule.getArgs(args, benchmark, views, viewsIndices, randomState, directory)
+            multiviewArguments += mutliviewModule.getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview)
     argumentDictionaries["Multiview"] = multiviewArguments
     return argumentDictionaries
 
@@ -503,9 +502,7 @@ else:
                           viewsIndices]
 monoviewTime = time.time() - dataBaseTime - start
 
-argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, scores, classifiersConfigs,
-                                              classifiersNames, NB_VIEW, metrics[0], argumentDictionaries, randomState,
-                                              directory)
+argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory, resultsMonoview)
 
 if nbCores > 1:
     resultsMultiview = []

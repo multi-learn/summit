@@ -1,4 +1,4 @@
-from ...Methods.LateFusion import LateFusionClassifier
+from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
 import MonoviewClassifiers
 import numpy as np
 import pyscm
@@ -12,6 +12,7 @@ from math import ceil
 import random
 from sklearn.metrics import accuracy_score
 import itertools
+import pkgutil
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
@@ -19,15 +20,28 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     paramsSets = []
     for _ in range(nIter):
         max_attributes = randomState.randint(1, 20)
-        p = randomState.random()
+        p = randomState.random_sample()
         model = randomState.choice(["conjunction", "disjunction"])
         order = randomState.randint(1,nbView)
         paramsSets.append([p, max_attributes, model, order])
     return paramsSets
 
 
-def getArgs(args, views, viewsIndices, directory):
-    monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName) for classifierName in args.FU_L_cl_names]
+def getArgs(args, views, viewsIndices, directory, resultsMonoview):
+    if args.FU_L_cl_names!=['']:
+        pass
+    else:
+        monoviewClassifierModulesNames = [name for _, name, isPackage in pkgutil.iter_modules(['MonoviewClassifiers'])
+                                          if (not isPackage)]
+        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices)
+    monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
+                                 for classifierName in args.FU_L_cl_names]
+    if args.FU_L_cl_config != ['']:
+        classifiersConfigs = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
+                              for monoviewClassifierModule,classifierConfig
+                              in zip(monoviewClassifierModules,args.FU_L_cl_config)]
+    else:
+        classifiersConfigs = getConfig(args.FU_L_cl_names, resultsMonoview)
     arguments = {"CL_type": "Fusion",
                  "views": views,
                  "NB_VIEW": len(views),
@@ -35,14 +49,10 @@ def getArgs(args, views, viewsIndices, directory):
                  "NB_CLASS": len(args.CL_classes),
                  "LABELS_NAMES": args.CL_classes,
                  "FusionKWARGS": {"fusionType": "LateFusion",
-                                  "fusionMethod": "BayesianInference",
+                                  "fusionMethod": "SCMForLinear",
                                   "classifiersNames": args.FU_L_cl_names,
-                                  "classifiersConfigs": [monoviewClassifierModule.getKWARGS([arg.split(":")
-                                                                                             for arg in
-                                                                                             classifierConfig.split(";")])
-                                                         for monoviewClassifierModule,classifierConfig
-                                                         in zip(args.FU_L_cl_config,monoviewClassifierModules)],
-                                  'fusionMethodConfig': args.FU_L_method_config[0],
+                                  "classifiersConfigs": classifiersConfigs,
+                                  'fusionMethodConfig': args.FU_L_method_config,
                                   'monoviewSelection': args.FU_L_select_monoview,
                                   "nbView": (len(viewsIndices))}}
     return [arguments]
@@ -77,15 +87,15 @@ class SCMForLinear(LateFusionClassifier):
                                       NB_CORES=NB_CORES)
         self.SCMClassifier = None
         # self.config = kwargs['fusionMethodConfig'][0]
-        if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig'][0]==['']:
+        if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig']==['']:
             self.p = 1
             self.maxAttributes = 5
             self.order = 1
             self.modelType = "conjunction"
         else:
-            self.p = kwargs['fusionMethodConfig'][0]
-            self.maxAttributes = kwargs['fusionMethodConfig'][1]
-            self.order = kwargs['fusionMethodConfig'][2]
+            self.p = int(kwargs['fusionMethodConfig'][0])
+            self.maxAttributes = int(kwargs['fusionMethodConfig'][1])
+            self.order = int(kwargs['fusionMethodConfig'][2])
             self.modelType = kwargs['fusionMethodConfig'][3]
 
     def setParams(self, paramsSet):
@@ -99,14 +109,17 @@ class SCMForLinear(LateFusionClassifier):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices == None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        for index, viewIndex in enumerate(viewsIndices):
-            monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[index])
-            self.monoviewClassifiers.append(
-                monoviewClassifier.fit(getV(DATASET, viewIndex, trainIndices),
-                                       DATASET.get("Labels")[trainIndices],
-                                       NB_CORES=self.nbCores,
-                                       **dict((str(configIndex), config) for configIndex, config in
-                                              enumerate(self.monoviewClassifiersConfigs[index]))))
+        if type(self.monoviewClassifiersConfigs[0])==dict:
+            for index, viewIndex in enumerate(viewsIndices):
+                monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[index])
+                self.monoviewClassifiers.append(
+                    monoviewClassifier.fit(getV(DATASET, viewIndex, trainIndices),
+                                           DATASET.get("Labels")[trainIndices],
+                                           NB_CORES=self.nbCores,
+                                           **dict((str(configIndex), config) for configIndex, config in
+                                                  enumerate(self.monoviewClassifiersConfigs[index]))))
+        else:
+            self.monoviewClassifiers = self.monoviewClassifiersConfigs
         self.SCMForLinearFusionFit(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
@@ -115,18 +128,15 @@ class SCMForLinear(LateFusionClassifier):
         nbView = len(viewsIndices)
         if usedIndices == None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if usedIndices:
-            monoviewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
-            accus=[]
-            for index, viewIndex in enumerate(viewsIndices):
-                monoviewDecision = self.monoviewClassifiers[index].predict(
-                    getV(DATASET, viewIndex, usedIndices))
-                accus.append(accuracy_score(DATASET.get("Labels").value[usedIndices], monoviewDecision))
-                monoviewDecisions[:, index] = monoviewDecision
-            features = self.generateInteractions(monoviewDecisions)
-            predictedLabels = self.SCMClassifier.predict(features)
-        else:
-            predictedLabels = []
+        monoviewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
+        accus=[]
+        for index, viewIndex in enumerate(viewsIndices):
+            monoviewDecision = self.monoviewClassifiers[index].predict(
+                getV(DATASET, viewIndex, usedIndices))
+            accus.append(accuracy_score(DATASET.get("Labels").value[usedIndices], monoviewDecision))
+            monoviewDecisions[:, index] = monoviewDecision
+        features = self.generateInteractions(monoviewDecisions)
+        predictedLabels = self.SCMClassifier.predict(features)
         return predictedLabels
 
     def SCMForLinearFusionFit(self, DATASET, usedIndices=None, viewsIndices=None):
@@ -175,7 +185,7 @@ class SCMForLinear(LateFusionClassifier):
         dsetFile = h5py.File(name, "r")
         packedDataset = dsetFile.get("temp_scm")
         attributeClassification = BaptisteRuleClassifications(packedDataset, features.shape[0])
-        self.SCMClassifier.fit(binaryAttributes, DATASET.get("Labels")[usedIndices], attribute_classifications=attributeClassification)
+        self.SCMClassifier.fit(binaryAttributes, DATASET.get("Labels").value[usedIndices], attribute_classifications=attributeClassification)
         try:
             dsetFile.close()
             os.remove(name)

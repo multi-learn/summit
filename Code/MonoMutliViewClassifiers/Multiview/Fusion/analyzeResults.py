@@ -31,13 +31,13 @@ def printMetricScore(metricScores, metrics):
         else:
             metricKWARGS = {}
         metricScoreString += "\tFor "+metricModule.getConfig(**metricKWARGS)+" : "
-        metricScoreString += "\n\t\t- Score on train : "+str(metricScores[metric[0]][0]) +" with STD : "+str(metricScores[metric[0]][2])
-        metricScoreString += "\n\t\t- Score on test : "+str(metricScores[metric[0]][1]) +" with STD : "+str(metricScores[metric[0]][3])
+        metricScoreString += "\n\t\t- Score on train : "+str(metricScores[metric[0]][0])
+        metricScoreString += "\n\t\t- Score on test : "+str(metricScores[metric[0]][1])
         metricScoreString += "\n\n"
     return metricScoreString
 
 
-def getTotalMetricScores(metric, trainLabelsIterations, testLabelsIterations, DATASET, iterationValidationIndices, statsIter):
+def getTotalMetricScores(metric, trainLabels, testLabels, DATASET, validationIndices):
     labels = DATASET.get("Labels").value
     DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]
     metricModule = getattr(Metrics, metric[0])
@@ -45,30 +45,29 @@ def getTotalMetricScores(metric, trainLabelsIterations, testLabelsIterations, DA
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
-    trainScores = []
-    testScores = []
-    validationScores = []
-    for statsIterIndex in range(statsIter):
-        validationIndices = iterationValidationIndices[statsIterIndex]
-        learningIndices = [index for index in range(DATASET_LENGTH) if index not in validationIndices]
-        trainScores.append(metricModule.score(labels[learningIndices], trainLabelsIterations[statsIterIndex], **metricKWARGS))
-        testScores.append(metricModule.score(labels[validationIndices], testLabelsIterations[statsIterIndex], **metricKWARGS))
-    return [np.mean(np.array(trainScores)), np.mean(np.array(testScores)), np.std(np.array(trainScores)),
-            np.std(np.array(testScores))]
+
+    learningIndices = [index for index in range(DATASET_LENGTH) if index not in validationIndices]
+    trainScore = metricModule.score(labels[learningIndices], trainLabels, **metricKWARGS)
+    testScore = metricModule.score(labels[validationIndices], testLabels, **metricKWARGS)
+    return [trainScore, testScore]
 
 
-def getMetricsScores(metrics, trainLabelsIterations, testLabelsIterations,
-                     DATASET, validationIndices, statsIter):
+def getMetricsScores(metrics, trainLabels, testLabels,
+                     DATASET, validationIndices):
     metricsScores = {}
     for metric in metrics:
-        metricsScores[metric[0]] = getTotalMetricScores(metric, trainLabelsIterations, testLabelsIterations,
-                                                        DATASET, validationIndices, statsIter)
+        metricsScores[metric[0]] = getTotalMetricScores(metric, trainLabels, testLabels,
+                                                        DATASET, validationIndices)
     return metricsScores
 
 
-def execute(classifiersIterations, trainLabelsIterations,testLabelsIterations, DATASET, classificationKWARGS,
-            learningRate, LABELS_DICTIONARY,views, nbCores, times, name, nbFolds, ivalidationIndices,
-            gridSearch, nIter, metrics, statsIter, viewsIndices, randomState):
+def execute(classifier, trainLabels,
+            testLabels, DATASET,
+            classificationKWARGS, classificationIndices,
+            LABELS_DICTIONARY, views, nbCores, times,
+            name, KFolds,
+            hyperParamSearch, nIter, metrics, statsIter,
+            viewsIndices, randomState):
 
     CLASS_LABELS = DATASET.get("Labels").value
 
@@ -103,25 +102,25 @@ def execute(classifiersIterations, trainLabelsIterations,testLabelsIterations, D
     #
     # kFoldLearningTime = [np.mean([kFoldLearningTime[statsIterIndex][foldIdx] for foldIdx in range(nbFolds)])for statsIterIndex in range(statsIter)]
     # kFoldPredictionTime = [np.mean([kFoldPredictionTime[statsIterIndex][foldIdx] for foldIdx in range(nbFolds)])for statsIterIndex in range(statsIter)]
-    learningIndices = [[index for index in range(DATASET_LENGTH) if index not in ivalidationIndices[statsIterIndex]] for statsIterIndex in range(statsIter)]
+    learningIndices, validationIndices = classificationIndices
     metricModule = getattr(Metrics, metrics[0][0])
     if metrics[0][1]!=None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metrics[0][1]))
     else:
         metricKWARGS = {}
-    scoreOnTrain = np.mean(np.array([metricModule.score(CLASS_LABELS[learningIndices[statsIterIndex]], trainLabelsIterations[statsIterIndex], **metricKWARGS) for statsIterIndex in range(statsIter)]))
-    scoreOnTest = np.mean(np.array([metricModule.score(CLASS_LABELS[ivalidationIndices[statsIterIndex]], testLabelsIterations[statsIterIndex], **metricKWARGS) for statsIterIndex in range(statsIter)]))
-    fusionConfiguration = classifiersIterations[0].classifier.getConfig(fusionMethodConfig,monoviewClassifiersNames, monoviewClassifiersConfigs)
-    stringAnalysis = "\t\tResult for Multiview classification with "+ fusionType + "and random state : "+str(randomState)+\
-                     "\n\nAverage "+metrics[0][0]+" :\n\t-On Train : " + str(scoreOnTrain) + "\n\t-On Test : " + str(scoreOnTest) + \
+    scoreOnTrain = metricModule.score(CLASS_LABELS[learningIndices], trainLabels, **metricKWARGS)
+    scoreOnTest = metricModule.score(CLASS_LABELS[validationIndices], testLabels, **metricKWARGS)
+    fusionConfiguration = classifier.classifier.getConfig(fusionMethodConfig,monoviewClassifiersNames, monoviewClassifiersConfigs)
+    stringAnalysis = "\t\tResult for Multiview classification with "+ fusionType + " and random state : "+str(randomState)+\
+                     "\n\n"+metrics[0][0]+" :\n\t-On Train : " + str(scoreOnTrain) + "\n\t-On Test : " + str(scoreOnTest) + \
                      "\n\nDataset info :\n\t-Database name : " + name + "\n\t-Labels : " + \
-                     ', '.join(LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(views) + "\n\t-" + str(nbFolds) + \
+                     ', '.join(LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(views) + "\n\t-" + str(KFolds.n_splits) + \
                      " folds\n\nClassification configuration : \n\t-Algorithm used : "+fusionType+" "+fusionConfiguration
 
     if fusionType=="LateFusion":
-        stringAnalysis+=Methods.LateFusion.getAccuracies(classifiersIterations)
-    metricsScores = getMetricsScores(metrics, trainLabelsIterations, testLabelsIterations,
-                                     DATASET, ivalidationIndices, statsIter)
+        stringAnalysis+=Methods.LateFusion.getScores(classifier)
+    metricsScores = getMetricsScores(metrics, trainLabels, testLabels,
+                                     DATASET, validationIndices)
     stringAnalysis+=printMetricScore(metricsScores, metrics)
     # stringAnalysis += "\n\nComputation time on " + str(nbCores) + " cores : \n\tDatabase extraction time : " + str(
     #     hms(seconds=int(extractionTime))) + "\n\t"

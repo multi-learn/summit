@@ -23,6 +23,13 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
     return classifier
 
 
+def paramsToSet(nIter, randomState):
+    paramsSet = []
+    for _ in range(nIter):
+        paramsSet.append([randomState.randint(1, 300), randomState.choice(["gini", "entropy"]), randomState.choice(["best", "random"])])
+    return paramsSet
+
+
 def getKWARGS(kwargsList):
     kwargsDict = {}
     for (kwargName, kwargValue) in kwargsList:
@@ -37,7 +44,7 @@ def getKWARGS(kwargsList):
 
 def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_DT = Pipeline([('classifier', DecisionTreeClassifier())])
-    param_DT = {"classifier__max_depth": randint(1, 30),
+    param_DT = {"classifier__max_depth": randint(1, 300),
                 "classifier__criterion": ["gini", "entropy"],
                 "classifier__splitter": ["best", "random"]}
     metricModule = getattr(Metrics, metric[0])
@@ -55,7 +62,10 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=
 
 
 def getConfig(config):
-    try:
-        return "\n\t\t- Decision Tree with max_depth : "+str(config[0]) + ", criterion : "+config[1]+", splitter : "+config[2]
-    except:
-        return "\n\t\t- Decision Tree with max_depth : "+str(config["0"]) + ", criterion : "+config["1"]+", splitter : "+config["2"]
+    if type(config) not in [list, dict]:
+        return "\n\t\t- Decision Tree with max_depth : "+str(config.max_depth) + ", criterion : "+config.criterion+", splitter : "+config.splitter
+    else:
+        try:
+            return "\n\t\t- Decision Tree with max_depth : "+str(config[0]) + ", criterion : "+config[1]+", splitter : "+config[2]
+        except:
+            return "\n\t\t- Decision Tree with max_depth : "+str(config["0"]) + ", criterion : "+config["1"]+", splitter : "+config["2"]
