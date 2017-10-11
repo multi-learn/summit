@@ -52,9 +52,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     t_start = time.time()
     feat = X.attrs["name"]
     CL_type = kwargs["CL_type"]
-    nbClass = kwargs["nbClass"]
     X = getValue(X)
-    datasetLength = X.shape[0]
     learningRate = len(classificationIndices[0])/(len(classificationIndices[0])+len(classificationIndices[1]))
 
     logging.debug("Done:\t Loading data")
@@ -63,16 +61,9 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
                   + str(learningRate) + ", CrossValidation k-folds: " + str(KFolds.n_splits) + ", cores:"
                   + str(nbCores) + ", algorithm : " + CL_type)
 
-    # y_trains = []
-    # y_tests = []
-    # y_train_preds = []
-    # y_test_preds = []
     trainIndices, testIndices = classificationIndices
-    # for iterationStat in range(statsIter):
     # Calculate Train/Test data
-    logging.debug("Start:\t Determine Train/Test split") #+" for iteration "+str(iterationStat+1)
-    # testIndices = MonoviewUtils.splitDataset(Y, nbClass, classificationIndices, datasetLength, randomState)
-    # trainIndices = [i for i in range(datasetLength) if i not in testIndices]
+    logging.debug("Start:\t Determine Train/Test split")
     X_train = extractSubset(X, trainIndices)
     X_test = extractSubset(X, testIndices)
     y_train = Y[trainIndices]
@@ -102,10 +93,6 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     y_train_pred = cl_res.predict(X_train)
     y_test_pred = cl_res.predict(X_test)
 
-    # y_trains.append(y_train)
-    # y_train_preds.append(y_train_pred)
-    # y_tests.append(y_test)
-    # y_test_preds.append(y_test_pred)
     full_labels = cl_res.predict(X)
     logging.debug("Done:\t Predicting")
     t_end = time.time() - t_start
@@ -153,38 +140,6 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     viewIndex = args["viewIndex"]
     return viewIndex, [CL_type, cl_desc+[feat], metricsScores, full_labels, clKWARGS]
 
-    # # Classification Report with Precision, Recall, F1 , Support
-    # logging.debug("Info:\t Classification report:")
-    # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Report"
-    # logging.debug("\n" + str(metrics.classification_report(y_test, y_test_pred, labels = range(0,len(classLabelsDesc.name)), target_names=classLabelsNamesList)))
-    # scores_df = ExportResults.classification_report_df(directory, filename, y_test, y_test_pred, range(0, len(classLabelsDesc.name)), classLabelsNamesList)
-    #
-    # # Create some useful statistcs
-    # logging.debug("Info:\t Statistics:")
-    # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Stats"
-    # stats_df = ExportResults.classification_stats(directory, filename, scores_df, accuracy_score)
-    # logging.debug("\n" + stats_df.to_string())
-    #
-    # # Confusion Matrix
-    # logging.debug("Info:\t Calculate Confusionmatrix")
-    # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-ConfMatrix"
-    # df_conf_norm = ExportResults.confusion_matrix_df(directory, filename, y_test, y_test_pred, classLabelsNamesList)
-    # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-ConfMatrixImg"
-    # ExportResults.plot_confusion_matrix(directory, filename, df_conf_norm)
-    #
-    # logging.debug("Done:\t Statistic Results")
-    #
-    #
-    # # Plot Result
-    # logging.debug("Start:\t Plot Result")
-    # np_score = ExportResults.calcScorePerClass(y_test, cl_res.predict(X_test).astype(int))
-    # ### directory and filename the same as CSV Export
-    # filename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + name + "-" + feat + "-Score"
-    # ExportResults.showResults(directory, filename, name, feat, np_score)
-    # logging.debug("Done:\t Plot Result")
-    # return [CL_type, accuracy_score, cl_desc]
-
-
 if __name__=='__main__':
     parser = argparse.ArgumentParser(
         description='This methods permits to execute a multiclass classification with one single view. At this point the used classifier is a RandomForest. The GridSearch permits to vary the number of trees and CrossValidation with k-folds. The result will be a plot of the score per class and a CSV with the best classifier found by the GridSearch.',
@@ -213,29 +168,8 @@ if __name__=='__main__':
     groupClassifier = parser.add_argument_group('Classifier Config')
     groupClassifier.add_argument('--CL_config', metavar='STRING', nargs="+", action='store', help='GridSearch: Determine the trees', default=['25:75:125:175'])
 
-    # groupSVMLinear = parser.add_argument_group('SVC arguments')
-    # groupSVMLinear.add_argument('--CL_SVML_C', metavar='STRING', action='store', help='GridSearch : Penalty parameters used', default='1:10:100:1000')
-    #
-    # groupSVMRBF = parser.add_argument_group('SVC arguments')
-    # groupSVMRBF.add_argument('--CL_SVMR_C', metavar='STRING', action='store', help='GridSearch : Penalty parameters used', default='1:10:100:1000')
-    #
-    # groupRF = parser.add_argument_group('Decision Trees arguments')
-    # groupRF.add_argument('--CL_DT_depth', metavar='STRING', action='store', help='GridSearch: Determine max depth for Decision Trees', default='1:3:5:7')
-    #
-    # groupSGD = parser.add_argument_group('SGD')
-    # groupSGD.add_argument('--CL_SGD_alpha', metavar='STRING', action='store', help='GridSearch: Determine alpha for SGDClassifier', default='0.1:0.2:0.5:0.9')
-    # groupSGD.add_argument('--CL_SGD_loss', metavar='STRING', action='store', help='GridSearch: Determine loss for SGDClassifier', default='log')
-    # groupSGD.add_argument('--CL_SGD_penalty', metavar='STRING', action='store', help='GridSearch: Determine penalty for SGDClassifier', default='l2')
-
-
     args = parser.parse_args()
 
-    # RandomForestKWARGS = {"classifier__n_estimators":map(int, args.CL_RF_trees.split())}
-    # SVMLinearKWARGS = {"classifier__C":map(int,args.CL_SVML_C.split(":"))}
-    # SVMRBFKWARGS = {"classifier__C":map(int,args.CL_SVMR_C.split(":"))}
-    # DecisionTreeKWARGS = {"classifier__max_depth":map(int,args.CL_DT_depth.split(":"))}
-    # SGDKWARGS = {"classifier__alpha" : map(float,args.CL_SGD_alpha.split(":")), "classifier__loss":args.CL_SGD_loss.split(":"),
-    #              "classifier__penalty":args.CL_SGD_penalty.split(":")}
     classifierKWARGS = dict((key, value) for key, value in enumerate([arg.split(":") for arg in args.CL_config]))
     ### Main Programm
 

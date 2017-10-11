@@ -8,14 +8,11 @@ import pkgutil
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
-    nbView = classificationKWARGS["nbView"]
     paramsSets = []
     for _ in range(nIter):
         paramsSets.append([])
     return paramsSets
 
-# def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
-#     return None
 
 def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview):
     if args.FU_L_cl_names!=['']:
@@ -45,6 +42,7 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview):
                                   'monoviewSelection': args.FU_L_select_monoview,
                                   "nbView": (len(viewsIndices))}}
     return [arguments]
+
 
 class SVMForLinear(LateFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):

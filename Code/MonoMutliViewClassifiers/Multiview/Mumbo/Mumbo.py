@@ -339,7 +339,6 @@ class Mumbo:
                         self.ds[pastIterIndice, viewIndice, exampleIndice] = 1
                     else:
                         self.ds[pastIterIndice, viewIndice, exampleIndice] = 0
-                        #return ds
 
     def updateFs(self, NB_VIEW, DATASET_LENGTH, NB_CLASS):
         for viewIndice in range(NB_VIEW):
@@ -356,7 +355,6 @@ class Mumbo:
                                            for pastIterIndice in range(self.iterIndex)]))
         if np.amax(np.absolute(self.fs)) != 0:
             self.fs /= np.amax(np.absolute(self.fs))
-            #return fs
 
     def updateCostmatrices(self, NB_VIEW, DATASET_LENGTH, NB_CLASS, CLASS_LABELS):
         for viewIndice in range(NB_VIEW):
@@ -409,46 +407,6 @@ class Mumbo:
                         = -1 * np.sum(np.exp(self.generalFs[self.iterIndex, exampleIndice] -
                                              self.generalFs[self.iterIndex, exampleIndice, classe]))
 
-    # def fit(self, DATASET, CLASS_LABELS, **kwargs):
-    #     # Initialization
-    #     DATASET_LENGTH = len(CLASS_LABELS)
-    #     NB_VIEW = len(DATASET)
-    #     NB_CLASS = len(set(CLASS_LABELS))
-    #     bestViews = np.zeros(self.maxIter)
-    #     bestClassifiers = []
-    #
-    #     # Learning
-    #     for i in range(self.maxIter):
-    #         logging.debug('\t\tStart:\t Iteration ' + str(self.iterIndex + 1))
-    #         classifiers, predictedLabels, areBad = self.trainWeakClassifiers(DATASET, CLASS_LABELS, NB_CLASS,
-    #                                                                          DATASET_LENGTH, NB_VIEW)
-    #         if areBad.all():
-    #             logging.warning("All bad for iteration " + str(self.iterIndex))
-    #
-    #         self.predictions[self.iterIndex] = predictedLabels
-    #
-    #         for viewIndice in range(NB_VIEW):
-    #             self.computeEdge(viewIndice, DATASET_LENGTH, CLASS_LABELS)
-    #             if areBad[viewIndice]:
-    #                 self.alphas[self.iterIndex, viewIndice] = 0.
-    #             else:
-    #                 self.alphas[self.iterIndex, viewIndice] = self.computeAlpha(self.edges[self.iterIndex,
-    #                                                                                        viewIndice])
-    #         self.updateDs(CLASS_LABELS, NB_VIEW, DATASET_LENGTH)
-    #         self.updateFs(NB_VIEW, DATASET_LENGTH, NB_CLASS)
-    #
-    #         self.updateCostmatrices(NB_VIEW, DATASET_LENGTH, NB_CLASS, CLASS_LABELS)
-    #         bestView, edge, bestFakeView = self.chooseView(NB_VIEW, CLASS_LABELS, DATASET_LENGTH)
-    #         self.bestViews[self.iterIndex] = bestView
-    #         if areBad.all():
-    #             self.generalAlphas[self.iterIndex] = 0.
-    #         else:
-    #             self.generalAlphas[self.iterIndex] = self.computeAlpha(edge)
-    #         self.bestClassifiers.append(classifiers[bestView])
-    #         self.updateGeneralFs(DATASET_LENGTH, NB_CLASS, bestView)
-    #         self.updateGeneralCostMatrix(DATASET_LENGTH, NB_CLASS, CLASS_LABELS)
-
-
     def predict(self, DATASET, NB_CLASS=2):
         DATASET_LENGTH = len(DATASET[0])
         predictedLabels = np.zeros(DATASET_LENGTH)
@@ -481,7 +439,6 @@ class Mumbo:
     def classifyMumbobyIter_hdf5(self, DATASET, fakeViewsIndicesDict, usedIndices=None, NB_CLASS=2):
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        # if usedIndices is not None:
         DATASET_LENGTH = len(usedIndices)
         predictedLabels = np.zeros((DATASET_LENGTH, self.maxIter))
         votes = np.zeros((DATASET_LENGTH, NB_CLASS))
@@ -494,9 +451,5 @@ class Mumbo:
                 votesByIter[usedExampleIndex, int(classifier.predict(data))] += alpha[fakeViewsIndicesDict[view]]
                 votes[usedExampleIndex] = votes[usedExampleIndex] + np.array(votesByIter[usedExampleIndex])
                 predictedLabels[usedExampleIndex, iterIndex] = np.argmax(votes[usedExampleIndex])
-        # else:
-        #     predictedLabels = []
-        #     for i in range(self.maxIter):
-        #         predictedLabels.append([])
 
         return np.transpose(predictedLabels)

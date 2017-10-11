@@ -155,17 +155,8 @@ class Fusion:
     def setParams(self, paramsSet):
         self.classifier.setParams(paramsSet)
 
-
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
         self.classifier.fit_hdf5(DATASET, trainIndices=trainIndices, viewsIndices=viewsIndices)
-
-    # def fit(self, DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, NB_CLASS, NB_CORES, trainArguments):
-    #     fusionType, fusionMethod, fusionConfig, monoviewClassifier, monoviewClassifierConfig = trainArguments
-    #     fusionTypeModule = globals()[fusionType]  # Early/late fusion
-    #     trainFusion = getattr(fusionTypeModule, fusionMethod+"Train")  # linearWeighted for example
-    #     classifier = trainFusion(DATASET, CLASS_LABELS, DATASET_LENGTH, NB_VIEW, monoviewClassifier,
-    #                              monoviewClassifierConfig, fusionConfig)
-    #     return fusionType, fusionMethod, classifier
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if usedIndices is None:
@@ -183,13 +174,5 @@ class Fusion:
         else:
             predictedLabels = []
         return predictedLabels
-
-    # def predict(self, DATASET, classifier, NB_CLASS):
-    #     fusionType, fusionMethod, fusionClassifier = classifier
-    #     fusionType = globals()[fusionType]  # Early/late fusion
-    #     predictFusion = getattr(fusionType, fusionMethod+"Predict")  # linearWeighted for example
-    #     predictedLabels = predictFusion(DATASET, fusionClassifier)
-    #     return predictedLabels
-
 
 

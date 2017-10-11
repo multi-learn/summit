@@ -30,9 +30,7 @@ def randomizedSearch(dataset, classifierName, metrics, learningIndices, KFolds, 
     classifierPackage =getattr(Multiview,classifierName)  # Permet d'appeler un module avec une string
     classifierModule = getattr(classifierPackage, classifierName)
     classifierClass = getattr(classifierModule, classifierName)
-    statsIter = len(learningIndices)
     if classifierName != "Mumbo":
-        datasetLength = dataset.get("Metadata").attrs["datasetLength"]
         paramsSets = classifierModule.genParamsSets(classificationKWARGS, randomState, nIter=nIter)
         if metricModule.getConfig()[-14]=="h":
             baseScore = -1000.0
@@ -44,16 +42,11 @@ def randomizedSearch(dataset, classifierName, metrics, learningIndices, KFolds, 
         kFolds = KFolds.split(learningIndices, dataset.get("Labels").value[learningIndices])
         for paramsSet in paramsSets:
             scores = []
-            # for statsIterIndex in range(statsIter):
             for trainIndices, testIndices in kFolds:
-                # fold.sort()
-                # trainIndices = [index for index in range(datasetLength) if (index not in fold) and (index in learningIndices[statsIterIndex])]
                 classifier = classifierClass(randomState, NB_CORES=nbCores, **classificationKWARGS)
                 classifier.setParams(paramsSet)
                 classifier.fit_hdf5(dataset, trainIndices=learningIndices[trainIndices], viewsIndices=viewsIndices)
-                # trainLabels = classifier.predict_hdf5(dataset, usedIndices=trainIndices, viewsIndices=viewsIndices)
                 testLabels = classifier.predict_hdf5(dataset, usedIndices=learningIndices[testIndices], viewsIndices=viewsIndices)
-                # trainScore = metricModule.score(dataset.get("Labels").value[trainIndices], trainLabels)
                 testScore = metricModule.score(dataset.get("Labels").value[learningIndices[testIndices]], testLabels)
                 scores.append(testScore)
             crossValScore = np.mean(np.array(scores))

@@ -17,14 +17,6 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     return paramsSets
 
 
-# def getArgs(args, benchmark):
-#     classifiersNames = args.FU_cl_names
-#     classifiersConfig = [getattr(MonoviewClassifiers, name).getKWARGS([arg.split(":")
-#                                                                        for arg in config.split(";")])
-#                          for config, name in zip(args.FU_cl_config, classifiersNames)]
-#     fusionMethodConfig = args.FU_method_config
-#     return classifiersNames, classifiersConfig, fusionMethodConfig
-
 def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview):
     if args.FU_L_cl_names!=['']:
         args.FU_L_select_monoview = "user_defined"
@@ -56,26 +48,6 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview):
                                   'monoviewSelection': args.FU_L_select_monoview,
                                   "nbView": (len(viewsIndices))}}
     return [arguments]
-#
-# def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
-#     if type(viewsIndices)==type(None):
-#         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-#     nbView = len(viewsIndices)
-#     bestScore = 0.0
-#     bestConfig = None
-#     if classificationKWARGS["fusionMethodConfig"][0] is not None:
-#         for i in range(nIter):
-#             randomWeightsArray = np.random.random_sample(nbView)
-#             normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
-#             classificationKWARGS["fusionMethodConfig"][0] = normalizedArray
-#             classifier = BayesianInference(1, **classificationKWARGS)
-#             classifier.fit_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
-#             predictedLabels = classifier.predict_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
-#             accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
-#             if accuracy > bestScore:
-#                 bestScore = accuracy
-#                 bestConfig = normalizedArray
-#         return [bestConfig]
 
 
 class BayesianInference(LateFusionClassifier):
@@ -83,7 +55,6 @@ class BayesianInference(LateFusionClassifier):
         LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
 
-        # self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
         if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig']==['']:
             self.weights = np.array([1.0 for classifier in kwargs['classifiersNames']])
         else:
@@ -96,7 +67,6 @@ class BayesianInference(LateFusionClassifier):
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if viewsIndices is None:
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-        # self.weights /= float(max(self.weights))
         nbView = len(viewsIndices)
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])

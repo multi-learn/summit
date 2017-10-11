@@ -82,16 +82,9 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=None, metric=["accura
         p = randomState.random_sample()
         model = randomState.choice(["conjunction", "disjunction"])
         classifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=max_attributes, model_type=model, verbose=False)
-        # if nbFolds != 1:
-        #     kFolds = DB.getKFoldIndices(nbFolds, y_train, len(set(y_train)), range(len(y_train)), randomState)
-        # else:
-        #     kFolds = [[], range(len(y_train))]
         scores = []
         kFolds = KFolds.split(X_train, y_train)
         for foldIdx, (trainIndices, testIndices) in enumerate(kFolds):
-            # if fold != range(len(y_train)):
-            # fold.sort()
-            # trainIndices = [index for index in range(len(y_train)) if (index not in fold)]
             attributeClassification, binaryAttributes, dsetFile, name = transformData(X_train[trainIndices])
             try:
                 classifier.fit(binaryAttributes, y_train[trainIndices], X=None,

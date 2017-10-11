@@ -431,7 +431,6 @@ trainIndices, testIndices, a, aa = sklearn.model_selection.train_test_split(indi
                                                                             random_state=randomState)
 classificationIndices = (trainIndices, testIndices)
 kFolds = sklearn.model_selection.KFold(n_splits=args.CL_nbFolds, random_state=randomState)
-# kFoldsIndices = kFolds.split(trainIndices)
 
 datasetFiles = initMultipleDatasets(args, nbCores)
 
@@ -456,7 +455,6 @@ logging.info("Start:\t Finding all available mono- & multiview algorithms")
 
 benchmark = initBenchmark(args)
 
-# fusionMethodConfig = [args.FU_method_config[0].split(":"), "b"]
 
 initKWARGS = initKWARGS(args, benchmark)
 

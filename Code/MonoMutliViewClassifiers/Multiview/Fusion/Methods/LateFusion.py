@@ -35,15 +35,6 @@ def fitMonoviewClassifier(classifierName, data, labels, classifierConfig, needPr
                                               enumerate(classifierConfig
                                                         )))
             return classifier
-    # else:
-    #     if needProbas and not canProbasClassifier(classifierConfig):
-    #         monoviewClassifier = getattr(MonoviewClassifiers, "DecisionTree")
-    #         DTConfig = {"0":300, "1":"entropy", "2":"random"}
-    #         classifier = monoviewClassifier.fit(data,labels, randomState,DTConfig)
-    #         return classifier
-    #     else:
-    #         return classifierConfig
-
 
 
 def getScores(LateFusionClassifiers):
@@ -129,8 +120,6 @@ def getConfig(classifiersNames, resultsMonoview):
                 classifiersConfigs[viewIndex]=resultMonoview[1][4]
     return classifiersConfigs
 
-def jambon(fromage):
-    pass
 
 class LateFusionClassifier(object):
     def __init__(self, randomState, monoviewClassifiersNames, monoviewClassifiersConfigs, monoviewSelection, NB_CORES=1):
@@ -151,13 +140,6 @@ class LateFusionClassifier(object):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        # monoviewSelectionMethod = locals()[self.monoviewSelection]
-        # self.monoviewClassifiers = monoviewSelectionMethod()
-        # a = Parallel(n_jobs=self.nbCores)(
-        #     delayed(jambon)(DATASET.get("Labels").value[trainIndices],
-        #                                    )
-        #     for index, viewIndex in enumerate(viewsIndices))
-        # import pdb;pdb.set_trace()
 
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
                 delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[index],

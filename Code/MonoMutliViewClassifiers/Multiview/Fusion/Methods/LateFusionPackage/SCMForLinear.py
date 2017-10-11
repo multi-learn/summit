@@ -56,36 +56,12 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview):
                                   "nbView": (len(viewsIndices))}}
     return [arguments]
 
-# def gridSearch(DATASET, classificationKWARGS, trainIndices, nIter=30, viewsIndices=None):
-#     if type(viewsIndices)==type(None):
-#         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-#     nbView = len(viewsIndices)
-#     bestScore = 0.0
-#     bestConfig = None
-#     for i in range(nIter):
-#         max_attributes = random.randint(1, 20)
-#         p = random.random()
-#         model = random.choice(["conjunction", "disjunction"])
-#         order = random.randint(1,nbView)
-#         randomWeightsArray = np.random.random_sample(nbView)
-#         normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
-#         classificationKWARGS["fusionMethodConfig"][0] = [p, max_attributes, model, order]
-#         classifier = SCMForLinear(1, **classificationKWARGS)
-#         classifier.fit_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
-#         predictedLabels = classifier.predict_hdf5(DATASET, trainIndices, viewsIndices=viewsIndices)
-#         accuracy = accuracy_score(DATASET.get("Labels")[trainIndices], predictedLabels)
-#         if accuracy > bestScore:
-#             bestScore = accuracy
-#             bestConfig = [p, max_attributes, model, order]
-#         return [bestConfig]
-
 
 class SCMForLinear(LateFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
         LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
         self.SCMClassifier = None
-        # self.config = kwargs['fusionMethodConfig'][0]
         if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig']==['']:
             self.p = 1
             self.maxAttributes = 5
@@ -108,7 +84,6 @@ class SCMForLinear(LateFusionClassifier):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        # if type(self.monoviewClassifiersConfigs[0])==dict:
         for index, viewIndex in enumerate(viewsIndices):
             monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[index])
             self.monoviewClassifiers.append(
@@ -116,8 +91,6 @@ class SCMForLinear(LateFusionClassifier):
                                        DATASET.get("Labels").value[trainIndices], self.randomState,
                                        NB_CORES=self.nbCores,
                                        **self.monoviewClassifiersConfigs[index]))
-        # else:
-        #     self.monoviewClassifiers = self.monoviewClassifiersConfigs
         self.SCMForLinearFusionFit(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
@@ -140,14 +113,6 @@ class SCMForLinear(LateFusionClassifier):
     def SCMForLinearFusionFit(self, DATASET, usedIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-        # if self.p is None:
-        #     self.p = float(self.config[0])
-        # if self.maxAttributes is None:
-        #     self.maxAttributes = int(self.config[1])
-        # if self.modelType is None:
-        #     self.modelType = self.config[2]
-        # if self.order is None:
-        #     self.order = self.config[3]
 
         nbView = len(viewsIndices)
         self.SCMClassifier = pyscm.scm.SetCoveringMachine(p=self.p, max_attributes=self.maxAttributes, model_type=self.modelType, verbose=False)
