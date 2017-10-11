@@ -304,17 +304,17 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
     trueLabels = DATASET.get("Labels").value
     times = [dataBaseTime, monoviewTime, multiviewTime]
     results = (resultsMonoview, resultsMultiview)
-    # analyzeLabels(labels, trueLabels, results, directory)
-    # logging.debug("Start:\t Analyze Global Results for iteration")
-    # resultAnalysis(benchmark, results, args.name, times, metrics, directory)
-    # logging.debug("Done:\t Analyze Global Results for iteration")
-    # globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
-    # totalTime = time.time() - start
-    # logging.info("Extraction time : "+str(dataBaseTime)+
-    #              "s, Monoview time : "+str(monoviewTime)+
-    #              "s, Multiview Time : "+str(multiviewTime)+
-    #              "s, Global Analysis Time : "+str(globalAnalysisTime)+
-    #              "s, Total Duration : "+str(totalTime)+"s")
+    analyzeLabels(labels, trueLabels, results, directory)
+    logging.debug("Start:\t Analyze Global Results for iteration")
+    resultAnalysis(benchmark, results, args.name, times, metrics, directory)
+    logging.debug("Done:\t Analyze Global Results for iteration")
+    globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
+    totalTime = time.time() - start
+    logging.info("Extraction time : "+str(dataBaseTime)+
+                 "s, Monoview time : "+str(monoviewTime)+
+                 "s, Multiview Time : "+str(multiviewTime)+
+                 "s, Global Analysis Time : "+str(globalAnalysisTime)+
+                 "s, Total Duration : "+str(totalTime)+"s")
     return results
 
 
