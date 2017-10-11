@@ -45,7 +45,7 @@ def intersect(allClassifersNames, directory, viewsIndices):
     wrongSets = [0 for _ in allClassifersNames]
     nbViews = len(viewsIndices)
     for classifierIndex, classifierName in enumerate(allClassifersNames):
-        classifierDirectory = directory+"/"+classifierName+"/"
+        classifierDirectory = directory+classifierName+"/"
         viewDirectoryNames = os.listdir(classifierDirectory)
         wrongSets[classifierIndex]=[0 for _ in viewDirectoryNames]
         for viewIndex, viewDirectoryName in enumerate(viewDirectoryNames):
