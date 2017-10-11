@@ -104,3 +104,60 @@ def analyzeLabels(labelsArrays, realLabels, results, directory):
     cbar = fig.colorbar(cax, ticks=[0, 1])
     cbar.ax.set_yticklabels(['Wrong', ' Right'])
     fig.savefig(directory+time.strftime("%Y%m%d-%H%M%S")+"-error_analysis.png")
+
+
+def genScoresNames(iterResults, metric, nbResults, names):
+    validationScores = []
+    trainScores = []
+    for iterindex, iterResult in enumerate(iterResults):
+        mono, multi = iterResult
+        import pdb;pdb.set_trace()
+        validationScores[iterindex] = [float(res[1][2][metric[0]][1]) for res in mono]
+        validationScores[iterindex] += [float(scores[metric[0]][1]) for a, b, scores, c in multi]
+        trainScores[iterindex] = [float(res[1][1][2][metric[0]][0]) for res in mono]
+        trainScores[iterindex] += [float(scores[metric[0]][0]) for a, b, scores, c in multi]
+
+        validationScores[iterindex] = np.array(validationScores)
+        trainScores[iterindex] = np.array(trainScores)
+
+    validationScores = np.array(validationScores)
+    trainScores = np.array(trainScores)
+    validationSTDs = np.std(validationScores, axis=0)
+    trainSTDs = np.std(trainScores, axis=0)
+    validationMeans = np.mean(validationScores, axis=0)
+    trainMeans = np.mean(trainScores, axis=0)
+
+    f = pylab.figure(figsize=(40, 30))
+    width = 0.35       # the width of the bars
+    fig = plt.gcf()
+    fig.subplots_adjust(bottom=105.0, top=105.01)
+    ax = f.add_axes([0.1, 0.1, 0.8, 0.8])
+    if metric[1]!=None:
+        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+    else:
+        metricKWARGS = {}
+    sorted_indices = np.argsort(validationMeans)
+    validationMeans = validationMeans[sorted_indices]
+    trainMeans = trainMeans[sorted_indices]
+    names = names[sorted_indices]
+
+    ax.set_title(getattr(Metrics, metric[0]).getConfig(**metricKWARGS)+" for each classifier")
+    rects = ax.bar(range(nbResults), validationMeans, width, color="r", yerr=validationSTDs)
+    rect2 = ax.bar(np.arange(nbResults)+width, trainMeans, width, color="0.7", yerr=trainSTDs)
+    autolabel(rects, ax)
+    autolabel(rect2, ax)
+    ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
+    ax.set_xticks(np.arange(nbResults)+width)
+    ax.set_xticklabels(names, rotation="vertical")
+
+    return f
+
+
+def analyzeIterResults(iterResults, name, metrics, directory):
+    nbResults = len(iterResults[0][0])+len(iterResults[0][1])
+    nbIter = len(iterResults)
+    names = genNamesFromRes(iterResults[0][0], iterResults[0][1])
+    for metric in metrics:
+        figure = genScoresNames(iterResults, metric, nbResults, names)
+        figure.savefig(directory+time.strftime("%Y%m%d-%H%M%S")+"-"+name+"-Mean_on_"
+                       +str(nbIter)+"_iter-"+metric[0]+".png")

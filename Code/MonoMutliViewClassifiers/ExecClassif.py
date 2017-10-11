@@ -24,7 +24,7 @@ from Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 import Multiview.GetMultiviewDb as DB
 from Versions import testVersions
-from ResultAnalysis import resultAnalysis, analyzeLabels
+from ResultAnalysis import resultAnalysis, analyzeLabels, analyzeIterResults
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -278,8 +278,9 @@ def genDirecortiesNames(directory, statsIter):
 def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory, args, classificationIndices, kFolds,
                               randomState, hyperParamSearch, metrics, coreIndex, viewsIndices, dataBaseTime, start, benchmark,
                               views):
+    resultsMonoview = []
     labelsNames = LABELS_DICTIONARY.values()
-    resultsMonoview = [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
+    resultsMonoview += [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
                                                  coreIndex, args.type, args.pathF, randomState,
                                                  hyperParamSearch=hyperParamSearch,
                                                  metrics=metrics, nIter=args.CL_GS_iter,
@@ -289,7 +290,8 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
 
     argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory, resultsMonoview)
 
-    resultsMultiview = [
+    resultsMultiview = []
+    resultsMultiview += [
         ExecMultiview_multicore(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
                                 args.pathF, LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
                                 metrics=metrics, nIter=args.CL_GS_iter,**arguments)
@@ -302,17 +304,17 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
     trueLabels = DATASET.get("Labels").value
     times = [dataBaseTime, monoviewTime, multiviewTime]
     results = (resultsMonoview, resultsMultiview)
-    analyzeLabels(labels, trueLabels, results, directory)
-    logging.debug("Start:\t Analyze Global Results")
-    resultAnalysis(benchmark, results, args.name, times, metrics, directory)
-    logging.debug("Done:\t Analyze Global Results")
-    globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
-    totalTime = time.time() - start
-    logging.info("Extraction time : "+str(dataBaseTime)+
-                 "s, Monoview time : "+str(monoviewTime)+
-                 "s, Multiview Time : "+str(multiviewTime)+
-                 "s, Global Analysis Time : "+str(globalAnalysisTime)+
-                 "s, Total Duration : "+str(totalTime)+"s")
+    # analyzeLabels(labels, trueLabels, results, directory)
+    # logging.debug("Start:\t Analyze Global Results for iteration")
+    # resultAnalysis(benchmark, results, args.name, times, metrics, directory)
+    # logging.debug("Done:\t Analyze Global Results for iteration")
+    # globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
+    # totalTime = time.time() - start
+    # logging.info("Extraction time : "+str(dataBaseTime)+
+    #              "s, Monoview time : "+str(monoviewTime)+
+    #              "s, Multiview Time : "+str(multiviewTime)+
+    #              "s, Global Analysis Time : "+str(globalAnalysisTime)+
+    #              "s, Total Duration : "+str(totalTime)+"s")
     return results
 
 
@@ -382,7 +384,6 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
                  "s, Multiview Time : "+str(multiviewTime)+
                  "s, Global Analysis Time : "+str(globalAnalysisTime)+
                  "s, Total Duration : "+str(totalTime)+"s")
-    return results
 
 
 def initRandomState(randomStateArg, directory):
@@ -642,8 +643,12 @@ if statsIter>1:
         logging.debug("Start:\t Deleting " + str(nbCores) + " temporary datasets for multiprocessing")
         datasetFiles = DB.deleteHDF5(args.pathF, args.name, nbCores)
         logging.debug("Start:\t Deleting datasets for multiprocessing")
+    analyzeIterResults(iterResults, args.name, metrics, directory)
 
 else:
-    res = classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories, args, classificationIndices, kFolds,
-                          statsIterRandomStates, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
-                          benchmark, views)
+    classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories, args, classificationIndices, kFolds,
+                    statsIterRandomStates, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
+                    benchmark, views)
+
+if statsIter > 1:
+    pass
