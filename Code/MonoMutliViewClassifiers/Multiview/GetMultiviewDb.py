@@ -211,7 +211,7 @@ def getPositions(labelsUsed, fullLabels):
 #     return datasetFile, labelsDictionary
 
 
-def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, LABELS_NAMES, randomState):
+def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, LABELS_NAMES):
     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
     fullLabels = datasetFile.get("Labels")
     labelsDictionary = dict((labelIndex, labelName) for labelIndex, labelName in
