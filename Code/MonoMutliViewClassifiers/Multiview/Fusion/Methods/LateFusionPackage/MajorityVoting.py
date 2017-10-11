@@ -16,12 +16,11 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     return paramsSets
 
 
-def getArgs(args, views, viewsIndices, directory, resultsMonoview):
+def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview):
     if args.FU_L_cl_names!=['']:
         pass
     else:
-        monoviewClassifierModulesNames = [name for _, name, isPackage in pkgutil.iter_modules(['MonoviewClassifiers'])
-                                          if (not isPackage)]
+        monoviewClassifierModulesNames = benchmark["Monoview"]
         args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices)
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
                                  for classifierName in args.FU_L_cl_names]
@@ -71,24 +70,24 @@ class MajorityVoting(LateFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
         LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
-        if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig']==['']:
+        if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig']==['']:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 
     def setParams(self, paramsSet):
-        self.weights = paramsSet[0]
+        self.weights = np.array(paramsSet[0])
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         nbView = len(viewsIndices)
-        self.weights = self.weights/float(max(self.weights))
-        if usedIndices == None:
+        self.weights /= float(sum(self.weights))
+        if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
 
         datasetLength = len(usedIndices)
-        votes = np.zeros((datasetLength, DATASET.get("Metadata").attrs["nbClass"]), dtype=int)
+        votes = np.zeros((datasetLength, DATASET.get("Metadata").attrs["nbClass"]), dtype=float)
         monoViewDecisions = np.zeros((len(usedIndices),nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
@@ -112,7 +111,7 @@ class MajorityVoting(LateFusionClassifier):
         return predictedLabels
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
-        configString = "with Majority Voting \n\t-With monoview classifiers : "
+        configString = "with Majority Voting \n\t-With weights : "+str(self.weights)+"\n\t-With monoview classifiers : "
         for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
             configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)

@@ -32,7 +32,7 @@ def genFusionName(type_, a, b, c):
     if type_ == "Fusion" and a["fusionType"] != "EarlyFusion":
         return "Late-"+str(a["fusionMethod"])
     elif type_ == "Fusion" and a["fusionType"] != "LateFusion":
-        return "Early-"+a["fusionMethod"]+"-"+a["classifiersNames"][0]
+        return "Early-"+a["fusionMethod"]+"-"+a["classifiersNames"]
 
 
 def genNamesFromRes(mono, multi):
@@ -48,17 +48,17 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory):
         nbResults = len(mono)+len(multi)
         validationScores = [float(res[1][2][metric[0]][1]) for res in mono]
         validationScores += [float(scores[metric[0]][1]) for a, b, scores, c in multi]
-        validationSTD = [float(res[1][2][metric[0]][3]) for res in mono]
-        validationSTD += [float(scores[metric[0]][3]) for a, b, scores, c in multi]
+        # validationSTD = [float(res[1][2][metric[0]][3]) for res in mono]
+        # validationSTD += [float(scores[metric[0]][3]) for a, b, scores, c in multi]
         trainScores = [float(res[1][2][metric[0]][0]) for res in mono]
         trainScores += [float(scores[metric[0]][0]) for a, b, scores, c in multi]
-        trainSTD = [float(res[1][2][metric[0]][2]) for res in mono]
-        trainSTD += [float(scores[metric[0]][2]) for a, b, scores, c in multi]
+        # trainSTD = [float(res[1][2][metric[0]][2]) for res in mono]
+        # trainSTD += [float(scores[metric[0]][2]) for a, b, scores, c in multi]
 
         validationScores = np.array(validationScores)
-        validationSTD = np.array(validationSTD)
+        # validationSTD = np.array(validationSTD)
         trainScores = np.array(trainScores)
-        trainSTD = np.array(trainSTD)
+        # trainSTD = np.array(trainSTD)
         names = np.array(names)
 
         f = pylab.figure(figsize=(40, 30))
@@ -72,14 +72,14 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory):
             metricKWARGS = {}
         sorted_indices = np.argsort(validationScores)
         validationScores = validationScores[sorted_indices]
-        validationSTD = validationSTD[sorted_indices]
+        # validationSTD = validationSTD[sorted_indices]
         trainScores = trainScores[sorted_indices]
-        trainSTD = trainSTD[sorted_indices]
+        # trainSTD = trainSTD[sorted_indices]
         names = names[sorted_indices]
 
         ax.set_title(getattr(Metrics, metric[0]).getConfig(**metricKWARGS)+" on validation set for each classifier")
-        rects = ax.bar(range(nbResults), validationScores, width, color="r", yerr=validationSTD)
-        rect2 = ax.bar(np.arange(nbResults)+width, trainScores, width, color="0.7", yerr=trainSTD)
+        rects = ax.bar(range(nbResults), validationScores, width, color="r", )#yerr=validationSTD)
+        rect2 = ax.bar(np.arange(nbResults)+width, trainScores, width, color="0.7",)# yerr=trainSTD)
         autolabel(rects, ax)
         autolabel(rect2, ax)
         ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
@@ -87,7 +87,7 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory):
         ax.set_xticklabels(names, rotation="vertical")
 
         f.savefig(directory+time.strftime("%Y%m%d-%H%M%S")+"-"+name+"-"+metric[0]+".png")
-    logging.info("Extraction time : "+str(times[0])+"s, Monoview time : "+str(times[1])+"s, Multiview Time : "+str(times[2])+"s")
+
 
 
 def analyzeLabels(labelsArrays, realLabels, results, directory):

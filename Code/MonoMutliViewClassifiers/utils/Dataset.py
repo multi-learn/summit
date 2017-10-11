@@ -3,12 +3,12 @@ import numpy as np
 
 
 def getV(DATASET, viewIndex, usedIndices=None):
-    if usedIndices==None:
+    if usedIndices is None:
         usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
     if type(usedIndices) is int:
         return DATASET.get("View"+str(viewIndex))[usedIndices, :]
     else:
-        usedIndices=np.array(usedIndices)
+        usedIndices = np.array(usedIndices)
         sortedIndices = np.argsort(usedIndices)
         usedIndices = usedIndices[sortedIndices]
 
@@ -35,9 +35,9 @@ def getValue(DATASET):
         return DATASET.value
     else:
         sparse_mat = sparse.csr_matrix((DATASET.get("data").value,
-                                  DATASET.get("indices").value,
-                                  DATASET.get("indptr").value),
-                                 shape=DATASET.attrs["shape"])
+                                       DATASET.get("indices").value,
+                                       DATASET.get("indptr").value),
+                                       shape=DATASET.attrs["shape"])
         return sparse_mat
 
 

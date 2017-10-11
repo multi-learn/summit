@@ -404,6 +404,7 @@ groupLateFusion.add_argument('--FU_L_select_monoview', metavar='STRING', action=
                              help='Determine which method to use to select the monoview classifiers',
                              default="intersect")
 
+start = time.time()
 args = parser.parse_args()
 
 os.nice(args.nice)
@@ -412,7 +413,6 @@ statsIter = args.CL_statsiter
 randomState = np.random.RandomState(args.randomState)
 hyperParamSearch = args.CL_HPS_type
 
-start = time.time()
 
 if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake", "Plausible", "KMultiOmic"]:
     getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
@@ -475,7 +475,7 @@ if nbCores > 1:
     for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
         resultsMonoview += (Parallel(n_jobs=nbCores)(
             delayed(ExecMonoview_multicore)(directory, args.name, labelsNames, classificationIndices, kFolds,
-                                            coreIndex, args.type, args.pathF, statsIter, randomState,
+                                            coreIndex, args.type, args.pathF, randomState,
                                             hyperParamSearch=hyperParamSearch,
                                             metrics=metrics, nIter=args.CL_GS_iter,
                                             **argumentDictionaries["Monoview"][coreIndex + stepIndex * nbCores])
@@ -490,7 +490,7 @@ if nbCores > 1:
 else:
     resultsMonoview += ([ExecMonoview(directory, DATASET.get("View" + str(arguments["viewIndex"])),
                                       DATASET.get("Labels").value, args.name, labelsNames,
-                                      classificationIndices, kFolds, 1, args.type, args.pathF, statsIter, randomState,
+                                      classificationIndices, kFolds, 1, args.type, args.pathF, randomState,
                                       hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=args.CL_GS_iter,
                                       **arguments)
                          for arguments in argumentDictionaries["Monoview"]])
@@ -511,14 +511,14 @@ if nbCores > 1:
         resultsMultiview += Parallel(n_jobs=nbCores)(
             delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
                                              args.pathF,
-                                             LABELS_DICTIONARY, statsIter, randomState, hyperParamSearch=hyperParamSearch,
+                                             LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
                                              metrics=metrics, nIter=args.CL_GS_iter,
                                              **argumentDictionaries["Multiview"][stepIndex * nbCores + coreIndex])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
 else:
     resultsMultiview = [
         ExecMultiview(directory, DATASET, args.name, classificationIndices, kFolds, 1, args.type, args.pathF,
-                      LABELS_DICTIONARY, statsIter, randomState, hyperParamSearch=hyperParamSearch,
+                      LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
                       metrics=metrics, nIter=args.CL_GS_iter, **arguments) for arguments in
         argumentDictionaries["Multiview"]]
 multiviewTime = time.time() - monoviewTime - dataBaseTime - start
@@ -536,3 +536,10 @@ analyzeLabels(labels, trueLabels, results, directory)
 logging.debug("Start:\t Analyze Global Results")
 resultAnalysis(benchmark, results, args.name, times, metrics, directory)
 logging.debug("Done:\t Analyze Global Results")
+globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
+totalTime = time.time() - start
+logging.info("Extraction time : "+str(dataBaseTime)+
+             "s, Monoview time : "+str(monoviewTime)+
+             "s, Multiview Time : "+str(multiviewTime)+
+             "s, Global Analysis Time : "+str(globalAnalysisTime)+
+             "s, Total Duration : "+str(totalTime)+"s")

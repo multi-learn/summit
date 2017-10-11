@@ -204,9 +204,9 @@ class Mumbo:
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
-        if usedIndices == None:
+        if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if type(viewsIndices)==type(None):
+        if viewsIndices is None:
             viewsIndices = range(DATASET.get("Metadata").attrs["nbView"])
 
         viewDict = dict((viewIndex, index) for index, viewIndex in enumerate(viewsIndices))
@@ -229,19 +229,16 @@ class Mumbo:
 
     def predict_proba_hdf5(self, DATASET, usedIndices=None):
         NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
-        if usedIndices == None:
+        if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if usedIndices is not None:
-            DATASET_LENGTH = len(usedIndices)
-            predictedProbas = np.zeros((DATASET_LENGTH, NB_CLASS))
+        DATASET_LENGTH = len(usedIndices)
+        predictedProbas = np.zeros((DATASET_LENGTH, NB_CLASS))
 
-            for labelIndex, exampleIndex in enumerate(usedIndices):
-                for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
-                    data = getV(DATASET, int(view), exampleIndex)
-                    predictedProbas[labelIndex, int(classifier.predict(np.array([data])))] += alpha[view]
-                predictedProbas[labelIndex,:] = predictedProbas[labelIndex,:]/np.sum(predictedProbas[labelIndex,:])
-        else:
-            predictedProbas = []
+        for labelIndex, exampleIndex in enumerate(usedIndices):
+            for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
+                data = getV(DATASET, int(view), exampleIndex)
+                predictedProbas[labelIndex, int(classifier.predict(np.array([data])))] += alpha[view]
+            predictedProbas[labelIndex,:] = predictedProbas[labelIndex,:]/np.sum(predictedProbas[labelIndex,:])
         return predictedProbas
 
     def trainWeakClassifiers(self, DATASET, CLASS_LABELS, NB_CLASS, DATASET_LENGTH, NB_VIEW):
@@ -482,24 +479,24 @@ class Mumbo:
         return np.transpose(predictedLabels)
 
     def classifyMumbobyIter_hdf5(self, DATASET, fakeViewsIndicesDict, usedIndices=None, NB_CLASS=2):
-        if usedIndices == None:
+        if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if usedIndices:
-            DATASET_LENGTH = len(usedIndices)
-            predictedLabels = np.zeros((DATASET_LENGTH, self.maxIter))
-            votes = np.zeros((DATASET_LENGTH, NB_CLASS))
+        # if usedIndices is not None:
+        DATASET_LENGTH = len(usedIndices)
+        predictedLabels = np.zeros((DATASET_LENGTH, self.maxIter))
+        votes = np.zeros((DATASET_LENGTH, NB_CLASS))
 
-            for iterIndex, (classifier, alpha, view) in enumerate(zip(self.bestClassifiers, self.alphas, self.bestViews)):
-                votesByIter = np.zeros((DATASET_LENGTH, NB_CLASS))
+        for iterIndex, (classifier, alpha, view) in enumerate(zip(self.bestClassifiers, self.alphas, self.bestViews)):
+            votesByIter = np.zeros((DATASET_LENGTH, NB_CLASS))
 
-                for usedExampleIndex, exampleIndex in enumerate(usedIndices):
-                    data = np.array([np.array(getV(DATASET,int(view), exampleIndex))])
-                    votesByIter[usedExampleIndex, int(classifier.predict(data))] += alpha[fakeViewsIndicesDict[view]]
-                    votes[usedExampleIndex] = votes[usedExampleIndex] + np.array(votesByIter[usedExampleIndex])
-                    predictedLabels[usedExampleIndex, iterIndex] = np.argmax(votes[usedExampleIndex])
-        else:
-            predictedLabels = []
-            for i in range(self.maxIter):
-                predictedLabels.append([])
+            for usedExampleIndex, exampleIndex in enumerate(usedIndices):
+                data = np.array([np.array(getV(DATASET,int(view), int(exampleIndex)))])
+                votesByIter[usedExampleIndex, int(classifier.predict(data))] += alpha[fakeViewsIndicesDict[view]]
+                votes[usedExampleIndex] = votes[usedExampleIndex] + np.array(votesByIter[usedExampleIndex])
+                predictedLabels[usedExampleIndex, iterIndex] = np.argmax(votes[usedExampleIndex])
+        # else:
+        #     predictedLabels = []
+        #     for i in range(self.maxIter):
+        #         predictedLabels.append([])
 
         return np.transpose(predictedLabels)

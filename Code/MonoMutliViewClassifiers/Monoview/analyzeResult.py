@@ -43,7 +43,7 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
 
 
 def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics, nIter, feat, CL_type, clKWARGS, classLabelsNames,
-            shape, y_train, y_train_pred, y_test, y_test_pred, time, statsIter, randomState):
+            shape, y_train, y_train_pred, y_test, y_test_pred, time, randomState):
     metricsScores = {}
     metricModule = getattr(Metrics, metrics[0][0])
     trainScore = metricModule.score(y_train, y_train_pred)
@@ -52,7 +52,7 @@ def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics, nIter, fea
     # val = np.mean(testScores)
     stdTrain = "nan" #np.std(trainScores)
     stdTest = "nan" #np.std(testScores)
-    stringAnalysis = "Classification on "+name+" database for "+feat+" with "+CL_type+", random state is "+str(randomState)+", and "+str(statsIter)+" statistical iterations\n\n"
+    stringAnalysis = "Classification on "+name+" database for "+feat+" with "+CL_type+", random state is "+str(randomState)+".\n\n"
     stringAnalysis += metrics[0][0]+" on train : "+str(trainScore)+", with STD : "+str(stdTrain)+"\n"+metrics[0][0]+" on test : "+str(testScore)+", with STD : "+str(stdTest)+"\n\n"
     stringAnalysis += getDBConfigString(name, feat, learningRate, shape, classLabelsNames, KFolds)
     stringAnalysis += getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS)

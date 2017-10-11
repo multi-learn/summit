@@ -30,7 +30,7 @@ __status__ 	= "Prototype"           # Production, Development, Prototype
 __date__	= 2016-03-25
 
 
-def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices, KFolds, datasetFileIndex, databaseType, path, statsIter, randomState, hyperParamSearch="randomizedSearch",
+def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices, KFolds, datasetFileIndex, databaseType, path, randomState, hyperParamSearch="randomizedSearch",
                            metrics=[["accuracy_score", None]], nIter=30, **args):
     DATASET = h5py.File(path+name+str(datasetFileIndex)+".hdf5", "r")
     kwargs = args["args"]
@@ -38,11 +38,11 @@ def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices, 
     neededViewIndex = views.index(kwargs["feat"])
     X = DATASET.get("View"+str(neededViewIndex))
     Y = DATASET.get("Labels").value
-    return ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFolds, 1, databaseType, path, statsIter, randomState, hyperParamSearch=hyperParamSearch,
+    return ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFolds, 1, databaseType, path, randomState, hyperParamSearch=hyperParamSearch,
                         metrics=metrics, nIter=nIter, **args)
 
 
-def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFolds, nbCores, databaseType, path, statsIter, randomState, hyperParamSearch="randomizedSearch",
+def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFolds, nbCores, databaseType, path, randomState, hyperParamSearch="randomizedSearch",
                  metrics=[["accuracy_score", None]], nIter=30, **args):
     logging.debug("Start:\t Loading data")
     try:
@@ -115,7 +115,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
     stringAnalysis, imagesAnalysis, metricsScores = execute(name, classificationIndices, KFolds, nbCores, hyperParamSearch, metrics, nIter, feat, CL_type,
                                                             clKWARGS, labelsNames, X.shape,
-                                                            y_train, y_train_pred, y_test, y_test_pred, t_end, statsIter, randomState)
+                                                            y_train, y_train_pred, y_test, y_test_pred, t_end, randomState)
     cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
     logging.debug("Done:\t Getting Results")
     logging.info(stringAnalysis)
@@ -151,7 +151,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
     logging.info("Done:\t Result Analysis")
     viewIndex = args["viewIndex"]
-    return viewIndex, [CL_type, cl_desc+[feat], metricsScores, full_labels, cl_res]
+    return viewIndex, [CL_type, cl_desc+[feat], metricsScores, full_labels, clKWARGS]
 
     # # Classification Report with Precision, Recall, F1 , Support
     # logging.debug("Info:\t Classification report:")

@@ -37,27 +37,25 @@ def printMetricScore(metricScores, metrics):
     return metricScoreString
 
 
-def getTotalMetricScores(metric, trainLabels, testLabels, DATASET, validationIndices):
+def getTotalMetricScores(metric, trainLabels, testLabels, DATASET, validationIndices, learningIndices):
     labels = DATASET.get("Labels").value
-    DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
 
-    learningIndices = [index for index in range(DATASET_LENGTH) if index not in validationIndices]
     trainScore = metricModule.score(labels[learningIndices], trainLabels, **metricKWARGS)
     testScore = metricModule.score(labels[validationIndices], testLabels, **metricKWARGS)
     return [trainScore, testScore]
 
 
 def getMetricsScores(metrics, trainLabels, testLabels,
-                     DATASET, validationIndices):
+                     DATASET, validationIndices, learningIndices):
     metricsScores = {}
     for metric in metrics:
         metricsScores[metric[0]] = getTotalMetricScores(metric, trainLabels, testLabels,
-                                                        DATASET, validationIndices)
+                                                        DATASET, validationIndices, learningIndices)
     return metricsScores
 
 
@@ -66,7 +64,7 @@ def execute(classifier, trainLabels,
             classificationKWARGS, classificationIndices,
             LABELS_DICTIONARY, views, nbCores, times,
             name, KFolds,
-            hyperParamSearch, nIter, metrics, statsIter,
+            hyperParamSearch, nIter, metrics,
             viewsIndices, randomState):
 
     CLASS_LABELS = DATASET.get("Labels").value
@@ -77,8 +75,8 @@ def execute(classifier, trainLabels,
     monoviewClassifiersConfigs = classificationKWARGS["classifiersConfigs"]
     fusionMethodConfig = classificationKWARGS["fusionMethodConfig"]
 
-    DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]
-    NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+    # DATASET_LENGTH = DATASET.get("Metadata").attrs["datasetLength"]
+    # NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     # kFoldAccuracyOnTrain = np.zeros((nbFolds, statsIter))
     # kFoldAccuracyOnTest = np.zeros((nbFolds, statsIter))
     # kFoldAccuracyOnValidation = np.zeros((nbFolds, statsIter))
@@ -108,10 +106,10 @@ def execute(classifier, trainLabels,
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metrics[0][1]))
     else:
         metricKWARGS = {}
-    scoreOnTrain = metricModule.score(CLASS_LABELS[learningIndices], trainLabels, **metricKWARGS)
+    scoreOnTrain = metricModule.score(CLASS_LABELS[learningIndices], CLASS_LABELS[learningIndices], **metricKWARGS)
     scoreOnTest = metricModule.score(CLASS_LABELS[validationIndices], testLabels, **metricKWARGS)
     fusionConfiguration = classifier.classifier.getConfig(fusionMethodConfig,monoviewClassifiersNames, monoviewClassifiersConfigs)
-    stringAnalysis = "\t\tResult for Multiview classification with "+ fusionType + " and random state : "+str(randomState)+\
+    stringAnalysis = "\t\tResult for Multiview classification with "+ fusionType + " and random state : "+str(randomState)+ \
                      "\n\n"+metrics[0][0]+" :\n\t-On Train : " + str(scoreOnTrain) + "\n\t-On Test : " + str(scoreOnTest) + \
                      "\n\nDataset info :\n\t-Database name : " + name + "\n\t-Labels : " + \
                      ', '.join(LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(views) + "\n\t-" + str(KFolds.n_splits) + \
@@ -120,9 +118,12 @@ def execute(classifier, trainLabels,
     if fusionType=="LateFusion":
         stringAnalysis+=Methods.LateFusion.getScores(classifier)
     metricsScores = getMetricsScores(metrics, trainLabels, testLabels,
-                                     DATASET, validationIndices)
-    stringAnalysis+=printMetricScore(metricsScores, metrics)
+                                     DATASET, validationIndices, learningIndices)
+    # if fusionMethod=="MajorityVoting":
+    #     print CLASS_LABELS[learningIndices]==CLASS_LABELS[learningIndices]
+    #     import pdb;pdb.set_trace()
     # stringAnalysis += "\n\nComputation time on " + str(nbCores) + " cores : \n\tDatabase extraction time : " + str(
+    stringAnalysis+=printMetricScore(metricsScores, metrics)
     #     hms(seconds=int(extractionTime))) + "\n\t"
     # row_format = "{:>15}" * 3
     # stringAnalysis += row_format.format("", *['Learn', 'Prediction'])

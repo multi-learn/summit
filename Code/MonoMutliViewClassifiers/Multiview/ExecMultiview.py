@@ -21,28 +21,28 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"                           # Production, Development, Prototype
 
 
-def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY, statsIter, randomState,
+def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY, randomState,
                             hyperParamSearch=False, nbCores=1, metrics=None, nIter=30, **arguments):
     DATASET = h5py.File(path+name+str(coreIndex)+".hdf5", "r")
-    return ExecMultiview(directory, DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY, statsIter, randomState,
+    return ExecMultiview(directory, DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY, randomState,
                          hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=nIter, **arguments)
 
 
-def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCores, databaseType, path, LABELS_DICTIONARY, statsIter, randomState,
+def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCores, databaseType, path, LABELS_DICTIONARY, randomState,
                   hyperParamSearch=False, metrics=None, nIter=30, **kwargs):
 
-    datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
-    NB_VIEW = kwargs["NB_VIEW"]
+    # datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
+    # NB_VIEW = kwargs["NB_VIEW"]
     views = kwargs["views"]
     viewsIndices = kwargs["viewsIndices"]
-    NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+    # NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     if not metrics:
         metrics = [["f1_score", None]]
-    metric = metrics[0]
+    # metric = metrics[0]
     CL_type = kwargs["CL_type"]
-    LABELS_NAMES = kwargs["LABELS_NAMES"]
+    # LABELS_NAMES = kwargs["LABELS_NAMES"]
     classificationKWARGS = kwargs[CL_type+"KWARGS"]
-    learningRate = len(classificationIndices[0])/(len(classificationIndices[0])+len(classificationIndices[1]))
+    learningRate = len(classificationIndices[0])/float((len(classificationIndices[0])+len(classificationIndices[1])))
     t_start = time.time()
     logging.info("### Main Programm for Multiview Classification")
     logging.info("### Classification - Database : " + str(name) + " ; Views : " + ", ".join(views) +
@@ -65,13 +65,13 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     classifierClass = getattr(classifierModule, CL_type)
     analysisModule = getattr(classifierPackage, "analyzeResults")
 
-    logging.info("Train ratio : " + str(learningRate))
+    # logging.info("Train ratio : " + str(learningRate))
     # iValidationIndices = [DB.splitDataset(DATASET, classificationIndices, datasetLength, randomState) for _ in range(statsIter)]
     # iLearningIndices = [[index for index in range(datasetLength) if index not in validationIndices] for validationIndices in iValidationIndices]
     # iClassificationSetLength = [len(learningIndices) for learningIndices in iLearningIndices]
     # logging.info("Done:\t Determine validation split")
 
-    logging.info("CV On " + str(KFolds.n_splits) + " folds")
+    # logging.info("CV On " + str(KFolds.n_splits) + " folds")
     # if KFolds != 1:
     #     iKFolds = [DB.getKFoldIndices(KFolds, DATASET.get("Labels")[...], NB_CLASS, learningIndices, randomState) for learningIndices in iLearningIndices]
     # else:
@@ -89,10 +89,15 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     if hyperParamSearch != "None":
         classifier = searchBestSettings(DATASET, CL_type, metrics, learningIndices, KFolds, randomState, viewsIndices=viewsIndices, searchingTool=hyperParamSearch, nIter=nIter, **classificationKWARGS)
     else:
-        classifier = classifierClass(NB_CORES=nbCores, **classificationKWARGS)
+        classifier = classifierClass(randomState, NB_CORES=nbCores, **classificationKWARGS)
 
     classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices)
     trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
+    # try:
+    #     if "MajorityVoting" == classificationKWARGS["fusionMethod"]:
+    #         import pdb; pdb.set_trace()
+    # except:
+    #     pass
     testLabels = classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices)
     fullLabels = classifier.predict_hdf5(DATASET, viewsIndices=viewsIndices)
     # trainLabelsIterations.append(trainLabels)
@@ -113,7 +118,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
                                                                            classificationKWARGS, classificationIndices,
                                                                            LABELS_DICTIONARY, views, nbCores, times,
                                                                            name, KFolds,
-                                                                           hyperParamSearch, nIter, metrics, statsIter,
+                                                                           hyperParamSearch, nIter, metrics,
                                                                            viewsIndices, randomState)
     labelsSet = set(LABELS_DICTIONARY.values())
     logging.info(stringAnalysis)

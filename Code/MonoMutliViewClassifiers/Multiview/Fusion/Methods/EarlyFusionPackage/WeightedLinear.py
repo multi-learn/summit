@@ -18,13 +18,12 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     return paramsSets
 
 
-def getArgs(args, views, viewsIndices, directory, resultsMonoview):
+def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview):
     argumentsList = []
     if args.FU_E_cl_names != ['']:
         pass
     else:
-        monoviewClassifierModulesNames = [name for _, name, isPackage in pkgutil.iter_modules(['MonoviewClassifiers'])
-                                          if (not isPackage)]
+        monoviewClassifierModulesNames = benchmark["Monoview"]
         args.FU_E_cl_names = monoviewClassifierModulesNames
         args.FU_E_cl_config = [None for _ in monoviewClassifierModulesNames]
     for classifierName, classifierConfig in zip(args.FU_E_cl_names, args.FU_E_cl_config):
@@ -85,7 +84,7 @@ class WeightedLinear(EarlyFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
         EarlyFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                        NB_CORES=NB_CORES)
-        if kwargs['fusionMethodConfig']==None:
+        if kwargs['fusionMethodConfig'] is None:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
         elif kwargs['fusionMethodConfig']==['']:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
@@ -112,7 +111,7 @@ class WeightedLinear(EarlyFusionClassifier):
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         self.weights = self.weights/float(np.sum(self.weights))
-        if usedIndices == None:
+        if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=usedIndices, viewsIndices=viewsIndices)
         predictedLabels = self.monoviewClassifier.predict(self.monoviewData)

@@ -27,11 +27,11 @@ def testVersions():
         print "Please install pyscm"
         raise
 
-    try:
-        import cv2
-        # print("OpenCV2-V.: " + cv2.__version__)
-    except:
-        print "Please install cv2 module"
+    # try:
+    #     import cv2
+    #     # print("OpenCV2-V.: " + cv2.__version__)
+    # except:
+    #     print "Please install cv2 module"
 
     try:
         import pandas

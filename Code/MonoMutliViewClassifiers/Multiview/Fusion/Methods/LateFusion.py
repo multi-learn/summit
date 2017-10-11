@@ -23,7 +23,7 @@ def canProbasClassifier(classifierConfig):
 
 
 def fitMonoviewClassifier(classifierName, data, labels, classifierConfig, needProbas, randomState):
-    if type(classifierConfig[0])==dict:
+    if type(classifierConfig) == dict:
         monoviewClassifier = getattr(MonoviewClassifiers, classifierName)
         if needProbas and not monoviewClassifier.canProbas():
             monoviewClassifier = getattr(MonoviewClassifiers, "DecisionTree")
@@ -35,14 +35,14 @@ def fitMonoviewClassifier(classifierName, data, labels, classifierConfig, needPr
                                               enumerate(classifierConfig
                                                         )))
             return classifier
-    else:
-        if needProbas and not canProbasClassifier(classifierConfig):
-            monoviewClassifier = getattr(MonoviewClassifiers, "DecisionTree")
-            DTConfig = {"0":300, "1":"entropy", "2":"random"}
-            classifier = monoviewClassifier.fit(data,labels, randomState,DTConfig)
-            return classifier
-        else:
-            return classifierConfig
+    # else:
+    #     if needProbas and not canProbasClassifier(classifierConfig):
+    #         monoviewClassifier = getattr(MonoviewClassifiers, "DecisionTree")
+    #         DTConfig = {"0":300, "1":"entropy", "2":"random"}
+    #         classifier = monoviewClassifier.fit(data,labels, randomState,DTConfig)
+    #         return classifier
+    #     else:
+    #         return classifierConfig
 
 
 
@@ -122,12 +122,12 @@ def getClassifiers(selectionMethodName, allClassifiersNames, directory, viewsInd
 
 
 def getConfig(classifiersNames, resultsMonoview):
-    classifiers = [0 for _ in range(len(classifiersNames))]
+    classifiersConfigs = [0 for _ in range(len(classifiersNames))]
     for viewIndex, classifierName in enumerate(classifiersNames):
         for resultMonoview in resultsMonoview:
             if resultMonoview[0]==viewIndex and resultMonoview[1][0]==classifierName:
-                classifiers[viewIndex]=resultMonoview[1][4]
-    return classifiers
+                classifiersConfigs[viewIndex]=resultMonoview[1][4]
+    return classifiersConfigs
 
 def jambon(fromage):
     pass
@@ -149,7 +149,7 @@ class LateFusionClassifier(object):
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-        if trainIndices == None:
+        if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         # monoviewSelectionMethod = locals()[self.monoviewSelection]
         # self.monoviewClassifiers = monoviewSelectionMethod()

@@ -75,7 +75,7 @@ def getArgs(args, benchmark, views, viewsIndices, randomState, directory, result
         fusionTypePackage = getattr(Methods, fusionType+"Package")
         for fusionMethod in benchmark["Multiview"]["Fusion"]["Methods"][fusionType]:
             fusionMethodModule = getattr(fusionTypePackage, fusionMethod)
-            arguments = fusionMethodModule.getArgs(args, views, viewsIndices, directory, resultsMonoview)
+            arguments = fusionMethodModule.getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview)
             argumentsList+= arguments
     return argumentsList
 
@@ -86,7 +86,7 @@ def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None, viewsIndices=
     if not usedIndices:
         usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
     NB_VIEW = len(viewsIndices)
-    if weights==None:
+    if weights is None:
         weights = np.array([1/NB_VIEW for i in range(NB_VIEW)])
     if sum(weights)!=1:
         weights = weights/sum(weights)
@@ -168,7 +168,7 @@ class Fusion:
     #     return fusionType, fusionMethod, classifier
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
-        if usedIndices == None:
+        if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if type(viewsIndices)==type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
@@ -176,7 +176,7 @@ class Fusion:
         return predictedLabels
 
     def predict_probas_hdf5(self, DATASET, usedIndices=None):
-        if usedIndices == None:
+        if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if usedIndices:
             predictedLabels = self.classifier.predict_probas_hdf5(DATASET, usedIndices=usedIndices)

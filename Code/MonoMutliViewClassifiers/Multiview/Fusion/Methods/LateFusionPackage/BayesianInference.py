@@ -25,24 +25,23 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 #     fusionMethodConfig = args.FU_method_config
 #     return classifiersNames, classifiersConfig, fusionMethodConfig
 
-def getArgs(args, views, viewsIndices, directory, resultsMonoview):
+def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview):
     if args.FU_L_cl_names!=['']:
-       args.FU_L_select_monoview = "user_defined"
+        args.FU_L_select_monoview = "user_defined"
     else:
-        monoviewClassifierModulesNames = [name for _, name, isPackage in pkgutil.iter_modules(['MonoviewClassifiers'])
-                                          if (not isPackage)]
+        monoviewClassifierModulesNames = benchmark["Monoview"]
         args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices)
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
-                                     for classifierName in args.FU_L_cl_names]
-    if args.FU_L_cl_config != ['']:
-        classifiersConfigs = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
-                            for monoviewClassifierModule,classifierConfig
-                            in zip(monoviewClassifierModules,args.FU_L_cl_config)]
-    else:
-        classifiersConfigs = getConfig(args.FU_L_cl_names, resultsMonoview)
+                                 for classifierName in args.FU_L_cl_names]
     if args.FU_L_cl_names==[""] and args.CL_type == ["Multiview"]:
         raise AttributeError("You must perform Monoview classification or specify "
                              "which monoview classifier to use Late Fusion")
+    if args.FU_L_cl_config != ['']:
+        classifiersConfigs = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
+                              for monoviewClassifierModule,classifierConfig
+                              in zip(monoviewClassifierModules,args.FU_L_cl_config)]
+    else:
+        classifiersConfigs = getConfig(args.FU_L_cl_names, resultsMonoview)
     arguments = {"CL_type": "Fusion",
                  "views": views,
                  "NB_VIEW": len(views),
@@ -85,8 +84,8 @@ class BayesianInference(LateFusionClassifier):
                                       NB_CORES=NB_CORES)
 
         # self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
-        if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig']==['']:
-            self.weights = [1.0 for classifier in kwargs['classifiersNames']]
+        if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig']==['']:
+            self.weights = np.array([1.0 for classifier in kwargs['classifiersNames']])
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
         self.needProbas = True
@@ -95,13 +94,14 @@ class BayesianInference(LateFusionClassifier):
         self.weights = paramsSet[0]
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
-        if type(viewsIndices)==type(None):
+        if viewsIndices is None:
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-        self.weights = self.weights/float(max(self.weights))
+        # self.weights /= float(max(self.weights))
         nbView = len(viewsIndices)
-        if usedIndices == None:
+        if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if sum(self.weights)!=1.0:
+            print self.weights
             self.weights = self.weights/sum(self.weights)
 
         viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))

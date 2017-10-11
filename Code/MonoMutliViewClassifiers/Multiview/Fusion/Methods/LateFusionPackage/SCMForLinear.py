@@ -27,12 +27,11 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     return paramsSets
 
 
-def getArgs(args, views, viewsIndices, directory, resultsMonoview):
+def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview):
     if args.FU_L_cl_names!=['']:
         pass
     else:
-        monoviewClassifierModulesNames = [name for _, name, isPackage in pkgutil.iter_modules(['MonoviewClassifiers'])
-                                          if (not isPackage)]
+        monoviewClassifierModulesNames =benchmark["Monoview"]
         args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices)
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
                                  for classifierName in args.FU_L_cl_names]
@@ -87,7 +86,7 @@ class SCMForLinear(LateFusionClassifier):
                                       NB_CORES=NB_CORES)
         self.SCMClassifier = None
         # self.config = kwargs['fusionMethodConfig'][0]
-        if kwargs['fusionMethodConfig'][0]==None or kwargs['fusionMethodConfig']==['']:
+        if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig']==['']:
             self.p = 1
             self.maxAttributes = 5
             self.order = 1
@@ -105,28 +104,27 @@ class SCMForLinear(LateFusionClassifier):
         self.modelType = paramsSet[2]
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
-        if type(viewsIndices)==type(None):
+        if viewsIndices is None:
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-        if trainIndices == None:
+        if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if type(self.monoviewClassifiersConfigs[0])==dict:
-            for index, viewIndex in enumerate(viewsIndices):
-                monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[index])
-                self.monoviewClassifiers.append(
-                    monoviewClassifier.fit(getV(DATASET, viewIndex, trainIndices),
-                                           DATASET.get("Labels")[trainIndices],
-                                           NB_CORES=self.nbCores,
-                                           **dict((str(configIndex), config) for configIndex, config in
-                                                  enumerate(self.monoviewClassifiersConfigs[index]))))
-        else:
-            self.monoviewClassifiers = self.monoviewClassifiersConfigs
+        # if type(self.monoviewClassifiersConfigs[0])==dict:
+        for index, viewIndex in enumerate(viewsIndices):
+            monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[index])
+            self.monoviewClassifiers.append(
+                monoviewClassifier.fit(getV(DATASET, viewIndex, trainIndices),
+                                       DATASET.get("Labels").value[trainIndices], self.randomState,
+                                       NB_CORES=self.nbCores,
+                                       **self.monoviewClassifiersConfigs[index]))
+        # else:
+        #     self.monoviewClassifiers = self.monoviewClassifiersConfigs
         self.SCMForLinearFusionFit(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
-        if type(viewsIndices)==type(None):
+        if viewsIndices is None:
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         nbView = len(viewsIndices)
-        if usedIndices == None:
+        if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         monoviewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         accus=[]

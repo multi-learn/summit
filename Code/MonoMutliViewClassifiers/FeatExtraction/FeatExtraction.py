@@ -218,7 +218,7 @@ def calcSURFSIFTDescriptors(dfImages, boolSIFT):
                 elif(float(i)/float(len(npImages))>0.5 and bool_Progress==False):
                         logging.debug(feat + "50% of images processed (Keypoints)")
                         bool_Progress = None
-                elif(float(i)/float(len(npImages))>0.75 and bool_Progress==None):
+                elif float(i)/float(len(npImages))>0.75 and bool_Progress==None:
                         logging.debug(feat + "75% of images processed (Keypoints)")
                         bool_Progress = NotImplemented
 
