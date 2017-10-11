@@ -447,7 +447,7 @@ groupClass.add_argument('--CL_algos_multiview', metavar='STRING', action='store'
 groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
                         default=2)
 groupClass.add_argument('--CL_statsiter', metavar='INT', action='store',
-                        help='Number of iteration for each algorithm to mean results', type=int,
+                        help="Number of iteration for each algorithm to mean results if using multiple cores, it's highly recommended to use statsiter mod(nbCores) = 0", type=int,
                         default=2)
 groupClass.add_argument('--CL_metrics', metavar='STRING', action='store', nargs="+",
                         help='Determine which metrics to use, separate metric and configuration with ":".'

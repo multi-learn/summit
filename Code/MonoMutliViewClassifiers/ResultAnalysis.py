@@ -106,22 +106,18 @@ def analyzeLabels(labelsArrays, realLabels, results, directory):
     fig.savefig(directory+time.strftime("%Y%m%d-%H%M%S")+"-error_analysis.png")
 
 
-def genScoresNames(iterResults, metric, nbResults, names):
-    validationScores = []
-    trainScores = []
-    for iterindex, iterResult in enumerate(iterResults):
+def genScoresNames(iterResults, metric, nbResults, names, nbMono):
+    nbIter = len(iterResults)
+    validationScores = np.zeros((nbIter, nbResults))
+    trainScores = np.zeros((nbIter, nbResults))
+    for iterIndex, iterResult in enumerate(iterResults):
         mono, multi = iterResult
-        import pdb;pdb.set_trace()
-        validationScores[iterindex] = [float(res[1][2][metric[0]][1]) for res in mono]
-        validationScores[iterindex] += [float(scores[metric[0]][1]) for a, b, scores, c in multi]
-        trainScores[iterindex] = [float(res[1][1][2][metric[0]][0]) for res in mono]
-        trainScores[iterindex] += [float(scores[metric[0]][0]) for a, b, scores, c in multi]
+        validationScores[iterIndex, :nbMono] = np.array([float(res[1][2][metric[0]][1]) for res in mono])
+        validationScores[iterIndex, nbMono:] = np.array([float(scores[metric[0]][1]) for a, b, scores, c in multi])
+        trainScores[iterIndex, :nbMono] = np.array([float(res[1][2][metric[0]][0]) for res in mono])
+        trainScores[iterIndex, nbMono:] = np.array([float(scores[metric[0]][0]) for a, b, scores, c in multi])
 
-        validationScores[iterindex] = np.array(validationScores)
-        trainScores[iterindex] = np.array(trainScores)
-
-    validationScores = np.array(validationScores)
-    trainScores = np.array(trainScores)
+    # import pdb;pdb.set_trace()
     validationSTDs = np.std(validationScores, axis=0)
     trainSTDs = np.std(trainScores, axis=0)
     validationMeans = np.mean(validationScores, axis=0)
@@ -138,8 +134,10 @@ def genScoresNames(iterResults, metric, nbResults, names):
         metricKWARGS = {}
     sorted_indices = np.argsort(validationMeans)
     validationMeans = validationMeans[sorted_indices]
+    validationSTDs = validationSTDs[sorted_indices]
+    trainSTDs = trainSTDs[sorted_indices]
     trainMeans = trainMeans[sorted_indices]
-    names = names[sorted_indices]
+    names = np.array(names)[sorted_indices]
 
     ax.set_title(getattr(Metrics, metric[0]).getConfig(**metricKWARGS)+" for each classifier")
     rects = ax.bar(range(nbResults), validationMeans, width, color="r", yerr=validationSTDs)
@@ -155,9 +153,11 @@ def genScoresNames(iterResults, metric, nbResults, names):
 
 def analyzeIterResults(iterResults, name, metrics, directory):
     nbResults = len(iterResults[0][0])+len(iterResults[0][1])
+    nbMono = len(iterResults[0][0])
+    nbMulti = len(iterResults[0][1])
     nbIter = len(iterResults)
     names = genNamesFromRes(iterResults[0][0], iterResults[0][1])
     for metric in metrics:
-        figure = genScoresNames(iterResults, metric, nbResults, names)
+        figure = genScoresNames(iterResults, metric, nbResults, names, nbMono)
         figure.savefig(directory+time.strftime("%Y%m%d-%H%M%S")+"-"+name+"-Mean_on_"
                        +str(nbIter)+"_iter-"+metric[0]+".png")
