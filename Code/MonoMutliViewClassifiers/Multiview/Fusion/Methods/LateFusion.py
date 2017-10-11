@@ -45,26 +45,30 @@ def intersect(allClassifersNames, directory, viewsIndices):
     wrongSets = [0 for _ in allClassifersNames]
     nbViews = len(viewsIndices)
     for classifierIndex, classifierName in enumerate(allClassifersNames):
-        classifierDirectory = directory+classifierName+"/"
-        viewDirectoryNames = os.listdir(classifierDirectory)
-        wrongSets[classifierIndex]=[0 for _ in viewDirectoryNames]
-        for viewIndex, viewDirectoryName in enumerate(viewDirectoryNames):
-            for resultFileName in os.listdir(classifierDirectory+"/"+viewDirectoryName+"/"):
-                if resultFileName.endswith("train_labels.csv"):
-                    yTrainFileName = classifierDirectory+"/"+viewDirectoryName+"/"+resultFileName
-                elif resultFileName.endswith("train_pred.csv"):
-                    yTrainPredFileName = classifierDirectory+"/"+viewDirectoryName+"/"+resultFileName
-            train = np.genfromtxt(yTrainFileName, delimiter=",").astype(np.int16)
-            pred = np.genfromtxt(yTrainPredFileName, delimiter=",").astype(np.int16)
-            length = len(train)
-            wrongLabelsIndices = np.where(train+pred == 1)
-            wrongSets[classifierIndex][viewIndex]=wrongLabelsIndices
+        try :
+            classifierDirectory = directory+classifierName+"/"
+            viewDirectoryNames = os.listdir(classifierDirectory)
+            wrongSets[classifierIndex]=[0 for _ in viewDirectoryNames]
+            for viewIndex, viewDirectoryName in enumerate(viewDirectoryNames):
+                for resultFileName in os.listdir(classifierDirectory+"/"+viewDirectoryName+"/"):
+                    if resultFileName.endswith("train_labels.csv"):
+                        yTrainFileName = classifierDirectory+"/"+viewDirectoryName+"/"+resultFileName
+                    elif resultFileName.endswith("train_pred.csv"):
+                        yTrainPredFileName = classifierDirectory+"/"+viewDirectoryName+"/"+resultFileName
+                train = np.genfromtxt(yTrainFileName, delimiter=",").astype(np.int16)
+                pred = np.genfromtxt(yTrainPredFileName, delimiter=",").astype(np.int16)
+                length = len(train)
+                wrongLabelsIndices = np.where(train+pred == 1)
+                wrongSets[classifierIndex][viewIndex]=wrongLabelsIndices
+        except OSError:
+            for viewIndex in range(nbViews):
+                wrongSets[classifierIndex][viewIndex]= np.arange(length)
     combinations = itertools.combinations_with_replacement(range(len(allClassifersNames)), nbViews)
     bestLen = length
     bestCombination = None
     for combination in combinations:
         intersect = np.arange(length, dtype=np.int16)
-        for viewIndex, classifierindex in enumerate(combination):
+        for viewIndex, classifierIndex in enumerate(combination):
             intersect = np.intersect1d(intersect, wrongSets[classifierIndex][viewIndex])
         if len(intersect) < bestLen:
             bestLen = len(intersect)

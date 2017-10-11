@@ -26,8 +26,9 @@ def makeMeNoisy(viewData, randomState, percentage=15):
     return noisyViewData
 
 
-def getPlausibleDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, randomState, nbView=3,
-                       nbClass=2, datasetLength=347):
+def getPlausibleDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, nbView=3,
+                       nbClass=2, datasetLength=347, randomStateInt=42):
+    randomState = np.random.RandomState(randomStateInt)
     nbFeatures = 250
     datasetFile = h5py.File(pathF + "Plausible.hdf5", "w")
     CLASS_LABELS = np.array([0 for i in range(datasetLength / 2)] + [1 for i in range(datasetLength / 2)])
@@ -172,42 +173,42 @@ def getPositions(labelsUsed, fullLabels):
     return usedIndices
 
 
-def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES, randomState):
-    labelsNamesFile = open(pathF + nameDB + '-ClassLabels-Description.csv')
-    datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")
-    if len(LABELS_NAMES) != NB_CLASS:
-        nbLabelsAvailable = 0
-        for l in labelsNamesFile:
-            nbLabelsAvailable += 1
-        LABELS_NAMES = [line.strip().split(";")[1] for lineIdx, line in enumerate(labelsNamesFile) if
-                        lineIdx in randomState.randint(nbLabelsAvailable, size=NB_CLASS)]
-    fullLabels = np.genfromtxt(pathF + nameDB + '-ClassLabels.csv', delimiter=',').astype(int)
-    labelsDictionary = dict((classIndex, labelName) for (classIndex, labelName) in
-                            [(int(line.strip().split(";")[0]), line.strip().split(";")[1]) for lineIndex, line in
-                             enumerate(labelsNamesFile) if line.strip().split(";")[0] in LABELS_NAMES])
-    if len(set(fullLabels)) > NB_CLASS:
-        usedIndices = getPositions(labelsDictionary.keys(), fullLabels)
-    else:
-        usedIndices = range(len(fullLabels))
-    for viewIndex, view in enumerate(views):
-        viewFile = pathF + nameDB + "-" + view + '.csv'
-        viewMatrix = np.array(np.genfromtxt(viewFile, delimiter=','))[usedIndices, :]
-        viewDset = datasetFile.create_dataset("View" + str(viewIndex), viewMatrix.shape, data=viewMatrix)
-        viewDset.attrs["name"] = view
-        viewDset.attrs["sparse"] = False
-        viewDset.attrs["binary"] = False
-
-    labelsDset = datasetFile.create_dataset("Labels", fullLabels[usedIndices].shape, data=fullLabels[usedIndices])
-    labelsDset.attrs["labels"] = [labelName for index, labelName in labelsDictionary.iteritems()]
-    labelsDset.attrs["labels_indices"] = [labelIndex for labelIndex, labelName in labelsDictionary.iteritems()]
-
-    metaDataGrp = datasetFile.create_group("Metadata")
-    metaDataGrp.attrs["nbView"] = len(views)
-    metaDataGrp.attrs["nbClass"] = NB_CLASS
-    metaDataGrp.attrs["datasetLength"] = len(fullLabels[usedIndices])
-    datasetFile.close()
-    datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
-    return datasetFile, labelsDictionary
+# def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES, randomState):
+#     labelsNamesFile = open(pathF + nameDB + '-ClassLabels-Description.csv')
+#     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")
+#     if len(LABELS_NAMES) != NB_CLASS:
+#         nbLabelsAvailable = 0
+#         for l in labelsNamesFile:
+#             nbLabelsAvailable += 1
+#         LABELS_NAMES = [line.strip().split(";")[1] for lineIdx, line in enumerate(labelsNamesFile) if
+#                         lineIdx in randomState.randint(nbLabelsAvailable, size=NB_CLASS)]
+#     fullLabels = np.genfromtxt(pathF + nameDB + '-ClassLabels.csv', delimiter=',').astype(int)
+#     labelsDictionary = dict((classIndex, labelName) for (classIndex, labelName) in
+#                             [(int(line.strip().split(";")[0]), line.strip().split(";")[1]) for lineIndex, line in
+#                              enumerate(labelsNamesFile) if line.strip().split(";")[0] in LABELS_NAMES])
+#     if len(set(fullLabels)) > NB_CLASS:
+#         usedIndices = getPositions(labelsDictionary.keys(), fullLabels)
+#     else:
+#         usedIndices = range(len(fullLabels))
+#     for viewIndex, view in enumerate(views):
+#         viewFile = pathF + nameDB + "-" + view + '.csv'
+#         viewMatrix = np.array(np.genfromtxt(viewFile, delimiter=','))[usedIndices, :]
+#         viewDset = datasetFile.create_dataset("View" + str(viewIndex), viewMatrix.shape, data=viewMatrix)
+#         viewDset.attrs["name"] = view
+#         viewDset.attrs["sparse"] = False
+#         viewDset.attrs["binary"] = False
+#
+#     labelsDset = datasetFile.create_dataset("Labels", fullLabels[usedIndices].shape, data=fullLabels[usedIndices])
+#     labelsDset.attrs["labels"] = [labelName for index, labelName in labelsDictionary.iteritems()]
+#     labelsDset.attrs["labels_indices"] = [labelIndex for labelIndex, labelName in labelsDictionary.iteritems()]
+#
+#     metaDataGrp = datasetFile.create_group("Metadata")
+#     metaDataGrp.attrs["nbView"] = len(views)
+#     metaDataGrp.attrs["nbClass"] = NB_CLASS
+#     metaDataGrp.attrs["datasetLength"] = len(fullLabels[usedIndices])
+#     datasetFile.close()
+#     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
+#     return datasetFile, labelsDictionary
 
 
 def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, LABELS_NAMES, randomState):

@@ -7,6 +7,7 @@ import sys
 import select
 import logging
 import errno
+import cPickle
 
 # Import 3rd party modules
 from joblib import Parallel, delayed
@@ -238,6 +239,168 @@ def arangeMetrics(metrics, metricPrinc):
     return metrics
 
 
+def genSplits(statsIter, indices, DATASET, splitRatio, statsIterRandomStates):
+    if statsIter > 1:
+        splits = []
+        for randomState in statsIterRandomStates:
+            trainIndices, testIndices, a, b = sklearn.model_selection.train_test_split(indices, DATASET.get("Labels").value,
+                                                                                       test_size=splitRatio,
+                                                                                       random_state=randomState)
+            splits.append([trainIndices, testIndices])
+        return splits
+    else:
+        trainIndices, testIndices, a, b = sklearn.model_selection.train_test_split(indices, DATASET.get("Labels").value,
+                                                                                   test_size=splitRatio,
+                                                                                   random_state=statsIterRandomStates)
+        return trainIndices, testIndices
+
+
+def genKFolds(statsIter, nbFolds, statsIterRandomStates):
+    if statsIter > 1:
+        foldsList = []
+        for randomState in statsIterRandomStates:
+            foldsList.append(sklearn.model_selection.KFold(n_splits=nbFolds, random_state=randomState))
+        return foldsList
+    else:
+        return sklearn.model_selection.KFold(n_splits=nbFolds, random_state=statsIterRandomStates)
+
+
+def genDirecortiesNames(directory, statsIter):
+    if statsIter>1:
+        directories = []
+        for i in range(statsIter):
+            directories.append(directory+"iter_"+str(i+1)+"/")
+        return directories
+    else:
+        return directory
+
+
+def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory, args, classificationIndices, kFolds,
+                              randomState, hyperParamSearch, metrics, coreIndex, viewsIndices, dataBaseTime, start, benchmark,
+                              views):
+    labelsNames = LABELS_DICTIONARY.values()
+    resultsMonoview = [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
+                                                 coreIndex, args.type, args.pathF, randomState,
+                                                 hyperParamSearch=hyperParamSearch,
+                                                 metrics=metrics, nIter=args.CL_GS_iter,
+                                                 **arguments)
+                         for arguments in argumentDictionaries["Monoview"]]
+    monoviewTime = time.time() - dataBaseTime - start
+
+    argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory, resultsMonoview)
+
+    resultsMultiview = [
+        ExecMultiview_multicore(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
+                                args.pathF, LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
+                                metrics=metrics, nIter=args.CL_GS_iter,**arguments)
+        for arguments in argumentDictionaries["Multiview"]]
+    multiviewTime = time.time() - monoviewTime - dataBaseTime - start
+
+    labels = np.array(
+        [resultMonoview[1][3] for resultMonoview in resultsMonoview] + [resultMultiview[3] for resultMultiview in
+                                                                        resultsMultiview]).transpose()
+    trueLabels = DATASET.get("Labels").value
+    times = [dataBaseTime, monoviewTime, multiviewTime]
+    results = (resultsMonoview, resultsMultiview)
+    analyzeLabels(labels, trueLabels, results, directory)
+    logging.debug("Start:\t Analyze Global Results")
+    resultAnalysis(benchmark, results, args.name, times, metrics, directory)
+    logging.debug("Done:\t Analyze Global Results")
+    globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
+    totalTime = time.time() - start
+    logging.info("Extraction time : "+str(dataBaseTime)+
+                 "s, Monoview time : "+str(monoviewTime)+
+                 "s, Multiview Time : "+str(multiviewTime)+
+                 "s, Global Analysis Time : "+str(globalAnalysisTime)+
+                 "s, Total Duration : "+str(totalTime)+"s")
+    return results
+
+
+def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory, args, classificationIndices, kFolds,
+                    randomState, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
+                    benchmark, views):
+    resultsMonoview = []
+    labelsNames = LABELS_DICTIONARY.values()
+    if nbCores > 1:
+        nbExperiments = len(argumentDictionaries["Monoview"])
+        for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
+            resultsMonoview += (Parallel(n_jobs=nbCores)(
+                delayed(ExecMonoview_multicore)(directory, args.name, labelsNames, classificationIndices, kFolds,
+                                                coreIndex, args.type, args.pathF, randomState,
+                                                hyperParamSearch=hyperParamSearch,
+                                                metrics=metrics, nIter=args.CL_GS_iter,
+                                                **argumentDictionaries["Monoview"][coreIndex + stepIndex * nbCores])
+                for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores))))
+
+    else:
+        resultsMonoview += ([ExecMonoview(directory, DATASET.get("View" + str(arguments["viewIndex"])),
+                                          DATASET.get("Labels").value, args.name, labelsNames,
+                                          classificationIndices, kFolds, 1, args.type, args.pathF, randomState,
+                                          hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=args.CL_GS_iter,
+                                          **arguments)
+                             for arguments in argumentDictionaries["Monoview"]])
+    monoviewTime = time.time() - dataBaseTime - start
+
+    argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory, resultsMonoview)
+
+    if nbCores > 1:
+        resultsMultiview = []
+        nbExperiments = len(argumentDictionaries["Multiview"])
+        for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
+            resultsMultiview += Parallel(n_jobs=nbCores)(
+                delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
+                                                 args.pathF,
+                                                 LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
+                                                 metrics=metrics, nIter=args.CL_GS_iter,
+                                                 **argumentDictionaries["Multiview"][stepIndex * nbCores + coreIndex])
+                for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
+    else:
+        resultsMultiview = [
+            ExecMultiview(directory, DATASET, args.name, classificationIndices, kFolds, 1, args.type, args.pathF,
+                          LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
+                          metrics=metrics, nIter=args.CL_GS_iter, **arguments) for arguments in
+            argumentDictionaries["Multiview"]]
+    multiviewTime = time.time() - monoviewTime - dataBaseTime - start
+    if nbCores > 1:
+        logging.debug("Start:\t Deleting " + str(nbCores) + " temporary datasets for multiprocessing")
+        datasetFiles = DB.deleteHDF5(args.pathF, args.name, nbCores)
+        logging.debug("Start:\t Deleting datasets for multiprocessing")
+    labels = np.array(
+        [resultMonoview[1][3] for resultMonoview in resultsMonoview] + [resultMultiview[3] for resultMultiview in
+                                                                        resultsMultiview]).transpose()
+    trueLabels = DATASET.get("Labels").value
+    times = [dataBaseTime, monoviewTime, multiviewTime]
+    results = (resultsMonoview, resultsMultiview)
+    analyzeLabels(labels, trueLabels, results, directory)
+    logging.debug("Start:\t Analyze Global Results")
+    resultAnalysis(benchmark, results, args.name, times, metrics, directory)
+    logging.debug("Done:\t Analyze Global Results")
+    globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
+    totalTime = time.time() - start
+    logging.info("Extraction time : "+str(dataBaseTime)+
+                 "s, Monoview time : "+str(monoviewTime)+
+                 "s, Multiview Time : "+str(multiviewTime)+
+                 "s, Global Analysis Time : "+str(globalAnalysisTime)+
+                 "s, Total Duration : "+str(totalTime)+"s")
+    return results
+
+
+def initRandomState(randomStateArg, directory):
+    if randomStateArg is None:
+        randomState = np.random.RandomState(randomStateArg)
+    else:
+        try:
+            seed = int(randomStateArg)
+            randomState = np.random.RandomState(seed)
+        except ValueError:
+            fileName = randomStateArg
+            with open(fileName, 'rb') as handle:
+                randomState = cPickle.load(handle)
+    with open(directory+"randomState.pickle", "wb") as handle:
+        cPickle.dump(randomState, handle)
+    return randomState
+
+
 testVersions()
 parser = argparse.ArgumentParser(
     description='This file is used to benchmark the scores fo multiple classification algorithm on multiview data.',
@@ -257,8 +420,8 @@ groupStandard.add_argument('--pathF', metavar='STRING', action='store', help='Pa
                            default='/home/bbauvin/Documents/Data/Data_multi_omics/')
 groupStandard.add_argument('--nice', metavar='INT', action='store', type=int,
                            help='Niceness for the process', default=0)
-groupStandard.add_argument('--randomState', metavar='INT', action='store', type=int,
-                           help='Niceness for the process', default=None)
+groupStandard.add_argument('--randomState', metavar='STRING', action='store',
+                           help="The random state seed to use or a file where we can find it's get_state", default=None)
 
 groupClass = parser.add_argument_group('Classification arguments')
 groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
@@ -410,35 +573,36 @@ args = parser.parse_args()
 os.nice(args.nice)
 nbCores = args.CL_cores
 statsIter = args.CL_statsiter
-randomState = np.random.RandomState(args.randomState)
 hyperParamSearch = args.CL_HPS_type
 
+directory = initLogFile(args)
+randomState = initRandomState(args.randomState, directory)
+if statsIter > 1:
+    statsIterRandomStates = [np.random.RandomState(randomState.randint(500)) for _ in range(statsIter)]
+else:
+    statsIterRandomStates = randomState
 
 if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake", "Plausible", "KMultiOmic"]:
     getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
 else:
     getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
 
-directory = initLogFile(args)
 
 DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nb_class,
-                                         args.CL_classes, randomState)
+                                         args.CL_classes)
 
 datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
 indices = np.arange(datasetLength)
-trainIndices, testIndices, a, aa = sklearn.model_selection.train_test_split(indices, DATASET.get("Labels").value,
-                                                                            test_size=args.CL_split,
-                                                                            random_state=randomState)
-classificationIndices = (trainIndices, testIndices)
-kFolds = sklearn.model_selection.KFold(n_splits=args.CL_nbFolds, random_state=randomState)
+classificationIndices = genSplits(statsIter, indices, DATASET, args.CL_split, statsIterRandomStates)
+kFolds = genKFolds(statsIter, args.CL_nbFolds, statsIterRandomStates)
 
 datasetFiles = initMultipleDatasets(args, nbCores)
 
 views, viewsIndices, allViews = initViews(DATASET, args)
 if not views:
     raise ValueError, "Empty views list, modify selected views to match dataset " + args.views
-NB_VIEW = len(views)
 
+NB_VIEW = len(views)
 NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
 metrics = [metric.split(":") for metric in args.CL_metrics]
@@ -463,81 +627,23 @@ dataBaseTime = time.time() - start
 argumentDictionaries = {"Monoview": [], "Multiview": []}
 argumentDictionaries = initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, DATASET, NB_CLASS,
                                              initKWARGS)
+directories = genDirecortiesNames(directory, statsIter)
 
-bestClassifiers = []
-bestClassifiersConfigs = []
-resultsMonoview = []
-labelsNames = LABELS_DICTIONARY.values()
-if nbCores > 1:
-    nbExperiments = len(argumentDictionaries["Monoview"])
+if statsIter>1:
+    iterResults = []
+    nbExperiments = statsIter
     for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
-        resultsMonoview += (Parallel(n_jobs=nbCores)(
-            delayed(ExecMonoview_multicore)(directory, args.name, labelsNames, classificationIndices, kFolds,
-                                            coreIndex, args.type, args.pathF, randomState,
-                                            hyperParamSearch=hyperParamSearch,
-                                            metrics=metrics, nIter=args.CL_GS_iter,
-                                            **argumentDictionaries["Monoview"][coreIndex + stepIndex * nbCores])
+        iterResults += (Parallel(n_jobs=nbCores)(
+            delayed(classifyOneIter_multicore)(LABELS_DICTIONARY, argumentDictionaries, 1, directories[coreIndex + stepIndex * nbCores], args, classificationIndices[coreIndex + stepIndex * nbCores], kFolds[coreIndex + stepIndex * nbCores],
+                                               statsIterRandomStates[coreIndex + stepIndex * nbCores], hyperParamSearch, metrics, coreIndex, viewsIndices, dataBaseTime, start, benchmark,
+                                               views)
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores))))
-    scores = [[result[1][2][metrics[0][0]][1] for result in resultsMonoview if result[0] == viewIndex] for viewIndex in
-              viewsIndices]
-    classifiersNames = [[result[1][0] for result in resultsMonoview if result[0] == viewIndex] for viewIndex in
-                        viewsIndices]
-    classifiersConfigs = [[result[1][1][:-1] for result in resultsMonoview if result[0] == viewIndex] for viewIndex in
-                          viewsIndices]
+    if nbCores > 1:
+        logging.debug("Start:\t Deleting " + str(nbCores) + " temporary datasets for multiprocessing")
+        datasetFiles = DB.deleteHDF5(args.pathF, args.name, nbCores)
+        logging.debug("Start:\t Deleting datasets for multiprocessing")
 
 else:
-    resultsMonoview += ([ExecMonoview(directory, DATASET.get("View" + str(arguments["viewIndex"])),
-                                      DATASET.get("Labels").value, args.name, labelsNames,
-                                      classificationIndices, kFolds, 1, args.type, args.pathF, randomState,
-                                      hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=args.CL_GS_iter,
-                                      **arguments)
-                         for arguments in argumentDictionaries["Monoview"]])
-    scores = [[result[1][2][metrics[0][0]][1] for result in resultsMonoview if result[0] == viewIndex] for viewIndex
-              in viewsIndices]
-    classifiersNames = [[result[1][0] for result in resultsMonoview if result[0] == viewIndex] for viewIndex in
-                        viewsIndices]
-    classifiersConfigs = [[result[1][1][:-1] for result in resultsMonoview if result[0] == viewIndex] for viewIndex in
-                          viewsIndices]
-monoviewTime = time.time() - dataBaseTime - start
-
-argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory, resultsMonoview)
-
-if nbCores > 1:
-    resultsMultiview = []
-    nbExperiments = len(argumentDictionaries["Multiview"])
-    for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
-        resultsMultiview += Parallel(n_jobs=nbCores)(
-            delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
-                                             args.pathF,
-                                             LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
-                                             metrics=metrics, nIter=args.CL_GS_iter,
-                                             **argumentDictionaries["Multiview"][stepIndex * nbCores + coreIndex])
-            for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
-else:
-    resultsMultiview = [
-        ExecMultiview(directory, DATASET, args.name, classificationIndices, kFolds, 1, args.type, args.pathF,
-                      LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
-                      metrics=metrics, nIter=args.CL_GS_iter, **arguments) for arguments in
-        argumentDictionaries["Multiview"]]
-multiviewTime = time.time() - monoviewTime - dataBaseTime - start
-if nbCores > 1:
-    logging.debug("Start:\t Deleting " + str(nbCores) + " temporary datasets for multiprocessing")
-    datasetFiles = DB.deleteHDF5(args.pathF, args.name, nbCores)
-    logging.debug("Start:\t Deleting datasets for multiprocessing")
-labels = np.array(
-    [resultMonoview[1][3] for resultMonoview in resultsMonoview] + [resultMultiview[3] for resultMultiview in
-                                                                    resultsMultiview]).transpose()
-trueLabels = DATASET.get("Labels").value
-times = [dataBaseTime, monoviewTime, multiviewTime]
-results = (resultsMonoview, resultsMultiview)
-analyzeLabels(labels, trueLabels, results, directory)
-logging.debug("Start:\t Analyze Global Results")
-resultAnalysis(benchmark, results, args.name, times, metrics, directory)
-logging.debug("Done:\t Analyze Global Results")
-globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
-totalTime = time.time() - start
-logging.info("Extraction time : "+str(dataBaseTime)+
-             "s, Monoview time : "+str(monoviewTime)+
-             "s, Multiview Time : "+str(multiviewTime)+
-             "s, Global Analysis Time : "+str(globalAnalysisTime)+
-             "s, Total Duration : "+str(totalTime)+"s")
+    res = classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories, args, classificationIndices, kFolds,
+                          statsIterRandomStates, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
+                          benchmark, views)
