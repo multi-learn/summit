@@ -15,17 +15,19 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 
 
 def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, classificationIndices):
-    if args.FU_L_cl_names!=['']:
+    if args.FU_L_cl_names != ['']:
         pass
     else:
         monoviewClassifierModulesNames = benchmark["Monoview"]
-        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices, resultsMonoview, classificationIndices)
+        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory,
+                                            viewsIndices, resultsMonoview, classificationIndices)
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
                                  for classifierName in args.FU_L_cl_names]
     if args.FU_L_cl_config != ['']:
-        classifiersConfigs = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
-                              for monoviewClassifierModule,classifierConfig
-                              in zip(monoviewClassifierModules,args.FU_L_cl_config)]
+        classifiersConfigs = [
+            monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
+            for monoviewClassifierModule, classifierConfig
+            in zip(monoviewClassifierModules, args.FU_L_cl_config)]
     else:
         classifiersConfigs = getConfig(args.FU_L_cl_names, resultsMonoview)
     arguments = {"CL_type": "Fusion",
@@ -46,7 +48,8 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
 
 class SVMForLinear(LateFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
+        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
+                                      kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
         self.SVMClassifier = None
 
@@ -55,7 +58,7 @@ class SVMForLinear(LateFusionClassifier):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if type(self.monoviewClassifiersConfigs[0])==dict:
+        if type(self.monoviewClassifiersConfigs[0]) == dict:
             for index, viewIndex in enumerate(viewsIndices):
                 monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[index])
                 self.monoviewClassifiers.append(
@@ -85,7 +88,7 @@ class SVMForLinear(LateFusionClassifier):
         return predictedLabels
 
     def SVMForLinearFusionFit(self, DATASET, usedIndices=None, viewsIndices=None):
-        if type(viewsIndices)==type(None):
+        if type(viewsIndices) == type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         nbView = len(viewsIndices)
         self.SVMClassifier = OneVsOneClassifier(SVC())
@@ -96,9 +99,10 @@ class SVMForLinear(LateFusionClassifier):
 
         self.SVMClassifier.fit(monoViewDecisions, DATASET.get("Labels").value[usedIndices])
 
-    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
+    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
         configString = "with SVM for linear \n\t-With monoview classifiers : "
-        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
+        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs,
+                                                                    monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
             configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
         return configString

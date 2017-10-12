@@ -8,16 +8,18 @@ import logging
 
 import Metrics
 
+
 def DecisionTree(data, labels, arg, weights, randomState):
     depth = int(arg[0])
     subSampling = float(arg[1])
     if subSampling != 1.0:
-        subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling, randomState, weights=weights)
+        subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling, randomState,
+                                                                        weights=weights)
     else:
         subSampledData, subSampledLabels, subSampledWeights = data, labels, weights
     isBad = False
     classifier = tree.DecisionTreeClassifier(max_depth=depth)
-    #classifier = OneVsRestClassifier(tree.DecisionTreeClassifier(max_depth=depth))
+    # classifier = OneVsRestClassifier(tree.DecisionTreeClassifier(max_depth=depth))
     classifier.fit(subSampledData, subSampledLabels, subSampledWeights)
     prediction = classifier.predict(data)
     accuracy = accuracy_score(labels, prediction)
@@ -34,7 +36,7 @@ def getConfig(classifierConfig):
 
 
 def hyperParamSearch(data, labels, randomState, metric="accuracy_score"):
-    minSubSampling = 1.0/(len(labels)/2)
+    minSubSampling = 1.0 / (len(labels) / 2)
     bestSettings = []
     bestResults = []
     classifier = tree.DecisionTreeClassifier(max_depth=1)
@@ -46,13 +48,14 @@ def hyperParamSearch(data, labels, randomState, metric="accuracy_score"):
         preliminary_accuracies[i] = accuracy_score(labels, prediction)
     preliminary_accuracy = np.mean(preliminary_accuracies)
     if preliminary_accuracy < 0.50:
-        for max_depth in np.arange(10)+1:
-            for subSampling in sorted((np.arange(20, dtype=float)+1)/20, reverse=True):
+        for max_depth in np.arange(10) + 1:
+            for subSampling in sorted((np.arange(20, dtype=float) + 1) / 20, reverse=True):
                 if subSampling > minSubSampling:
                     accuracies = np.zeros(50)
                     for i in range(50):
                         if subSampling != 1.0:
-                            subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling, randomState)
+                            subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling,
+                                                                                            randomState)
                         else:
                             subSampledData, subSampledLabels, = data, labels
                         classifier = tree.DecisionTreeClassifier(max_depth=max_depth)
@@ -73,11 +76,12 @@ def hyperParamSearch(data, labels, randomState, metric="accuracy_score"):
                 preliminary_accuracies[i] = accuracy_score(labels, prediction)
         preliminary_accuracy = np.mean(preliminary_accuracies)
         if preliminary_accuracy < 0.50:
-            for subSampling in sorted((np.arange(19, dtype=float)+1)/200, reverse=True):
+            for subSampling in sorted((np.arange(19, dtype=float) + 1) / 200, reverse=True):
                 if minSubSampling < subSampling:
                     accuracies = np.zeros(50)
                     for i in range(50):
-                        subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling, randomState )
+                        subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling,
+                                                                                        randomState)
                         classifier = tree.DecisionTreeClassifier(max_depth=1)
                         classifier.fit(subSampledData, subSampledLabels)
                         prediction = classifier.predict(data)
@@ -87,10 +91,11 @@ def hyperParamSearch(data, labels, randomState, metric="accuracy_score"):
                         bestSettings.append([1, subSampling])
                         bestResults.append(accuracy)
         else:
-            for subSampling in sorted((np.arange(19, dtype=float)+1)/2000, reverse=True):
+            for subSampling in sorted((np.arange(19, dtype=float) + 1) / 2000, reverse=True):
                 accuracies = np.zeros(50)
                 for i in range(50):
-                    subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling, randomState)
+                    subSampledData, subSampledLabels, subSampledWeights = subSample(data, labels, subSampling,
+                                                                                    randomState)
                     if minSubSampling < subSampling:
                         classifier1 = tree.DecisionTreeClassifier(max_depth=1)
                         classifier1.fit(subSampledData, subSampledLabels)
@@ -101,7 +106,7 @@ def hyperParamSearch(data, labels, randomState, metric="accuracy_score"):
                     bestSettings.append([1, subSampling])
                     bestResults.append(accuracy)
 
-    assert bestResults!=[], "No good settings found for Decision Tree!"
+    assert bestResults != [], "No good settings found for Decision Tree!"
 
     return getBestSetting(bestSettings, bestResults)
 
@@ -110,10 +115,10 @@ def getBestSetting(bestSettings, bestResults):
     diffTo52 = 100.0
     bestSettingsIndex = 0
     for resultIndex, result in enumerate(bestResults):
-        if abs(0.55-result) < diffTo52:
-            diffTo52 = abs(0.55-result)
+        if abs(0.55 - result) < diffTo52:
+            diffTo52 = abs(0.55 - result)
             bestResult = result
             bestSettingsIndex = resultIndex
-    logging.debug("\t\tInfo:\t Best Result : "+str(result))
+    logging.debug("\t\tInfo:\t Best Result : " + str(result))
 
     return map(lambda p: round(p, 4), bestSettings[bestSettingsIndex])

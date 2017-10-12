@@ -1,6 +1,7 @@
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score, classification_report
 import numpy as np
 import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import operator
@@ -11,11 +12,9 @@ import logging
 import Metrics
 from utils.Dataset import getV, getShape
 
-
 # Author-Info
-__author__ 	= "Baptiste Bauvin"
-__status__ 	= "Prototype"                           # Production, Development, Prototype
-
+__author__ = "Baptiste Bauvin"
+__status__ = "Prototype"  # Production, Development, Prototype
 
 
 def findMainView(bestViews):
@@ -30,7 +29,7 @@ def plotAccuracyByIter(scoresOnTainByIter, scoresOnTestByIter, features, classif
     figure = plt.figure()
     ax1 = figure.add_subplot(111)
     axes = figure.gca()
-    axes.set_ylim([0.40,1.00])
+    axes.set_ylim([0.40, 1.00])
     titleString = ""
     for view, classifierConfig in zip(features, classifierAnalysis):
         titleString += "\n" + view + " : " + classifierConfig
@@ -39,15 +38,15 @@ def plotAccuracyByIter(scoresOnTainByIter, scoresOnTestByIter, features, classif
     plt.text(0.5, 1.08, titleString,
              horizontalalignment='center',
              fontsize=8,
-             transform = ax1.transAxes)
+             transform=ax1.transAxes)
     figure.subplots_adjust(top=0.8)
     ax1.set_xlabel("Iteration Index")
     ax1.set_ylabel("Accuracy")
     ax1.plot(x, scoresOnTainByIter, c='red', label='Train')
     ax1.plot(x, scoresOnTestByIter, c='black', label='Test')
 
-    ax1.legend(loc='lower center', 
-                ncol=3, fancybox=True, shadow=True)
+    ax1.legend(loc='lower center',
+               ncol=3, fancybox=True, shadow=True)
 
     return '-accuracyByIteration', figure
 
@@ -62,7 +61,7 @@ def classifyMumbobyIter_hdf5(usedIndices, DATASET, classifiers, alphas, views, N
         votesByIter = np.zeros((DATASET_LENGTH, NB_CLASS))
 
         for usedExampleIndex, exampleIndex in enumerate(usedIndices):
-            data = np.array([np.array(getV(DATASET,int(view), exampleIndex))])
+            data = np.array([np.array(getV(DATASET, int(view), exampleIndex))])
             votesByIter[usedExampleIndex, int(classifier.predict(data))] += alpha
             votes[usedExampleIndex] = votes[usedExampleIndex] + np.array(votesByIter[usedExampleIndex])
             predictedLabels[usedExampleIndex, iterIndex] = np.argmax(votes[usedExampleIndex])
@@ -77,14 +76,15 @@ def error(testLabels, computedLabels):
 
 def getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices, LABELS_DICTIONARY):
     nbView = DATASET.get("Metadata").attrs["nbView"]
-    viewNames = [DATASET.get("View"+str(viewIndex)).attrs["name"] for viewIndex in range(nbView)]
-    viewShapes = [getShape(DATASET,viewIndex) for viewIndex in range(nbView)]
+    viewNames = [DATASET.get("View" + str(viewIndex)).attrs["name"] for viewIndex in range(nbView)]
+    viewShapes = [getShape(DATASET, viewIndex) for viewIndex in range(nbView)]
     DBString = "Dataset info :\n\t-Dataset name : " + databaseName
     DBString += "\n\t-Labels : " + ', '.join(LABELS_DICTIONARY.values())
-    DBString += "\n\t-Views : " + ', '.join([viewName+" of shape "+str(viewShape)
+    DBString += "\n\t-Views : " + ', '.join([viewName + " of shape " + str(viewShape)
                                              for viewName, viewShape in zip(viewNames, viewShapes)])
     DBString += "\n\t-" + str(nbFolds) + " folds"
-    DBString += "\n\t- Validation set length : "+str(len(validationIndices))+" for learning rate : "+str(LEARNING_RATE)+" on a total number of examples of "+str(DATASET.get("Metadata").attrs["datasetLength"])
+    DBString += "\n\t- Validation set length : " + str(len(validationIndices)) + " for learning rate : " + str(
+        LEARNING_RATE) + " on a total number of examples of " + str(DATASET.get("Metadata").attrs["datasetLength"])
     DBString += "\n\n"
     return DBString, viewNames
 
@@ -95,7 +95,7 @@ def getAlgoConfig(classifier, classificationKWARGS, nbCores, viewNames, hyperPar
     threshold = classificationKWARGS["threshold"]
     extractionTime, classificationTime = times
     weakClassifierConfigs = [getattr(globals()[classifierName], 'getConfig')(classifiersConfig) for classifiersConfig,
-                                                                                                   classifierName
+                                                                                                    classifierName
                              in zip(classifier.classifiersConfigs, classifier.classifiersNames)]
     classifierAnalysis = [classifierName + " " + weakClassifierConfig + "on " + feature for classifierName,
                                                                                             weakClassifierConfig,
@@ -103,9 +103,9 @@ def getAlgoConfig(classifier, classificationKWARGS, nbCores, viewNames, hyperPar
                           in zip(classifier.classifiersNames, weakClassifierConfigs, viewNames)]
     gridSearchString = ""
     if hyperParamSearch:
-        gridSearchString += "Configurations found by randomized search with "+str(nIter)+" iterations"
-    algoString = "\n\nMumbo configuration : \n\t-Used "+str(nbCores)+" core(s)"
-    algoString += "\n\t-Iterations : min " + str(minIter)+ ", max "+str(maxIter)+", threshold "+str(threshold)
+        gridSearchString += "Configurations found by randomized search with " + str(nIter) + " iterations"
+    algoString = "\n\nMumbo configuration : \n\t-Used " + str(nbCores) + " core(s)"
+    algoString += "\n\t-Iterations : min " + str(minIter) + ", max " + str(maxIter) + ", threshold " + str(threshold)
     algoString += "\n\t-Weak Classifiers : " + "\n\t\t-".join(classifierAnalysis)
     algoString += "\n\n"
     algoString += "\n\nComputation time on " + str(nbCores) + " cores : \n\tDatabase extraction time : " + str(
@@ -124,22 +124,26 @@ def getReport(classifier, CLASS_LABELS, classificationIndices, DATASET, trainLab
     nbView = len(viewIndices)
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     metricModule = getattr(Metrics, metric[0])
-    fakeViewsIndicesDict = dict((viewIndex, fakeViewIndex) for viewIndex, fakeViewIndex in zip(viewIndices, range(nbView)))
+    fakeViewsIndicesDict = dict(
+        (viewIndex, fakeViewIndex) for viewIndex, fakeViewIndex in zip(viewIndices, range(nbView)))
     trainScore = metricModule.score(CLASS_LABELS[learningIndices], trainLabels)
     testScore = metricModule.score(CLASS_LABELS[validationIndices], testLabels)
     mumboClassifier = classifier
     maxIter = mumboClassifier.iterIndex
     meanAverageAccuracies = np.mean(mumboClassifier.averageAccuracies, axis=0)
-    viewsStats = np.array([float(list(mumboClassifier.bestViews).count(viewIndex))/
-                                                  len(mumboClassifier.bestViews)for viewIndex in range(nbView)])
-    PredictedTrainLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, fakeViewsIndicesDict, usedIndices=learningIndices,
+    viewsStats = np.array([float(list(mumboClassifier.bestViews).count(viewIndex)) /
+                           len(mumboClassifier.bestViews) for viewIndex in range(nbView)])
+    PredictedTrainLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, fakeViewsIndicesDict,
+                                                                          usedIndices=learningIndices,
                                                                           NB_CLASS=NB_CLASS)
-    PredictedTestLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, fakeViewsIndicesDict, usedIndices=validationIndices,
-                                                                          NB_CLASS=NB_CLASS)
-    scoresByIter = np.zeros((len(PredictedTestLabelsByIter),2))
-    for iterIndex,(iterPredictedTrainLabels, iterPredictedTestLabels) in enumerate(zip(PredictedTrainLabelsByIter, PredictedTestLabelsByIter)):
-        scoresByIter[iterIndex, 0] = metricModule.score(CLASS_LABELS[learningIndices],iterPredictedTrainLabels)
-        scoresByIter[iterIndex, 1] = metricModule.score(CLASS_LABELS[validationIndices],iterPredictedTestLabels)
+    PredictedTestLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, fakeViewsIndicesDict,
+                                                                         usedIndices=validationIndices,
+                                                                         NB_CLASS=NB_CLASS)
+    scoresByIter = np.zeros((len(PredictedTestLabelsByIter), 2))
+    for iterIndex, (iterPredictedTrainLabels, iterPredictedTestLabels) in enumerate(
+            zip(PredictedTrainLabelsByIter, PredictedTestLabelsByIter)):
+        scoresByIter[iterIndex, 0] = metricModule.score(CLASS_LABELS[learningIndices], iterPredictedTrainLabels)
+        scoresByIter[iterIndex, 1] = metricModule.score(CLASS_LABELS[validationIndices], iterPredictedTestLabels)
 
     scoresOnTainByIter = [scoresByIter[iterIndex, 0] for iterIndex in range(maxIter)]
 
@@ -161,7 +165,7 @@ def iterRelevant(iterIndex, kFoldClassifierStats):
 def modifiedMean(surplusAccuracies):
     maxLen = 0
     for foldAccuracies in surplusAccuracies.values():
-        if len(foldAccuracies)>maxLen:
+        if len(foldAccuracies) > maxLen:
             maxLen = len(foldAccuracies)
     meanAccuracies = []
     for accuracyIndex in range(maxLen):
@@ -179,13 +183,13 @@ def printMetricScore(metricScores, metrics):
     metricScoreString = "\n\n"
     for metric in metrics:
         metricModule = getattr(Metrics, metric[0])
-        if metric[1]!=None:
+        if metric[1] is not None:
             metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
         else:
             metricKWARGS = {}
-        metricScoreString += "\tFor "+metricModule.getConfig(**metricKWARGS)+" : "
-        metricScoreString += "\n\t\t- Score on train : "+str(metricScores[metric[0]][0])
-        metricScoreString += "\n\t\t- Score on test : "+str(metricScores[metric[0]][1])
+        metricScoreString += "\tFor " + metricModule.getConfig(**metricKWARGS) + " : "
+        metricScoreString += "\n\t\t- Score on train : " + str(metricScores[metric[0]][0])
+        metricScoreString += "\n\t\t- Score on test : " + str(metricScores[metric[0]][1])
         metricScoreString += "\n\n"
     return metricScoreString
 
@@ -194,7 +198,7 @@ def getTotalMetricScores(metric, trainLabels, testLabels,
                          DATASET, validationIndices, learningIndices):
     labels = DATASET.get("Labels").value
     metricModule = getattr(Metrics, metric[0])
-    if metric[1]!=None:
+    if metric[1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
@@ -214,7 +218,7 @@ def getMetricsScores(metrics, trainLabels, testLabels,
 
 
 def getMeanIterations(kFoldClassifierStats, foldIndex):
-    iterations = np.array([kFoldClassifier[foldIndex].iterIndex+1 for kFoldClassifier in kFoldClassifierStats])
+    iterations = np.array([kFoldClassifier[foldIndex].iterIndex + 1 for kFoldClassifier in kFoldClassifierStats])
     return np.mean(iterations)
 
 
@@ -226,20 +230,23 @@ def execute(classifier, trainLabels,
             hyperParamSearch, nIter, metrics,
             viewsIndices, randomState):
     learningIndices, validationIndices = classificationIndices
-    LEARNING_RATE = len(learningIndices)/(len(learningIndices)+len(validationIndices))
+    LEARNING_RATE = len(learningIndices) / (len(learningIndices) + len(validationIndices))
     nbFolds = KFolds.n_splits
 
     CLASS_LABELS = DATASET.get("Labels")[...]
 
-    dbConfigurationString, viewNames = getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices, LABELS_DICTIONARY)
-    algoConfigurationString, classifierAnalysis = getAlgoConfig(classifier, classificationKWARGS, nbCores, viewNames, hyperParamSearch, nIter, times)
+    dbConfigurationString, viewNames = getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices,
+                                                   LABELS_DICTIONARY)
+    algoConfigurationString, classifierAnalysis = getAlgoConfig(classifier, classificationKWARGS, nbCores, viewNames,
+                                                                hyperParamSearch, nIter, times)
 
     (totalScoreOnTrain, totalScoreOnTest, meanAverageAccuracies, viewsStats, scoresOnTainByIter,
      scoresOnTestByIter) = getReport(classifier, CLASS_LABELS, classificationIndices, DATASET,
-                                                  trainLabels, testLabels, viewsIndices, metrics[0])
+                                     trainLabels, testLabels, viewsIndices, metrics[0])
 
-    stringAnalysis = "\t\tResult for Multiview classification with Mumbo with random state : "+str(randomState) + \
-                     "\n\nAverage "+metrics[0][0]+" :\n\t-On Train : " + str(totalScoreOnTrain) + "\n\t-On Test : " + \
+    stringAnalysis = "\t\tResult for Multiview classification with Mumbo with random state : " + str(randomState) + \
+                     "\n\nAverage " + metrics[0][0] + " :\n\t-On Train : " + str(
+        totalScoreOnTrain) + "\n\t-On Test : " + \
                      str(totalScoreOnTest)
     stringAnalysis += dbConfigurationString
     stringAnalysis += algoConfigurationString
@@ -247,16 +254,16 @@ def execute(classifier, trainLabels,
                                      DATASET, validationIndices, learningIndices)
     stringAnalysis += printMetricScore(metricsScores, metrics)
     stringAnalysis += "Mean average scores and stats :"
-    for viewIndex, (meanAverageAccuracy, bestViewStat) in enumerate(zip(meanAverageAccuracies,viewsStats)):
-        stringAnalysis+="\n\t- On "+viewNames[viewIndex]+ \
-                        " : \n\t\t- Mean average Accuracy : "+str(meanAverageAccuracy)+ \
-                        "\n\t\t- Percentage of time chosen : "+str(bestViewStat)
+    for viewIndex, (meanAverageAccuracy, bestViewStat) in enumerate(zip(meanAverageAccuracies, viewsStats)):
+        stringAnalysis += "\n\t- On " + viewNames[viewIndex] + \
+                          " : \n\t\t- Mean average Accuracy : " + str(meanAverageAccuracy) + \
+                          "\n\t\t- Percentage of time chosen : " + str(bestViewStat)
     stringAnalysis += "\n\n For each iteration : "
     for iterIndex in range(len(scoresOnTainByIter)):
         stringAnalysis += "\n\t- Iteration " + str(iterIndex + 1)
         stringAnalysis += "\n\t\tScore on train : " + \
-                              str(scoresOnTainByIter[iterIndex]) + '\n\t\tScore on test : ' + \
-                              str(scoresOnTestByIter[iterIndex])
+                          str(scoresOnTainByIter[iterIndex]) + '\n\t\tScore on test : ' + \
+                          str(scoresOnTestByIter[iterIndex])
 
     name, image = plotAccuracyByIter(scoresOnTainByIter, scoresOnTestByIter, views, classifierAnalysis)
     imagesAnalysis = {name: image}

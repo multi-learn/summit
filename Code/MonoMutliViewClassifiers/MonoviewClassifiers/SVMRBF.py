@@ -1,22 +1,21 @@
 from sklearn.svm import SVC
-from sklearn.pipeline import Pipeline                   # Pipelining in classification
+from sklearn.pipeline import Pipeline  # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
 from scipy.stats import randint
 import numpy as np
 from utils.HyperParameterSearch import genHeatMaps
 
-
 # Author-Info
-__author__ 	= "Baptiste Bauvin"
-__status__ 	= "Prototype"                           # Production, Development, Prototype
+__author__ = "Baptiste Bauvin"
+__status__ = "Prototype"  # Production, Development, Prototype
 
 
 def canProbas():
     return True
 
 
-def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
+def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
     C = int(kwargs['0'])
     classifier = SVC(C=C, kernel='rbf', probability=True, max_iter=1000, random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
@@ -26,7 +25,7 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
 def paramsToSet(nIter, randomState):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append([randomState.randint(1, 10000),])
+        paramsSet.append([randomState.randint(1, 10000), ])
     return paramsSet
 
 
@@ -38,11 +37,12 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1,
+                     metric=["accuracy_score", None], nIter=30):
     pipeline_SVMRBF = Pipeline([('classifier', SVC(kernel="rbf", max_iter=1000))])
     param_SVMRBF = {"classifier__C": randint(1, 10000)}
     metricModule = getattr(Metrics, metric[0])
-    if metric[1]!=None:
+    if metric[1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
@@ -63,9 +63,9 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nb
 
 def getConfig(config):
     if type(config) not in [list, dict]:
-        return "\n\t\t- SVM RBF with C : "+str(config.C)
+        return "\n\t\t- SVM RBF with C : " + str(config.C)
     else:
         try:
-            return "\n\t\t- SVM RBF with C : "+str(config[0])
+            return "\n\t\t- SVM RBF with C : " + str(config[0])
         except:
-            return "\n\t\t- SVM RBF with C : "+str(config["0"])
+            return "\n\t\t- SVM RBF with C : " + str(config["0"])

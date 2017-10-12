@@ -217,13 +217,15 @@ def lateFusionSetArgs(views, viewsIndices, classes, method,
     return arguments
 
 
-def initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory, resultsMonoview, classificationIndices):
+def initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory,
+                           resultsMonoview, classificationIndices):
     multiviewArguments = []
     if "Multiview" in benchmark:
         for multiviewAlgoName in benchmark["Multiview"]:
             multiviewPackage = getattr(Multiview, multiviewAlgoName)
             mutliviewModule = getattr(multiviewPackage, multiviewAlgoName)
-            multiviewArguments += mutliviewModule.getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview, classificationIndices)
+            multiviewArguments += mutliviewModule.getArgs(args, benchmark, views, viewsIndices, randomState, directory,
+                                                          resultsMonoview, classificationIndices)
     argumentDictionaries["Multiview"] = multiviewArguments
     return argumentDictionaries
 
@@ -243,7 +245,8 @@ def genSplits(statsIter, indices, DATASET, splitRatio, statsIterRandomStates):
     if statsIter > 1:
         splits = []
         for randomState in statsIterRandomStates:
-            trainIndices, testIndices, a, b = sklearn.model_selection.train_test_split(indices, DATASET.get("Labels").value,
+            trainIndices, testIndices, a, b = sklearn.model_selection.train_test_split(indices,
+                                                                                       DATASET.get("Labels").value,
                                                                                        test_size=splitRatio,
                                                                                        random_state=randomState)
             splits.append([trainIndices, testIndices])
@@ -266,35 +269,38 @@ def genKFolds(statsIter, nbFolds, statsIterRandomStates):
 
 
 def genDirecortiesNames(directory, statsIter):
-    if statsIter>1:
+    if statsIter > 1:
         directories = []
         for i in range(statsIter):
-            directories.append(directory+"iter_"+str(i+1)+"/")
+            directories.append(directory + "iter_" + str(i + 1) + "/")
         return directories
     else:
         return directory
 
 
-def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory, args, classificationIndices, kFolds,
-                              randomState, hyperParamSearch, metrics, coreIndex, viewsIndices, dataBaseTime, start, benchmark,
+def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory, args, classificationIndices,
+                              kFolds,
+                              randomState, hyperParamSearch, metrics, coreIndex, viewsIndices, dataBaseTime, start,
+                              benchmark,
                               views):
     resultsMonoview = []
     labelsNames = LABELS_DICTIONARY.values()
     resultsMonoview += [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
-                                                 coreIndex, args.type, args.pathF, randomState,
-                                                 hyperParamSearch=hyperParamSearch,
-                                                 metrics=metrics, nIter=args.CL_GS_iter,
-                                                 **arguments)
-                         for arguments in argumentDictionaries["Monoview"]]
+                                               coreIndex, args.type, args.pathF, randomState,
+                                               hyperParamSearch=hyperParamSearch,
+                                               metrics=metrics, nIter=args.CL_GS_iter,
+                                               **arguments)
+                        for arguments in argumentDictionaries["Monoview"]]
     monoviewTime = time.time() - dataBaseTime - start
 
-    argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory, resultsMonoview, classificationIndices)
+    argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries,
+                                                  randomState, directory, resultsMonoview, classificationIndices)
 
     resultsMultiview = []
     resultsMultiview += [
         ExecMultiview_multicore(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
                                 args.pathF, LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
-                                metrics=metrics, nIter=args.CL_GS_iter,**arguments)
+                                metrics=metrics, nIter=args.CL_GS_iter, **arguments)
         for arguments in argumentDictionaries["Multiview"]]
     multiviewTime = time.time() - monoviewTime - dataBaseTime - start
 
@@ -310,11 +316,11 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
     logging.debug("Done:\t Analyze Global Results for iteration")
     globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
     totalTime = time.time() - start
-    logging.info("Extraction time : "+str(dataBaseTime)+
-                 "s, Monoview time : "+str(monoviewTime)+
-                 "s, Multiview Time : "+str(multiviewTime)+
-                 "s, Global Analysis Time : "+str(globalAnalysisTime)+
-                 "s, Total Duration : "+str(totalTime)+"s")
+    logging.info("Extraction time : " + str(dataBaseTime) +
+                 "s, Monoview time : " + str(monoviewTime) +
+                 "s, Multiview Time : " + str(multiviewTime) +
+                 "s, Global Analysis Time : " + str(globalAnalysisTime) +
+                 "s, Total Duration : " + str(totalTime) + "s")
     return results
 
 
@@ -343,14 +349,16 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
                              for arguments in argumentDictionaries["Monoview"]])
     monoviewTime = time.time() - dataBaseTime - start
 
-    argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory, resultsMonoview, classificationIndices)
+    argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries,
+                                                  randomState, directory, resultsMonoview, classificationIndices)
 
     resultsMultiview = []
     if nbCores > 1:
         nbExperiments = len(argumentDictionaries["Multiview"])
         for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
             resultsMultiview += Parallel(n_jobs=nbCores)(
-                delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
+                delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, classificationIndices, kFolds,
+                                                 args.type,
                                                  args.pathF,
                                                  LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
                                                  metrics=metrics, nIter=args.CL_GS_iter,
@@ -379,11 +387,11 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
     logging.debug("Done:\t Analyze Global Results")
     globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
     totalTime = time.time() - start
-    logging.info("Extraction time : "+str(dataBaseTime)+
-                 "s, Monoview time : "+str(monoviewTime)+
-                 "s, Multiview Time : "+str(multiviewTime)+
-                 "s, Global Analysis Time : "+str(globalAnalysisTime)+
-                 "s, Total Duration : "+str(totalTime)+"s")
+    logging.info("Extraction time : " + str(dataBaseTime) +
+                 "s, Monoview time : " + str(monoviewTime) +
+                 "s, Multiview Time : " + str(multiviewTime) +
+                 "s, Global Analysis Time : " + str(globalAnalysisTime) +
+                 "s, Total Duration : " + str(totalTime) + "s")
     return results
 
 
@@ -398,7 +406,7 @@ def initRandomState(randomStateArg, directory):
             fileName = randomStateArg
             with open(fileName, 'rb') as handle:
                 randomState = cPickle.load(handle)
-    with open(directory+"randomState.pickle", "wb") as handle:
+    with open(directory + "randomState.pickle", "wb") as handle:
         cPickle.dump(randomState, handle)
     return randomState
 
@@ -448,7 +456,8 @@ groupClass.add_argument('--CL_algos_multiview', metavar='STRING', action='store'
 groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
                         default=2)
 groupClass.add_argument('--CL_statsiter', metavar='INT', action='store',
-                        help="Number of iteration for each algorithm to mean results if using multiple cores, it's highly recommended to use statsiter mod(nbCores) = 0", type=int,
+                        help="Number of iteration for each algorithm to mean results if using multiple cores, it's highly recommended to use statsiter mod(nbCores) = 0",
+                        type=int,
                         default=2)
 groupClass.add_argument('--CL_metrics', metavar='STRING', action='store', nargs="+",
                         help='Determine which metrics to use, separate metric and configuration with ":".'
@@ -589,7 +598,6 @@ if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake", "Plaus
 else:
     getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
 
-
 DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nb_class,
                                          args.CL_classes)
 
@@ -622,7 +630,6 @@ logging.info("Start:\t Finding all available mono- & multiview algorithms")
 
 benchmark = initBenchmark(args)
 
-
 initKWARGS = initKWARGS(args, benchmark)
 
 dataBaseTime = time.time() - start
@@ -632,24 +639,29 @@ argumentDictionaries = initMonoviewArguments(benchmark, argumentDictionaries, vi
                                              initKWARGS)
 directories = genDirecortiesNames(directory, statsIter)
 
-if statsIter>1:
+if statsIter > 1:
     for statIterIndex in range(statsIter):
-        if not os.path.exists(os.path.dirname(directories[statIterIndex]+"train_labels.csv")):
+        if not os.path.exists(os.path.dirname(directories[statIterIndex] + "train_labels.csv")):
             try:
-                os.makedirs(os.path.dirname(directories[statIterIndex]+"train_labels.csv"))
+                os.makedirs(os.path.dirname(directories[statIterIndex] + "train_labels.csv"))
             except OSError as exc:
                 if exc.errno != errno.EEXIST:
                     raise
         trainIndices, testIndices = classificationIndices[statIterIndex]
         trainLabels = DATASET.get("Labels").value[trainIndices]
-        np.savetxt(directories[statIterIndex]+"train_labels.csv", trainLabels, delimiter=",")
+        np.savetxt(directories[statIterIndex] + "train_labels.csv", trainLabels, delimiter=",")
     if nbCores > 1:
         iterResults = []
         nbExperiments = statsIter
         for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
             iterResults += (Parallel(n_jobs=nbCores)(
-                delayed(classifyOneIter_multicore)(LABELS_DICTIONARY, argumentDictionaries, 1, directories[coreIndex + stepIndex * nbCores], args, classificationIndices[coreIndex + stepIndex * nbCores], kFolds[coreIndex + stepIndex * nbCores],
-                                                   statsIterRandomStates[coreIndex + stepIndex * nbCores], hyperParamSearch, metrics, coreIndex, viewsIndices, dataBaseTime, start, benchmark,
+                delayed(classifyOneIter_multicore)(LABELS_DICTIONARY, argumentDictionaries, 1,
+                                                   directories[coreIndex + stepIndex * nbCores], args,
+                                                   classificationIndices[coreIndex + stepIndex * nbCores],
+                                                   kFolds[coreIndex + stepIndex * nbCores],
+                                                   statsIterRandomStates[coreIndex + stepIndex * nbCores],
+                                                   hyperParamSearch, metrics, coreIndex, viewsIndices, dataBaseTime,
+                                                   start, benchmark,
                                                    views)
                 for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores))))
         logging.debug("Start:\t Deleting " + str(nbCores) + " temporary datasets for multiprocessing")
@@ -658,15 +670,18 @@ if statsIter>1:
     else:
         iterResults = []
         for iterIndex in range(statsIter):
-            iterResults.append(classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories[iterIndex], args,
-                                               classificationIndices[iterIndex], kFolds[iterIndex], statsIterRandomStates[iterIndex],
-                                               hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start, benchmark, views))
+            iterResults.append(
+                classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories[iterIndex], args,
+                                classificationIndices[iterIndex], kFolds[iterIndex], statsIterRandomStates[iterIndex],
+                                hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start, benchmark,
+                                views))
     analyzeIterResults(iterResults, args.name, metrics, directory)
 
 else:
-    res = classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories, args, classificationIndices, kFolds,
-                    statsIterRandomStates, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
-                    benchmark, views)
+    res = classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories, args, classificationIndices,
+                          kFolds,
+                          statsIterRandomStates, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
+                          benchmark, views)
 
 if statsIter > 1:
     pass

@@ -8,26 +8,25 @@ from pyscm.binary_attributes.base import BaseBinaryAttributeList
 import os
 from utils.HyperParameterSearch import genHeatMaps
 
-
 # Author-Info
-__author__ 	= "Baptiste Bauvin"
-__status__ 	= "Prototype"                           # Production, Development, Prototype
+__author__ = "Baptiste Bauvin"
+__status__ = "Prototype"  # Production, Development, Prototype
 
 
 def canProbas():
     return False
 
 
-def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
+def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
     max_attrtibutes = kwargs['0']
     try:
         p = kwargs['1']
     except:
-        p=1.0
+        p = 1.0
     try:
         model_type = kwargs['2']
     except:
-        model_type="conjunction"
+        model_type = "conjunction"
     try:
         attributeClassification = kwargs["attributeClassification"]
         binaryAttributes = kwargs["binaryAttributes"]
@@ -64,14 +63,14 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=None, metric=["accuracy_score", None], nIter=30, nbCores=1):
-
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=None, metric=["accuracy_score", None],
+                     nIter=30, nbCores=1):
     metricModule = getattr(Metrics, metric[0])
-    if metric[1]!=None:
+    if metric[1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
-    if metricModule.getConfig()[-14]=="h":
+    if metricModule.getConfig()[-14] == "h":
         baseScore = -1000.0
         isBetter = "higher"
     else:
@@ -104,19 +103,19 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=None,
                 pass
             dsetFile.close()
             os.remove(name)
-        if scores==[]:
+        if scores == []:
             score = baseScore
         else:
             score = np.mean(np.array(scores))
 
-        if isBetter=="higher" and score > baseScore:
+        if isBetter == "higher" and score > baseScore:
             baseScore = score
             config = [max_attributes, p, model]
-        if isBetter=="lower" and score < baseScore:
+        if isBetter == "lower" and score < baseScore:
             baseScore = score
             config = [max_attributes, p, model]
 
-    assert config!=[], "No good configuration found for SCM"
+    assert config != [], "No good configuration found for SCM"
     scoresArray = scores
     params = [("maxAttributes", np.array(maxAttributesArray)),
               ("p", np.array(pArray)),
@@ -128,12 +127,15 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=None,
 
 def getConfig(config):
     if type(config) not in [list, dict]:
-        return "\n\t\t- SCM with max_attributes : "+str(config.max_attributes)+", model type : "+config.model_type+", p : "+str(config.p)
+        return "\n\t\t- SCM with max_attributes : " + str(
+            config.max_attributes) + ", model type : " + config.model_type + ", p : " + str(config.p)
     else:
-        try :
-            return "\n\t\t- SCM with max_attributes : "+str(config[0])+", p : "+str(config[1])+", model type : "+str(config[2])
+        try:
+            return "\n\t\t- SCM with max_attributes : " + str(config[0]) + ", p : " + str(
+                config[1]) + ", model type : " + str(config[2])
         except:
-            return "\n\t\t- SCM with max_attributes : "+str(config["0"])+", p : "+str(config["1"])+", model type : "+str(config["2"])
+            return "\n\t\t- SCM with max_attributes : " + str(config["0"]) + ", p : " + str(
+                config["1"]) + ", model type : " + str(config["2"])
 
 
 def transformData(dataArray):
@@ -148,18 +150,18 @@ def transformData(dataArray):
         nameb = "temp_scm"
         if not os.path.isfile(nameb):
             dsetFile = h5py.File(nameb, "w")
-            name=nameb
+            name = nameb
         else:
-            fail=True
-            i=0
-            name=nameb
+            fail = True
+            i = 0
+            name = nameb
             while fail:
                 if not os.path.isfile(name):
                     dsetFile = h5py.File(name, "w")
-                    fail=False
+                    fail = False
                 else:
-                    i+=1
-                    name = nameb+str(i)
+                    i += 1
+                    name = nameb + str(i)
 
         packedDataset = dsetFile.create_dataset("temp_scm", data=packedData)
         dsetFile.close()
@@ -170,15 +172,16 @@ def transformData(dataArray):
 
 
 def isBinary(dataset):
-    if type(dataset[0,0]) is np.uint8:
+    if type(dataset[0, 0]) is np.uint8:
         return True
     for line in dataset:
         for data in line:
-            if data!=0 or data!=1:
+            if data != 0 or data != 1:
                 return False
     return True
 
-#!/usr/bin/env python
+
+# !/usr/bin/env python
 """
 	Kover: Learn interpretable computational phenotyping models from k-merized genomic data
 	Copyright (C) 2015  Alexandre Drouin
@@ -220,7 +223,6 @@ def _minimum_uint_size(max_value):
 
 
 class BaptisteRule(object):
-
     def __init__(self, feature_index, kmer_sequence, type):
         """
         A k-mer rule
@@ -244,16 +246,19 @@ class BaptisteRule(object):
             return (X[:, self.feature_index] == 1).astype(np.uint8)
 
     def inverse(self):
-        return BaptisteRule(feature_index=self.feature_index, kmer_sequence=self.kmer_sequence, type="absence" if self.type == "presence" else "presence")
+        return BaptisteRule(feature_index=self.feature_index, kmer_sequence=self.kmer_sequence,
+                            type="absence" if self.type == "presence" else "presence")
 
     def __str__(self):
         return ("Absence(" if self.type == "absence" else "Presence(") + self.kmer_sequence + ")"
+
 
 class LazyBaptisteRuleList(object):
     """
     By convention, the first half of the list contains presence rules and the second half contains the absence rules in
     the same order.
     """
+
     def __init__(self, kmer_sequences, feature_index_by_rule):
         self.n_rules = feature_index_by_rule.shape[0] * 2
         self.kmer_sequences = kmer_sequences
@@ -273,6 +278,7 @@ class LazyBaptisteRuleList(object):
 
     def __len__(self):
         return self.n_rules
+
 
 class BaseRuleClassifications(object):
     def __init__(self):
@@ -296,6 +302,7 @@ class BaptisteRuleClassifications(BaseRuleClassifications):
     """
     Methods involving columns account for presence and absence rules
     """
+
     # TODO: Clean up. Get rid of the code to handle deleted rows. We don't need this.
     def __init__(self, dataset, n_rows, block_size=None):
         self.dataset = dataset
@@ -332,7 +339,7 @@ class BaptisteRuleClassifications(BaseRuleClassifications):
         """
         Columns can be an integer (or any object that implements __index__) or a sorted list/ndarray.
         """
-        #TODO: Support slicing, make this more efficient than getting the columns individually.
+        # TODO: Support slicing, make this more efficient than getting the columns individually.
         columns_is_int = False
         if hasattr(columns, "__index__"):  # All int types implement the __index__ method (PEP 357)
             columns = [columns.__index__()]
@@ -344,8 +351,8 @@ class BaptisteRuleClassifications(BaseRuleClassifications):
         else:
             columns = list(columns)
         # Detect where an inversion is needed (columns corresponding to absence rules)
-        columns, invert_result = zip(* (((column if column < self.dataset.shape[1] else column % self.dataset.shape[1]),
-                                         (True if column > self.dataset.shape[1] else False)) for column in columns))
+        columns, invert_result = zip(*(((column if column < self.dataset.shape[1] else column % self.dataset.shape[1]),
+                                        (True if column > self.dataset.shape[1] else False)) for column in columns))
         columns = list(columns)
         invert_result = np.array(invert_result)
 
@@ -431,9 +438,10 @@ class BaptisteRuleClassifications(BaseRuleClassifications):
                 self.inplace_popcount(block, block_row_mask)
 
                 # Increment the sum
-                result[col_block * self.block_size[1]:min((col_block + 1) * self.block_size[1], self.dataset.shape[1])] += np.sum(block, axis=0)
+                result[col_block * self.block_size[1]:min((col_block + 1) * self.block_size[1],
+                                                          self.dataset.shape[1])] += np.sum(block, axis=0)
 
         # Compute the sum for absence rules
-        result[self.dataset.shape[1] : ] = len(rows) - result[: self.dataset.shape[1]]
+        result[self.dataset.shape[1]:] = len(rows) - result[: self.dataset.shape[1]]
 
         return result

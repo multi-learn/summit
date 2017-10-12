@@ -11,23 +11,25 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     paramsSets = []
     for _ in range(nIter):
         randomWeightsArray = randomState.random_sample(nbView)
-        normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
+        normalizedArray = randomWeightsArray / np.sum(randomWeightsArray)
         paramsSets.append([normalizedArray])
     return paramsSets
 
 
 def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, classificationIndices):
-    if args.FU_L_cl_names!=['']:
+    if args.FU_L_cl_names != ['']:
         pass
     else:
         monoviewClassifierModulesNames = benchmark["Monoview"]
-        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices, resultsMonoview, classificationIndices)
+        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory,
+                                            viewsIndices, resultsMonoview, classificationIndices)
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
                                  for classifierName in args.FU_L_cl_names]
     if args.FU_L_cl_config != ['']:
-        classifiersConfigs = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
-                              for monoviewClassifierModule,classifierConfig
-                              in zip(monoviewClassifierModules,args.FU_L_cl_config)]
+        classifiersConfigs = [
+            monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
+            for monoviewClassifierModule, classifierConfig
+            in zip(monoviewClassifierModules, args.FU_L_cl_config)]
     else:
         classifiersConfigs = getConfig(args.FU_L_cl_names, resultsMonoview)
     arguments = {"CL_type": "Fusion",
@@ -48,9 +50,10 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
 
 class MajorityVoting(LateFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
+        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
+                                      kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
-        if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig']==['']:
+        if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig'] == ['']:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
@@ -59,7 +62,7 @@ class MajorityVoting(LateFusionClassifier):
         self.weights = np.array(paramsSet[0])
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
-        if type(viewsIndices)==type(None):
+        if type(viewsIndices) == type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         nbView = len(viewsIndices)
         self.weights /= float(sum(self.weights))
@@ -68,7 +71,7 @@ class MajorityVoting(LateFusionClassifier):
 
         datasetLength = len(usedIndices)
         votes = np.zeros((datasetLength, DATASET.get("Metadata").attrs["nbClass"]), dtype=float)
-        monoViewDecisions = np.zeros((len(usedIndices),nbView), dtype=int)
+        monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
                 getV(DATASET, viewIndex, usedIndices))
@@ -90,9 +93,11 @@ class MajorityVoting(LateFusionClassifier):
         # 		nbMaximum = len(np.where(votes==max(votes))[0])
         return predictedLabels
 
-    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
-        configString = "with Majority Voting \n\t-With weights : "+str(self.weights)+"\n\t-With monoview classifiers : "
-        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
+    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
+        configString = "with Majority Voting \n\t-With weights : " + str(
+            self.weights) + "\n\t-With monoview classifiers : "
+        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs,
+                                                                    monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
             configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
         return configString

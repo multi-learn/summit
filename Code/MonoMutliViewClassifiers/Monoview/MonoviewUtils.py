@@ -5,22 +5,22 @@
 # Import built-in modules
 
 # Import sci-kit learn party modules
-#from sklearn.tests import train_test_split   # For calculating the train/test split
-from sklearn.pipeline import Pipeline                   # Pipelining in classification
-from sklearn.model_selection import GridSearchCV            # GridSearch for parameters of classification
-from sklearn.ensemble import RandomForestClassifier     # RandomForest-Classifier
+# from sklearn.tests import train_test_split   # For calculating the train/test split
+from sklearn.pipeline import Pipeline  # Pipelining in classification
+from sklearn.model_selection import GridSearchCV  # GridSearch for parameters of classification
+from sklearn.ensemble import RandomForestClassifier  # RandomForest-Classifier
 import sklearn
 import numpy as np
 
 # Import own modules
 
 # Author-Info
-__author__ 	= "Nikolas Huelsmann, Baptiste Bauvin"
-__status__ 	= "Prototype"                           # Production, Development, Prototype
-__date__	= 2016-03-25
+__author__ = "Nikolas Huelsmann, Baptiste Bauvin"
+__status__ = "Prototype"  # Production, Development, Prototype
+__date__ = 2016 - 03 - 25
 
 
-def isUseful (labelSupports, index, CLASS_LABELS, labelDict):
+def isUseful(labelSupports, index, CLASS_LABELS, labelDict):
     if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:
         labelSupports[labelDict[CLASS_LABELS[index]]] -= 1
         return True, labelSupports
@@ -35,7 +35,7 @@ def getLabelSupports(CLASS_LABELS):
 
 
 def splitDataset(LABELS, NB_CLASS, LEARNING_RATE, DATASET_LENGTH, randomState):
-    validationIndices = extractRandomTrainingSet(LABELS, 1-LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState)
+    validationIndices = extractRandomTrainingSet(LABELS, 1 - LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState)
     validationIndices.sort()
     return validationIndices
 
@@ -47,7 +47,7 @@ def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLA
     usedIndices = []
     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
         isUseFull = False
-        index = int(randomState.randint(0, DATASET_LENGTH-1))
+        index = int(randomState.randint(0, DATASET_LENGTH - 1))
         if index not in usedIndices:
             isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
         if isUseFull:
@@ -170,7 +170,7 @@ def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLA
 # y_test: Test Labels
 # num_estimators: number of trees
 def MonoviewClassifRandomForest(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
-    num_estimators =  kwargs["classifier__n_estimators"]
+    num_estimators = kwargs["classifier__n_estimators"]
     # PipeLine with RandomForest classifier
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
 
@@ -185,18 +185,18 @@ def MonoviewClassifRandomForest(X_train, y_train, nbFolds=4, nbCores=1, **kwargs
     # scoring: scoring...
     # cv: Nombre de K-Folds pour CV
     grid_rf = GridSearchCV(
-            pipeline_rf,
-            param_grid=param_rf,
-            refit=True,
-            n_jobs=nbCores,
-            scoring='accuracy',
-            cv=nbFolds,
+        pipeline_rf,
+        param_grid=param_rf,
+        refit=True,
+        n_jobs=nbCores,
+        scoring='accuracy',
+        cv=nbFolds,
     )
 
     rf_detector = grid_rf.fit(X_train, y_train)
 
     desc_estimators = [rf_detector.best_params_["classifier__n_estimators"]]
-    description = "Classif_" + "RF" + "-" + "CV_" +  str(nbFolds) + "-" + "Trees_" + str(map(str,desc_estimators))
+    description = "Classif_" + "RF" + "-" + "CV_" + str(nbFolds) + "-" + "Trees_" + str(map(str, desc_estimators))
 
     return description, rf_detector
 
@@ -205,22 +205,24 @@ def MonoviewClassifSVMLinear(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     pipeline_SVMLinear = Pipeline([('classifier', sklearn.svm.SVC())])
     param_SVMLinear = kwargs
 
-    grid_SVMLinear = GridSearchCV(pipeline_SVMLinear, param_grid=param_SVMLinear, refit=True, n_jobs=nbCores, scoring='accuracy',
-                            cv=nbFolds)
+    grid_SVMLinear = GridSearchCV(pipeline_SVMLinear, param_grid=param_SVMLinear, refit=True, n_jobs=nbCores,
+                                  scoring='accuracy',
+                                  cv=nbFolds)
     SVMLinear_detector = grid_SVMLinear.fit(X_train, y_train)
     desc_params = [SVMLinear_detector.best_params_["classifier__C"]]
-    description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
+    description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
     return description, SVMLinear_detector
+
 
 def MonoviewClassifSVMRBF(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     pipeline_SVMRBF = Pipeline([('classifier', sklearn.svm.SVC())])
     param_SVMRBF = kwargs
 
     grid_SVMRBF = GridSearchCV(pipeline_SVMRBF, param_grid=param_SVMRBF, refit=True, n_jobs=nbCores, scoring='accuracy',
-                                  cv=nbFolds)
+                               cv=nbFolds)
     SVMRBF_detector = grid_SVMRBF.fit(X_train, y_train)
     desc_params = [SVMRBF_detector.best_params_["classifier__C"]]
-    description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
+    description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
     return description, SVMRBF_detector
 
 
@@ -229,10 +231,10 @@ def MonoviewClassifDecisionTree(X_train, y_train, nbFolds=4, nbCores=1, **kwargs
     param_DT = kwargs
 
     grid_DT = GridSearchCV(pipeline_DT, param_grid=param_DT, refit=True, n_jobs=nbCores, scoring='accuracy',
-                            cv=nbFolds)
+                           cv=nbFolds)
     DT_detector = grid_DT.fit(X_train, y_train)
     desc_params = [DT_detector.best_params_["classifier__max_depth"]]
-    description = "Classif_" + "DT" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
+    description = "Classif_" + "DT" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
     return description, DT_detector
 
 
@@ -240,12 +242,13 @@ def MonoviewClassifSGD(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     pipeline_SGD = Pipeline([('classifier', sklearn.linear_model.SGDClassifier())])
     param_SGD = kwargs
     grid_SGD = GridSearchCV(pipeline_SGD, param_grid=param_SGD, refit=True, n_jobs=nbCores, scoring='accuracy',
-                                cv=nbFolds)
+                            cv=nbFolds)
     SGD_detector = grid_SGD.fit(X_train, y_train)
     desc_params = [SGD_detector.best_params_["classifier__loss"], SGD_detector.best_params_["classifier__penalty"],
                    SGD_detector.best_params_["classifier__alpha"]]
-    description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
+    description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
     return description, SGD_detector
+
 
 def MonoviewClassifKNN(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
     pipeline_KNN = Pipeline([('classifier', sklearn.neighbors.KNeighborsClassifier())])
@@ -254,31 +257,31 @@ def MonoviewClassifKNN(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
                             cv=nbFolds)
     KNN_detector = grid_KNN.fit(X_train, y_train)
     desc_params = [KNN_detector.best_params_["classifier__n_neighbors"]]
-    description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str,desc_params))
+    description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
     return description, KNN_detector
 
 
 
-#def calcClassifRandomForest(X_train, X_test, y_test, y_train, num_estimators):
-#    from sklearn.grid_search import ParameterGrid
-#    param_rf = { 'classifier__n_estimators': num_estimators}
-#    forest = RandomForestClassifier()
-#
-#    bestgrid=0;
-#    for g in ParameterGrid(grid):
-#        forest.set_params(**g)
-#        forest.fit(X_train,y_train)
-#        score = forest.score(X_test, y_test)
-#
-#        if score > best_score:
-#            best_score = score
-#            best_grid = g
-#
-#    rf_detector = RandomForestClassifier()
-#    rf_detector.set_params(**best_grid)
-#    rf_detector.fit(X_train,y_train)
+    # def calcClassifRandomForest(X_train, X_test, y_test, y_train, num_estimators):
+    #    from sklearn.grid_search import ParameterGrid
+    #    param_rf = { 'classifier__n_estimators': num_estimators}
+    #    forest = RandomForestClassifier()
+    #
+    #    bestgrid=0;
+    #    for g in ParameterGrid(grid):
+    #        forest.set_params(**g)
+    #        forest.fit(X_train,y_train)
+    #        score = forest.score(X_test, y_test)
+    #
+    #        if score > best_score:
+    #            best_score = score
+    #            best_grid = g
+    #
+    #    rf_detector = RandomForestClassifier()
+    #    rf_detector.set_params(**best_grid)
+    #    rf_detector.fit(X_train,y_train)
 
-#    #desc_estimators = best_grid
-#    description = "Classif_" + "RF" + "-" + "CV_" +  "NO" + "-" + "Trees_" + str(best_grid)
+    #    #desc_estimators = best_grid
+    #    description = "Classif_" + "RF" + "-" + "CV_" +  "NO" + "-" + "Trees_" + str(best_grid)
 
-#    return (description, rf_detector)
+    #    return (description, rf_detector)

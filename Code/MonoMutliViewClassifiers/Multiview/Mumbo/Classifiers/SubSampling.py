@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def getLabelSupports(CLASS_LABELS):
     labels = set(CLASS_LABELS)
     supports = [CLASS_LABELS.tolist().count(label) for label in labels]
@@ -16,7 +17,7 @@ def isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict):
 
 def subSample(data, labels, subSampling, randomState, weights=None):
     if weights is None:
-        weights = np.ones(len(labels))/len(labels)
+        weights = np.ones(len(labels)) / len(labels)
     nbExamples = len(labels)
     labelSupports, labelDict = getLabelSupports(labels)
 

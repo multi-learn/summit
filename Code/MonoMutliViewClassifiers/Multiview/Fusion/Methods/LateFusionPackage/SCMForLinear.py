@@ -22,23 +22,25 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
         max_attributes = randomState.randint(1, 20)
         p = randomState.random_sample()
         model = randomState.choice(["conjunction", "disjunction"])
-        order = randomState.randint(1,nbView)
+        order = randomState.randint(1, nbView)
         paramsSets.append([p, max_attributes, model, order])
     return paramsSets
 
 
 def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, classificationIndices):
-    if args.FU_L_cl_names!=['']:
+    if args.FU_L_cl_names != ['']:
         pass
     else:
-        monoviewClassifierModulesNames =benchmark["Monoview"]
-        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices, resultsMonoview, classificationIndices)
+        monoviewClassifierModulesNames = benchmark["Monoview"]
+        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory,
+                                            viewsIndices, resultsMonoview, classificationIndices)
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
                                  for classifierName in args.FU_L_cl_names]
     if args.FU_L_cl_config != ['']:
-        classifiersConfigs = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
-                              for monoviewClassifierModule,classifierConfig
-                              in zip(monoviewClassifierModules,args.FU_L_cl_config)]
+        classifiersConfigs = [
+            monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
+            for monoviewClassifierModule, classifierConfig
+            in zip(monoviewClassifierModules, args.FU_L_cl_config)]
     else:
         classifiersConfigs = getConfig(args.FU_L_cl_names, resultsMonoview)
     arguments = {"CL_type": "Fusion",
@@ -59,10 +61,11 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
 
 class SCMForLinear(LateFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
+        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
+                                      kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
         self.SCMClassifier = None
-        if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig']==['']:
+        if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig'] == ['']:
             self.p = 1
             self.maxAttributes = 5
             self.order = 1
@@ -100,7 +103,7 @@ class SCMForLinear(LateFusionClassifier):
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         monoviewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
-        accus=[]
+        accus = []
         for index, viewIndex in enumerate(viewsIndices):
             monoviewDecision = self.monoviewClassifiers[index].predict(
                 getV(DATASET, viewIndex, usedIndices))
@@ -111,44 +114,47 @@ class SCMForLinear(LateFusionClassifier):
         return predictedLabels
 
     def SCMForLinearFusionFit(self, DATASET, usedIndices=None, viewsIndices=None):
-        if type(viewsIndices)==type(None):
+        if type(viewsIndices) == type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
 
         nbView = len(viewsIndices)
-        self.SCMClassifier = pyscm.scm.SetCoveringMachine(p=self.p, max_attributes=self.maxAttributes, model_type=self.modelType, verbose=False)
+        self.SCMClassifier = pyscm.scm.SetCoveringMachine(p=self.p, max_attributes=self.maxAttributes,
+                                                          model_type=self.modelType, verbose=False)
         monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
                 getV(DATASET, viewIndex, usedIndices))
         features = self.generateInteractions(monoViewDecisions)
-        featureSequence=[str(index) for index in range(nbView)]
-        for orderIndex in range(self.order-1):
-            featureSequence += [str(featureIndex) for featureIndex in itertools.combinations(range(monoViewDecisions.shape[1]), orderIndex+2)]
+        featureSequence = [str(index) for index in range(nbView)]
+        for orderIndex in range(self.order - 1):
+            featureSequence += [str(featureIndex) for featureIndex in
+                                itertools.combinations(range(monoViewDecisions.shape[1]), orderIndex + 2)]
         featureIndexByRule = np.arange(features.shape[1], dtype=np.uint32)
         binaryAttributes = LazyBaptisteRuleList(featureSequence, featureIndexByRule)
         packedData = _pack_binary_bytes_to_ints(features, 64)
         nameb = "temp_scm_fusion"
         if not os.path.isfile(nameb):
             dsetFile = h5py.File(nameb, "w")
-            name=nameb
+            name = nameb
         else:
-            fail=True
-            i=0
-            name=nameb
+            fail = True
+            i = 0
+            name = nameb
             while fail:
                 if not os.path.isfile(name):
                     dsetFile = h5py.File(name, "w")
-                    fail=False
+                    fail = False
                 else:
-                    i+=1
-                    name = nameb+str(i)
+                    i += 1
+                    name = nameb + str(i)
 
         packedDataset = dsetFile.create_dataset("temp_scm", data=packedData)
         dsetFile.close()
         dsetFile = h5py.File(name, "r")
         packedDataset = dsetFile.get("temp_scm")
         attributeClassification = BaptisteRuleClassifications(packedDataset, features.shape[0])
-        self.SCMClassifier.fit(binaryAttributes, DATASET.get("Labels").value[usedIndices], attribute_classifications=attributeClassification)
+        self.SCMClassifier.fit(binaryAttributes, DATASET.get("Labels").value[usedIndices],
+                               attribute_classifications=attributeClassification)
         try:
             dsetFile.close()
             os.remove(name)
@@ -156,36 +162,37 @@ class SCMForLinear(LateFusionClassifier):
             pass
 
     def generateInteractions(self, monoViewDecisions):
-        if type(self.order)==type(None):
+        if type(self.order) == type(None):
             order = monoViewDecisions.shape[1]
-        if self.order==1:
+        if self.order == 1:
             return monoViewDecisions
 
         else:
-            genratedIntercations = [monoViewDecisions[:,i] for i in range(monoViewDecisions.shape[1])]
-            for orderIndex in range(self.order-1):
-                combins = itertools.combinations(range(monoViewDecisions.shape[1]), orderIndex+2)
+            genratedIntercations = [monoViewDecisions[:, i] for i in range(monoViewDecisions.shape[1])]
+            for orderIndex in range(self.order - 1):
+                combins = itertools.combinations(range(monoViewDecisions.shape[1]), orderIndex + 2)
                 for combin in combins:
-                    generatedDecision = monoViewDecisions[:,combin[0]]
-                    for index in range(len(combin)-1):
-                        if self.modelType=="disjunction":
-                            generatedDecision = np.logical_and(generatedDecision, monoViewDecisions[:,combin[index+1]])
+                    generatedDecision = monoViewDecisions[:, combin[0]]
+                    for index in range(len(combin) - 1):
+                        if self.modelType == "disjunction":
+                            generatedDecision = np.logical_and(generatedDecision,
+                                                               monoViewDecisions[:, combin[index + 1]])
                         else:
-                            generatedDecision = np.logical_or(generatedDecision, monoViewDecisions[:,combin[index+1]])
+                            generatedDecision = np.logical_or(generatedDecision,
+                                                              monoViewDecisions[:, combin[index + 1]])
                     genratedIntercations.append(generatedDecision)
             return np.transpose(np.array(genratedIntercations).astype(np.uint8))
 
-
-
-
-    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
-        configString = "with SCM for linear with max_attributes : "+str(self.maxAttributes)+", p : "+str(self.p)+\
-                       " model_type : "+str(self.modelType)+" has chosen "+\
-                       str(len(self.SCMClassifier.attribute_importances))+" rule(s) \n\t-With monoview classifiers : "
-        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
+    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
+        configString = "with SCM for linear with max_attributes : " + str(self.maxAttributes) + ", p : " + str(self.p) + \
+                       " model_type : " + str(self.modelType) + " has chosen " + \
+                       str(len(self.SCMClassifier.attribute_importances)) + " rule(s) \n\t-With monoview classifiers : "
+        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs,
+                                                                    monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
             configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
         return configString
+
 
 def _minimum_uint_size(max_value):
     """
@@ -205,7 +212,6 @@ def _minimum_uint_size(max_value):
 
 
 class BaptisteRule(object):
-
     def __init__(self, feature_index, kmer_sequence, type):
         """
         A k-mer rule
@@ -229,7 +235,8 @@ class BaptisteRule(object):
             return (X[:, self.feature_index] == 1).astype(np.uint8)
 
     def inverse(self):
-        return BaptisteRule(feature_index=self.feature_index, kmer_sequence=self.kmer_sequence, type="absence" if self.type == "presence" else "presence")
+        return BaptisteRule(feature_index=self.feature_index, kmer_sequence=self.kmer_sequence,
+                            type="absence" if self.type == "presence" else "presence")
 
     def __str__(self):
         return ("Absence(" if self.type == "absence" else "Presence(") + self.kmer_sequence + ")"
@@ -240,6 +247,7 @@ class LazyBaptisteRuleList(object):
     By convention, the first half of the list contains presence rules and the second half contains the absence rules in
     the same order.
     """
+
     def __init__(self, kmer_sequences, feature_index_by_rule):
         self.n_rules = feature_index_by_rule.shape[0] * 2
         self.kmer_sequences = kmer_sequences
@@ -260,6 +268,7 @@ class LazyBaptisteRuleList(object):
     def __len__(self):
         return self.n_rules
 
+
 class BaseRuleClassifications(object):
     def __init__(self):
         pass
@@ -277,10 +286,12 @@ class BaseRuleClassifications(object):
     def sum_rows(self, rows):
         raise NotImplementedError()
 
+
 class BaptisteRuleClassifications(BaseRuleClassifications):
     """
     Methods involving columns account for presence and absence rules
     """
+
     # TODO: Clean up. Get rid of the code to handle deleted rows. We don't need this.
     def __init__(self, dataset, n_rows, block_size=None):
         self.dataset = dataset
@@ -317,7 +328,7 @@ class BaptisteRuleClassifications(BaseRuleClassifications):
         """
         Columns can be an integer (or any object that implements __index__) or a sorted list/ndarray.
         """
-        #TODO: Support slicing, make this more efficient than getting the columns individually.
+        # TODO: Support slicing, make this more efficient than getting the columns individually.
         columns_is_int = False
         if hasattr(columns, "__index__"):  # All int types implement the __index__ method (PEP 357)
             columns = [columns.__index__()]
@@ -329,8 +340,8 @@ class BaptisteRuleClassifications(BaseRuleClassifications):
         else:
             columns = list(columns)
         # Detect where an inversion is needed (columns corresponding to absence rules)
-        columns, invert_result = zip(* (((column if column < self.dataset.shape[1] else column % self.dataset.shape[1]),
-                                         (True if column > self.dataset.shape[1] else False)) for column in columns))
+        columns, invert_result = zip(*(((column if column < self.dataset.shape[1] else column % self.dataset.shape[1]),
+                                        (True if column > self.dataset.shape[1] else False)) for column in columns))
         columns = list(columns)
         invert_result = np.array(invert_result)
 
@@ -416,9 +427,10 @@ class BaptisteRuleClassifications(BaseRuleClassifications):
                 self.inplace_popcount(block, block_row_mask)
 
                 # Increment the sum
-                result[col_block * self.block_size[1]:min((col_block + 1) * self.block_size[1], self.dataset.shape[1])] += np.sum(block, axis=0)
+                result[col_block * self.block_size[1]:min((col_block + 1) * self.block_size[1],
+                                                          self.dataset.shape[1])] += np.sum(block, axis=0)
 
         # Compute the sum for absence rules
-        result[self.dataset.shape[1] : ] = len(rows) - result[: self.dataset.shape[1]]
+        result[self.dataset.shape[1]:] = len(rows) - result[: self.dataset.shape[1]]
 
         return result

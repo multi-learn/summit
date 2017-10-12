@@ -3,7 +3,7 @@ import os.path
 import errno
 
 sys.path.append(
-        os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+    os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 # from Multiview import *
 import Multiview
@@ -18,35 +18,38 @@ from utils.HyperParameterSearch import searchBestSettings
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
-__status__ = "Prototype"                           # Production, Development, Prototype
+__status__ = "Prototype"  # Production, Development, Prototype
 
 
-def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY, randomState,
+def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY,
+                            randomState,
                             hyperParamSearch=False, nbCores=1, metrics=None, nIter=30, **arguments):
-    DATASET = h5py.File(path+name+str(coreIndex)+".hdf5", "r")
-    return ExecMultiview(directory, DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY, randomState,
+    DATASET = h5py.File(path + name + str(coreIndex) + ".hdf5", "r")
+    return ExecMultiview(directory, DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY,
+                         randomState,
                          hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=nIter, **arguments)
 
 
-def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCores, databaseType, path, LABELS_DICTIONARY, randomState,
+def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCores, databaseType, path,
+                  LABELS_DICTIONARY, randomState,
                   hyperParamSearch=False, metrics=None, nIter=30, **kwargs):
-
     views = kwargs["views"]
     viewsIndices = kwargs["viewsIndices"]
     if not metrics:
         metrics = [["f1_score", None]]
     CL_type = kwargs["CL_type"]
-    classificationKWARGS = kwargs[CL_type+"KWARGS"]
-    learningRate = len(classificationIndices[0])/float((len(classificationIndices[0])+len(classificationIndices[1])))
+    classificationKWARGS = kwargs[CL_type + "KWARGS"]
+    learningRate = len(classificationIndices[0]) / float(
+        (len(classificationIndices[0]) + len(classificationIndices[1])))
     t_start = time.time()
     logging.info("### Main Programm for Multiview Classification")
     logging.info("### Classification - Database : " + str(name) + " ; Views : " + ", ".join(views) +
-                 " ; Algorithm : " + CL_type + " ; Cores : " + str(nbCores)+", Train ratio : " + str(learningRate)+
+                 " ; Algorithm : " + CL_type + " ; Cores : " + str(nbCores) + ", Train ratio : " + str(learningRate) +
                  ", CV on " + str(KFolds.n_splits) + " folds")
 
     for viewIndex, viewName in zip(viewsIndices, views):
         logging.info("Info:\t Shape of " + str(viewName) + " :" + str(
-                getShape(DATASET, viewIndex)))
+            getShape(DATASET, viewIndex)))
     logging.info("Done:\t Read Database Files")
 
     extractionTime = time.time() - t_start
@@ -57,7 +60,9 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     analysisModule = getattr(classifierPackage, "analyzeResults")
 
     if hyperParamSearch != "None":
-        classifier = searchBestSettings(DATASET, CL_type, metrics, learningIndices, KFolds, randomState, viewsIndices=viewsIndices, searchingTool=hyperParamSearch, nIter=nIter, **classificationKWARGS)
+        classifier = searchBestSettings(DATASET, CL_type, metrics, learningIndices, KFolds, randomState,
+                                        viewsIndices=viewsIndices, searchingTool=hyperParamSearch, nIter=nIter,
+                                        **classificationKWARGS)
     else:
         classifier = classifierClass(randomState, NB_CORES=nbCores, **classificationKWARGS)
 
@@ -102,9 +107,9 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     if imagesAnalysis is not None:
         for imageName in imagesAnalysis:
             if os.path.isfile(outputFileName + imageName + ".png"):
-                for i in range(1,20):
+                for i in range(1, 20):
                     testFileName = outputFileName + imageName + "-" + str(i) + ".png"
-                    if os.path.isfile(testFileName )!=True:
+                    if not os.path.isfile(testFileName):
                         imagesAnalysis[imageName].savefig(testFileName)
                         break
 

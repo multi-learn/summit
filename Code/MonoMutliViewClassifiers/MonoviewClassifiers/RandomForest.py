@@ -7,15 +7,15 @@ import numpy as np
 from utils.HyperParameterSearch import genHeatMaps
 
 # Author-Info
-__author__ 	= "Baptiste Bauvin"
-__status__ 	= "Prototype"                           # Production, Development, Prototype
+__author__ = "Baptiste Bauvin"
+__status__ = "Prototype"  # Production, Development, Prototype
 
 
 def canProbas():
     return True
 
 
-def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
+def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
     num_estimators = int(kwargs['0'])
     maxDepth = int(kwargs['1'])
     criterion = kwargs["2"]
@@ -45,13 +45,14 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1,
+                     metric=["accuracy_score", None], nIter=30):
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
     param_rf = {"classifier__n_estimators": randint(1, 300),
                 "classifier__max_depth": randint(1, 300),
                 "classifier__criterion": ["gini", "entropy"]}
     metricModule = getattr(Metrics, metric[0])
-    if metric[1]!=None:
+    if metric[1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
@@ -75,9 +76,12 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nb
 
 def getConfig(config):
     if type(config) not in [list, dict]:
-        return "\n\t\t- Random Forest with num_esimators : "+str(config.n_estimators)+", max_depth : "+str(config.max_depth)+ ", criterion : "+config.criterion
+        return "\n\t\t- Random Forest with num_esimators : " + str(config.n_estimators) + ", max_depth : " + str(
+            config.max_depth) + ", criterion : " + config.criterion
     else:
         try:
-            return "\n\t\t- Random Forest with num_esimators : "+str(config[0])+", max_depth : "+str(config[1])+ ", criterion : "+config[2]
+            return "\n\t\t- Random Forest with num_esimators : " + str(config[0]) + ", max_depth : " + str(
+                config[1]) + ", criterion : " + config[2]
         except:
-            return "\n\t\t- Random Forest with num_esimators : "+str(config["0"])+", max_depth : "+str(config["1"])+ ", criterion : "+config["2"]
+            return "\n\t\t- Random Forest with num_esimators : " + str(config["0"]) + ", max_depth : " + str(
+                config["1"]) + ", criterion : " + config["2"]

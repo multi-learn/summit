@@ -13,7 +13,7 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     paramsSets = []
     for iterIndex in range(nIter):
         randomWeightsArray = randomState.random_sample(nbView)
-        normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
+        normalizedArray = randomWeightsArray / np.sum(randomWeightsArray)
         paramsSets.append([normalizedArray, paramsMonoview[iterIndex]])
     return paramsSets
 
@@ -40,7 +40,8 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
                                           "classifiersNames": classifierName,
                                           "classifiersConfigs": monoviewClassifierModule.getKWARGS([arg.split(":")
                                                                                                     for arg in
-                                                                                                    classifierConfig.split(",")]),
+                                                                                                    classifierConfig.split(
+                                                                                                        ",")]),
                                           'fusionMethodConfig': args.FU_E_method_configs,
                                           "nbView": (len(viewsIndices))}}
         else:
@@ -66,31 +67,33 @@ class WeightedLinear(EarlyFusionClassifier):
                                        NB_CORES=NB_CORES)
         if kwargs['fusionMethodConfig'] is None:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
-        elif kwargs['fusionMethodConfig']==['']:
+        elif kwargs['fusionMethodConfig'] == ['']:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig']))
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
-        if type(viewsIndices)==type(None):
+        if type(viewsIndices) == type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        self.weights = self.weights/float(max(self.weights))
+        self.weights /= float(max(self.weights))
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=trainIndices, viewsIndices=viewsIndices)
         monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
-        self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData, DATASET.get("Labels").value[trainIndices], self.randomState,
-                                                                     NB_CORES=self.nbCores,
-                                                                     **self.monoviewClassifiersConfig)
+        self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData,
+                                                               DATASET.get("Labels").value[trainIndices],
+                                                               self.randomState,
+                                                               NB_CORES=self.nbCores,
+                                                               **self.monoviewClassifiersConfig)
 
     def setParams(self, paramsSet):
         self.weights = paramsSet[0]
         self.monoviewClassifiersConfig = dict((str(index), param) for index, param in enumerate(paramsSet[1]))
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
-        if type(viewsIndices)==type(None):
+        if type(viewsIndices) == type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-        self.weights = self.weights/float(np.sum(self.weights))
+        self.weights /= float(np.sum(self.weights))
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=usedIndices, viewsIndices=viewsIndices)
@@ -99,14 +102,14 @@ class WeightedLinear(EarlyFusionClassifier):
         return predictedLabels
 
     def predict_proba_hdf5(self, DATASET, usedIndices=None):
-        if usedIndices == None:
+        if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=usedIndices)
         predictedLabels = self.monoviewClassifier.predict_proba(self.monoviewData)
         return predictedLabels
 
-    def getConfig(self, fusionMethodConfig ,monoviewClassifiersNames, monoviewClassifiersConfigs):
-        configString = "with weighted concatenation, using weights : "+", ".join(map(str, self.weights))+ \
+    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
+        configString = "with weighted concatenation, using weights : " + ", ".join(map(str, self.weights)) + \
                        " with monoview classifier : "
         monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifiersNames)
         configString += monoviewClassifierModule.getConfig(self.monoviewClassifiersConfig)

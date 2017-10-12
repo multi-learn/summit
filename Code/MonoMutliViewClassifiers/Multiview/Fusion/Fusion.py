@@ -8,10 +8,9 @@ import MonoviewClassifiers
 
 from utils.Dataset import getV
 
-
 # Author-Info
-__author__ 	= "Baptiste Bauvin"
-__status__ 	= "Prototype"                           # Production, Development, Prototype
+__author__ = "Baptiste Bauvin"
+__status__ = "Prototype"  # Production, Development, Prototype
 
 
 def getBenchmark(benchmark, args=None):
@@ -32,16 +31,17 @@ def getBenchmark(benchmark, args=None):
                             if (not isPackage)]
         fusionMonoviewClassifiers = allMonoviewAlgos
         allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
-        benchmark["Multiview"]["Fusion"]=allFusionAlgos
+        benchmark["Multiview"]["Fusion"] = allFusionAlgos
     else:
         benchmark["Multiview"]["Fusion"] = {}
         if args.FU_types != [""]:
             benchmark["Multiview"]["Fusion"]["Methods"] = dict(
                 (fusionType, []) for fusionType in args.FU_types)
         else:
-            benchmark["Multiview"]["Fusion"]["Methods"] = dict((fusionModulesName, "_") for fusionModulesName in fusionModulesNames)
+            benchmark["Multiview"]["Fusion"]["Methods"] = dict(
+                (fusionModulesName, "_") for fusionModulesName in fusionModulesNames)
         if "LateFusion" in benchmark["Multiview"]["Fusion"]["Methods"]:
-            if args.FU_late_methods== [""]:
+            if args.FU_late_methods == [""]:
                 benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = [name for _, name, isPackage in
                                                                              pkgutil.iter_modules([
                                                                                  "Multiview/Fusion/Methods/LateFusionPackage"])
@@ -72,32 +72,33 @@ def getArgs(args, benchmark, views, viewsIndices, randomState, directory, result
         args.FU_L_select_monoview = "randomClf"
     argumentsList = []
     for fusionType in benchmark["Multiview"]["Fusion"]["Methods"]:
-        fusionTypePackage = getattr(Methods, fusionType+"Package")
+        fusionTypePackage = getattr(Methods, fusionType + "Package")
         for fusionMethod in benchmark["Multiview"]["Fusion"]["Methods"][fusionType]:
             fusionMethodModule = getattr(fusionTypePackage, fusionMethod)
-            arguments = fusionMethodModule.getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, classificationIndices)
-            argumentsList+= arguments
+            arguments = fusionMethodModule.getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview,
+                                                   classificationIndices)
+            argumentsList += arguments
     return argumentsList
 
 
 def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None, viewsIndices=None):
-    if type(viewsIndices)==type(None):
+    if type(viewsIndices) == type(None):
         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
     if not usedIndices:
         usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
     NB_VIEW = len(viewsIndices)
     if weights is None:
-        weights = np.array([1/NB_VIEW for i in range(NB_VIEW)])
-    if sum(weights)!=1:
-        weights = weights/sum(weights)
-    monoviewData = np.concatenate([weights[index]*getV(DATASET, viewIndex, usedIndices)
-                                        for index, viewIndex in enumerate(viewsIndices)], axis=1)
+        weights = np.array([1 / NB_VIEW for i in range(NB_VIEW)])
+    if sum(weights) != 1:
+        weights = weights / sum(weights)
+    monoviewData = np.concatenate([weights[index] * getV(DATASET, viewIndex, usedIndices)
+                                   for index, viewIndex in enumerate(viewsIndices)], axis=1)
     return monoviewData
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
     fusionTypeName = classificationKWARGS["fusionType"]
-    fusionTypePackage = getattr(Methods, fusionTypeName+"Package")
+    fusionTypePackage = getattr(Methods, fusionTypeName + "Package")
     fusionMethodModuleName = classificationKWARGS["fusionMethod"]
     fusionMethodModule = getattr(fusionTypePackage, fusionMethodModuleName)
     fusionMethodConfig = fusionMethodModule.genParamsSets(classificationKWARGS, randomState, nIter=nIter)
@@ -105,16 +106,16 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 
 
 def gridSearch_hdf5(DATASET, viewsIndices, classificationKWARGS, learningIndices, metric=None, nIter=30):
-    if type(viewsIndices)==type(None):
+    if type(viewsIndices) == type(None):
         viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
     fusionTypeName = classificationKWARGS["fusionType"]
-    fusionTypePackage = globals()[fusionTypeName+"Package"]
+    fusionTypePackage = globals()[fusionTypeName + "Package"]
     fusionMethodModuleName = classificationKWARGS["fusionMethod"]
     fusionMethodModule = getattr(fusionTypePackage, fusionMethodModuleName)
     classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
-        logging.debug("\tStart:\t Random search for "+classifierName+ " with "+str(nIter)+" iterations")
+        logging.debug("\tStart:\t Random search for " + classifierName + " with " + str(nIter) + " iterations")
         classifierModule = getattr(MonoviewClassifiers, classifierName)
         classifierMethod = getattr(classifierModule, "hyperParamSearch")
         if fusionTypeName == "LateFusion":
@@ -122,34 +123,38 @@ def gridSearch_hdf5(DATASET, viewsIndices, classificationKWARGS, learningIndices
                                                  DATASET.get("Labels")[learningIndices], metric=metric,
                                                  nIter=nIter))
         else:
-            bestSettings.append(classifierMethod(makeMonoviewData_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices),
-                                                 DATASET.get("Labels")[learningIndices], metric=metric,
-                                                 nIter=nIter))
-        logging.debug("\tDone:\t Random search for "+classifierName)
+            bestSettings.append(
+                classifierMethod(makeMonoviewData_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices),
+                                 DATASET.get("Labels")[learningIndices], metric=metric,
+                                 nIter=nIter))
+        logging.debug("\tDone:\t Random search for " + classifierName)
     classificationKWARGS["classifiersConfigs"] = bestSettings
-    logging.debug("\tStart:\t Random search for "+fusionMethodModuleName)
-    fusionMethodConfig = fusionMethodModule.gridSearch(DATASET, classificationKWARGS, learningIndices, nIter=nIter, viewsIndices=viewsIndices)
-    logging.debug("\tDone:\t Random search for "+fusionMethodModuleName)
+    logging.debug("\tStart:\t Random search for " + fusionMethodModuleName)
+    fusionMethodConfig = fusionMethodModule.gridSearch(DATASET, classificationKWARGS, learningIndices, nIter=nIter,
+                                                       viewsIndices=viewsIndices)
+    logging.debug("\tDone:\t Random search for " + fusionMethodModuleName)
     return bestSettings, fusionMethodConfig
 
 
 def getCLString(classificationKWARGS):
     if classificationKWARGS["fusionType"] == "LateFusion":
-        return "Fusion-"+classificationKWARGS["fusionType"]+"-"+classificationKWARGS["fusionMethod"]+"-"+\
+        return "Fusion-" + classificationKWARGS["fusionType"] + "-" + classificationKWARGS["fusionMethod"] + "-" + \
                "-".join(classificationKWARGS["classifiersNames"])
     elif classificationKWARGS["fusionType"] == "EarlyFusion":
-        return "Fusion-"+classificationKWARGS["fusionType"]+"-"+classificationKWARGS["fusionMethod"]+"-"+ \
+        return "Fusion-" + classificationKWARGS["fusionType"] + "-" + classificationKWARGS["fusionMethod"] + "-" + \
                classificationKWARGS["classifiersNames"]
+
 
 class Fusion:
     def __init__(self, randomState, NB_CORES=1, **kwargs):
         fusionType = kwargs['fusionType']
         fusionMethod = kwargs['fusionMethod']
-        fusionTypePackage = getattr(Methods, fusionType+"Package")
+        fusionTypePackage = getattr(Methods, fusionType + "Package")
         fusionMethodModule = getattr(fusionTypePackage, fusionMethod)
         fusionMethodClass = getattr(fusionMethodModule, fusionMethod)
         nbCores = NB_CORES
-        classifierKWARGS = dict((key, value) for key, value in kwargs.iteritems() if key not in ['fusionType', 'fusionMethod'])
+        classifierKWARGS = dict(
+            (key, value) for key, value in kwargs.iteritems() if key not in ['fusionType', 'fusionMethod'])
         self.classifier = fusionMethodClass(randomState, NB_CORES=nbCores, **classifierKWARGS)
 
     def setParams(self, paramsSet):
@@ -161,7 +166,7 @@ class Fusion:
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if type(viewsIndices)==type(None):
+        if type(viewsIndices) == type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         predictedLabels = self.classifier.predict_hdf5(DATASET, usedIndices=usedIndices, viewsIndices=viewsIndices)
         return predictedLabels
@@ -174,5 +179,3 @@ class Fusion:
         else:
             predictedLabels = []
         return predictedLabels
-
-

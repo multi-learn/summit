@@ -11,23 +11,25 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     paramsSets = []
     for _ in range(nIter):
         randomWeightsArray = randomState.random_sample(nbView)
-        normalizedArray = randomWeightsArray/np.sum(randomWeightsArray)
+        normalizedArray = randomWeightsArray / np.sum(randomWeightsArray)
         paramsSets.append([normalizedArray])
     return paramsSets
 
 
 def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, classificationIndices):
-    if args.FU_L_cl_names!=['']:
+    if args.FU_L_cl_names != ['']:
         pass
     else:
         monoviewClassifierModulesNames = benchmark["Monoview"]
-        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices, resultsMonoview, classificationIndices)
+        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory,
+                                            viewsIndices, resultsMonoview, classificationIndices)
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
                                  for classifierName in args.FU_L_cl_names]
     if args.FU_L_cl_config != ['']:
-        classifiersConfigs = [monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
-                              for monoviewClassifierModule,classifierConfig
-                              in zip(monoviewClassifierModules,args.FU_L_cl_config)]
+        classifiersConfigs = [
+            monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
+            for monoviewClassifierModule, classifierConfig
+            in zip(monoviewClassifierModules, args.FU_L_cl_config)]
     else:
         classifiersConfigs = getConfig(args.FU_L_cl_names, resultsMonoview)
     arguments = {"CL_type": "Fusion",
@@ -48,9 +50,10 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
 
 class WeightedLinear(LateFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'], kwargs["monoviewSelection"],
+        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
+                                      kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
-        if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig']==['']:
+        if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig'] == ['']:
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
@@ -63,21 +66,22 @@ class WeightedLinear(LateFusionClassifier):
         if viewsIndices is None:
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         nbView = len(viewsIndices)
-        self.weights = self.weights/float(sum(self.weights))
+        self.weights /= float(sum(self.weights))
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
         for index, viewIndex in enumerate(viewsIndices):
             viewScores[index] = np.array(self.monoviewClassifiers[index].predict_proba(
-                getV(DATASET, viewIndex, usedIndices)))*self.weights[index]
+                getV(DATASET, viewIndex, usedIndices))) * self.weights[index]
         predictedLabels = np.argmax(np.sum(viewScores, axis=0), axis=1)
 
         return predictedLabels
 
-    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames,monoviewClassifiersConfigs):
-        configString = "with Weighted linear using a weight for each view : "+", ".join(map(str,self.weights)) + \
+    def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
+        configString = "with Weighted linear using a weight for each view : " + ", ".join(map(str, self.weights)) + \
                        "\n\t-With monoview classifiers : "
-        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs, monoviewClassifiersNames):
+        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs,
+                                                                    monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
             configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
         return configString

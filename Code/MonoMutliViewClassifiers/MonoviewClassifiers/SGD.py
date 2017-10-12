@@ -1,23 +1,21 @@
 from sklearn.linear_model import SGDClassifier
-from sklearn.pipeline import Pipeline                   # Pipelining in classification
+from sklearn.pipeline import Pipeline  # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
 from scipy.stats import uniform
 import numpy as np
 from utils.HyperParameterSearch import genHeatMaps
 
-
-
 # Author-Info
-__author__ 	= "Baptiste Bauvin"
-__status__ 	= "Prototype"                           # Production, Development, Prototype
+__author__ = "Baptiste Bauvin"
+__status__ = "Prototype"  # Production, Development, Prototype
 
 
 def canProbas():
     return True
 
 
-def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
+def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
     loss = kwargs['0']
     penalty = kwargs['1']
     try:
@@ -49,7 +47,8 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1,
+                     metric=["accuracy_score", None], nIter=30):
     pipeline_SGD = Pipeline([('classifier', SGDClassifier())])
     losses = ['log', 'modified_huber']
     penalties = ["l1", "l2", "elasticnet"]
@@ -57,7 +56,7 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nb
     param_SGD = {"classifier__loss": losses, "classifier__penalty": penalties,
                  "classifier__alpha": alphas}
     metricModule = getattr(Metrics, metric[0])
-    if metric[1]!=None:
+    if metric[1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
@@ -80,9 +79,12 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nb
 
 def getConfig(config):
     if type(config) not in [list, dict]:
-        return "\n\t\t- SGDClassifier with loss : "+config.loss+", penalty : "+config.penalty+", alpha : "+str(config.alpha)
+        return "\n\t\t- SGDClassifier with loss : " + config.loss + ", penalty : " + config.penalty + ", alpha : " + str(
+            config.alpha)
     else:
         try:
-            return "\n\t\t- SGDClassifier with loss : "+config[0]+", penalty : "+config[1]+", alpha : "+str(config[2])
+            return "\n\t\t- SGDClassifier with loss : " + config[0] + ", penalty : " + config[1] + ", alpha : " + str(
+                config[2])
         except:
-            return "\n\t\t- SGDClassifier with loss : "+config["0"]+", penalty : "+config["1"]+", alpha : "+str(config["2"])
+            return "\n\t\t- SGDClassifier with loss : " + config["0"] + ", penalty : " + config[
+                "1"] + ", alpha : " + str(config["2"])

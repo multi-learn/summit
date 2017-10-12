@@ -12,6 +12,7 @@ import numpy as np  # for Numpy Arrays
 import matplotlib.pyplot as plt  # for Plots
 from scipy.interpolate import interp1d  # to Interpolate Data
 import matplotlib
+
 matplotlib.use('Agg')
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker  # to generate the Annotations in plot
 from pylab import rcParams  # to change size of plot
@@ -33,7 +34,7 @@ def exportPandasToCSV(pandasSorDF, directory, filename):
     if os.path.isfile(file + ".csv"):
         for i in range(1, 20):
             testFileName = filename + "-" + str(i) + ".csv"
-            if os.path.isfile(directory + testFileName) != True:
+            if not os.path.isfile(directory + testFileName):
                 pandasSorDF.to_csv(directory + testFileName, sep=';')
                 break
 
@@ -48,7 +49,7 @@ def exportNumpyToCSV(numpyArray, directory, filename, format):
     if os.path.isfile(file + ".csv"):
         for i in range(1, 20):
             testFileName = filename + "-" + str(i) + ".csv"
-            if os.path.isfile(directory + testFileName) != True:
+            if not os.path.isfile(directory + testFileName):
                 np.savetxt(directory + testFileName, numpyArray, delimiter=";", fmt=format)
                 break
 
@@ -59,7 +60,8 @@ def exportNumpyToCSV(numpyArray, directory, filename, format):
 #### Rendering of results
 
 ### Rendering of Score and Time
-def showScoreTime(directory, filename, store, resScore, resTime, rangeX, parameter, feat_desc, cl_desc, fig_desc, y_desc1,
+def showScoreTime(directory, filename, store, resScore, resTime, rangeX, parameter, feat_desc, cl_desc, fig_desc,
+                  y_desc1,
                   y_desc2):
     # Determine interpolated functions
     f_score_interp = interp1d(rangeX, resScore, kind='quadratic')
@@ -123,14 +125,14 @@ def showScoreTime(directory, filename, store, resScore, resTime, rangeX, paramet
 
     plt.title(fig_desc, fontsize=18)
 
-    if (store):
+    if store:
         # Makes sure that the file does not yet exist
         file = directory + filename
 
         if os.path.isfile(file + ".png"):
             for i in range(1, 20):
                 testFileName = filename + "-" + str(i) + ".png"
-                if os.path.isfile(directory + testFileName) != True:
+                if not os.path.isfile(directory + testFileName):
                     plt.savefig(directory + testFileName)
                     break
 
@@ -173,7 +175,7 @@ def showResults(directory, filename, db, feat, score):
     if os.path.isfile(file + ".png"):
         for i in range(1, 20):
             testFileName = filename + "-" + str(i) + ".png"
-            if os.path.isfile(directory + testFileName) != True:
+            if not os.path.isfile(directory + testFileName):
                 plt.savefig(directory + testFileName)
                 break
 
@@ -253,7 +255,7 @@ def plot_confusion_matrix(directory, filename, df_confusion, title='Confusion ma
     if os.path.isfile(file + ".png"):
         for i in range(1, 20):
             testFileName = filename + "-" + str(i) + ".png"
-            if os.path.isfile(directory + testFileName) != True:
+            if not os.path.isfile(directory + testFileName):
                 plt.savefig(directory + testFileName)
                 break
 

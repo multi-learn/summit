@@ -10,9 +10,10 @@
 
 
 # Author-Info
-__author__ 	= "Nikolas Huelsmann, Baptiste BAUVIN"
-__status__ 	= "Prototype"           # Production, Development, Prototype
-__date__	= 2016-03-25
+__author__ = "Nikolas Huelsmann, Baptiste BAUVIN"
+__status__ = "Prototype"  # Production, Development, Prototype
+__date__ = 2016 - 03 - 25
+
 
 def testVersions():
     try:
@@ -68,7 +69,7 @@ def testVersions():
         raise
 
     try:
-        import logging                          # To create Log-Files
+        import logging  # To create Log-Files
         # print("Logging: " + logging.__version__)
     except:
         print "Please install logging module"
@@ -89,7 +90,7 @@ def testVersions():
         raise
 
     try:
-        import h5py#
+        import h5py  #
         # print("h5py: " + h5py.__version__)
     except:
         print "Pease install h5py module"

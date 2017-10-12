@@ -1,23 +1,21 @@
 from sklearn.svm import SVC
-from sklearn.pipeline import Pipeline                   # Pipelining in classification
+from sklearn.pipeline import Pipeline  # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
 from scipy.stats import randint
 import numpy as np
 from utils.HyperParameterSearch import genHeatMaps
 
-
-
 # Author-Info
-__author__ 	= "Baptiste Bauvin"
-__status__ 	= "Prototype"                           # Production, Development, Prototype
+__author__ = "Baptiste Bauvin"
+__status__ = "Prototype"  # Production, Development, Prototype
 
 
 def canProbas():
     return True
 
 
-def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1,**kwargs):
+def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
     C = int(kwargs['0'])
     degree = int(kwargs['1'])
     classifier = SVC(C=C, kernel='poly', degree=degree, probability=True, max_iter=1000, random_state=randomState)
@@ -42,12 +40,13 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1,
+                     metric=["accuracy_score", None], nIter=30):
     pipeline_SVMPoly = Pipeline([('classifier', SVC(kernel="poly", max_iter=1000))])
     param_SVMPoly = {"classifier__C": randint(1, 10000),
                      "classifier__degree": randint(1, 30)}
     metricModule = getattr(Metrics, metric[0])
-    if metric[1]!=None:
+    if metric[1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
@@ -68,9 +67,9 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nb
 
 def getConfig(config):
     if type(config) not in [list, dict]:
-        return "\n\t\t- SVM Poly with C : "+str(config.C)+", degree : "+str(config.degree)
+        return "\n\t\t- SVM Poly with C : " + str(config.C) + ", degree : " + str(config.degree)
     else:
         try:
-            return "\n\t\t- SVM Poly with C : "+str(config[0])+", degree : "+str(config[1])
+            return "\n\t\t- SVM Poly with C : " + str(config[0]) + ", degree : " + str(config[1])
         except:
-            return "\n\t\t- SVM Poly with C : "+str(config["0"])+", degree : "+str(config["1"])
+            return "\n\t\t- SVM Poly with C : " + str(config["0"]) + ", degree : " + str(config["1"])

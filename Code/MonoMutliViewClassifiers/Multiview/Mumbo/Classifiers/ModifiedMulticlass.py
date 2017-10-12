@@ -166,7 +166,6 @@ def predict_proba_ovr(estimators, X, is_multilabel):
 
 
 class _ConstantPredictor(BaseEstimator):
-
     def fit(self, X, y):
         self.y_ = y
         return self
@@ -256,9 +255,9 @@ class OneVsRestClassifier(BaseEstimator, ClassifierMixin, MetaEstimatorMixin):
         # n_jobs > 1 in can results in slower performance due to the overhead
         # of spawning threads.  See joblib issue #112.
         self.estimators_ = Parallel(n_jobs=self.n_jobs)(delayed(_fit_binary)(
-                self.estimator, X, column, classes=[
-                    "not %s" % self.label_binarizer_.classes_[i],
-                    self.label_binarizer_.classes_[i]], sample_weight=sample_weight)
+            self.estimator, X, column, classes=[
+                "not %s" % self.label_binarizer_.classes_[i],
+                self.label_binarizer_.classes_[i]], sample_weight=sample_weight)
                                                         for i, column in enumerate(columns))
 
         return self
@@ -349,7 +348,7 @@ class OneVsRestClassifier(BaseEstimator, ClassifierMixin, MetaEstimatorMixin):
         check_is_fitted(self, 'estimators_')
         if not hasattr(self.estimators_[0], "decision_function"):
             raise AttributeError(
-                    "Base estimator doesn't have a decision_function attribute.")
+                "Base estimator doesn't have a decision_function attribute.")
         return np.array([est.decision_function(X).ravel()
                          for est in self.estimators_]).T
 
@@ -367,7 +366,7 @@ class OneVsRestClassifier(BaseEstimator, ClassifierMixin, MetaEstimatorMixin):
         check_is_fitted(self, 'estimators_')
         if not hasattr(self.estimators_[0], "coef_"):
             raise AttributeError(
-                    "Base estimator doesn't have a coef_ attribute.")
+                "Base estimator doesn't have a coef_ attribute.")
         coefs = [e.coef_ for e in self.estimators_]
         if sp.issparse(coefs[0]):
             return sp.vstack(coefs)
@@ -378,7 +377,7 @@ class OneVsRestClassifier(BaseEstimator, ClassifierMixin, MetaEstimatorMixin):
         check_is_fitted(self, 'estimators_')
         if not hasattr(self.estimators_[0], "intercept_"):
             raise AttributeError(
-                    "Base estimator doesn't have an intercept_ attribute.")
+                "Base estimator doesn't have an intercept_ attribute.")
         return np.array([e.intercept_.ravel() for e in self.estimators_])
 
 
@@ -469,9 +468,9 @@ class OneVsOneClassifier(BaseEstimator, ClassifierMixin, MetaEstimatorMixin):
         self.classes_ = np.unique(y)
         n_classes = self.classes_.shape[0]
         self.estimators_ = Parallel(n_jobs=self.n_jobs)(
-                delayed(_fit_ovo_binary)(
-                        self.estimator, X, y, self.classes_[i], self.classes_[j])
-                for i in range(n_classes) for j in range(i + 1, n_classes))
+            delayed(_fit_ovo_binary)(
+                self.estimator, X, y, self.classes_[i], self.classes_[j])
+            for i in range(n_classes) for j in range(i + 1, n_classes))
 
         return self
 
@@ -695,8 +694,8 @@ class OutputCodeClassifier(BaseEstimator, ClassifierMixin, MetaEstimatorMixin):
                       for i in range(X.shape[0])], dtype=np.int)
 
         self.estimators_ = Parallel(n_jobs=self.n_jobs)(
-                delayed(_fit_binary)(self.estimator, X, Y[:, i])
-                for i in range(Y.shape[1]))
+            delayed(_fit_binary)(self.estimator, X, Y[:, i])
+            for i in range(Y.shape[1]))
 
         return self
 
@@ -715,4 +714,3 @@ class OutputCodeClassifier(BaseEstimator, ClassifierMixin, MetaEstimatorMixin):
         Y = np.array([_predict_binary(e, X) for e in self.estimators_]).T
         pred = euclidean_distances(Y, self.code_book_).argmin(axis=1)
         return self.classes_[pred]
-
