@@ -6,6 +6,7 @@ import h5py
 from Multiview import GetMultiviewDb as DB
 from pyscm.binary_attributes.base import BaseBinaryAttributeList
 import os
+from utils.HyperParameterSearch import genHeatMaps
 
 
 # Author-Info
@@ -63,7 +64,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, KFolds=None, metric=["accuracy_score", None], nIter=30, nbCores=1):
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=None, metric=["accuracy_score", None], nIter=30, nbCores=1):
 
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:
@@ -77,10 +78,16 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=None, metric=["accura
         baseScore = 1000.0
         isBetter = "lower"
     config = []
+    maxAttributesArray = []
+    pArray = []
+    modelsArray = []
     for iterIndex in range(nIter):
         max_attributes = randomState.randint(1, 20)
+        maxAttributesArray.append(max_attributes)
         p = randomState.random_sample()
+        pArray.append(p)
         model = randomState.choice(["conjunction", "disjunction"])
+        modelsArray.append(model)
         classifier = pyscm.scm.SetCoveringMachine(p=p, max_attributes=max_attributes, model_type=model, verbose=False)
         scores = []
         kFolds = KFolds.split(X_train, y_train)
@@ -110,6 +117,12 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=None, metric=["accura
             config = [max_attributes, p, model]
 
     assert config!=[], "No good configuration found for SCM"
+    scoresArray = scores
+    params = [("maxAttributes", np.array(maxAttributesArray)),
+              ("p", np.array(pArray)),
+              ("model", np.array(modelsArray))]
+
+    genHeatMaps(params, scoresArray, outputFileName)
     return config
 
 

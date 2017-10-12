@@ -3,6 +3,8 @@ import numpy as np
 import sys
 import Multiview
 import Metrics
+import matplotlib.pyplot as plt
+import itertools
 
 def searchBestSettings(dataset, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=None, searchingTool="hyperParamSearch", nIter=1, **kwargs):
     if viewsIndices is None:
@@ -70,6 +72,39 @@ def randomizedSearch(dataset, classifierName, metrics, learningIndices, KFolds, 
 
 def spearMint(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1, **kwargs):
     pass
+
+
+def genHeatMaps(params, scoresArray, outputFileName):
+    nbParams = len(params)
+    if nbParams > 2:
+        combinations = itertools.combinations(range(nbParams), 2)
+    else:
+        combinations = [(0,1)]
+    for combination in combinations:
+        paramName1, paramArray1 = params[combination[0]]
+        paramName2, paramArray2 = params[combination[1]]
+
+        paramArray1Set = np.sort(np.array(list(set(paramArray1))))
+        paramArray2Set = np.sort(np.array(list(set(paramArray2))))
+
+        scoresMatrix = np.zeros((len(paramArray2Set), len(paramArray1Set)))-0.1
+        for param1, param2, score in zip(paramArray1, paramArray2, scoresArray):
+            param1Index,  = np.where(paramArray1Set == param1)
+            param2Index,  = np.where(paramArray2Set == param2)
+            scoresMatrix[int(param2Index), int(param1Index)] = score
+
+        plt.figure(figsize=(8, 6))
+        plt.subplots_adjust(left=.2, right=0.95, bottom=0.15, top=0.95)
+        plt.imshow(scoresMatrix, interpolation='nearest', cmap=plt.cm.hot,
+                   )
+        plt.xlabel(paramName1)
+        plt.ylabel(paramName2)
+        plt.colorbar()
+        plt.xticks(np.arange(len(paramArray1Set)), paramArray1Set)
+        plt.yticks(np.arange(len(paramArray2Set)), paramArray2Set, rotation=45)
+        plt.title('Validation metric')
+        plt.savefig(outputFileName+"heat_map-"+paramName1+"-"+paramName2+".png")
+        plt.close()
 
 # nohup python ~/dev/git/spearmint/spearmint/main.py . &
 

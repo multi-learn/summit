@@ -54,7 +54,17 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     CL_type = kwargs["CL_type"]
     X = getValue(X)
     learningRate = len(classificationIndices[0])/(len(classificationIndices[0])+len(classificationIndices[1]))
-
+    labelsString = "-".join(labelsNames)
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+    CL_type_string = CL_type
+    outputFileName = directory + "/"+CL_type_string+"/"+"/"+feat+"/"+timestr +"Results-" + CL_type_string + "-" + labelsString + \
+                     '-learnRate' + str(learningRate) + '-' + name + "-" + feat + "-"
+    if not os.path.exists(os.path.dirname(outputFileName)):
+        try:
+            os.makedirs(os.path.dirname(outputFileName))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
     logging.debug("Done:\t Loading data")
     # Determine the Database to extract features
     logging.debug("Info:\t Classification - Database:" + str(name) + " Feature:" + str(feat) + " train ratio:"
@@ -78,7 +88,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     if hyperParamSearch != "None":
         classifierHPSearch = getattr(classifierModule, hyperParamSearch)
         logging.debug("Start:\t RandomSearch best settings with "+str(nIter)+" iterations for "+CL_type)
-        cl_desc = classifierHPSearch(X_train, y_train, randomState, KFolds=KFolds, nbCores=nbCores,
+        cl_desc = classifierHPSearch(X_train, y_train, randomState, outputFileName, KFolds=KFolds, nbCores=nbCores,
                                      metric=metrics[0], nIter=nIter)
         clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
         logging.debug("Done:\t RandomSearch best settings")
@@ -106,17 +116,12 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
     logging.debug("Done:\t Getting Results")
     logging.info(stringAnalysis)
-    labelsString = "-".join(labelsNames)
-    timestr = time.strftime("%Y%m%d-%H%M%S")
-    CL_type_string = CL_type
-    outputFileName = directory + "/"+CL_type_string+"/"+"/"+feat+"/"+timestr +"Results-" + CL_type_string + "-" + labelsString + \
-                     '-learnRate' + str(learningRate) + '-' + name + "-" + feat + "-"
-    if not os.path.exists(os.path.dirname(outputFileName)):
-        try:
-            os.makedirs(os.path.dirname(outputFileName))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
+    # labelsString = "-".join(labelsNames)
+    # timestr = time.strftime("%Y%m%d-%H%M%S")
+    # CL_type_string = CL_type
+    # outputFileName = directory + "/"+CL_type_string+"/"+"/"+feat+"/"+timestr +"Results-" + CL_type_string + "-" + labelsString + \
+    #                  '-learnRate' + str(learningRate) + '-' + name + "-" + feat + "-"
+
 
     outputTextFile = open(outputFileName + '.txt', 'w')
     outputTextFile.write(stringAnalysis)

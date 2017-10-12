@@ -3,6 +3,8 @@ from sklearn.pipeline import Pipeline                   # Pipelining in classifi
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
 from scipy.stats import randint
+import numpy as np
+from utils.HyperParameterSearch import genHeatMaps
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -42,7 +44,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_DT = Pipeline([('classifier', DecisionTreeClassifier())])
     param_DT = {"classifier__max_depth": randint(1, 300),
                 "classifier__criterion": ["gini", "entropy"],
@@ -58,6 +60,13 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=
     DT_detector = grid_DT.fit(X_train, y_train)
     desc_params = [DT_detector.best_params_["classifier__max_depth"], DT_detector.best_params_["classifier__criterion"],
                    DT_detector.best_params_["classifier__splitter"]]
+
+    scoresArray = DT_detector.cv_results_['mean_test_score']
+    params = [("maxDepth", np.array(DT_detector.cv_results_['param_classifier__max_depth'])),
+              ("criterion", np.array(DT_detector.cv_results_['param_classifier__criterion'])),
+              ("splitter", np.array(DT_detector.cv_results_['param_classifier__splitter']))]
+
+    genHeatMaps(params, scoresArray, outputFileName)
     return desc_params
 
 

@@ -3,6 +3,8 @@ from sklearn.pipeline import Pipeline                   # Pipelining in classifi
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
 from scipy.stats import randint
+import numpy as np
+from utils.HyperParameterSearch import genHeatMaps
 
 
 # Author-Info
@@ -47,7 +49,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_KNN = Pipeline([('classifier', KNeighborsClassifier())])
     param_KNN = {"classifier__n_neighbors": randint(1, 50),
                  "classifier__weights": ["uniform", "distance"],
@@ -68,6 +70,15 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=
                    KNN_detector.best_params_["classifier__algorithm"],
                    KNN_detector.best_params_["classifier__p"],
                    ]
+
+    scoresArray = KNN_detector.cv_results_['mean_test_score']
+    params = [("nNeighbors", np.array(KNN_detector.cv_results_['param_classifier__n_neighbors'])),
+              ("weights", np.array(KNN_detector.cv_results_['param_classifier__weights'])),
+              ("algorithm", np.array(KNN_detector.cv_results_['param_classifier__algorithm'])),
+              ("p", np.array(KNN_detector.cv_results_['param_classifier__p']))]
+
+    genHeatMaps(params, scoresArray, outputFileName)
+
     return desc_params
 
 

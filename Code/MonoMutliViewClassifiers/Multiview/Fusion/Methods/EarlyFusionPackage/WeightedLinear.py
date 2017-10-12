@@ -18,7 +18,7 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     return paramsSets
 
 
-def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview):
+def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, classificationIndices):
     argumentsList = []
     if args.FU_E_cl_names != ['']:
         pass

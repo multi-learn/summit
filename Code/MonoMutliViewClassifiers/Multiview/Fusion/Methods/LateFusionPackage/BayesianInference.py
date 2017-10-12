@@ -17,12 +17,12 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     return paramsSets
 
 
-def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview):
+def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, classificationIndices):
     if args.FU_L_cl_names!=['']:
         args.FU_L_select_monoview = "user_defined"
     else:
         monoviewClassifierModulesNames = benchmark["Monoview"]
-        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices)
+        args.FU_L_cl_names = getClassifiers(args.FU_L_select_monoview, monoviewClassifierModulesNames, directory, viewsIndices, resultsMonoview, classificationIndices)
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
                                  for classifierName in args.FU_L_cl_names]
     if args.FU_L_cl_names==[""] and args.CL_type == ["Multiview"]:

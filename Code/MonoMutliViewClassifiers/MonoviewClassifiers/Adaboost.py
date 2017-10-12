@@ -4,6 +4,9 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.tree import DecisionTreeClassifier
 import Metrics
 from scipy.stats import randint
+import numpy as np
+import matplotlib.pyplot as plt
+from utils.HyperParameterSearch import genHeatMaps
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -39,10 +42,10 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, KFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, metric=["accuracy_score", None], nIter=30, nbCores=1):
     pipeline = Pipeline([('classifier', AdaBoostClassifier())])
 
-    param= {"classifier__n_estimators": randint(1, 15),
+    param= {"classifier__n_estimators": randint(1, 150),
             "classifier__base_estimator": [DecisionTreeClassifier()]}
     metricModule = getattr(Metrics, metric[0])
     if metric[1]!=None:
@@ -55,6 +58,36 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, metric=["accuracy_
     detector = grid.fit(X_train, y_train)
     desc_estimators = [detector.best_params_["classifier__n_estimators"],
                        detector.best_params_["classifier__base_estimator"]]
+
+    scoresArray = detector.cv_results_['mean_test_score']
+    params = [("baseEstimators", np.array(["DecisionTree" for _ in range(nIter)])),
+              ("nEstimators", np.array(detector.cv_results_['param_classifier__n_estimators']))]
+
+    genHeatMaps(params, scoresArray, outputFileName)
+
+    # baseEstimatorsSet = np.array(set(baseEstimators))
+    # nEstimatorsSet = np.sort(np.array(list(set(nEstimators))))
+    #
+    # scoresArray = detector.cv_results_['mean_test_score']
+    # scoresMatrix = np.zeros((len(nEstimatorsSet), 1))
+    # for baseEstimator, nEstimator, score in zip(baseEstimators, nEstimators, scoresArray):
+    #     baseEstimatorIndex = 0
+    #     i, = np.where(nEstimatorsSet == nEstimator)
+    #     print i
+    #     nEstimatorIndex,  = np.where(nEstimatorsSet == nEstimator)
+    #     scoresMatrix[int(nEstimatorIndex), baseEstimatorIndex] = score
+    #
+    # plt.figure(figsize=(8, 6))
+    # plt.subplots_adjust(left=.2, right=0.95, bottom=0.15, top=0.95)
+    # plt.imshow(scoresMatrix, interpolation='nearest', cmap=plt.cm.hot,
+    #            )
+    # plt.xlabel('n_estimators')
+    # plt.ylabel('base_estimator')
+    # plt.colorbar()
+    # plt.xticks(np.arange(1), ["DecisionTree"])
+    # plt.yticks(np.arange(len(nEstimatorsSet)), nEstimatorsSet, rotation=45)
+    # plt.title('Validation accuracy')
+    # plt.savefig(outputFileName+"heat_map.png")
     return desc_estimators
 
 

@@ -78,6 +78,7 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory):
         ax.set_xticklabels(names, rotation="vertical")
 
         f.savefig(directory+time.strftime("%Y%m%d-%H%M%S")+"-"+name+"-"+metric[0]+".png")
+        plt.close()
 
 
 def analyzeLabels(labelsArrays, realLabels, results, directory):
@@ -104,6 +105,7 @@ def analyzeLabels(labelsArrays, realLabels, results, directory):
     cbar = fig.colorbar(cax, ticks=[0, 1])
     cbar.ax.set_yticklabels(['Wrong', ' Right'])
     fig.savefig(directory+time.strftime("%Y%m%d-%H%M%S")+"-error_analysis.png")
+    plt.close()
 
 
 def genScoresNames(iterResults, metric, nbResults, names, nbMono):
@@ -154,7 +156,6 @@ def genScoresNames(iterResults, metric, nbResults, names, nbMono):
 def analyzeIterResults(iterResults, name, metrics, directory):
     nbResults = len(iterResults[0][0])+len(iterResults[0][1])
     nbMono = len(iterResults[0][0])
-    nbMulti = len(iterResults[0][1])
     nbIter = len(iterResults)
     names = genNamesFromRes(iterResults[0][0], iterResults[0][1])
     for metric in metrics:

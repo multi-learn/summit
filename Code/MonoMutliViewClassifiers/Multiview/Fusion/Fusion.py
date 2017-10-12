@@ -67,7 +67,7 @@ def getBenchmark(benchmark, args=None):
     return benchmark
 
 
-def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview):
+def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview, classificationIndices):
     if not "Monoview" in benchmark and not args.FU_L_select_monoview in ["randomClf", "Determined"]:
         args.FU_L_select_monoview = "randomClf"
     argumentsList = []
@@ -75,7 +75,7 @@ def getArgs(args, benchmark, views, viewsIndices, randomState, directory, result
         fusionTypePackage = getattr(Methods, fusionType+"Package")
         for fusionMethod in benchmark["Multiview"]["Fusion"]["Methods"][fusionType]:
             fusionMethodModule = getattr(fusionTypePackage, fusionMethod)
-            arguments = fusionMethodModule.getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview)
+            arguments = fusionMethodModule.getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, classificationIndices)
             argumentsList+= arguments
     return argumentsList
 

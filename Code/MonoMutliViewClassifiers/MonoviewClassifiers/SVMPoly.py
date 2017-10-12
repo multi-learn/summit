@@ -3,6 +3,8 @@ from sklearn.pipeline import Pipeline                   # Pipelining in classifi
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
 from scipy.stats import randint
+import numpy as np
+from utils.HyperParameterSearch import genHeatMaps
 
 
 
@@ -40,7 +42,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SVMPoly = Pipeline([('classifier', SVC(kernel="poly", max_iter=1000))])
     param_SVMPoly = {"classifier__C": randint(1, 10000),
                      "classifier__degree": randint(1, 30)}
@@ -52,8 +54,15 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=
     scorer = metricModule.get_scorer(**metricKWARGS)
     grid_SVMPoly = RandomizedSearchCV(pipeline_SVMPoly, n_iter=nIter, param_distributions=param_SVMPoly, refit=True,
                                       n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
-    SVMRBF_detector = grid_SVMPoly.fit(X_train, y_train)
-    desc_params = [SVMRBF_detector.best_params_["classifier__C"], SVMRBF_detector.best_params_["classifier__degree"]]
+    SVMPoly_detector = grid_SVMPoly.fit(X_train, y_train)
+    desc_params = [SVMPoly_detector.best_params_["classifier__C"], SVMPoly_detector.best_params_["classifier__degree"]]
+
+    scoresArray = SVMPoly_detector.cv_results_['mean_test_score']
+    params = [("c", np.array(SVMPoly_detector.cv_results_['param_classifier__C'])),
+              ("degree", np.array(SVMPoly_detector.cv_results_['param_classifier__degree']))]
+
+    genHeatMaps(params, scoresArray, outputFileName)
+
     return desc_params
 
 

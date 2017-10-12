@@ -3,6 +3,8 @@ from sklearn.pipeline import Pipeline                   # Pipelining in classifi
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
 from scipy.stats import uniform
+import numpy as np
+from utils.HyperParameterSearch import genHeatMaps
 
 
 
@@ -47,7 +49,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_SGD = Pipeline([('classifier', SGDClassifier())])
     losses = ['log', 'modified_huber']
     penalties = ["l1", "l2", "elasticnet"]
@@ -65,6 +67,14 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=
     SGD_detector = grid_SGD.fit(X_train, y_train)
     desc_params = [SGD_detector.best_params_["classifier__loss"], SGD_detector.best_params_["classifier__penalty"],
                    SGD_detector.best_params_["classifier__alpha"]]
+
+    scoresArray = SGD_detector.cv_results_['mean_test_score']
+    params = [("loss", np.array(SGD_detector.cv_results_['param_classifier__loss'])),
+              ("penalty", np.array(SGD_detector.cv_results_['param_classifier__penalty'])),
+              ("aplha", np.array(SGD_detector.cv_results_['param_classifier__alpha']))]
+
+    genHeatMaps(params, scoresArray, outputFileName)
+
     return desc_params
 
 

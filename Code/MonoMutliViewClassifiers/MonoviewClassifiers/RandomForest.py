@@ -3,6 +3,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import RandomizedSearchCV
 import Metrics
 from scipy.stats import randint
+import numpy as np
+from utils.HyperParameterSearch import genHeatMaps
 
 # Author-Info
 __author__ 	= "Baptiste Bauvin"
@@ -43,7 +45,7 @@ def getKWARGS(kwargsList):
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
+def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1, metric=["accuracy_score", None], nIter=30):
     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
     param_rf = {"classifier__n_estimators": randint(1, 300),
                 "classifier__max_depth": randint(1, 300),
@@ -61,6 +63,13 @@ def randomizedSearch(X_train, y_train, randomState, KFolds=4, nbCores=1, metric=
     desc_estimators = [rf_detector.best_params_["classifier__n_estimators"],
                        rf_detector.best_params_["classifier__max_depth"],
                        rf_detector.best_params_["classifier__criterion"]]
+
+    scoresArray = rf_detector.cv_results_['mean_test_score']
+    params = [("nEstimators", np.array(rf_detector.cv_results_['param_classifier__n_estimators'])),
+              ("maxDepth", np.array(rf_detector.cv_results_['param_classifier__max_depth'])),
+              ("criterion", np.array(rf_detector.cv_results_['param_classifier__criterion']))]
+
+    genHeatMaps(params, scoresArray, outputFileName)
     return desc_estimators
 
 
