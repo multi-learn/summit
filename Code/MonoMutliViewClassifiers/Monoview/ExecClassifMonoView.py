@@ -7,22 +7,17 @@ import argparse  # for command line arguments
 import datetime  # for TimeStamp in CSVFile
 import os  # to geth path of the running script
 import time  # for time calculations
-import operator
 import errno
 
 # Import 3rd party modules
 import numpy as np  # for reading CSV-files and Series
 import logging  # To create Log-Files
-from sklearn import metrics  # For stastics on classification
 import h5py
 
 # Import own modules
-import MonoviewUtils  # Functions for classification
-import ExportResults  # Functions to render results
 import MonoviewClassifiers
-import Metrics
 from analyzeResult import execute
-from utils.Dataset import getV, getValue, extractSubset
+from ..utils.Dataset import getValue, extractSubset
 
 # Author-Info
 __author__ = "Nikolas Huelsmann, Baptiste BAUVIN"
