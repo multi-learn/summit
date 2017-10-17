@@ -1,5 +1,10 @@
 from scipy import sparse
 import numpy as np
+import Multiview.GetMultiviewDb as DB
+import logging
+import os
+import sys
+import select
 
 
 def getV(DATASET, viewIndex, usedIndices=None):
@@ -59,3 +64,46 @@ def extractSubset(matrix, usedIndices):
         return sparse.csr_matrix((newData, newIndices, newIndptr), shape=(len(usedIndices), matrix.shape[1]))
     else:
         return matrix[usedIndices]
+
+
+def initMultipleDatasets(args, nbCores):
+    """Used to create copies of the dataset if multicore computation is used
+    Needs arg.pathF and arg.name"""
+    if nbCores > 1:
+        if DB.datasetsAlreadyExist(args.pathF, args.name, nbCores):
+            logging.debug("Info:\t Enough copies of the dataset are already available")
+            pass
+        else:
+            logging.debug("Start:\t Creating " + str(nbCores) + " temporary datasets for multiprocessing")
+            logging.warning(" WARNING : /!\ This may use a lot of HDD storage space : " +
+                            str(os.path.getsize(args.pathF + args.name + ".hdf5") * nbCores / float(
+                                1024) / 1000 / 1000) + " Gbytes /!\ ")
+            confirmation = confirm()
+            if not confirmation:
+                sys.exit(0)
+            else:
+                datasetFiles = DB.copyHDF5(args.pathF, args.name, nbCores)
+                logging.debug("Start:\t Creating datasets for multiprocessing")
+                return datasetFiles
+
+
+def confirm(resp=True, timeout=15):
+    ans = input_(timeout)
+    if not ans:
+        return resp
+    if ans not in ['y', 'Y', 'n', 'N']:
+        print 'please enter y or n.'
+    if ans == 'y' or ans == 'Y':
+        return True
+    if ans == 'n' or ans == 'N':
+        return False
+
+
+def input_(timeout=15):
+    print "You have " + str(timeout) + " seconds to stop the script by typing n"
+    i, o, e = select.select([sys.stdin], [], [], timeout)
+    if i:
+        return sys.stdin.readline().strip()
+    else:
+        return "y"
+
