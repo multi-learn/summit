@@ -1,10 +1,11 @@
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline  # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
-import Metrics
 from scipy.stats import randint
 import numpy as np
-from utils.HyperParameterSearch import genHeatMaps
+
+from .. import Metrics
+from ..utils.HyperParameterSearch import genHeatMaps
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

@@ -1,9 +1,10 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import RandomizedSearchCV
-from .. import Metrics
 from scipy.stats import randint
 import numpy as np
+
+from .. import Metrics
 from ..utils.HyperParameterSearch import genHeatMaps
 
 # Author-Info

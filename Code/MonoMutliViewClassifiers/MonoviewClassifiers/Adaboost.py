@@ -2,11 +2,11 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.tree import DecisionTreeClassifier
-import Metrics
 from scipy.stats import randint
 import numpy as np
-import matplotlib.pyplot as plt
-from utils.HyperParameterSearch import genHeatMaps
+
+from .. import Metrics
+from ..utils.HyperParameterSearch import genHeatMaps
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

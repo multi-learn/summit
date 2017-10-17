@@ -1,12 +1,13 @@
-import Metrics
 from pyscm.utils import _pack_binary_bytes_to_ints
 import pyscm
-from utils.Dataset import getShape
 import h5py
-from Multiview import GetMultiviewDb as DB
-from pyscm.binary_attributes.base import BaseBinaryAttributeList
+# from pyscm.binary_attributes.base import BaseBinaryAttributeList
 import os
-from utils.HyperParameterSearch import genHeatMaps
+
+# from ..Multiview import GetMultiviewDb as DB
+# from ..utils.Dataset import getShape
+from .. import Metrics
+from ..utils.HyperParameterSearch import genHeatMaps
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

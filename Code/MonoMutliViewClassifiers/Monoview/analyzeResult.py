@@ -1,8 +1,8 @@
 from datetime import timedelta as hms
 import numpy as np
 
-import MonoviewClassifiers
-import Metrics
+from .. import MonoviewClassifiers
+from .. import Metrics
 
 
 def getDBConfigString(name, feat, classificationIndices, shape, classLabelsNames, KFolds):
