@@ -537,13 +537,17 @@ groupSCM.add_argument('--CL_SCM_model_type', metavar='STRING', action='store',
 groupMumbo = parser.add_argument_group('Mumbo arguments')
 groupMumbo.add_argument('--MU_types', metavar='STRING', action='store', nargs="+",
                         help='Determine which monoview classifier to use with Mumbo',
-                        default=['DecisionTree', 'DecisionTree', 'DecisionTree'])
+                        default=[''])
 groupMumbo.add_argument('--MU_config', metavar='STRING', action='store', nargs='+',
-                        help='Configuration for the monoview classifier in Mumbo',
-                        default=['2:0.5', '2:0.5', '2:0.5'])
+                        help='Configuration for the monoview classifier in Mumbo separate each classifier with sapce and each argument with:',
+                        default=[''])
 groupMumbo.add_argument('--MU_iter', metavar='INT', action='store', nargs=3,
                         help='Max number of iteration, min number of iteration, convergence threshold', type=float,
                         default=[10, 1, 0.01])
+groupMumbo.add_argument('--MU_combination', action='store_true',
+                        help='Try all the monoview classifiers combinations for each view',
+                        default=False)
+
 
 groupFusion = parser.add_argument_group('Fusion arguments')
 groupFusion.add_argument('--FU_types', metavar='STRING', action='store', nargs="+",
@@ -670,6 +674,15 @@ if statsIter > 1:
     else:
         iterResults = []
         for iterIndex in range(statsIter):
+            if not os.path.exists(os.path.dirname(directories[iterIndex] + "train_labels.csv")):
+                try:
+                    os.makedirs(os.path.dirname(directories[iterIndex] + "train_labels.csv"))
+                except OSError as exc:
+                    if exc.errno != errno.EEXIST:
+                        raise
+            trainIndices, testIndices = classificationIndices[iterIndex]
+            trainLabels = DATASET.get("Labels").value[trainIndices]
+            np.savetxt(directories[iterIndex] + "train_labels.csv", trainLabels, delimiter=",")
             iterResults.append(
                 classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories[iterIndex], args,
                                 classificationIndices[iterIndex], kFolds[iterIndex], statsIterRandomStates[iterIndex],
@@ -678,6 +691,15 @@ if statsIter > 1:
     analyzeIterResults(iterResults, args.name, metrics, directory)
 
 else:
+    if not os.path.exists(os.path.dirname(directories + "train_labels.csv")):
+        try:
+            os.makedirs(os.path.dirname(directories + "train_labels.csv"))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+    trainIndices, testIndices = classificationIndices
+    trainLabels = DATASET.get("Labels").value[trainIndices]
+    np.savetxt(directories + "train_labels.csv", trainLabels, delimiter=",")
     res = classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories, args, classificationIndices,
                           kFolds,
                           statsIterRandomStates, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,

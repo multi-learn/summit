@@ -130,7 +130,7 @@ def getReport(classifier, CLASS_LABELS, classificationIndices, DATASET, trainLab
     testScore = metricModule.score(CLASS_LABELS[validationIndices], testLabels)
     mumboClassifier = classifier
     maxIter = mumboClassifier.iterIndex
-    meanAverageAccuracies = np.mean(mumboClassifier.averageAccuracies, axis=0)
+    meanAverageAccuracies = np.mean(mumboClassifier.averageScores, axis=0)
     viewsStats = np.array([float(list(mumboClassifier.bestViews).count(viewIndex)) /
                            len(mumboClassifier.bestViews) for viewIndex in range(nbView)])
     PredictedTrainLabelsByIter = mumboClassifier.classifyMumbobyIter_hdf5(DATASET, fakeViewsIndicesDict,
@@ -230,41 +230,46 @@ def execute(classifier, trainLabels,
             hyperParamSearch, nIter, metrics,
             viewsIndices, randomState):
     learningIndices, validationIndices = classificationIndices
-    LEARNING_RATE = len(learningIndices) / (len(learningIndices) + len(validationIndices))
-    nbFolds = KFolds.n_splits
+    if classifier.classifiersConfigs is None:
+        metricsScores = getMetricsScores(metrics, trainLabels, testLabels,
+                                         DATASET, validationIndices, learningIndices)
+        return "No good setting for monoview classifier", None, metricsScores
+    else:
+        LEARNING_RATE = len(learningIndices) / (len(learningIndices) + len(validationIndices))
+        nbFolds = KFolds.n_splits
 
-    CLASS_LABELS = DATASET.get("Labels")[...]
+        CLASS_LABELS = DATASET.get("Labels")[...]
 
-    dbConfigurationString, viewNames = getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices,
-                                                   LABELS_DICTIONARY)
-    algoConfigurationString, classifierAnalysis = getAlgoConfig(classifier, classificationKWARGS, nbCores, viewNames,
-                                                                hyperParamSearch, nIter, times)
+        dbConfigurationString, viewNames = getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices,
+                                                       LABELS_DICTIONARY)
+        algoConfigurationString, classifierAnalysis = getAlgoConfig(classifier, classificationKWARGS, nbCores, viewNames,
+                                                                    hyperParamSearch, nIter, times)
 
-    (totalScoreOnTrain, totalScoreOnTest, meanAverageAccuracies, viewsStats, scoresOnTainByIter,
-     scoresOnTestByIter) = getReport(classifier, CLASS_LABELS, classificationIndices, DATASET,
-                                     trainLabels, testLabels, viewsIndices, metrics[0])
+        (totalScoreOnTrain, totalScoreOnTest, meanAverageAccuracies, viewsStats, scoresOnTainByIter,
+         scoresOnTestByIter) = getReport(classifier, CLASS_LABELS, classificationIndices, DATASET,
+                                         trainLabels, testLabels, viewsIndices, metrics[0])
 
-    stringAnalysis = "\t\tResult for Multiview classification with Mumbo with random state : " + str(randomState) + \
-                     "\n\nAverage " + metrics[0][0] + " :\n\t-On Train : " + str(
-        totalScoreOnTrain) + "\n\t-On Test : " + \
-                     str(totalScoreOnTest)
-    stringAnalysis += dbConfigurationString
-    stringAnalysis += algoConfigurationString
-    metricsScores = getMetricsScores(metrics, trainLabels, testLabels,
-                                     DATASET, validationIndices, learningIndices)
-    stringAnalysis += printMetricScore(metricsScores, metrics)
-    stringAnalysis += "Mean average scores and stats :"
-    for viewIndex, (meanAverageAccuracy, bestViewStat) in enumerate(zip(meanAverageAccuracies, viewsStats)):
-        stringAnalysis += "\n\t- On " + viewNames[viewIndex] + \
-                          " : \n\t\t- Mean average Accuracy : " + str(meanAverageAccuracy) + \
-                          "\n\t\t- Percentage of time chosen : " + str(bestViewStat)
-    stringAnalysis += "\n\n For each iteration : "
-    for iterIndex in range(len(scoresOnTainByIter)):
-        stringAnalysis += "\n\t- Iteration " + str(iterIndex + 1)
-        stringAnalysis += "\n\t\tScore on train : " + \
-                          str(scoresOnTainByIter[iterIndex]) + '\n\t\tScore on test : ' + \
-                          str(scoresOnTestByIter[iterIndex])
+        stringAnalysis = "\t\tResult for Multiview classification with Mumbo with random state : " + str(randomState) + \
+                         "\n\nAverage " + metrics[0][0] + " :\n\t-On Train : " + str(
+            totalScoreOnTrain) + "\n\t-On Test : " + \
+                         str(totalScoreOnTest)
+        stringAnalysis += dbConfigurationString
+        stringAnalysis += algoConfigurationString
+        metricsScores = getMetricsScores(metrics, trainLabels, testLabels,
+                                         DATASET, validationIndices, learningIndices)
+        stringAnalysis += printMetricScore(metricsScores, metrics)
+        stringAnalysis += "Mean average scores and stats :"
+        for viewIndex, (meanAverageAccuracy, bestViewStat) in enumerate(zip(meanAverageAccuracies, viewsStats)):
+            stringAnalysis += "\n\t- On " + viewNames[viewIndex] + \
+                              " : \n\t\t- Mean average Accuracy : " + str(meanAverageAccuracy) + \
+                              "\n\t\t- Percentage of time chosen : " + str(bestViewStat)
+        stringAnalysis += "\n\n For each iteration : "
+        for iterIndex in range(len(scoresOnTainByIter)):
+            stringAnalysis += "\n\t- Iteration " + str(iterIndex + 1)
+            stringAnalysis += "\n\t\tScore on train : " + \
+                              str(scoresOnTainByIter[iterIndex]) + '\n\t\tScore on test : ' + \
+                              str(scoresOnTestByIter[iterIndex])
 
-    name, image = plotAccuracyByIter(scoresOnTainByIter, scoresOnTestByIter, views, classifierAnalysis)
-    imagesAnalysis = {name: image}
-    return stringAnalysis, imagesAnalysis, metricsScores
+        name, image = plotAccuracyByIter(scoresOnTainByIter, scoresOnTestByIter, views, classifierAnalysis)
+        imagesAnalysis = {name: image}
+        return stringAnalysis, imagesAnalysis, metricsScores

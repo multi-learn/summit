@@ -66,7 +66,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     else:
         classifier = classifierClass(randomState, NB_CORES=nbCores, **classificationKWARGS)
 
-    classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices)
+    classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices, metric=metrics[0])
     trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
     testLabels = classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices)
     fullLabels = classifier.predict_hdf5(DATASET, viewsIndices=viewsIndices)

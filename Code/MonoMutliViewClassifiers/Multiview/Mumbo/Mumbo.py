@@ -4,6 +4,7 @@ from joblib import Parallel, delayed
 import itertools
 from Classifiers import *
 import time
+import Classifiers
 import pkgutil
 import logging
 from sklearn.metrics import accuracy_score
@@ -29,19 +30,59 @@ def getBenchmark(benchmark, args=None):
 
 def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview, classificationIndices):
     argumentsList = []
-
-    arguments = {"CL_type": "Mumbo",
-                 "views": views,
-                 "NB_VIEW": len(views),
-                 "viewsIndices": viewsIndices,
-                 "NB_CLASS": len(args.CL_classes),
-                 "LABELS_NAMES": args.CL_classes,
-                 "MumboKWARGS": {"classifiersNames": args.MU_types,
-                                 "maxIter": int(args.MU_iter[0]), "minIter": int(args.MU_iter[1]),
-                                 "threshold": args.MU_iter[2],
-                                 "classifiersConfigs": [map(float, argument.split(":")) for argument in
-                                                        args.MU_config], "nbView": (len(viewsIndices))}}
-    argumentsList.append(arguments)
+    nbViews = len(views)
+    if args.MU_combination and args.MU_types != [""]:
+        classifiersCombinations = itertools.combinations_with_replacement(args.MU_types, nbViews)
+        for classifierCombination in classifiersCombinations:
+            arguments = {"CL_type": "Mumbo",
+                         "views": views,
+                         "NB_VIEW": len(views),
+                         "viewsIndices": viewsIndices,
+                         "NB_CLASS": len(args.CL_classes),
+                         "LABELS_NAMES": args.CL_classes,
+                         "MumboKWARGS": {"classifiersNames": classifierCombination,
+                                         "maxIter": int(args.MU_iter[0]), "minIter": int(args.MU_iter[1]),
+                                         "threshold": args.MU_iter[2],
+                                         "classifiersConfigs": [],
+                                         "nbView": (len(viewsIndices))}}
+            argumentsList.append(arguments)
+    else:
+        if len(args.MU_types) == nbViews:
+            pass
+        elif len(args.MU_types) < nbViews and args.MU_types != ['']:
+            while len(args.MU_types) < nbViews:
+                args.MU_types.append(args.MU_types[0])
+        elif len(args.MU_types) > nbViews:
+            args.MU_types = args.MU_types[:nbViews]
+        else:
+            args.MU_types = ["DecisionTree" for _ in views]
+        classifiersModules = [getattr(Classifiers, classifierName) for classifierName in args.MU_types]
+        if args.MU_config != [""]:
+            arguments = {"CL_type": "Mumbo",
+                         "views": views,
+                         "NB_VIEW": len(views),
+                         "viewsIndices": viewsIndices,
+                         "NB_CLASS": len(args.CL_classes),
+                         "LABELS_NAMES": args.CL_classes,
+                         "MumboKWARGS": {"classifiersNames": args.MU_types,
+                                         "maxIter": int(args.MU_iter[0]), "minIter": int(args.MU_iter[1]),
+                                         "threshold": args.MU_iter[2],
+                                         "classifiersConfigs": [classifierModule.getKWARGS(argument.split(":"), randomState) for argument, classifierModule in
+                                                                zip(args.MU_config, classifiersModules)],
+                                         "nbView": (len(viewsIndices))}}
+        else:
+            arguments = {"CL_type": "Mumbo",
+                         "views": views,
+                         "NB_VIEW": len(views),
+                         "viewsIndices": viewsIndices,
+                         "NB_CLASS": len(args.CL_classes),
+                         "LABELS_NAMES": args.CL_classes,
+                         "MumboKWARGS": {"classifiersNames": args.MU_types,
+                                         "maxIter": int(args.MU_iter[0]), "minIter": int(args.MU_iter[1]),
+                                         "threshold": args.MU_iter[2],
+                                         "classifiersConfigs": [],
+                                         "nbView": (len(viewsIndices))}}
+        argumentsList.append(arguments)
     return argumentsList
 
 
@@ -56,28 +97,25 @@ def computeWeights(DATASET_LENGTH, iterIndex, viewIndice, CLASS_LABELS, costMatr
                         for exampleIndice in range(DATASET_LENGTH)])
     return weights
 
+#
+# def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS,
+#                         DATASET_LENGTH, viewIndice, classifier_config, iterIndex, costMatrices):
+#     weights = computeWeights(DATASET_LENGTH, iterIndex, viewIndice, CLASS_LABELS, costMatrices)
+#     classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
+#     classifierMethod = getattr(classifierModule, classifierName)
+#     classifier, classes, isBad, averageAccuracy = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config,
+#                                                                    weights)
+#     logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(averageAccuracy))
+#     return classifier, classes, isBad, averageAccuracy
 
-def trainWeakClassifier(classifierName, monoviewDataset, CLASS_LABELS,
-                        DATASET_LENGTH, viewIndice, classifier_config, iterIndex, costMatrices):
-    weights = computeWeights(DATASET_LENGTH, iterIndex, viewIndice, CLASS_LABELS, costMatrices)
-    classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
-    classifierMethod = getattr(classifierModule, classifierName)
-    classifier, classes, isBad, averageAccuracy = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config,
-                                                                   weights)
-    logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(averageAccuracy))
-    return classifier, classes, isBad, averageAccuracy
 
-
-def trainWeakClassifier_hdf5(classifierName, monoviewDataset, CLASS_LABELS, DATASET_LENGTH,
+def trainWeakClassifier_hdf5(classifier, classifierName, monoviewDataset, CLASS_LABELS, DATASET_LENGTH,
                              viewIndice, classifier_config, viewName, iterIndex, costMatrices, classifierIndex,
-                             randomState):
+                             randomState, metric):
     weights = computeWeights(DATASET_LENGTH, iterIndex, classifierIndex, CLASS_LABELS, costMatrices)
-    classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
-    classifierMethod = getattr(classifierModule, classifierName)
-    classifier, classes, isBad, averageAccuracy = classifierMethod(monoviewDataset, CLASS_LABELS, classifier_config,
-                                                                   weights, randomState)
-    logging.debug("\t\t\tView " + str(viewIndice) + " : " + str(averageAccuracy))
-    return classifier, classes, isBad, averageAccuracy
+    classifier, classes, isBad, averageScore = classifier.fit_hdf5(monoviewDataset, CLASS_LABELS, weights, metric)
+    logging.debug("\t\t\t"+viewName + " : " + str(averageScore))
+    return classifier, classes, isBad, averageScore
 
 
 def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices, randomState, metric=None, nIter=None):
@@ -92,7 +130,10 @@ def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices,
                                                  DATASET.get("Labels").value[learningIndices], randomState,
                                                  metric=metric))
         logging.debug("\tDone:\t Gridsearch for " + classifierName)
-    return bestSettings, None
+    if None in bestSettings:
+        return None, None
+    else:
+        return bestSettings, None
 
 
 def getCLString(classificationKWARGS):
@@ -104,6 +145,13 @@ class Mumbo:
         self.maxIter = kwargs["maxIter"]
         self.minIter = kwargs["minIter"]
         self.threshold = kwargs["threshold"]
+        classifiersClasses = []
+        for classifierName in kwargs["classifiersNames"]:
+            classifierModule = getattr(Classifiers, classifierName)
+            classifiersClasses.append(getattr(classifierModule, classifierName))
+        self.monoviewClassifiers = [classifierClass(**classifierConfig)
+                                    for classifierClass, classifierConfig
+                                    in zip(classifiersClasses, kwargs["classifiersConfigs"])]
         self.classifiersNames = kwargs["classifiersNames"]
         self.classifiersConfigs = kwargs["classifiersConfigs"]
         nbView = kwargs["nbView"]
@@ -114,17 +162,17 @@ class Mumbo:
         self.generalAlphas = np.zeros(self.maxIter)
         self.bestClassifiers = []
         self.bestViews = np.zeros(self.maxIter, dtype=int) - 1
-        self.averageAccuracies = np.zeros((self.maxIter, nbView))
+        self.averageScores = np.zeros((self.maxIter, nbView))
         self.iterAccuracies = np.zeros(self.maxIter)
         self.randomState = randomState
 
-    def initDataDependant(self, datasetLength, nbView, nbClass, labels):
+    def initDataDependant(self, trainLength, nbView, nbClass, labels):
         self.edges = np.zeros((self.maxIter, nbView))
         self.alphas = np.zeros((self.maxIter, nbView))
         self.generalAlphas = np.zeros(self.maxIter)
         self.bestClassifiers = []
         self.bestViews = np.zeros(self.maxIter, dtype=int) - 1
-        self.averageAccuracies = np.zeros((self.maxIter, nbView))
+        self.averageScores = np.zeros((self.maxIter, nbView))
         self.costMatrices = np.array([
                                          np.array([
                                                       np.array([
@@ -132,10 +180,10 @@ class Mumbo:
                                                                              else -(nbClass - 1)
                                                                              for classe in range(nbClass)
                                                                              ]) for exampleIndice in
-                                                                   range(datasetLength)
-                                                                   ]) for viewIndice in range(nbView)])
+                                                                   range(trainLength)
+                                                                   ]) for _ in range(nbView)])
                                          if iteration == 0
-                                         else np.zeros((nbView, datasetLength, nbClass))
+                                         else np.zeros((nbView, trainLength, nbClass))
                                          for iteration in range(self.maxIter + 1)
                                          ])
         self.generalCostMatrix = np.array([
@@ -143,71 +191,76 @@ class Mumbo:
                                                            np.array([1 if labels[exampleIndice] != classe
                                                                      else -(nbClass - 1)
                                                                      for classe in range(nbClass)
-                                                                     ]) for exampleIndice in range(datasetLength)
-                                                           ]) for iteration in range(self.maxIter)
+                                                                     ]) for exampleIndice in range(trainLength)
+                                                           ]) for _ in range(self.maxIter)
                                               ])
-        self.fs = np.zeros((self.maxIter, nbView, datasetLength, nbClass))
-        self.ds = np.zeros((self.maxIter, nbView, datasetLength))
-        self.predictions = np.zeros((self.maxIter, nbView, datasetLength))
-        self.generalFs = np.zeros((self.maxIter, datasetLength, nbClass))
+        self.fs = np.zeros((self.maxIter, nbView, trainLength, nbClass))
+        self.ds = np.zeros((self.maxIter, nbView, trainLength))
+        self.predictions = np.zeros((self.maxIter, nbView, trainLength))
+        self.generalFs = np.zeros((self.maxIter, trainLength, nbClass))
 
-    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
+    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None, metric=["f1_score", None]):
 
         # Initialization
-        if trainIndices is None:
-            trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if type(viewsIndices) == type(None):
-            viewsIndices = range(DATASET.get("Metadata").attrs["nbView"])
-        NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
-        NB_VIEW = len(viewsIndices)
-        DATASET_LENGTH = len(trainIndices)
-        LABELS = DATASET.get("Labels").value[trainIndices]
-        self.initDataDependant(DATASET_LENGTH, NB_VIEW, NB_CLASS, LABELS)
-        # Learning
-        isStabilized = False
-        self.iterIndex = 0
-        while not isStabilized and not self.iterIndex >= self.maxIter - 1:
-            if self.iterIndex > self.minIter:
-                coeffs = np.polyfit(np.log(np.arange(self.iterIndex) + 0.00001), self.iterAccuracies[:self.iterIndex],
-                                    1)
-                if coeffs[0] / self.iterIndex < self.threshold:
-                    isStabilized = True
-
-            logging.debug('\t\tStart:\t Iteration ' + str(self.iterIndex + 1))
-            classifiers, predictedLabels, areBad = self.trainWeakClassifiers_hdf5(DATASET, trainIndices, NB_CLASS,
-                                                                                  DATASET_LENGTH, viewsIndices)
-            if areBad.all():
-                logging.warning("\t\tWARNING:\tAll bad for iteration " + str(self.iterIndex))
-
-            self.predictions[self.iterIndex] = predictedLabels
-
-            for viewFakeIndex in range(NB_VIEW):
-                self.computeEdge(viewFakeIndex, DATASET_LENGTH, LABELS)
-                if areBad[viewFakeIndex]:
-                    self.alphas[self.iterIndex, viewFakeIndex] = 0.
+        if self.classifiersConfigs is None:
+            pass
+        else:
+            if trainIndices is None:
+                trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
+            if type(viewsIndices) == type(None):
+                viewsIndices = range(DATASET.get("Metadata").attrs["nbView"])
+            NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+            NB_VIEW = len(viewsIndices)
+            trainLength = len(trainIndices)
+            LABELS = DATASET.get("Labels").value[trainIndices]
+            self.initDataDependant(trainLength, NB_VIEW, NB_CLASS, LABELS)
+            # Learning
+            isStabilized = False
+            self.iterIndex = 0
+            while not isStabilized and not self.iterIndex >= self.maxIter - 1:
+                if self.iterIndex > self.minIter:
+                    coeffs = np.polyfit(np.log(np.arange(self.iterIndex) + 0.00001), self.iterAccuracies[:self.iterIndex],
+                                        1)
+                    if abs(coeffs[0]) / self.iterIndex < self.threshold:
+                        isStabilized = True
                 else:
-                    self.alphas[self.iterIndex, viewFakeIndex] = self.computeAlpha(
-                        self.edges[self.iterIndex, viewFakeIndex])
+                    pass
 
-            self.updateDs(LABELS, NB_VIEW, DATASET_LENGTH)
-            self.updateFs(NB_VIEW, DATASET_LENGTH, NB_CLASS)
+                logging.debug('\t\tStart:\t Iteration ' + str(self.iterIndex + 1))
+                classifiers, predictedLabels, areBad = self.trainWeakClassifiers_hdf5(DATASET, trainIndices, NB_CLASS,
+                                                                                      trainLength, viewsIndices, metric)
+                if areBad.all():
+                    logging.warning("\t\tWARNING:\tAll bad for iteration " + str(self.iterIndex))
 
-            self.updateCostmatrices(NB_VIEW, DATASET_LENGTH, NB_CLASS, LABELS)
-            bestView, edge, bestFakeView = self.chooseView(viewsIndices, LABELS, DATASET_LENGTH)
-            self.bestViews[self.iterIndex] = bestView
-            logging.debug("\t\t\t Best view : \t\t" + DATASET.get("View" + str(bestView)).attrs["name"])
-            if areBad.all():
-                self.generalAlphas[self.iterIndex] = 0.
-            else:
-                self.generalAlphas[self.iterIndex] = self.computeAlpha(edge)
-            self.bestClassifiers.append(classifiers[bestFakeView])
-            self.updateGeneralFs(DATASET_LENGTH, NB_CLASS, bestFakeView)
-            self.updateGeneralCostMatrix(DATASET_LENGTH, NB_CLASS, LABELS)
-            predictedLabels = self.predict_hdf5(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
-            accuracy = accuracy_score(DATASET.get("Labels").value[trainIndices], predictedLabels)
-            self.iterAccuracies[self.iterIndex] = accuracy
+                self.predictions[self.iterIndex] = predictedLabels
 
-            self.iterIndex += 1
+                for viewFakeIndex in range(NB_VIEW):
+                    self.computeEdge(viewFakeIndex, trainLength, LABELS)
+                    if areBad[viewFakeIndex]:
+                        self.alphas[self.iterIndex, viewFakeIndex] = 0.
+                    else:
+                        self.alphas[self.iterIndex, viewFakeIndex] = self.computeAlpha(
+                            self.edges[self.iterIndex, viewFakeIndex])
+
+                self.updateDs(LABELS, NB_VIEW, trainLength)
+                self.updateFs(NB_VIEW, trainLength, NB_CLASS)
+
+                self.updateCostmatrices(NB_VIEW, trainLength, NB_CLASS, LABELS)
+                bestView, edge, bestFakeView = self.chooseView(viewsIndices, LABELS, trainLength)
+                self.bestViews[self.iterIndex] = bestView
+                logging.debug("\t\t\t Best view : \t\t" + DATASET.get("View" + str(bestView)).attrs["name"])
+                if areBad.all():
+                    self.generalAlphas[self.iterIndex] = 0.
+                else:
+                    self.generalAlphas[self.iterIndex] = self.computeAlpha(edge)
+                self.bestClassifiers.append(classifiers[bestFakeView])
+                self.updateGeneralFs(trainLength, NB_CLASS, bestFakeView)
+                self.updateGeneralCostMatrix(trainLength, NB_CLASS, LABELS)
+                predictedLabels = self.predict_hdf5(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
+                accuracy = accuracy_score(DATASET.get("Labels").value[trainIndices], predictedLabels)
+                self.iterAccuracies[self.iterIndex] = accuracy
+
+                self.iterIndex += 1
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
@@ -215,24 +268,26 @@ class Mumbo:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if viewsIndices is None:
             viewsIndices = range(DATASET.get("Metadata").attrs["nbView"])
-
-        viewDict = dict((viewIndex, index) for index, viewIndex in enumerate(viewsIndices))
-        if usedIndices is not None:
-            DATASET_LENGTH = len(usedIndices)
-            predictedLabels = np.zeros(DATASET_LENGTH)
-
-            for labelIndex, exampleIndex in enumerate(usedIndices):
-                votes = np.zeros(NB_CLASS)
-                for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
-                    if view != -1:
-                        data = getV(DATASET, int(view), int(exampleIndex))
-                        votes[int(classifier.predict(np.array([data])))] += alpha[viewDict[view]]
-                    else:
-                        pass
-                predictedLabels[labelIndex] = np.argmax(votes)
+        if self.classifiersConfigs is None:
+            return np.zeros(len(usedIndices), dtype=int)
         else:
-            predictedLabels = []
-        return predictedLabels
+            viewDict = dict((viewIndex, index) for index, viewIndex in enumerate(viewsIndices))
+            if usedIndices is not None:
+                DATASET_LENGTH = len(usedIndices)
+                predictedLabels = np.zeros(DATASET_LENGTH)
+
+                for labelIndex, exampleIndex in enumerate(usedIndices):
+                    votes = np.zeros(NB_CLASS)
+                    for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
+                        if view != -1:
+                            data = getV(DATASET, int(view), int(exampleIndex))
+                            votes[int(classifier.predict(np.array([data])))] += alpha[viewDict[view]]
+                        else:
+                            pass
+                    predictedLabels[labelIndex] = np.argmax(votes)
+            else:
+                predictedLabels = []
+            return predictedLabels
 
     def predict_proba_hdf5(self, DATASET, usedIndices=None):
         NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
@@ -240,41 +295,43 @@ class Mumbo:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         DATASET_LENGTH = len(usedIndices)
         predictedProbas = np.zeros((DATASET_LENGTH, NB_CLASS))
-
-        for labelIndex, exampleIndex in enumerate(usedIndices):
-            for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
-                data = getV(DATASET, int(view), exampleIndex)
-                predictedProbas[labelIndex, int(classifier.predict(np.array([data])))] += alpha[view]
-            predictedProbas[labelIndex, :] = predictedProbas[labelIndex, :] / np.sum(predictedProbas[labelIndex, :])
+        if self.classifiersConfigs is None:
+            predictedProbas[:,0]=1.0
+        else:
+            for labelIndex, exampleIndex in enumerate(usedIndices):
+                for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
+                    data = getV(DATASET, int(view), exampleIndex)
+                    predictedProbas[labelIndex, int(classifier.predict(np.array([data])))] += alpha[view]
+                predictedProbas[labelIndex, :] = predictedProbas[labelIndex, :] / np.sum(predictedProbas[labelIndex, :])
         return predictedProbas
 
-    def trainWeakClassifiers(self, DATASET, CLASS_LABELS, NB_CLASS, DATASET_LENGTH, NB_VIEW):
-        trainedClassifiers = []
-        labelsMatrix = []
-        areBad = []
-        if self.nbCores > NB_VIEW:
-            NB_JOBS = NB_VIEW
-        else:
-            NB_JOBS = self.nbCores
-        classifiersConfigs = self.classifiersConfigs
-        costMatrices = self.costMatrices
-        classifiersNames = self.classifiersNames
-        iterIndex = self.iterIndex
-        trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
-            delayed(trainWeakClassifier)(classifiersNames[viewIndice], DATASET[viewIndice], CLASS_LABELS,
-                                         DATASET_LENGTH, viewIndice, classifiersConfigs[viewIndice], iterIndex,
-                                         costMatrices)
-            for viewIndice in range(NB_VIEW))
-
-        for viewIndex, (classifier, labelsArray, isBad, averageAccuracy) in enumerate(trainedClassifiersAndLabels):
-            self.averageAccuracies[self.iterIndex, viewIndex] = averageAccuracy
-            trainedClassifiers.append(classifier)
-            labelsMatrix.append(labelsArray)
-            areBad.append(isBad)
-        return np.array(trainedClassifiers), np.array(labelsMatrix), np.array(areBad)
+    # def trainWeakClassifiers(self, DATASET, CLASS_LABELS, NB_CLASS, DATASET_LENGTH, NB_VIEW):
+    #     trainedClassifiers = []
+    #     labelsMatrix = []
+    #     areBad = []
+    #     if self.nbCores > NB_VIEW:
+    #         NB_JOBS = NB_VIEW
+    #     else:
+    #         NB_JOBS = self.nbCores
+    #     classifiersConfigs = self.classifiersConfigs
+    #     costMatrices = self.costMatrices
+    #     classifiersNames = self.classifiersNames
+    #     iterIndex = self.iterIndex
+    #     trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
+    #         delayed(trainWeakClassifier)(classifiersNames[viewIndice], DATASET[viewIndice], CLASS_LABELS,
+    #                                      DATASET_LENGTH, viewIndice, classifiersConfigs[viewIndice], iterIndex,
+    #                                      costMatrices)
+    #         for viewIndice in range(NB_VIEW))
+    #
+    #     for viewIndex, (classifier, labelsArray, isBad, averageAccuracy) in enumerate(trainedClassifiersAndLabels):
+    #         self.averageScores[self.iterIndex, viewIndex] = averageAccuracy
+    #         trainedClassifiers.append(classifier)
+    #         labelsMatrix.append(labelsArray)
+    #         areBad.append(isBad)
+    #     return np.array(trainedClassifiers), np.array(labelsMatrix), np.array(areBad)
 
     def trainWeakClassifiers_hdf5(self, DATASET, trainIndices, NB_CLASS,
-                                  DATASET_LENGTH, viewIndices):
+                                  DATASET_LENGTH, viewIndices, metric):
         NB_VIEW = len(viewIndices)
         trainedClassifiers = []
         labelsMatrix = []
@@ -286,19 +343,20 @@ class Mumbo:
         classifiersConfigs = self.classifiersConfigs
         costMatrices = self.costMatrices
         classifiersNames = self.classifiersNames
+        classifiers = self.monoviewClassifiers
         iterIndex = self.iterIndex
         trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
-            delayed(trainWeakClassifier_hdf5)(classifiersNames[classifierIndex],
+            delayed(trainWeakClassifier_hdf5)(classifiers[classifierIndex], classifiersNames[classifierIndex],
                                               getV(DATASET, viewIndex, trainIndices),
                                               DATASET.get("Labels").value[trainIndices],
                                               DATASET_LENGTH,
                                               viewIndex, classifiersConfigs[classifierIndex],
                                               DATASET.get("View" + str(viewIndex)).attrs["name"], iterIndex,
-                                              costMatrices, classifierIndex, self.randomState)
+                                              costMatrices, classifierIndex, self.randomState, metric)
             for classifierIndex, viewIndex in enumerate(viewIndices))
 
-        for viewFakeIndex, (classifier, labelsArray, isBad, averageAccuracy) in enumerate(trainedClassifiersAndLabels):
-            self.averageAccuracies[self.iterIndex, viewFakeIndex] = averageAccuracy
+        for viewFakeIndex, (classifier, labelsArray, isBad, averageScore) in enumerate(trainedClassifiersAndLabels):
+            self.averageScores[self.iterIndex, viewFakeIndex] = averageScore
             trainedClassifiers.append(classifier)
             labelsMatrix.append(labelsArray)
             areBad.append(isBad)
