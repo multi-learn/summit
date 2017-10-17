@@ -1,12 +1,10 @@
-from sklearn.metrics import precision_recall_fscore_support, accuracy_score, classification_report
 import numpy as np
 import matplotlib
-
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import operator
 from datetime import timedelta as hms
-import logging
+# import logging
 
 # import Mumbo
 # from Classifiers import *

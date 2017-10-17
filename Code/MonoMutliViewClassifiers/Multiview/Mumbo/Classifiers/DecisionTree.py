@@ -1,7 +1,7 @@
 import sklearn
 from sklearn.base import BaseEstimator, ClassifierMixin
 import numpy as np
-from ModifiedMulticlass import OneVsRestClassifier
+# from ModifiedMulticlass import OneVsRestClassifier
 from SubSampling import subSample
 import logging
 
