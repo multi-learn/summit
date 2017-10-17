@@ -42,7 +42,7 @@ def genNamesFromRes(mono, multi):
     return names
 
 
-def resultAnalysis(benchmark, results, name, times, metrics, directory):
+def resultAnalysis(benchmark, results, name, times, metrics, directory, minSize=10):
     mono, multi = results
     for metric in metrics:
         names = genNamesFromRes(mono, multi)
@@ -55,30 +55,27 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory):
         validationScores = np.array(validationScores)
         trainScores = np.array(trainScores)
         names = np.array(names)
-
-        f = pylab.figure(figsize=(40, 30))
-        width = 0.35  # the width of the bars
-        fig = plt.gcf()
-        fig.subplots_adjust(bottom=105.0, top=105.01)
-        ax = f.add_axes([0.1, 0.1, 0.8, 0.8])
-        if metric[1] is not None:
-            metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-        else:
-            metricKWARGS = {}
+        size = nbResults
+        if nbResults < minSize:
+            size = minSize
+        figKW = {"figsize" : (size, 3.0/4*size+2.0)}
+        f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
+        barWidth= 0.35
         sorted_indices = np.argsort(validationScores)
         validationScores = validationScores[sorted_indices]
         trainScores = trainScores[sorted_indices]
         names = names[sorted_indices]
 
-        ax.set_title(getattr(Metrics, metric[0]).getConfig(**metricKWARGS) + " on validation set for each classifier")
-        rects = ax.bar(range(nbResults), validationScores, width, color="r", )
-        rect2 = ax.bar(np.arange(nbResults) + width, trainScores, width, color="0.7", )
+        ax.set_title(metric[0] + "\n on validation set for each classifier")
+        rects = ax.bar(range(nbResults), validationScores, barWidth, color="r", )
+        rect2 = ax.bar(np.arange(nbResults) + barWidth, trainScores, barWidth, color="0.7", )
         autolabel(rects, ax)
         autolabel(rect2, ax)
         ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
-        ax.set_xticks(np.arange(nbResults) + width)
+        ax.set_ylim(-0.1, 1.1)
+        ax.set_xticks(np.arange(nbResults) + barWidth)
         ax.set_xticklabels(names, rotation="vertical")
-
+        plt.tight_layout()
         f.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-" + name + "-" + metric[0] + ".png")
         plt.close()
 
@@ -94,7 +91,8 @@ def analyzeLabels(labelsArrays, realLabels, results, directory):
     for classifierIndex in range(nbClassifiers):
         for iterIndex in range(nbIter):
             data[:, classifierIndex * nbIter + iterIndex] = tempData[classifierIndex, :]
-    fig = pylab.figure(figsize=(10, 20))
+    figKW = {"figsize":(nbClassifiers/2, nbExamples/20)}
+    fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
     cmap = mpl.colors.ListedColormap(['red', 'green'])
     bounds = [-0.5, 0.5, 1.5]
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
@@ -106,11 +104,12 @@ def analyzeLabels(labelsArrays, realLabels, results, directory):
     plt.xticks(ticks, labels, rotation="vertical")
     cbar = fig.colorbar(cax, ticks=[0, 1])
     cbar.ax.set_yticklabels(['Wrong', ' Right'])
+    fig.tight_layout()
     fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
     plt.close()
 
 
-def genScoresNames(iterResults, metric, nbResults, names, nbMono):
+def genScoresNames(iterResults, metric, nbResults, names, nbMono, minSize=10):
     nbIter = len(iterResults)
     validationScores = np.zeros((nbIter, nbResults))
     trainScores = np.zeros((nbIter, nbResults))
@@ -121,21 +120,16 @@ def genScoresNames(iterResults, metric, nbResults, names, nbMono):
         trainScores[iterIndex, :nbMono] = np.array([float(res[1][2][metric[0]][0]) for res in mono])
         trainScores[iterIndex, nbMono:] = np.array([float(scores[metric[0]][0]) for a, b, scores, c in multi])
 
-    # import pdb;pdb.set_trace()
     validationSTDs = np.std(validationScores, axis=0)
     trainSTDs = np.std(trainScores, axis=0)
     validationMeans = np.mean(validationScores, axis=0)
     trainMeans = np.mean(trainScores, axis=0)
-
-    f = pylab.figure(figsize=(40, 30))
-    width = 0.35  # the width of the bars
-    fig = plt.gcf()
-    fig.subplots_adjust(bottom=105.0, top=105.01)
-    ax = f.add_axes([0.1, 0.1, 0.8, 0.8])
-    if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-    else:
-        metricKWARGS = {}
+    size=nbResults
+    if nbResults<minSize:
+        size=minSize
+    figKW = {"figsize" : (size, 3.0/4*size+2.0)}
+    f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
+    barWidth = 0.35  # the width of the bars
     sorted_indices = np.argsort(validationMeans)
     validationMeans = validationMeans[sorted_indices]
     validationSTDs = validationSTDs[sorted_indices]
@@ -143,14 +137,16 @@ def genScoresNames(iterResults, metric, nbResults, names, nbMono):
     trainMeans = trainMeans[sorted_indices]
     names = np.array(names)[sorted_indices]
 
-    ax.set_title(getattr(Metrics, metric[0]).getConfig(**metricKWARGS) + " for each classifier")
-    rects = ax.bar(range(nbResults), validationMeans, width, color="r", yerr=validationSTDs)
-    rect2 = ax.bar(np.arange(nbResults) + width, trainMeans, width, color="0.7", yerr=trainSTDs)
+    ax.set_title(metric[0] + " for each classifier")
+    rects = ax.bar(range(nbResults), validationMeans, barWidth, color="r", yerr=validationSTDs)
+    rect2 = ax.bar(np.arange(nbResults) + barWidth, trainMeans, barWidth, color="0.7", yerr=trainSTDs)
     autolabel(rects, ax)
     autolabel(rect2, ax)
+    ax.set_ylim(-0.1, 1.1)
     ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
-    ax.set_xticks(np.arange(nbResults) + width)
+    ax.set_xticks(np.arange(nbResults) + barWidth)
     ax.set_xticklabels(names, rotation="vertical")
+    f.tight_layout()
 
     return f
 
