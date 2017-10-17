@@ -14,7 +14,7 @@ import matplotlib
 
 # Import own modules
 import Multiview
-import Metrics
+# import Metrics
 import MonoviewClassifiers
 from Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
@@ -27,7 +27,7 @@ from utils import execution, Dataset
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
-matplotlib.use('Agg')  # Anti-Grain Geometry C++ library to make a raster (pixel) image of the figure
+# matplotlib.use('Agg')  # Anti-Grain Geometry C++ library to make a raster (pixel) image of the figure
 
 
 def initBenchmark(args):
@@ -154,7 +154,7 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
                               benchmark,
                               views):
     resultsMonoview = []
-    np.savetxt(directories + "train_indices.csv", classificationIndices[0], delimiter=",")
+    np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
     labelsNames = LABELS_DICTIONARY.values()
     resultsMonoview += [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
                                                coreIndex, args.type, args.pathF, randomState,
@@ -199,8 +199,6 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
                     randomState, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
                     benchmark, views):
     print classificationIndices[0]
-    import pdb;
-    pdb.set_trace()
 
     np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
     resultsMonoview = []
