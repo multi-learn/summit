@@ -1,8 +1,7 @@
-from ...Methods.EarlyFusion import EarlyFusionClassifier
-import MonoviewClassifiers
 import numpy as np
-import pkgutil
-from sklearn.metrics import accuracy_score
+
+from ...Methods.EarlyFusion import EarlyFusionClassifier
+from ..... import MonoviewClassifiers
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):

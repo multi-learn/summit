@@ -3,12 +3,9 @@ import numpy as np
 import matplotlib
 
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import operator
-from datetime import timedelta as hms
-from Methods import *
 import Methods.LateFusion
-import Metrics
+from ... import Metrics
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

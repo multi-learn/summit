@@ -4,14 +4,11 @@
 import numpy as np
 import itertools
 from joblib import Parallel, delayed
-# from sklearn.multiclass import OneVsOneClassifier
-# from sklearn.svm import SVC
-import os
 import sys
 
-from  .... import MonoviewClassifiers
-import Metrics
-from utils.Dataset import getV
+from .... import MonoviewClassifiers
+from .... import Metrics
+from ....utils.Dataset import getV
 
 
 def canProbasClassifier(classifierConfig):

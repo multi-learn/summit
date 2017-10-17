@@ -2,11 +2,9 @@ import numpy as np
 import logging
 import pkgutil
 
-# from Methods import *
 import Methods
-import MonoviewClassifiers
-
-from utils.Dataset import getV
+from ... import MonoviewClassifiers
+from ...utils.Dataset import getV
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
