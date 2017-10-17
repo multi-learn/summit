@@ -1,11 +1,8 @@
 import sys
 import os.path
 import errno
-
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-
-import GetMultiviewDb as DB
 import os
 import logging
 import time
