@@ -5,14 +5,13 @@ import errno
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-# from Multiview import *
-import Multiview
-
 import GetMultiviewDb as DB
 import os
 import logging
 import time
 import h5py
+
+import Multiview
 from utils.Dataset import getShape
 from utils.HyperParameterSearch import searchBestSettings
 

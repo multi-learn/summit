@@ -1,9 +1,7 @@
 import numpy as np
 import math
 from scipy import sparse
-# from string import digits
 import os
-# import random
 import logging
 import h5py
 import operator
