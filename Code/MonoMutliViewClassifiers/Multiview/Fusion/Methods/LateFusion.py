@@ -9,7 +9,7 @@ from joblib import Parallel, delayed
 import os
 import sys
 
-import MonoviewClassifiers
+from  .... import MonoviewClassifiers
 import Metrics
 from utils.Dataset import getV
 

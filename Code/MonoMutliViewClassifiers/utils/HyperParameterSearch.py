@@ -1,9 +1,9 @@
 import numpy as np
 import sys
-import Multiview
-import Metrics
 import matplotlib.pyplot as plt
 import itertools
+
+from .. import Metrics
 
 
 def searchBestSettings(dataset, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=None,
@@ -22,7 +22,7 @@ def gridSearch(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1,
     pass
 
 
-def randomizedSearch(dataset, classifierName, metrics, learningIndices, KFolds, randomState, viewsIndices=None, nIter=1,
+def randomizedSearch(dataset, classifierPackage, classifierName, metrics, learningIndices, KFolds, randomState, viewsIndices=None, nIter=1,
                      nbCores=1, **classificationKWARGS):
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
@@ -32,7 +32,6 @@ def randomizedSearch(dataset, classifierName, metrics, learningIndices, KFolds, 
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
-    classifierPackage = getattr(Multiview, classifierName)  # Permet d'appeler un module avec une string
     classifierModule = getattr(classifierPackage, classifierName)
     classifierClass = getattr(classifierModule, classifierName)
     if classifierName != "Mumbo":

@@ -14,7 +14,7 @@ import matplotlib
 import h5py
 
 # Import own modules
-import Multiview
+from . import Multiview
 # import Metrics
 import MonoviewClassifiers
 from Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore

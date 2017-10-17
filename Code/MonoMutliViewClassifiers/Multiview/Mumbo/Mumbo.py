@@ -2,13 +2,13 @@ import numpy as np
 import math
 from joblib import Parallel, delayed
 import itertools
-from Classifiers import *
 import time
-import Classifiers
 import pkgutil
 import logging
 from sklearn.metrics import accuracy_score
-from utils.Dataset import getV
+
+import Classifiers
+from ...utils.Dataset import getV
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

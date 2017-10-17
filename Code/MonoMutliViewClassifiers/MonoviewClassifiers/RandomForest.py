@@ -1,10 +1,10 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import RandomizedSearchCV
-import Metrics
+from .. import Metrics
 from scipy.stats import randint
 import numpy as np
-from utils.HyperParameterSearch import genHeatMaps
+from ..utils.HyperParameterSearch import genHeatMaps
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

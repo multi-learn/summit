@@ -11,9 +11,9 @@ import logging
 import time
 import h5py
 
+from ..utils.Dataset import getShape
+from ..utils import HyperParameterSearch
 import Multiview
-from utils.Dataset import getShape
-from utils.HyperParameterSearch import searchBestSettings
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -59,7 +59,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     analysisModule = getattr(classifierPackage, "analyzeResults")
 
     if hyperParamSearch != "None":
-        classifier = searchBestSettings(DATASET, CL_type, metrics, learningIndices, KFolds, randomState,
+        classifier = HyperParameterSearch.searchBestSettings(DATASET, classifierModule, CL_type, metrics, learningIndices, KFolds, randomState,
                                         viewsIndices=viewsIndices, searchingTool=hyperParamSearch, nIter=nIter,
                                         **classificationKWARGS)
     else:

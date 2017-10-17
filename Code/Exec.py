@@ -1,5 +1,5 @@
 import sys
-from MonoMutliViewClassifiers.ExecClassif import execClassif
+from MonoMutliViewClassifiers import ExecClassif
 
-execClassif(sys.argv[1:])
+ExecClassif.execClassif(sys.argv[1:])
 

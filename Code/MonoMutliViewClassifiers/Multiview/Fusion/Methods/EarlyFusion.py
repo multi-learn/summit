@@ -2,7 +2,7 @@
 # -*- encoding: utf-8
 
 import numpy as np
-from utils.Dataset import getV
+from ....utils.Dataset import getV
 
 
 class EarlyFusionClassifier(object):

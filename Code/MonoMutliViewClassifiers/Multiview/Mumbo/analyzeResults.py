@@ -6,11 +6,12 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import operator
 from datetime import timedelta as hms
-import Mumbo
-from Classifiers import *
 import logging
-import Metrics
-from utils.Dataset import getV, getShape
+
+# import Mumbo
+# from Classifiers import *
+from ... import Metrics
+from ...utils.Dataset import getV, getShape
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
