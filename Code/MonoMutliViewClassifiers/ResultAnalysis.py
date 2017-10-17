@@ -80,7 +80,7 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory, minSize=
         plt.close()
 
 
-def analyzeLabels(labelsArrays, realLabels, results, directory):
+def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):
     mono, multi = results
     classifiersNames = genNamesFromRes(mono, multi)
     nbClassifiers = len(classifiersNames)
@@ -91,14 +91,16 @@ def analyzeLabels(labelsArrays, realLabels, results, directory):
     for classifierIndex in range(nbClassifiers):
         for iterIndex in range(nbIter):
             data[:, classifierIndex * nbIter + iterIndex] = tempData[classifierIndex, :]
-    figKW = {"figsize":(nbClassifiers/2, nbExamples/20)}
+    figWidth = max(nbClassifiers/2, minSize)
+    figHeight = max(nbExamples/20, minSize)
+    figKW = {"figsize":(figWidth, figHeight)}
     fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
     cmap = mpl.colors.ListedColormap(['red', 'green'])
     bounds = [-0.5, 0.5, 1.5]
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
     cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm, aspect='auto')
-    plt.title('Error on examples depending on the classifier')
+    plt.title('Errors depending on the classifier')
     ticks = np.arange(0, nbClassifiers * nbIter, nbIter)
     labels = classifiersNames
     plt.xticks(ticks, labels, rotation="vertical")
