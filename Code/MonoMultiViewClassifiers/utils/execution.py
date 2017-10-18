@@ -7,8 +7,8 @@ import errno
 import logging
 import sklearn
 
-def parseTheArgs(arguments):
 
+def parseTheArgs(arguments):
 
     parser = argparse.ArgumentParser(
         description='This file is used to benchmark the scores fo multiple classification algorithm on multiview data.',
@@ -198,7 +198,7 @@ def initRandomState(randomStateArg, directory):
     return randomState
 
 def initLogFile(args):
-    resultDirectory = "../../Results/" + args.name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
+    resultDirectory = "../Results/" + args.name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
     logFileName = time.strftime("%Y%m%d-%H%M%S") + "-" + ''.join(args.CL_type) + "-" + "_".join(
         args.views) + "-" + args.name + "-LOG"
     if not os.path.exists(os.path.dirname(resultDirectory + logFileName)):

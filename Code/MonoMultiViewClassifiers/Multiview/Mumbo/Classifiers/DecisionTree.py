@@ -138,8 +138,7 @@ def getConfig(classifierConfig):
                'with criterion ' + criterion + ', ' + \
                ' sub-sampled at ' + str(subSampling) + ' '
     except KeyError:
-        print classifierConfig
-
+        return "Go back, you're drunk"
 
 
 def findClosest(scores, base=0.5):

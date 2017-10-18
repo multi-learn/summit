@@ -1,4 +1,5 @@
 # Import built-in modules
+# import pdb;pdb.set_trace()
 import pkgutil  # for TimeStamp in CSVFile
 import os
 import time
@@ -101,10 +102,7 @@ def initMonoviewKWARGS(args, classifiersNames):
 
 
 def initKWARGSFunc(args, benchmark):
-    if "Monoview" in benchmark:
-        monoviewKWARGS = initMonoviewKWARGS(args, benchmark["Monoview"])
-    else:
-        monoviewKWARGS = {}
+    monoviewKWARGS = initMonoviewKWARGS(args, benchmark["Monoview"])
     return monoviewKWARGS
 
 
@@ -274,6 +272,7 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
 # __ EXECUTION __ #
 # _______________ #
 def execClassif(arguments):
+    import pdb;pdb.set_trace()
     testVersions()
     start = time.time()
     args = execution.parseTheArgs(arguments)
