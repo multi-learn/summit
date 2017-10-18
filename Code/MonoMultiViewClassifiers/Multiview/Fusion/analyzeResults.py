@@ -2,7 +2,7 @@ from sklearn.metrics import precision_recall_fscore_support, accuracy_score, cla
 import numpy as np
 import matplotlib
 
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 import operator
 import Methods.LateFusion
 from ... import Metrics

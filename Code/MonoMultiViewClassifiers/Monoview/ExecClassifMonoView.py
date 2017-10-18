@@ -15,7 +15,7 @@ import logging  # To create Log-Files
 import h5py
 
 # Import own modules
-import MonoviewClassifiers
+from .. import MonoviewClassifiers
 from analyzeResult import execute
 from ..utils.Dataset import getValue, extractSubset
 

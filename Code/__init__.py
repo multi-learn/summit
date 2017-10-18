@@ -1,1 +1,1 @@
-from . import MonoMutliViewClassifiers, Tests, Exec
+from . import MonoMultiViewClassifiers, Tests, Exec

@@ -1,18 +1,17 @@
-from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
-import MonoviewClassifiers
 import numpy as np
-from sklearn.metrics import accuracy_score
-from utils.Dataset import getV
+from sklearn.multiclass import OneVsOneClassifier
+from sklearn.svm import SVC
 import pkgutil
+
+from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
+from .....utils.Dataset import getV
+from ..... import MonoviewClassifiers
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
-    nbView = classificationKWARGS["nbView"]
     paramsSets = []
     for _ in range(nIter):
-        randomWeightsArray = randomState.random_sample(nbView)
-        normalizedArray = randomWeightsArray / np.sum(randomWeightsArray)
-        paramsSets.append([normalizedArray])
+        paramsSets.append([])
     return paramsSets
 
 
@@ -39,7 +38,7 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
                  "NB_CLASS": len(args.CL_classes),
                  "LABELS_NAMES": args.CL_classes,
                  "FusionKWARGS": {"fusionType": "LateFusion",
-                                  "fusionMethod": "WeightedLinear",
+                                  "fusionMethod": "SVMForLinear",
                                   "classifiersNames": args.FU_L_cl_names,
                                   "classifiersConfigs": classifiersConfigs,
                                   'fusionMethodConfig': args.FU_L_method_config,
@@ -48,38 +47,61 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
     return [arguments]
 
 
-class WeightedLinear(LateFusionClassifier):
+class SVMForLinear(LateFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
         LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                       kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
-        if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig'] == ['']:
-            self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
+        self.SVMClassifier = None
+
+    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
+        if viewsIndices is None:
+            viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
+        if trainIndices is None:
+            trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
+        if type(self.monoviewClassifiersConfigs[0]) == dict:
+            for index, viewIndex in enumerate(viewsIndices):
+                monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[index])
+                self.monoviewClassifiers.append(
+                    monoviewClassifier.fit(getV(DATASET, viewIndex, trainIndices),
+                                           DATASET.get("Labels").value[trainIndices], self.randomState,
+                                           NB_CORES=self.nbCores,
+                                           **dict((str(configIndex), config) for configIndex, config in
+                                                  enumerate(self.monoviewClassifiersConfigs[index]))))
         else:
-            self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
-        self.needProbas = True
+            self.monoviewClassifiers = self.monoviewClassifiersConfigs
+        self.SVMForLinearFusionFit(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
 
     def setParams(self, paramsSet):
-        self.weights = paramsSet[0]
+        pass
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if viewsIndices is None:
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         nbView = len(viewsIndices)
-        self.weights /= float(sum(self.weights))
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
+        monoviewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
-            viewScores[index] = np.array(self.monoviewClassifiers[index].predict_proba(
-                getV(DATASET, viewIndex, usedIndices))) * self.weights[index]
-        predictedLabels = np.argmax(np.sum(viewScores, axis=0), axis=1)
-
+            monoviewDecisions[:, index] = self.monoviewClassifiers[index].predict(
+                getV(DATASET, viewIndex, usedIndices))
+        predictedLabels = self.SVMClassifier.predict(monoviewDecisions)
         return predictedLabels
 
+    def SVMForLinearFusionFit(self, DATASET, usedIndices=None, viewsIndices=None):
+        if type(viewsIndices) == type(None):
+            viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
+        nbView = len(viewsIndices)
+        self.SVMClassifier = OneVsOneClassifier(SVC())
+        monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
+        for index, viewIndex in enumerate(viewsIndices):
+            monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
+                getV(DATASET, viewIndex, usedIndices))
+
+        self.SVMClassifier.fit(monoViewDecisions, DATASET.get("Labels").value[usedIndices])
+
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
-        configString = "with Weighted linear using a weight for each view : " + ", ".join(map(str, self.weights)) + \
-                       "\n\t-With monoview classifiers : "
+        configString = "with SVM for linear \n\t-With monoview classifiers : "
         for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs,
                                                                     monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)

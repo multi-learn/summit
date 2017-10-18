@@ -19,7 +19,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 def getBenchmark(benchmark, args=None):
     allAlgos = [name for _, name, isPackage in
-                pkgutil.iter_modules(['Multiview/Mumbo/Classifiers'])
+                pkgutil.iter_modules("./MonoMultiViewClassifiers/Multiview/Mumbo/Classifiers")
                 if not isPackage and not name in ["SubSampling", "ModifiedMulticlass", "Kover"]]
     if args is None or args.MU_types != ['']:
         benchmark["Multiview"]["Mumbo"] = allAlgos

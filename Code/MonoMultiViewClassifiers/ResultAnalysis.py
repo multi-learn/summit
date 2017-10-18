@@ -6,15 +6,15 @@ import logging
 # Import third party modules
 import matplotlib
 
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import cm
+# from matplotlib import cm
 import matplotlib as mpl
 
 # Import own Modules
-import Metrics
-from utils.Transformations import signLabels
+# import Metrics
+# from utils.Transformations import signLabels
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

@@ -8,7 +8,7 @@ import datetime  # for TimeStamp in CSVFile
 import os  # to geth path of the running script
 import matplotlib
 
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 # Import 3rd party modules
 import pandas as pd  # for Series
 import numpy as np  # for DataFrames

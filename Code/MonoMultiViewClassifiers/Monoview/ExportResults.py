@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt  # for Plots
 from scipy.interpolate import interp1d  # to Interpolate Data
 import matplotlib
 
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker  # to generate the Annotations in plot
 from pylab import rcParams  # to change size of plot
 from sklearn import metrics  # For stastics on classification

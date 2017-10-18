@@ -1,9 +1,10 @@
-from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
-import MonoviewClassifiers
 import numpy as np
 from sklearn.metrics import accuracy_score
-from utils.Dataset import getV
 import pkgutil
+
+from ..... import MonoviewClassifiers
+from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
+from .....utils.Dataset import getV
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
@@ -39,7 +40,7 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
                  "NB_CLASS": len(args.CL_classes),
                  "LABELS_NAMES": args.CL_classes,
                  "FusionKWARGS": {"fusionType": "LateFusion",
-                                  "fusionMethod": "MajorityVoting",
+                                  "fusionMethod": "WeightedLinear",
                                   "classifiersNames": args.FU_L_cl_names,
                                   "classifiersConfigs": classifiersConfigs,
                                   'fusionMethodConfig': args.FU_L_method_config,
@@ -48,7 +49,7 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
     return [arguments]
 
 
-class MajorityVoting(LateFusionClassifier):
+class WeightedLinear(LateFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
         LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                       kwargs["monoviewSelection"],
@@ -57,45 +58,29 @@ class MajorityVoting(LateFusionClassifier):
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
+        self.needProbas = True
 
     def setParams(self, paramsSet):
-        self.weights = np.array(paramsSet[0])
+        self.weights = paramsSet[0]
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
-        if type(viewsIndices) == type(None):
+        if viewsIndices is None:
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         nbView = len(viewsIndices)
         self.weights /= float(sum(self.weights))
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-
-        datasetLength = len(usedIndices)
-        votes = np.zeros((datasetLength, DATASET.get("Metadata").attrs["nbClass"]), dtype=float)
-        monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
+        viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
         for index, viewIndex in enumerate(viewsIndices):
-            monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
-                getV(DATASET, viewIndex, usedIndices))
-        for exampleIndex in range(datasetLength):
-            for viewIndex, featureClassification in enumerate(monoViewDecisions[exampleIndex, :]):
-                votes[exampleIndex, featureClassification] += self.weights[viewIndex]
-            nbMaximum = len(np.where(votes[exampleIndex] == max(votes[exampleIndex]))[0])
-            try:
-                assert nbMaximum != nbView
-            except:
-                print "Majority voting can't decide, each classifier has voted for a different class"
-                raise
-        predictedLabels = np.argmax(votes, axis=1)
-        # Can be upgraded by restarting a new classification process if
-        # there are multiple maximums ?:
-        # 	while nbMaximum>1:
-        # 		relearn with only the classes that have a maximum number of vote
-        # 		votes = revote
-        # 		nbMaximum = len(np.where(votes==max(votes))[0])
+            viewScores[index] = np.array(self.monoviewClassifiers[index].predict_proba(
+                getV(DATASET, viewIndex, usedIndices))) * self.weights[index]
+        predictedLabels = np.argmax(np.sum(viewScores, axis=0), axis=1)
+
         return predictedLabels
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
-        configString = "with Majority Voting \n\t-With weights : " + str(
-            self.weights) + "\n\t-With monoview classifiers : "
+        configString = "with Weighted linear using a weight for each view : " + ", ".join(map(str, self.weights)) + \
+                       "\n\t-With monoview classifiers : "
         for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs,
                                                                     monoviewClassifiersNames):
             monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)

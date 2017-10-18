@@ -2,7 +2,7 @@
 import pkgutil  # for TimeStamp in CSVFile
 import os
 import time
-import sys
+# import sys
 import logging
 import errno
 
@@ -11,24 +11,24 @@ from joblib import Parallel, delayed
 import numpy as np
 import math
 import matplotlib
+matplotlib.use('Agg')  # Anti-Grain Geometry C++ library to make a raster (pixel) image of the figure
 import h5py
 
 # Import own modules
 from . import Multiview
 # import Metrics
-import MonoviewClassifiers
-from Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
-from Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
-import Multiview.GetMultiviewDb as DB
+from . import MonoviewClassifiers
+from .Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
+from .Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
+from .Multiview import GetMultiviewDb as DB
 from Versions import testVersions
 from ResultAnalysis import resultAnalysis, analyzeLabels, analyzeIterResults
-from utils import execution, Dataset
+from .utils import execution, Dataset
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
-# matplotlib.use('Agg')  # Anti-Grain Geometry C++ library to make a raster (pixel) image of the figure
 
 
 def initBenchmark(args):
@@ -37,11 +37,11 @@ def initBenchmark(args):
     args.FU_early_methods, args.CL_algos_monoview"""
     benchmark = {"Monoview": {}, "Multiview": {}}
     allMultiviewPackages = [name for _, name, isPackage
-                            in pkgutil.iter_modules(['Multiview/']) if isPackage]
+                            in pkgutil.iter_modules(['./MonoMultiViewClassifiers/Multiview/']) if isPackage]
     if args.CL_type == ["Benchmark"]:
 
         allMonoviewAlgos = [name for _, name, isPackage in
-                            pkgutil.iter_modules(['MonoviewClassifiers'])
+                            pkgutil.iter_modules(['./MonoMultiViewClassifiers/MonoviewClassifiers'])
                             if (not isPackage)]
         benchmark["Monoview"] = allMonoviewAlgos
         benchmark["Multiview"] = dict((multiviewPackageName, "_") for multiviewPackageName in allMultiviewPackages)
@@ -63,7 +63,7 @@ def initBenchmark(args):
                 benchmark = multiviewModule.getBenchmark(benchmark, args=args)
     if "Monoview" in args.CL_type:
         if args.CL_algos_monoview == ['']:
-            benchmark["Monoview"] = [name for _, name, isPackage in pkgutil.iter_modules(["MonoviewClassifiers"])
+            benchmark["Monoview"] = [name for _, name, isPackage in pkgutil.iter_modules(["./MonoMultiViewClassifiers/MonoviewClassifiers"])
                                      if not isPackage]
 
         else:
@@ -200,7 +200,6 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
 def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory, args, classificationIndices, kFolds,
                     randomState, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
                     benchmark, views):
-    print classificationIndices[0]
 
     np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
     resultsMonoview = []
@@ -318,7 +317,7 @@ def execClassif(arguments):
     metrics = [metric.split(":") for metric in args.CL_metrics]
     if metrics == [[""]]:
         metricsNames = [name for _, name, isPackage
-                        in pkgutil.iter_modules(['Metrics']) if not isPackage and name != "log_loss"]
+                        in pkgutil.iter_modules(['./MonoMultiViewClassifiers/Metrics']) if not isPackage and name != "log_loss"]
         metrics = [[metricName] for metricName in metricsNames]
         metrics = arangeMetrics(metrics, args.CL_metric_princ)
     for metricIndex, metric in enumerate(metrics):

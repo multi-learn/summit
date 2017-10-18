@@ -1,9 +1,6 @@
-from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
-import MonoviewClassifiers
 import numpy as np
 import pyscm
 from pyscm.utils import _pack_binary_bytes_to_ints
-from utils.Dataset import getV
 import os
 import h5py
 from pyscm.binary_attributes.classifications.popcount import inplace_popcount_32, inplace_popcount_64
@@ -14,6 +11,9 @@ from sklearn.metrics import accuracy_score
 import itertools
 import pkgutil
 
+from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
+from ..... import MonoviewClassifiers
+from .....utils.Dataset import getV
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
     nbView = classificationKWARGS["nbView"]

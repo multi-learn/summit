@@ -2,7 +2,10 @@ import numpy as np
 import logging
 import pkgutil
 
+# from Methods import *
+import pdb;pdb.set_trace()
 import Methods
+
 from ... import MonoviewClassifiers
 from ...utils.Dataset import getV
 
@@ -13,19 +16,19 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 def getBenchmark(benchmark, args=None):
     fusionModulesNames = [name for _, name, isPackage
-                          in pkgutil.iter_modules(['Multiview/Fusion/Methods']) if not isPackage]
+                          in pkgutil.iter_modules(['./MonoMultiViewClassifiers/Multiview/Fusion/Methods']) if not isPackage]
     fusionModules = [getattr(Methods, fusionModulesName)
                      for fusionModulesName in fusionModulesNames]
     fusionClassifiers = [getattr(fusionModule, fusionModulesName + "Classifier")
                          for fusionModulesName, fusionModule in zip(fusionModulesNames, fusionModules)]
     fusionMethods = dict((fusionModulesName, [name for _, name, isPackage in
                                               pkgutil.iter_modules(
-                                                  ["Multiview/Fusion/Methods/" + fusionModulesName + "Package"])
+                                                  ["./MonoMultiViewClassifiers/Multiview/Fusion/Methods/" + fusionModulesName + "Package"])
                                               if not isPackage])
                          for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClassifiers))
     if args is None:
         allMonoviewAlgos = [name for _, name, isPackage in
-                            pkgutil.iter_modules(['MonoviewClassifiers'])
+                            pkgutil.iter_modules(['./MonoMultiViewClassifiers/MonoviewClassifiers'])
                             if (not isPackage)]
         fusionMonoviewClassifiers = allMonoviewAlgos
         allFusionAlgos = {"Methods": fusionMethods, "Classifiers": fusionMonoviewClassifiers}
@@ -42,7 +45,7 @@ def getBenchmark(benchmark, args=None):
             if args.FU_late_methods == [""]:
                 benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = [name for _, name, isPackage in
                                                                              pkgutil.iter_modules([
-                                                                                 "Multiview/Fusion/Methods/LateFusionPackage"])
+                                                                                 "./MonoMultiViewClassifiers/Multiview/Fusion/Methods/LateFusionPackage"])
                                                                              if not isPackage]
             else:
                 benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = args.FU_late_methods
@@ -50,13 +53,13 @@ def getBenchmark(benchmark, args=None):
             if args.FU_early_methods == [""]:
                 benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = [name for _, name, isPackage in
                                                                               pkgutil.iter_modules([
-                                                                                  "Multiview/Fusion/Methods/EarlyFusionPackage"])
+                                                                                  "./MonoMultiViewClassifiers/Multiview/Fusion/Methods/EarlyFusionPackage"])
                                                                               if not isPackage]
             else:
                 benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = args.FU_early_methods
         if args.CL_algos_monoview == ['']:
             benchmark["Multiview"]["Fusion"]["Classifiers"] = [name for _, name, isPackage in
-                                                               pkgutil.iter_modules(['MonoviewClassifiers'])
+                                                               pkgutil.iter_modules(['./MonoMultiViewClassifiers/MonoviewClassifiers'])
                                                                if (not isPackage) and (name != "SGD") and (
                                                                    name[:3] != "SVM")
                                                                and (name != "SCM")]
