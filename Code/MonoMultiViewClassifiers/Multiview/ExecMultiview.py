@@ -1,8 +1,8 @@
 import sys
 import os.path
 import errno
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+# sys.path.append(
+#     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 import os
 import logging
 import time
@@ -11,6 +11,7 @@ import imp
 
 from ..utils.Dataset import getShape
 from ..utils import HyperParameterSearch
+from . import Fusion, Mumbo
 # from . import *
 
 # Author-Info
@@ -51,19 +52,18 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
 
     extractionTime = time.time() - t_start
     learningIndices, validationIndices = classificationIndices
-    packageDirectories = [entry for entry in os.listdir("MonoMultiViewClassifiers/Multiview/") if os.path.isdir("MonoMultiViewClassifiers/Multiview/"+entry)]
-    for packageDirectory in packageDirectories:
-        if packageDirectory == CL_type:
-            classifierModule = imp.load_source(CL_type, "MonoMultiViewClassifiers/Multiview/"+packageDirectory+"/"+CL_type+".py")
-            analysisModule = imp.load_source(CL_type, "MonoMultiViewClassifiers/Multiview/"+packageDirectory+"/analyzeResults.py")
-    import pdb; pdb.set_trace()
-    # classifierPackage = getattr(locals(), CL_type)  # Permet d'appeler un module avec une string
-    # classifierModule = getattr(classifierPackage, CL_type)
-    classifierClass = getattr(classifierModule, CL_type)
-    # analysisModule = getattr(classifierPackage, "analyzeResults")
+    # packageDirectories = [entry for entry in os.listdir("MonoMultiViewClassifiers/Multiview/") if os.path.isdir("MonoMultiViewClassifiers/Multiview/"+entry)]
+    # for packageDirectory in packageDirectories:
+    #     if packageDirectory == CL_type:
+    #         classifierModule = imp.find_module(CL_type, "MonoMultiViewClassifiers/Multiview/"+packageDirectory+"/"+CL_type+".py")
+    #         analysisModule = imp.load_source(CL_type, "MonoMultiViewClassifiers/Multiview/"+packageDirectory+"/analyzeResults.py")
+    classifierPackage = globals()[CL_type]  # Permet d'appeler un module avec une string
+    classifierModule = getattr(classifierPackage, CL_type+"Module")
+    classifierClass = getattr(classifierModule, CL_type+"Class")
+    analysisModule = getattr(classifierPackage, "analyzeResults")
 
     if hyperParamSearch != "None":
-        classifier = HyperParameterSearch.searchBestSettings(DATASET, classifierModule, CL_type, metrics, learningIndices, KFolds, randomState,
+        classifier = HyperParameterSearch.searchBestSettings(DATASET, classifierPackage, CL_type, metrics, learningIndices, KFolds, randomState,
                                         viewsIndices=viewsIndices, searchingTool=hyperParamSearch, nIter=nIter,
                                         **classificationKWARGS)
     else:

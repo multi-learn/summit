@@ -1,3 +1,3 @@
-from . import Mumbo, analyzeResults
+from . import MumboModule, analyzeResults
 
-__all__ = ["Mumbo", "Classifiers"]
+__all__ = ["MumboModule.py", "Classifiers"]

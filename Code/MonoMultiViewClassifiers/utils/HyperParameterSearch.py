@@ -6,13 +6,13 @@ import itertools
 from .. import Metrics
 
 
-def searchBestSettings(dataset, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=None,
+def searchBestSettings(dataset, classifierPackage, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=None,
                        searchingTool="hyperParamSearch", nIter=1, **kwargs):
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
     thismodule = sys.modules[__name__]
     searchingToolMethod = getattr(thismodule, searchingTool)
-    bestSettings = searchingToolMethod(dataset, classifierName, metrics, iLearningIndices, iKFolds, randomState,
+    bestSettings = searchingToolMethod(dataset, classifierPackage, classifierName, metrics, iLearningIndices, iKFolds, randomState,
                                        viewsIndices=viewsIndices, nIter=nIter, **kwargs)
     return bestSettings  # or well set clasifier ?
 
@@ -32,8 +32,8 @@ def randomizedSearch(dataset, classifierPackage, classifierName, metrics, learni
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
-    classifierModule = getattr(classifierPackage, classifierName)
-    classifierClass = getattr(classifierModule, classifierName)
+    classifierModule = getattr(classifierPackage, classifierName+"Module")
+    classifierClass = getattr(classifierModule, classifierName+"Class")
     if classifierName != "Mumbo":
         paramsSets = classifierModule.genParamsSets(classificationKWARGS, randomState, nIter=nIter)
         if metricModule.getConfig()[-14] == "h":

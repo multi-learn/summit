@@ -6,7 +6,7 @@ from datetime import timedelta as hms
 # import logging
 
 # import Mumbo
-# from Classifiers import *
+import Classifiers
 from ... import Metrics
 from ...utils.Dataset import getV, getShape
 
@@ -92,7 +92,7 @@ def getAlgoConfig(classifier, classificationKWARGS, nbCores, viewNames, hyperPar
     minIter = classificationKWARGS["minIter"]
     threshold = classificationKWARGS["threshold"]
     extractionTime, classificationTime = times
-    weakClassifierConfigs = [getattr(globals()[classifierName], 'getConfig')(classifiersConfig) for classifiersConfig,
+    weakClassifierConfigs = [getattr(getattr(Classifiers, classifierName), 'getConfig')(classifiersConfig) for classifiersConfig,
                                                                                                     classifierName
                              in zip(classifier.classifiersConfigs, classifier.classifiersNames)]
     classifierAnalysis = [classifierName + " " + weakClassifierConfig + "on " + feature for classifierName,

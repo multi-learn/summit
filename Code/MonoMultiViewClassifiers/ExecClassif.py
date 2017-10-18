@@ -30,7 +30,6 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-
 def initBenchmark(args):
     """Used to create a list of all the algorithm packages names used for the benchmark
     Needs args.CL_type, args.CL_algos_multiview, args.MU_types, args.FU_types, args.FU_late_methods,
@@ -47,7 +46,7 @@ def initBenchmark(args):
         benchmark["Multiview"] = dict((multiviewPackageName, "_") for multiviewPackageName in allMultiviewPackages)
         for multiviewPackageName in allMultiviewPackages:
             multiviewPackage = getattr(Multiview, multiviewPackageName)
-            multiviewModule = getattr(multiviewPackage, multiviewPackageName)
+            multiviewModule = getattr(multiviewPackage, multiviewPackageName+"Module")
             benchmark = multiviewModule.getBenchmark(benchmark, args=args)
 
     if "Multiview" in args.CL_type:
@@ -131,7 +130,7 @@ def initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDiction
     if "Multiview" in benchmark:
         for multiviewAlgoName in benchmark["Multiview"]:
             multiviewPackage = getattr(Multiview, multiviewAlgoName)
-            mutliviewModule = getattr(multiviewPackage, multiviewAlgoName)
+            mutliviewModule = getattr(multiviewPackage, multiviewAlgoName+"Module")
             multiviewArguments += mutliviewModule.getArgs(args, benchmark, views, viewsIndices, randomState, directory,
                                                           resultsMonoview, classificationIndices)
     argumentDictionaries["Multiview"] = multiviewArguments

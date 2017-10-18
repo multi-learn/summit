@@ -124,7 +124,7 @@ def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices,
     for classifierIndex, classifierName in enumerate(classifiersNames):
         logging.debug("\tStart:\t Random search for " + classifierName + " on " +
                       DATASET.get("View" + str(viewIndices[classifierIndex])).attrs["name"])
-        classifierModule = globals()[classifierName]  # Permet d'appeler une fonction avec une string
+        classifierModule = getattr(Classifiers, classifierName)  # Permet d'appeler une fonction avec une string
         classifierGridSearch = getattr(classifierModule, "hyperParamSearch")
         bestSettings.append(classifierGridSearch(getV(DATASET, viewIndices[classifierIndex], learningIndices),
                                                  DATASET.get("Labels").value[learningIndices], randomState,
@@ -140,7 +140,7 @@ def getCLString(classificationKWARGS):
     return "Mumbo-" + "-".join(classificationKWARGS["classifiersNames"])
 
 
-class Mumbo:
+class MumboClass:
     def __init__(self, randomState, NB_CORES=1, **kwargs):
         self.maxIter = kwargs["maxIter"]
         self.minIter = kwargs["minIter"]

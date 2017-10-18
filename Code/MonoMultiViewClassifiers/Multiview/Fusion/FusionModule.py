@@ -3,8 +3,11 @@ import logging
 import pkgutil
 
 # from Methods import *
-import pdb;pdb.set_trace()
-import Methods
+
+try:
+    from . import Methods
+except ValueError:
+    import pdb;pdb.set_trace()
 
 from ... import MonoviewClassifiers
 from ...utils.Dataset import getV
@@ -146,7 +149,7 @@ def getCLString(classificationKWARGS):
                classificationKWARGS["classifiersNames"]
 
 
-class Fusion:
+class FusionClass:
     def __init__(self, randomState, NB_CORES=1, **kwargs):
         fusionType = kwargs['fusionType']
         fusionMethod = kwargs['fusionMethod']
