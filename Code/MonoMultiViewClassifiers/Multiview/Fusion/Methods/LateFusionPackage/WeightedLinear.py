@@ -26,6 +26,9 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
                                             viewsIndices, resultsMonoview, classificationIndices)
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
                                  for classifierName in args.FU_L_cl_names]
+    if args.FU_L_cl_names == [""] and args.CL_type == ["Multiview"]:
+        raise AttributeError("You must perform Monoview classification or specify "
+                             "which monoview classifier to use Late Fusion")
     if args.FU_L_cl_config != ['']:
         classifiersConfigs = [
             monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])

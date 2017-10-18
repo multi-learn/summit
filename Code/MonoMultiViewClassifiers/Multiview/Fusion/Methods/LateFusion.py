@@ -28,10 +28,14 @@ def fitMonoviewClassifier(classifierName, data, labels, classifierConfig, needPr
             classifier = monoviewClassifier.fit(data, labels, randomState, DTConfig)
             return classifier
         else:
+            if type(classifierConfig) is dict:
+                pass
+            else:
+                classifierConfig = dict((str(configIndex), config)
+                                         for configIndex, config in enumerate(classifierConfig))
+
             classifier = monoviewClassifier.fit(data, labels, randomState,
-                                                **dict((str(configIndex), config) for configIndex, config in
-                                                       enumerate(classifierConfig
-                                                                 )))
+                                                **classifierConfig)
             return classifier
 
 
@@ -67,6 +71,9 @@ def intersect(allClassifersNames, directory, viewsIndices, resultsMonoview, clas
             bestLen = len(intersect)
             bestCombination = combination
     return [classifiersNames[viewIndex][index] for viewIndex, index in enumerate(bestCombination)]
+
+def allMonoviewClassifiers(allClassifersNames, directory, viewsIndices, resultsMonoview, classificationIndices):
+    return allClassifersNames
 
 
 def bestScore(allClassifersNames, directory, viewsIndices, resultsMonoview, classificationIndices):
@@ -133,8 +140,8 @@ class LateFusionClassifier(object):
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
 
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
-            delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[index],
-                                           getV(DATASET, viewIndex, trainIndices),
-                                           DATASET.get("Labels").value[trainIndices],
-                                           self.monoviewClassifiersConfigs[index], self.needProbas, self.randomState)
-            for index, viewIndex in enumerate(viewsIndices))
+                delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[index],
+                                               getV(DATASET, viewIndex, trainIndices),
+                                               DATASET.get("Labels").value[trainIndices],
+                                               self.monoviewClassifiersConfigs[index], self.needProbas, self.randomState)
+                for index, viewIndex in enumerate(viewsIndices))

@@ -59,7 +59,7 @@ def initBenchmark(args):
         for multiviewPackageName in allMultiviewPackages:
             if multiviewPackageName in algosMutliview:
                 multiviewPackage = getattr(Multiview, multiviewPackageName)
-                multiviewModule = getattr(multiviewPackage, multiviewPackageName)
+                multiviewModule = getattr(multiviewPackage, multiviewPackageName+"Module")
                 benchmark = multiviewModule.getBenchmark(benchmark, args=args)
     if "Monoview" in args.CL_type:
         if args.CL_algos_monoview == ['']:
@@ -272,7 +272,7 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
 # __ EXECUTION __ #
 # _______________ #
 def execClassif(arguments):
-    import pdb;pdb.set_trace()
+    # import pdb;pdb.set_trace()
     testVersions()
     start = time.time()
     args = execution.parseTheArgs(arguments)

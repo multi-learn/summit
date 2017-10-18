@@ -24,6 +24,9 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
                                             viewsIndices, resultsMonoview, classificationIndices)
     monoviewClassifierModules = [getattr(MonoviewClassifiers, classifierName)
                                  for classifierName in args.FU_L_cl_names]
+    if args.FU_L_cl_names == [""] and args.CL_type == ["Multiview"]:
+        raise AttributeError("You must perform Monoview classification or specify "
+                             "which monoview classifier to use Late Fusion")
     if args.FU_L_cl_config != ['']:
         classifiersConfigs = [
             monoviewClassifierModule.getKWARGS([arg.split(":") for arg in classifierConfig.split(",")])
@@ -62,12 +65,16 @@ class SVMForLinear(LateFusionClassifier):
         if type(self.monoviewClassifiersConfigs[0]) == dict:
             for index, viewIndex in enumerate(viewsIndices):
                 monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[index])
+                if type(self.monoviewClassifiersConfigs[index]) is dict:
+                    pass
+                else:
+                    self.monoviewClassifiersConfigs[index] = dict((str(configIndex), config)
+                                            for configIndex, config in enumerate(self.monoviewClassifiersConfigs[index]))
                 self.monoviewClassifiers.append(
                     monoviewClassifier.fit(getV(DATASET, viewIndex, trainIndices),
                                            DATASET.get("Labels").value[trainIndices], self.randomState,
                                            NB_CORES=self.nbCores,
-                                           **dict((str(configIndex), config) for configIndex, config in
-                                                  enumerate(self.monoviewClassifiersConfigs[index]))))
+                                           **self.monoviewClassifiersConfigs[index]))
         else:
             self.monoviewClassifiers = self.monoviewClassifiersConfigs
         self.SVMForLinearFusionFit(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
