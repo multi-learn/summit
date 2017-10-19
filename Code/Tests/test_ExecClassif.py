@@ -7,13 +7,19 @@ from MonoMultiViewClassifiers import ExecClassif
 class Test_initBenchmark(unittest.TestCase):
 
     def test_benchmark_wanted(self):
-        benchmark_output = ExecClassif.initBenchmark(self.args)
+        # benchmark_output = ExecClassif.initBenchmark(self.args)
         self.assertEqual(1,1)
+
+
+class Test_initKWARGS(unittest.TestCase):
 
     def test_initKWARGSFunc_no_monoview(self):
         benchmark = {"Monoview":{}, "Multiview":{}}
         args = ExecClassif.initKWARGSFunc({}, benchmark)
         self.assertEqual(args, {})
+
+
+class Test_initMonoviewArguments(unittest.TestCase):
 
     def test_initMonoviewArguments_no_monoview(self):
         benchmark = {"Monoview":{}, "Multiview":{}}
@@ -23,6 +29,8 @@ class Test_initBenchmark(unittest.TestCase):
     def test_initMonoviewArguments_empty(self):
         benchmark = {"Monoview":{}, "Multiview":{}}
         arguments = ExecClassif.initMonoviewArguments(benchmark, {}, [], [], None, 0, {})
+
+class Essai(unittest.TestCase):
 
     def setUp(self):
         parser = argparse.ArgumentParser(
