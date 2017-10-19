@@ -70,20 +70,11 @@ def initBenchmark(args):
     return benchmark
 
 
-def initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, DATASET, NB_CLASS, kwargsInit):
+def initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, NB_CLASS, kwargsInit):
     if benchmark["Monoview"]:
         argumentDictionaries["Monoview"] = []
         for view in views:
             for classifier in benchmark["Monoview"]:
-                # if classifier == "SCM":
-                #     if DATASET.get("View" + str(allViews.index(view))).attrs["binary"]:
-                #         arguments = {
-                #             "args": {classifier + "KWARGS": kwargsInit[classifier + "KWARGSInit"], "feat": view,
-                #                      "CL_type": classifier, "nbClass": NB_CLASS}, "viewIndex": allViews.index(view)}
-                #         argumentDictionaries["Monoview"].append(arguments)
-                #     else:
-                #         pass
-                # else:
                 arguments = {
                     "args": {classifier + "KWARGS": kwargsInit[classifier + "KWARGSInit"], "feat": view,
                              "CL_type": classifier, "nbClass": NB_CLASS}, "viewIndex": allViews.index(view)}
@@ -328,7 +319,7 @@ def execClassif(arguments):
     dataBaseTime = time.time() - start
 
     argumentDictionaries = {"Monoview": [], "Multiview": []}
-    argumentDictionaries = initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, DATASET, NB_CLASS,
+    argumentDictionaries = initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, NB_CLASS,
                                                  initKWARGS)
     directories = execution.genDirecortiesNames(directory, statsIter)
 
