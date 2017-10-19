@@ -1,3 +1,5 @@
+from Versions import testVersions
+testVersions()
 import sys
 
 from MonoMultiViewClassifiers import ExecClassif

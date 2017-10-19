@@ -22,7 +22,6 @@ from . import MonoviewClassifiers
 from .Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from .Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 from .Multiview import GetMultiviewDb as DB
-from Versions import testVersions
 from ResultAnalysis import resultAnalysis, analyzeLabels, analyzeIterResults
 from .utils import execution, Dataset
 
@@ -273,7 +272,6 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
 # _______________ #
 def execClassif(arguments):
     # import pdb;pdb.set_trace()
-    testVersions()
     start = time.time()
     args = execution.parseTheArgs(arguments)
 
