@@ -3,4 +3,6 @@ TODO
 .idea/**
 .ipynb_checkpoints/**
 Results/**
+Data/**
 Code/MonoMultiviewClassifiers/Results/*
+Code/Tests/temp_tests/**

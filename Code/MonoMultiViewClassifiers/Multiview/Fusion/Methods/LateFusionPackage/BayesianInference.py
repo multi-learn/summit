@@ -74,7 +74,6 @@ class BayesianInference(LateFusionClassifier):
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if sum(self.weights) != 1.0:
-            print self.weights
             self.weights = self.weights / sum(self.weights)
 
         viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))

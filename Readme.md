@@ -1,20 +1,14 @@
 # Mono- and Multi-view classification benchmark
 
-This project aims to be an easy-to use solution to run a prior benchmark on a dataset abd evaluate mono- and multi-view algorithms capacity to classify it correctly.
+This project aims to be an easy-to use solution to run a prior benchmark on a dataset and evaluate mono- & multi-view algorithms capacity to classify it correctly.
 
 ## Getting Started
-
-In order to run it you'll need to try on simulated data with the command
-```
-python multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/ExecClassif.py -log
-```
-Results will be stored in multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/
 
 ### Prerequisites
 
 To be able to use this project, you'll need :
 
-* [Python 2.7](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+* [Python 2.7](http://www.dropwizard.io/1.0.2/docs/)
 
 And the following python modules :
 * [pyscm](https://github.com/aldro61/pyscm) - Set Covering Machine, Marchand, M., & Taylor, J. S. (2003) by A.Drouin, F.Brochu, G.Letarte St-Pierre, M.Osseni, P-L.Plante
@@ -22,24 +16,66 @@ And the following python modules :
 * [matplotlib](http://matplotlib.org/) - Used to plot results
 * [sklearn](http://scikit-learn.org/stable/) - Used for the monoview classifiers
 * [joblib](https://pypi.python.org/pypi/joblib) - Used to compute on multiple threads
-* [h5py](www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to sapre RAM
+* [h5py](www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to spare RAM
 * ([argparse](https://docs.python.org/3/library/argparse.html) - Used to parse the input args)
 * ([logging](https://docs.python.org/2/library/logging.html) - Used to generate log)
 
-They are all tested in  `multiview-machine-mearning-omis/Code/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `ExecClassif` script
+They are all tested in  `multiview-machine-mearning-omis/Code/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `Exec` script
 
 ### Installing
 
 No installation is needed, just the prerequisites.
 
+### Running on simulated data
+
+In order to run it you'll need to try on **simulated** data with the command
+```
+cd multiview-machine-learning-omis/Code
+python Exec.py -log
+```
+Results will be stored in `multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/`
+
+If no path is specified, hdf5 datasets are stored in `multiview-machine-learning-omis/Data`
+
+
+### Discovering the arguments
+
+In order to see all the arguments of this script and their decription and default values run :
+```
+cd multiview-machine-learning-omis/Code
+python Exec.py -h
+```
+
+
+### Understanding `Results/` architecture
+
+Results are stored in `multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/`
+A directory will be created with the name of the database used to run the script.
+For each time the script is run, a new directory named after the running date and time will be created.
+In that directory:
+* If the script is run using more than one statistic iteration, it will create one directory for each iteration and store the statistical analysis in the current directory 
+* If it is run with one iteration, the itration results will be stored in the current directory
+
+The results for each iteration are graphs recaping the classifiers scores and the classifiers config and results are stored in a directory of their own.
+To explore the results run the `Exec` script and go in `multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/Plausible/`
+
+
 ## Running the tests
+
+**/!\ still in development, test sucess is not meaningful ATM /!\\**
 
 In order to run it you'll need to try on simulated data with the command
 ```
-python multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/ExecClassif.py -log
+cd multiview-machine-learning-omis/Code
+python -m unittest discover
 ```
-Results will be stored in multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/
 
 ## Authors
 
 * **Baptiste BAUVIN**
+
+### Contributors
+
+* **Mazid Osseni**
+* **Alexandre Drouin**
+* **Nikolas Huelsmann**

@@ -5,6 +5,7 @@ import os
 import logging
 import h5py
 import operator
+import errno
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -28,7 +29,13 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, nbView=3,
                        nbClass=2, datasetLength=347, randomStateInt=42):
     randomState = np.random.RandomState(randomStateInt)
     nbFeatures = 250
-    datasetFile = h5py.File(pathF + "Plausible.hdf5", "w")
+    if not os.path.exists(os.path.dirname(pathF + "Plausible.hdf5")):
+        try:
+            os.makedirs(os.path.dirname(pathF + "Plausible.hdf5"))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+    datasetFile = h5py.File(pathF + "/Plausible.hdf5", "w")
     CLASS_LABELS = np.array([0 for i in range(datasetLength / 2)] + [1 for i in range(datasetLength / 2)])
     for viewIndex in range(nbView):
         viewData = np.array([np.zeros(nbFeatures) for i in range(datasetLength / 2)] + [np.ones(nbFeatures)
