@@ -75,19 +75,19 @@ def initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, DATA
         argumentDictionaries["Monoview"] = []
         for view in views:
             for classifier in benchmark["Monoview"]:
-                if classifier == "SCM":
-                    if DATASET.get("View" + str(allViews.index(view))).attrs["binary"]:
-                        arguments = {
-                            "args": {classifier + "KWARGS": kwargsInit[classifier + "KWARGSInit"], "feat": view,
-                                     "CL_type": classifier, "nbClass": NB_CLASS}, "viewIndex": allViews.index(view)}
-                        argumentDictionaries["Monoview"].append(arguments)
-                    else:
-                        pass
-                else:
-                    arguments = {
-                        "args": {classifier + "KWARGS": kwargsInit[classifier + "KWARGSInit"], "feat": view,
-                                 "CL_type": classifier, "nbClass": NB_CLASS}, "viewIndex": allViews.index(view)}
-                    argumentDictionaries["Monoview"].append(arguments)
+                # if classifier == "SCM":
+                #     if DATASET.get("View" + str(allViews.index(view))).attrs["binary"]:
+                #         arguments = {
+                #             "args": {classifier + "KWARGS": kwargsInit[classifier + "KWARGSInit"], "feat": view,
+                #                      "CL_type": classifier, "nbClass": NB_CLASS}, "viewIndex": allViews.index(view)}
+                #         argumentDictionaries["Monoview"].append(arguments)
+                #     else:
+                #         pass
+                # else:
+                arguments = {
+                    "args": {classifier + "KWARGS": kwargsInit[classifier + "KWARGSInit"], "feat": view,
+                             "CL_type": classifier, "nbClass": NB_CLASS}, "viewIndex": allViews.index(view)}
+                argumentDictionaries["Monoview"].append(arguments)
     return argumentDictionaries
 
 
