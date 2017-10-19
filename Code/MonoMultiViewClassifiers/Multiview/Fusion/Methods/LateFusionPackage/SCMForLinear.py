@@ -1,22 +1,11 @@
 import numpy as np
-import pyscm
-# from pyscm.utils import _pack_binary_bytes_to_ints
-import os
-import h5py
-# from pyscm.binary_attributes.classifications.popcount import inplace_popcount_32, inplace_popcount_64
-# from pyscm.utils import _unpack_binary_bytes_from_ints
 
 from pyscm.scm import SetCoveringMachineClassifier as scm
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.pipeline import Pipeline
-from sklearn.model_selection import RandomizedSearchCV
 from sklearn.externals.six import iteritems, iterkeys, itervalues
 
-from math import ceil
-import random
 from sklearn.metrics import accuracy_score
 import itertools
-import pkgutil
 
 from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
 from ..... import MonoviewClassifiers

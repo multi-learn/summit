@@ -1,8 +1,10 @@
-from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
 from sklearn.pipeline import Pipeline  # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import randint
 import numpy as np
+import graphviz
+import cPickle
 
 from .. import Metrics
 from ..utils.HyperParameterSearch import genHeatMaps
@@ -20,7 +22,7 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
     maxDepth = int(kwargs['0'])
     criterion = kwargs['1']
     splitter = kwargs['2']
-    classifier = DecisionTreeClassifier(max_depth=maxDepth, criterion=criterion, splitter=splitter,
+    classifier = tree.DecisionTreeClassifier(max_depth=maxDepth, criterion=criterion, splitter=splitter,
                                         random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
@@ -48,7 +50,7 @@ def getKWARGS(kwargsList):
 
 def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1,
                      metric=["accuracy_score", None], nIter=30):
-    pipeline_DT = Pipeline([('classifier', DecisionTreeClassifier())])
+    pipeline_DT = Pipeline([('classifier', tree.DecisionTreeClassifier())])
     param_DT = {"classifier__max_depth": randint(1, 300),
                 "classifier__criterion": ["gini", "entropy"],
                 "classifier__splitter": ["best", "random"]}
@@ -85,3 +87,23 @@ def getConfig(config):
         except:
             return "\n\t\t- Decision Tree with max_depth : " + str(config["0"]) + ", criterion : " + config[
                 "1"] + ", splitter : " + config["2"]
+
+def getInterpret(classifier, directory):
+    dot_data = tree.export_graphviz(classifier, out_file=None)
+    graph = graphviz.Source(dot_data)
+    graph.render(directory+"-tree.pdf")
+    featureImportances = classifier.feature_importances_
+    sortedArgs = np.argsort(-featureImportances)
+    featureImportancesSorted = featureImportances[sortedArgs][:50]
+    featureIndicesSorted = sortedArgs[:50]
+    featuresImportancesDict = dict((featureIndex, featureImportance)
+                                   for featureIndex, featureImportance in enumerate(featureImportances)
+                                   if featureImportance != 0)
+    with open(directory + '-feature_importances.pickle', 'wb') as handle:
+        cPickle.dump(featuresImportancesDict, handle)
+    interpretString = "Feature importances : \n"
+    for featureIndex, featureImportance in zip(featureIndicesSorted, featureImportancesSorted):
+        if featureImportance > 0:
+            interpretString += "- Feature index : " + str(featureIndex) + \
+                               ", feature importance : " + str(featureImportance) + "\n"
+    return interpretString

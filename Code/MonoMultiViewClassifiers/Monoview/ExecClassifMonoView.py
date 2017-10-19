@@ -113,7 +113,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
                                                             hyperParamSearch, metrics, nIter, feat, CL_type,
                                                             clKWARGS, labelsNames, X.shape,
                                                             y_train, y_train_pred, y_test, y_test_pred, t_end,
-                                                            randomState)
+                                                            randomState, cl_res, outputFileName)
     cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
     logging.debug("Done:\t Getting Results")
     logging.info(stringAnalysis)

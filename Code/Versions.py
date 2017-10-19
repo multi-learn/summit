@@ -96,8 +96,15 @@ def testVersions():
         isUpToDate = False
         toInstall.append("h5py")
 
+    try:
+        import graphviz  #
+    except:
+        isUpToDate = False
+        toInstall.append("graphviz")
+
     if not isUpToDate:
         print "You can't run at the moment, please install the following modules : \n"+ "\n".join(toInstall)
+        quit()
 
 if __name__== "__main__":
     testVersions()

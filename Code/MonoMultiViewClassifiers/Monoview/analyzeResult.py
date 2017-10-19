@@ -16,7 +16,7 @@ def getDBConfigString(name, feat, classificationIndices, shape, classLabelsNames
     return dbConfigString
 
 
-def getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS):
+def getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS, classififer, directory):
     classifierModule = getattr(MonoviewClassifiers, CL_type)
     classifierConfigString = "Classifier configuration : \n"
     classifierConfigString += "\t- " + classifierModule.getConfig(clKWARGS)[5:] + "\n"
@@ -24,7 +24,8 @@ def getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS):
     if gridSearch:
         classifierConfigString += "\t- Got configuration using randomized search with " + str(nIter) + " iterations \n"
     classifierConfigString += "\n\n"
-    return classifierConfigString
+    classifierInterpretString = classifierModule.getInterpret(classififer, directory)
+    return classifierConfigString, classifierInterpretString
 
 
 def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
@@ -43,7 +44,7 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
 
 
 def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics, nIter, feat, CL_type, clKWARGS, classLabelsNames,
-            shape, y_train, y_train_pred, y_test, y_test_pred, time, randomState):
+            shape, y_train, y_train_pred, y_test, y_test_pred, time, randomState, classifier, directory):
     metricsScores = {}
     metricModule = getattr(Metrics, metrics[0][0])
     trainScore = metricModule.score(y_train, y_train_pred)
@@ -53,7 +54,8 @@ def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics, nIter, fea
     stringAnalysis += metrics[0][0] + " on train : " + str(trainScore) + "\n" + metrics[0][0] + " on test : " + str(
         testScore) + "\n\n"
     stringAnalysis += getDBConfigString(name, feat, learningRate, shape, classLabelsNames, KFolds)
-    stringAnalysis += getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS)
+    classifierConfigString, classifierIntepretString = getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS, classifier, directory)
+    stringAnalysis += classifierConfigString
     for metric in metrics:
         stringAnalysis += getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred)
         if metric[1] is not None:
@@ -63,6 +65,8 @@ def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics, nIter, fea
         metricsScores[metric[0]] = [getattr(Metrics, metric[0]).score(y_train, y_train_pred),
                                     getattr(Metrics, metric[0]).score(y_test, y_test_pred)]
     stringAnalysis += "\n\n Classification took " + str(hms(seconds=int(time)))
+    stringAnalysis += "\n\n Classifier Interpretation : \n"
+    stringAnalysis+= classifierIntepretString
 
     imageAnalysis = {}
     return stringAnalysis, imageAnalysis, metricsScores
