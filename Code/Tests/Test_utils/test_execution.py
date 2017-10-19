@@ -71,3 +71,13 @@ class Test_genSplits(unittest.TestCase):
         self.assertGreater(len(np.where(self.labels[self.test_indices]==0)[0]), 0)
         self.assertGreater(len(np.where(self.labels[self.train_indices]==1)[0]), 0)
         self.assertGreater(len(np.where(self.labels[self.test_indices]==1)[0]), 0)
+
+class Test_genKFolds(unittest.TestCase):
+
+    def setUp(self):
+        self.statsIter = 2
+        self.nbFolds = 5
+        self.statsIterRandomStates = [np.random.RandomState(42), np.random.RandomState(94)]
+
+    def test_genKFolds_iter(self):
+        pass

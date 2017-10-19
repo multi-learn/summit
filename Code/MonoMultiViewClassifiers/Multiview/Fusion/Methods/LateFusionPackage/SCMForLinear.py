@@ -62,7 +62,7 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
         max_attributes = randomState.randint(1, 20)
         p = randomState.random_sample()
         model = randomState.choice(["conjunction", "disjunction"])
-        order = randomState.randint(1, nbView)
+        order = randomState.randint(1, 10)
         paramsSets.append([p, max_attributes, model, order])
     return paramsSets
 
@@ -123,7 +123,6 @@ class SCMForLinear(LateFusionClassifier):
         self.p = paramsSet[0]
         self.maxAttributes = paramsSet[1]
         self.order = paramsSet[3]
-        self.order = 2
         self.modelType = paramsSet[2]
 
     def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
