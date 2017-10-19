@@ -296,8 +296,7 @@ def execClassif(arguments):
                                              args.CL_classes)
 
     datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
-    indices = np.arange(datasetLength)
-    classificationIndices = execution.genSplits(statsIter, indices, DATASET, args.CL_split, statsIterRandomStates)
+    classificationIndices = execution.genSplits(statsIter, datasetLength, DATASET, args.CL_split, statsIterRandomStates)
 
     kFolds = execution.genKFolds(statsIter, args.CL_nbFolds, statsIterRandomStates)
 

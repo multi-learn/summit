@@ -197,6 +197,7 @@ def initRandomState(randomStateArg, directory):
         cPickle.dump(randomState, handle)
     return randomState
 
+
 def initLogFile(args):
     resultDirectory = "../Results/" + args.name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
     logFileName = time.strftime("%Y%m%d-%H%M%S") + "-" + ''.join(args.CL_type) + "-" + "_".join(
@@ -224,20 +225,26 @@ def initLogFile(args):
     return resultDirectory
 
 
-def genSplits(statsIter, indices, DATASET, splitRatio, statsIterRandomStates):
+def genSplits(statsIter, datasetlength, DATASET, splitRatio, statsIterRandomStates):
+    indices = np.arange(datasetlength)
     if statsIter > 1:
         splits = []
         for randomState in statsIterRandomStates:
-            trainIndices, testIndices, a, b = sklearn.model_selection.train_test_split(indices,
-                                                                                       DATASET.get("Labels").value,
-                                                                                       test_size=splitRatio,
-                                                                                       random_state=randomState)
+            foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1, random_state=randomState, test_size=splitRatio)
+            folds = foldsObj.split(indices, DATASET.get("Labels").value)
+            for fold in folds:
+                train_fold, test_fold = fold
+            trainIndices = indices[train_fold]
+            testIndices = indices[test_fold]
             splits.append([trainIndices, testIndices])
         return splits
     else:
-        trainIndices, testIndices, a, b = sklearn.model_selection.train_test_split(indices, DATASET.get("Labels").value,
-                                                                                   test_size=splitRatio,
-                                                                                   random_state=statsIterRandomStates)
+        foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1, random_state=statsIterRandomStates, test_size=splitRatio)
+        folds = foldsObj.split(indices, DATASET.get("Labels").value)
+        for fold in folds:
+            train_fold, test_fold = fold
+        trainIndices = indices[train_fold]
+        testIndices = indices[test_fold]
         return trainIndices, testIndices
 
 
