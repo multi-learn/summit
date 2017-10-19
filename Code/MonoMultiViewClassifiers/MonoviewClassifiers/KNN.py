@@ -96,3 +96,6 @@ def getConfig(config):
         except:
             return "\n\t\t- K nearest Neighbors with  n_neighbors : " + str(config["0"]) + ", weights : " + config[
                 "1"] + ", algorithm : " + config["2"] + ", p : " + str(config["3"])
+
+def getInterpret(classifier, directory):
+    return ""

@@ -86,3 +86,7 @@ def getConfig(config):
         except:
             return "\n\t\t- Random Forest with num_esimators : " + str(config["0"]) + ", max_depth : " + str(
                 config["1"]) + ", criterion : " + config["2"]
+
+
+def getInterpret(classifier, directory):
+    pass
