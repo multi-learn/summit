@@ -60,6 +60,8 @@ def canProbas():
     return False
 
 
+
+
 def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
     modelType = kwargs['0']
     maxRules = int(kwargs['1'])
@@ -74,6 +76,10 @@ def paramsToSet(nIter, randomState):
     for _ in range(nIter):
         paramsSet.append([randomState.choice(["conjunction", "disjunction"]), randomState.randint(1, 15), randomState.random_sample()])
     return paramsSet
+
+
+def getInterpret(classifier, directory):
+    return ""
 
 
 def getKWARGS(kwargsList):

@@ -89,3 +89,6 @@ def getConfig(config):
         except:
             return "\n\t\t- SGDClassifier with loss : " + config["0"] + ", penalty : " + config[
                 "1"] + ", alpha : " + str(config["2"])
+
+def getInterpret(classifier, directory):
+    return ""

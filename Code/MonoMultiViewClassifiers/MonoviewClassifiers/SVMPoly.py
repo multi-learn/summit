@@ -75,3 +75,6 @@ def getConfig(config):
             return "\n\t\t- SVM Poly with C : " + str(config[0]) + ", degree : " + str(config[1])
         except:
             return "\n\t\t- SVM Poly with C : " + str(config["0"]) + ", degree : " + str(config["1"])
+
+def getInterpret(classifier, directory):
+    return ""
