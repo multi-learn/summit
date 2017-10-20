@@ -22,7 +22,7 @@ from . import MonoviewClassifiers
 from .Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from .Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 from .Multiview import GetMultiviewDb as DB
-from ResultAnalysis import resultAnalysis, analyzeLabels, analyzeIterResults
+from ResultAnalysis import resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes
 from .utils import execution, Dataset
 
 # Author-Info
@@ -170,7 +170,7 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
     trueLabels = DATASET.get("Labels").value
     times = [dataBaseTime, monoviewTime, multiviewTime]
     results = (resultsMonoview, resultsMultiview)
-    analyzeLabels(labels, trueLabels, results, directory)
+    labelAnalysis = analyzeLabels(labels, trueLabels, results, directory)
     logging.debug("Start:\t Analyze Global Results for iteration")
     resultAnalysis(benchmark, results, args.name, times, metrics, directory)
     logging.debug("Done:\t Analyze Global Results for iteration")
@@ -181,7 +181,7 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
                  "s, Multiview Time : " + str(multiviewTime) +
                  "s, Global Analysis Time : " + str(globalAnalysisTime) +
                  "s, Total Duration : " + str(totalTime) + "s")
-    return results
+    return results, labelAnalysis
 
 
 def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory, args, classificationIndices, kFolds,
@@ -244,7 +244,7 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
     trueLabels = DATASET.get("Labels").value
     times = [dataBaseTime, monoviewTime, multiviewTime]
     results = (resultsMonoview, resultsMultiview)
-    analyzeLabels(labels, trueLabels, results, directory)
+    labelAnalysis = analyzeLabels(labels, trueLabels, results, directory)
     logging.debug("Start:\t Analyze Global Results")
     resultAnalysis(benchmark, results, args.name, times, metrics, directory)
     logging.debug("Done:\t Analyze Global Results")
@@ -255,7 +255,7 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
                  "s, Multiview Time : " + str(multiviewTime) +
                  "s, Global Analysis Time : " + str(globalAnalysisTime) +
                  "s, Total Duration : " + str(totalTime) + "s")
-    return results
+    return results, labelAnalysis
 
 
 # _______________ #
@@ -368,7 +368,16 @@ def execClassif(arguments):
                                     classificationIndices[iterIndex], kFolds[iterIndex], statsIterRandomStates[iterIndex],
                                     hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start, benchmark,
                                     views))
-        analyzeIterResults(iterResults, args.name, metrics, directory)
+        classifiersIterResults = []
+        iterLabelAnalysis = []
+        for result in iterResults:
+            classifiersIterResults.append(result[0])
+            iterLabelAnalysis.append(result[1])
+
+        mono,multi = classifiersIterResults[0]
+        classifiersNames = genNamesFromRes(mono, multi)
+        analyzeIterLabels(iterLabelAnalysis, directory, classifiersNames)
+        analyzeIterResults(classifiersIterResults, args.name, metrics, directory)
 
     else:
         if not os.path.exists(os.path.dirname(directories + "train_labels.csv")):
@@ -380,7 +389,7 @@ def execClassif(arguments):
         trainIndices, testIndices = classificationIndices
         trainLabels = DATASET.get("Labels").value[trainIndices]
         np.savetxt(directories + "train_labels.csv", trainLabels, delimiter=",")
-        res = classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories, args, classificationIndices,
+        res, labelAnalysis = classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories, args, classificationIndices,
                               kFolds,
                               statsIterRandomStates, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
                               benchmark, views)

@@ -80,6 +80,27 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory, minSize=
         plt.close()
 
 
+def analyzeIterLabels(labelsAnalysisList, directory, classifiersNames, minSize=10):
+    nbExamples = labelsAnalysisList[0].shape[0]
+    nbClassifiers = len(classifiersNames)
+    nbIter = 2
+
+    figWidth = max(nbClassifiers / 2, minSize)
+    figHeight = max(nbExamples / 20, minSize)
+    figKW = {"figsize": (figWidth, figHeight)}
+    fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
+    data = sum(labelsAnalysisList)
+    cax = plt.imshow(data, interpolation='none', cmap="grey", aspect='auto')
+    plt.title('Errors depending on the classifier')
+    ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)
+    plt.xticks(ticks, classifiersNames, rotation="vertical")
+    cbar = fig.colorbar(cax, ticks=[0, len(labelsAnalysisList)])
+    cbar.ax.set_yticklabels(['Always Wrong', 'Always Right'])
+    fig.tight_layout()
+    fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
+    plt.close()
+
+
 def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):
     mono, multi = results
     classifiersNames = genNamesFromRes(mono, multi)
@@ -101,7 +122,7 @@ def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):
 
     cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm, aspect='auto')
     plt.title('Errors depending on the classifier')
-    ticks = np.arange(0, nbClassifiers * nbIter, nbIter)
+    ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)
     labels = classifiersNames
     plt.xticks(ticks, labels, rotation="vertical")
     cbar = fig.colorbar(cax, ticks=[0, 1])
@@ -109,6 +130,7 @@ def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):
     fig.tight_layout()
     fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
     plt.close()
+    return data
 
 
 def genScoresNames(iterResults, metric, nbResults, names, nbMono, minSize=10):
