@@ -171,16 +171,16 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
     times = [dataBaseTime, monoviewTime, multiviewTime]
     results = (resultsMonoview, resultsMultiview)
     labelAnalysis = analyzeLabels(labels, trueLabels, results, directory)
-    logging.debug("Start:\t Analyze Global Results for iteration")
+    logging.debug("Start:\t Analyze Iteration Results")
     resultAnalysis(benchmark, results, args.name, times, metrics, directory)
-    logging.debug("Done:\t Analyze Global Results for iteration")
+    logging.debug("Done:\t Analyze Iteration Results")
     globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
     totalTime = time.time() - start
     logging.info("Extraction time : " + str(dataBaseTime) +
                  "s, Monoview time : " + str(monoviewTime) +
                  "s, Multiview Time : " + str(multiviewTime) +
-                 "s, Global Analysis Time : " + str(globalAnalysisTime) +
-                 "s, Total Duration : " + str(totalTime) + "s")
+                 "s, Iteration Analysis Time : " + str(globalAnalysisTime) +
+                 "s, Iteration Duration : " + str(totalTime) + "s")
     return results, labelAnalysis
 
 
@@ -245,16 +245,16 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
     times = [dataBaseTime, monoviewTime, multiviewTime]
     results = (resultsMonoview, resultsMultiview)
     labelAnalysis = analyzeLabels(labels, trueLabels, results, directory)
-    logging.debug("Start:\t Analyze Global Results")
+    logging.debug("Start:\t Analyze Iteration Results")
     resultAnalysis(benchmark, results, args.name, times, metrics, directory)
-    logging.debug("Done:\t Analyze Global Results")
+    logging.debug("Done:\t Analyze Iteration Results")
     globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
     totalTime = time.time() - start
     logging.info("Extraction time : " + str(dataBaseTime) +
                  "s, Monoview time : " + str(monoviewTime) +
                  "s, Multiview Time : " + str(multiviewTime) +
-                 "s, Global Analysis Time : " + str(globalAnalysisTime) +
-                 "s, Total Duration : " + str(totalTime) + "s")
+                 "s, Iteration Analysis Time : " + str(globalAnalysisTime) +
+                 "s, Iteration Duration : " + str(totalTime) + "s")
     return results, labelAnalysis
 
 
@@ -324,6 +324,7 @@ def execClassif(arguments):
     directories = execution.genDirecortiesNames(directory, statsIter)
 
     if statsIter > 1:
+        logging.debug("Start:\t Benchmark classification")
         for statIterIndex in range(statsIter):
             if not os.path.exists(os.path.dirname(directories[statIterIndex] + "train_labels.csv")):
                 try:
@@ -368,6 +369,8 @@ def execClassif(arguments):
                                     classificationIndices[iterIndex], kFolds[iterIndex], statsIterRandomStates[iterIndex],
                                     hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start, benchmark,
                                     views))
+        logging.debug("Done:\t Benchmark classification")
+        logging.debug("Start:\t Global Results Analysis")
         classifiersIterResults = []
         iterLabelAnalysis = []
         for result in iterResults:
@@ -378,8 +381,12 @@ def execClassif(arguments):
         classifiersNames = genNamesFromRes(mono, multi)
         analyzeIterLabels(iterLabelAnalysis, directory, classifiersNames)
         analyzeIterResults(classifiersIterResults, args.name, metrics, directory)
+        logging.debug("Done:\t Global Results Analysis")
+        totalDur = time.time()-start
+        logging.info("Info:\t Total duration : "+str(totalDur))
 
     else:
+        logging.debug("Start:\t Benchmark classification")
         if not os.path.exists(os.path.dirname(directories + "train_labels.csv")):
             try:
                 os.makedirs(os.path.dirname(directories + "train_labels.csv"))
@@ -393,6 +400,9 @@ def execClassif(arguments):
                               kFolds,
                               statsIterRandomStates, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
                               benchmark, views)
+        logging.debug("Done:\t Benchmark classification")
+        totalDur = time.time()-start
+        logging.info("Info:\t Total duration : "+str(totalDur))
 
     if statsIter > 1:
         pass
