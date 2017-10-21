@@ -45,6 +45,7 @@ def genNamesFromRes(mono, multi):
 def resultAnalysis(benchmark, results, name, times, metrics, directory, minSize=10):
     mono, multi = results
     for metric in metrics:
+        logging.debug("Start:\t Score graph generation for "+metric[0])
         names = genNamesFromRes(mono, multi)
         nbResults = len(mono) + len(multi)
         validationScores = [float(res[1][2][metric[0]][1]) for res in mono]
@@ -78,9 +79,11 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory, minSize=
         plt.tight_layout()
         f.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-" + name + "-" + metric[0] + ".png")
         plt.close()
+        logging.debug("Done:\t Score graph generation for " + metric[0])
 
 
 def analyzeIterLabels(labelsAnalysisList, directory, classifiersNames, minSize=10):
+    logging.debug("Start:\t Global label analysis figure generation")
     nbExamples = labelsAnalysisList[0].shape[0]
     nbClassifiers = len(classifiersNames)
     nbIter = 2
@@ -99,6 +102,8 @@ def analyzeIterLabels(labelsAnalysisList, directory, classifiersNames, minSize=1
     fig.tight_layout()
     fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
     plt.close()
+    logging.debug("Done:\t Global label analysis figure generation")
+    logging.debug("Start:\t Global error by example figure generation")
     errorOnExamples = -1 * np.sum(data, axis=1) / nbIter + (nbClassifiers*len(labelsAnalysisList))
     np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-clf_errors.csv", data, delimiter=",")
     np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
@@ -109,9 +114,11 @@ def analyzeIterLabels(labelsAnalysisList, directory, classifiersNames, minSize=1
     plt.title("Number of classifiers that failed to classify each example")
     fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.png")
     plt.close()
+    logging.debug("Done:\t Global error by example figure generation")
 
 
 def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):
+    logging.debug("Start:\t Label analysis figure generation")
     mono, multi = results
     classifiersNames = genNamesFromRes(mono, multi)
     nbClassifiers = len(classifiersNames)
@@ -140,6 +147,9 @@ def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):
     fig.tight_layout()
     fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
     plt.close()
+    logging.debug("Done:\t Label analysis figure generation")
+
+    logging.debug("Start:\t Error by example figure generation")
     errorOnExamples = -1*np.sum(data, axis=1)/nbIter+nbClassifiers
     np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-clf_errors.csv", data, delimiter=",")
     np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
@@ -150,6 +160,7 @@ def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):
     plt.title("Number of classifiers that failed to classify each example")
     fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.png")
     plt.close()
+    logging.debug("Done:\t Error by example figure generation")
     return data
 
 
@@ -201,6 +212,8 @@ def analyzeIterResults(iterResults, name, metrics, directory):
     nbIter = len(iterResults)
     names = genNamesFromRes(iterResults[0][0], iterResults[0][1])
     for metric in metrics:
+        logging.debug("Start:\t Global score graph generation for " + metric[0])
         figure = genScoresNames(iterResults, metric, nbResults, names, nbMono)
         figure.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-" + name + "-Mean_on_"
                        + str(nbIter) + "_iter-" + metric[0] + ".png")
+        logging.debug("Done:\t Global score graph generation for " + metric[0])
