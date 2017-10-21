@@ -90,7 +90,7 @@ def analyzeIterLabels(labelsAnalysisList, directory, classifiersNames, minSize=1
     figKW = {"figsize": (figWidth, figHeight)}
     fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
     data = sum(labelsAnalysisList)
-    cax = plt.imshow(data, interpolation='none', cmap="grey", aspect='auto')
+    cax = plt.imshow(-data, interpolation='none', cmap="Greys", aspect='auto')
     plt.title('Errors depending on the classifier')
     ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)
     plt.xticks(ticks, classifiersNames, rotation="vertical")
@@ -98,6 +98,16 @@ def analyzeIterLabels(labelsAnalysisList, directory, classifiersNames, minSize=1
     cbar.ax.set_yticklabels(['Always Wrong', 'Always Right'])
     fig.tight_layout()
     fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
+    plt.close()
+    errorOnExamples = -1 * np.sum(data, axis=1) / nbIter + (nbClassifiers*len(labelsAnalysisList))
+    np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-clf_errors.csv", data, delimiter=",")
+    np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
+    fig, ax = plt.subplots()
+    x = np.arange(nbExamples)
+    plt.bar(x, errorOnExamples)
+    plt.ylim([0,nbClassifiers*len(labelsAnalysisList)])
+    plt.title("Number of classifiers that failed to classify each example")
+    fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.png")
     plt.close()
 
 
@@ -129,6 +139,16 @@ def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):
     cbar.ax.set_yticklabels(['Wrong', ' Right'])
     fig.tight_layout()
     fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
+    plt.close()
+    errorOnExamples = -1*np.sum(data, axis=1)/nbIter+nbClassifiers
+    np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-clf_errors.csv", data, delimiter=",")
+    np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
+    fig, ax = plt.subplots()
+    x = np.arange(nbExamples)
+    plt.bar(x, errorOnExamples)
+    plt.ylim([0,nbClassifiers])
+    plt.title("Number of classifiers that failed to classify each example")
+    fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.png")
     plt.close()
     return data
 
