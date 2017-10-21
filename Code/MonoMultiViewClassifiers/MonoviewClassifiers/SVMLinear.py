@@ -75,4 +75,5 @@ def getConfig(config):
             return "\n\t\t- SVM Linear with C : " + str(config["0"])
 
 def getInterpret(classifier, directory):
+    # TODO : coeffs
     return ""

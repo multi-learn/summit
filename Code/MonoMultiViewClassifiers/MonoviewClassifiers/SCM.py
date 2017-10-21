@@ -78,10 +78,6 @@ def paramsToSet(nIter, randomState):
     return paramsSet
 
 
-def getInterpret(classifier, directory):
-    return ""
-
-
 def getKWARGS(kwargsList):
     kwargsDict = {}
     for (kwargName, kwargValue) in kwargsList:
@@ -134,3 +130,7 @@ def getConfig(config):
         except:
             return "\n\t\t- SCM with model_type: " + config["0"] + ", max_rules : " + str(config["1"]) + ", p : " + \
                    str(config["2"])
+
+
+def getInterpret(classifier, directory):
+    return ""

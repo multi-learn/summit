@@ -91,4 +91,6 @@ def getConfig(config):
                 "1"] + ", alpha : " + str(config["2"])
 
 def getInterpret(classifier, directory):
+    # TODO : coeffs
     return ""
+# 

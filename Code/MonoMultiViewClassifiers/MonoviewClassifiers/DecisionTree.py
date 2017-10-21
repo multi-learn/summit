@@ -4,10 +4,11 @@ from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import randint
 import numpy as np
 import graphviz
-import cPickle
+# import cPickle
 
 from .. import Metrics
 from ..utils.HyperParameterSearch import genHeatMaps
+from ..utils.Interpret import getFeatureImportance
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -92,18 +93,5 @@ def getInterpret(classifier, directory):
     dot_data = tree.export_graphviz(classifier, out_file=None)
     graph = graphviz.Source(dot_data)
     graph.render(directory+"-tree.pdf")
-    featureImportances = classifier.feature_importances_
-    sortedArgs = np.argsort(-featureImportances)
-    featureImportancesSorted = featureImportances[sortedArgs][:50]
-    featureIndicesSorted = sortedArgs[:50]
-    featuresImportancesDict = dict((featureIndex, featureImportance)
-                                   for featureIndex, featureImportance in enumerate(featureImportances)
-                                   if featureImportance != 0)
-    with open(directory + '-feature_importances.pickle', 'wb') as handle:
-        cPickle.dump(featuresImportancesDict, handle)
-    interpretString = "Feature importances : \n"
-    for featureIndex, featureImportance in zip(featureIndicesSorted, featureImportancesSorted):
-        if featureImportance > 0:
-            interpretString += "- Feature index : " + str(featureIndex) + \
-                               ", feature importance : " + str(featureImportance) + "\n"
+    interpretString = getFeatureImportance(classifier, directory)
     return interpretString
