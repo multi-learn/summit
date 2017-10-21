@@ -176,11 +176,11 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
     logging.debug("Done:\t Analyze Iteration Results")
     globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
     totalTime = time.time() - start
-    logging.info("Extraction time : " + str(dataBaseTime) +
-                 "s, Monoview time : " + str(monoviewTime) +
-                 "s, Multiview Time : " + str(multiviewTime) +
-                 "s, Iteration Analysis Time : " + str(globalAnalysisTime) +
-                 "s, Iteration Duration : " + str(totalTime) + "s")
+    logging.info("Extraction time : " + str(int(dataBaseTime)) +
+                 "s, Monoview time : " + str(int(monoviewTime)) +
+                 "s, Multiview Time : " + str(int(multiviewTime)) +
+                 "s, Iteration Analysis Time : " + str(int(globalAnalysisTime)) +
+                 "s, Iteration Duration : " + str(int(totalTime)) + "s")
     return results, labelAnalysis
 
 
@@ -250,11 +250,11 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
     logging.debug("Done:\t Analyze Iteration Results")
     globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
     totalTime = time.time() - start
-    logging.info("Extraction time : " + str(dataBaseTime) +
-                 "s, Monoview time : " + str(monoviewTime) +
-                 "s, Multiview Time : " + str(multiviewTime) +
-                 "s, Iteration Analysis Time : " + str(globalAnalysisTime) +
-                 "s, Iteration Duration : " + str(totalTime) + "s")
+    logging.info("Extraction time : " + str(int(dataBaseTime)) +
+                 "s, Monoview time : " + str(int(monoviewTime)) +
+                 "s, Multiview Time : " + str(int(multiviewTime)) +
+                 "s, Iteration Analysis Time : " + str(int(globalAnalysisTime)) +
+                 "s, Iteration Duration : " + str(int(totalTime)) + "s")
     return results, labelAnalysis
 
 
@@ -382,8 +382,13 @@ def execClassif(arguments):
         analyzeIterLabels(iterLabelAnalysis, directory, classifiersNames)
         analyzeIterResults(classifiersIterResults, args.name, metrics, directory)
         logging.debug("Done:\t Global Results Analysis")
-        totalDur = time.time()-start
-        logging.info("Info:\t Total duration : "+str(totalDur))
+        totalDur = time.time() - start
+        m, s = divmod(totalDur, 60)
+        h, m = divmod(m, 60)
+        d, h = divmod(h, 24)
+        # print "%d:%02d:%02d" % (h, m, s)
+        logging.info("Info:\t Total duration : " + str(d) + " days, " + str(h) + " hours, " + str(m) + " mins, " + str(
+            int(s)) + "secs.")
 
     else:
         logging.debug("Start:\t Benchmark classification")
@@ -402,7 +407,11 @@ def execClassif(arguments):
                               benchmark, views)
         logging.debug("Done:\t Benchmark classification")
         totalDur = time.time()-start
-        logging.info("Info:\t Total duration : "+str(totalDur))
+        m, s = divmod(totalDur, 60)
+        h, m = divmod(m, 60)
+        d, h = divmod(h, 24)
+        # print "%d:%02d:%02d" % (h, m, s)
+        logging.info("Info:\t Total duration : "+str(d)+ " days, "+str(h)+" hours, "+str(m)+" mins, "+str(int(s))+"secs.")
 
     if statsIter > 1:
         pass
