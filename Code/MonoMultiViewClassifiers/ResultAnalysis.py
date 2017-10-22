@@ -97,7 +97,7 @@ def analyzeIterLabels(labelsAnalysisList, directory, classifiersNames, minSize=1
     plt.title('Errors depending on the classifier')
     ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)
     plt.xticks(ticks, classifiersNames, rotation="vertical")
-    cbar = fig.colorbar(cax, ticks=[0, len(labelsAnalysisList)])
+    cbar = fig.colorbar(cax, ticks=[0, -len(labelsAnalysisList)])
     cbar.ax.set_yticklabels(['Always Wrong', 'Always Right'])
     fig.tight_layout()
     fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
