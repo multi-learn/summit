@@ -7,7 +7,7 @@ import pkgutil
 import logging
 from sklearn.metrics import accuracy_score
 
-import Classifiers
+from . import Classifiers
 from ...utils.Dataset import getV
 
 # Author-Info

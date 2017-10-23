@@ -6,7 +6,7 @@ from datetime import timedelta as hms
 # import logging
 
 # import Mumbo
-import Classifiers
+from . import Classifiers
 from ... import Metrics
 from ...utils.Dataset import getV, getShape
 

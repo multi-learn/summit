@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
-import cPickle
+import pickle
 
 
 def percent(x, pos):
@@ -26,7 +26,7 @@ def getFeatureImportance(classifier, directory, interpretString=""):
                                    for featureIndex, featureImportance in enumerate(featureImportances)
                                    if featureImportance != 0)
     with open(directory+'-feature_importances.pickle', 'wb') as handle:
-        cPickle.dump(featuresImportancesDict, handle)
+        pickle.dump(featuresImportancesDict, handle)
     interpretString += "Feature importances : \n"
     for featureIndex, featureImportance in zip(featureIndicesSorted, featureImportancesSorted):
         if featureImportance>0:

@@ -16,13 +16,13 @@ import h5py
 
 # Import own modules
 from .. import MonoviewClassifiers
-from analyzeResult import execute
+from .analyzeResult import execute
 from ..utils.Dataset import getValue, extractSubset
 
 # Author-Info
 __author__ = "Nikolas Huelsmann, Baptiste BAUVIN"
 __status__ = "Prototype"  # Production, Development, Prototype
-__date__ = 2016 - 03 - 25
+# __date__ = 2016 - 03 - 25
 
 
 def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices, KFolds, datasetFileIndex, databaseType,
@@ -114,7 +114,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
                                                             clKWARGS, labelsNames, X.shape,
                                                             y_train, y_train_pred, y_test, y_test_pred, t_end,
                                                             randomState, cl_res, outputFileName)
-    cl_desc = [value for key, value in sorted(clKWARGS.iteritems())]
+    cl_desc = [value for key, value in sorted(clKWARGS.items())]
     logging.debug("Done:\t Getting Results")
     logging.info(stringAnalysis)
     # labelsString = "-".join(labelsNames)

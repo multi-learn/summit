@@ -4,7 +4,7 @@ import matplotlib
 
 # matplotlib.use('Agg')
 import operator
-import Methods.LateFusion
+from .Methods import LateFusion
 from ... import Metrics
 
 # Author-Info
@@ -88,7 +88,7 @@ def execute(classifier, trainLabels,
                      " folds\n\nClassification configuration : \n\t-Algorithm used : " + fusionType + " " + fusionConfiguration
 
     if fusionType == "LateFusion":
-        stringAnalysis += Methods.LateFusion.getScores(classifier)
+        stringAnalysis += LateFusion.getScores(classifier)
     metricsScores = getMetricsScores(metrics, trainLabels, testLabels,
                                      DATASET, validationIndices, learningIndices)
     stringAnalysis += printMetricScore(metricsScores, metrics)

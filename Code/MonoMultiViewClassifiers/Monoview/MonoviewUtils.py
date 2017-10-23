@@ -17,7 +17,7 @@ import numpy as np
 # Author-Info
 __author__ = "Nikolas Huelsmann, Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
-__date__ = 2016 - 03 - 25
+# __date__ = 2016 - 03 - 25
 
 
 def isUseful(labelSupports, index, CLASS_LABELS, labelDict):

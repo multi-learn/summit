@@ -12,7 +12,7 @@
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
-__date__ = 2016 - 03 - 25
+# __date__ = 2016 - 03 - 25
 
 
 def testVersions():
@@ -96,14 +96,20 @@ def testVersions():
         isUpToDate = False
         toInstall.append("h5py")
 
-    # try:
-    #     import graphviz  #
-    # except:
-    #     isUpToDate = False
-    #     toInstall.append("graphviz")
+    try:
+        import graphviz  #
+    except:
+        isUpToDate = False
+        toInstall.append("graphviz")
+
+    try:
+        import pickle  #
+    except:
+        isUpToDate = False
+        toInstall.append("pickle")
 
     if not isUpToDate:
-        print "You can't run at the moment, please install the following modules : \n"+ "\n".join(toInstall)
+        print("You can't run at the moment, please install the following modules : \n"+ "\n".join(toInstall))
         quit()
 
 if __name__== "__main__":

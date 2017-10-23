@@ -158,7 +158,7 @@ class FusionClass:
         fusionMethodClass = getattr(fusionMethodModule, fusionMethod)
         nbCores = NB_CORES
         classifierKWARGS = dict(
-            (key, value) for key, value in kwargs.iteritems() if key not in ['fusionType', 'fusionMethod'])
+            (key, value) for key, value in kwargs.items() if key not in ['fusionType', 'fusionMethod'])
         self.classifier = fusionMethodClass(randomState, NB_CORES=nbCores, **classifierKWARGS)
 
     def setParams(self, paramsSet):

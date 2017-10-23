@@ -36,13 +36,13 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, nbView=3,
             if exc.errno != errno.EEXIST:
                 raise
     datasetFile = h5py.File(pathF + "/Plausible.hdf5", "w")
-    CLASS_LABELS = np.array([0 for i in range(datasetLength / 2)] + [1 for i in range(datasetLength / 2)])
+    CLASS_LABELS = np.array([0 for i in range(int(datasetLength / 2))] + [1 for i in range(int(datasetLength / 2))])
     for viewIndex in range(nbView):
-        viewData = np.array([np.zeros(nbFeatures) for i in range(datasetLength / 2)] + [np.ones(nbFeatures)
+        viewData = np.array([np.zeros(nbFeatures) for i in range(int(datasetLength / 2))] + [np.ones(nbFeatures)
                                                                                         for i in
-                                                                                        range(datasetLength / 2)])
-        fakeTrueIndices = randomState.randint(0, datasetLength / 2 - 1, datasetLength / 5)
-        fakeFalseIndices = randomState.randint(datasetLength / 2, datasetLength - 1, datasetLength / 5)
+                                                                                        range(int(datasetLength / 2))])
+        fakeTrueIndices = randomState.randint(0, int(datasetLength / 2) - 1, int(datasetLength / 5))
+        fakeFalseIndices = randomState.randint(int(datasetLength / 2), datasetLength - 1, int(datasetLength / 5))
 
         viewData[fakeTrueIndices] = np.ones((len(fakeTrueIndices), nbFeatures))
         viewData[fakeFalseIndices] = np.zeros((len(fakeFalseIndices), nbFeatures))

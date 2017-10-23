@@ -1,6 +1,6 @@
 import argparse
 import numpy as np
-import cPickle
+import pickle
 import time
 import os
 import errno
@@ -192,9 +192,9 @@ def initRandomState(randomStateArg, directory):
         except ValueError:
             fileName = randomStateArg
             with open(fileName, 'rb') as handle:
-                randomState = cPickle.load(handle)
+                randomState = pickle.load(handle)
     with open(directory + "randomState.pickle", "wb") as handle:
-        cPickle.dump(randomState, handle)
+        pickle.dump(randomState, handle)
     return randomState
 
 

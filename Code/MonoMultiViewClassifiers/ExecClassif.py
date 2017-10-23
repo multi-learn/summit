@@ -22,7 +22,7 @@ from . import MonoviewClassifiers
 from .Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from .Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 from .Multiview import GetMultiviewDb as DB
-from ResultAnalysis import resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes
+from .ResultAnalysis import resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes
 from .utils import execution, Dataset
 
 # Author-Info
@@ -87,7 +87,7 @@ def initMonoviewKWARGS(args, classifiersNames):
     for classifiersName in classifiersNames:
         classifierModule = getattr(MonoviewClassifiers, classifiersName)
         monoviewKWARGS[classifiersName + "KWARGSInit"] = classifierModule.getKWARGS(
-            [(key, value) for key, value in vars(args).iteritems() if key.startswith("CL_" + classifiersName)])
+            [(key, value) for key, value in vars(args).items() if key.startswith("CL_" + classifiersName)])
     return monoviewKWARGS
 
 
@@ -295,7 +295,7 @@ def execClassif(arguments):
 
     views, viewsIndices, allViews = execution.initViews(DATASET, args)
     if not views:
-        raise ValueError, "Empty views list, modify selected views to match dataset " + args.views
+        raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
 
     NB_VIEW = len(views)
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]

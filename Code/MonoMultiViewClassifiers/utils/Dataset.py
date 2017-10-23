@@ -92,7 +92,7 @@ def confirm(resp=True, timeout=15):
     if not ans:
         return resp
     if ans not in ['y', 'Y', 'n', 'N']:
-        print 'please enter y or n.'
+        print('please enter y or n.')
     if ans == 'y' or ans == 'Y':
         return True
     if ans == 'n' or ans == 'N':
@@ -100,7 +100,7 @@ def confirm(resp=True, timeout=15):
 
 
 def input_(timeout=15):
-    print "You have " + str(timeout) + " seconds to stop the script by typing n"
+    print("You have " + str(timeout) + " seconds to stop the script by typing n")
     i, o, e = select.select([sys.stdin], [], [], timeout)
     if i:
         return sys.stdin.readline().strip()

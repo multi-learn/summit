@@ -86,7 +86,7 @@ class MajorityVoting(LateFusionClassifier):
             try:
                 assert nbMaximum != nbView
             except:
-                print "Majority voting can't decide, each classifier has voted for a different class"
+                print("Majority voting can't decide, each classifier has voted for a different class")
                 raise
         predictedLabels = np.argmax(votes, axis=1)
         # Can be upgraded by restarting a new classification process if
