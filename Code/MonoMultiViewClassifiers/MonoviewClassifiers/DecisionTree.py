@@ -3,7 +3,7 @@ from sklearn.pipeline import Pipeline  # Pipelining in classification
 from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import randint
 import numpy as np
-import graphviz
+# import graphviz
 # import cPickle
 
 from .. import Metrics
@@ -91,7 +91,7 @@ def getConfig(config):
 
 def getInterpret(classifier, directory):
     dot_data = tree.export_graphviz(classifier, out_file=None)
-    graph = graphviz.Source(dot_data)
-    graph.render(directory+"-tree.pdf")
+    # graph = graphviz.Source(dot_data)
+    # graph.render(directory+"-tree.pdf")
     interpretString = getFeatureImportance(classifier, directory)
     return interpretString
