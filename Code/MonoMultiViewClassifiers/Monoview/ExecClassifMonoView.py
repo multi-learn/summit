@@ -3,8 +3,6 @@
 """ Execution: Script to perform a MonoView classification """
 
 # Import built-in modules
-import argparse  # for command line arguments
-import datetime  # for TimeStamp in CSVFile
 import os  # to geth path of the running script
 import time  # for time calculations
 import errno
