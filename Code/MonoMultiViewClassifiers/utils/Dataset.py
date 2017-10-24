@@ -10,6 +10,7 @@ from . import GetMultiviewDb as DB
 
 
 def getV(DATASET, viewIndex, usedIndices=None):
+    """Used to extract a view as a numpy array or a sparse mat from the HDF5 dataset"""
     if usedIndices is None:
         usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
     if type(usedIndices) is int:
@@ -32,6 +33,7 @@ def getV(DATASET, viewIndex, usedIndices=None):
 
 
 def getShape(DATASET, viewIndex):
+    """Used to get the dataset shape even if it's sparse"""
     if not DATASET.get("View" + str(viewIndex)).attrs["sparse"]:
         return DATASET.get("View" + str(viewIndex)).shape
     else:
@@ -39,6 +41,7 @@ def getShape(DATASET, viewIndex):
 
 
 def getValue(DATASET):
+    """Used to get the value of a view in the HDF5 dataset even if it sparse"""
     if not DATASET.attrs["sparse"]:
         return DATASET.value
     else:
@@ -50,6 +53,7 @@ def getValue(DATASET):
 
 
 def extractSubset(matrix, usedIndices):
+    """Used to extract a subset of a matrix even if it's sparse"""
     if sparse.issparse(matrix):
         newIndptr = np.zeros(len(usedIndices) + 1, dtype=int)
         oldindptr = matrix.indptr
@@ -69,8 +73,7 @@ def extractSubset(matrix, usedIndices):
 
 
 def initMultipleDatasets(args, nbCores):
-    """Used to create copies of the dataset if multicore computation is used
-    Needs arg.pathF and arg.name"""
+    """Used to create copies of the dataset if multicore computation is used"""
     if nbCores > 1:
         if DB.datasetsAlreadyExist(args.pathF, args.name, nbCores):
             logging.debug("Info:\t Enough copies of the dataset are already available")
@@ -90,6 +93,7 @@ def initMultipleDatasets(args, nbCores):
 
 
 def confirm(resp=True, timeout=15):
+    """Used to process answer"""
     ans = input_(timeout)
     if not ans:
         return resp
@@ -102,6 +106,7 @@ def confirm(resp=True, timeout=15):
 
 
 def input_(timeout=15):
+    """used as a UI to stop if too much HDD space will be used"""
     print("You have " + str(timeout) + " seconds to stop the script by typing n")
     i, o, e = select.select([sys.stdin], [], [], timeout)
     if i:

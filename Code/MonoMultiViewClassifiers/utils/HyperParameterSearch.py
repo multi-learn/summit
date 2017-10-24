@@ -8,6 +8,7 @@ from .. import Metrics
 
 def searchBestSettings(dataset, classifierPackage, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=None,
                        searchingTool="hyperParamSearch", nIter=1, **kwargs):
+    """Used to select the right hyperparam optimization function to optimize hyper parameters"""
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
     thismodule = sys.modules[__name__]
@@ -18,12 +19,13 @@ def searchBestSettings(dataset, classifierPackage, classifierName, metrics, iLea
 
 
 def gridSearch(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1, **kwargs):
-    # si grid search est selectionne, on veut tester certaines valeurs
+    """Used to perfom gridsearch on the classifiers"""
     pass
 
 
 def randomizedSearch(dataset, classifierPackage, classifierName, metrics, learningIndices, KFolds, randomState, viewsIndices=None, nIter=1,
                      nbCores=1, **classificationKWARGS):
+    """Used to perform a random search on the classifiers to optimize hyper parameters"""
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
     metric = metrics[0]
@@ -75,10 +77,12 @@ def randomizedSearch(dataset, classifierPackage, classifierName, metrics, learni
 
 
 def spearMint(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1, **kwargs):
+    """Used to perform spearmint on the classifiers to optimize hyper parameters"""
     pass
 
 
 def genHeatMaps(params, scoresArray, outputFileName):
+    """Used to generate a heat map for each doublet of hyperparms optimized on the previous function"""
     nbParams = len(params)
     if nbParams > 2:
         combinations = itertools.combinations(range(nbParams), 2)
@@ -110,128 +114,128 @@ def genHeatMaps(params, scoresArray, outputFileName):
         plt.savefig(outputFileName + "heat_map-" + paramName1 + "-" + paramName2 + ".png")
         plt.close()
 
-        # nohup python ~/dev/git/spearmint/spearmint/main.py . &
+# nohup python ~/dev/git/spearmint/spearmint/main.py . &
 
-        # import json
-        # import numpy as np
-        # import math
-        #
-        # from os import system
-        # from os.path import join
-        #
-        #
-        # def run_kover(dataset, split, model_type, p, max_rules, output_dir):
-        #     outdir = join(output_dir, "%s_%f" % (model_type, p))
-        #     kover_command = "kover learn " \
-        #                     "--dataset '%s' " \
-        #                     "--split %s " \
-        #                     "--model-type %s " \
-        #                     "--p %f " \
-        #                     "--max-rules %d " \
-        #                     "--max-equiv-rules 10000 " \
-        #                     "--hp-choice cv " \
-        #                     "--random-seed 0 " \
-        #                     "--output-dir '%s' " \
-        #                     "--n-cpu 1 " \
-        #                     "-v" % (dataset,
-        #                             split,
-        #                             model_type,
-        #                             p,
-        #                             max_rules,
-        #                             outdir)
-        #
-        #     system(kover_command)
-        #
-        #     return json.load(open(join(outdir, "results.json")))["cv"]["best_hp"]["score"]
-        #
-        #
-        # def main(job_id, params):
-        #     print params
-        #
-        #     max_rules = params["MAX_RULES"][0]
-        #
-        #     species = params["SPECIES"][0]
-        #     antibiotic = params["ANTIBIOTIC"][0]
-        #     split = params["SPLIT"][0]
-        #
-        #     model_type = params["model_type"][0]
-        #
-        #     # LS31
-        #     if species == "saureus":
-        #         dataset_path = "/home/droale01/droale01-ls31/projects/genome_scm/data/earle_2016/saureus/kover_datasets/%s.kover" % antibiotic
-        #     else:
-        #         dataset_path = "/home/droale01/droale01-ls31/projects/genome_scm/genome_scm_paper/data/%s/%s.kover" % (species, antibiotic)
-        #
-        #     output_path = "/home/droale01/droale01-ls31/projects/genome_scm/manifold_scm/spearmint/vanilla_scm/%s/%s" % (species, antibiotic)
-        #
-        #     # MacBook
-        #     #dataset_path = "/Volumes/Einstein 1/kover_phylo/datasets/%s/%s.kover" % (species, antibiotic)
-        #     #output_path = "/Volumes/Einstein 1/manifold_scm/version2/%s_spearmint" % antibiotic
-        #
-        #     return run_kover(dataset=dataset_path,
-        #                      split=split,
-        #                      model_type=model_type,
-        #                      p=params["p"][0],
-        #                      max_rules=max_rules,
-        #                      output_dir=output_path)
-        # killall mongod && sleep 1 && rm -r database/* && rm mongo.log*
-        # mongod --fork --logpath mongo.log --dbpath database
-        #
-        # {
-        #     "language"        : "PYTHON",
-        #     "experiment-name" : "vanilla_scm_cdiff_azithromycin",
-        #     "polling-time"    : 1,
-        #     "resources" : {
-        #         "my-machine" : {
-        #             "scheduler"         : "local",
-        #             "max-concurrent"    : 5,
-        #             "max-finished-jobs" : 100
-        #         }
-        #     },
-        #     "tasks": {
-        #         "resistance" : {
-        #             "type"       : "OBJECTIVE",
-        #             "likelihood" : "NOISELESS",
-        #             "main-file"  : "spearmint_wrapper",
-        #             "resources"  : ["my-machine"]
-        #         }
-        #     },
-        #     "variables": {
-        #
-        #         "MAX_RULES" : {
-        #             "type" : "ENUM",
-        #             "size" : 1,
-        #             "options": [10]
-        #         },
-        #
-        #
-        #         "SPECIES" : {
-        #             "type" : "ENUM",
-        #             "size" : 1,
-        #             "options": ["cdiff"]
-        #         },
-        #         "ANTIBIOTIC" : {
-        #             "type" : "ENUM",
-        #             "size" : 1,
-        #             "options": ["azithromycin"]
-        #         },
-        #         "SPLIT" : {
-        #             "type" : "ENUM",
-        #             "size" : 1,
-        #             "options": ["split_seed_2"]
-        #         },
-        #
-        #
-        #         "model_type" : {
-        #             "type" : "ENUM",
-        #             "size" : 1,
-        #             "options": ["conjunction", "disjunction"]
-        #         },
-        #         "p" : {
-        #             "type" : "FLOAT",
-        #             "size" : 1,
-        #             "min"  : 0.01,
-        #             "max"  : 100
-        #         }
-        #     }
-        # }
+# import json
+# import numpy as np
+# import math
+#
+# from os import system
+# from os.path import join
+#
+#
+# def run_kover(dataset, split, model_type, p, max_rules, output_dir):
+#     outdir = join(output_dir, "%s_%f" % (model_type, p))
+#     kover_command = "kover learn " \
+#                     "--dataset '%s' " \
+#                     "--split %s " \
+#                     "--model-type %s " \
+#                     "--p %f " \
+#                     "--max-rules %d " \
+#                     "--max-equiv-rules 10000 " \
+#                     "--hp-choice cv " \
+#                     "--random-seed 0 " \
+#                     "--output-dir '%s' " \
+#                     "--n-cpu 1 " \
+#                     "-v" % (dataset,
+#                             split,
+#                             model_type,
+#                             p,
+#                             max_rules,
+#                             outdir)
+#
+#     system(kover_command)
+#
+#     return json.load(open(join(outdir, "results.json")))["cv"]["best_hp"]["score"]
+#
+#
+# def main(job_id, params):
+#     print params
+#
+#     max_rules = params["MAX_RULES"][0]
+#
+#     species = params["SPECIES"][0]
+#     antibiotic = params["ANTIBIOTIC"][0]
+#     split = params["SPLIT"][0]
+#
+#     model_type = params["model_type"][0]
+#
+#     # LS31
+#     if species == "saureus":
+#         dataset_path = "/home/droale01/droale01-ls31/projects/genome_scm/data/earle_2016/saureus/kover_datasets/%s.kover" % antibiotic
+#     else:
+#         dataset_path = "/home/droale01/droale01-ls31/projects/genome_scm/genome_scm_paper/data/%s/%s.kover" % (species, antibiotic)
+#
+#     output_path = "/home/droale01/droale01-ls31/projects/genome_scm/manifold_scm/spearmint/vanilla_scm/%s/%s" % (species, antibiotic)
+#
+#     # MacBook
+#     #dataset_path = "/Volumes/Einstein 1/kover_phylo/datasets/%s/%s.kover" % (species, antibiotic)
+#     #output_path = "/Volumes/Einstein 1/manifold_scm/version2/%s_spearmint" % antibiotic
+#
+#     return run_kover(dataset=dataset_path,
+#                      split=split,
+#                      model_type=model_type,
+#                      p=params["p"][0],
+#                      max_rules=max_rules,
+#                      output_dir=output_path)
+# killall mongod && sleep 1 && rm -r database/* && rm mongo.log*
+# mongod --fork --logpath mongo.log --dbpath database
+#
+# {
+#     "language"        : "PYTHON",
+#     "experiment-name" : "vanilla_scm_cdiff_azithromycin",
+#     "polling-time"    : 1,
+#     "resources" : {
+#         "my-machine" : {
+#             "scheduler"         : "local",
+#             "max-concurrent"    : 5,
+#             "max-finished-jobs" : 100
+#         }
+#     },
+#     "tasks": {
+#         "resistance" : {
+#             "type"       : "OBJECTIVE",
+#             "likelihood" : "NOISELESS",
+#             "main-file"  : "spearmint_wrapper",
+#             "resources"  : ["my-machine"]
+#         }
+#     },
+#     "variables": {
+#
+#         "MAX_RULES" : {
+#             "type" : "ENUM",
+#             "size" : 1,
+#             "options": [10]
+#         },
+#
+#
+#         "SPECIES" : {
+#             "type" : "ENUM",
+#             "size" : 1,
+#             "options": ["cdiff"]
+#         },
+#         "ANTIBIOTIC" : {
+#             "type" : "ENUM",
+#             "size" : 1,
+#             "options": ["azithromycin"]
+#         },
+#         "SPLIT" : {
+#             "type" : "ENUM",
+#             "size" : 1,
+#             "options": ["split_seed_2"]
+#         },
+#
+#
+#         "model_type" : {
+#             "type" : "ENUM",
+#             "size" : 1,
+#             "options": ["conjunction", "disjunction"]
+#         },
+#         "p" : {
+#             "type" : "FLOAT",
+#             "size" : 1,
+#             "min"  : 0.01,
+#             "max"  : 100
+#         }
+#     }
+# }

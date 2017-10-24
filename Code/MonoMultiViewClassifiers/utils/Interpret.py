@@ -5,11 +5,12 @@ import pickle
 
 
 def percent(x, pos):
-    'The two args are the value and tick position'
+    """Used to print percentage of importance on the y axis"""
     return '%1.1f %%' % (x * 100)
 
 
 def getFeatureImportance(classifier, directory, interpretString=""):
+    """Used to generate a graph and a pickle dictionary representing feature importances"""
     featureImportances = classifier.feature_importances_
     sortedArgs = np.argsort(-featureImportances)
     featureImportancesSorted = featureImportances[sortedArgs][:50]

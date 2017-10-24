@@ -9,6 +9,7 @@ import sklearn
 
 
 def parseTheArgs(arguments):
+    """Used to parse the args entered by the user"""
 
     parser = argparse.ArgumentParser(
         description='This file is used to benchmark the scores fo multiple classification algorithm on multiview data.',
@@ -183,6 +184,7 @@ def parseTheArgs(arguments):
     return args
 
 def initRandomState(randomStateArg, directory):
+    """Used to init a random state and multiple if needed (multicore)"""
     if randomStateArg is None:
         randomState = np.random.RandomState(randomStateArg)
     else:
@@ -199,6 +201,7 @@ def initRandomState(randomStateArg, directory):
 
 
 def initLogFile(args):
+    """Used to init the directory where the results will be stored and the log file"""
     resultDirectory = "../Results/" + args.name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
     logFileName = time.strftime("%Y%m%d-%H%M%S") + "-" + ''.join(args.CL_type) + "-" + "_".join(
         args.views) + "-" + args.name + "-LOG"
@@ -226,11 +229,14 @@ def initLogFile(args):
 
 
 def genSplits(statsIter, datasetlength, DATASET, splitRatio, statsIterRandomStates):
+    """Used to gen the train/test splits using one or multiple random states"""
     indices = np.arange(datasetlength)
     if statsIter > 1:
         splits = []
         for randomState in statsIterRandomStates:
-            foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1, random_state=randomState, test_size=splitRatio)
+            foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1,
+                                                                      random_state=randomState,
+                                                                      test_size=splitRatio)
             folds = foldsObj.split(indices, DATASET.get("Labels").value)
             for fold in folds:
                 train_fold, test_fold = fold
@@ -249,6 +255,7 @@ def genSplits(statsIter, datasetlength, DATASET, splitRatio, statsIterRandomStat
 
 
 def genKFolds(statsIter, nbFolds, statsIterRandomStates):
+    """Used to generate folds indices for cross validation and multiple if needed"""
     if statsIter > 1:
         foldsList = []
         for randomState in statsIterRandomStates:
@@ -259,8 +266,7 @@ def genKFolds(statsIter, nbFolds, statsIterRandomStates):
 
 
 def initViews(DATASET, args):
-    """Used to return the views names that will be used by the algos, their indices and all the views names
-    Needs args.views"""
+    """Used to return the views names that will be used by the algos, their indices and all the views names"""
     NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
     if args.views != [""]:
         allowedViews = args.views
@@ -278,6 +284,7 @@ def initViews(DATASET, args):
 
 
 def genDirecortiesNames(directory, statsIter):
+    """Used to generate the different directories of each iteration if needed"""
     if statsIter > 1:
         directories = []
         for i in range(statsIter):
