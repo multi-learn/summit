@@ -3,14 +3,12 @@ import logging
 import os
 import os.path
 import time
-
 import h5py
 
 from ..utils import HyperParameterSearch
 from ..utils.Dataset import getShape
 from .. import MultiviewClassifiers
 
-# from . import *
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -50,11 +48,6 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
 
     extractionTime = time.time() - t_start
     learningIndices, validationIndices = classificationIndices
-    # packageDirectories = [entry for entry in os.listdir("MonoMultiViewClassifiers/Multiview/") if os.path.isdir("MonoMultiViewClassifiers/Multiview/"+entry)]
-    # for packageDirectory in packageDirectories:
-    #     if packageDirectory == CL_type:
-    #         classifierModule = imp.find_module(CL_type, "MonoMultiViewClassifiers/Multiview/"+packageDirectory+"/"+CL_type+".py")
-    #         analysisModule = imp.load_source(CL_type, "MonoMultiViewClassifiers/Multiview/"+packageDirectory+"/analyzeResults.py")
     classifierPackage = getattr(MultiviewClassifiers, CL_type)  # Permet d'appeler un module avec une string
     classifierModule = getattr(classifierPackage, CL_type+"Module")
     classifierClass = getattr(classifierModule, CL_type+"Class")
