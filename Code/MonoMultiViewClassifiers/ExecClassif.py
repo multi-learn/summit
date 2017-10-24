@@ -1,22 +1,18 @@
-# Import built-in modules
-# import pdb;pdb.set_trace()
 import errno
 import logging
 import math
 import os
-import pkgutil  # for TimeStamp in CSVFile
+import pkgutil
 import time
 
 import matplotlib
 import numpy as np
 from joblib import Parallel, delayed
-
-matplotlib.use('Agg')  # Anti-Grain Geometry C++ library to make a raster (pixel) image of the figure
 import h5py
 
+matplotlib.use('Agg')  # Anti-Grain Geometry C++ library to make a raster (pixel) image of the figure
+
 # Import own modules
-# import Metrics
-# from . import Multiview
 from . import MonoviewClassifiers
 from . import MultiviewClassifiers
 from .Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
@@ -70,7 +66,8 @@ def initBenchmark(args):
     return benchmark
 
 
-def initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, NB_CLASS, kwargsInit):
+def initMonoviewExps(benchmark, argumentDictionaries, views, allViews, NB_CLASS, kwargsInit):
+    """Used to add each monoview exeperience args to the list of monoview experiences args"""
     if benchmark["Monoview"]:
         argumentDictionaries["Monoview"] = []
         for view in views:
@@ -83,6 +80,7 @@ def initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, NB_C
 
 
 def initMonoviewKWARGS(args, classifiersNames):
+    """Used to init kwargs thanks to a function in each monoview classifier package"""
     monoviewKWARGS = {}
     for classifiersName in classifiersNames:
         classifierModule = getattr(MonoviewClassifiers, classifiersName)
@@ -114,6 +112,7 @@ def initKWARGSFunc(args, benchmark):
 
 def initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory,
                            resultsMonoview, classificationIndices):
+    """Used to add each monoview exeperience args to the list of monoview experiences args"""
     multiviewArguments = []
     if "Multiview" in benchmark:
         for multiviewAlgoName in benchmark["Multiview"]:
@@ -126,6 +125,8 @@ def initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDiction
 
 
 def arangeMetrics(metrics, metricPrinc):
+    """Used to get the metrics list in the right order so that
+    the first one is the principal metric specified in args"""
     if [metricPrinc] in metrics:
         metricIndex = metrics.index([metricPrinc])
         firstMetric = metrics[0]
@@ -141,6 +142,8 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
                               randomState, hyperParamSearch, metrics, coreIndex, viewsIndices, dataBaseTime, start,
                               benchmark,
                               views):
+    """Used to execute mono and multiview classification and result analysis for one random state
+     using multicore classification"""
     resultsMonoview = []
     np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
     labelsNames = LABELS_DICTIONARY.values()
@@ -187,7 +190,9 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
 def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory, args, classificationIndices, kFolds,
                     randomState, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
                     benchmark, views):
-
+    """Used to execute mono and multiview classification and result analysis for one random state
+         classification"""
+    #TODO : Clarify this one
     np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
     resultsMonoview = []
     labelsNames = LABELS_DICTIONARY.values()
@@ -258,11 +263,8 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
     return results, labelAnalysis
 
 
-# _______________ #
-# __ EXECUTION __ #
-# _______________ #
 def execClassif(arguments):
-    # import pdb;pdb.set_trace()
+    """Main function to execute the benchmark"""
     start = time.time()
     args = execution.parseTheArgs(arguments)
 
@@ -319,8 +321,8 @@ def execClassif(arguments):
     dataBaseTime = time.time() - start
 
     argumentDictionaries = {"Monoview": [], "Multiview": []}
-    argumentDictionaries = initMonoviewArguments(benchmark, argumentDictionaries, views, allViews, NB_CLASS,
-                                                 initKWARGS)
+    argumentDictionaries = initMonoviewExps(benchmark, argumentDictionaries, views, allViews, NB_CLASS,
+                                            initKWARGS)
     directories = execution.genDirecortiesNames(directory, statsIter)
 
     if statsIter > 1:

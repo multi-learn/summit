@@ -4,6 +4,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 
 def testVersions():
+    """Used to test if all prerequisites are installed"""
     isUpToDate = True
     toInstall = []
 

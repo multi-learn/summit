@@ -22,6 +22,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 
 def autolabel(rects, ax):
+    """Used to print scores on top of the bars"""
     for rect in rects:
         height = rect.get_height()
         ax.text(rect.get_x() + rect.get_width() / 2., 1.01 * height,
@@ -30,6 +31,7 @@ def autolabel(rects, ax):
 
 
 def genFusionName(type_, a, b, c):
+    """Used to generate fusion classifiers names"""
     if type_ == "Fusion" and a["fusionType"] != "EarlyFusion":
         return "Late-" + str(a["fusionMethod"])
     elif type_ == "Fusion" and a["fusionType"] != "LateFusion":
@@ -37,12 +39,14 @@ def genFusionName(type_, a, b, c):
 
 
 def genNamesFromRes(mono, multi):
+    """Used to generate classifiers names list (inthe right order) from mono- and multi-view results"""
     names = [res[1][0] + "-" + res[1][1][-1] for res in mono]
     names += [type_ if type_ != "Fusion" else genFusionName(type_, a, b, c) for type_, a, b, c in multi]
     return names
 
 
 def resultAnalysis(benchmark, results, name, times, metrics, directory, minSize=10):
+    """Used to generate bar graphs of all the classifiers scores for each metric """
     mono, multi = results
     for metric in metrics:
         logging.debug("Start:\t Score graph generation for "+metric[0])
@@ -82,42 +86,8 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory, minSize=
         logging.debug("Done:\t Score graph generation for " + metric[0])
 
 
-def analyzeIterLabels(labelsAnalysisList, directory, classifiersNames, minSize=10):
-    logging.debug("Start:\t Global label analysis figure generation")
-    nbExamples = labelsAnalysisList[0].shape[0]
-    nbClassifiers = len(classifiersNames)
-    nbIter = 2
-
-    figWidth = max(nbClassifiers / 2, minSize)
-    figHeight = max(nbExamples / 20, minSize)
-    figKW = {"figsize": (figWidth, figHeight)}
-    fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-    data = sum(labelsAnalysisList)
-    cax = plt.imshow(-data, interpolation='none', cmap="Greys", aspect='auto')
-    plt.title('Errors depending on the classifier')
-    ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)
-    plt.xticks(ticks, classifiersNames, rotation="vertical")
-    cbar = fig.colorbar(cax, ticks=[0, -len(labelsAnalysisList)])
-    cbar.ax.set_yticklabels(['Always Wrong', 'Always Right'])
-    fig.tight_layout()
-    fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
-    plt.close()
-    logging.debug("Done:\t Global label analysis figure generation")
-    logging.debug("Start:\t Global error by example figure generation")
-    errorOnExamples = -1 * np.sum(data, axis=1) / nbIter + (nbClassifiers*len(labelsAnalysisList))
-    np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-clf_errors.csv", data, delimiter=",")
-    np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
-    fig, ax = plt.subplots()
-    x = np.arange(nbExamples)
-    plt.bar(x, errorOnExamples)
-    plt.ylim([0,nbClassifiers*len(labelsAnalysisList)])
-    plt.title("Number of classifiers that failed to classify each example")
-    fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.png")
-    plt.close()
-    logging.debug("Done:\t Global error by example figure generation")
-
-
 def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):
+    """Used to generate a graph showing errors on each example depending on classifier"""
     logging.debug("Start:\t Label analysis figure generation")
     mono, multi = results
     classifiersNames = genNamesFromRes(mono, multi)
@@ -164,7 +134,47 @@ def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):
     return data
 
 
-def genScoresNames(iterResults, metric, nbResults, names, nbMono, minSize=10):
+def analyzeIterLabels(labelsAnalysisList, directory, classifiersNames, minSize=10):
+    """Used to generate a graph showing errors on each example depending on classifierusing a score
+     if multiple iterations"""
+    logging.debug("Start:\t Global label analysis figure generation")
+    nbExamples = labelsAnalysisList[0].shape[0]
+    nbClassifiers = len(classifiersNames)
+    nbIter = 2
+
+    figWidth = max(nbClassifiers / 2, minSize)
+    figHeight = max(nbExamples / 20, minSize)
+    figKW = {"figsize": (figWidth, figHeight)}
+    fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
+    data = sum(labelsAnalysisList)
+    cax = plt.imshow(-data, interpolation='none', cmap="Greys", aspect='auto')
+    plt.title('Errors depending on the classifier')
+    ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)
+    plt.xticks(ticks, classifiersNames, rotation="vertical")
+    cbar = fig.colorbar(cax, ticks=[0, -len(labelsAnalysisList)])
+    cbar.ax.set_yticklabels(['Always Wrong', 'Always Right'])
+    fig.tight_layout()
+    fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
+    plt.close()
+    logging.debug("Done:\t Global label analysis figure generation")
+    logging.debug("Start:\t Global error by example figure generation")
+    errorOnExamples = -1 * np.sum(data, axis=1) / nbIter + (nbClassifiers*len(labelsAnalysisList))
+    np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-clf_errors.csv", data, delimiter=",")
+    np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
+    fig, ax = plt.subplots()
+    x = np.arange(nbExamples)
+    plt.bar(x, errorOnExamples)
+    plt.ylim([0,nbClassifiers*len(labelsAnalysisList)])
+    plt.title("Number of classifiers that failed to classify each example")
+    fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.png")
+    plt.close()
+    logging.debug("Done:\t Global error by example figure generation")
+
+
+
+def genFig(iterResults, metric, nbResults, names, nbMono, minSize=10):
+    """Used to generate the bar graph representing the mean scores of each classifiers if multiple iteration
+     with different random states"""
     nbIter = len(iterResults)
     validationScores = np.zeros((nbIter, nbResults))
     trainScores = np.zeros((nbIter, nbResults))
@@ -213,7 +223,7 @@ def analyzeIterResults(iterResults, name, metrics, directory):
     names = genNamesFromRes(iterResults[0][0], iterResults[0][1])
     for metric in metrics:
         logging.debug("Start:\t Global score graph generation for " + metric[0])
-        figure = genScoresNames(iterResults, metric, nbResults, names, nbMono)
+        figure = genFig(iterResults, metric, nbResults, names, nbMono)
         figure.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-" + name + "-Mean_on_"
                        + str(nbIter) + "_iter-" + metric[0] + ".png")
         logging.debug("Done:\t Global score graph generation for " + metric[0])
