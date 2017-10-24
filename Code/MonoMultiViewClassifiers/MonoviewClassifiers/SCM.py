@@ -1,21 +1,12 @@
-# from pyscm.utils import _pack_binary_bytes_to_ints
-# import pyscm
-import h5py
-# from pyscm.binary_attributes.base import BaseBinaryAttributeList
-import os
-import itertools
-# import pyscm.deprecated as pyscm
 import numpy as np
 
 from pyscm.scm import SetCoveringMachineClassifier as scm
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import RandomizedSearchCV
-from sklearn.externals.six import iteritems, iterkeys, itervalues
+from sklearn.externals.six import iteritems
 from scipy.stats import uniform, randint
 
-# from ..Multiview import GetMultiviewDb as DB
-# from ..utils.Dataset import getShape
 from .. import Metrics
 from ..utils.HyperParameterSearch import genHeatMaps
 

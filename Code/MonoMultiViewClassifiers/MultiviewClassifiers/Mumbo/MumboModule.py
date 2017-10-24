@@ -1,14 +1,14 @@
-import numpy as np
-import math
-from joblib import Parallel, delayed
 import itertools
-import time
-import pkgutil
 import logging
+import math
+import pkgutil
+
+import numpy as np
+from joblib import Parallel, delayed
 from sklearn.metrics import accuracy_score
 
-from . import Classifiers
 from ...utils.Dataset import getV
+from . import Classifiers
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -19,7 +19,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 def getBenchmark(benchmark, args=None):
     allAlgos = [name for _, name, isPackage in
-                pkgutil.iter_modules("./MonoMultiViewClassifiers/Multiview/Mumbo/Classifiers")
+                pkgutil.iter_modules("./MonoMultiViewClassifiers/MultiviewClassifiers/Mumbo/Classifiers")
                 if not isPackage and not name in ["SubSampling", "ModifiedMulticlass", "Kover"]]
     if args is None or args.MU_types != ['']:
         benchmark["Multiview"]["Mumbo"] = allAlgos

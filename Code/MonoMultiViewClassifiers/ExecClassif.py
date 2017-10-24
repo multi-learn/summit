@@ -1,27 +1,27 @@
 # Import built-in modules
 # import pdb;pdb.set_trace()
-import pkgutil  # for TimeStamp in CSVFile
-import os
-import time
-# import sys
-import logging
 import errno
-
-# Import 3rd party modules
-from joblib import Parallel, delayed
-import numpy as np
+import logging
 import math
+import os
+import pkgutil  # for TimeStamp in CSVFile
+import time
+
 import matplotlib
+import numpy as np
+from joblib import Parallel, delayed
+
 matplotlib.use('Agg')  # Anti-Grain Geometry C++ library to make a raster (pixel) image of the figure
 import h5py
 
 # Import own modules
-from . import Multiview
 # import Metrics
+# from . import Multiview
 from . import MonoviewClassifiers
+from . import MultiviewClassifiers
 from .Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from .Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
-from .Multiview import GetMultiviewDb as DB
+from .utils import GetMultiviewDb as DB
 from .ResultAnalysis import resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes
 from .utils import execution, Dataset
 
@@ -36,7 +36,7 @@ def initBenchmark(args):
     args.FU_early_methods, args.CL_algos_monoview"""
     benchmark = {"Monoview": {}, "Multiview": {}}
     allMultiviewPackages = [name for _, name, isPackage
-                            in pkgutil.iter_modules(['./MonoMultiViewClassifiers/Multiview/']) if isPackage]
+                            in pkgutil.iter_modules(['./MonoMultiViewClassifiers/MultiviewClassifiers/']) if isPackage]
     if args.CL_type == ["Benchmark"]:
 
         allMonoviewAlgos = [name for _, name, isPackage in
@@ -45,7 +45,7 @@ def initBenchmark(args):
         benchmark["Monoview"] = allMonoviewAlgos
         benchmark["Multiview"] = dict((multiviewPackageName, "_") for multiviewPackageName in allMultiviewPackages)
         for multiviewPackageName in allMultiviewPackages:
-            multiviewPackage = getattr(Multiview, multiviewPackageName)
+            multiviewPackage = getattr(MultiviewClassifiers, multiviewPackageName)
             multiviewModule = getattr(multiviewPackage, multiviewPackageName+"Module")
             benchmark = multiviewModule.getBenchmark(benchmark, args=args)
 
@@ -57,7 +57,7 @@ def initBenchmark(args):
             algosMutliview = args.CL_algos_multiview
         for multiviewPackageName in allMultiviewPackages:
             if multiviewPackageName in algosMutliview:
-                multiviewPackage = getattr(Multiview, multiviewPackageName)
+                multiviewPackage = getattr(MultiviewClassifiers, multiviewPackageName)
                 multiviewModule = getattr(multiviewPackage, multiviewPackageName+"Module")
                 benchmark = multiviewModule.getBenchmark(benchmark, args=args)
     if "Monoview" in args.CL_type:
@@ -117,7 +117,7 @@ def initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDiction
     multiviewArguments = []
     if "Multiview" in benchmark:
         for multiviewAlgoName in benchmark["Multiview"]:
-            multiviewPackage = getattr(Multiview, multiviewAlgoName)
+            multiviewPackage = getattr(MultiviewClassifiers, multiviewAlgoName)
             mutliviewModule = getattr(multiviewPackage, multiviewAlgoName+"Module")
             multiviewArguments += mutliviewModule.getArgs(args, benchmark, views, viewsIndices, randomState, directory,
                                                           resultsMonoview, classificationIndices)

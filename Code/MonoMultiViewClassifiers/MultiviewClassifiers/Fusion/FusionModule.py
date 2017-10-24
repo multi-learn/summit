@@ -1,6 +1,7 @@
-import numpy as np
 import logging
 import pkgutil
+
+import numpy as np
 
 # from Methods import *
 
@@ -19,16 +20,12 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 def getBenchmark(benchmark, args=None):
     fusionModulesNames = [name for _, name, isPackage
-                          in pkgutil.iter_modules(['./MonoMultiViewClassifiers/Multiview/Fusion/Methods']) if not isPackage]
-    fusionModules = [getattr(Methods, fusionModulesName)
-                     for fusionModulesName in fusionModulesNames]
-    fusionClassifiers = [getattr(fusionModule, fusionModulesName + "Classifier")
-                         for fusionModulesName, fusionModule in zip(fusionModulesNames, fusionModules)]
+                          in pkgutil.iter_modules(['./MonoMultiViewClassifiers/MultiviewClassifiers/Fusion/Methods']) if not isPackage]
     fusionMethods = dict((fusionModulesName, [name for _, name, isPackage in
                                               pkgutil.iter_modules(
-                                                  ["./MonoMultiViewClassifiers/Multiview/Fusion/Methods/" + fusionModulesName + "Package"])
+                                                  ["./MonoMultiViewClassifiers/MultiviewClassifiers/Fusion/Methods/" + fusionModulesName + "Package"])
                                               if not isPackage])
-                         for fusionModulesName, fusionClasse in zip(fusionModulesNames, fusionClassifiers))
+                         for fusionModulesName in fusionModulesNames)
     if args is None:
         allMonoviewAlgos = [name for _, name, isPackage in
                             pkgutil.iter_modules(['./MonoMultiViewClassifiers/MonoviewClassifiers'])
@@ -48,7 +45,7 @@ def getBenchmark(benchmark, args=None):
             if args.FU_late_methods == [""]:
                 benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = [name for _, name, isPackage in
                                                                              pkgutil.iter_modules([
-                                                                                 "./MonoMultiViewClassifiers/Multiview/Fusion/Methods/LateFusionPackage"])
+                                                                                 "./MonoMultiViewClassifiers/MultiviewClassifiers/Fusion/Methods/LateFusionPackage"])
                                                                              if not isPackage]
             else:
                 benchmark["Multiview"]["Fusion"]["Methods"]["LateFusion"] = args.FU_late_methods
@@ -56,7 +53,7 @@ def getBenchmark(benchmark, args=None):
             if args.FU_early_methods == [""]:
                 benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = [name for _, name, isPackage in
                                                                               pkgutil.iter_modules([
-                                                                                  "./MonoMultiViewClassifiers/Multiview/Fusion/Methods/EarlyFusionPackage"])
+                                                                                  "./MonoMultiViewClassifiers/MultiviewClassifiers/Fusion/Methods/EarlyFusionPackage"])
                                                                               if not isPackage]
             else:
                 benchmark["Multiview"]["Fusion"]["Methods"]["EarlyFusion"] = args.FU_early_methods

@@ -1,14 +1,12 @@
-import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
 import operator
 from datetime import timedelta as hms
-# import logging
 
-# import Mumbo
-from . import Classifiers
+import matplotlib.pyplot as plt
+import numpy as np
+
 from ... import Metrics
 from ...utils.Dataset import getV, getShape
+from . import Classifiers
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -93,7 +91,7 @@ def getAlgoConfig(classifier, classificationKWARGS, nbCores, viewNames, hyperPar
     threshold = classificationKWARGS["threshold"]
     extractionTime, classificationTime = times
     weakClassifierConfigs = [getattr(getattr(Classifiers, classifierName), 'getConfig')(classifiersConfig) for classifiersConfig,
-                                                                                                    classifierName
+                                                                                                               classifierName
                              in zip(classifier.classifiersConfigs, classifier.classifiersNames)]
     classifierAnalysis = [classifierName + " " + weakClassifierConfig + "on " + feature for classifierName,
                                                                                             weakClassifierConfig,

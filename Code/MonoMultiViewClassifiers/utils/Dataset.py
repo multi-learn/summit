@@ -1,10 +1,12 @@
-from scipy import sparse
-import numpy as np
 import logging
 import os
-import sys
 import select
-from ..Multiview import GetMultiviewDb as DB
+import sys
+
+import numpy as np
+from scipy import sparse
+
+from . import GetMultiviewDb as DB
 
 
 def getV(DATASET, viewIndex, usedIndices=None):

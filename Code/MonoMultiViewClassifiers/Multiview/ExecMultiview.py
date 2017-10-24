@@ -1,17 +1,15 @@
-import sys
-import os.path
 import errno
-# sys.path.append(
-#     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-import os
 import logging
+import os
+import os.path
 import time
-import h5py
-import imp
 
-from ..utils.Dataset import getShape
+import h5py
+
 from ..utils import HyperParameterSearch
-from . import Fusion, Mumbo
+from ..utils.Dataset import getShape
+from .. import MultiviewClassifiers
+
 # from . import *
 
 # Author-Info
@@ -57,7 +55,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     #     if packageDirectory == CL_type:
     #         classifierModule = imp.find_module(CL_type, "MonoMultiViewClassifiers/Multiview/"+packageDirectory+"/"+CL_type+".py")
     #         analysisModule = imp.load_source(CL_type, "MonoMultiViewClassifiers/Multiview/"+packageDirectory+"/analyzeResults.py")
-    classifierPackage = globals()[CL_type]  # Permet d'appeler un module avec une string
+    classifierPackage = getattr(MultiviewClassifiers, CL_type)  # Permet d'appeler un module avec une string
     classifierModule = getattr(classifierPackage, CL_type+"Module")
     classifierClass = getattr(classifierModule, CL_type+"Class")
     analysisModule = getattr(classifierPackage, "analyzeResults")
