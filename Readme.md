@@ -8,7 +8,7 @@ This project aims to be an easy-to use solution to run a prior benchmark on a da
 
 To be able to use this project, you'll need :
 
-* [Python 2.7](http://www.dropwizard.io/1.0.2/docs/)
+* [Python 2.7](https://docs.python.org/2/) or [Python 3](https://docs.python.org/3/) 
 
 And the following python modules :
 * [pyscm](https://github.com/aldro61/pyscm) - Set Covering Machine, Marchand, M., & Taylor, J. S. (2003) by A.Drouin, F.Brochu, G.Letarte St-Pierre, M.Osseni, P-L.Plante
@@ -17,8 +17,7 @@ And the following python modules :
 * [sklearn](http://scikit-learn.org/stable/) - Used for the monoview classifiers
 * [joblib](https://pypi.python.org/pypi/joblib) - Used to compute on multiple threads
 * [h5py](www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to spare RAM
-* ([argparse](https://docs.python.org/3/library/argparse.html) - Used to parse the input args)
-* ([logging](https://docs.python.org/2/library/logging.html) - Used to generate log)
+
 
 They are all tested in  `multiview-machine-mearning-omis/Code/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `Exec` script
 
@@ -53,8 +52,8 @@ Results are stored in `multiview-machine-learning-omis/Code/MonoMultiViewClassif
 A directory will be created with the name of the database used to run the script.
 For each time the script is run, a new directory named after the running date and time will be created.
 In that directory:
-* If the script is run using more than one statistic iteration, it will create one directory for each iteration and store the statistical analysis in the current directory 
-* If it is run with one iteration, the itration results will be stored in the current directory
+* If the script is run using more than one statistic iteration (one for each seed), it will create one directory for each iteration and store the statistical analysis in the current directory 
+* If it is run with one iteration, the iteration results will be stored in the current directory
 
 The results for each iteration are graphs recaping the classifiers scores and the classifiers config and results are stored in a directory of their own.
 To explore the results run the `Exec` script and go in `multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/Plausible/`
@@ -70,7 +69,7 @@ cd multiview-machine-learning-omis/
 python -m unittest discover
 ```
 
-## Authors
+## Author
 
 * **Baptiste BAUVIN**
 
