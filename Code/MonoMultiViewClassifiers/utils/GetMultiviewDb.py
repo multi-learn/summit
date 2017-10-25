@@ -12,6 +12,31 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
+def copyHDF5(pathF, name, nbCores):
+    """Used to copy a HDF5 database in case of multicore computing"""
+    datasetFile = h5py.File(pathF + name + ".hdf5", "r")
+    for coreIndex in range(nbCores):
+        newDataSet = h5py.File(pathF + name + str(coreIndex) + ".hdf5", "w")
+        for dataset in datasetFile:
+            datasetFile.copy("/" + dataset, newDataSet["/"])
+        newDataSet.close()
+
+
+def datasetsAlreadyExist(pathF, name, nbCores):
+    """Used to check if it's necessary to copy datasets"""
+    allDatasetExist = True
+    for coreIndex in range(nbCores):
+        import os.path
+        allDatasetExist *= os.path.isfile(pathF + name + str(coreIndex) + ".hdf5")
+    return allDatasetExist
+
+
+def deleteHDF5(pathF, name, nbCores):
+    """Used to delete temporary copies at the end of the benchmark"""
+    for coreIndex in range(nbCores):
+        os.remove(pathF + name + str(coreIndex) + ".hdf5")
+
+
 def makeMeNoisy(viewData, randomState, percentage=15):
     """used to introduce some noise in the generated data"""
     viewData = viewData.astype(bool)
@@ -918,26 +943,6 @@ def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, LABELS_NAMES):
 #     return datasetFile, labelDictionary
 #
 #
-# def copyHDF5(pathF, name, nbCores):
-#     datasetFile = h5py.File(pathF + name + ".hdf5", "r")
-#     for coreIndex in range(nbCores):
-#         newDataSet = h5py.File(pathF + name + str(coreIndex) + ".hdf5", "w")
-#         for dataset in datasetFile:
-#             datasetFile.copy("/" + dataset, newDataSet["/"])
-#         newDataSet.close()
-#
-#
-# def datasetsAlreadyExist(pathF, name, nbCores):
-#     allDatasetExist = True
-#     for coreIndex in range(nbCores):
-#         import os.path
-#         allDatasetExist *= os.path.isfile(pathF + name + str(coreIndex) + ".hdf5")
-#     return allDatasetExist
-#
-#
-# def deleteHDF5(pathF, name, nbCores):
-#     for coreIndex in range(nbCores):
-#         os.remove(pathF + name + str(coreIndex) + ".hdf5")
 #
 # # def getOneViewFromDB(viewName, pathToDB, DBName):
 # #     view = np.genfromtxt(pathToDB + DBName +"-" + viewName, delimiter=';')
