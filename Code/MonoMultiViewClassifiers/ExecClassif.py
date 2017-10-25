@@ -269,7 +269,7 @@ def execClassif(arguments):
     args = execution.parseTheArgs(arguments)
 
     os.nice(args.nice)
-    nbCores = args.CL_cores
+    nbCores = args.nbCores
     statsIter = args.CL_statsiter
     hyperParamSearch = args.CL_HPS_type
 
@@ -285,7 +285,7 @@ def execClassif(arguments):
     else:
         getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
 
-    DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nb_class,
+    DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nbClass,
                                              args.CL_classes)
 
     datasetLength = DATASET.get("Metadata").attrs["datasetLength"]

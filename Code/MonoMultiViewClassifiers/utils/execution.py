@@ -16,7 +16,7 @@ def parseTheArgs(arguments):
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     groupStandard = parser.add_argument_group('Standard arguments')
-    groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
+    groupStandard.add_argument('-log', action='store_true', help='Use option to activate logging to console')
     groupStandard.add_argument('--name', metavar='STRING', action='store', help='Name of Database (default: %(default)s)',
                                default='Plausible')
     groupStandard.add_argument('--type', metavar='STRING', action='store',
@@ -25,26 +25,30 @@ def parseTheArgs(arguments):
     groupStandard.add_argument('--views', metavar='STRING', action='store', nargs="+",
                                help='Name of the views selected for learning (default: %(default)s)',
                                default=[''])
-    groupStandard.add_argument('--pathF', metavar='STRING', action='store', help='Path to the views (default: %(default)s)',
+    groupStandard.add_argument('--pathF', metavar='STRING', action='store', help='Path to the hdf5 dataset or database folder (default: %(default)s)',
                                default='../Data/')
     groupStandard.add_argument('--nice', metavar='INT', action='store', type=int,
-                               help='Niceness for the process', default=0)
+                               help='Niceness for the processes', default=0)
     groupStandard.add_argument('--randomState', metavar='STRING', action='store',
-                               help="The random state seed to use or a file where we can find it's get_state", default=None)
+                               help="The random state seed to use or the path to a pickle file where it is stored",
+                               default=None)
+    groupStandard.add_argument('--cores', metavar='INT', action='store', help='Number of cores to use for parallel '
+                                                                              'computing, -1 for all',
+                               type=int, default=2)
 
     groupClass = parser.add_argument_group('Classification arguments')
     groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
-                            help='Determine the split between learning and validation sets', type=float,
+                            help='Determine the split ratio between learning and validation sets', type=float,
                             default=0.2)
     groupClass.add_argument('--CL_nbFolds', metavar='INT', action='store', help='Number of folds in cross validation',
                             type=int, default=2)
-    groupClass.add_argument('--CL_nb_class', metavar='INT', action='store', help='Number of classes, -1 for all', type=int,
+    groupClass.add_argument('--CL_nbClass', metavar='INT', action='store', help='Number of classes, -1 for all', type=int,
                             default=2)
     groupClass.add_argument('--CL_classes', metavar='STRING', action='store', nargs="+",
                             help='Classes used in the dataset (names of the folders) if not filled, random classes will be '
-                                 'selected ex. walrus mole leopard', default=["yes", "no"])
+                                 'selected', default=["yes", "no"])
     groupClass.add_argument('--CL_type', metavar='STRING', action='store', nargs="+",
-                            help='Determine whether to use Multiview and/or Monoview, or Benchmark',
+                            help='Determine whether to use Multiview and/or Monoview, or Benchmark classification',
                             default=['Benchmark'])
     groupClass.add_argument('--CL_algos_monoview', metavar='STRING', action='store', nargs="+",
                             help='Determine which monoview classifier to use if empty, considering all',
@@ -52,21 +56,20 @@ def parseTheArgs(arguments):
     groupClass.add_argument('--CL_algos_multiview', metavar='STRING', action='store', nargs="+",
                             help='Determine which multiview classifier to use if empty, considering all',
                             default=[''])
-    groupClass.add_argument('--CL_cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
-                            default=2)
     groupClass.add_argument('--CL_statsiter', metavar='INT', action='store',
-                            help="Number of iteration for each algorithm to mean results if using multiple cores, it's highly recommended to use statsiter mod(nbCores) = 0",
+                            help="Number of iteration for each algorithm to mean results on different random states. "
+                                 "If using multiple cores, it's highly recommended to use statsiter mod nbCores == 0",
                             type=int,
                             default=2)
     groupClass.add_argument('--CL_metrics', metavar='STRING', action='store', nargs="+",
                             help='Determine which metrics to use, separate metric and configuration with ":".'
                                  ' If multiple, separate with space. If no metric is specified, '
-                                 'considering all with accuracy for classification '
+                                 'considering all'
                             , default=[''])
     groupClass.add_argument('--CL_metric_princ', metavar='STRING', action='store',
                             help='Determine which metric to use for randomSearch and optimization', default="f1_score")
     groupClass.add_argument('--CL_GS_iter', metavar='INT', action='store',
-                            help='Determine how many Randomized grid search tests to do', type=int, default=2)
+                            help='Determine how many hyper parameters optimization tests to do', type=int, default=2)
     groupClass.add_argument('--CL_HPS_type', metavar='STRING', action='store',
                             help='Determine which hyperparamter search function use', default="randomizedSearch")
 
