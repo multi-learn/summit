@@ -12,11 +12,6 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def error(testLabels, computedLabels):
-    error = sum(map(operator.ne, computedLabels, testLabels))
-    return float(error) * 100 / len(computedLabels)
-
-
 def printMetricScore(metricScores, metrics):
     metricScoreString = "\n\n"
     for metric in metrics:
