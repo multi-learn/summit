@@ -1,8 +1,9 @@
-from Versions import testVersions
-testVersions()
-import sys
+if __name__=="__main__":
 
-from MonoMultiViewClassifiers import ExecClassif
 
-ExecClassif.execClassif(sys.argv[1:])
+    import sys
+
+    from MonoMultiViewClassifiers import ExecClassif
+    ExecClassif.execClassif(sys.argv[1:])
+
 

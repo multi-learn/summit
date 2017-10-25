@@ -1,7 +1,7 @@
 import unittest
 import argparse
 
-from MonoMultiViewClassifiers import ExecClassif
+from ..MonoMultiViewClassifiers import ExecClassif
 
 
 class Test_initBenchmark(unittest.TestCase):
@@ -23,12 +23,12 @@ class Test_initMonoviewArguments(unittest.TestCase):
 
     def test_initMonoviewArguments_no_monoview(self):
         benchmark = {"Monoview":{}, "Multiview":{}}
-        arguments = ExecClassif.initMonoviewArguments(benchmark, {}, [], [], None, 0, {})
+        arguments = ExecClassif.initMonoviewExps(benchmark, {}, [], None, 0, {})
         self.assertEqual(arguments, {})
 
     def test_initMonoviewArguments_empty(self):
         benchmark = {"Monoview":{}, "Multiview":{}}
-        arguments = ExecClassif.initMonoviewArguments(benchmark, {}, [], [], None, 0, {})
+        arguments = ExecClassif.initMonoviewExps(benchmark, {}, [], None, 0, {})
 
 class Essai(unittest.TestCase):
 
@@ -203,3 +203,10 @@ class Essai(unittest.TestCase):
                                      help='Determine which method to use to select the monoview classifiers',
                                      default="intersect")
         self.args = parser.parse_args([])
+
+
+def suite():
+    suite = unittest.TestSuite()
+    suite.addTest(Test_initBenchmark('test_initKWARGSFunc_no_monoview'))
+    # suite.addTest(WidgetTestCase('test_widget_resize'))
+    return suite

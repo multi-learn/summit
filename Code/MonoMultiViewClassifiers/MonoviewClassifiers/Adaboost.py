@@ -22,8 +22,9 @@ def canProbas():
 
 
 def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
+    """Used to fit the monoview classifier with the args stored in kwargs"""
     num_estimators = int(kwargs['0'])
-    base_estimators = DecisionTreeClassifier()  # kwargs['1']
+    base_estimators = DecisionTreeClassifier()
     classifier = AdaBoostClassifier(n_estimators=num_estimators, base_estimator=base_estimators,
                                     random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
@@ -31,6 +32,7 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
 
 
 def paramsToSet(nIter, randomState):
+    """Used for weighted linear early fusion to generate random search sets"""
     paramsSet = []
     for _ in range(nIter):
         paramsSet.append([randomState.randint(1, 15), DecisionTreeClassifier()])
@@ -38,12 +40,15 @@ def paramsToSet(nIter, randomState):
 
 
 def getKWARGS(kwargsList):
+    """Used to format kwargs for the parsed args"""
     kwargsDict = {}
     for (kwargName, kwargValue) in kwargsList:
         if kwargName == "CL_Adaboost_n_est":
             kwargsDict['0'] = int(kwargValue)
         elif kwargName == "CL_Adaboost_b_est":
             kwargsDict['1'] = kwargValue
+        else:
+            raise(ValueError, "Wrong arguments served to Adaboost")
     return kwargsDict
 
 
@@ -74,7 +79,7 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, me
 
 
 def getConfig(config):
-    if type(config) not in [list, dict]:
+    if type(config) not in [list, dict]: # Used in late fusion when config is a classifier
         return "\n\t\t- Adaboost with num_esimators : " + str(config.n_estimators) + ", base_estimators : " + str(
             config.base_estimator)
     else:
@@ -83,6 +88,7 @@ def getConfig(config):
         except:
             return "\n\t\t- Adaboost with num_esimators : " + str(config["0"]) + ", base_estimators : " + str(
                 config["1"])
+
 
 def getInterpret(classifier, directory):
     interpretString = getFeatureImportance(classifier, directory)

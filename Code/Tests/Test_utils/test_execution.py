@@ -6,7 +6,7 @@ import numpy as np
 
 from sklearn.model_selection import StratifiedShuffleSplit
 
-from MonoMultiViewClassifiers.utils import execution
+from ...MonoMultiViewClassifiers.utils import execution
 
 
 class Test_parseTheArgs(unittest.TestCase):
@@ -23,16 +23,16 @@ class Test_initRandomState(unittest.TestCase):
 
     def test_random_state_42(self):
         randomState_42 = np.random.RandomState(42)
-        randomState = execution.initRandomState("42", "Tests/temp_tests/")
-        os.remove("Tests/temp_tests/randomState.pickle")
+        randomState = execution.initRandomState("42", "Code/Tests/temp_tests/")
+        os.remove("Code/Tests/temp_tests/randomState.pickle")
         np.testing.assert_array_equal(randomState.beta(1,100,100),
                                       randomState_42.beta(1,100,100))
 
     def test_random_state_pickle(self):
-        randomState_to_pickle = execution.initRandomState(None, "Tests/temp_tests/")
-        pickled_randomState = execution.initRandomState("Tests/temp_tests/randomState.pickle",
-                                                        "Tests/temp_tests/")
-        os.remove("Tests/temp_tests/randomState.pickle")
+        randomState_to_pickle = execution.initRandomState(None, "Code/Tests/temp_tests/")
+        pickled_randomState = execution.initRandomState("Code/Tests/temp_tests/randomState.pickle",
+                                                        "Code/Tests/temp_tests/")
+        os.remove("Code/Tests/temp_tests/randomState.pickle")
         np.testing.assert_array_equal(randomState_to_pickle.beta(1,100,100),
                                       pickled_randomState.beta(1,100,100))
 
