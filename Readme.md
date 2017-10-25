@@ -66,7 +66,7 @@ To explore the results run the `Exec` script and go in `multiview-machine-learni
 
 In order to run it you'll need to try on simulated data with the command
 ```
-cd multiview-machine-learning-omis/Code
+cd multiview-machine-learning-omis/
 python -m unittest discover
 ```
 
