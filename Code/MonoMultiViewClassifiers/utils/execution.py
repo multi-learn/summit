@@ -32,7 +32,7 @@ def parseTheArgs(arguments):
     groupStandard.add_argument('--randomState', metavar='STRING', action='store',
                                help="The random state seed to use or the path to a pickle file where it is stored",
                                default=None)
-    groupStandard.add_argument('--cores', metavar='INT', action='store', help='Number of cores to use for parallel '
+    groupStandard.add_argument('--nbCores', metavar='INT', action='store', help='Number of cores to use for parallel '
                                                                               'computing, -1 for all',
                                type=int, default=2)
 
@@ -185,6 +185,7 @@ def parseTheArgs(arguments):
                                  default="intersect")
     args = parser.parse_args(arguments)
     return args
+
 
 def initRandomState(randomStateArg, directory):
     """Used to init a random state and multiple if needed (multicore)"""

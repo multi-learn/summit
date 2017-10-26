@@ -67,11 +67,11 @@ def testVersions():
         isUpToDate = False
         toInstall.append("h5py")
 
-    try:
-        import graphviz  #
-    except ImportError:
-        isUpToDate = False
-        toInstall.append("graphviz")
+    # try:
+    #     import graphviz  #
+    # except ImportError:
+    #     isUpToDate = False
+    #     toInstall.append("graphviz")
 
     try:
         import pickle  #
