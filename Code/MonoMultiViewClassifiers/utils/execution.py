@@ -25,7 +25,8 @@ def parseTheArgs(arguments):
     groupStandard.add_argument('--views', metavar='STRING', action='store', nargs="+",
                                help='Name of the views selected for learning (default: %(default)s)',
                                default=[''])
-    groupStandard.add_argument('--pathF', metavar='STRING', action='store', help='Path to the hdf5 dataset or database folder (default: %(default)s)',
+    groupStandard.add_argument('--pathF', metavar='STRING', action='store', help='Path to the hdf5 dataset or database '
+                                                                                 'folder (default: %(default)s)',
                                default='../Data/')
     groupStandard.add_argument('--nice', metavar='INT', action='store', type=int,
                                help='Niceness for the processes', default=0)
@@ -37,6 +38,9 @@ def parseTheArgs(arguments):
                                type=int, default=2)
 
     groupClass = parser.add_argument_group('Classification arguments')
+    groupClass.add_argument('--CL_multiclassMethod', metavar='STRING', action='store',
+                            help='Determine which multiclass method to use if the dataset is multiclass', type=float,
+                            default="oneVersusOne")
     groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
                             help='Determine the split ratio between learning and validation sets', type=float,
                             default=0.2)

@@ -143,6 +143,44 @@ def getFakeDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, randomState):
     return datasetFile, LABELS_DICTIONARY
 
 
+
+class DatasetError(Exception):
+    pass
+
+
+def getClasses(labels):
+    nbLabels = len(set(list(labels)))
+    if nbLabels >= 2:
+        return set(list(labels))
+    else:
+        raise(DatasetError, "Dataset must have at least two different labels")
+
+
+def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames):
+    """Used to load a hdf5 database"""
+    datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
+    fullLabels = datasetFile.get("Labels")
+    temp_dataset = h5py.File("../Data/temp_"+nameDB+".hdf5", "w")
+    labelsSet = getClasses(fullLabels)
+    if len(labelsSet) > 2:
+        labelsNames = list(datasetFile.get("Labels").attrs["names"])
+        usedLabels = [labelsNames.index(askedLabelName) for askedLabelName in askedLabelsNames]
+        usedIndices = np.array([labelIndex for labelIndex, label in enumerate(fullLabels) if label in usedLabels])
+    else:
+        usedIndices = np.arange(fullLabels.shape)
+
+    for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
+        if datasetFile.get("View"+str(viewIndex)).attrs["name"] in views:
+            datasetFile.copy("View"+str(viewIndex), temp_dataset)
+        else:
+            pass
+    datasetFile.copy("Metadata", temp_dataset)
+
+    labelsDictionary = dict((labelIndex, labelName) for labelIndex, labelName in
+                            zip(fullLabels.attrs["labels_indices"], fullLabels.attrs["labels"]))
+    return datasetFile, labelsDictionary
+
+
 # def getLabelSupports(CLASS_LABELS):
 #     """Used to get the number of example for each label"""
 #     labels = set(CLASS_LABELS)
@@ -151,11 +189,11 @@ def getFakeDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, randomState):
 
 
 # def isUseful(labelSupports, index, CLASS_LABELS, labelDict):
-    # if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:
-    #     labelSupports[labelDict[CLASS_LABELS[index]]] -= 1
-    #     return True, labelSupports
-    # else:
-    #     return False, labelSupports
+# if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:
+#     labelSupports[labelDict[CLASS_LABELS[index]]] -= 1
+#     return True, labelSupports
+# else:
+#     return False, labelSupports
 
 
 # def splitDataset(DATASET, LEARNING_RATE, DATASET_LENGTH, randomState):
@@ -244,16 +282,6 @@ def getFakeDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, randomState):
 #     datasetFile.close()
 #     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
 #     return datasetFile, labelsDictionary
-
-
-def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, LABELS_NAMES):
-    """Used to load a hdf5 database"""
-    datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
-    fullLabels = datasetFile.get("Labels")
-    labelsDictionary = dict((labelIndex, labelName) for labelIndex, labelName in
-                            zip(fullLabels.attrs["labels_indices"], fullLabels.attrs["labels"]))
-    return datasetFile, labelsDictionary
-
 
 # def getCaltechDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES, randomState):
 #     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")

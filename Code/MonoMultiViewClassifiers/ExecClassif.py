@@ -280,7 +280,7 @@ def execClassif(arguments):
     else:
         statsIterRandomStates = randomState
 
-    if args.name not in ["MultiOmic", "ModifiedMultiOmic", "Caltech", "Fake", "Plausible", "KMultiOmic"]:
+    if args.name not in ["Fake", "Plausible"]:
         getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
     else:
         getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])

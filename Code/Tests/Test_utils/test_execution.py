@@ -72,6 +72,7 @@ class Test_genSplits(unittest.TestCase):
         self.assertGreater(len(np.where(self.labels[self.train_indices]==1)[0]), 0)
         self.assertGreater(len(np.where(self.labels[self.test_indices]==1)[0]), 0)
 
+
 class Test_genKFolds(unittest.TestCase):
 
     def setUp(self):
