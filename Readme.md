@@ -17,6 +17,8 @@ And the following python modules :
 * [sklearn](http://scikit-learn.org/stable/) - Used for the monoview classifiers
 * [joblib](https://pypi.python.org/pypi/joblib) - Used to compute on multiple threads
 * [h5py](www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to spare RAM
+* [pickle](https://docs.python.org/3/library/pickle.html) - Used to store some results
+* [graphviz](https://pypi.python.org/pypi/graphviz) - Used for decision tree interpretation
 
 
 They are all tested in  `multiview-machine-mearning-omis/Code/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `Exec` script
