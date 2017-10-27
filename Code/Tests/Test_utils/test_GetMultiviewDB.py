@@ -303,6 +303,9 @@ class Test_getClassicDBhdf5(unittest.TestCase):
         dataset_file, labels_dictionnary = GetMultiviewDb.getClassicDBhdf5(cls.views, cls.pathF, cls.nameDB,
                                                                            cls.NB_CLASS, cls.askedLabelsNames,
                                                                            cls.random_state)
+        cls.assertEqual(dataset_file.get("View0").attrs["name"], "test_view_1")
+
+
     @classmethod
     def tearDownClass(cls):
         os.remove("Code/Tests/temp_tests/test_dataset_temp_view_label_select.hdf5")
