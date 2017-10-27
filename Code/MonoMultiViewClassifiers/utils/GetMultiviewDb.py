@@ -234,6 +234,7 @@ def filterViews(datasetFile, temp_dataset, views, usedIndices):
 
 def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState):
     """Used to load a hdf5 database"""
+    askedLabelsNames = [askedLabelName.encode("utf8") for askedLabelName in askedLabelsNames]
     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
     fullLabels = datasetFile.get("Labels").value
     temp_dataset = h5py.File(pathF+nameDB+"_temp_view_label_select.hdf5", "w")
