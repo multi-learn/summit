@@ -39,7 +39,7 @@ def parseTheArgs(arguments):
 
     groupClass = parser.add_argument_group('Classification arguments')
     groupClass.add_argument('--CL_multiclassMethod', metavar='STRING', action='store',
-                            help='Determine which multiclass method to use if the dataset is multiclass', type=float,
+                            help='Determine which multiclass method to use if the dataset is multiclass',
                             default="oneVersusOne")
     groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
                             help='Determine the split ratio between learning and validation sets', type=float,
