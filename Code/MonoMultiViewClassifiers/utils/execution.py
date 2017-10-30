@@ -36,11 +36,13 @@ def parseTheArgs(arguments):
     groupStandard.add_argument('--nbCores', metavar='INT', action='store', help='Number of cores to use for parallel '
                                                                               'computing, -1 for all',
                                type=int, default=2)
+    groupStandard.add_argument('--machine', metavar='STRING', action='store',
+                               help='Type of machine on which the script runs', default="PC")
 
     groupClass = parser.add_argument_group('Classification arguments')
     groupClass.add_argument('--CL_multiclassMethod', metavar='STRING', action='store',
                             help='Determine which multiclass method to use if the dataset is multiclass',
-                            default="oneVersusOne")
+                            default="biclass")
     groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
                             help='Determine the split ratio between learning and validation sets', type=float,
                             default=0.2)

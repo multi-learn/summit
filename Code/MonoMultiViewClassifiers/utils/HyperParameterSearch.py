@@ -66,7 +66,7 @@ def randomizedSearch(dataset, classifierPackage, classifierName, metrics, learni
                 bestSettings = paramsSet
         classifier = classifierClass(randomState, NB_CORES=nbCores, **classificationKWARGS)
         classifier.setParams(bestSettings)
-
+    # TODO : This must be corrected
     else:
         bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, viewsIndices, classificationKWARGS, learningIndices,
                                                           randomState, metric=metric, nIter=nIter)
@@ -77,7 +77,8 @@ def randomizedSearch(dataset, classifierPackage, classifierName, metrics, learni
 
 
 def spearMint(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1, **kwargs):
-    """Used to perform spearmint on the classifiers to optimize hyper parameters"""
+    """Used to perform spearmint on the classifiers to optimize hyper parameters,
+    longer than randomsearch (can't be parallelized)"""
     pass
 
 

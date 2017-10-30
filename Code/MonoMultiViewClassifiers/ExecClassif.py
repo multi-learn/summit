@@ -94,22 +94,6 @@ def initKWARGSFunc(args, benchmark):
     return monoviewKWARGS
 
 
-# def lateFusionSetArgs(views, viewsIndices, classes, method,
-#                       classifiersNames, classifiersConfig, fusionMethodConfig):
-#     arguments = {"CL_type": "Fusion",
-#                  "views": views,
-#                  "NB_VIEW": len(views),
-#                  "viewsIndices": viewsIndices,
-#                  "NB_CLASS": len(classes),
-#                  "LABELS_NAMES": args.CL_classes,
-#                  "FusionKWARGS": {"fusionType": "LateFusion", "fusionMethod": method,
-#                                   "classifiersNames": classifiersNames,
-#                                   "classifiersConfigs": classifiersConfig,
-#                                   'fusionMethodConfig': fusionMethodConfig,
-#                                   "nbView": (len(viewsIndices))}}
-#     return arguments
-
-
 def initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries, randomState, directory,
                            resultsMonoview, classificationIndices):
     """Used to add each monoview exeperience args to the list of monoview experiences args"""
