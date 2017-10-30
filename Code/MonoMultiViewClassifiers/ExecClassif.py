@@ -19,7 +19,7 @@ from .Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from .Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 from .utils import GetMultiviewDb as DB
 from .ResultAnalysis import resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes
-from .utils import execution, Dataset
+from .utils import execution, Dataset, Multiclass
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -66,15 +66,23 @@ def initBenchmark(args):
     return benchmark
 
 
-def initMonoviewExps(benchmark, argumentDictionaries, views, allViews, NB_CLASS, kwargsInit):
+def genViewsDictionnary(DATASET):
+    datasetsNames = DATASET.keys()
+    viewsDictionary = dict((DATASET.get(datasetName).attrs["name"], int(datasetName[4:]))
+                           for datasetName in datasetsNames
+                           if datasetName[:4]=="View")
+    return viewsDictionary
+
+
+def initMonoviewExps(benchmark, argumentDictionaries, viewsDictionary,  NB_CLASS, kwargsInit):
     """Used to add each monoview exeperience args to the list of monoview experiences args"""
     if benchmark["Monoview"]:
         argumentDictionaries["Monoview"] = []
-        for view in views:
+        for viewName, viewIndex in viewsDictionary.items():
             for classifier in benchmark["Monoview"]:
                 arguments = {
-                    "args": {classifier + "KWARGS": kwargsInit[classifier + "KWARGSInit"], "feat": view,
-                             "CL_type": classifier, "nbClass": NB_CLASS}, "viewIndex": allViews.index(view)}
+                    "args": {classifier + "KWARGS": kwargsInit[classifier + "KWARGSInit"], "feat": viewName,
+                             "CL_type": classifier, "nbClass": NB_CLASS}, "viewIndex": viewIndex}
                 argumentDictionaries["Monoview"].append(arguments)
     return argumentDictionaries
 
@@ -272,18 +280,20 @@ def execClassif(arguments):
     DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nbClass,
                                              args.CL_classes)
 
-    datasetLength = DATASET.get("Metadata").attrs["datasetLength"]
-    classificationIndices = execution.genSplits(statsIter, datasetLength, DATASET, args.CL_split, statsIterRandomStates)
+    multiclassLabels, labelsIndices, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value)
+
+    classificationIndices = execution.genSplits(statsIter, oldIndicesMulticlass, multiclassLabels, args.CL_split, statsIterRandomStates)
 
     kFolds = execution.genKFolds(statsIter, args.CL_nbFolds, statsIterRandomStates)
 
     datasetFiles = Dataset.initMultipleDatasets(args, nbCores)
 
-    views, viewsIndices, allViews = execution.initViews(DATASET, args)
-    if not views:
-        raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
+    # views, viewsIndices, allViews = execution.initViews(DATASET, args)
+    # if not views:
+    #     raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
+    viewsDictionary = genViewsDictionnary(DATASET)
 
-    NB_VIEW = len(views)
+    # NB_VIEW = DATASET.get("Metadata").attrs["nbViews"]
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
     metrics = [metric.split(":") for metric in args.CL_metrics]
@@ -296,7 +306,7 @@ def execClassif(arguments):
         if len(metric) == 1:
             metrics[metricIndex] = [metric[0], None]
 
-    logging.info("Start:\t Finding all available mono- & multiview algorithms")
+    logging.debug("Start:\t Finding all available mono- & multiview algorithms")
 
     benchmark = initBenchmark(args)
 
@@ -305,7 +315,7 @@ def execClassif(arguments):
     dataBaseTime = time.time() - start
 
     argumentDictionaries = {"Monoview": [], "Multiview": []}
-    argumentDictionaries = initMonoviewExps(benchmark, argumentDictionaries, views, allViews, NB_CLASS,
+    argumentDictionaries = initMonoviewExps(benchmark, argumentDictionaries, viewsDictionary, NB_CLASS,
                                             initKWARGS)
     directories = execution.genDirecortiesNames(directory, statsIter)
 
@@ -323,7 +333,7 @@ def execClassif(arguments):
             np.savetxt(directories[statIterIndex] + "train_labels.csv", trainLabels, delimiter=",")
         if nbCores > 1:
             iterResults = []
-            nbExperiments = statsIter
+            nbExperiments = statsIter*len(multiclassLabels)
             for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
                 iterResults += (Parallel(n_jobs=nbCores)(
                     delayed(classifyOneIter_multicore)(LABELS_DICTIONARY, argumentDictionaries, 1,

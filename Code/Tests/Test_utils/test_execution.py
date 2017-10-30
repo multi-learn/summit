@@ -88,3 +88,49 @@ class Test_genKFolds(unittest.TestCase):
 
     def test_genKFolds_iter(self):
         pass
+
+
+class Test_genDirecortiesNames(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.directory = "../chicken_is_heaven/"
+        cls.stats_iter = 5
+        cls.labels_indices = [(0,1), (0,2), (0,3), (1,2), (1,3), (2,3)]
+        cls.multiclass_method = "oneVersusOne"
+        cls.labels_dictionary = {0:"test1", 1:"test2", 2:"test3", 3:"test4"}
+        pass
+
+    def test_simple_ovo(cls):
+        directories = execution.genDirecortiesNames(cls.directory, cls.stats_iter, cls.labels_indices,
+                                                    cls.multiclass_method, cls.labels_dictionary)
+        cls.assertEqual(len(directories), 30)
+        cls.assertEqual(directories[0], "../chicken_is_heaven/iter_1/test1_vs_test2/")
+        cls.assertEqual(directories[-1], "../chicken_is_heaven/iter_5/test3_vs_test4/")
+
+    def test_simple_ovr(cls):
+        cls.multiclass_method = "oneVersusRest"
+        cls.labels_indices = [0,1,2,3]
+        directories = execution.genDirecortiesNames(cls.directory, cls.stats_iter, cls.labels_indices,
+                                                    cls.multiclass_method, cls.labels_dictionary)
+        cls.assertEqual(len(directories), 20)
+        cls.assertEqual(directories[-1], "../chicken_is_heaven/iter_5/test4_vs_Rest/")
+        cls.assertEqual(directories[0], "../chicken_is_heaven/iter_1/test1_vs_Rest/")
+
+    def test_ovo_no_iter(cls):
+        cls.stats_iter = 1
+        directories = execution.genDirecortiesNames(cls.directory, cls.stats_iter, cls.labels_indices,
+                                                    cls.multiclass_method, cls.labels_dictionary)
+        cls.assertEqual(len(directories), 6)
+        cls.assertEqual(directories[0], "../chicken_is_heaven/test1_vs_test2/")
+        cls.assertEqual(directories[-1], "../chicken_is_heaven/test3_vs_test4/")
+
+    def test_ovr_no_iter(cls):
+        cls.stats_iter = 1
+        cls.multiclass_method = "oneVersusRest"
+        cls.labels_indices = [0,1,2,3]
+        directories = execution.genDirecortiesNames(cls.directory, cls.stats_iter, cls.labels_indices,
+                                                    cls.multiclass_method, cls.labels_dictionary)
+        cls.assertEqual(len(directories), 4)
+        cls.assertEqual(directories[-1], "../chicken_is_heaven/test4_vs_Rest/")
+        cls.assertEqual(directories[0], "../chicken_is_heaven/test1_vs_Rest/")

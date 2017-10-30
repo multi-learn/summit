@@ -42,7 +42,7 @@ def parseTheArgs(arguments):
     groupClass = parser.add_argument_group('Classification arguments')
     groupClass.add_argument('--CL_multiclassMethod', metavar='STRING', action='store',
                             help='Determine which multiclass method to use if the dataset is multiclass',
-                            default="biclass")
+                            default="oneVersusOne")
     groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
                             help='Determine the split ratio between learning and validation sets', type=float,
                             default=0.2)
@@ -238,30 +238,33 @@ def initLogFile(args):
     return resultDirectory
 
 
-def genSplits(statsIter, datasetlength, DATASET, splitRatio, statsIterRandomStates):
+def genSplits(statsIter, oldIndicesMulticlass, multiclasslabels, splitRatio, statsIterRandomStates, multiclassMethod):
     """Used to gen the train/test splits using one or multiple random states"""
-    indices = np.arange(datasetlength)
-    if statsIter > 1:
-        splits = []
-        for randomState in statsIterRandomStates:
-            foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1,
-                                                                      random_state=randomState,
-                                                                      test_size=splitRatio)
-            folds = foldsObj.split(indices, DATASET.get("Labels").value)
+    for oldIndices, labels in zip(oldIndicesMulticlass, multiclasslabels):
+        indices = oldIndices
+        splitsMulticlass = []
+        if statsIter > 1:
+            splits = []
+            for randomState in statsIterRandomStates:
+                foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1,
+                                                                          random_state=randomState,
+                                                                          test_size=splitRatio)
+                folds = foldsObj.split(indices, labels)
+                for fold in folds:
+                    train_fold, test_fold = fold
+                trainIndices = indices[train_fold]
+                testIndices = indices[test_fold]
+                splits.append([trainIndices, testIndices])
+            splitsMulticlass.append(splits)
+        else:
+            foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1, random_state=statsIterRandomStates, test_size=splitRatio)
+            folds = foldsObj.split(indices, labels)
             for fold in folds:
                 train_fold, test_fold = fold
             trainIndices = indices[train_fold]
             testIndices = indices[test_fold]
-            splits.append([trainIndices, testIndices])
-        return splits
-    else:
-        foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1, random_state=statsIterRandomStates, test_size=splitRatio)
-        folds = foldsObj.split(indices, DATASET.get("Labels").value)
-        for fold in folds:
-            train_fold, test_fold = fold
-        trainIndices = indices[train_fold]
-        testIndices = indices[test_fold]
-        return trainIndices, testIndices
+            splitsMulticlass.append((trainIndices, testIndices))
+    return splitsMulticlass
 
 
 def genKFolds(statsIter, nbFolds, statsIterRandomStates):
@@ -293,12 +296,29 @@ def initViews(DATASET, args):
         return views, viewsIndices, allViews
 
 
-def genDirecortiesNames(directory, statsIter):
+def genDirecortiesNames(directory, statsIter, labelsIndices, multiclassMethod, labelDictionary):
     """Used to generate the different directories of each iteration if needed"""
     if statsIter > 1:
         directories = []
         for i in range(statsIter):
-            directories.append(directory + "iter_" + str(i + 1) + "/")
-        return directories
+            if multiclassMethod == "oneVersusOne":
+                for labelIndex1, labelIndex2 in labelsIndices:
+                    labelName1 = labelDictionary[labelIndex1]
+                    labelName2 = labelDictionary[labelIndex2]
+                    directories.append(directory + "iter_" + str(i + 1) + "/"+labelName1+"_vs_"+labelName2+"/")
+            elif multiclassMethod == "oneVersusRest":
+                for labelIndex in labelsIndices:
+                    labelName = labelDictionary[labelIndex]
+                    directories.append(directory + "iter_" + str(i + 1) + "/"+labelName+"_vs_Rest/")
     else:
-        return directory
+        directories = []
+        if multiclassMethod == "oneVersusOne":
+            for labelIndex1, labelIndex2 in labelsIndices:
+                labelName1 = labelDictionary[labelIndex1]
+                labelName2 = labelDictionary[labelIndex2]
+                directories.append(directory +labelName1+"_vs_"+labelName2+"/")
+        elif multiclassMethod == "oneVersusRest":
+            for labelIndex in labelsIndices:
+                labelName = labelDictionary[labelIndex]
+                directories.append(directory +labelName+"_vs_Rest/")
+    return directories

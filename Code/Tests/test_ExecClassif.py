@@ -23,12 +23,12 @@ class Test_initMonoviewArguments(unittest.TestCase):
 
     def test_initMonoviewArguments_no_monoview(self):
         benchmark = {"Monoview":{}, "Multiview":{}}
-        arguments = ExecClassif.initMonoviewExps(benchmark, {}, [], None, 0, {})
+        arguments = ExecClassif.initMonoviewExps(benchmark, {}, {}, 0, {})
         self.assertEqual(arguments, {})
 
     def test_initMonoviewArguments_empty(self):
         benchmark = {"Monoview":{}, "Multiview":{}}
-        arguments = ExecClassif.initMonoviewExps(benchmark, {}, [], None, 0, {})
+        arguments = ExecClassif.initMonoviewExps(benchmark, {}, {}, 0, {})
 
 class Essai(unittest.TestCase):
 
