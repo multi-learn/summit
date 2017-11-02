@@ -29,5 +29,5 @@ Define a getConfig function
         kwargs : every argument that is specific to the metric
     Output :
         configString : A string that gives the name of the metric and explains how it is configured. Must end by
-                        (lower is better) or (higher is better) to be able to analyze the results
+                        (lower is better) or (higher is better) to be able to analyze the preds
 """

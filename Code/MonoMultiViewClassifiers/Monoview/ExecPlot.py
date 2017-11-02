@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" Script whichs helps to replot results from Feature Parameter Optimisation """
+""" Script whichs helps to replot preds from Feature Parameter Optimisation """
 
 # Import built-in modules
 import argparse  # for acommand line arguments
@@ -22,7 +22,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 __date__ = 2016 - 03 - 25
 
 parser = argparse.ArgumentParser(
-    description='This method can be used to replot results from Feature Parameter Optimisation',
+    description='This method can be used to replot preds from Feature Parameter Optimisation',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 args = parser.parse_args()
 args.name = "Caltech"

@@ -39,7 +39,7 @@ def genFusionName(type_, a, b, c):
 
 
 def genNamesFromRes(mono, multi):
-    """Used to generate classifiers names list (inthe right order) from mono- and multi-view results"""
+    """Used to generate classifiers names list (inthe right order) from mono- and multi-view preds"""
     names = [res[1][0] + "-" + res[1][1][-1] for res in mono]
     names += [type_ if type_ != "Fusion" else genFusionName(type_, a, b, c) for type_, a, b, c in multi]
     return names

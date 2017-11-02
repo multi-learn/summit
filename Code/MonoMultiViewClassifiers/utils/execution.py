@@ -63,7 +63,7 @@ def parseTheArgs(arguments):
                             help='Determine which multiview classifier to use if empty, considering all',
                             default=[''])
     groupClass.add_argument('--CL_statsiter', metavar='INT', action='store',
-                            help="Number of iteration for each algorithm to mean results on different random states. "
+                            help="Number of iteration for each algorithm to mean preds on different random states. "
                                  "If using multiple cores, it's highly recommended to use statsiter mod nbCores == 0",
                             type=int,
                             default=2)
@@ -211,7 +211,7 @@ def initRandomState(randomStateArg, directory):
 
 
 def initLogFile(args):
-    """Used to init the directory where the results will be stored and the log file"""
+    """Used to init the directory where the preds will be stored and the log file"""
     resultDirectory = "../Results/" + args.name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
     logFileName = time.strftime("%Y%m%d-%H%M%S") + "-" + ''.join(args.CL_type) + "-" + "_".join(
         args.views) + "-" + args.name + "-LOG"

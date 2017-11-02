@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" Library: Functions to export results to CSV or plots """
+""" Library: Functions to export preds to CSV or plots """
 
 # Import built-in modules
 import os  # for iteration throug directories

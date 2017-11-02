@@ -141,9 +141,9 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
                                                                            viewsIndices, randomState)
     logging.info("Done:\t Result Analysis for " + CL_type)
 
-    logging.debug("Start:\t Saving results")
+    logging.debug("Start:\t Saving preds")
     saveResults(LABELS_DICTIONARY, stringAnalysis, views, classifierModule, classificationKWARGS, directory,
                 learningRate, name, imagesAnalysis)
-    logging.debug("Start:\t Saving results")
+    logging.debug("Start:\t Saving preds")
 
     return CL_type, classificationKWARGS, metricsScores, fullLabels

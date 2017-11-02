@@ -161,7 +161,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     cl_desc = [value for key, value in sorted(clKWARGS.items())]
     logging.debug("Done:\t Getting Results")
 
-    logging.debug("Start:\t Saving results")
+    logging.debug("Start:\t Saving preds")
     saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, y_train, imagesAnalysis)
     logging.info("Done:\t Saving Results")
 

@@ -557,7 +557,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomStat
 #                                 if arrayLen == (nbBins - 1) * (lenBin - overlapping) + lenBin:
 #                                     results.append({"nbBins": nbBins, "overlapping": overlapping, "lenBin": lenBin})
 #                                     if len(results) == maxNbSolutions:
-#                                         params = results[randomState.randrange(len(results))]
+#                                         params = preds[randomState.randrange(len(preds))]
 #                                         return params
 #
 #
