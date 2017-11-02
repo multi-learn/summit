@@ -34,11 +34,11 @@ class Test_initMonoviewArguments(unittest.TestCase):
         arguments = ExecClassif.initMonoviewExps(benchmark, {}, {}, 0, {})
 
 
-def fakeBenchmarkExec(coreIndex=-1, a=7):
+def fakeBenchmarkExec(coreIndex, a):
     return [coreIndex, a]
 
 
-def fakeBenchmarkExec_mutlicore(nbCores=-1, a=6):
+def fakeBenchmarkExec_mutlicore(nbCores, a):
     return [nbCores,a]
 
 

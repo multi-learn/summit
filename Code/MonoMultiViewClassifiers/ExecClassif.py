@@ -270,8 +270,31 @@ def getResults(results, statsIter, nbMulticlass):
         else:
             analyzeBiclass(results)
 
-def execOneBenchmark(a=0, b=1):
+def execOneBenchmark(LABELS_DICTIONARY, directory):
+    resultsMonoview = []
+    labelsNames = LABELS_DICTIONARY.values()
+    np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
+
+    resultsMonoview += [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
+                                               coreIndex, args.type, args.pathF, randomState,
+                                               hyperParamSearch=hyperParamSearch,
+                                               metrics=metrics, nIter=args.CL_GS_iter,
+                                               **arguments)
+                        for arguments in argumentDictionaries["Monoview"]]
+    monoviewTime = time.time() - dataBaseTime - start
+
+    argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries,
+                                                  randomState, directory, resultsMonoview, classificationIndices)
+
+    resultsMultiview = []
+    resultsMultiview += [
+        ExecMultiview_multicore(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
+                                args.pathF, LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
+                                metrics=metrics, nIter=args.CL_GS_iter, **arguments)
+        for arguments in argumentDictionaries["Multiview"]]
+    multiviewTime = time.time() - monoviewTime - dataBaseTime - start
     return [-1]
+
 
 def execOneBenchmark_multicore():
     return [-1]
@@ -288,7 +311,7 @@ def execBenchmark(nbCores, statsIter, nbMulticlass, argumentsDictionaries,
             nbMulticoreToDo = range(int(math.ceil(float(nbExpsToDo) / nbCores)))
             for stepIndex in nbMulticoreToDo:
                 results += (Parallel(n_jobs=nbCores)(delayed(execOneBenchmark)
-                                                     (coreIndex = coreIndex,
+                                                     (coreIndex=coreIndex,
                                                       **argumentsDictionaries[coreIndex + stepIndex * nbCores])
                     for coreIndex in range(min(nbCores, nbExpsToDo - stepIndex * nbCores))))
         else:
