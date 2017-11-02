@@ -255,6 +255,35 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
     return results, labelAnalysis
 
 
+def getResults(results, statsIter, nbMulticlass):
+    if statsIter > 1:
+        if nbMulticlass > 1:
+            multiclassResults = analyzeMulticlass(results)
+            analyzerIer(multiclassResults)
+        else:
+            biclassResults = analyzeBiclass(results)
+            analyzeIter(biclassResults)
+    else:
+        if nbMulticlass>1:
+            analyzeMulticlass(results)
+        else:
+            analyzeBiclass(results)
+
+
+def execBenchmark(nbCores, statsIter, nbMulticlass):
+
+    if nbCores > 1:
+        if statsIter > 1 or nbMulticlass > 1:
+            pass # Start multiple benchamrks multicore with result flagging
+        else:
+            pass # Start one multicore benchmark with flagging
+    else:
+        pass # Do everything with flagging
+
+    getResults(results, statsIter, nbMulticlass)
+
+
+
 def execClassif(arguments):
     """Main function to execute the benchmark"""
     start = time.time()
@@ -264,6 +293,7 @@ def execClassif(arguments):
     nbCores = args.nbCores
     statsIter = args.CL_statsiter
     hyperParamSearch = args.CL_HPS_type
+    multiclassMethod = args.CL_multiclassMethod
 
     directory = execution.initLogFile(args)
     randomState = execution.initRandomState(args.randomState, directory)
@@ -280,9 +310,9 @@ def execClassif(arguments):
     DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nbClass,
                                              args.CL_classes)
 
-    multiclassLabels, labelsIndices, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value)
+    multiclassLabels, labelsIndices, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod)
 
-    classificationIndices = execution.genSplits(statsIter, oldIndicesMulticlass, multiclassLabels, args.CL_split, statsIterRandomStates)
+    classificationIndices = execution.genSplits(statsIter, oldIndicesMulticlass, multiclassLabels, args.CL_split, statsIterRandomStates, multiclassMethod)
 
     kFolds = execution.genKFolds(statsIter, args.CL_nbFolds, statsIterRandomStates)
 
@@ -317,7 +347,8 @@ def execClassif(arguments):
     argumentDictionaries = {"Monoview": [], "Multiview": []}
     argumentDictionaries = initMonoviewExps(benchmark, argumentDictionaries, viewsDictionary, NB_CLASS,
                                             initKWARGS)
-    directories = execution.genDirecortiesNames(directory, statsIter)
+    directories = execution.genDirecortiesNames(directory, statsIter, labelsIndices,
+                                                multiclassMethod, LABELS_DICTIONARY)
 
     if statsIter > 1:
         logging.debug("Start:\t Benchmark classification")
