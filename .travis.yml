@@ -5,6 +5,9 @@ python:
 addons:
   apt:
     packages:
+    - libblas-dev
+    - liblapack-dev
+    - gfortran
 install:
 - pip install -U pip pip-tools
 - pip install numpy scipy scikit-learn matplotlib logging joblib argparse h5py
