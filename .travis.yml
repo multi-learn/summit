@@ -5,16 +5,13 @@ python:
 addons:
   apt:
     packages:
-    - libblas-dev
-    - liblapack-dev
-    - gfortran
 install:
 - pip install -U pip pip-tools
-- pip install numpy scipy scikit-learn
-- git clone https://github.com/aldro61/pyscm.git && python setup.py install
+- pip install numpy scipy scikit-learn matplotlib logging joblib argparse h5py pickle
+- git clone https://github.com/aldro61/pyscm.git /tmp/ && python /tmp/pyscm/setup.py install
 script:
-- python setup.py test
-notifications:
-  email:
-    on_success: change
-on_failure: change
+- python -m unittest discover
+#notifications:
+#  email:
+#    on_success: change
+#on_failure: change
