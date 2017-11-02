@@ -7,7 +7,7 @@ addons:
     packages:
 install:
 - pip install -U pip pip-tools
-- pip install numpy scipy scikit-learn matplotlib logging joblib argparse h5py pickle
+- pip install numpy scipy scikit-learn matplotlib logging joblib argparse h5py
 - git clone https://github.com/aldro61/pyscm.git /tmp/ && python /tmp/pyscm/setup.py install
 script:
 - python -m unittest discover
