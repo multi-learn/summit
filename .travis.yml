@@ -11,6 +11,7 @@ install:
 - git clone https://github.com/aldro61/pyscm.git /tmp/ && python /tmp/pyscm/setup.py install
 script:
 - python -m unittest discover
+
 #notifications:
 #  email:
 #    on_success: change
