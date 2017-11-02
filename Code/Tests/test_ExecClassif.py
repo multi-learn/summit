@@ -1,7 +1,10 @@
 import unittest
 import argparse
+import time
 
 from ..MonoMultiViewClassifiers import ExecClassif
+
+
 
 
 class Test_initBenchmark(unittest.TestCase):
@@ -29,6 +32,50 @@ class Test_initMonoviewArguments(unittest.TestCase):
     def test_initMonoviewArguments_empty(self):
         benchmark = {"Monoview":{}, "Multiview":{}}
         arguments = ExecClassif.initMonoviewExps(benchmark, {}, {}, 0, {})
+
+
+def fakeBenchmarkExec(coreIndex=-1, a=7):
+    return [coreIndex, a]
+
+
+def fakeBenchmarkExec_mutlicore(nbCores=-1, a=6):
+    return [nbCores,a]
+
+
+class Test_execBenchmark(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+
+        cls.argumentDictionaries = [{"a": 4}]
+
+    def test_simple(cls):
+        res = ExecClassif.execBenchmark(1,1,1,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+                                        execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore)
+        cls.assertEqual(res, [[-1,4]])
+
+    def test_multiclass_no_iter(cls):
+        cls.argumentDictionaries = [{"a": 10}, {"a": 4}]
+        res = ExecClassif.execBenchmark(2,1,2,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+                                        execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore)
+        cls.assertEqual(res, [[0,10], [1,4]])
+
+    def test_multiclass_and_iter(cls):
+        cls.argumentDictionaries = [{"a": 10}, {"a": 4}, {"a": 55}, {"a": 24}]
+        res = ExecClassif.execBenchmark(2,2,2,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+                                        execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore)
+        cls.assertEqual(res, [[0,10], [1,4], [0,55], [1,24]])
+
+    def test_no_iter_biclass_multicore(cls):
+        res = ExecClassif.execBenchmark(2,1,1,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+                                        execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore)
+        cls.assertEqual(res, [[2,4]])
+
+
+
+
+
+
 
 class Essai(unittest.TestCase):
 

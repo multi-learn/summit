@@ -137,8 +137,9 @@ def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, 
     """Used to execute mono and multiview classification and result analysis for one random state
      using multicore classification"""
     resultsMonoview = []
-    np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
     labelsNames = LABELS_DICTIONARY.values()
+    np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
+
     resultsMonoview += [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
                                                coreIndex, args.type, args.pathF, randomState,
                                                hyperParamSearch=hyperParamSearch,
@@ -269,18 +270,36 @@ def getResults(results, statsIter, nbMulticlass):
         else:
             analyzeBiclass(results)
 
+def execOneBenchmark(a=0, b=1):
+    return [-1]
 
-def execBenchmark(nbCores, statsIter, nbMulticlass):
+def execOneBenchmark_multicore():
+    return [-1]
 
+
+def execBenchmark(nbCores, statsIter, nbMulticlass, argumentsDictionaries,
+                  execOneBenchmark=execOneBenchmark, execOneBenchmark_multicore=execOneBenchmark_multicore):
+    """Used to execute the needed benchmark(s) on multicore or mono-core functions
+    The execOneBenchmark and execOneBenchmark_multicore keywords args are only used in the tests"""
+    results = []
     if nbCores > 1:
         if statsIter > 1 or nbMulticlass > 1:
-            pass # Start multiple benchamrks multicore with result flagging
+            nbExpsToDo = nbMulticlass*statsIter
+            nbMulticoreToDo = range(int(math.ceil(float(nbExpsToDo) / nbCores)))
+            for stepIndex in nbMulticoreToDo:
+                results += (Parallel(n_jobs=nbCores)(delayed(execOneBenchmark)
+                                                     (coreIndex = coreIndex,
+                                                      **argumentsDictionaries[coreIndex + stepIndex * nbCores])
+                    for coreIndex in range(min(nbCores, nbExpsToDo - stepIndex * nbCores))))
         else:
-            pass # Start one multicore benchmark with flagging
+            results += [execOneBenchmark_multicore(nbCores=nbCores, **argumentsDictionaries[0])]
     else:
-        pass # Do everything with flagging
+        for arguments in argumentsDictionaries:
+            results += [execOneBenchmark(**arguments)]
+    # Do everything with flagging
 
-    getResults(results, statsIter, nbMulticlass)
+    # getResults(results, statsIter, nbMulticlass)
+    return results
 
 
 
