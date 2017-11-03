@@ -10,8 +10,8 @@ addons:
     - gfortran
 install:
 - pip install -U pip pip-tools
-- pip install numpy scipy scikit-learn matplotlib logging joblib argparse h5py
-- git clone https://github.com/aldro61/pyscm.git /tmp/pyscm && cd /tmp/pyscm/ && python setup.py install && cd ~/babau1/multiview-machine-learning-omis
+- pip install numpy scipy scikit-learn matplotlib joblib argparse h5py
+- cd .. && git clone https://github.com/aldro61/pyscm.git && cd pyscm/ && python setup.py install && cd ../multiview-machine-learning-omis
 script:
 - python -m unittest discover
 

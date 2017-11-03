@@ -205,6 +205,7 @@ class Test_genMetricsScores(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.multiclass_labels = np.array([0,1,2,3,4,5,2,1,3])
+        cls.wrong_labels = np.array([1,3,3,4,5,0,2,4,3])
         cls.multiclassResults = [{"chicken_is_heaven":
                                       {"labels": cls.multiclass_labels}}]
         cls.true_labels = np.array([0,2,2,3,4,5,1,3,2])
@@ -215,6 +216,47 @@ class Test_genMetricsScores(unittest.TestCase):
         multiclassResults = ExecClassif.genMetricsScores(cls.multiclassResults, cls.true_labels, cls.metrics)
         cls.assertEqual(cls.score_to_get, multiclassResults[0]["chicken_is_heaven"]["metricsScores"]["accuracy_score"])
 
+    def test_multiple_clf(cls):
+        cls.multiclassResults = [{"chicken_is_heaven": {"labels": cls.multiclass_labels},
+                                  "cheese_is_no_disease": {"labels": cls.wrong_labels}},
+                                 ]
+        multiclassResults = ExecClassif.genMetricsScores(cls.multiclassResults, cls.true_labels, cls.metrics)
+        cls.assertEqual(0, multiclassResults[0]["cheese_is_no_disease"]["metricsScores"]["accuracy_score"])
+        cls.assertEqual(cls.score_to_get, multiclassResults[0]["chicken_is_heaven"]["metricsScores"]["accuracy_score"])
+
+    def test_multiple_metrics(cls):
+        from sklearn.metrics import f1_score
+        cls.score_to_get_f1 = f1_score(cls.true_labels, cls.multiclass_labels, average="micro")
+        cls.metrics = [["accuracy_score"], ["f1_score"]]
+        multiclassResults = ExecClassif.genMetricsScores(cls.multiclassResults, cls.true_labels, cls.metrics)
+        cls.assertEqual(cls.score_to_get, multiclassResults[0]["chicken_is_heaven"]["metricsScores"]["accuracy_score"])
+        cls.assertEqual(cls.score_to_get_f1, multiclassResults[0]["chicken_is_heaven"]["metricsScores"]["f1_score"])
+
+    def test_multiple_iterations(cls):
+        cls.multiclassResults = [{"chicken_is_heaven": {"labels": cls.multiclass_labels}},
+                                 {"chicken_is_heaven": {"labels": cls.wrong_labels}},
+                                 ]
+        multiclassResults = ExecClassif.genMetricsScores(cls.multiclassResults, cls.true_labels, cls.metrics)
+        cls.assertEqual(0, multiclassResults[1]["chicken_is_heaven"]["metricsScores"]["accuracy_score"])
+        cls.assertEqual(cls.score_to_get, multiclassResults[0]["chicken_is_heaven"]["metricsScores"]["accuracy_score"])
+
+    def test_all(cls):
+        cls.multiclassResults = [{"chicken_is_heaven": {"labels": cls.multiclass_labels},
+                                                          "cheese_is_no_disease": {"labels": cls.wrong_labels}},
+                                                         {"chicken_is_heaven": {"labels": cls.wrong_labels},
+                                                          "cheese_is_no_disease": {"labels": cls.multiclass_labels}},
+                                                         ]
+        cls.metrics = [["accuracy_score"], ["f1_score"]]
+        from sklearn.metrics import f1_score
+        cls.score_to_get_f1 = f1_score(cls.true_labels, cls.multiclass_labels, average="micro")
+        multiclassResults = ExecClassif.genMetricsScores(cls.multiclassResults, cls.true_labels, cls.metrics)
+        cls.assertEqual(0, multiclassResults[1]["chicken_is_heaven"]["metricsScores"]["accuracy_score"])
+        cls.assertEqual(cls.score_to_get_f1, multiclassResults[1]["cheese_is_no_disease"]["metricsScores"]["f1_score"])
+
+        # {},
+        # {"cheese_is_no_disease": {"labels": cls.multiclass_labels}}}
+# {{{"chicken_is_heaven": {"labels": cls.wrong_labels}},
+#   {}}}
 
 
 
