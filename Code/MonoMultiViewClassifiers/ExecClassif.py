@@ -20,6 +20,7 @@ from .Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 from .utils import GetMultiviewDb as DB
 from .ResultAnalysis import resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes
 from .utils import execution, Dataset, Multiclass
+from . import Metrics
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -234,7 +235,43 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
     return results, labelAnalysis
 
 
-def analyzeMulticlass(results, statsIter, nbExamples, nbLabels):
+def genMetricsScores(results, trueLabels, metrics):
+
+    logging.debug("Start:\t Getting multiclass scores for each metric")
+
+    for metric in metrics:
+        metricModule = getattr(Metrics, metric[0])
+        for iterIndex, iterResults in enumerate(results):
+            for classifierName, resultDictionary in iterResults.items():
+                if not "metricsScores" in resultDictionary:
+                    results[iterIndex][classifierName]["metricsScores"]={}
+                score = metricModule.score(trueLabels,resultDictionary["labels"])
+                results[iterIndex][classifierName]["metricsScores"][metric[0]] = score
+
+
+    logging.debug("Done:\t Getting multiclass scores for each metric")
+
+    return results
+
+
+def getErrorOnLabels(multiclassResults, multiclassLabels):
+
+    logging.debug("Start:\t Getting errors on each example for each classifier")
+    for iterIndex, iterResults in enumerate(multiclassResults):
+        for classifierName, classifierResults in iterResults.items():
+            errorOnExamples = np.where(classifierResults["labels"] == multiclassLabels)
+            multiclassResults[iterIndex][classifierName]["errorOnExample"] = errorOnExamples
+
+    logging.debug("Done:\t Getting errors on each example for each classifier")
+
+    return multiclassResults
+
+
+def publishMulticlassResults(multiclassResults):
+    pass
+
+
+def analyzeMulticlass(results, statsIter, nbExamples, nbLabels, multiclassLabels, metrics):
     multiclassResults = [{} for _ in range(statsIter)]
     for iterIndex in range(statsIter):
         for flag, resMono, resMulti in results:
@@ -251,16 +288,17 @@ def analyzeMulticlass(results, statsIter, nbExamples, nbLabels):
     for iterIndex, multiclassiterResult in enumerate(multiclassResults):
         for key, value in multiclassiterResult.items():
             multiclassResults[iterIndex][key] = {"labels": np.argmax(value, axis=1)}
-    multiclassResults = getMetricsScores(multiclassResults)
-    multiclassResults = getErrorOnLabels(multiclassResults)
+    multiclassResults = genMetricsScores(multiclassResults, multiclassLabels, metrics)
+    multiclassResults = getErrorOnLabels(multiclassResults, multiclassLabels)
     publishMulticlassResults(multiclassResults)
     return multiclassResults
 
 
-def getResults(results, statsIter, nbMulticlass, argumentDictionaries):
+def getResults(results, statsIter, nbMulticlass, argumentDictionaries, multiclassLabels):
     if statsIter > 1:
         if nbMulticlass > 1:
-            multiclassResults = analyzeMulticlass(results, statsIter, argumentDictionaries)
+            # TODO : analyze biclass results
+            multiclassResults = analyzeMulticlass(results, statsIter, argumentDictionaries, multiclassLabels)
             analyzerIter(multiclassResults)
         else:
             biclassResults = analyzeBiclass(results)
@@ -336,7 +374,7 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None, directory=Non
     return [flag, resultsMonoview, resultsMultiview]
 
 
-def execBenchmark(nbCores, statsIter, nbMulticlass, argumentsDictionaries,
+def execBenchmark(nbCores, statsIter, nbMulticlass, argumentsDictionaries, multiclassLabels,
                   execOneBenchmark=execOneBenchmark, execOneBenchmark_multicore=execOneBenchmark_multicore):
     """Used to execute the needed benchmark(s) on multicore or mono-core functions
     The execOneBenchmark and execOneBenchmark_multicore keywords args are only used in the tests"""
@@ -363,7 +401,7 @@ def execBenchmark(nbCores, statsIter, nbMulticlass, argumentsDictionaries,
     # Do everything with flagging
 
     logging.debug("Start:\t Analyzing preds")
-    # getResults(preds, statsIter, nbMulticlass)
+    # getResults(results, statsIter, nbMulticlass, argumentsDictionaries, multiclassLabels)
     logging.debug("Done:\t Analyzing preds")
 
     return results

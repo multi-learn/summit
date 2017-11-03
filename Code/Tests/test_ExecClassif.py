@@ -51,24 +51,24 @@ class Test_execBenchmark(unittest.TestCase):
         cls.argumentDictionaries = [{"a": 4}]
 
     def test_simple(cls):
-        res = ExecClassif.execBenchmark(1,1,1,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+        res = ExecClassif.execBenchmark(1,1,1,cls.argumentDictionaries, [], execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore)
         cls.assertEqual(res, [[-1,4]])
 
     def test_multiclass_no_iter(cls):
         cls.argumentDictionaries = [{"a": 10}, {"a": 4}]
-        res = ExecClassif.execBenchmark(2,1,2,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+        res = ExecClassif.execBenchmark(2,1,2,cls.argumentDictionaries, [], execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore)
         cls.assertEqual(res, [[0,10], [1,4]])
 
     def test_multiclass_and_iter(cls):
         cls.argumentDictionaries = [{"a": 10}, {"a": 4}, {"a": 55}, {"a": 24}]
-        res = ExecClassif.execBenchmark(2,2,2,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+        res = ExecClassif.execBenchmark(2,2,2,cls.argumentDictionaries, [], execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore)
         cls.assertEqual(res, [[0,10], [1,4], [0,55], [1,24]])
 
     def test_no_iter_biclass_multicore(cls):
-        res = ExecClassif.execBenchmark(2,1,1,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+        res = ExecClassif.execBenchmark(2,1,1,cls.argumentDictionaries, [], execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore)
         cls.assertEqual(res, [[2,4]])
 
@@ -193,10 +193,11 @@ class Test_analyzeMulticlass(unittest.TestCase):
         cls.statsIter = 2
         cls.nbExample = 5
         cls.nbLabels = 4
+        cls.true_labels = np.array([0,1,2,3,0])
 
     def test_simple(cls):
-        multiclassResults = ExecClassif.analyzeMulticlass(cls.results, cls.statsIter, cls.nbExample, cls.nbLabels)
-        np.testing.assert_array_equal(multiclassResults[1]["chicken_is_heaven"], np.array([0,1,2,3,0]))
+        multiclassResults = ExecClassif.analyzeMulticlass(cls.results, cls.statsIter, cls.nbExample, cls.nbLabels, cls.true_labels, [["accuracy_score"]])
+        np.testing.assert_array_equal(multiclassResults[1]["chicken_is_heaven"]["labels"], cls.true_labels)
 
 
 #
