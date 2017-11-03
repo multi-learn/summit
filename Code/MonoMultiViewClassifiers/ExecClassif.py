@@ -259,8 +259,8 @@ def getErrorOnLabels(multiclassResults, multiclassLabels):
     logging.debug("Start:\t Getting errors on each example for each classifier")
     for iterIndex, iterResults in enumerate(multiclassResults):
         for classifierName, classifierResults in iterResults.items():
-            errorOnExamples = np.where(classifierResults["labels"] == multiclassLabels)
-            multiclassResults[iterIndex][classifierName]["errorOnExample"] = errorOnExamples
+            errorOnExamples = classifierResults["labels"] == multiclassLabels
+            multiclassResults[iterIndex][classifierName]["errorOnExample"] = errorOnExamples.astype(int)
 
     logging.debug("Done:\t Getting errors on each example for each classifier")
 
