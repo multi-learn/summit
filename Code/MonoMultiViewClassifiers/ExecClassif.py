@@ -236,6 +236,7 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
 
 
 def genMetricsScores(results, trueLabels, metrics):
+    """Used to add all the metrics scores to the multiclass result structure  for each clf and each iteration"""
 
     logging.debug("Start:\t Getting multiclass scores for each metric")
 
@@ -255,8 +256,10 @@ def genMetricsScores(results, trueLabels, metrics):
 
 
 def getErrorOnLabels(multiclassResults, multiclassLabels):
+    """Used to add all the arrays showing on which example there is an error for each clf and each iteration"""
 
     logging.debug("Start:\t Getting errors on each example for each classifier")
+
     for iterIndex, iterResults in enumerate(multiclassResults):
         for classifierName, classifierResults in iterResults.items():
             errorOnExamples = classifierResults["labels"] == multiclassLabels
@@ -268,6 +271,7 @@ def getErrorOnLabels(multiclassResults, multiclassLabels):
 
 
 def publishMulticlassResults(multiclassResults):
+    # TODO : figure and folder organization
     pass
 
 
@@ -294,12 +298,22 @@ def analyzeMulticlass(results, statsIter, nbExamples, nbLabels, multiclassLabels
     return multiclassResults
 
 
-def getResults(results, statsIter, nbMulticlass, argumentDictionaries, multiclassLabels):
+def analyzeBiclass(results):
+    # TODO
+    return ""
+
+
+def analyzeIter(results):
+    # TODO
+    pass
+
+
+def getResults(results, statsIter, nbMulticlass, argumentDictionaries, multiclassLabels, metrics):
     if statsIter > 1:
         if nbMulticlass > 1:
-            # TODO : analyze biclass results
-            multiclassResults = analyzeMulticlass(results, statsIter, argumentDictionaries, multiclassLabels)
-            analyzerIter(multiclassResults)
+            analyzeBiclass(results)
+            multiclassResults = analyzeMulticlass(results, statsIter, argumentDictionaries, multiclassLabels, metrics)
+            analyzeIter(multiclassResults)
         else:
             biclassResults = analyzeBiclass(results)
             analyzeIter(biclassResults)
@@ -401,7 +415,7 @@ def execBenchmark(nbCores, statsIter, nbMulticlass, argumentsDictionaries, multi
     # Do everything with flagging
 
     logging.debug("Start:\t Analyzing preds")
-    # getResults(results, statsIter, nbMulticlass, argumentsDictionaries, multiclassLabels)
+    # getResults(results, statsIter, nbMulticlass, argumentsDictionaries, multiclassLabels, metrics)
     logging.debug("Done:\t Analyzing preds")
 
     return results

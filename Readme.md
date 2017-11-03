@@ -1,5 +1,6 @@
-# Mono- and Multi-view classification benchmark
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 [![Build Status](https://travis-ci.com/babau1/multiview-machine-learning-omis.svg?token=pjoowx3poApRRtwqHTpd&branch=master)](https://travis-ci.com/babau1/multiview-machine-learning-omis)
+# Mono- and Multi-view classification benchmark
 
 This project aims to be an easy-to use solution to run a prior benchmark on a dataset and evaluate mono- & multi-view algorithms capacity to classify it correctly.
 

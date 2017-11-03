@@ -253,6 +253,7 @@ class Test_genMetricsScores(unittest.TestCase):
         cls.assertEqual(0, multiclassResults[1]["chicken_is_heaven"]["metricsScores"]["accuracy_score"])
         cls.assertEqual(cls.score_to_get_f1, multiclassResults[1]["cheese_is_no_disease"]["metricsScores"]["f1_score"])
 
+
 class Test_getErrorOnLabels(unittest.TestCase):
 
     @classmethod
@@ -265,6 +266,24 @@ class Test_getErrorOnLabels(unittest.TestCase):
 
     def test_simple(cls):
         multiclassResults = ExecClassif.getErrorOnLabels(cls.multiclassResults, cls.true_labels)
+        np.testing.assert_array_equal(np.array([1, 0, 1, 1, 1, 1, 0, 0, 0]),
+                                      multiclassResults[0]["chicken_is_heaven"]["errorOnExample"])
+
+    def test_full(cls):
+        cls.multiclassResults = [{"chicken_is_heaven": {"labels": cls.multiclass_labels},
+                                  "cheese_is_no_disease": {"labels": cls.wrong_labels}},
+                                 {"chicken_is_heaven": {"labels": cls.wrong_labels},
+                                  "cheese_is_no_disease": {"labels": cls.wrong_labels}},
+                                 ]
+        multiclassResults = ExecClassif.getErrorOnLabels(cls.multiclassResults, cls.true_labels)
+        np.testing.assert_array_equal(np.array([1, 0, 1, 1, 1, 1, 0, 0, 0]),
+                                      multiclassResults[0]["chicken_is_heaven"]["errorOnExample"])
+        np.testing.assert_array_equal(np.array([0, 0, 0, 0, 0, 0, 0, 0, 0]),
+                                      multiclassResults[1]["cheese_is_no_disease"]["errorOnExample"])
+
+    def test_type(cls):
+        multiclassResults = ExecClassif.getErrorOnLabels(cls.multiclassResults, cls.true_labels)
+        cls.assertEqual(type(multiclassResults[0]["chicken_is_heaven"]["errorOnExample"][0]), np.int64)
         np.testing.assert_array_equal(np.array([1, 0, 1, 1, 1, 1, 0, 0, 0]),
                                       multiclassResults[0]["chicken_is_heaven"]["errorOnExample"])
 #
