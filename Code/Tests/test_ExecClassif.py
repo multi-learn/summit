@@ -2,6 +2,7 @@ import unittest
 import argparse
 import os
 import numpy as np
+from sklearn.metrics import accuracy_score
 
 from ..MonoMultiViewClassifiers import ExecClassif
 
@@ -198,6 +199,23 @@ class Test_analyzeMulticlass(unittest.TestCase):
     def test_simple(cls):
         multiclassResults = ExecClassif.analyzeMulticlass(cls.results, cls.statsIter, cls.nbExample, cls.nbLabels, cls.true_labels, [["accuracy_score"]])
         np.testing.assert_array_equal(multiclassResults[1]["chicken_is_heaven"]["labels"], cls.true_labels)
+
+class Test_genMetricsScores(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.multiclass_labels = np.array([0,1,2,3,4,5,2,1,3])
+        cls.multiclassResults = [{"chicken_is_heaven":
+                                      {"labels": cls.multiclass_labels}}]
+        cls.true_labels = np.array([0,2,2,3,4,5,1,3,2])
+        cls.metrics = [["accuracy_score"]]
+        cls.score_to_get = accuracy_score(cls.true_labels, cls.multiclass_labels)
+
+    def test_simple(cls):
+        multiclassResults = ExecClassif.genMetricsScores(cls.multiclassResults, cls.true_labels, cls.metrics)
+        cls.assertEqual(cls.score_to_get, multiclassResults[0]["chicken_is_heaven"]["metricsScores"]["accuracy_score"])
+
+
 
 
 #
