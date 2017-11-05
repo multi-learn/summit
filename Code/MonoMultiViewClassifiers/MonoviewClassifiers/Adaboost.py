@@ -17,7 +17,7 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def canProbas():
+def canProbas(a=10):
     return True
 
 
