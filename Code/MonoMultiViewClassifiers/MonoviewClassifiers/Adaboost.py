@@ -58,12 +58,14 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, me
 
     param = {"classifier__n_estimators": randint(1, 150),
              "classifier__base_estimator": [DecisionTreeClassifier()]}
+
     metricModule = getattr(Metrics, metric[0])
     if metric[1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
+
     grid = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=param, refit=True, n_jobs=nbCores,
                               scoring=scorer, cv=KFolds, random_state=randomState)
     detector = grid.fit(X_train, y_train)
@@ -79,7 +81,7 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, me
 
 
 def getConfig(config):
-    if type(config) not in [list, dict]: # Used in late fusion when config is a classifier
+    if type(config) not in [list, dict]:  # Used in late fusion when config is a classifier
         return "\n\t\t- Adaboost with num_esimators : " + str(config.n_estimators) + ", base_estimators : " + str(
             config.base_estimator)
     else:
