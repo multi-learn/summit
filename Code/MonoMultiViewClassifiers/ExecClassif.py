@@ -235,17 +235,26 @@ def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory,
     return results, labelAnalysis
 
 
-def genMetricsScores(results, trueLabels, metrics):
+def getClassificationIndices(argumentsDictionaries, iterIndex):
+
+    for argumentsDictionary in argumentsDictionaries:
+        if argumentsDictionary["flag"][0]==iterIndex:
+
+
+
+
+def genMetricsScores(results, trueLabels, metrics, argumentsDictionaries):
     """Used to add all the metrics scores to the multiclass result structure  for each clf and each iteration"""
 
     logging.debug("Start:\t Getting multiclass scores for each metric")
-
+   # TODO : Metric score for train and test
     for metric in metrics:
         metricModule = getattr(Metrics, metric[0])
         for iterIndex, iterResults in enumerate(results):
             for classifierName, resultDictionary in iterResults.items():
                 if not "metricsScores" in resultDictionary:
                     results[iterIndex][classifierName]["metricsScores"]={}
+                classificationIndices = getClassificationIndices(argumentsDictionaries, iterIndex)
                 score = metricModule.score(trueLabels,resultDictionary["labels"])
                 results[iterIndex][classifierName]["metricsScores"][metric[0]] = score
 
@@ -270,12 +279,67 @@ def getErrorOnLabels(multiclassResults, multiclassLabels):
     return multiclassResults
 
 
-def publishMulticlassResults(multiclassResults):
+def autolabel(rects, ax):
+    """Used to print scores on top of the bars"""
+    for rect in rects:
+        height = rect.get_height()
+        ax.text(rect.get_x() + rect.get_width() / 2., 1.01 * height,
+                "%.2f" % height,
+                ha='center', va='bottom')
+
+def publishMulticlassResults(multiclassResults, metrics, statsIter, argumentDictionaries, minSize=10):
+    # mono, multi = multiclassResults
+    directory = argumentDictionaries["diretory"] # TODO : care that's fake
+    for iterIndex in range(statsIter):
+        for metric in metrics:
+            logging.debug("Start:\t Multiclass score graph generation for "+metric[0])
+            classifiersNames = []
+            validationScores = []
+            trainScores = []
+            for classifierName in multiclassResults[iterIndex].keys():
+                classifiersNames.append(classifierName)
+                validationScores.append(multiclassResults[iterIndex][classifierName]["metricsScore"][metric[0]]["validation"])
+                trainScores.append(multiclassResults[iterIndex][classifierName]["metricsScore"][metric[0]]["train"])
+            nbResults = len(validationScores)
+            # nbResults = len(mono) + len(multi)
+            # validationScores = [float(res[1][2][metric[0]][1]) for res in mono]
+            # validationScores += [float(scores[metric[0]][1]) for a, b, scores, c in multi]
+            # trainScores = [float(res[1][2][metric[0]][0]) for res in mono]
+            # trainScores += [float(scores[metric[0]][0]) for a, b, scores, c in multi]
+
+            validationScores = np.array(validationScores)
+            trainScores = np.array(trainScores)
+            names = np.array(names)
+            size = nbResults
+            if nbResults < minSize:
+                size = minSize
+            figKW = {"figsize" : (size, 3.0/4*size+2.0)}
+            f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
+            barWidth= 0.35
+            sorted_indices = np.argsort(validationScores)
+            validationScores = validationScores[sorted_indices]
+            trainScores = trainScores[sorted_indices]
+            names = names[sorted_indices]
+
+            ax.set_title(metric[0] + "\n on validation set for each classifier")
+            rects = ax.bar(range(nbResults), validationScores, barWidth, color="r", )
+            rect2 = ax.bar(np.arange(nbResults) + barWidth, trainScores, barWidth, color="0.7", )
+            autolabel(rects, ax)
+            autolabel(rect2, ax)
+            ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
+            ax.set_ylim(-0.1, 1.1)
+            ax.set_xticks(np.arange(nbResults) + barWidth)
+            ax.set_xticklabels(names, rotation="vertical")
+            plt.tight_layout()
+            f.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-" + name + "-" + metric[0] + ".png")
+            plt.close()
+            logging.debug("Done:\t Multiclass score graph generation for " + metric[0])
     # TODO : figure and folder organization
     pass
 
 
-def analyzeMulticlass(results, statsIter, nbExamples, nbLabels, multiclassLabels, metrics):
+def analyzeMulticlass(results, statsIter, argumentDictionaries, nbExamples, nbLabels, multiclassLabels, metrics):
+    """Used to tranform one versus one results in multiclass results and to publish it"""
     multiclassResults = [{} for _ in range(statsIter)]
     for iterIndex in range(statsIter):
         for flag, resMono, resMulti in results:
@@ -292,9 +356,9 @@ def analyzeMulticlass(results, statsIter, nbExamples, nbLabels, multiclassLabels
     for iterIndex, multiclassiterResult in enumerate(multiclassResults):
         for key, value in multiclassiterResult.items():
             multiclassResults[iterIndex][key] = {"labels": np.argmax(value, axis=1)}
-    multiclassResults = genMetricsScores(multiclassResults, multiclassLabels, metrics)
+    multiclassResults = genMetricsScores(multiclassResults, multiclassLabels, metrics, argumentDictionaries)
     multiclassResults = getErrorOnLabels(multiclassResults, multiclassLabels)
-    publishMulticlassResults(multiclassResults)
+    publishMulticlassResults(multiclassResults, metrics, statsIter, argumentDictionaries)
     return multiclassResults
 
 
@@ -450,7 +514,7 @@ def execClassif(arguments):
 
     multiclassLabels, labelsIndices, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod)
 
-    classificationIndices = execution.genSplits(statsIter, oldIndicesMulticlass, multiclassLabels, args.CL_split, statsIterRandomStates, multiclassMethod)
+    classificationIndices = execution.genSplits(statsIter, oldIndicesMulticlass, DATASET.get("Labels").value, args.CL_split, statsIterRandomStates, multiclassMethod)
 
     kFolds = execution.genKFolds(statsIter, args.CL_nbFolds, statsIterRandomStates)
 

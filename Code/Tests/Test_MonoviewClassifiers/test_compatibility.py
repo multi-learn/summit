@@ -73,6 +73,7 @@ class Test_fit(unittest.TestCase):
                 res = monoview_classifier_module.fit(cls.dataset, cls.labels, cls.random_state, **cls.args)
                 cls.assertIn("predict", dir(res), "fit must return an object able to predict")
 
+
 class Test_paramsToSet(unittest.TestCase):
 
     def test_inputs(self):
@@ -93,3 +94,16 @@ class Test_paramsToSet(unittest.TestCase):
                 self.assertEqual(type(res), list)
                 self.assertEqual(len(res), 2)
                 self.assertEqual(type(res[0]), list)
+
+# class Test_getKWARGS(unittest.TestCase):
+#
+#     # TODO : Find a way to enter the right args
+#
+#     def test_inputs(self):
+#         for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
+#             if fileName[-3:] == ".py" and fileName != "__init__.py":
+#                 monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
+#                 with self.assertRaises(TypeError, msg="getKWARGS must have 1 positional args") as catcher:
+#                     monoview_classifier_module.getKWARGS()
+#                     monoview_classifier_module.getKWARGS([1],2)
+

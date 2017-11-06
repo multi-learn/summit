@@ -60,17 +60,17 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory, minSize=
         validationScores = np.array(validationScores)
         trainScores = np.array(trainScores)
         names = np.array(names)
+        sorted_indices = np.argsort(validationScores)
+        validationScores = validationScores[sorted_indices]
+        trainScores = trainScores[sorted_indices]
+        names = names[sorted_indices]
+
         size = nbResults
         if nbResults < minSize:
             size = minSize
         figKW = {"figsize" : (size, 3.0/4*size+2.0)}
         f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
         barWidth= 0.35
-        sorted_indices = np.argsort(validationScores)
-        validationScores = validationScores[sorted_indices]
-        trainScores = trainScores[sorted_indices]
-        names = names[sorted_indices]
-
         ax.set_title(metric[0] + "\n on validation set for each classifier")
         rects = ax.bar(range(nbResults), validationScores, barWidth, color="r", )
         rect2 = ax.bar(np.arange(nbResults) + barWidth, trainScores, barWidth, color="0.7", )
