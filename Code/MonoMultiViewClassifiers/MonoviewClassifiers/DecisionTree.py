@@ -46,6 +46,8 @@ def getKWARGS(kwargsList):
             kwargsDict['1'] = kwargValue
         if kwargName == "CL_DecisionTree_splitter":
             kwargsDict['2'] = kwargValue
+        else:
+            raise ValueError("Wrong arguments served to DecisionTree")
     return kwargsDict
 
 

@@ -45,6 +45,8 @@ def getKWARGS(kwargsList):
             kwargsDict['1'] = kwargValue
         elif kwargName == "CL_SGD_alpha":
             kwargsDict['2'] = float(kwargValue)
+        else:
+            raise ValueError("Wrong arguments served to SGD")
     return kwargsDict
 
 

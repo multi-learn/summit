@@ -17,7 +17,7 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def canProbas(a=10):
+def canProbas():
     return True
 
 
@@ -48,7 +48,7 @@ def getKWARGS(kwargsList):
         elif kwargName == "CL_Adaboost_b_est":
             kwargsDict['1'] = kwargValue
         else:
-            raise(ValueError, "Wrong arguments served to Adaboost")
+            raise ValueError("Wrong arguments served to Adaboost")
     return kwargsDict
 
 

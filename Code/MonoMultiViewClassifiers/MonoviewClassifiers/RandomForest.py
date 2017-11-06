@@ -45,6 +45,8 @@ def getKWARGS(kwargsList):
             kwargsDict['1'] = kwargValue
         elif kwargName == "CL_RandomForest_criterion":
             kwargsDict['2'] = kwargValue
+        else:
+            raise ValueError("Wrong arguments served to RandomForest")
     return kwargsDict
 
 

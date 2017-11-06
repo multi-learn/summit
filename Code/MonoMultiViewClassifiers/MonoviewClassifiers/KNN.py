@@ -46,6 +46,8 @@ def getKWARGS(kwargsList):
             kwargsDict['2'] = kwargValue
         if kwargName == "CL_KNN_p":
             kwargsDict['3'] = int(kwargValue)
+        else:
+            raise ValueError("Wrong arguments served to KNN")
     return kwargsDict
 
 

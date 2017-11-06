@@ -78,6 +78,8 @@ def getKWARGS(kwargsList):
             kwargsDict['1'] = int(kwargValue)
         elif kwargName == "CL_SCM_p":
             kwargsDict['2'] = float(kwargValue)
+        else:
+            raise ValueError("Wrong arguments served to SCM")
     return kwargsDict
 
 

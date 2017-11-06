@@ -36,6 +36,8 @@ def getKWARGS(kwargsList):
     for (kwargName, kwargValue) in kwargsList:
         if kwargName == "CL_SVMRBF_C":
             kwargsDict['0'] = int(kwargValue)
+        else:
+            raise ValueError("Wrong arguments served to SVMRBF")
     return kwargsDict
 
 

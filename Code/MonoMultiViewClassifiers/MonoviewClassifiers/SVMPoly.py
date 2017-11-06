@@ -39,6 +39,8 @@ def getKWARGS(kwargsList):
             kwargsDict['0'] = int(kwargValue)
         elif kwargName == "CL_SVMPoly_deg":
             kwargsDict['1'] = int(kwargValue)
+        else:
+            raise ValueError("Wrong arguments served to SVMPoly")
     return kwargsDict
 
 
