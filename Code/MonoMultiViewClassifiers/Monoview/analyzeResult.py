@@ -16,7 +16,7 @@ def getDBConfigString(name, feat, classificationIndices, shape, classLabelsNames
     return dbConfigString
 
 
-def getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS, classififer, directory):
+def getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS, classifier, directory):
     classifierModule = getattr(MonoviewClassifiers, CL_type)
     classifierConfigString = "Classifier configuration : \n"
     classifierConfigString += "\t- " + classifierModule.getConfig(clKWARGS)[5:] + "\n"
@@ -24,7 +24,7 @@ def getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS, cla
     if gridSearch:
         classifierConfigString += "\t- Got configuration using randomized search with " + str(nIter) + " iterations \n"
     classifierConfigString += "\n\n"
-    classifierInterpretString = classifierModule.getInterpret(classififer, directory)
+    classifierInterpretString = classifierModule.getInterpret(classifier, directory)
     return classifierConfigString, classifierInterpretString
 
 

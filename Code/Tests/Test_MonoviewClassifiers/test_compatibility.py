@@ -1,5 +1,7 @@
 import unittest
 import os
+import h5py
+import numpy as np
 
 from ...MonoMultiViewClassifiers import MonoviewClassifiers
 
@@ -24,13 +26,70 @@ class Test_methods(unittest.TestCase):
                 self.assertIn("getInterpret", dir(monoview_classifier_module),
                               fileName[:-3]+" must have getInterpret method implemented")
 
-class Test_inputs(unittest.TestCase):
+class Test_canProbas(unittest.TestCase):
 
-    def test_canProbas(self):
+    def test_outputs(self):
         for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
             if fileName[-3:] == ".py" and fileName != "__init__.py":
                 monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
                 res = monoview_classifier_module.canProbas()
                 self.assertEqual(type(res), bool, "canProbas must return a boolean")
+
+    def test_inputs(self):
+        for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
+            if fileName[-3:] == ".py" and fileName != "__init__.py":
+                monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
                 with self.assertRaises(TypeError, msg="canProbas must have 0 args") as catcher:
                     monoview_classifier_module.canProbas(35)
+
+class Test_fit(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.random_state = np.random.RandomState(42)
+        cls.dataset = cls.random_state.random_sample((10,20))
+        cls.labels = cls.random_state.randint(0,2,10)
+
+    def test_inputs(cls):
+        # DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs
+        for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
+            if fileName[-3:] == ".py" and fileName != "__init__.py":
+                monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
+                cls.args = dict((str(index), value) for index, value in
+                                enumerate(monoview_classifier_module.paramsToSet(1, cls.random_state)[0]))
+                res = monoview_classifier_module.fit(cls.dataset, cls.labels, cls.random_state, **cls.args)
+                with cls.assertRaises(TypeError, msg="fit must have 3 positional args, one kwarg") as catcher:
+                    monoview_classifier_module.fit()
+                    monoview_classifier_module.fit(cls.dataset)
+                    monoview_classifier_module.fit(cls.dataset,cls.labels)
+                    monoview_classifier_module.fit(cls.dataset,cls.labels, cls.random_state, 1, 10)
+
+    def test_outputs(cls):
+        for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
+            if fileName[-3:] == ".py" and fileName != "__init__.py":
+                monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
+                cls.args = dict((str(index), value) for index, value in
+                                enumerate(monoview_classifier_module.paramsToSet(1, cls.random_state)[0]))
+                res = monoview_classifier_module.fit(cls.dataset, cls.labels, cls.random_state, **cls.args)
+                cls.assertIn("predict", dir(res), "fit must return an object able to predict")
+
+class Test_paramsToSet(unittest.TestCase):
+
+    def test_inputs(self):
+        for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
+            if fileName[-3:] == ".py" and fileName != "__init__.py":
+                monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
+                with self.assertRaises(TypeError, msg="paramsToSet must have 2 positional args") as catcher:
+                    monoview_classifier_module.paramsToSet(2, np.random.RandomState(42), 10)
+                    monoview_classifier_module.paramsToSet(2)
+                    monoview_classifier_module.paramsToSet()
+                res = monoview_classifier_module.paramsToSet(2, np.random.RandomState(42))
+
+    def test_outputs(self):
+        for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
+            if fileName[-3:] == ".py" and fileName != "__init__.py":
+                monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
+                res = monoview_classifier_module.paramsToSet(2, np.random.RandomState(42))
+                self.assertEqual(type(res), list)
+                self.assertEqual(len(res), 2)
+                self.assertEqual(type(res[0]), list)

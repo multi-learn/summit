@@ -74,5 +74,6 @@ def getConfig(config):
         except:
             return "\n\t\t- SVM RBF with C : " + str(config["0"])
 
+
 def getInterpret(classifier, directory):
     return ""
