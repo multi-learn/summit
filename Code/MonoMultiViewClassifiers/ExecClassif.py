@@ -239,6 +239,7 @@ def getClassificationIndices(argumentsDictionaries, iterIndex):
 
     for argumentsDictionary in argumentsDictionaries:
         if argumentsDictionary["flag"][0]==iterIndex:
+            pass
 
 
 
@@ -485,7 +486,6 @@ def execBenchmark(nbCores, statsIter, nbMulticlass, argumentsDictionaries, multi
     return results
 
 
-
 def execClassif(arguments):
     """Main function to execute the benchmark"""
     start = time.time()
@@ -512,9 +512,9 @@ def execClassif(arguments):
     DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nbClass,
                                              args.CL_classes)
 
-    multiclassLabels, labelsIndices, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod)
+    classificationIndices = execution.genSplits(statsIter, DATASET.get("Labels").value, args.CL_split, statsIterRandomStates)
 
-    classificationIndices = execution.genSplits(statsIter, oldIndicesMulticlass, DATASET.get("Labels").value, args.CL_split, statsIterRandomStates, multiclassMethod)
+    multiclassLabels, labelsCombinations, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod, classificationIndices)
 
     kFolds = execution.genKFolds(statsIter, args.CL_nbFolds, statsIterRandomStates)
 
@@ -549,9 +549,10 @@ def execClassif(arguments):
     argumentDictionaries = {"Monoview": [], "Multiview": []}
     argumentDictionaries = initMonoviewExps(benchmark, argumentDictionaries, viewsDictionary, NB_CLASS,
                                             initKWARGS)
-    directories = execution.genDirecortiesNames(directory, statsIter, labelsIndices,
+    directories = execution.genDirecortiesNames(directory, statsIter, labelsCombinations,
                                                 multiclassMethod, LABELS_DICTIONARY)
     # TODO : Gen arguments dictionaries
+    benchmarkArgumentDictionaries = execution.genArgumentDictionaries(LABELS_DICTIONARY, directories, multiclassLabels, labelsCombinations, oldIndicesMulticlass, hyperParamSearch, args, kFolds, statsIterRandomStates, metrics, argumentDictionaries, benchmark)
 
     if statsIter > 1:
         logging.debug("Start:\t Benchmark classification")

@@ -55,6 +55,7 @@ class Test_genSplits(unittest.TestCase):
         self.X_indices = np.random.randint(0,500,50)
         self.labels = np.zeros(500)
         self.labels[self.X_indices[:10]] = 1
+        self.labels[self.X_indices[11:30]] = 2  # To test multiclass
         self.foldsObj = StratifiedShuffleSplit(n_splits=1, random_state=42, test_size=0.2)
         self.folds = self.foldsObj.split(self.X_indices, self.labels[self.X_indices])
         for fold in self.folds:
@@ -77,6 +78,8 @@ class Test_genSplits(unittest.TestCase):
         self.assertGreater(len(np.where(self.labels[self.test_indices]==0)[0]), 0)
         self.assertGreater(len(np.where(self.labels[self.train_indices]==1)[0]), 0)
         self.assertGreater(len(np.where(self.labels[self.test_indices]==1)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[self.train_indices]==2)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[self.test_indices]==2)[0]), 0)
 
 
 class Test_genKFolds(unittest.TestCase):
