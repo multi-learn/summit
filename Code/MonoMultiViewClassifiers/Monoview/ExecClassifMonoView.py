@@ -32,7 +32,7 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
     feat = X.attrs["name"]
     CL_type = kwargs["CL_type"]
     X = getValue(X)
-    learningRate = len(classificationIndices[0]) / (len(classificationIndices[0]) + len(classificationIndices[1]))
+    learningRate = float(len(classificationIndices[0])) / (len(classificationIndices[0]) + len(classificationIndices[1]))
     labelsString = "-".join(labelsNames)
     timestr = time.strftime("%Y%m%d-%H%M%S")
     CL_type_string = CL_type
