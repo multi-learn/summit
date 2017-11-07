@@ -47,6 +47,7 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
                 raise
     return kwargs, t_start, feat, CL_type, X, learningRate, labelsString, outputFileName
 
+
 def initTrainTest(X, Y, classificationIndices):
     trainIndices, testIndices = classificationIndices
     X_train = extractSubset(X, trainIndices)
@@ -55,18 +56,20 @@ def initTrainTest(X, Y, classificationIndices):
     y_test = Y[testIndices]
     return X_train, y_train, X_test, y_test
 
+
 def getKWARGS(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train, randomState,
               outputFileName, KFolds, nbCores, metrics, kwargs):
     if hyperParamSearch != "None":
+        logging.debug("Start:\t " + hyperParamSearch + " best settings with " + str(nIter) + " iterations for " + CL_type)
         classifierHPSearch = getattr(classifierModule, hyperParamSearch)
-        logging.debug("Start:\t RandomSearch best settings with " + str(nIter) + " iterations for " + CL_type)
         cl_desc = classifierHPSearch(X_train, y_train, randomState, outputFileName, KFolds=KFolds, nbCores=nbCores,
                                      metric=metrics[0], nIter=nIter)
         clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
-        logging.debug("Done:\t RandomSearch best settings")
+        logging.debug("Done:\t " + hyperParamSearch + "RandomSearch best settings")
     else:
         clKWARGS = kwargs[CL_type + "KWARGS"]
     return clKWARGS
+
 
 def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, y_train, imagesAnalysis):
     logging.info(stringAnalysis)
