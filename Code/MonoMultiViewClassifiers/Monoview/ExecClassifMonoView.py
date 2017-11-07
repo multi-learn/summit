@@ -37,7 +37,7 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
     timestr = time.strftime("%Y%m%d-%H%M%S")
     CL_type_string = CL_type
 
-    outputFileName = directory + "/" + CL_type_string + "/" + "/" + feat + "/" + timestr + "Results-" + CL_type_string + "-" + labelsString + \
+    outputFileName = directory + CL_type_string + "/" + feat + "/" + "Results-" + CL_type_string + "-" + labelsString + \
                      '-learnRate' + str(learningRate) + '-' + name + "-" + feat + "-"
     if not os.path.exists(os.path.dirname(outputFileName)):
         try:
@@ -45,7 +45,7 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-    return kwargs, t_start, feat, CL_type, X, learningRate, labelsString, timestr, outputFileName
+    return kwargs, t_start, feat, CL_type, X, learningRate, labelsString, outputFileName
 
 def initTrainTest(X, Y, classificationIndices):
     trainIndices, testIndices = classificationIndices
@@ -116,7 +116,6 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     X, \
     learningRate, \
     labelsString, \
-    timestr, \
     outputFileName = initConstants(args, X, classificationIndices, labelsNames, name, directory)
     logging.debug("Done:\t Loading data")
 

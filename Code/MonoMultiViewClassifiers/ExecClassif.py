@@ -533,7 +533,7 @@ def execClassif(arguments):
     if statsIter > 1:
         statsIterRandomStates = [np.random.RandomState(randomState.randint(500)) for _ in range(statsIter)]
     else:
-        statsIterRandomStates = randomState
+        statsIterRandomStates = [randomState]
 
     if args.name not in ["Fake", "Plausible"]:
         getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
@@ -543,7 +543,7 @@ def execClassif(arguments):
     DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nbClass,
                                              args.CL_classes)
 
-    classificationIndices = execution.genSplits(statsIter, DATASET.get("Labels").value, args.CL_split, statsIterRandomStates)
+    classificationIndices = execution.genSplits(DATASET.get("Labels").value, args.CL_split, statsIterRandomStates)
 
     multiclassLabels, labelsCombinations, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod, classificationIndices)
 

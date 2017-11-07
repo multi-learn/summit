@@ -52,34 +52,43 @@ class Test_initLogFile(unittest.TestCase):
 class Test_genSplits(unittest.TestCase):
 
     def setUp(self):
-        self.X_indices = np.random.randint(0,500,50)
+        self.stastIter = 3
+        self.statsIterRandomStates = [np.random.RandomState(42+i+1) for i in range(self.stastIter)]
+        self.random_state = np.random.RandomState(42)
+        self.X_indices = self.random_state.randint(0,500,50)
         self.labels = np.zeros(500)
         self.labels[self.X_indices[:10]] = 1
         self.labels[self.X_indices[11:30]] = 2  # To test multiclass
-        self.foldsObj = StratifiedShuffleSplit(n_splits=1, random_state=42, test_size=0.2)
-        self.folds = self.foldsObj.split(self.X_indices, self.labels[self.X_indices])
-        for fold in self.folds:
-            self.train_fold, self.test_fold = fold
-        self.train_indices = self.X_indices[self.train_fold]
-        self.test_indices = self.X_indices[self.test_fold]
+        self.splitRatio = 0.2
 
-    def test_genSplits_no_iter_ratio(self):
-        self.assertEqual(len(self.train_indices), 0.8*50)
-        self.assertEqual(len(self.test_indices), 0.2*50)
 
-    def test_genSplits_no_iter_presence(self):
-        for index in self.test_indices:
-            self.assertIn(index, self.X_indices)
-        for index in self.train_indices:
-            self.assertIn(index, self.X_indices)
+    def test_simple(self):
+        splits = execution.genSplits(self.labels, self.splitRatio, self.statsIterRandomStates)
+        self.assertEqual(len(splits), 3)
+        self.assertEqual(len(splits[1]), 2)
+        self.assertEqual(type(splits[1][0]), np.ndarray)
+        self.assertAlmostEqual(len(splits[1][0]), 0.8*500)
+        self.assertAlmostEqual(len(splits[1][1]), 0.2*500)
+        self.assertGreater(len(np.where(self.labels[splits[1][0]]==0)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[splits[1][0]]==1)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[splits[1][0]]==2)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[splits[1][1]]==0)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[splits[1][1]]==1)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[splits[1][1]]==2)[0]), 0)
 
-    def test_genSplits_no_iter_balance(self):
-        self.assertGreater(len(np.where(self.labels[self.train_indices]==0)[0]), 0)
-        self.assertGreater(len(np.where(self.labels[self.test_indices]==0)[0]), 0)
-        self.assertGreater(len(np.where(self.labels[self.train_indices]==1)[0]), 0)
-        self.assertGreater(len(np.where(self.labels[self.test_indices]==1)[0]), 0)
-        self.assertGreater(len(np.where(self.labels[self.train_indices]==2)[0]), 0)
-        self.assertGreater(len(np.where(self.labels[self.test_indices]==2)[0]), 0)
+    def test_genSplits_no_iter(self):
+        splits = execution.genSplits(self.labels, self.splitRatio, self.statsIterRandomStates)
+        self.assertEqual(len(splits), 3)
+        self.assertEqual(len(splits[0]), 2)
+        self.assertEqual(type(splits[0][0]), np.ndarray)
+        self.assertAlmostEqual(len(splits[0][0]), 0.8*500)
+        self.assertAlmostEqual(len(splits[0][1]), 0.2*500)
+        self.assertGreater(len(np.where(self.labels[splits[0][0]]==0)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[splits[0][0]]==1)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[splits[0][0]]==2)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[splits[0][1]]==0)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[splits[0][1]]==1)[0]), 0)
+        self.assertGreater(len(np.where(self.labels[splits[0][1]]==2)[0]), 0)
 
 
 class Test_genKFolds(unittest.TestCase):
