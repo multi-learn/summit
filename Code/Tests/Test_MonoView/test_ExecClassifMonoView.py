@@ -52,3 +52,22 @@ class Test_initConstants(unittest.TestCase):
         os.rmdir("Code/Tests/temp_tests/test_dir/test_clf")
         os.rmdir("Code/Tests/temp_tests/test_dir")
         os.rmdir("Code/Tests/temp_tests")
+
+class Test_initTrainTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.random_state = np.random.RandomState(42)
+        cls.X = cls.random_state.randint(0,500,(10,5))
+        print(cls.X)
+        cls.Y = cls.random_state.randint(0,2,10)
+        print(cls.Y)
+        cls.classificationIndices = [np.array([0,2,4,6,8]),np.array([1,3,5,7,9])]
+        import pdb; pdb.set_trace()
+
+    def test_simple(cls):
+        X_train, y_train, X_test, y_test = ExecClassifMonoView.initTrainTest(cls.X, cls.Y, cls.classificationIndices)
+        np.testing.assert_array_equal(X_train, np.array([np.array([]), np.array([]), np.array([]), np.array([]), np.array([])]))
+        np.testing.assert_array_equal(X_test, np.array([np.array([]), np.array([]), np.array([]), np.array([]), np.array([])]))
+        np.testing.assert_array_equal(y_train, np.array([]))
+        np.testing.assert_array_equal(y_test, np.array([]))

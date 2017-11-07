@@ -61,7 +61,6 @@ class Test_genSplits(unittest.TestCase):
         self.labels[self.X_indices[11:30]] = 2  # To test multiclass
         self.splitRatio = 0.2
 
-
     def test_simple(self):
         splits = execution.genSplits(self.labels, self.splitRatio, self.statsIterRandomStates)
         self.assertEqual(len(splits), 3)
