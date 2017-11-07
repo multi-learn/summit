@@ -22,6 +22,7 @@ __author__ = "Nikolas Huelsmann, Baptiste BAUVIN"
 __status__ = "Prototype"  # Production, Development, Prototype
 # __date__ = 2016 - 03 - 25
 
+
 def initConstants(args, X, classificationIndices, labelsNames, name, directory):
     try:
         kwargs = args["args"]
