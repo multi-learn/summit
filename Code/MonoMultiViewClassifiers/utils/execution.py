@@ -34,7 +34,7 @@ def parseTheArgs(arguments):
                                help="The random state seed to use or the path to a pickle file where it is stored",
                                default=None)
     groupStandard.add_argument('--nbCores', metavar='INT', action='store', help='Number of cores to use for parallel '
-                                                                              'computing, -1 for all',
+                                                                                'computing, -1 for all',
                                type=int, default=2)
     groupStandard.add_argument('--machine', metavar='STRING', action='store',
                                help='Type of machine on which the script runs', default="PC")
@@ -238,22 +238,33 @@ def initLogFile(args):
     return resultDirectory
 
 
-def genSplits(labels, splitRatio, statsIterRandomStates):
+def genSplits(statsIter, labels, splitRatio, statsIterRandomStates, multiclassMethod):
     """Used to gen the train/test splits using one or multiple random states"""
-    indices = np.arange(len(labels))
-    splits = []
-    for randomState in statsIterRandomStates:
-        foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1,
-                                                                  random_state=randomState,
-                                                                  test_size=splitRatio)
+    for oldIndices, labels in zip(oldIndicesMulticlass, multiclasslabels):
+        indices = oldIndices
+    splitsMulticlass = []
+    if statsIter > 1:
+        splits = []
+        for randomState in statsIterRandomStates:
+            foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1,
+                                                                      random_state=randomState,
+                                                                      test_size=splitRatio)
+            folds = foldsObj.split(indices, labels)
+            for fold in folds:
+                train_fold, test_fold = fold
+            trainIndices = indices[train_fold]
+            testIndices = indices[test_fold]
+            splits.append([trainIndices, testIndices])
+        splitsMulticlass.append(splits)
+    else:
+        foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1, random_state=statsIterRandomStates, test_size=splitRatio)
         folds = foldsObj.split(indices, labels)
         for fold in folds:
             train_fold, test_fold = fold
         trainIndices = indices[train_fold]
         testIndices = indices[test_fold]
-        splits.append([trainIndices, testIndices])
-
-    return splits
+        splitsMulticlass.append((trainIndices, testIndices))
+    return splitsMulticlass
 
 
 def genKFolds(statsIter, nbFolds, statsIterRandomStates):
@@ -310,33 +321,4 @@ def genDirecortiesNames(directory, statsIter, labelsIndices, multiclassMethod, l
             for labelIndex in labelsIndices:
                 labelName = labelDictionary[labelIndex]
                 directories.append(directory +labelName+"_vs_Rest/")
-    return directories
-
-
-def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, labelsCombinations, oldIndicesMulticlass, hyperParamSearch, args,
-                            kFolds, statsIterRandomStates, metrics, argumentDictionaries, benchmark):
-    benchmarkArgumentDictionaries = []
-    for combinationIndex, labelsCombination in enumerate(labelsCombinations):
-        for iterIndex, iterRandomState in enumerate(statsIterRandomStates):
-            benchmarkArgumentDictionary = {"LABELS_DICTIONARY": {0:labelsDictionary[labelsCombination[0]],
-                                                                 1:labelsDictionary[labelsCombination[1]]},
-                                           "directory": directories[iterIndex]+
-                                                        labelsDictionary[labelsCombination[0]]+
-                                                        "vs"+
-                                                        labelsDictionary[labelsCombination[1]]+"/",
-                                           "classificationIndices": oldIndicesMulticlass[combinationIndex][iterIndex],
-                                           "args": args,
-                                           "labels": multiclassLabels[combinationIndex],
-                                           "kFolds": kFolds[iterIndex],
-                                           "randomState": iterRandomState,
-                                           "hyperParamSearch": hyperParamSearch,
-                                           "metrics": metrics,
-                                           "argumentDictionaries": argumentDictionaries,
-                                           "benchmark": benchmark,
-                                           "views": None,
-                                           "viewsIndices": None,
-                                           "flag": [iterIndex, labelsCombination]}
-            benchmarkArgumentDictionaries.append(benchmarkArgumentDictionary)
-    return benchmarkArgumentDictionaries
-
-
+return directories

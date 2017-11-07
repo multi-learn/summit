@@ -239,7 +239,6 @@ def getClassificationIndices(argumentsDictionaries, iterIndex):
 
     for argumentsDictionary in argumentsDictionaries:
         if argumentsDictionary["flag"][0]==iterIndex:
-            pass
 
 
 
@@ -248,7 +247,7 @@ def genMetricsScores(results, trueLabels, metrics, argumentsDictionaries):
     """Used to add all the metrics scores to the multiclass result structure  for each clf and each iteration"""
 
     logging.debug("Start:\t Getting multiclass scores for each metric")
-   # TODO : Metric score for train and test
+    # TODO : Metric score for train and test
     for metric in metrics:
         metricModule = getattr(Metrics, metric[0])
         for iterIndex, iterResults in enumerate(results):
@@ -339,27 +338,27 @@ def publishMulticlassResults(multiclassResults, metrics, statsIter, argumentDict
     pass
 
 
-def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamples, nbLabels, multiclassLabels, metrics):
+def analyzeMulticlass(results, statsIter, argumentDictionaries, nbExamples, nbLabels, multiclassLabels, metrics):
     """Used to tranform one versus one results in multiclass results and to publish it"""
     multiclassResults = [{} for _ in range(statsIter)]
     for iterIndex in range(statsIter):
         for flag, resMono, resMulti in results:
-                for classifierResult in resMono:
-                    if classifierResult[1][0] not in multiclassResults[iterIndex]:
-                        multiclassResults[iterIndex][classifierResult[1][0]] = np.zeros((nbExamples, nbLabels)
-                                                                                        , dtype=int)
-                    for exampleIndex, label in enumerate(classifierResult[1][3]):
-                        if label == 1:
-                            multiclassResults[iterIndex][classifierResult[1][0]][exampleIndex, flag[1][0]] += 1
-                        else:
-                            multiclassResults[iterIndex][classifierResult[1][0]][exampleIndex, flag[1][1]] += 1
+            for classifierResult in resMono:
+                if classifierResult[1][0] not in multiclassResults[iterIndex]:
+                    multiclassResults[iterIndex][classifierResult[1][0]] = np.zeros((nbExamples, nbLabels)
+                                                                                    , dtype=int)
+                for exampleIndex, label in enumerate(classifierResult[1][3]):
+                    if label == 1:
+                        multiclassResults[iterIndex][classifierResult[1][0]][exampleIndex, flag[1][0]] += 1
+                    else:
+                        multiclassResults[iterIndex][classifierResult[1][0]][exampleIndex, flag[1][1]] += 1
 
     for iterIndex, multiclassiterResult in enumerate(multiclassResults):
         for key, value in multiclassiterResult.items():
             multiclassResults[iterIndex][key] = {"labels": np.argmax(value, axis=1)}
-    multiclassResults = genMetricsScores(multiclassResults, multiclassLabels, metrics, benchmarkArgumentDictionaries)
+    multiclassResults = genMetricsScores(multiclassResults, multiclassLabels, metrics, argumentDictionaries)
     multiclassResults = getErrorOnLabels(multiclassResults, multiclassLabels)
-    publishMulticlassResults(multiclassResults, metrics, statsIter, benchmarkArgumentDictionaries)
+    publishMulticlassResults(multiclassResults, metrics, statsIter, argumentDictionaries)
     return multiclassResults
 
 
@@ -373,11 +372,11 @@ def analyzeIter(results):
     pass
 
 
-def getResults(results, statsIter, nbMulticlass, benchmarkArgumentDictionaries, multiclassLabels, metrics):
+def getResults(results, statsIter, nbMulticlass, argumentDictionaries, multiclassLabels, metrics):
     if statsIter > 1:
         if nbMulticlass > 1:
             analyzeBiclass(results)
-            multiclassResults = analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, multiclassLabels, metrics)
+            multiclassResults = analyzeMulticlass(results, statsIter, argumentDictionaries, multiclassLabels, metrics)
             analyzeIter(multiclassResults)
         else:
             biclassResults = analyzeBiclass(results)
@@ -391,25 +390,15 @@ def getResults(results, statsIter, nbMulticlass, benchmarkArgumentDictionaries, 
 
 def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, classificationIndices=None, args=None,
                      kFolds=None, randomState=None, hyperParamSearch=None, metrics=None, argumentDictionaries=None,
-                     benchmark=None, views=None, viewsIndices=None, flag=None, labels=None,
-                     ExecMonoview_multicore=ExecMonoview_multicore, ExecMultiview_multicore=ExecMultiview_multicore,
-                     initMultiviewArguments=initMultiviewArguments):
+                     benchmark=None, views=None, viewsIndices=None, flag=None, ExecMonoview_multicore=ExecMonoview_multicore,
+                     ExecMultiview_multicore=ExecMultiview_multicore, initMultiviewArguments=initMultiviewArguments):
     """Used to run a benchmark using one core. ExecMonoview_multicore, initMultiviewArguments and
      ExecMultiview_multicore args are only used for tests"""
-    if not os.path.exists(os.path.dirname(directory + "train_labels.csv")):
-        try:
-            os.makedirs(os.path.dirname(directory + "train_labels.csv"))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-    trainIndices, testIndices = classificationIndices
-    trainLabels = labels[trainIndices]
-    np.savetxt(directory + "train_labels.csv", trainLabels, delimiter=",")
     resultsMonoview = []
     labelsNames = list(LABELS_DICTIONARY.values())
     np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
     resultsMonoview += [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
-                                               coreIndex, args.type, args.pathF, randomState, labels,
+                                               coreIndex, args.type, args.pathF, randomState,
                                                hyperParamSearch=hyperParamSearch, metrics=metrics,
                                                nIter=args.CL_GS_iter, **argument)
                         for argument in argumentDictionaries["Monoview"]]
@@ -420,7 +409,7 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, class
     resultsMultiview = []
     resultsMultiview += [
         ExecMultiview_multicore(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
-                                args.pathF, LABELS_DICTIONARY, randomState, labels, hyperParamSearch=hyperParamSearch,
+                                args.pathF, LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
                                 metrics=metrics, nIter=args.CL_GS_iter, **arguments)
         for arguments in argumentDictionaries["Multiview"]]
     return [flag, resultsMonoview, resultsMultiview]
@@ -428,21 +417,9 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, class
 
 def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None, directory=None, classificationIndices=None, args=None,
                                kFolds=None, randomState=None, hyperParamSearch=None, metrics=None, argumentDictionaries=None,
-                               benchmark=None, views=None, viewsIndices=None, flag=None, labels=None,
-                               ExecMonoview_multicore=ExecMonoview_multicore,
-                               ExecMultiview_multicore=ExecMultiview_multicore,
-                               initMultiviewArguments=initMultiviewArguments):
-    """Used to run a benchmark using multiple cores. ExecMonoview_multicore, initMultiviewArguments and
-     ExecMultiview_multicore args are only used for tests"""
-    if not os.path.exists(os.path.dirname(directory + "train_labels.csv")):
-        try:
-            os.makedirs(os.path.dirname(directory + "train_labels.csv"))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-    trainIndices, testIndices = classificationIndices
-    trainLabels = labels[trainIndices]
-    np.savetxt(directory + "train_labels.csv", trainLabels, delimiter=",")
+                               benchmark=None, views=None, viewsIndices=None, flag=None, ExecMonoview_multicore=ExecMonoview_multicore,
+                               ExecMultiview_multicore=ExecMultiview_multicore, initMultiviewArguments=initMultiviewArguments):
+
     np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
     resultsMonoview = []
     labelsNames = list(LABELS_DICTIONARY.values())
@@ -452,7 +429,7 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None, directory=Non
     for stepIndex in range(nbMulticoreToDo):
         resultsMonoview += (Parallel(n_jobs=nbCores)(
             delayed(ExecMonoview_multicore)(directory, args.name, labelsNames, classificationIndices, kFolds,
-                                            coreIndex, args.type, args.pathF, randomState, labels,
+                                            coreIndex, args.type, args.pathF, randomState,
                                             hyperParamSearch=hyperParamSearch,
                                             metrics=metrics, nIter=args.CL_GS_iter,
                                             **argumentDictionaries["Monoview"][coreIndex + stepIndex * nbCores])
@@ -467,7 +444,7 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None, directory=Non
     for stepIndex in range(nbMulticoreToDo):
         resultsMultiview += Parallel(n_jobs=nbCores)(
             delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, classificationIndices, kFolds,
-                                             args.type, args.pathF, LABELS_DICTIONARY, randomState, labels,
+                                             args.type, args.pathF, LABELS_DICTIONARY, randomState,
                                              hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=args.CL_GS_iter,
                                              **argumentDictionaries["Multiview"][stepIndex * nbCores + coreIndex])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
@@ -475,17 +452,8 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None, directory=Non
     return [flag, resultsMonoview, resultsMultiview]
 
 
-def execOneBenchmarkMonoCore(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, classificationIndices=None, args=None,
-                             kFolds=None, randomState=None, hyperParamSearch=None, metrics=None, argumentDictionaries=None,
-                             benchmark=None, views=None, viewsIndices=None, flag=None, labels=None,
-                             ExecMonoview_multicore=ExecMonoview_multicore, ExecMultiview_multicore=ExecMultiview_multicore,
-                             initMultiviewArguments=initMultiviewArguments):
-    pass
-
-
-def execBenchmark(nbCores, statsIter, nbMulticlass, benchmarkArgumentsDictionaries,
-                  execOneBenchmark=execOneBenchmark, execOneBenchmark_multicore=execOneBenchmark_multicore,
-                  execOneBenchmarkMonoCore=execOneBenchmarkMonoCore):
+def execBenchmark(nbCores, statsIter, nbMulticlass, argumentsDictionaries, multiclassLabels,
+                  execOneBenchmark=execOneBenchmark, execOneBenchmark_multicore=execOneBenchmark_multicore):
     """Used to execute the needed benchmark(s) on multicore or mono-core functions
     The execOneBenchmark and execOneBenchmark_multicore keywords args are only used in the tests"""
     # TODO :  find a way to flag
@@ -494,27 +462,28 @@ def execBenchmark(nbCores, statsIter, nbMulticlass, benchmarkArgumentsDictionari
     results = []
     if nbCores > 1:
         if statsIter > 1 or nbMulticlass > 1:
-            nbExpsToDo = len(benchmarkArgumentsDictionaries)
+            nbExpsToDo = nbMulticlass*statsIter
             nbMulticoreToDo = range(int(math.ceil(float(nbExpsToDo) / nbCores)))
             for stepIndex in nbMulticoreToDo:
                 results += (Parallel(n_jobs=nbCores)(delayed(execOneBenchmark)
                                                      (coreIndex=coreIndex,
-                                                      **benchmarkArgumentsDictionaries[coreIndex + stepIndex * nbCores])
-                            for coreIndex in range(min(nbCores, nbExpsToDo - stepIndex * nbCores))))
+                                                      **argumentsDictionaries[coreIndex + stepIndex * nbCores])
+                                                     for coreIndex in range(min(nbCores, nbExpsToDo - stepIndex * nbCores))))
         else:
-            results += [execOneBenchmark_multicore(nbCores=nbCores, **benchmarkArgumentsDictionaries[0])]
+            results += [execOneBenchmark_multicore(nbCores=nbCores, **argumentsDictionaries[0])]
     else:
-        for arguments in benchmarkArgumentsDictionaries:
-            results += [execOneBenchmarkMonoCore(**arguments)]
+        for arguments in argumentsDictionaries:
+            results += [execOneBenchmark(**arguments)]
     logging.debug("Done:\t Executing all the needed biclass benchmarks")
 
     # Do everything with flagging
 
     logging.debug("Start:\t Analyzing preds")
-    # getResults(results, statsIter, nbMulticlass, benchmarkArgumentsDictionaries, multiclassLabels, metrics)
+    # getResults(results, statsIter, nbMulticlass, argumentsDictionaries, multiclassLabels, metrics)
     logging.debug("Done:\t Analyzing preds")
 
     return results
+
 
 
 def execClassif(arguments):
@@ -533,7 +502,7 @@ def execClassif(arguments):
     if statsIter > 1:
         statsIterRandomStates = [np.random.RandomState(randomState.randint(500)) for _ in range(statsIter)]
     else:
-        statsIterRandomStates = [randomState]
+        statsIterRandomStates = randomState
 
     if args.name not in ["Fake", "Plausible"]:
         getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
@@ -543,9 +512,9 @@ def execClassif(arguments):
     DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nbClass,
                                              args.CL_classes)
 
-    classificationIndices = execution.genSplits(DATASET.get("Labels").value, args.CL_split, statsIterRandomStates)
+    classificationIndices = execution.genSplits(statsIter, DATASET.get("Labels").value, args.CL_split, statsIterRandomStates)
 
-    multiclassLabels, labelsCombinations, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod, classificationIndices)
+    multiclassLabels, labelsIndices, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod)
 
     kFolds = execution.genKFolds(statsIter, args.CL_nbFolds, statsIterRandomStates)
 
@@ -580,36 +549,9 @@ def execClassif(arguments):
     argumentDictionaries = {"Monoview": [], "Multiview": []}
     argumentDictionaries = initMonoviewExps(benchmark, argumentDictionaries, viewsDictionary, NB_CLASS,
                                             initKWARGS)
-    directories = execution.genDirecortiesNames(directory, statsIter, labelsCombinations,
+    directories = execution.genDirecortiesNames(directory, statsIter, labelsIndices,
                                                 multiclassMethod, LABELS_DICTIONARY)
     # TODO : Gen arguments dictionaries
-    benchmarkArgumentDictionaries = execution.genArgumentDictionaries(LABELS_DICTIONARY, directories, multiclassLabels,
-                                                                      labelsCombinations, oldIndicesMulticlass,
-                                                                      hyperParamSearch, args, kFolds,
-                                                                      statsIterRandomStates, metrics,
-                                                                      argumentDictionaries, benchmark)
-
-    nbMulticlass = len(labelsCombinations)
-
-    execBenchmark(nbCores, statsIter, nbMulticlass, benchmarkArgumentDictionaries)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     if statsIter > 1:
         logging.debug("Start:\t Benchmark classification")
@@ -690,9 +632,9 @@ def execClassif(arguments):
         trainLabels = DATASET.get("Labels").value[trainIndices]
         np.savetxt(directories + "train_labels.csv", trainLabels, delimiter=",")
         res, labelAnalysis = classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories, args, classificationIndices,
-                              kFolds,
-                              statsIterRandomStates, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
-                              benchmark, views)
+                                             kFolds,
+                                             statsIterRandomStates, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
+                                             benchmark, views)
         logging.debug("Done:\t Benchmark classification")
         totalDur = time.time()-start
         m, s = divmod(totalDur, 60)
@@ -702,4 +644,4 @@ def execClassif(arguments):
         logging.info("Info:\t Total duration : "+str(d)+ " days, "+str(h)+" hours, "+str(m)+" mins, "+str(int(s))+"secs.")
 
     if statsIter > 1:
-        pass
+pass
