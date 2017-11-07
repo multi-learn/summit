@@ -89,7 +89,7 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, 
 
 
 def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices, KFolds, datasetFileIndex, databaseType,
-                           path, randomState, hyperParamSearch="randomizedSearch",
+                           path, randomState, labels, hyperParamSearch="randomizedSearch",
                            metrics=[["accuracy_score", None]], nIter=30, **args):
     DATASET = h5py.File(path + name + str(datasetFileIndex) + ".hdf5", "r")
     kwargs = args["args"]
@@ -97,7 +97,7 @@ def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices, 
              range(DATASET.get("Metadata").attrs["nbView"])]
     neededViewIndex = views.index(kwargs["feat"])
     X = DATASET.get("View" + str(neededViewIndex))
-    Y = DATASET.get("Labels").value
+    Y = labels
     return ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFolds, 1, databaseType, path,
                         randomState, hyperParamSearch=hyperParamSearch,
                         metrics=metrics, nIter=nIter, **args)
@@ -143,8 +143,8 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
     logging.debug("Start:\t Predicting")
     full_labels_pred = cl_res.predict(X)
-    y_train_pred = full_labels_pred[classificationIndices[0]]
-    y_test_pred = full_labels_pred[classificationIndices[1]]
+    y_train_pred = cl_res.predict(X[classificationIndices[0]])
+    y_test_pred = cl_res.predict(X[classificationIndices[1]])
     logging.debug("Done:\t Predicting")
 
     t_end = time.time() - t_start

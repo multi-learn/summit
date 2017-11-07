@@ -114,7 +114,7 @@ class SCMForLinear(LateFusionClassifier):
         self.order = paramsSet[3]
         self.modelType = paramsSet[2]
 
-    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
+    def fit_hdf5(self, DATASET, labels, trainIndices=None, viewsIndices=None):
         if viewsIndices is None:
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices is None:
@@ -123,7 +123,7 @@ class SCMForLinear(LateFusionClassifier):
             monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[index])
             self.monoviewClassifiers.append(
                 monoviewClassifier.fit(getV(DATASET, viewIndex, trainIndices),
-                                       DATASET.get("Labels").value[trainIndices], self.randomState,
+                                       labels[trainIndices], self.randomState,
                                        NB_CORES=self.nbCores,
                                        **self.monoviewClassifiersConfigs[index]))
         self.SCMForLinearFusionFit(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)

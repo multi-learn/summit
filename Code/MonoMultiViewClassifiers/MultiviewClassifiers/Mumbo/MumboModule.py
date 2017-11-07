@@ -199,7 +199,7 @@ class MumboClass:
         self.predictions = np.zeros((self.maxIter, nbView, trainLength))
         self.generalFs = np.zeros((self.maxIter, trainLength, nbClass))
 
-    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None, metric=["f1_score", None]):
+    def fit_hdf5(self, DATASET, labels, trainIndices=None, viewsIndices=None, metric=["f1_score", None]):
 
         # Initialization
         if self.classifiersConfigs is None:
@@ -212,7 +212,7 @@ class MumboClass:
             NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
             NB_VIEW = len(viewsIndices)
             trainLength = len(trainIndices)
-            LABELS = DATASET.get("Labels").value[trainIndices]
+            LABELS = labels[trainIndices]
             self.initDataDependant(trainLength, NB_VIEW, NB_CLASS, LABELS)
             # Learning
             isStabilized = False

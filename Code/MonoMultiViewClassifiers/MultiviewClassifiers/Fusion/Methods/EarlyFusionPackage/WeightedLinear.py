@@ -71,7 +71,7 @@ class WeightedLinear(EarlyFusionClassifier):
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig']))
 
-    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
+    def fit_hdf5(self, DATASET, labels, trainIndices=None, viewsIndices=None):
         if type(viewsIndices) == type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices is None:
@@ -80,7 +80,7 @@ class WeightedLinear(EarlyFusionClassifier):
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=trainIndices, viewsIndices=viewsIndices)
         monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
         self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData,
-                                                               DATASET.get("Labels").value[trainIndices],
+                                                               labels[trainIndices],
                                                                self.randomState,
                                                                NB_CORES=self.nbCores,
                                                                **self.monoviewClassifiersConfig)

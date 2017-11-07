@@ -167,8 +167,8 @@ class FusionClass:
     def setParams(self, paramsSet):
         self.classifier.setParams(paramsSet)
 
-    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None, metric=["f1_score", None]):
-        self.classifier.fit_hdf5(DATASET, trainIndices=trainIndices, viewsIndices=viewsIndices)
+    def fit_hdf5(self, DATASET, labels, trainIndices=None, viewsIndices=None, metric=["f1_score", None]):
+        self.classifier.fit_hdf5(DATASET, labels, trainIndices=trainIndices, viewsIndices=viewsIndices)
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if usedIndices is None:

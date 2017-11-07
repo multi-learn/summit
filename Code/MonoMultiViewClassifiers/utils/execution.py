@@ -337,7 +337,7 @@ def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, lab
                                            "labels": multiclassLabels[combinationIndex],
                                            "kFolds": kFolds[iterIndex],
                                            "randomState": iterRandomState,
-                                           "hyperParamSearch": hyperParamSearch, 
+                                           "hyperParamSearch": hyperParamSearch,
                                            "metrics": metrics,
                                            "argumentDictionaries": argumentDictionaries,
                                            "benchmark": benchmark,

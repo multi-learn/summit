@@ -57,7 +57,7 @@ class SVMForLinear(LateFusionClassifier):
                                       NB_CORES=NB_CORES)
         self.SVMClassifier = None
 
-    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
+    def fit_hdf5(self, DATASET, labels, trainIndices=None, viewsIndices=None):
         if viewsIndices is None:
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices is None:
@@ -72,7 +72,7 @@ class SVMForLinear(LateFusionClassifier):
                                             for configIndex, config in enumerate(self.monoviewClassifiersConfigs[index]))
                 self.monoviewClassifiers.append(
                     monoviewClassifier.fit(getV(DATASET, viewIndex, trainIndices),
-                                           DATASET.get("Labels").value[trainIndices], self.randomState,
+                                           labels[trainIndices], self.randomState,
                                            NB_CORES=self.nbCores,
                                            **self.monoviewClassifiersConfigs[index]))
         else:

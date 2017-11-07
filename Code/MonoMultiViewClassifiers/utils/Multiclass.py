@@ -11,22 +11,28 @@ def genMulticlassLabels(labels, multiclassMethod, classificationIndices):
             combinations = itertools.combinations(np.arange(nbLabels), 2)
             multiclassLabels = []
             labelsIndices = []
-            oldIndicesMulticlass = []
+            indicesMulticlass = []
             for combination in combinations:
                 labelsIndices.append(combination)
                 oldIndices = [exampleIndex
                               for exampleIndex, exampleLabel in enumerate(labels)
                               if exampleLabel in combination]
-                oldTrainIndices = [[oldIndex for oldIndex in oldIndicesMulticlass if oldIndex in trainIndices]
-                                   for trainIndices, testIndices in classificationIndices]
-                oldTestIndices = [[oldIndex for oldIndex in oldIndicesMulticlass if oldIndex in testIndices]
-                                  for trainIndices, testIndices in classificationIndices]
-                oldIndicesMulticlass.append([oldTrainIndices, oldTestIndices])
-                multiclassLabels.append(np.array([1 if exampleLabel == combination[0]
-                                                  else 0
-                                                  for exampleLabel in labels[oldIndices]]))
+                trainIndices = [np.array([oldIndex for oldIndex in oldIndices if oldIndex in iterIndices[0]])
+                                   for iterIndices in classificationIndices]
+                testIndices = [np.array([oldIndex for oldIndex in oldIndices if oldIndex in iterindices[1]])
+                                  for iterindices in classificationIndices]
+                indicesMulticlass.append([trainIndices, testIndices])
+                newLabels = np.zeros(len(labels), dtype=int)-100
+                for labelIndex, label in enumerate(labels):
+                    if label == combination[0]:
+                        newLabels[labelIndex] = 1
+                    elif label == combination[1]:
+                        newLabels[labelIndex] = 0
+                    else:
+                        pass
+                multiclassLabels.append(newLabels)
     elif multiclassMethod == "oneVersusRest":
         # TODO : Implement one versus rest if probas are not a problem anymore
         pass
-    return multiclassLabels, labelsIndices, oldIndicesMulticlass
+    return multiclassLabels, labelsIndices, indicesMulticlass
 #

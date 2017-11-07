@@ -6,14 +6,14 @@ import itertools
 from .. import Metrics
 
 
-def searchBestSettings(dataset, classifierPackage, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=None,
+def searchBestSettings(dataset, labels, classifierPackage, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=None,
                        searchingTool="hyperParamSearch", nIter=1, **kwargs):
     """Used to select the right hyperparam optimization function to optimize hyper parameters"""
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
     thismodule = sys.modules[__name__]
     searchingToolMethod = getattr(thismodule, searchingTool)
-    bestSettings = searchingToolMethod(dataset, classifierPackage, classifierName, metrics, iLearningIndices, iKFolds, randomState,
+    bestSettings = searchingToolMethod(dataset, labels, classifierPackage, classifierName, metrics, iLearningIndices, iKFolds, randomState,
                                        viewsIndices=viewsIndices, nIter=nIter, **kwargs)
     return bestSettings  # or well set clasifier ?
 
@@ -23,7 +23,7 @@ def gridSearch(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1,
     pass
 
 
-def randomizedSearch(dataset, classifierPackage, classifierName, metrics, learningIndices, KFolds, randomState, viewsIndices=None, nIter=1,
+def randomizedSearch(dataset, labels, classifierPackage, classifierName, metrics, learningIndices, KFolds, randomState, viewsIndices=None, nIter=1,
                      nbCores=1, **classificationKWARGS):
     """Used to perform a random search on the classifiers to optimize hyper parameters"""
     if viewsIndices is None:
@@ -45,7 +45,7 @@ def randomizedSearch(dataset, classifierPackage, classifierName, metrics, learni
             baseScore = 1000.0
             isBetter = "lower"
         bestSettings = None
-        kFolds = KFolds.split(learningIndices, dataset.get("Labels").value[learningIndices])
+        kFolds = KFolds.split(learningIndices, labels[learningIndices])
         for paramsSet in paramsSets:
             scores = []
             for trainIndices, testIndices in kFolds:
@@ -54,7 +54,7 @@ def randomizedSearch(dataset, classifierPackage, classifierName, metrics, learni
                 classifier.fit_hdf5(dataset, trainIndices=learningIndices[trainIndices], viewsIndices=viewsIndices)
                 testLabels = classifier.predict_hdf5(dataset, usedIndices=learningIndices[testIndices],
                                                      viewsIndices=viewsIndices)
-                testScore = metricModule.score(dataset.get("Labels").value[learningIndices[testIndices]], testLabels)
+                testScore = metricModule.score(labels[learningIndices[testIndices]], testLabels)
                 scores.append(testScore)
             crossValScore = np.mean(np.array(scores))
 

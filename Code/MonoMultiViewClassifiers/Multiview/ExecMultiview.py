@@ -68,17 +68,17 @@ def saveResults(LABELS_DICTIONARY, stringAnalysis, views, classifierModule, clas
 
 
 def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds, databaseType, path, LABELS_DICTIONARY,
-                            randomState,
+                            randomState, labels,
                             hyperParamSearch=False, nbCores=1, metrics=None, nIter=30, **arguments):
     """Used to load an HDF5 dataset for each parallel job and execute multiview classification"""
     DATASET = h5py.File(path + name + str(coreIndex) + ".hdf5", "r")
     return ExecMultiview(directory, DATASET, name, learningRate, nbFolds, 1, databaseType, path, LABELS_DICTIONARY,
-                         randomState,
+                         randomState, labels,
                          hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=nIter, **arguments)
 
 
 def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCores, databaseType, path,
-                  LABELS_DICTIONARY, randomState,
+                  LABELS_DICTIONARY, randomState, labels,
                   hyperParamSearch=False, metrics=None, nIter=30, **kwargs):
     """Used to execute multiview classification and result analysis"""
     logging.debug("Start:\t Initialize constants")
@@ -106,7 +106,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
 
     logging.debug("Start:\t Optimizing hyperparameters")
     if hyperParamSearch != "None":
-        classifier = HyperParameterSearch.searchBestSettings(DATASET, classifierPackage,
+        classifier = HyperParameterSearch.searchBestSettings(DATASET, labels, classifierPackage,
                                                              CL_type, metrics, learningIndices,
                                                              KFolds, randomState,
                                                              viewsIndices=viewsIndices,
@@ -117,7 +117,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     logging.debug("Done:\t Optimizing hyperparameters")
 
     logging.debug("Start:\t Fitting classifier")
-    classifier.fit_hdf5(DATASET, trainIndices=learningIndices, viewsIndices=viewsIndices, metric=metrics[0])
+    classifier.fit_hdf5(DATASET, labels, trainIndices=learningIndices, viewsIndices=viewsIndices, metric=metrics[0])
     logging.debug("Done:\t Fitting classifier")
 
     logging.debug("Start:\t Predicting")

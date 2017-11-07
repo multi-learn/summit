@@ -133,7 +133,7 @@ class LateFusionClassifier(object):
         self.monoviewSelection = monoviewSelection
         self.randomState = randomState
 
-    def fit_hdf5(self, DATASET, trainIndices=None, viewsIndices=None):
+    def fit_hdf5(self, DATASET, labels, trainIndices=None, viewsIndices=None):
         if type(viewsIndices) == type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices is None:
@@ -142,6 +142,6 @@ class LateFusionClassifier(object):
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
                 delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[index],
                                                getV(DATASET, viewIndex, trainIndices),
-                                               DATASET.get("Labels").value[trainIndices],
+                                               labels[trainIndices],
                                                self.monoviewClassifiersConfigs[index], self.needProbas, self.randomState)
                 for index, viewIndex in enumerate(viewsIndices))
