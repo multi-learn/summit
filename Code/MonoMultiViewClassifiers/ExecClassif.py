@@ -512,9 +512,9 @@ def execClassif(arguments):
     DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nbClass,
                                              args.CL_classes)
 
-    multiclassLabels, labelsIndices, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod)
+    classificationIndices = execution.genSplits(statsIter, DATASET.get("Labels").value, args.CL_split, statsIterRandomStates)
 
-    classificationIndices = execution.genSplits(statsIter, oldIndicesMulticlass, DATASET.get("Labels").value, args.CL_split, statsIterRandomStates, multiclassMethod)
+    multiclassLabels, labelsIndices, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod)
 
     kFolds = execution.genKFolds(statsIter, args.CL_nbFolds, statsIterRandomStates)
 

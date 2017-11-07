@@ -238,32 +238,32 @@ def initLogFile(args):
     return resultDirectory
 
 
-def genSplits(statsIter, oldIndicesMulticlass, multiclasslabels, splitRatio, statsIterRandomStates, multiclassMethod):
+def genSplits(statsIter, labels, splitRatio, statsIterRandomStates, multiclassMethod):
     """Used to gen the train/test splits using one or multiple random states"""
     for oldIndices, labels in zip(oldIndicesMulticlass, multiclasslabels):
-        indices = oldIndices
-        splitsMulticlass = []
-        if statsIter > 1:
-            splits = []
-            for randomState in statsIterRandomStates:
-                foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1,
-                                                                          random_state=randomState,
-                                                                          test_size=splitRatio)
-                folds = foldsObj.split(indices, labels)
-                for fold in folds:
-                    train_fold, test_fold = fold
-                trainIndices = indices[train_fold]
-                testIndices = indices[test_fold]
-                splits.append([trainIndices, testIndices])
-            splitsMulticlass.append(splits)
-        else:
-            foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1, random_state=statsIterRandomStates, test_size=splitRatio)
+    indices = oldIndices
+    splitsMulticlass = []
+    if statsIter > 1:
+        splits = []
+        for randomState in statsIterRandomStates:
+            foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1,
+                                                                      random_state=randomState,
+                                                                      test_size=splitRatio)
             folds = foldsObj.split(indices, labels)
             for fold in folds:
                 train_fold, test_fold = fold
             trainIndices = indices[train_fold]
             testIndices = indices[test_fold]
-            splitsMulticlass.append((trainIndices, testIndices))
+            splits.append([trainIndices, testIndices])
+        splitsMulticlass.append(splits)
+    else:
+        foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1, random_state=statsIterRandomStates, test_size=splitRatio)
+        folds = foldsObj.split(indices, labels)
+        for fold in folds:
+            train_fold, test_fold = fold
+        trainIndices = indices[train_fold]
+        testIndices = indices[test_fold]
+        splitsMulticlass.append((trainIndices, testIndices))
     return splitsMulticlass
 
 
