@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.com/babau1/multiview-machine-learning-omis.svg?token=pjoowx3poApRRtwqHTpd&branch=master)](https://travis-ci.com/babau1/multiview-machine-learning-omis)
 # Mono- and Multi-view classification benchmark
 
-This project aims to be an easy-to use solution to run a prior benchmark on a dataset and evaluate mono- & multi-view algorithms capacity to classify it correctly.
+This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- & multi-view algorithms capacity to classify it correctly.
 
 ## Getting Started
 
