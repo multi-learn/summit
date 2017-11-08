@@ -285,31 +285,14 @@ def initViews(DATASET, args):
         return views, viewsIndices, allViews
 
 
-def genDirecortiesNames(directory, statsIter, labelsIndices, multiclassMethod, labelDictionary):
+def genDirecortiesNames(directory, statsIter):
     """Used to generate the different directories of each iteration if needed"""
     if statsIter > 1:
         directories = []
         for i in range(statsIter):
-            if multiclassMethod == "oneVersusOne":
-                for labelIndex1, labelIndex2 in labelsIndices:
-                    labelName1 = labelDictionary[labelIndex1]
-                    labelName2 = labelDictionary[labelIndex2]
-                    directories.append(directory + "iter_" + str(i + 1) + "/"+labelName1+"_vs_"+labelName2+"/")
-            elif multiclassMethod == "oneVersusRest":
-                for labelIndex in labelsIndices:
-                    labelName = labelDictionary[labelIndex]
-                    directories.append(directory + "iter_" + str(i + 1) + "/"+labelName+"_vs_Rest/")
+            directories.append(directory + "iter_" + str(i + 1) + "/")
     else:
-        directories = []
-        if multiclassMethod == "oneVersusOne":
-            for labelIndex1, labelIndex2 in labelsIndices:
-                labelName1 = labelDictionary[labelIndex1]
-                labelName2 = labelDictionary[labelIndex2]
-                directories.append(directory +labelName1+"_vs_"+labelName2+"/")
-        elif multiclassMethod == "oneVersusRest":
-            for labelIndex in labelsIndices:
-                labelName = labelDictionary[labelIndex]
-                directories.append(directory +labelName+"_vs_Rest/")
+        directories = [directory]
     return directories
 
 

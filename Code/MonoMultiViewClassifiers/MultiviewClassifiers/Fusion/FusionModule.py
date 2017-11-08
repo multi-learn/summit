@@ -18,6 +18,14 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
+def genName(config):
+    if config["fusionType"] == "LateFusion":
+        classifierRedNames = [classifierName[:4] for classifierName in config["classifierNames"]]
+        return "Late-" + str(config["fusionMethod"][:4])+"-"+"-".join(classifierRedNames)
+    elif config["fusionType"] == "EarlyFusion":
+        return "Early-" + config["fusionMethod"] + "-" + config["classifiersNames"]
+
+
 def getBenchmark(benchmark, args=None):
     """Used to generate the list of fusion classifiers for the benchmark"""
     fusionModulesNames = [name for _, name, isPackage

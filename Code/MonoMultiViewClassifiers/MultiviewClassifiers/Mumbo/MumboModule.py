@@ -17,6 +17,10 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 # Data shape : ((Views, Examples, Corrdinates))
 
+def genName(config):
+    return "Mumbo"
+
+
 def getBenchmark(benchmark, args=None):
     allAlgos = [name for _, name, isPackage in
                 pkgutil.iter_modules("./MonoMultiViewClassifiers/MultiviewClassifiers/Mumbo/Classifiers")
