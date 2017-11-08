@@ -47,7 +47,7 @@ def makeMeNoisy(viewData, randomState, percentage=15):
     for _ in range(nbNoisyCoord):
         rowIdx = randomState.choice(rows)
         colIdx = randomState.choice(cols)
-        viewData[rowIdx, colIdx] = not viewData[rowIdx, colIdx]
+        viewData[rowIdx, colIdx] = 0
     noisyViewData = viewData.astype(np.uint8)
     return noisyViewData
 
@@ -64,16 +64,22 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, nbView=3,
             if exc.errno != errno.EEXIST:
                 raise
     datasetFile = h5py.File(pathF + "/Plausible.hdf5", "w")
-    CLASS_LABELS = np.array([0 for _ in range(int(datasetLength / 2))] + [1 for _ in range(int(datasetLength / 2))])
+    firstBound = int(datasetLength / 3)
+    rest = datasetLength - 2*int(datasetLength / 3)
+    scndBound = 2*int(datasetLength / 3)
+    thrdBound = datasetLength
+    CLASS_LABELS = np.array([0 for _ in range(firstBound)] + [1 for _ in range(firstBound)] + [2 for _ in range(rest)])
     for viewIndex in range(nbView):
-        viewData = np.array([np.zeros(nbFeatures) for _ in range(int(datasetLength / 2))] + [np.ones(nbFeatures)
-                                                                                        for _ in
-                                                                                        range(int(datasetLength / 2))])
-        fakeTrueIndices = randomState.randint(0, int(datasetLength / 2) - 1, int(datasetLength / 5))
-        fakeFalseIndices = randomState.randint(int(datasetLength / 2), datasetLength - 1, int(datasetLength / 5))
+        viewData = np.array([np.zeros(nbFeatures) for _ in range(firstBound)] +
+                            [np.ones(nbFeatures)for _ in range(firstBound)] +
+                            [np.ones(nbFeatures)+1 for _ in range(rest)])
+        fakeOneIndices = randomState.randint(0, firstBound, int(datasetLength / 12))
+        fakeTwoIndices = randomState.randint(firstBound, scndBound, int(datasetLength / 12))
+        fakeZeroIndices = randomState.randint(scndBound, thrdBound, int(datasetLength / 12))
 
-        viewData[fakeTrueIndices] = np.ones((len(fakeTrueIndices), nbFeatures))
-        viewData[fakeFalseIndices] = np.zeros((len(fakeFalseIndices), nbFeatures))
+        viewData[fakeOneIndices] = np.ones((len(fakeOneIndices), nbFeatures))
+        viewData[fakeZeroIndices] = np.zeros((len(fakeZeroIndices), nbFeatures))
+        viewData[fakeTwoIndices] = np.ones((len(fakeTwoIndices), nbFeatures))+1
         viewData = makeMeNoisy(viewData, randomState)
         viewDset = datasetFile.create_dataset("View" + str(viewIndex), viewData.shape, data=viewData.astype(np.uint8))
         viewDset.attrs["name"] = "View" + str(viewIndex)
@@ -81,14 +87,14 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, nbView=3,
     labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
     labelsDset[...] = CLASS_LABELS
     labelsDset.attrs["name"] = "Labels"
-    labelsDset.attrs["names"] = ["No".encode(), "Yes".encode()]
+    labelsDset.attrs["names"] = ["No".encode(), "Yes".encode(), "Maybe".encode()]
     metaDataGrp = datasetFile.create_group("Metadata")
     metaDataGrp.attrs["nbView"] = nbView
-    metaDataGrp.attrs["nbClass"] = 2
+    metaDataGrp.attrs["nbClass"] = 3
     metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
     datasetFile.close()
     datasetFile = h5py.File(pathF + "Plausible.hdf5", "r")
-    LABELS_DICTIONARY = {0: "No", 1: "Yes"}
+    LABELS_DICTIONARY = {0: "No", 1: "Yes", 2:"Maybe"}
     return datasetFile, LABELS_DICTIONARY
 
 

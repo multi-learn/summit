@@ -26,7 +26,7 @@ def score(y_true, y_pred, **kwargs):
     try:
         average = kwargs["4"]
     except:
-        average = "binary"
+        average = "micro"
     score = metric(y_true, y_pred, beta, sample_weight=sample_weight, labels=labels, pos_label=pos_label,
                    average=average)
     return score

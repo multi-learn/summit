@@ -76,11 +76,12 @@ class BayesianInference(LateFusionClassifier):
         if sum(self.weights) != 1.0:
             self.weights = self.weights / sum(self.weights)
 
-        viewScores = np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
+        viewScores = []#np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
         for index, viewIndex in enumerate(viewsIndices):
-            viewScores[index] = np.power(
+            viewScores.append(np.power(
                 self.monoviewClassifiers[index].predict_proba(getV(DATASET, viewIndex, usedIndices)),
-                self.weights[index])
+                self.weights[index]))
+        viewScores = np.array(viewScores)
         predictedLabels = np.argmax(np.prod(viewScores, axis=0), axis=1)
         return predictedLabels
 

@@ -30,7 +30,7 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
 def paramsToSet(nIter, randomState):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append([randomState.randint(1, 50), randomState.choice(["uniform", "distance"]),
+        paramsSet.append([randomState.randint(1, 20), randomState.choice(["uniform", "distance"]),
                           randomState.choice(["auto", "ball_tree", "kd_tree", "brute"]), randomState.choice([1, 2])])
     return paramsSet
 
@@ -40,11 +40,11 @@ def getKWARGS(kwargsList):
     for (kwargName, kwargValue) in kwargsList:
         if kwargName == "CL_KNN_neigh":
             kwargsDict['0'] = int(kwargValue)
-        if kwargName == "CL_KNN_weights":
+        elif kwargName == "CL_KNN_weights":
             kwargsDict['1'] = kwargValue
-        if kwargName == "CL_KNN_algo":
+        elif kwargName == "CL_KNN_algo":
             kwargsDict['2'] = kwargValue
-        if kwargName == "CL_KNN_p":
+        elif kwargName == "CL_KNN_p":
             kwargsDict['3'] = int(kwargValue)
         else:
             raise ValueError("Wrong arguments served to KNN")
@@ -54,7 +54,7 @@ def getKWARGS(kwargsList):
 def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1,
                      metric=["accuracy_score", None], nIter=30):
     pipeline_KNN = Pipeline([('classifier', KNeighborsClassifier())])
-    param_KNN = {"classifier__n_neighbors": randint(1, 50),
+    param_KNN = {"classifier__n_neighbors": randint(1, 20),
                  "classifier__weights": ["uniform", "distance"],
                  "classifier__algorithm": ["auto", "ball_tree", "kd_tree", "brute"],
                  "classifier__p": [1, 2],

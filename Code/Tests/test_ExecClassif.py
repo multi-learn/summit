@@ -43,9 +43,12 @@ def fakeBenchmarkExec(coreIndex=-1, a=7):
 def fakeBenchmarkExec_mutlicore(nbCores=-1, a=6):
     return [nbCores,a]
 
-def fakeBenchmarkExec_monocore(a=4):
-    return a
+def fakeBenchmarkExec_monocore(DATASET=1, a=4):
+    return [DATASET, a]
 
+def fakegetResults(results, statsIter, nbMulticlass, benchmarkArgumentsDictionaries, multiClassLabels, metrics,
+                   classificationIndices, directories, directory, labelsDictionary, nbExamples, nbLabels):
+    return 3
 
 class Test_execBenchmark(unittest.TestCase):
 
@@ -55,29 +58,35 @@ class Test_execBenchmark(unittest.TestCase):
         cls.argumentDictionaries = [{"a": 4}]
 
     def test_simple(cls):
-        res = ExecClassif.execBenchmark(1,1,1,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+        res = ExecClassif.execBenchmark(1,2,3,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, 11, execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                        execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore)
-        cls.assertEqual(res, [4])
+                                        execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore, getResults=fakegetResults)
+        cls.assertEqual(res, [[11,4]])
 
     def test_multiclass_no_iter(cls):
         cls.argumentDictionaries = [{"a": 10}, {"a": 4}]
-        res = ExecClassif.execBenchmark(2,1,2,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+        res = ExecClassif.execBenchmark(2,1,2,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, 11,
+                                        execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                        execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore)
+                                        execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
+                                        getResults=fakegetResults)
         cls.assertEqual(res, [[0,10], [1,4]])
 
     def test_multiclass_and_iter(cls):
         cls.argumentDictionaries = [{"a": 10}, {"a": 4}, {"a": 55}, {"a": 24}]
-        res = ExecClassif.execBenchmark(2,2,2,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+        res = ExecClassif.execBenchmark(2,2,2,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, 11,
+                                        execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                        execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore)
+                                        execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
+                                        getResults=fakegetResults)
         cls.assertEqual(res, [[0,10], [1,4], [0,55], [1,24]])
 
     def test_no_iter_biclass_multicore(cls):
-        res = ExecClassif.execBenchmark(2,1,1,cls.argumentDictionaries, execOneBenchmark=fakeBenchmarkExec,
+        res = ExecClassif.execBenchmark(2,1,1,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, 11,
+                                        execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                        execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore)
+                                        execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
+                                        getResults=fakegetResults)
         cls.assertEqual(res, [[2,4]])
 
 
@@ -179,47 +188,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
         os.rmdir("Code/Tests/tmp_tests")
 
 
-class Test_getMetricsScoresBiclass(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.metrics = [["accuracy_score"]]
-        cls.monoViewResults = [["", ["chicken_is_heaven", "", {"accuracy_score": [0.5,0.7]}]]]
-        cls.multiviewResults = [["Mumbo", {"":""}, {"accuracy_score":[0.6,0.8]}]]
-
-    def test_simple(cls):
-        res = ExecClassif.getMetricsScoresBiclass(cls.metrics, cls.monoViewResults, cls.multiviewResults)
-        cls.assertIn("accuracy_score",res)
-        cls.assertEqual(type(res["accuracy_score"]), dict)
-        cls.assertEqual(res["accuracy_score"]["classifiersNames"], ["chicken_is_heaven", "Mumbo"])
-        cls.assertEqual(res["accuracy_score"]["trainScores"], [0.5, 0.6])
-        cls.assertEqual(res["accuracy_score"]["testScores"], [0.7, 0.8])
-
-    def test_only_monoview(cls):
-        cls.monoViewResults = []
-        res = ExecClassif.getMetricsScoresBiclass(cls.metrics, cls.monoViewResults, cls.multiviewResults)
-        cls.assertIn("accuracy_score",res)
-        cls.assertEqual(type(res["accuracy_score"]), dict)
-        cls.assertEqual(res["accuracy_score"]["classifiersNames"], ["Mumbo"])
-        cls.assertEqual(res["accuracy_score"]["trainScores"], [0.6])
-        cls.assertEqual(res["accuracy_score"]["testScores"], [0.8])
-
-
-class Test_getExampleErrorsBiclass(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.usedBenchmarkArgumentDictionary = {"labels": np.array([0,1,1,-100,-100,0,1,1,-100])}
-        cls.monoViewResults = [["", ["chicken_is_heaven", "", {}, np.array([1,1,1,-100,-100,0,1,1,-100])]]]
-        cls.multiviewResults = [["Mumbo", {"":""}, {}, np.array([0,0,1,-100,-100,0,1,1,-100])]]
-
-    def test_simple(cls):
-        res = ExecClassif.getExampleErrorsBiclass(cls.usedBenchmarkArgumentDictionary, cls.monoViewResults,
-                                                  cls.multiviewResults)
-        cls.assertIn("chicken_is_heaven", res)
-        cls.assertIn("Mumbo", res)
-        np.testing.assert_array_equal(res["Mumbo"], np.array([1,0,1,-100,-100,1,1,1,-100]))
-        np.testing.assert_array_equal(res["chicken_is_heaven"], np.array([0,1,1,-100,-100,1,1,1,-100]))
 
 #
 # class Test_analyzeMulticlass(unittest.TestCase):

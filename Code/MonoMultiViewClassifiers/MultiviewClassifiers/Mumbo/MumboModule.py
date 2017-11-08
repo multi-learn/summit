@@ -217,6 +217,7 @@ class MumboClass:
             NB_VIEW = len(viewsIndices)
             trainLength = len(trainIndices)
             LABELS = labels[trainIndices]
+            print(LABELS)
             self.initDataDependant(trainLength, NB_VIEW, NB_CLASS, LABELS)
             # Learning
             isStabilized = False

@@ -261,10 +261,10 @@ def genKFolds(statsIter, nbFolds, statsIterRandomStates):
     if statsIter > 1:
         foldsList = []
         for randomState in statsIterRandomStates:
-            foldsList.append(sklearn.model_selection.KFold(n_splits=nbFolds, random_state=randomState))
+            foldsList.append(sklearn.model_selection.StratifiedKFold(n_splits=nbFolds, random_state=randomState))
         return foldsList
     else:
-        return sklearn.model_selection.KFold(n_splits=nbFolds, random_state=statsIterRandomStates)
+        return sklearn.model_selection.StratifiedKFold(n_splits=nbFolds, random_state=statsIterRandomStates)
 
 
 def initViews(DATASET, args):
@@ -297,7 +297,7 @@ def genDirecortiesNames(directory, statsIter):
 
 
 def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, labelsCombinations, oldIndicesMulticlass, hyperParamSearch, args,
-                            kFolds, statsIterRandomStates, metrics, argumentDictionaries, benchmark):
+                            kFolds, statsIterRandomStates, metrics, argumentDictionaries, benchmark, nbViews, views):
     benchmarkArgumentDictionaries = []
     for combinationIndex, labelsCombination in enumerate(labelsCombinations):
         for iterIndex, iterRandomState in enumerate(statsIterRandomStates):
@@ -316,8 +316,8 @@ def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, lab
                                            "metrics": metrics,
                                            "argumentDictionaries": argumentDictionaries,
                                            "benchmark": benchmark,
-                                           "views": None,
-                                           "viewsIndices": None,
+                                           "views": views,
+                                           "viewsIndices": range(nbViews),
                                            "flag": [iterIndex, labelsCombination]}
             benchmarkArgumentDictionaries.append(benchmarkArgumentDictionary)
     return benchmarkArgumentDictionaries

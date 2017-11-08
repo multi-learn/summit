@@ -51,7 +51,7 @@ def randomizedSearch(dataset, labels, classifierPackage, classifierName, metrics
             for trainIndices, testIndices in kFolds:
                 classifier = classifierClass(randomState, NB_CORES=nbCores, **classificationKWARGS)
                 classifier.setParams(paramsSet)
-                classifier.fit_hdf5(dataset, trainIndices=learningIndices[trainIndices], viewsIndices=viewsIndices)
+                classifier.fit_hdf5(dataset, labels, trainIndices=learningIndices[trainIndices], viewsIndices=viewsIndices)
                 testLabels = classifier.predict_hdf5(dataset, usedIndices=learningIndices[testIndices],
                                                      viewsIndices=viewsIndices)
                 testScore = metricModule.score(labels[learningIndices[testIndices]], testLabels)

@@ -42,9 +42,9 @@ def getKWARGS(kwargsList):
     for (kwargName, kwargValue) in kwargsList:
         if kwargName == "CL_DecisionTree_depth":
             kwargsDict['0'] = int(kwargValue)
-        if kwargName == "CL_DecisionTree_criterion":
+        elif kwargName == "CL_DecisionTree_criterion":
             kwargsDict['1'] = kwargValue
-        if kwargName == "CL_DecisionTree_splitter":
+        elif kwargName == "CL_DecisionTree_splitter":
             kwargsDict['2'] = kwargValue
         else:
             raise ValueError("Wrong arguments served to DecisionTree")

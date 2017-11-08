@@ -145,9 +145,14 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     logging.debug("Done:\t Training")
 
     logging.debug("Start:\t Predicting")
-    full_labels_pred = cl_res.predict(X)
+    full_labels_pred = np.zeros(Y.shape, dtype=int)-100
     y_train_pred = cl_res.predict(X[classificationIndices[0]])
     y_test_pred = cl_res.predict(X[classificationIndices[1]])
+    for trainIndex, index in enumerate(classificationIndices[0]):
+        full_labels_pred[index] = y_train_pred[trainIndex]
+    for testIndex, index in enumerate(classificationIndices[1]):
+        full_labels_pred[index] = y_test_pred[testIndex]
+
     logging.debug("Done:\t Predicting")
 
     t_end = time.time() - t_start

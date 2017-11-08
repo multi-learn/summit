@@ -4,6 +4,7 @@ import os
 import os.path
 import time
 import h5py
+import numpy as np
 
 from ..utils import HyperParameterSearch
 from ..utils.Dataset import getShape
@@ -123,7 +124,11 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     logging.debug("Start:\t Predicting")
     trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices, viewsIndices=viewsIndices)
     testLabels = classifier.predict_hdf5(DATASET, usedIndices=validationIndices, viewsIndices=viewsIndices)
-    fullLabels = classifier.predict_hdf5(DATASET, viewsIndices=viewsIndices)
+    fullLabels = np.zeros(labels.shape, dtype=int)-100
+    for trainIndex, index in enumerate(learningIndices):
+        fullLabels[index] = trainLabels[trainIndex]
+    for testIndex, index in enumerate(validationIndices):
+        fullLabels[index] = testLabels[testIndex]
     logging.info("Done:\t Pertidcting")
 
     classificationTime = time.time() - t_start
@@ -132,6 +137,8 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     #TODO: get better cltype
     logging.info("Start:\t Result Analysis for " + CL_type)
     times = (extractionTime, classificationTime)
+    if len(set(labels[learningIndices]))>2 or len(set(trainLabels))>2:
+        import pdb;pdb.set_trace()
     stringAnalysis, imagesAnalysis, metricsScores = analysisModule.execute(classifier, trainLabels,
                                                                            testLabels, DATASET,
                                                                            classificationKWARGS, classificationIndices,
