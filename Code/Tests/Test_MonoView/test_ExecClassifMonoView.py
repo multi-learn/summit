@@ -18,7 +18,7 @@ class Test_initConstants(unittest.TestCase):
         cls.X = cls.datasetFile.create_dataset("View0", data=cls.X_value)
         cls.X.attrs["name"] = "test_dataset"
         cls.X.attrs["sparse"] = False
-        cls.classificationIndices = [np.array([0,2,4,6,8]),np.array([1,3,5,7,9])]
+        cls.classificationIndices = [np.array([0,2,4,6,8]), np.array([1,3,5,7,9]), np.array([1,3,5,7,9])]
         cls.labelsNames = ["test_true", "test_false"]
         cls.name = "test"
         cls.directory = "Code/Tests/temp_tests/test_dir/"
@@ -61,10 +61,10 @@ class Test_initTrainTest(unittest.TestCase):
         cls.random_state = np.random.RandomState(42)
         cls.X = cls.random_state.randint(0,500,(10,5))
         cls.Y = cls.random_state.randint(0,2,10)
-        cls.classificationIndices = [np.array([0,2,4,6,8]),np.array([1,3,5,7,9])]
+        cls.classificationIndices = [np.array([0,2,4,6,8]),np.array([1,3,5,7,9]), np.array([1,3,5,7,9])]
 
     def test_simple(cls):
-        X_train, y_train, X_test, y_test = ExecClassifMonoView.initTrainTest(cls.X, cls.Y, cls.classificationIndices)
+        X_train, y_train, X_test, y_test, X_test_multiclass = ExecClassifMonoView.initTrainTest(cls.X, cls.Y, cls.classificationIndices)
         np.testing.assert_array_equal(X_train, np.array([np.array([102,435,348,270,106]),
                                                          np.array([466,214,330,458,87]),
                                                          np.array([149,308,257,343,491]),

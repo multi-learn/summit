@@ -129,7 +129,10 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
         fullLabels[index] = trainLabels[trainIndex]
     for testIndex, index in enumerate(validationIndices):
         fullLabels[index] = testLabels[testIndex]
-    testLabelsMulticlass = classifier.predict_hdf5(DATASET, usedIndices=testIndicesMulticlass, viewsIndices=viewsIndices)
+    if testIndicesMulticlass:
+        testLabelsMulticlass = classifier.predict_hdf5(DATASET, usedIndices=testIndicesMulticlass, viewsIndices=viewsIndices)
+    else:
+        testLabelsMulticlass = []
     logging.info("Done:\t Pertidcting")
 
     classificationTime = time.time() - t_start
@@ -140,10 +143,6 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
 
     logging.info("Start:\t Result Analysis for " + CL_type)
     times = (extractionTime, classificationTime)
-    if set(labels[learningIndices])!=set([0,1]) or (set(trainLabels)!=set([0,1]) and set(trainLabels)!=set([0]) and set(trainLabels)!=set([1])):
-        print(set(labels[learningIndices]))
-        print(set(trainLabels))
-        import pdb;pdb.set_trace()
     stringAnalysis, imagesAnalysis, metricsScores = analysisModule.execute(classifier, trainLabels,
                                                                            testLabels, DATASET,
                                                                            classificationKWARGS, classificationIndices,
