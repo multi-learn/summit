@@ -2,6 +2,7 @@ import unittest
 import argparse
 import os
 import numpy as np
+import h5py
 from sklearn.metrics import accuracy_score
 
 from ..MonoMultiViewClassifiers import ExecClassif
@@ -36,59 +37,68 @@ class Test_initMonoviewArguments(unittest.TestCase):
         arguments = ExecClassif.initMonoviewExps(benchmark, {}, {}, 0, {})
 
 
-def fakeBenchmarkExec(coreIndex=-1, a=7):
+def fakeBenchmarkExec(coreIndex=-1, a=7, args=1):
     return [coreIndex, a]
 
 
-def fakeBenchmarkExec_mutlicore(nbCores=-1, a=6):
+def fakeBenchmarkExec_mutlicore(nbCores=-1, a=6, args=1):
     return [nbCores,a]
 
-def fakeBenchmarkExec_monocore(DATASET=1, a=4):
-    return [DATASET, a]
+def fakeBenchmarkExec_monocore(DATASET=1, a=4, args=1):
+    return [a]
 
 def fakegetResults(results, statsIter, nbMulticlass, benchmarkArgumentsDictionaries, multiClassLabels, metrics,
                    classificationIndices, directories, directory, labelsDictionary, nbExamples, nbLabels):
     return 3
 
+def fakeDelete(a, b,c):
+    return 9
+
 class Test_execBenchmark(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-
-        cls.argumentDictionaries = [{"a": 4}]
+        os.mkdir("Code/Tests/tmp_tests")
+        cls.Dataset = h5py.File("Code/Tests/tmp_tests/test_file.hdf5", "w")
+        cls.labels = cls.Dataset.create_dataset("Labels", data=np.array([0, 1, 2]))
+        cls.argumentDictionaries = [{"a": 4, "args":FakeArg()}]
 
     def test_simple(cls):
-        res = ExecClassif.execBenchmark(1,2,3,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, 11, execOneBenchmark=fakeBenchmarkExec,
+        res = ExecClassif.execBenchmark(1,2,3,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, cls.Dataset, execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                        execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore, getResults=fakegetResults)
-        cls.assertEqual(res, [[11,4]])
+                                        execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore, getResults=fakegetResults, delete=fakeDelete)
+        cls.assertEqual(res, [[4]])
 
     def test_multiclass_no_iter(cls):
-        cls.argumentDictionaries = [{"a": 10}, {"a": 4}]
-        res = ExecClassif.execBenchmark(2,1,2,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, 11,
+        cls.argumentDictionaries = [{"a": 10, "args":FakeArg()}, {"a": 4, "args":FakeArg()}]
+        res = ExecClassif.execBenchmark(2,1,2,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, cls.Dataset,
                                         execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
                                         execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
-                                        getResults=fakegetResults)
+                                        getResults=fakegetResults, delete=fakeDelete)
         cls.assertEqual(res, [[0,10], [1,4]])
 
     def test_multiclass_and_iter(cls):
-        cls.argumentDictionaries = [{"a": 10}, {"a": 4}, {"a": 55}, {"a": 24}]
-        res = ExecClassif.execBenchmark(2,2,2,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, 11,
+        cls.argumentDictionaries = [{"a": 10, "args":FakeArg()}, {"a": 4, "args":FakeArg()}, {"a": 55, "args":FakeArg()}, {"a": 24, "args":FakeArg()}]
+        res = ExecClassif.execBenchmark(2,2,2,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, cls.Dataset,
                                         execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
                                         execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
-                                        getResults=fakegetResults)
+                                        getResults=fakegetResults, delete=fakeDelete)
         cls.assertEqual(res, [[0,10], [1,4], [0,55], [1,24]])
 
     def test_no_iter_biclass_multicore(cls):
-        res = ExecClassif.execBenchmark(2,1,1,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, 11,
+        res = ExecClassif.execBenchmark(2,1,1,cls.argumentDictionaries,[[[1,2], [3,4,5]]], 5, 6, 7, 8, 9, 10, cls.Dataset,
                                         execOneBenchmark=fakeBenchmarkExec,
                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
                                         execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
-                                        getResults=fakegetResults)
+                                        getResults=fakegetResults, delete=fakeDelete)
         cls.assertEqual(res, [[2,4]])
 
+    @classmethod
+    def tearDownClass(cls):
+        os.remove("Code/Tests/tmp_tests/test_file.hdf5")
+        os.rmdir("Code/Tests/tmp_tests")
 
 def fakeExecMono(directory, name, labelsNames, classificationIndices, kFolds, coreIndex, type, pathF, randomState, labels,
                  hyperParamSearch="try", metrics="try", nIter=1, **arguments):

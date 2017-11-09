@@ -295,7 +295,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
 def execBenchmark(nbCores, statsIter, nbMulticlass, benchmarkArgumentsDictionaries, classificationIndices, directories,
                   directory, multiClassLabels, metrics, labelsDictionary, nbLabels, DATASET,
                   execOneBenchmark=execOneBenchmark, execOneBenchmark_multicore=execOneBenchmark_multicore,
-                  execOneBenchmarkMonoCore=execOneBenchmarkMonoCore, getResults=getResults):
+                  execOneBenchmarkMonoCore=execOneBenchmarkMonoCore, getResults=getResults, delete=DB.deleteHDF5):
     """Used to execute the needed benchmark(s) on multicore or mono-core functions
     The execOneBenchmark and execOneBenchmark_multicore keywords args are only used in the tests"""
     # TODO :  find a way to flag
@@ -320,7 +320,7 @@ def execBenchmark(nbCores, statsIter, nbMulticlass, benchmarkArgumentsDictionari
     if nbCores > 1:
         logging.debug("Start:\t Deleting " + str(nbCores) + " temporary datasets for multiprocessing")
         args = benchmarkArgumentsDictionaries[0]["args"]
-        datasetFiles = DB.deleteHDF5(args.pathF, args.name, nbCores)
+        datasetFiles = delete(args.pathF, args.name, nbCores)
         logging.debug("Start:\t Deleting datasets for multiprocessing")
     # Do everything with flagging
     nbExamples = len(classificationIndices[0][0])+len(classificationIndices[0][1])

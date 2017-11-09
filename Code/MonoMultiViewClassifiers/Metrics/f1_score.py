@@ -31,7 +31,7 @@ def score(y_true, y_pred, **kwargs):
             average = "micro"
         else:
             average = "binary"
-    
+
     score = metric(y_true, y_pred, sample_weight=sample_weight, labels=labels, pos_label=pos_label, average=average)
 
     return score
