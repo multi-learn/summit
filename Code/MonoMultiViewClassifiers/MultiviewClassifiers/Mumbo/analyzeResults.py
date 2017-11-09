@@ -118,7 +118,7 @@ def getReport(classifier, CLASS_LABELS, classificationIndices, DATASET, trainLab
               testLabels, viewIndices, metric):
     learningIndices, validationIndices, multiviewTestIndices = classificationIndices
     nbView = len(viewIndices)
-    NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+    NB_CLASS = len(set(CLASS_LABELS))  # DATASET.get("Metadata").attrs["nbClass"]
     metricModule = getattr(Metrics, metric[0])
     fakeViewsIndicesDict = dict(
         (viewIndex, fakeViewIndex) for viewIndex, fakeViewIndex in zip(viewIndices, range(nbView)))
@@ -233,7 +233,7 @@ def execute(classifier, trainLabels,
         LEARNING_RATE = len(learningIndices) / (len(learningIndices) + len(validationIndices))
         nbFolds = KFolds.n_splits
 
-        CLASS_LABELS = DATASET.get("Labels")[...]
+        CLASS_LABELS = labels
 
         dbConfigurationString, viewNames = getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices,
                                                        LABELS_DICTIONARY)

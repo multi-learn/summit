@@ -153,7 +153,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
         full_labels_pred[index] = y_train_pred[trainIndex]
     for testIndex, index in enumerate(classificationIndices[1]):
         full_labels_pred[index] = y_test_pred[testIndex]
-    if X_test_multiclass:
+    if X_test_multiclass != []:
         y_test_multiclass_pred = cl_res.predict(X_test_multiclass)
     else:
         y_test_multiclass_pred = []

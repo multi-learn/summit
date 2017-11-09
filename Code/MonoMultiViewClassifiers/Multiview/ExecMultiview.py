@@ -129,7 +129,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
         fullLabels[index] = trainLabels[trainIndex]
     for testIndex, index in enumerate(validationIndices):
         fullLabels[index] = testLabels[testIndex]
-    if testIndicesMulticlass:
+    if testIndicesMulticlass != []:
         testLabelsMulticlass = classifier.predict_hdf5(DATASET, usedIndices=testIndicesMulticlass, viewsIndices=viewsIndices)
     else:
         testLabelsMulticlass = []

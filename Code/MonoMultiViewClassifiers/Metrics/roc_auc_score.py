@@ -1,5 +1,6 @@
 from sklearn.metrics import roc_auc_score as metric
 from sklearn.metrics import make_scorer
+from sklearn.preprocessing import MultiLabelBinarizer
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -14,7 +15,15 @@ def score(y_true, y_pred, **kwargs):
     try:
         average = kwargs["1"]
     except:
-        average = "micro"
+        if len(set(y_true)) > 2:
+            average = "micro"
+        else:
+            average = None
+    if len(set(y_true)) > 2:
+        mlb = MultiLabelBinarizer()
+        y_true = mlb.fit_transform([(label) for label in y_true])
+        y_pred = mlb.fit_transform([(label) for label in y_pred])
+
     score = metric(y_true, y_pred, sample_weight=sample_weight, average=average)
     return score
 

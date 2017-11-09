@@ -33,6 +33,7 @@ def genMulticlassLabels(labels, multiclassMethod, classificationIndices):
                     else:
                         pass
                 multiclassLabels.append(newLabels)
+
     elif multiclassMethod == "oneVersusRest":
         # TODO : Implement one versus rest if probas are not a problem anymore
         pass
