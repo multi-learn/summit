@@ -95,7 +95,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     logging.info("Info:\t Extraction duration "+str(extractionTime)+"s")
 
     logging.debug("Start:\t Getting train/test split")
-    learningIndices, validationIndices = classificationIndices
+    learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
     logging.debug("Done:\t Getting train/test split")
 
     logging.debug("Start:\t Getting classifiers modules")
@@ -129,6 +129,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
         fullLabels[index] = trainLabels[trainIndex]
     for testIndex, index in enumerate(validationIndices):
         fullLabels[index] = testLabels[testIndex]
+    testLabelsMulticlass = classifier.predict_hdf5(DATASET, usedIndices=testIndicesMulticlass, viewsIndices=viewsIndices)
     logging.info("Done:\t Pertidcting")
 
     classificationTime = time.time() - t_start
@@ -157,4 +158,4 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
                 learningRate, name, imagesAnalysis)
     logging.debug("Start:\t Saving preds")
 
-    return CL_type, classificationKWARGS, metricsScores, fullLabels
+    return CL_type, classificationKWARGS, metricsScores, fullLabels, testLabelsMulticlass

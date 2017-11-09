@@ -66,7 +66,7 @@ def execute(classifier, trainLabels,
     monoviewClassifiersConfigs = classificationKWARGS["classifiersConfigs"]
     fusionMethodConfig = classificationKWARGS["fusionMethodConfig"]
 
-    learningIndices, validationIndices = classificationIndices
+    learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
     metricModule = getattr(Metrics, metrics[0][0])
     if metrics[0][1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metrics[0][1]))

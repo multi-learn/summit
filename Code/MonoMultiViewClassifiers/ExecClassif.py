@@ -845,7 +845,7 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, class
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-    trainIndices, testIndices = classificationIndices
+    trainIndices = classificationIndices[0]
     trainLabels = labels[trainIndices]
     np.savetxt(directory + "train_labels.csv", trainLabels, delimiter=",")
     resultsMonoview = []
@@ -883,7 +883,7 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None, directory=Non
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-    trainIndices, testIndices = classificationIndices
+    trainIndices = classificationIndices[0]
     trainLabels = labels[trainIndices]
     np.savetxt(directory + "train_labels.csv", trainLabels, delimiter=",")
     np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
@@ -929,7 +929,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-    trainIndices, testIndices = classificationIndices
+    trainIndices = classificationIndices[0]
     trainLabels = labels[trainIndices]
     np.savetxt(directory + "train_labels.csv", trainLabels, delimiter=",")
     resultsMonoview = []
@@ -1023,7 +1023,7 @@ def execClassif(arguments):
 
     classificationIndices = execution.genSplits(DATASET.get("Labels").value, args.CL_split, statsIterRandomStates)
 
-    multiclassLabels, labelsCombinations, oldIndicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod, classificationIndices)
+    multiclassLabels, labelsCombinations, indicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod, classificationIndices)
 
     kFolds = execution.genKFolds(statsIter, args.CL_nbFolds, statsIterRandomStates)
 
@@ -1060,7 +1060,7 @@ def execClassif(arguments):
                                             initKWARGS)
     directories = execution.genDirecortiesNames(directory, statsIter)
     benchmarkArgumentDictionaries = execution.genArgumentDictionaries(LABELS_DICTIONARY, directories, multiclassLabels,
-                                                                      labelsCombinations, oldIndicesMulticlass,
+                                                                      labelsCombinations, indicesMulticlass,
                                                                       hyperParamSearch, args, kFolds,
                                                                       statsIterRandomStates, metrics,
                                                                       argumentDictionaries, benchmark, nbViews, views)

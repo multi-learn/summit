@@ -296,7 +296,7 @@ def genDirecortiesNames(directory, statsIter):
     return directories
 
 
-def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, labelsCombinations, oldIndicesMulticlass, hyperParamSearch, args,
+def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, labelsCombinations, indicesMulticlass, hyperParamSearch, args,
                             kFolds, statsIterRandomStates, metrics, argumentDictionaries, benchmark, nbViews, views):
     benchmarkArgumentDictionaries = []
     for combinationIndex, labelsCombination in enumerate(labelsCombinations):
@@ -307,7 +307,9 @@ def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, lab
                                                         labelsDictionary[labelsCombination[0]]+
                                                         "vs"+
                                                         labelsDictionary[labelsCombination[1]]+"/",
-                                           "classificationIndices": oldIndicesMulticlass[combinationIndex][iterIndex],
+                                           "classificationIndices": [indicesMulticlass[combinationIndex][0][iterIndex],
+                                                                     indicesMulticlass[combinationIndex][1][iterIndex],
+                                                                     indicesMulticlass[combinationIndex][2][iterIndex]],
                                            "args": args,
                                            "labels": multiclassLabels[combinationIndex],
                                            "kFolds": kFolds[iterIndex],

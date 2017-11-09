@@ -49,12 +49,13 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
 
 
 def initTrainTest(X, Y, classificationIndices):
-    trainIndices, testIndices = classificationIndices
+    trainIndices, testIndices, testIndicesMulticlass = classificationIndices
     X_train = extractSubset(X, trainIndices)
     X_test = extractSubset(X, testIndices)
+    X_test_multiclass = extractSubset(X, testIndicesMulticlass)
     y_train = Y[trainIndices]
     y_test = Y[testIndices]
-    return X_train, y_train, X_test, y_test
+    return X_train, y_train, X_test, y_test, X_test_multiclass
 
 
 def getKWARGS(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train, randomState,
@@ -127,7 +128,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
                   + str(nbCores) + ", algorithm : " + CL_type)
 
     logging.debug("Start:\t Determine Train/Test split")
-    X_train, y_train, X_test, y_test = initTrainTest(X, Y, classificationIndices)
+    X_train, y_train, X_test, y_test, X_test_multiclass = initTrainTest(X, Y, classificationIndices)
     logging.debug("Info:\t Shape X_train:" + str(X_train.shape) + ", Length of y_train:" + str(len(y_train)))
     logging.debug("Info:\t Shape X_test:" + str(X_test.shape) + ", Length of y_test:" + str(len(y_test)))
     logging.debug("Done:\t Determine Train/Test split")
@@ -145,13 +146,14 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     logging.debug("Done:\t Training")
 
     logging.debug("Start:\t Predicting")
+    y_train_pred = cl_res.predict(X_train)
+    y_test_pred = cl_res.predict(X_test)
     full_labels_pred = np.zeros(Y.shape, dtype=int)-100
-    y_train_pred = cl_res.predict(X[classificationIndices[0]])
-    y_test_pred = cl_res.predict(X[classificationIndices[1]])
     for trainIndex, index in enumerate(classificationIndices[0]):
         full_labels_pred[index] = y_train_pred[trainIndex]
     for testIndex, index in enumerate(classificationIndices[1]):
         full_labels_pred[index] = y_test_pred[testIndex]
+    y_test_multiclass_pred = cl_res.predict(X_test_multiclass)
 
     logging.debug("Done:\t Predicting")
 
@@ -174,7 +176,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     logging.info("Done:\t Saving Results")
 
     viewIndex = args["viewIndex"]
-    return viewIndex, [CL_type, cl_desc + [feat], metricsScores, full_labels_pred, clKWARGS]
+    return viewIndex, [CL_type, cl_desc + [feat], metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred]
 
 
 if __name__ == '__main__':

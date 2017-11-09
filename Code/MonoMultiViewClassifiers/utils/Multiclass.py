@@ -21,7 +21,8 @@ def genMulticlassLabels(labels, multiclassMethod, classificationIndices):
                                    for iterIndices in classificationIndices]
                 testIndices = [np.array([oldIndex for oldIndex in oldIndices if oldIndex in iterindices[1]])
                                   for iterindices in classificationIndices]
-                indicesMulticlass.append([trainIndices, testIndices])
+                testIndicesMulticlass = [np.array(iterindices[1]) for iterindices in classificationIndices]
+                indicesMulticlass.append([trainIndices, testIndices, testIndicesMulticlass])
                 newLabels = np.zeros(len(labels), dtype=int)-100
                 for labelIndex, label in enumerate(labels):
                     if label == combination[0]:

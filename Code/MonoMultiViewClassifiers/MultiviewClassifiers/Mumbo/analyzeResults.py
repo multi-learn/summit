@@ -116,7 +116,7 @@ def getAlgoConfig(classifier, classificationKWARGS, nbCores, viewNames, hyperPar
 
 def getReport(classifier, CLASS_LABELS, classificationIndices, DATASET, trainLabels,
               testLabels, viewIndices, metric):
-    learningIndices, validationIndices = classificationIndices
+    learningIndices, validationIndices, multiviewTestIndices = classificationIndices
     nbView = len(viewIndices)
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
     metricModule = getattr(Metrics, metric[0])
@@ -224,7 +224,7 @@ def execute(classifier, trainLabels,
             databaseName, KFolds,
             hyperParamSearch, nIter, metrics,
             viewsIndices, randomState, labels):
-    learningIndices, validationIndices = classificationIndices
+    learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
     if classifier.classifiersConfigs is None:
         metricsScores = getMetricsScores(metrics, trainLabels, testLabels,
                                          validationIndices, learningIndices, labels)
