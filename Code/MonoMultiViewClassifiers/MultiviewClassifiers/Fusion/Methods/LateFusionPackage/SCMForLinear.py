@@ -126,7 +126,7 @@ class SCMForLinear(LateFusionClassifier):
                                        labels[trainIndices], self.randomState,
                                        NB_CORES=self.nbCores,
                                        **self.monoviewClassifiersConfigs[index]))
-        self.SCMForLinearFusionFit(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
+        self.SCMForLinearFusionFit(DATASET, labels, usedIndices=trainIndices, viewsIndices=viewsIndices)
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if viewsIndices is None:
@@ -135,17 +135,17 @@ class SCMForLinear(LateFusionClassifier):
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         monoviewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
-        accus = []
+        # accus = []
         for index, viewIndex in enumerate(viewsIndices):
             monoviewDecision = self.monoviewClassifiers[index].predict(
                 getV(DATASET, viewIndex, usedIndices))
-            accus.append(accuracy_score(DATASET.get("Labels").value[usedIndices], monoviewDecision))
+            # accus.append(accuracy_score(DATASET.get("Labels").value[usedIndices], monoviewDecision))
             monoviewDecisions[:, index] = monoviewDecision
         features = self.generateInteractions(monoviewDecisions)
         predictedLabels = self.SCMClassifier.predict(features)
         return predictedLabels
 
-    def SCMForLinearFusionFit(self, DATASET, usedIndices=None, viewsIndices=None):
+    def SCMForLinearFusionFit(self, DATASET, labels, usedIndices=None, viewsIndices=None):
         if type(viewsIndices) == type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
 
@@ -158,7 +158,7 @@ class SCMForLinear(LateFusionClassifier):
                 getV(DATASET, viewIndex, usedIndices))
         features = self.generateInteractions(monoViewDecisions)
         features = np.array([np.array([feat for feat in feature]) for feature in features])
-        self.SCMClassifier.fit(features, DATASET.get("Labels").value[usedIndices].astype(int))
+        self.SCMClassifier.fit(features, labels[usedIndices].astype(int))
 
     def generateInteractions(self, monoViewDecisions):
         if type(self.order) == type(None):

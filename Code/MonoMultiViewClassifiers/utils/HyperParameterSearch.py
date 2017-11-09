@@ -68,7 +68,7 @@ def randomizedSearch(dataset, labels, classifierPackage, classifierName, metrics
         classifier.setParams(bestSettings)
     # TODO : This must be corrected
     else:
-        bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, viewsIndices, classificationKWARGS, learningIndices,
+        bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, labels, viewsIndices, classificationKWARGS, learningIndices,
                                                           randomState, metric=metric, nIter=nIter)
         classificationKWARGS["classifiersConfigs"] = bestConfigs
         classifier = classifierClass(randomState, NB_CORES=nbCores, **classificationKWARGS)

@@ -27,25 +27,28 @@ def printMetricScore(metricScores, metrics):
     return metricScoreString
 
 
-def getTotalMetricScores(metric, trainLabels, testLabels, DATASET, validationIndices, learningIndices):
-    labels = DATASET.get("Labels").value
+def getTotalMetricScores(metric, trainLabels, testLabels, validationIndices, learningIndices, labels):
     metricModule = getattr(Metrics, metric[0])
     if metric[1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
         metricKWARGS = {}
-
-    trainScore = metricModule.score(labels[learningIndices], trainLabels, **metricKWARGS)
+    try:
+        trainScore = metricModule.score(labels[learningIndices], trainLabels, **metricKWARGS)
+    except:
+        print(labels[learningIndices])
+        print(trainLabels)
+        import pdb;pdb.set_trace()
     testScore = metricModule.score(labels[validationIndices], testLabels, **metricKWARGS)
     return [trainScore, testScore]
 
 
 def getMetricsScores(metrics, trainLabels, testLabels,
-                     DATASET, validationIndices, learningIndices):
+                     validationIndices, learningIndices, labels):
     metricsScores = {}
     for metric in metrics:
         metricsScores[metric[0]] = getTotalMetricScores(metric, trainLabels, testLabels,
-                                                        DATASET, validationIndices, learningIndices)
+                                                        validationIndices, learningIndices, labels)
     return metricsScores
 
 
@@ -55,8 +58,8 @@ def execute(classifier, trainLabels,
             LABELS_DICTIONARY, views, nbCores, times,
             name, KFolds,
             hyperParamSearch, nIter, metrics,
-            viewsIndices, randomState):
-    CLASS_LABELS = DATASET.get("Labels").value
+            viewsIndices, randomState, labels):
+    CLASS_LABELS = labels
 
     fusionType = classificationKWARGS["fusionType"]
     monoviewClassifiersNames = classificationKWARGS["classifiersNames"]
@@ -85,7 +88,7 @@ def execute(classifier, trainLabels,
     if fusionType == "LateFusion":
         stringAnalysis += LateFusion.getScores(classifier)
     metricsScores = getMetricsScores(metrics, trainLabels, testLabels,
-                                     DATASET, validationIndices, learningIndices)
+                                     validationIndices, learningIndices, labels)
     stringAnalysis += printMetricScore(metricsScores, metrics)
 
     imagesAnalysis = {}

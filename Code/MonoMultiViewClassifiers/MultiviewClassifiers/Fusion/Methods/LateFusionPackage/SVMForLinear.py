@@ -77,7 +77,7 @@ class SVMForLinear(LateFusionClassifier):
                                            **self.monoviewClassifiersConfigs[index]))
         else:
             self.monoviewClassifiers = self.monoviewClassifiersConfigs
-        self.SVMForLinearFusionFit(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
+        self.SVMForLinearFusionFit(DATASET, labels, usedIndices=trainIndices, viewsIndices=viewsIndices)
 
     def setParams(self, paramsSet):
         pass
@@ -95,7 +95,7 @@ class SVMForLinear(LateFusionClassifier):
         predictedLabels = self.SVMClassifier.predict(monoviewDecisions)
         return predictedLabels
 
-    def SVMForLinearFusionFit(self, DATASET, usedIndices=None, viewsIndices=None):
+    def SVMForLinearFusionFit(self, DATASET, labels, usedIndices=None, viewsIndices=None):
         if type(viewsIndices) == type(None):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         nbView = len(viewsIndices)
@@ -105,7 +105,7 @@ class SVMForLinear(LateFusionClassifier):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
                 getV(DATASET, viewIndex, usedIndices))
 
-        self.SVMClassifier.fit(monoViewDecisions, DATASET.get("Labels").value[usedIndices])
+        self.SVMClassifier.fit(monoViewDecisions, labels[usedIndices])
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
         configString = "with SVM for linear \n\t-With monoview classifiers : "

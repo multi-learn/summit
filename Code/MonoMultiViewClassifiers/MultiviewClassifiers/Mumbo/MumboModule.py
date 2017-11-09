@@ -122,7 +122,7 @@ def trainWeakClassifier_hdf5(classifier, classifierName, monoviewDataset, CLASS_
     return classifier, classes, isBad, averageScore
 
 
-def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices, randomState, metric=None, nIter=None):
+def gridSearch_hdf5(DATASET, labels, viewIndices, classificationKWARGS, learningIndices, randomState, metric=None, nIter=None):
     classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
@@ -131,7 +131,7 @@ def gridSearch_hdf5(DATASET, viewIndices, classificationKWARGS, learningIndices,
         classifierModule = getattr(Classifiers, classifierName)  # Permet d'appeler une fonction avec une string
         classifierGridSearch = getattr(classifierModule, "hyperParamSearch")
         bestSettings.append(classifierGridSearch(getV(DATASET, viewIndices[classifierIndex], learningIndices),
-                                                 DATASET.get("Labels").value[learningIndices], randomState,
+                                                 labels[learningIndices], randomState,
                                                  metric=metric))
         logging.debug("\tDone:\t Gridsearch for " + classifierName)
     if None in bestSettings:
@@ -213,11 +213,10 @@ class MumboClass:
                 trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
             if type(viewsIndices) == type(None):
                 viewsIndices = range(DATASET.get("Metadata").attrs["nbView"])
-            NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+            NB_CLASS = len(set(labels[trainIndices]))
             NB_VIEW = len(viewsIndices)
             trainLength = len(trainIndices)
             LABELS = labels[trainIndices]
-            print(LABELS)
             self.initDataDependant(trainLength, NB_VIEW, NB_CLASS, LABELS)
             # Learning
             isStabilized = False
@@ -232,7 +231,7 @@ class MumboClass:
                     pass
 
                 logging.debug('\t\tStart:\t Iteration ' + str(self.iterIndex + 1))
-                classifiers, predictedLabels, areBad = self.trainWeakClassifiers_hdf5(DATASET, trainIndices, NB_CLASS,
+                classifiers, predictedLabels, areBad = self.trainWeakClassifiers_hdf5(DATASET, labels, trainIndices, NB_CLASS,
                                                                                       trainLength, viewsIndices, metric)
                 if areBad.all():
                     logging.warning("\t\tWARNING:\tAll bad for iteration " + str(self.iterIndex))
@@ -262,13 +261,13 @@ class MumboClass:
                 self.updateGeneralFs(trainLength, NB_CLASS, bestFakeView)
                 self.updateGeneralCostMatrix(trainLength, NB_CLASS, LABELS)
                 predictedLabels = self.predict_hdf5(DATASET, usedIndices=trainIndices, viewsIndices=viewsIndices)
-                accuracy = accuracy_score(DATASET.get("Labels").value[trainIndices], predictedLabels)
+                accuracy = accuracy_score(labels[trainIndices], predictedLabels)
                 self.iterAccuracies[self.iterIndex] = accuracy
 
                 self.iterIndex += 1
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
-        NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+        NB_CLASS = 2  # DATASET.get("Metadata").attrs["nbClass"] #change if multiclass
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if viewsIndices is None:
@@ -282,7 +281,7 @@ class MumboClass:
                 predictedLabels = np.zeros(DATASET_LENGTH)
 
                 for labelIndex, exampleIndex in enumerate(usedIndices):
-                    votes = np.zeros(NB_CLASS)
+                    votes = np.zeros(2) #change if multiclass
                     for classifier, alpha, view in zip(self.bestClassifiers, self.alphas, self.bestViews):
                         if view != -1:
                             data = getV(DATASET, int(view), int(exampleIndex))
@@ -295,7 +294,7 @@ class MumboClass:
             return predictedLabels
 
     def predict_proba_hdf5(self, DATASET, usedIndices=None):
-        NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+        NB_CLASS = 2  # DATASET.get("Metadata").attrs["nbClass"] #change if multiclass
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         DATASET_LENGTH = len(usedIndices)
@@ -335,7 +334,7 @@ class MumboClass:
     #         areBad.append(isBad)
     #     return np.array(trainedClassifiers), np.array(labelsMatrix), np.array(areBad)
 
-    def trainWeakClassifiers_hdf5(self, DATASET, trainIndices, NB_CLASS,
+    def trainWeakClassifiers_hdf5(self, DATASET, labels, trainIndices, NB_CLASS,
                                   DATASET_LENGTH, viewIndices, metric):
         NB_VIEW = len(viewIndices)
         trainedClassifiers = []
@@ -353,7 +352,7 @@ class MumboClass:
         trainedClassifiersAndLabels = Parallel(n_jobs=NB_JOBS)(
             delayed(trainWeakClassifier_hdf5)(classifiers[classifierIndex], classifiersNames[classifierIndex],
                                               getV(DATASET, viewIndex, trainIndices),
-                                              DATASET.get("Labels").value[trainIndices],
+                                              labels[trainIndices],
                                               DATASET_LENGTH,
                                               viewIndex, classifiersConfigs[classifierIndex],
                                               DATASET.get("View" + str(viewIndex)).attrs["name"], iterIndex,

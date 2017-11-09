@@ -134,10 +134,14 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
     classificationTime = time.time() - t_start
     logging.info("Info:\t Classification duration " + str(extractionTime) + "s")
 
+
     #TODO: get better cltype
+
     logging.info("Start:\t Result Analysis for " + CL_type)
     times = (extractionTime, classificationTime)
-    if len(set(labels[learningIndices]))>2 or len(set(trainLabels))>2:
+    if set(labels[learningIndices])!=set([0,1]) or (set(trainLabels)!=set([0,1]) and set(trainLabels)!=set([0]) and set(trainLabels)!=set([1])):
+        print(set(labels[learningIndices]))
+        print(set(trainLabels))
         import pdb;pdb.set_trace()
     stringAnalysis, imagesAnalysis, metricsScores = analysisModule.execute(classifier, trainLabels,
                                                                            testLabels, DATASET,
@@ -145,7 +149,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
                                                                            LABELS_DICTIONARY, views, nbCores, times,
                                                                            name, KFolds,
                                                                            hyperParamSearch, nIter, metrics,
-                                                                           viewsIndices, randomState)
+                                                                           viewsIndices, randomState, labels)
     logging.info("Done:\t Result Analysis for " + CL_type)
 
     logging.debug("Start:\t Saving preds")
