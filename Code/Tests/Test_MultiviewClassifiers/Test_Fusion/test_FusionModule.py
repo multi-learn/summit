@@ -8,7 +8,7 @@ class Test_genName(unittest.TestCase):
     def test_late(self):
         self.config = {"fusionType": "LateFusion",
                        "fusionMethod": "chicken_is_heaven",
-                       "classifierNames": ["cheese", "is", "no", "disease"]}
+                       "classifiersNames": ["cheese", "is", "no", "disease"]}
         res = FusionModule.genName(self.config)
         self.assertEqual(res, "Late-chic-chee-is-no-dise")
 

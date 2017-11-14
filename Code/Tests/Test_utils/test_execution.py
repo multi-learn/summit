@@ -119,3 +119,15 @@ class Test_genDirecortiesNames(unittest.TestCase):
         directories = execution.genDirecortiesNames(cls.directory, cls.stats_iter)
         cls.assertEqual(len(directories), 1)
         cls.assertEqual(directories[0], "../chicken_is_heaven/")
+
+class Test_genArgumentDictionaries(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.labelsDictionary = {0:"yes", 1:"No", 2:"Maybe"}
+        cls.direcories = ["Res/iter_1", "Res/iter_2"]
+        cls.multiclassLabels = [np.array([0, 1, -100, 1, 0]),
+                                np.array([1, 0, -100, 1, 0]),
+                                np.array([0, 1, -100, 0, 1])]
+        cls.labelsCombinations = [[0,1], [0,2], [1,2]]
+        cls.indicesMulticlass = [[[[], []], [[], []], [[], []]], [[], [], []]]
