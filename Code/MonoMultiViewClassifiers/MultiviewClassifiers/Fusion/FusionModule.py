@@ -153,7 +153,7 @@ def getCLString(classificationKWARGS):
     """Used to get the classifier name as a string"""
     if classificationKWARGS["fusionType"] == "LateFusion":
         return "Fusion-" + classificationKWARGS["fusionType"] + "-" + classificationKWARGS["fusionMethod"] + "-" + \
-               "-".join(classificationKWARGS["classifiersNames"])
+               "-".join(classificationKWARGS["classifiersNames"][:5])
     elif classificationKWARGS["fusionType"] == "EarlyFusion":
         return "Fusion-" + classificationKWARGS["fusionType"] + "-" + classificationKWARGS["fusionMethod"] + "-" + \
                classificationKWARGS["classifiersNames"]

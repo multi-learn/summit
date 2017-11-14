@@ -377,7 +377,7 @@ def execClassif(arguments):
     metrics = [metric.split(":") for metric in args.CL_metrics]
     if metrics == [[""]]:
         metricsNames = [name for _, name, isPackage
-                        in pkgutil.iter_modules(['./MonoMultiViewClassifiers/Metrics']) if not isPackage and name != "log_loss"]
+                        in pkgutil.iter_modules(['./MonoMultiViewClassifiers/Metrics']) if not isPackage and name not in ["log_loss", "matthews_corrcoef", "roc_auc_score"]]
         metrics = [[metricName] for metricName in metricsNames]
         metrics = arangeMetrics(metrics, args.CL_metric_princ)
     for metricIndex, metric in enumerate(metrics):

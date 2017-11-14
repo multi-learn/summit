@@ -26,7 +26,7 @@ def score(y_true, y_pred, **kwargs):
     try:
         average = kwargs["4"]
     except:
-        if len(set(y_true)) > 2:
+        if len(set(y_true)) > 2 or len(set(y_pred))>2:
             average = "micro"
         else:
             average = "binary"
