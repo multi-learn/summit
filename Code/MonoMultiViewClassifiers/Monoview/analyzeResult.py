@@ -40,7 +40,7 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
     metricScoreString += "\n\t\t- Score on train : " + str(metricScoreTrain)
     metricScoreString += "\n\t\t- Score on test : " + str(metricScoreTest)
     metricScoreString += "\n"
-    return metricScoreString
+    return metricScoreString, [metricScoreTrain, metricScoreTest]
 
 
 def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics, nIter, feat, CL_type, clKWARGS, classLabelsNames,
@@ -57,13 +57,16 @@ def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics, nIter, fea
     classifierConfigString, classifierIntepretString = getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS, classifier, directory)
     stringAnalysis += classifierConfigString
     for metric in metrics:
-        stringAnalysis += getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred)
-        if metric[1] is not None:
-            metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-        else:
-            metricKWARGS = {}
-        metricsScores[metric[0]] = [getattr(Metrics, metric[0]).score(y_train, y_train_pred),
-                                    getattr(Metrics, metric[0]).score(y_test, y_test_pred)]
+        metricString, metricScore = getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred)
+        stringAnalysis += metricString
+        metricsScores[metric[0]] = metricScore
+        # stringAnalysis += getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred)
+        # if metric[1] is not None:
+        #     metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+        # else:
+        #     metricKWARGS = {}
+        # metricsScores[metric[0]] = [getattr(Metrics, metric[0]).score(y_train, y_train_pred),
+        #                             getattr(Metrics, metric[0]).score(y_test, y_test_pred)]
     stringAnalysis += "\n\n Classification took " + str(hms(seconds=int(time)))
     stringAnalysis += "\n\n Classifier Interpretation : \n"
     stringAnalysis+= classifierIntepretString

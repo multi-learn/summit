@@ -24,7 +24,7 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def autolabel(rects, ax, set=1):
+def autolabel(rects, ax, set=1, std=None):
     """Used to print scores on top of the bars"""
     if set == 1:
         text_height = -0.05
@@ -32,11 +32,16 @@ def autolabel(rects, ax, set=1):
     else:
         text_height = -0.07
         weight = "normal"
-    for rect in rects:
+    for rectIndex, rect in enumerate(rects):
         height = rect.get_height()
-        ax.text(rect.get_x() + rect.get_width() / 2., text_height,
-                "%.2f" % height, weight=weight,
-                ha='center', va='bottom', size="small")
+        if std is not None:
+            ax.text(rect.get_x() + rect.get_width() / 2., text_height,
+                    "%.2f" % height + u'\u00B1' + "%.2f" % std[rectIndex], weight=weight,
+                    ha='center', va='bottom', size="x-small")
+        else:
+            ax.text(rect.get_x() + rect.get_width() / 2., text_height,
+                    "%.2f" % height, weight=weight,
+                    ha='center', va='bottom', size="small")
 
 
 def getMetricsScoresBiclass(metrics, monoviewResults, multiviewResults):
@@ -300,8 +305,8 @@ def publishMulticlassExmapleErrors(multiclassResults, directories, databaseName,
         figHeight = max(nbExamples/20, minSize)
         figKW = {"figsize":(figWidth, figHeight)}
         fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-        cmap = mpl.colors.ListedColormap(['black', 'red', 'green'])
-        bounds = [-100.5,-0.5, 0.5, 1.5]
+        cmap = mpl.colors.ListedColormap(['red', 'green'])
+        bounds = [-0.5, 0.5, 1.5]
         norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
         cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm, aspect='auto')
@@ -312,8 +317,8 @@ def publishMulticlassExmapleErrors(multiclassResults, directories, databaseName,
         red_patch = mpatches.Patch(color='red', label='Classifier failed')
         green_patch = mpatches.Patch(color='green', label='Classifier succeded')
         plt.legend(handles=[red_patch, green_patch], bbox_to_anchor=(0,1.02,1,0.2), loc="lower left",mode="expand", borderaxespad=0, ncol=2)
-        cbar = fig.colorbar(cax, ticks=[0, 1])
-        cbar.ax.set_yticklabels(['Unseen', 'Wrong', ' Right'])
+        # cbar = fig.colorbar(cax, ticks=[0, 1])
+        # cbar.ax.set_yticklabels(['Wrong', ' Right'])
         fig.tight_layout()
         fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-" + databaseName +"-error_analysis.png", bbox_inches="tight")
         plt.close()
@@ -400,7 +405,7 @@ def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamp
 
 def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, classifiersDict, dataBaseName, statsIter, minSize=10):
     for labelsCombination, iterResult in iterResults.items():
-        currentDirectory = directory+ labelsDictionary[int(labelsCombination[0])]+"vs"+labelsDictionary[int(labelsCombination[1])]+"/"
+        currentDirectory = directory+ labelsDictionary[int(labelsCombination[0])]+"-vs-"+labelsDictionary[int(labelsCombination[1])]+"/"
         if not os.path.exists(os.path.dirname(currentDirectory+"a")):
             try:
                 os.makedirs(os.path.dirname(currentDirectory+"a"))
@@ -415,7 +420,8 @@ def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, cl
             trainSTDs = np.std(trainScores, axis=1)
             testSTDs = np.std(testScores, axis=1)
             nbResults = len(trainMeans)
-            names = classifiersDict.values()
+            reversedClassifiersDict = dict((value, key) for key, value in classifiersDict.items())
+            names = [reversedClassifiersDict[i] for i in range(len(classifiersDict))]
             size=nbResults
             if nbResults<minSize:
                 size=minSize
@@ -432,8 +438,8 @@ def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, cl
             ax.set_title(metricName + " for each classifier")
             rects = ax.bar(range(nbResults), testMeans, barWidth, color="r", yerr=testSTDs)
             rect2 = ax.bar(np.arange(nbResults) + barWidth, trainMeans, barWidth, color="0.7", yerr=trainSTDs)
-            autolabel(rects, ax, set=1)
-            autolabel(rect2, ax, set=2)
+            autolabel(rects, ax, set=1, std=testSTDs)
+            autolabel(rect2, ax, set=2, std=trainSTDs)
             ax.set_ylim(-0.1, 1.1)
             ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
             ax.set_xticks(np.arange(nbResults) + barWidth)
@@ -441,35 +447,50 @@ def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, cl
             f.tight_layout()
             f.savefig(currentDirectory + time.strftime("%Y%m%d-%H%M%S") + "-" + dataBaseName + "-Mean_on_"
                       + str(statsIter) + "_iter-" + metricName + ".png")
+            plt.close()
+
+
+def iterCmap(statsIter):
+    cmapList = ["red", "0.0"]
+    for i in range(statsIter):
+        cmapList.append(str((i+1)/statsIter))
+    cmap = mpl.colors.ListedColormap(cmapList)
+    bounds = [-100*statsIter-0.5, -0.5]
+    for i in range(statsIter):
+        bounds.append(i+0.5)
+    bounds.append(statsIter+0.5)
+    norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+    return cmap, norm
 
 
 def publishIterBiclassExampleErrors(iterResults, directory, labelsDictionary, classifiersDict, statsIter, minSize=10):
     for labelsCombination, combiResults in iterResults.items():
-        currentDirectory = directory+ labelsDictionary[int(labelsCombination[0])]+"vs"+labelsDictionary[int(labelsCombination[1])]+"/"
-        classifiersNames = classifiersDict.values()
+        currentDirectory = directory+ labelsDictionary[int(labelsCombination[0])]+"-vs-"+labelsDictionary[int(labelsCombination[1])]+"/"
+        reversedClassifiersDict = dict((value, key) for key, value in classifiersDict.items())
+        classifiersNames = [reversedClassifiersDict[i] for i in range(len(classifiersDict))]
+
         logging.debug("Start:\t Global label analysis figure generation")
         nbExamples = combiResults["errorOnExamples"].shape[1]
         nbClassifiers = combiResults["errorOnExamples"].shape[0]
-        nbIter = 2
-        import pdb;pdb.set_trace()
-
         figWidth = max(nbClassifiers / 2, minSize)
         figHeight = max(nbExamples / 20, minSize)
         figKW = {"figsize": (figWidth, figHeight)}
         fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-        data = combiResults["errorOnExamples"]
-        cax = plt.imshow(-data, interpolation='none', cmap="Greys", aspect='auto')
+        data = np.transpose(combiResults["errorOnExamples"])
+        cmap, norm = iterCmap(statsIter)
+        cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm, aspect='auto')
         plt.title('Errors depending on the classifier')
-        ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)
+        ticks = np.arange(nbClassifiers)
         plt.xticks(ticks, classifiersNames, rotation="vertical")
-        cbar = fig.colorbar(cax, ticks=[0, -statsIter])
-        cbar.ax.set_yticklabels(['Always Wrong', 'Always Right'])
+        cbar = fig.colorbar(cax, ticks=[-100*statsIter/2, 0, statsIter])
+        cbar.ax.set_yticklabels(['Unseen', 'Always Wrong', 'Always Right'])
         fig.tight_layout()
         fig.savefig(currentDirectory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
         plt.close()
         logging.debug("Done:\t Global label analysis figure generation")
+
         logging.debug("Start:\t Global error by example figure generation")
-        errorOnExamples = -1 * np.sum(data, axis=1) / nbIter + (nbClassifiers*statsIter)
+        errorOnExamples = -1 * np.sum(data, axis=1) + (nbClassifiers*statsIter)
         np.savetxt(currentDirectory + time.strftime("%Y%m%d-%H%M%S") + "-clf_errors.csv", data, delimiter=",")
         np.savetxt(currentDirectory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
         fig, ax = plt.subplots()
@@ -517,22 +538,22 @@ def publishIterMulticlassMetricsScores(iterMulticlassResults, classifiersNames, 
         f.tight_layout()
         f.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-" + dataBaseName + "-Mean_on_"
                   + str(statsIter) + "_iter-" + metricName + ".png")
+        plt.close()
 
 
 def publishIterMulticlassExampleErrors(iterMulticlassResults, directory, classifiersNames, statsIter, minSize=10):
+
     logging.debug("Start:\t Global label analysis figure generation")
     nbExamples = iterMulticlassResults["errorOnExamples"].shape[1]
     nbClassifiers = iterMulticlassResults["errorOnExamples"].shape[0]
-    nbIter = 2
-
     figWidth = max(nbClassifiers / 2, minSize)
     figHeight = max(nbExamples / 20, minSize)
     figKW = {"figsize": (figWidth, figHeight)}
     fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-    data = iterMulticlassResults["errorOnExamples"]
+    data = np.transpose(iterMulticlassResults["errorOnExamples"])
     cax = plt.imshow(-data, interpolation='none', cmap="Greys", aspect='auto')
     plt.title('Errors depending on the classifier')
-    ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)
+    ticks = np.arange(nbClassifiers)
     plt.xticks(ticks, classifiersNames, rotation="vertical")
     cbar = fig.colorbar(cax, ticks=[0, -statsIter])
     cbar.ax.set_yticklabels(['Always Wrong', 'Always Right'])
@@ -540,8 +561,9 @@ def publishIterMulticlassExampleErrors(iterMulticlassResults, directory, classif
     fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
     plt.close()
     logging.debug("Done:\t Global label analysis figure generation")
+
     logging.debug("Start:\t Global error by example figure generation")
-    errorOnExamples = -1 * np.sum(data, axis=1) / nbIter + (nbClassifiers*statsIter)
+    errorOnExamples = -1 * np.sum(data, axis=1) + (nbClassifiers*statsIter)
     np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-clf_errors.csv", data, delimiter=",")
     np.savetxt(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
     fig, ax = plt.subplots()
@@ -589,20 +611,20 @@ def analyzebiclassIter(biclassResults, metrics, statsIter, directory, labelsDict
     publishIterBiclassExampleErrors(iterBiclassResults, directory, labelsDictionary, classifiersDict, statsIter)
 
 
-def analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics, dataBaseName):
+def analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics, dataBaseName, nbExamples):
     """Used to mean the multiclass results on the iterations executed with different random states"""
 
     logging.debug("Start:\t Getting mean results for multiclass classification")
     iterMulticlassResults = {}
     nbClassifiers = len(multiclassResults[0])
-    iterMulticlassResults["errorOnExamples"] = np.zeros((nbClassifiers,len(multiclassResults[0].values()[0]["exampleErrors"])),
-                                                        dtype=int)
+    iterMulticlassResults["errorOnExamples"] = np.zeros((nbClassifiers,nbExamples),dtype=int)
     iterMulticlassResults["metricsScores"] = {}
     classifiersNames = []
     for iterIndex, multiclassResult in enumerate(multiclassResults):
         for classifierName, classifierResults in multiclassResult.items():
-            classifiersNames.append(classifierName)
-            classifierIndex = len(classifiersNames)-1
+            if classifierName not in classifiersNames:
+                classifiersNames.append(classifierName)
+            classifierIndex = classifiersNames.index(classifierName)
             for metric in metrics:
                 if metric[0] not in iterMulticlassResults["metricsScores"]:
                     iterMulticlassResults["metricsScores"][metric[0]] = {"trainScores":
@@ -611,7 +633,7 @@ def analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics, data
                                                                              np.zeros((nbClassifiers, statsIter))}
                 iterMulticlassResults["metricsScores"][metric[0]]["trainScores"][classifierIndex, iterIndex] = classifierResults["metricsScores"][metric[0]][0]
                 iterMulticlassResults["metricsScores"][metric[0]]["testScores"][classifierIndex, iterIndex] = classifierResults["metricsScores"][metric[0]][1]
-            iterMulticlassResults["errorOnExamples"][classifierIndex, :] += classifierResults["exampleErrors"]
+            iterMulticlassResults["errorOnExamples"][classifierIndex, :] += classifierResults["errorOnExample"]
     logging.debug("Start:\t Getting mean results for multiclass classification")
 
     publishIterMulticlassMetricsScores(iterMulticlassResults, classifiersNames, dataBaseName, directory, statsIter)
@@ -627,7 +649,7 @@ def getResults(results, statsIter, nbMulticlass, benchmarkArgumentDictionaries, 
             multiclassResults = analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamples, nbLabels, multiclassLabels,
                                                   metrics, classificationIndices, directories)
             analyzebiclassIter(biclassResults, metrics, statsIter, directory, labelsDictionary, dataBaseName, nbExamples)
-            analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics, dataBaseName)
+            analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics, dataBaseName, nbExamples)
         else:
             biclassResults = analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics)
             analyzebiclassIter(biclassResults, metrics, statsIter, directory, labelsDictionary, dataBaseName)
@@ -696,6 +718,8 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory, minSize=
         f.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-" + name + "-" + metric[0] + ".png")
         plt.close()
         logging.debug("Done:\t Score graph generation for " + metric[0])
+
+
 
 
 def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):

@@ -152,8 +152,9 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 def getCLString(classificationKWARGS):
     """Used to get the classifier name as a string"""
     if classificationKWARGS["fusionType"] == "LateFusion":
+        reducedClassifiersNames = [classifierName[:4] for classifierName in classificationKWARGS["classifiersNames"]]
         return "Fusion-" + classificationKWARGS["fusionType"] + "-" + classificationKWARGS["fusionMethod"] + "-" + \
-               "-".join(classificationKWARGS["classifiersNames"][:5])
+               "-".join(reducedClassifiersNames)
     elif classificationKWARGS["fusionType"] == "EarlyFusion":
         return "Fusion-" + classificationKWARGS["fusionType"] + "-" + classificationKWARGS["fusionMethod"] + "-" + \
                classificationKWARGS["classifiersNames"]

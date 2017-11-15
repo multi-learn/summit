@@ -15,11 +15,11 @@ def score(y_true, y_pred, **kwargs):
     try:
         average = kwargs["1"]
     except:
-        if len(set(y_true)) > 2 or len(set(y_pred))>2:
+        if set(y_true) != {0,1} or (set(y_pred) != {0,1} and set(y_pred) != {0} and set(y_pred) != {1}):
             average = "micro"
         else:
             average = None
-    if len(set(y_true)) > 2 or len(set(y_pred))>2:
+    if set(y_true) != {0,1} or (set(y_pred) != {0,1} and set(y_pred) != {0} and set(y_pred) != {1}):
         mlb = MultiLabelBinarizer()
         y_true = mlb.fit_transform([(label) for label in y_true])
         y_pred = mlb.fit_transform([(label) for label in y_pred])

@@ -305,7 +305,7 @@ def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, lab
                                                                  1:labelsDictionary[labelsCombination[1]]},
                                            "directory": directories[iterIndex]+
                                                         labelsDictionary[labelsCombination[0]]+
-                                                        "vs"+
+                                                        "-vs-"+
                                                         labelsDictionary[labelsCombination[1]]+"/",
                                            "classificationIndices": [indicesMulticlass[combinationIndex][0][iterIndex],
                                                                      indicesMulticlass[combinationIndex][1][iterIndex],
