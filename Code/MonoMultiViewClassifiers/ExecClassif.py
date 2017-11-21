@@ -18,7 +18,7 @@ from . import MultiviewClassifiers
 from .Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from .Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 from .utils import GetMultiviewDb as DB
-from .ResultAnalysis import resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes, getResults
+from .ResultAnalysis import getResults  #resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes,
 from .utils import execution, Dataset, Multiclass
 from . import Metrics
 

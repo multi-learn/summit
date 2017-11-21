@@ -52,7 +52,10 @@ def initTrainTest(X, Y, classificationIndices):
     trainIndices, testIndices, testIndicesMulticlass = classificationIndices
     X_train = extractSubset(X, trainIndices)
     X_test = extractSubset(X, testIndices)
-    X_test_multiclass = extractSubset(X, testIndicesMulticlass)
+    if testIndicesMulticlass != []:
+        X_test_multiclass = extractSubset(X, testIndicesMulticlass)
+    else:
+        X_test_multiclass = []
     y_train = Y[trainIndices]
     y_test = Y[testIndices]
     return X_train, y_train, X_test, y_test, X_test_multiclass

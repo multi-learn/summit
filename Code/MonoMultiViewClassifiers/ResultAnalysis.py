@@ -459,7 +459,7 @@ def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, cl
 def iterCmap(statsIter):
     cmapList = ["red", "0.0"]
     for i in range(statsIter):
-        cmapList.append(str((i+1)/statsIter))
+        cmapList.append(str(float((i+1))/statsIter))
     cmap = mpl.colors.ListedColormap(cmapList)
     bounds = [-100*statsIter-0.5, -0.5]
     for i in range(statsIter):
@@ -658,14 +658,14 @@ def getResults(results, statsIter, nbMulticlass, benchmarkArgumentDictionaries, 
             analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics, dataBaseName, nbExamples)
         else:
             biclassResults = analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics)
-            analyzebiclassIter(biclassResults, metrics, statsIter, directory, labelsDictionary, dataBaseName)
+            analyzebiclassIter(biclassResults, metrics, statsIter, directory, labelsDictionary, dataBaseName, nbExamples)
     else:
         if nbMulticlass>1:
             biclassResults = analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics)
             multiclassResults = analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamples, nbLabels, multiclassLabels,
                                                   metrics, classificationIndices, directories)
         else:
-            analyzeBiclass(results)
+            biclassResults = analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics)
 
 
 

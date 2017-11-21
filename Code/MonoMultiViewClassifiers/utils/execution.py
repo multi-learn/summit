@@ -264,7 +264,7 @@ def genKFolds(statsIter, nbFolds, statsIterRandomStates):
             foldsList.append(sklearn.model_selection.StratifiedKFold(n_splits=nbFolds, random_state=randomState))
         return foldsList
     else:
-        return sklearn.model_selection.StratifiedKFold(n_splits=nbFolds, random_state=statsIterRandomStates)
+        return [sklearn.model_selection.StratifiedKFold(n_splits=nbFolds, random_state=statsIterRandomStates)]
 
 
 def initViews(DATASET, args):

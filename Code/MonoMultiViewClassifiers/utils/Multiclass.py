@@ -6,7 +6,9 @@ def genMulticlassLabels(labels, multiclassMethod, classificationIndices):
     if multiclassMethod == "oneVersusOne":
         nbLabels = len(set(list(labels)))
         if nbLabels == 2:
-            classificationIndices = [[trainIndices, testIndices, []] for trainIndices, testIndices in classificationIndices]
+            classificationIndices = [[trainIndices for trainIndices, _ in classificationIndices],
+                                     [testIndices for _, testIndices in classificationIndices],
+                                     [[] for _ in classificationIndices]]
             return [labels], [(0,1)], [classificationIndices]
         else:
             combinations = itertools.combinations(np.arange(nbLabels), 2)
