@@ -261,7 +261,7 @@ def filterViews(datasetFile, temp_dataset, views, usedIndices):
             viewName = datasetFile.get("View" + str(viewIndex)).attrs["name"]
             if type(viewName) == bytes:
                 viewName = viewName.decode("utf-8")
-            if viewName.decode("utf-8") == askedViewName:
+            if viewName == askedViewName:
                 copyhdf5Dataset(datasetFile, temp_dataset, "View" + str(viewIndex), "View" + str(newViewIndex), usedIndices)
                 newViewName = temp_dataset.get("View"+str(newViewIndex)).attrs["name"]
                 if type(newViewName) == bytes:
