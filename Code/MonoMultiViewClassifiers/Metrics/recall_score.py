@@ -6,7 +6,7 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def score(y_true, y_pred, **kwargs):
+def score(y_true, y_pred, multiclass=False, **kwargs):
     try:
         sample_weight = kwargs["0"]
     except:
@@ -22,7 +22,7 @@ def score(y_true, y_pred, **kwargs):
     try:
         average = kwargs["3"]
     except:
-        if set(y_true) != {0,1} or (set(y_pred) != {0,1} and set(y_pred) != {0} and set(y_pred) != {1}):
+        if multiclass:
             average = "micro"
         else:
             average = "binary"

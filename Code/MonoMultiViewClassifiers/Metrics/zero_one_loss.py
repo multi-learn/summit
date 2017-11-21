@@ -6,7 +6,7 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def score(y_true, y_pred, **kwargs):
+def score(y_true, y_pred, multiclass=False, **kwargs):
     try:
         sample_weight = kwargs["0"]
     except:

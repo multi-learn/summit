@@ -6,7 +6,7 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def score(y_true, y_pred, **kwargs):
+def score(y_true, y_pred, multiclass=False, **kwargs):
     score = metric(y_true, y_pred)
     return score
 

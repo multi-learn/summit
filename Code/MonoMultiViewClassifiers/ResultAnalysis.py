@@ -218,9 +218,10 @@ def genMetricsScoresMulticlass(results, trueLabels, metrics, argumentsDictionari
             for classifierName, resultDictionary in iterResults.items():
                 if not "metricsScores" in resultDictionary:
                     results[iterIndex][classifierName]["metricsScores"]={}
-                trainScore = metricModule.score(trueLabels[trainIndices],resultDictionary["labels"][trainIndices])
+                trainScore = metricModule.score(trueLabels[trainIndices],resultDictionary["labels"][trainIndices], multiclass=True)
                 testScore = metricModule.score(trueLabels[multiclassTestIndices],
-                                               resultDictionary["labels"][multiclassTestIndices])
+                                               resultDictionary["labels"][multiclassTestIndices],
+                                               multiclass=True)
                 results[iterIndex][classifierName]["metricsScores"][metric[0]] = [trainScore, testScore]
 
 
@@ -720,8 +721,6 @@ def resultAnalysis(benchmark, results, name, times, metrics, directory, minSize=
         logging.debug("Done:\t Score graph generation for " + metric[0])
 
 
-
-
 def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):
     """Used to generate a graph showing errors on each example depending on classifier"""
     logging.debug("Start:\t Label analysis figure generation")
@@ -805,7 +804,6 @@ def analyzeIterLabels(labelsAnalysisList, directory, classifiersNames, minSize=1
     fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.png")
     plt.close()
     logging.debug("Done:\t Global error by example figure generation")
-
 
 
 def genFig(iterResults, metric, nbResults, names, nbMono, minSize=10):

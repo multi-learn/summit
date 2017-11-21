@@ -11,7 +11,7 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def score(y_true, y_pred, **kwargs):
+def score(y_true, y_pred, multiclass=False, **kwargs):
     """Arguments:
     y_true: real labels
     y_pred predicted labels
