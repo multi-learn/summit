@@ -258,7 +258,8 @@ def filterViews(datasetFile, temp_dataset, views, usedIndices):
     newViewIndex = 0
     for askedViewName in views:
         for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
-            if datasetFile.get("View" + str(viewIndex)).attrs["name"] == askedViewName:
+            viewName = datasetFile.get("View" + str(viewIndex)).attrs["name"]
+            if viewName.decode("utf-8") == askedViewName:
                 copyhdf5Dataset(datasetFile, temp_dataset, "View" + str(viewIndex), "View" + str(newViewIndex), usedIndices)
                 newViewIndex += 1
             else:
