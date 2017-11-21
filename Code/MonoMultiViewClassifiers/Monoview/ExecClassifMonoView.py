@@ -29,12 +29,14 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
     except KeyError:
         kwargs = args
     t_start = time.time()
-    feat = X.attrs["name"]
+    if type(X.attrs["name"]) == bytes:
+        feat = X.attrs["name"].decode("utf-8")
+    else:
+        feat = X.attrs["name"]
     CL_type = kwargs["CL_type"]
     X = getValue(X)
     learningRate = float(len(classificationIndices[0])) / (len(classificationIndices[0]) + len(classificationIndices[1]))
     labelsString = "-".join(labelsNames)
-    timestr = time.strftime("%Y%m%d-%H%M%S")
     CL_type_string = CL_type
 
     outputFileName = directory + CL_type_string + "/" + feat + "/" + "Results-" + CL_type_string + "-" + labelsString + \

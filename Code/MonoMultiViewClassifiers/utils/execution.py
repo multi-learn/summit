@@ -38,6 +38,8 @@ def parseTheArgs(arguments):
                                type=int, default=2)
     groupStandard.add_argument('--machine', metavar='STRING', action='store',
                                help='Type of machine on which the script runs', default="PC")
+    groupStandard.add_argument('-full', action='store_true', help='Use option to use full dataset and no labels or view filtering')
+
 
     groupClass = parser.add_argument_group('Classification arguments')
     groupClass.add_argument('--CL_multiclassMethod', metavar='STRING', action='store',

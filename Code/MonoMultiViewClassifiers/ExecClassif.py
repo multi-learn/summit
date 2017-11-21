@@ -356,7 +356,7 @@ def execClassif(arguments):
         getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
 
     DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nbClass,
-                                             args.CL_classes, randomState)
+                                             args.CL_classes, randomState, args.full)
 
     classificationIndices = execution.genSplits(DATASET.get("Labels").value, args.CL_split, statsIterRandomStates)
 

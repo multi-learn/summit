@@ -52,7 +52,7 @@ def makeMeNoisy(viewData, randomState, percentage=15):
     return noisyViewData
 
 
-def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", nbView=3,
+def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", randomState=None, full=True, nbView=3,
                        nbClass=2, datasetLength=347, randomStateInt=None):
     """Used to generate a plausible dataset to test the algorithms"""
     randomStateInt = 42
@@ -257,6 +257,9 @@ def filterLabels(labelsSet, askedLabelsNamesSet, fullLabels, availableLabelsName
 
 def filterViews(datasetFile, temp_dataset, views, usedIndices):
     newViewIndex = 0
+    if views == [""]:
+        for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
+            copyhdf5Dataset(datasetFile, temp_dataset, "View" + str(viewIndex), "View" + str(viewIndex), usedIndices)
     for askedViewName in views:
         for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
             viewName = datasetFile.get("View" + str(viewIndex)).attrs["name"]
@@ -286,32 +289,38 @@ def copyhdf5Dataset(sourceDataFile, destinationDataFile, sourceDatasetName, dest
             newDset.attrs[key] = value
 
 
-def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState):
+def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState, full=False):
     """Used to load a hdf5 database"""
-    askedLabelsNames = [askedLabelName.encode("utf8") for askedLabelName in askedLabelsNames]
-    datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
-    fullLabels = datasetFile.get("Labels").value
-    temp_dataset = h5py.File(pathF+nameDB+"_temp_view_label_select.hdf5", "w")
-    datasetFile.copy("Metadata", temp_dataset)
-    labelsSet = getClasses(fullLabels)
-    availableLabelsNames = list(datasetFile.get("Labels").attrs["names"])
-    askedLabelsNames, askedLabelsNamesSet = fillLabelNames(NB_CLASS, askedLabelsNames,
-                                                           randomState, availableLabelsNames)
+    if full:
+        datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
+        labelsDictionary = dict((labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
+                                enumerate(datasetFile.get("Labels").attrs["names"]))
+        return datasetFile, labelsDictionary
+    else:
+        askedLabelsNames = [askedLabelName.encode("utf8") for askedLabelName in askedLabelsNames]
+        datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
+        fullLabels = datasetFile.get("Labels").value
+        temp_dataset = h5py.File(pathF+nameDB+"_temp_view_label_select.hdf5", "w")
+        datasetFile.copy("Metadata", temp_dataset)
+        labelsSet = getClasses(fullLabels)
+        availableLabelsNames = list(datasetFile.get("Labels").attrs["names"])
+        askedLabelsNames, askedLabelsNamesSet = fillLabelNames(NB_CLASS, askedLabelsNames,
+                                                               randomState, availableLabelsNames)
 
-    newLabels, newLabelsNames, usedIndices = filterLabels(labelsSet, askedLabelsNamesSet, fullLabels,
-                                                          availableLabelsNames, askedLabelsNames)
-    temp_dataset.get("Metadata").attrs["datasetLength"] = len(usedIndices)
-    temp_dataset.get("Metadata").attrs["nbClass"] = NB_CLASS
-    temp_dataset.create_dataset("Labels", data=newLabels)
-    temp_dataset.get("Labels").attrs["names"] = newLabelsNames
-    filterViews(datasetFile, temp_dataset, views, usedIndices)
+        newLabels, newLabelsNames, usedIndices = filterLabels(labelsSet, askedLabelsNamesSet, fullLabels,
+                                                              availableLabelsNames, askedLabelsNames)
+        temp_dataset.get("Metadata").attrs["datasetLength"] = len(usedIndices)
+        temp_dataset.get("Metadata").attrs["nbClass"] = NB_CLASS
+        temp_dataset.create_dataset("Labels", data=newLabels)
+        temp_dataset.get("Labels").attrs["names"] = newLabelsNames
+        filterViews(datasetFile, temp_dataset, views, usedIndices)
 
-    labelsDictionary = dict((labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
-                            enumerate(temp_dataset.get("Labels").attrs["names"]))
-    return temp_dataset, labelsDictionary
+        labelsDictionary = dict((labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
+                                enumerate(temp_dataset.get("Labels").attrs["names"]))
+        return temp_dataset, labelsDictionary
 
 
-def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState, delimiter=","):
+def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState, full=False, delimiter=","):
     # TODO : Update this one
     labelsNames = np.genfromtxt(pathF + nameDB + "-labels-names.csv", dtype='str', delimiter=delimiter)
     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")
@@ -333,7 +342,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomStat
     metaDataGrp.attrs["nbClass"] = len(labelsNames)
     metaDataGrp.attrs["datasetLength"] = len(labels)
     datasetFile.close()
-    datasetFile, labelsDictionary = getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState)
+    datasetFile, labelsDictionary = getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState, full)
 
     return datasetFile, labelsDictionary
 

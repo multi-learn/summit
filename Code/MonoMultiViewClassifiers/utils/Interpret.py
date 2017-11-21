@@ -16,7 +16,7 @@ def getFeatureImportance(classifier, directory, interpretString=""):
     featureImportancesSorted = featureImportances[sortedArgs][:50]
     featureIndicesSorted = sortedArgs[:50]
     fig, ax = plt.subplots()
-    x = np.arange(50)
+    x = np.arange(len(featureIndicesSorted))
     formatter = FuncFormatter(percent)
     ax.yaxis.set_major_formatter(formatter)
     plt.bar(x, featureImportancesSorted)
