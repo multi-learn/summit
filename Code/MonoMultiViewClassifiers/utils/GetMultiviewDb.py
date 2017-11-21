@@ -53,8 +53,9 @@ def makeMeNoisy(viewData, randomState, percentage=15):
 
 
 def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", nbView=3,
-                       nbClass=2, datasetLength=347, randomStateInt=42):
+                       nbClass=2, datasetLength=347, randomStateInt=None):
     """Used to generate a plausible dataset to test the algorithms"""
+    randomStateInt = 42
     randomState = np.random.RandomState(randomStateInt)
     nbFeatures = 250
     if not os.path.exists(os.path.dirname(pathF + "Plausible.hdf5")):
