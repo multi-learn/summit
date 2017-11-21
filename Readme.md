@@ -49,7 +49,7 @@ If no path is specified, simulated hdf5 datasets are stored in `multiview-machin
 
 ### Discovering the arguments
 
-In order to see all the arguments of this script and their decription and default values run :
+In order to see all the arguments of this script, their description and default values run :
 ```
 cd multiview-machine-learning-omis/Code
 python Exec.py -h
@@ -65,7 +65,7 @@ In that directory:
 * If the script is run using more than one statistic iteration (one for each seed), it will create one directory for each iteration and store the statistical analysis in the current directory 
 * If it is run with one iteration, the iteration results will be stored in the current directory
 
-The results for each iteration are graphs recaping the classifiers scores and the classifiers config and results are stored in a directory of their own.
+The results for each iteration are graphs plotting the classifiers scores and the classifiers config and results are stored in a directory of their own.
 To explore the results run the `Exec` script and go in `multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/Plausible/`
 
 ### Dataset compatibility
@@ -92,6 +92,19 @@ One group for the additional data called `Metadata` containing at least 3 attrib
 * `attrs["nbView"]` an int counting the total number of views in the dataset
 * `attrs["nbClass"]` an int counting the total number of different labels in the dataset
 * `attrs["datasetLength"]` an int counting the total number of examples in the dataset
+
+
+### Running on your dataset 
+
+In order to run the script on your dataset you need to use : 
+```
+cd multiview-machine-learning-omis/Code
+python Exec.py -log --name <your_dataset_name> --type <.cvs_or_.hdf5> --pathF <path_to_your_dataset>
+```
+This will run a full benchmark on your dataset using all available views and labels.
+ 
+You may configure the `--CL_statsiter`, `--CL_split`, `--CL_nbFolds`, `--CL_GS_iter` arguments to start a meaningful benchmark
+ 
 
 ## Running the tests
 
