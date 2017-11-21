@@ -65,12 +65,12 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", nbView
                 raise
     datasetFile = h5py.File(pathF + "/Plausible.hdf5", "w")
     if NB_CLASS == 2:
-        CLASS_LABELS = np.array([0 for _ in range(datasetLength/2)] + [1 for _ in range(datasetLength-datasetLength/2)])
+        CLASS_LABELS = np.array([0 for _ in range(int(datasetLength/2))] + [1 for _ in range(datasetLength-int(datasetLength/2))])
         for viewIndex in range(nbView):
-            viewData = np.array([np.zeros(nbFeatures) for _ in range(datasetLength/2)] +
-                                [np.ones(nbFeatures)for _ in range(datasetLength-datasetLength/2)])
-            fakeOneIndices = randomState.randint(0, datasetLength/2, int(datasetLength / 12))
-            fakeZeroIndices = randomState.randint(datasetLength/2, datasetLength-datasetLength/2, int(datasetLength / 12))
+            viewData = np.array([np.zeros(nbFeatures) for _ in range(int(datasetLength/2))] +
+                                [np.ones(nbFeatures)for _ in range(datasetLength-int(datasetLength/2))])
+            fakeOneIndices = randomState.randint(0, int(datasetLength/2), int(datasetLength / 12))
+            fakeZeroIndices = randomState.randint(int(datasetLength/2), datasetLength, int(datasetLength / 12))
 
             viewData[fakeOneIndices] = np.ones((len(fakeOneIndices), nbFeatures))
             viewData[fakeZeroIndices] = np.zeros((len(fakeZeroIndices), nbFeatures))
@@ -297,7 +297,6 @@ def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomSta
     temp_dataset.create_dataset("Labels", data=newLabels)
     temp_dataset.get("Labels").attrs["names"] = newLabelsNames
     filterViews(datasetFile, temp_dataset, views, usedIndices)
-
 
     labelsDictionary = dict((labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
                             enumerate(temp_dataset.get("Labels").attrs["names"]))
