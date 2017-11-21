@@ -20,7 +20,7 @@ And the following python modules :
 * [joblib](https://pypi.python.org/pypi/joblib) - Used to compute on multiple threads
 * [h5py](www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to spare RAM
 * [pickle](https://docs.python.org/3/library/pickle.html) - Used to store some results
-* [graphviz](https://pypi.python.org/pypi/graphviz) - Used for decision tree interpretation
+* ([graphviz](https://pypi.python.org/pypi/graphviz) - Used for decision tree interpretation)
 
 
 They are all tested in  `multiview-machine-mearning-omis/Code/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `Exec` script
@@ -38,7 +38,13 @@ python Exec.py -log
 ```
 Results will be stored in `multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/`
 
-If no path is specified, hdf5 datasets are stored in `multiview-machine-learning-omis/Data`
+If you want to run a multiclass (one versus one) benchmark on simulated data, use : 
+```
+cd multiview-machine-learning-omis/Code
+python Exec.py -log --CL_nbClass 3
+```
+
+If no path is specified, simulated hdf5 datasets are stored in `multiview-machine-learning-omis/Data`
 
 
 ### Discovering the arguments
@@ -62,6 +68,30 @@ In that directory:
 The results for each iteration are graphs recaping the classifiers scores and the classifiers config and results are stored in a directory of their own.
 To explore the results run the `Exec` script and go in `multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/Plausible/`
 
+### Dataset compatibility
+
+In order to start a benchmark on your dataset, you need to format it so the script can use it. 
+You can have either a directory containing `.csv` files or a HDF5 file. 
+
+##### If you have multiple `.csv` files, you must organize them as : 
+* `top_directory/database_name-labels.csv`
+* `top_directory/database_name-labels-names.csv`
+* `top_directory/Views/view_name.csv` or `top_directory/Views/view_name-s.csv` if the view is sparse
+
+With `top_directory` being the last directory in the `pathF` argument
+ 
+##### If you already have an HDF5 dataset file it must be formatted as : 
+One dataset for each view called `ViewX` with `X` being the view index with 2 attribures : 
+* `attrs["name"]` a string for the name of the view
+* `attrs["name"]` a boolean specifying whether the view is sparse or not
+
+One dataset for the labels called `Labels` with one attribute : 
+* `attrs["names"]` a list of strings encoded in utf-8 namig the labels in the right order
+
+One group for the additional data called `Metadata` containing at least 3 attributes : 
+* `attrs["nbView"]` an int counting the total number of views in the dataset
+* `attrs["nbClass"]` an int counting the total number of different labels in the dataset
+* `attrs["datasetLength"]` an int counting the total number of examples in the dataset
 
 ## Running the tests
 
