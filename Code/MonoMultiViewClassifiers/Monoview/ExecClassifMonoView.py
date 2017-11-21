@@ -100,10 +100,10 @@ def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices, 
                            path, randomState, labels, hyperParamSearch="randomizedSearch",
                            metrics=[["accuracy_score", None]], nIter=30, **args):
     DATASET = h5py.File(path + name + str(datasetFileIndex) + ".hdf5", "r")
-    kwargs = args["args"]
-    views = [DATASET.get("View" + str(viewIndex)).attrs["name"] for viewIndex in
-             range(DATASET.get("Metadata").attrs["nbView"])]
-    neededViewIndex = views.index(kwargs["feat"])
+    # kwargs = args["args"]
+    # views = [DATASET.get("View" + str(viewIndex)).attrs["name"] for viewIndex in
+    #          range(DATASET.get("Metadata").attrs["nbView"])]
+    neededViewIndex = args["viewIndex"]
     X = DATASET.get("View" + str(neededViewIndex))
     Y = labels
     return ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFolds, 1, databaseType, path,
