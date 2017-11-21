@@ -223,10 +223,7 @@ def genMetricsScoresMulticlass(results, trueLabels, metrics, argumentsDictionari
                                                resultDictionary["labels"][multiclassTestIndices],
                                                multiclass=True)
                 results[iterIndex][classifierName]["metricsScores"][metric[0]] = [trainScore, testScore]
-
-
     logging.debug("Done:\t Getting multiclass scores for each metric")
-
     return results
 
 
@@ -318,8 +315,6 @@ def publishMulticlassExmapleErrors(multiclassResults, directories, databaseName,
         red_patch = mpatches.Patch(color='red', label='Classifier failed')
         green_patch = mpatches.Patch(color='green', label='Classifier succeded')
         plt.legend(handles=[red_patch, green_patch], bbox_to_anchor=(0,1.02,1,0.2), loc="lower left",mode="expand", borderaxespad=0, ncol=2)
-        # cbar = fig.colorbar(cax, ticks=[0, 1])
-        # cbar.ax.set_yticklabels(['Wrong', ' Right'])
         fig.tight_layout()
         fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-" + databaseName +"-error_analysis.png", bbox_inches="tight")
         plt.close()
