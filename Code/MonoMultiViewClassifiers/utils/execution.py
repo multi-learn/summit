@@ -274,11 +274,19 @@ def initViews(DATASET, args):
     NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
     if args.views != [""]:
         allowedViews = args.views
-        allViews = [str(DATASET.get("View" + str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
-        views = [str(DATASET.get("View" + str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW) if
-                 str(DATASET.get("View" + str(viewIndex)).attrs["name"]) in allowedViews]
-        viewsIndices = [viewIndex for viewIndex in range(NB_VIEW) if
-                        str(DATASET.get("View" + str(viewIndex)).attrs["name"]) in allowedViews]
+        allViews = [str(DATASET.get("View" + str(viewIndex)).attrs["name"])
+                    if type(DATASET.get("View" + str(viewIndex)).attrs["name"])!=bytes
+                    else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
+                    for viewIndex in range(NB_VIEW)]
+        views = []
+        viewsIndices = []
+        for viewIndex in range(NB_VIEW):
+            viewName = DATASET.get("View" + str(viewIndex)).attrs["name"]
+            if type(viewName) == bytes:
+                viewName = viewName.decode("utf-8")
+            if viewName in allowedViews:
+                views.append(viewName)
+                viewsIndices.append(viewsIndices)
         return views, viewsIndices, allViews
     else:
         views = [str(DATASET.get("View" + str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]

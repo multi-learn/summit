@@ -72,7 +72,10 @@ def error(testLabels, computedLabels):
 
 def getDBConfig(DATASET, LEARNING_RATE, nbFolds, databaseName, validationIndices, LABELS_DICTIONARY):
     nbView = DATASET.get("Metadata").attrs["nbView"]
-    viewNames = [DATASET.get("View" + str(viewIndex)).attrs["name"] for viewIndex in range(nbView)]
+    viewNames = [DATASET.get("View" + str(viewIndex)).attrs["name"]
+                 if type(DATASET.get("View" + str(viewIndex)).attrs["name"]) != bytes
+                 else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
+                 for viewIndex in range(nbView)]
     viewShapes = [getShape(DATASET, viewIndex) for viewIndex in range(nbView)]
     DBString = "Dataset info :\n\t-Dataset name : " + databaseName
     DBString += "\n\t-Labels : " + ', '.join(LABELS_DICTIONARY.values())

@@ -187,87 +187,88 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
 
 if __name__ == '__main__':
+    import argparse
     pass
-    # parser = argparse.ArgumentParser(
-    #     description='This methods permits to execute a multiclass classification with one single view. At this point the used classifier is a RandomForest. The GridSearch permits to vary the number of trees and CrossValidation with k-folds. The result will be a plot of the score per class and a CSV with the best classifier found by the GridSearch.',
-    #     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    #
-    # groupStandard = parser.add_argument_group('Standard arguments')
-    # groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
-    # groupStandard.add_argument('--type', metavar='STRING', action='store', help='Type of Dataset', default=".hdf5")
-    # groupStandard.add_argument('--name', metavar='STRING', action='store',
-    #                            help='Name of Database (default: %(default)s)', default='DB')
-    # groupStandard.add_argument('--feat', metavar='STRING', action='store',
-    #                            help='Name of Feature for Classification (default: %(default)s)', default='RGB')
-    # groupStandard.add_argument('--pathF', metavar='STRING', action='store',
-    #                            help='Path to the views (default: %(default)s)', default='Results-FeatExtr/')
-    # groupStandard.add_argument('--fileCL', metavar='STRING', action='store',
-    #                            help='Name of classLabels CSV-file  (default: %(default)s)', default='classLabels.csv')
-    # groupStandard.add_argument('--fileCLD', metavar='STRING', action='store',
-    #                            help='Name of classLabels-Description CSV-file  (default: %(default)s)',
-    #                            default='classLabels-Description.csv')
-    # groupStandard.add_argument('--fileFeat', metavar='STRING', action='store',
-    #                            help='Name of feature CSV-file  (default: %(default)s)', default='feature.csv')
-    #
-    # groupClass = parser.add_argument_group('Classification arguments')
-    # groupClass.add_argument('--CL_type', metavar='STRING', action='store', help='Classifier to use',
-    #                         default="RandomForest")
-    # groupClass.add_argument('--CL_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int,
-    #                         default=10)
-    # groupClass.add_argument('--CL_Cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
-    #                         default=1)
-    # groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Split ratio for train and test',
-    #                         type=float, default=0.9)
-    # groupClass.add_argument('--CL_metrics', metavar='STRING', action='store',
-    #                         help='Determine which metrics to use, separate with ":" if multiple, if empty, considering all',
-    #                         default='')
-    #
-    # groupClassifier = parser.add_argument_group('Classifier Config')
-    # groupClassifier.add_argument('--CL_config', metavar='STRING', nargs="+", action='store',
-    #                              help='GridSearch: Determine the trees', default=['25:75:125:175'])
-    #
-    # args = parser.parse_args()
-    #
-    # classifierKWARGS = dict((key, value) for key, value in enumerate([arg.split(":") for arg in args.CL_config]))
-    # ### Main Programm
-    #
-    #
-    # # Configure Logger
-    # directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
-    # logfilename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-LOG"
-    # logfile = directory + logfilename
-    # if os.path.isfile(logfile + ".log"):
-    #     for i in range(1, 20):
-    #         testFileName = logfilename + "-" + str(i) + ".log"
-    #         if not os.path.isfile(directory + testFileName):
-    #             logfile = directory + testFileName
-    #             break
-    # else:
-    #     logfile += ".log"
-    #
-    # logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logfile, level=logging.DEBUG,
-    #                     filemode='w')
-    #
-    # if args.log:
-    #     logging.getLogger().addHandler(logging.StreamHandler())
-    #
-    # # Read the features
-    # logging.debug("Start:\t Read " + args.type + " Files")
-    #
-    # if args.type == ".csv":
-    #     X = np.genfromtxt(args.pathF + args.fileFeat, delimiter=';')
-    #     Y = np.genfromtxt(args.pathF + args.fileCL, delimiter=';')
-    # elif args.type == ".hdf5":
-    #     dataset = h5py.File(args.pathF + args.name + ".hdf5", "r")
-    #     viewsDict = dict((dataset.get("View" + str(viewIndex)).attrs["name"], viewIndex) for viewIndex in
-    #                      range(dataset.get("Metadata").attrs["nbView"]))
-    #     X = dataset["View" + str(viewsDict[args.feat])][...]
-    #     Y = dataset["Labels"][...]
-    #
-    # logging.debug("Info:\t Shape of Feature:" + str(X.shape) + ", Length of classLabels vector:" + str(Y.shape))
-    # logging.debug("Done:\t Read CSV Files")
-    #
-    # arguments = {args.CL_type + "KWARGS": classifierKWARGS, "feat": args.feat, "fileFeat": args.fileFeat,
-    #              "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": args.CL_type}
-    # ExecMonoview(X, Y, args.name, args.CL_split, args.CL_CV, args.CL_Cores, args.type, args.pathF,
-    #              metrics=args.CL_metrics, **arguments)
+    parser = argparse.ArgumentParser(
+        description='This methods permits to execute a multiclass classification with one single view. At this point the used classifier is a RandomForest. The GridSearch permits to vary the number of trees and CrossValidation with k-folds. The result will be a plot of the score per class and a CSV with the best classifier found by the GridSearch.',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    groupStandard = parser.add_argument_group('Standard arguments')
+    groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
+    groupStandard.add_argument('--type', metavar='STRING', action='store', help='Type of Dataset', default=".hdf5")
+    groupStandard.add_argument('--name', metavar='STRING', action='store',
+                               help='Name of Database (default: %(default)s)', default='DB')
+    groupStandard.add_argument('--feat', metavar='STRING', action='store',
+                               help='Name of Feature for Classification (default: %(default)s)', default='RGB')
+    groupStandard.add_argument('--pathF', metavar='STRING', action='store',
+                               help='Path to the views (default: %(default)s)', default='Results-FeatExtr/')
+    groupStandard.add_argument('--fileCL', metavar='STRING', action='store',
+                               help='Name of classLabels CSV-file  (default: %(default)s)', default='classLabels.csv')
+    groupStandard.add_argument('--fileCLD', metavar='STRING', action='store',
+                               help='Name of classLabels-Description CSV-file  (default: %(default)s)',
+                               default='classLabels-Description.csv')
+    groupStandard.add_argument('--fileFeat', metavar='STRING', action='store',
+                               help='Name of feature CSV-file  (default: %(default)s)', default='feature.csv')
+
+    groupClass = parser.add_argument_group('Classification arguments')
+    groupClass.add_argument('--CL_type', metavar='STRING', action='store', help='Classifier to use',
+                            default="RandomForest")
+    groupClass.add_argument('--CL_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int,
+                            default=10)
+    groupClass.add_argument('--CL_Cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
+                            default=1)
+    groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Split ratio for train and test',
+                            type=float, default=0.9)
+    groupClass.add_argument('--CL_metrics', metavar='STRING', action='store',
+                            help='Determine which metrics to use, separate with ":" if multiple, if empty, considering all',
+                            default='')
+
+    groupClassifier = parser.add_argument_group('Classifier Config')
+    groupClassifier.add_argument('--CL_config', metavar='STRING', nargs="+", action='store',
+                                 help='GridSearch: Determine the trees', default=['25:75:125:175'])
+
+    args = parser.parse_args()
+
+    classifierKWARGS = dict((key, value) for key, value in enumerate([arg.split(":") for arg in args.CL_config]))
+    ### Main Programm
+
+
+    # Configure Logger
+    directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
+    logfilename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-LOG"
+    logfile = directory + logfilename
+    if os.path.isfile(logfile + ".log"):
+        for i in range(1, 20):
+            testFileName = logfilename + "-" + str(i) + ".log"
+            if not os.path.isfile(directory + testFileName):
+                logfile = directory + testFileName
+                break
+    else:
+        logfile += ".log"
+
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logfile, level=logging.DEBUG,
+                        filemode='w')
+
+    if args.log:
+        logging.getLogger().addHandler(logging.StreamHandler())
+
+    # Read the features
+    logging.debug("Start:\t Read " + args.type + " Files")
+
+    if args.type == ".csv":
+        X = np.genfromtxt(args.pathF + args.fileFeat, delimiter=';')
+        Y = np.genfromtxt(args.pathF + args.fileCL, delimiter=';')
+    elif args.type == ".hdf5":
+        dataset = h5py.File(args.pathF + args.name + ".hdf5", "r")
+        viewsDict = dict((dataset.get("View" + str(viewIndex)).attrs["name"], viewIndex) for viewIndex in
+                         range(dataset.get("Metadata").attrs["nbView"]))
+        X = dataset["View" + str(viewsDict[args.feat])][...]
+        Y = dataset["Labels"][...]
+
+    logging.debug("Info:\t Shape of Feature:" + str(X.shape) + ", Length of classLabels vector:" + str(Y.shape))
+    logging.debug("Done:\t Read CSV Files")
+
+    arguments = {args.CL_type + "KWARGS": classifierKWARGS, "feat": args.feat, "fileFeat": args.fileFeat,
+                 "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": args.CL_type}
+    ExecMonoview(X, Y, args.name, args.CL_split, args.CL_CV, args.CL_Cores, args.type, args.pathF,
+                 metrics=args.CL_metrics, **arguments)

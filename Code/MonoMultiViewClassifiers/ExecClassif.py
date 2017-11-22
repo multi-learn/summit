@@ -69,9 +69,15 @@ def initBenchmark(args):
 
 def genViewsDictionnary(DATASET):
     datasetsNames = DATASET.keys()
-    viewsDictionary = dict((DATASET.get(datasetName).attrs["name"], int(datasetName[4:]))
-                           for datasetName in datasetsNames
-                           if datasetName[:4]=="View")
+    viewsDictionary = {}
+    for datasetName in datasetsNames:
+        if datasetName[:4]=="View":
+            viewName = DATASET.get(datasetName).attrs["name"]
+            if type(viewName)!=bytes:
+                viewsDictionary[viewName] = int(datasetName[4:])
+            else:
+                viewsDictionary[viewName.decode("utf-8")] = int(datasetName[4:])
+
     return viewsDictionary
 
 
@@ -264,8 +270,10 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
     logging.debug("Start:\t Monoview benchmark")
     for arguments in argumentDictionaries["Monoview"]:
         kwargs = arguments["args"]
-        views = [DATASET.get("View" + str(viewIndex)).attrs["name"] for viewIndex in
-                 range(DATASET.get("Metadata").attrs["nbView"])]
+        views = [DATASET.get("View" + str(viewIndex)).attrs["name"]
+                 if type(DATASET.get("View" + str(viewIndex)).attrs["name"])!=bytes
+                 else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
+                 for viewIndex in range(DATASET.get("Metadata").attrs["nbView"])]
         neededViewIndex = views.index(kwargs["feat"])
         X = DATASET.get("View" + str(neededViewIndex))
         Y = labels
@@ -371,7 +379,11 @@ def execClassif(arguments):
     viewsDictionary = genViewsDictionnary(DATASET)
 
     nbViews = DATASET.get("Metadata").attrs["nbView"]
-    views = [DATASET.get("View"+str(viewIndex)).attrs["name"] for viewIndex in range(nbViews)]
+
+    views = [DATASET.get("View"+str(viewIndex)).attrs["name"]
+             if type(DATASET.get("View"+str(viewIndex)).attrs["name"])!=bytes
+             else DATASET.get("View"+str(viewIndex)).attrs["name"].decode("utf-8")
+             for viewIndex in range(nbViews)]
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
     metrics = [metric.split(":") for metric in args.CL_metrics]

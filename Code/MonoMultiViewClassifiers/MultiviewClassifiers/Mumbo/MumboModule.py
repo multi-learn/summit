@@ -118,6 +118,8 @@ def trainWeakClassifier_hdf5(classifier, classifierName, monoviewDataset, CLASS_
                              randomState, metric):
     weights = computeWeights(DATASET_LENGTH, iterIndex, classifierIndex, CLASS_LABELS, costMatrices)
     classifier, classes, isBad, averageScore = classifier.fit_hdf5(monoviewDataset, CLASS_LABELS, weights, metric)
+    if type(viewName) == bytes:
+        viewName = viewName.decode("utf-8")
     logging.debug("\t\t\t"+viewName + " : " + str(averageScore))
     return classifier, classes, isBad, averageScore
 
@@ -126,8 +128,7 @@ def gridSearch_hdf5(DATASET, labels, viewIndices, classificationKWARGS, learning
     classifiersNames = classificationKWARGS["classifiersNames"]
     bestSettings = []
     for classifierIndex, classifierName in enumerate(classifiersNames):
-        logging.debug("\tStart:\t Random search for " + classifierName + " on " +
-                      DATASET.get("View" + str(viewIndices[classifierIndex])).attrs["name"])
+        logging.debug("\tStart:\t Random search for " + classifierName + " on View" + str(viewIndices[classifierIndex]))
         classifierModule = getattr(Classifiers, classifierName)  # Permet d'appeler une fonction avec une string
         classifierGridSearch = getattr(classifierModule, "hyperParamSearch")
         bestSettings.append(classifierGridSearch(getV(DATASET, viewIndices[classifierIndex], learningIndices),
@@ -252,7 +253,7 @@ class MumboClass:
                 self.updateCostmatrices(NB_VIEW, trainLength, NB_CLASS, LABELS)
                 bestView, edge, bestFakeView = self.chooseView(viewsIndices, LABELS, trainLength)
                 self.bestViews[self.iterIndex] = bestView
-                logging.debug("\t\t\t Best view : \t\t" + DATASET.get("View" + str(bestView)).attrs["name"])
+                logging.debug("\t\t\t Best view : \t\t View" + str(bestView))
                 if areBad.all():
                     self.generalAlphas[self.iterIndex] = 0.
                 else:
