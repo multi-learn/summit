@@ -6,11 +6,6 @@ import numpy as np
 def genName(config):
     return "FatLateFusion"
 
-
-def getCLString(classificationKWARGS):
-    return "FatLateFusion"
-
-
 def getBenchmark(benchmark, args=None):
     benchmark["Multiview"]["FatLateFusion"] = ["take_everything"]
     return benchmark

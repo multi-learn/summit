@@ -43,7 +43,7 @@ def saveResults(LABELS_DICTIONARY, stringAnalysis, views, classifierModule, clas
     featureString = "-".join(views)
     labelsString = "-".join(labelsSet)
     timestr = time.strftime("%Y%m%d-%H%M%S")
-    CL_type_string = classifierModule.getCLString(classificationKWARGS)
+    CL_type_string = classifierModule.genName(classificationKWARGS)
     outputFileName = directory + "/" + CL_type_string + "/" + timestr + "Results-" + CL_type_string + "-" + featureString + '-' + labelsString + \
                      '-learnRate' + str(learningRate) + '-' + name
     if not os.path.exists(os.path.dirname(outputFileName)):

@@ -149,16 +149,6 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 #     return bestSettings, fusionMethodConfig
 
 
-def getCLString(classificationKWARGS):
-    """Used to get the classifier name as a string"""
-    if classificationKWARGS["fusionType"] == "LateFusion":
-        reducedClassifiersNames = [classifierName[:4] for classifierName in classificationKWARGS["classifiersNames"]]
-        return "Fusion-" + "Late" + "-" + classificationKWARGS["fusionMethod"][:5] + "-" + \
-               "-".join(reducedClassifiersNames)
-    elif classificationKWARGS["fusionType"] == "EarlyFusion":
-        return "Fusion-" + "Early" + "-" + classificationKWARGS["fusionMethod"][:5] + "-" + \
-               classificationKWARGS["classifiersNames"]
-
 
 class FusionClass:
     """The global representant of Fusion"""

@@ -141,10 +141,6 @@ def gridSearch_hdf5(DATASET, labels, viewIndices, classificationKWARGS, learning
         return bestSettings, None
 
 
-def getCLString(classificationKWARGS):
-    return "Mumbo-" + "-".join(classificationKWARGS["classifiersNames"])
-
-
 class MumboClass:
     def __init__(self, randomState, NB_CORES=1, **kwargs):
         self.maxIter = kwargs["maxIter"]
