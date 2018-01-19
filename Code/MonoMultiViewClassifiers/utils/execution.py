@@ -178,7 +178,7 @@ def parseTheArgs(arguments):
     groupEarlyFusion.add_argument('--FU_E_cl_names', metavar='STRING', action='store', nargs='+',
                                   help='Name of the classifiers used for each early fusion method', default=[''])
 
-    groupLateFusion = parser.add_argument_group('Late Early Fusion arguments')
+    groupLateFusion = parser.add_argument_group('Late Fusion arguments')
     groupLateFusion.add_argument('--FU_late_methods', metavar='STRING', action='store', nargs="+",
                                  help='Determine which late fusion method of fusion to use',
                                  default=[''])
@@ -191,6 +191,12 @@ def parseTheArgs(arguments):
     groupLateFusion.add_argument('--FU_L_select_monoview', metavar='STRING', action='store',
                                  help='Determine which method to use to select the monoview classifiers',
                                  default="intersect")
+
+    groupFatLateFusion = parser.add_argument_group('Fat Late Fusion arguments')
+    groupFatLateFusion.add_argument('--FLF_weights', metavar='FLOAT', action='store', nargs="+",
+                                 help='Determine which late fusion method of fusion to use', type=float,
+                                 default=[])
+
     args = parser.parse_args(arguments)
     return args
 

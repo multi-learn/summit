@@ -19,7 +19,8 @@ def getArgs(args, benchmark, views, viewsIndices, randomState, directory, result
                  "NB_CLASS": len(args.CL_classes),
                  "LABELS_NAMES": args.CL_classes,
                  "FatLateFusionKWARGS": {
-                     "monoviewDecisions": monoviewDecisions
+                     "monoviewDecisions": monoviewDecisions,
+                     "weights": args.FLF_weights
                  }
                  }
     argumentsList.append(arguments)
@@ -36,7 +37,10 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 class FatLateFusionClass:
 
     def __init__(self, randomState, NB_CORES=1, **kwargs):
-        self.weights = [1.0/len(["monoviewDecisions"]) for _ in range(len(["monoviewDecisions"]))]
+        if kwargs["weights"] == []:
+            self.weights = [1.0/len(["monoviewDecisions"]) for _ in range(len(["monoviewDecisions"]))]
+        else:
+            self.weights = np.array(kwargs["weights"])/np.sum(np.array(kwargs["weights"]))
         self.monoviewDecisions = kwargs["monoviewDecisions"]
 
     def setParams(self, paramsSet):

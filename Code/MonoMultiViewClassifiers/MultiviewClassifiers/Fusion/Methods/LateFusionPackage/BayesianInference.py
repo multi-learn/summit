@@ -59,7 +59,7 @@ class BayesianInference(LateFusionClassifier):
                                       NB_CORES=NB_CORES)
 
         if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig'] == ['']:
-            self.weights = np.array([1.0 for classifier in kwargs['classifiersNames']])
+            self.weights = np.array([1.0 for _ in kwargs['classifiersNames']])
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
         self.needProbas = True
