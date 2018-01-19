@@ -83,7 +83,7 @@ class Test_getKWARGS(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.classifierModule = None
-        cls.hyperParamSearch = None
+        cls.hyperParamSearch = "gridSearch"
         cls.nIter = 2
         cls.CL_type = "string"
         cls.X_train = np.zeros((10,20))

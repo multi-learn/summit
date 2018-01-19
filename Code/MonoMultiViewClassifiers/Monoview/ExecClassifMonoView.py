@@ -187,10 +187,14 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
 
 if __name__ == '__main__':
+    """The goal of this part of the module is to be able to execute a monoview experimentation
+     on a node of a cluster independently.
+     So one need to fill in all the ExecMonoview function arguments with the parse arg function
+     It could be a good idea to use pickle to store all the 'simple' args in order to reload them easily"""
     import argparse
-    pass
+
     parser = argparse.ArgumentParser(
-        description='This methods permits to execute a multiclass classification with one single view. At this point the used classifier is a RandomForest. The GridSearch permits to vary the number of trees and CrossValidation with k-folds. The result will be a plot of the score per class and a CSV with the best classifier found by the GridSearch.',
+        description='This methods is used to execute a multiclass classification with one single view. ',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     groupStandard = parser.add_argument_group('Standard arguments')
@@ -198,44 +202,53 @@ if __name__ == '__main__':
     groupStandard.add_argument('--type', metavar='STRING', action='store', help='Type of Dataset', default=".hdf5")
     groupStandard.add_argument('--name', metavar='STRING', action='store',
                                help='Name of Database (default: %(default)s)', default='DB')
-    groupStandard.add_argument('--feat', metavar='STRING', action='store',
-                               help='Name of Feature for Classification (default: %(default)s)', default='RGB')
+    groupStandard.add_argument('--view', metavar='STRING', action='store',
+                               help='Name of Feature for Classification (default: %(default)s)', default='View0')
     groupStandard.add_argument('--pathF', metavar='STRING', action='store',
                                help='Path to the views (default: %(default)s)', default='Results-FeatExtr/')
-    groupStandard.add_argument('--fileCL', metavar='STRING', action='store',
+    groupStandard.add_argument('--directory', metavar='STRING', action='store',
+                               help='Path to the views (default: %(default)s)', default='Results-FeatExtr/')
+    groupStandard.add_argument('--labelsNames', metavar='STRING', action='store', nargs='+',
                                help='Name of classLabels CSV-file  (default: %(default)s)', default='classLabels.csv')
-    groupStandard.add_argument('--fileCLD', metavar='STRING', action='store',
+    groupStandard.add_argument('--classificationIndices', metavar='STRING', action='store',
                                help='Name of classLabels-Description CSV-file  (default: %(default)s)',
                                default='classLabels-Description.csv')
-    groupStandard.add_argument('--fileFeat', metavar='STRING', action='store',
-                               help='Name of feature CSV-file  (default: %(default)s)', default='feature.csv')
-
-    groupClass = parser.add_argument_group('Classification arguments')
-    groupClass.add_argument('--CL_type', metavar='STRING', action='store', help='Classifier to use',
-                            default="RandomForest")
-    groupClass.add_argument('--CL_CV', metavar='INT', action='store', help='Number of k-folds for CV', type=int,
-                            default=10)
-    groupClass.add_argument('--CL_Cores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
+    groupStandard.add_argument('--nbCores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
                             default=1)
-    groupClass.add_argument('--CL_split', metavar='FLOAT', action='store', help='Split ratio for train and test',
-                            type=float, default=0.9)
-    groupClass.add_argument('--CL_metrics', metavar='STRING', action='store',
-                            help='Determine which metrics to use, separate with ":" if multiple, if empty, considering all',
-                            default='')
-
-    groupClassifier = parser.add_argument_group('Classifier Config')
-    groupClassifier.add_argument('--CL_config', metavar='STRING', nargs="+", action='store',
-                                 help='GridSearch: Determine the trees', default=['25:75:125:175'])
+    groupStandard.add_argument('--randomState', metavar='INT', action='store',
+                               help='Seed for the random state or pickable randomstate file', default=42)
+    groupStandard.add_argument('--hyperParamSearch', metavar='STRING', action='store',
+                               help='The type of method used tosearch the best set of hyper parameters', default='randomizedSearch')
+    groupStandard.add_argument('--metrics', metavar='STRING', action='store', nargs="+",
+                               help='Metrics used in the experimentation, the first will be the one used in CV',
+                               default=[''])
+    groupStandard.add_argument('--nIter', metavar='INT', action='store', help='Number of itetarion in hyper parameter search', type=int,
+                               default=10)
 
     args = parser.parse_args()
 
-    classifierKWARGS = dict((key, value) for key, value in enumerate([arg.split(":") for arg in args.CL_config]))
-    ### Main Programm
+    directory = args.directory
+    name = args.name
+    labelsNames = args.labelsNames
+    classificationIndices = args.classificationIndices
+    KFolds = args.KFolds
+    nbCores = args.nbCores
+    databaseType = None
+    path = args.pathF
+    randomState = args.randomState
+    hyperParamSearch = args.hyperParamSearch
+    metrics = args.metrics
+    nIter = args.nIter
+    kwargs = args.kwargs
+
+    # Extract the data using MPI
+    X = None
+    Y = None
+
+    logfilename = "gen a goodlogfilename"
 
 
-    # Configure Logger
-    directory = os.path.dirname(os.path.abspath(__file__)) + "/Results-ClassMonoView/"
-    logfilename = datetime.datetime.now().strftime("%Y_%m_%d") + "-CMV-" + args.name + "-" + args.feat + "-LOG"
+
     logfile = directory + logfilename
     if os.path.isfile(logfile + ".log"):
         for i in range(1, 20):
@@ -252,23 +265,15 @@ if __name__ == '__main__':
     if args.log:
         logging.getLogger().addHandler(logging.StreamHandler())
 
-    # Read the features
-    logging.debug("Start:\t Read " + args.type + " Files")
 
-    if args.type == ".csv":
-        X = np.genfromtxt(args.pathF + args.fileFeat, delimiter=';')
-        Y = np.genfromtxt(args.pathF + args.fileCL, delimiter=';')
-    elif args.type == ".hdf5":
-        dataset = h5py.File(args.pathF + args.name + ".hdf5", "r")
-        viewsDict = dict((dataset.get("View" + str(viewIndex)).attrs["name"], viewIndex) for viewIndex in
-                         range(dataset.get("Metadata").attrs["nbView"]))
-        X = dataset["View" + str(viewsDict[args.feat])][...]
-        Y = dataset["Labels"][...]
+    res = ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFolds, nbCores, databaseType, path,
+                 randomState, hyperParamSearch=hyperParamSearch,
+                 metrics=metrics, nIter=nIter, **kwargs)
 
-    logging.debug("Info:\t Shape of Feature:" + str(X.shape) + ", Length of classLabels vector:" + str(Y.shape))
-    logging.debug("Done:\t Read CSV Files")
 
-    arguments = {args.CL_type + "KWARGS": classifierKWARGS, "feat": args.feat, "fileFeat": args.fileFeat,
-                 "fileCL": args.fileCL, "fileCLD": args.fileCLD, "CL_type": args.CL_type}
-    ExecMonoview(X, Y, args.name, args.CL_split, args.CL_CV, args.CL_Cores, args.type, args.pathF,
-                 metrics=args.CL_metrics, **arguments)
+    # Pickle the res in a file to be reused.
+    # Go put a token in the token files without breaking everything.
+
+    # Need to write a function to be  able to know the timeu sed
+    # for a monoview experimentation approximately and the ressource it uses to write automatically the file in the shell
+    # it will have to be a not-too close approx as the taskswont be long and Ram-o-phage
