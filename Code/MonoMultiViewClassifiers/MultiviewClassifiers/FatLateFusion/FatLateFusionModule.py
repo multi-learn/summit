@@ -1,10 +1,8 @@
 import numpy as np
 
-
-
-
 def genName(config):
     return "FatLateFusion"
+
 
 def getBenchmark(benchmark, args=None):
     benchmark["Multiview"]["FatLateFusion"] = ["take_everything"]
@@ -31,8 +29,8 @@ def getArgs(args, benchmark, views, viewsIndices, randomState, directory, result
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
     """Used to generate parameters sets for the random hyper parameters optimization function"""
     nbMonoviewClassifiers = len(classificationKWARGS["monoviewDecisions"])
-    weights = [randomState.random_sample(nbMonoviewClassifiers) for _ in range(len(classificationKWARGS["monoviewDecisions"]))]
-    nomralizedWeights = [weights/np.sum(weights)]
+    weights = [randomState.random_sample(nbMonoviewClassifiers) for _ in range(nIter)]
+    nomralizedWeights = [[weightVector/np.sum(weightVector)] for weightVector in weights] 
     return nomralizedWeights
 
 class FatLateFusionClass:

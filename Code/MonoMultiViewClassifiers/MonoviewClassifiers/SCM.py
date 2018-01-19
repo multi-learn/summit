@@ -51,8 +51,6 @@ def canProbas():
     return False
 
 
-
-
 def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
     modelType = kwargs['0']
     maxRules = int(kwargs['1'])

@@ -57,7 +57,7 @@ def saveResults(LABELS_DICTIONARY, stringAnalysis, views, classifierModule, clas
     outputTextFile.close()
 
     if imagesAnalysis is not None:
-        for imageName in imagesAnalysis:
+        for imageName in imagesAnalysis.keys():
             if os.path.isfile(outputFileName + imageName + ".png"):
                 for i in range(1, 20):
                     testFileName = outputFileName + imageName + "-" + str(i) + ".png"

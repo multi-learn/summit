@@ -7,6 +7,7 @@ import numpy as np
 from ... import Metrics
 from ...utils.Dataset import getV, getShape
 from . import Classifiers
+from ...utils.MultiviewResultAnalysis import printMetricScore, getMetricsScores
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -109,9 +110,6 @@ def getAlgoConfig(classifier, classificationKWARGS, nbCores, viewNames, hyperPar
     algoString += "\n\n"
     algoString += "\n\nComputation time on " + str(nbCores) + " cores : \n\tDatabase extraction time : " + str(
         hms(seconds=int(extractionTime))) + "\n\t"
-    row_format = "{:>15}" * 3
-    algoString += row_format.format("", *['Learn', 'Prediction'])
-    algoString += '\n\t'
     algoString += "\n\tSo a total classification time of " + str(hms(seconds=int(classificationTime))) + ".\n\n"
     algoString += "\n\n"
     return algoString, classifierAnalysis
@@ -121,7 +119,7 @@ def getReport(classifier, CLASS_LABELS, classificationIndices, DATASET, trainLab
               testLabels, viewIndices, metric):
     learningIndices, validationIndices, multiviewTestIndices = classificationIndices
     nbView = len(viewIndices)
-    NB_CLASS = len(set(CLASS_LABELS))  # DATASET.get("Metadata").attrs["nbClass"]
+    NB_CLASS = len(set(CLASS_LABELS))
     metricModule = getattr(Metrics, metric[0])
     fakeViewsIndicesDict = dict(
         (viewIndex, fakeViewIndex) for viewIndex, fakeViewIndex in zip(viewIndices, range(nbView)))
@@ -178,43 +176,6 @@ def modifiedMean(surplusAccuracies):
     return meanAccuracies
 
 
-def printMetricScore(metricScores, metrics):
-    metricScoreString = "\n\n"
-    for metric in metrics:
-        metricModule = getattr(Metrics, metric[0])
-        if metric[1] is not None:
-            metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-        else:
-            metricKWARGS = {}
-        metricScoreString += "\tFor " + metricModule.getConfig(**metricKWARGS) + " : "
-        metricScoreString += "\n\t\t- Score on train : " + str(metricScores[metric[0]][0])
-        metricScoreString += "\n\t\t- Score on test : " + str(metricScores[metric[0]][1])
-        metricScoreString += "\n\n"
-    return metricScoreString
-
-
-def getTotalMetricScores(metric, trainLabels, testLabels,
-                         validationIndices, learningIndices, labels):
-    metricModule = getattr(Metrics, metric[0])
-    if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-    else:
-        metricKWARGS = {}
-    validationIndices = validationIndices
-    trainScore = metricModule.score(labels[learningIndices], trainLabels, **metricKWARGS)
-    testScore = metricModule.score(labels[validationIndices], testLabels, **metricKWARGS)
-    return [trainScore, testScore]
-
-
-def getMetricsScores(metrics, trainLabels, testLabels,
-                     validationIndices, learningIndices, labels):
-    metricsScores = {}
-    for metric in metrics:
-        metricsScores[metric[0]] = getTotalMetricScores(metric, trainLabels, testLabels,
-                                                        validationIndices, learningIndices, labels)
-    return metricsScores
-
-
 def getMeanIterations(kFoldClassifierStats, foldIndex):
     iterations = np.array([kFoldClassifier[foldIndex].iterIndex + 1 for kFoldClassifier in kFoldClassifierStats])
     return np.mean(iterations)
@@ -227,6 +188,7 @@ def execute(classifier, trainLabels,
             databaseName, KFolds,
             hyperParamSearch, nIter, metrics,
             viewsIndices, randomState, labels):
+
     learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
     if classifier.classifiersConfigs is None:
         metricsScores = getMetricsScores(metrics, trainLabels, testLabels,
