@@ -187,7 +187,7 @@ def execute(classifier, trainLabels,
             LABELS_DICTIONARY, views, nbCores, times,
             databaseName, KFolds,
             hyperParamSearch, nIter, metrics,
-            viewsIndices, randomState, labels):
+            viewsIndices, randomState, labels, classifierModule):
 
     learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
     if classifier.classifiersConfigs is None:

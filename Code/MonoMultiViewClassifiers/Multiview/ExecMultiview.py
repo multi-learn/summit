@@ -149,7 +149,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
                                                                            LABELS_DICTIONARY, views, nbCores, times,
                                                                            name, KFolds,
                                                                            hyperParamSearch, nIter, metrics,
-                                                                           viewsIndices, randomState, labels)
+                                                                           viewsIndices, randomState, labels, classifierModule)
     logging.info("Done:\t Result Analysis for " + CL_type)
 
     logging.debug("Start:\t Saving preds")

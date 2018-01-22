@@ -197,6 +197,11 @@ def parseTheArgs(arguments):
                                  help='Determine the weights of each monoview decision for FLF', type=float,
                                  default=[])
 
+    groupMumboNew = parser.add_argument_group('New Mumbo implementation arguments')
+    groupFatLateFusion.add_argument('--MUN_n_estimators', metavar='INT', action='store',
+                                    help='Determine the number of esitmators for mumbo', type=int,
+                                    default=10)
+
     args = parser.parse_args(arguments)
     return args
 

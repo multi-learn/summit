@@ -185,3 +185,18 @@ class FusionClass:
         else:
             predictedLabels = []
         return predictedLabels
+
+    def getConfigString(self, classificationKWARGS):
+        monoviewClassifiersNames = classificationKWARGS["classifiersNames"]
+        monoviewClassifiersConfigs = classificationKWARGS["classifiersConfigs"]
+        fusionMethodConfig = classificationKWARGS["fusionMethodConfig"]
+        return self.classifier.getConfig(fusionMethodConfig, monoviewClassifiersNames,
+                                                          monoviewClassifiersConfigs)
+
+    def getSpecificAnalysis(self, classificationKWARGS):
+        fusionType = classificationKWARGS["fusionType"]
+        if fusionType == "LateFusion":
+            stringAnalysis = Methods.LateFusion.getScores(self)
+        else:
+            stringAnalysis = ''
+        return stringAnalysis

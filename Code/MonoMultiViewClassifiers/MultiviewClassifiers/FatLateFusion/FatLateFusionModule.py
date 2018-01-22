@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def genName(config):
     return "FatLateFusion"
 
@@ -34,6 +35,7 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     nomralizedWeights = [[weightVector/np.sum(weightVector)] for weightVector in weights] 
     return nomralizedWeights
 
+
 class FatLateFusionClass:
 
     def __init__(self, randomState, NB_CORES=1, **kwargs):
@@ -61,12 +63,10 @@ class FatLateFusionClass:
 
     def predict_probas_hdf5(self, DATASET, usedIndices=None):
         pass
-        # if usedIndices is None:
-        #     usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        # votes = np.zeros((DATASET.get("Metadata").attrs["datasetLength"], DATASET.get("Metadata").attrs["nbClass"]), dtype=float)
-        # for exampleIndex in usedIndices:
-        #     for monoviewDecisionIndex, monoviewDecision in enumerate(self.monoviewDecisions):
-        #         votes[exampleIndex, monoviewDecision[exampleIndex]] += self.weights[monoviewDecisionIndex]
-        # predictedProbas =
-        # return predictedLabels
 
+    def getConfigString(self, classificationKWARGS):
+        return "weights : "+", ".join(map(str, list(self.weights)))
+
+    def getSpecificAnalysis(self, classificationKWARGS):
+        stringAnalysis = ''
+        return stringAnalysis

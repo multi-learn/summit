@@ -63,8 +63,8 @@ def initTrainTest(X, Y, classificationIndices):
     return X_train, y_train, X_test, y_test, X_test_multiclass
 
 
-def getKWARGS(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train, randomState,
-              outputFileName, KFolds, nbCores, metrics, kwargs):
+def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train, randomState,
+           outputFileName, KFolds, nbCores, metrics, kwargs):
     if hyperParamSearch != "None":
         logging.debug("Start:\t " + hyperParamSearch + " best settings with " + str(nIter) + " iterations for " + CL_type)
         classifierHPSearch = getattr(classifierModule, hyperParamSearch)
@@ -140,10 +140,10 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
     logging.debug("Start:\t Generate classifier args")
     classifierModule = getattr(MonoviewClassifiers, CL_type)
-    clKWARGS = getKWARGS(classifierModule, hyperParamSearch,
-                         nIter, CL_type, X_train, y_train,
-                         randomState, outputFileName,
-                         KFolds, nbCores, metrics, kwargs)
+    clKWARGS = getHPs(classifierModule, hyperParamSearch,
+                      nIter, CL_type, X_train, y_train,
+                      randomState, outputFileName,
+                      KFolds, nbCores, metrics, kwargs)
     logging.debug("Done:\t Generate classifier args")
 
     logging.debug("Start:\t Training")
@@ -192,6 +192,7 @@ if __name__ == '__main__':
      So one need to fill in all the ExecMonoview function arguments with the parse arg function
      It could be a good idea to use pickle to store all the 'simple' args in order to reload them easily"""
     import argparse
+    import pickle
 
     parser = argparse.ArgumentParser(
         description='This methods is used to execute a multiclass classification with one single view. ',
@@ -269,6 +270,9 @@ if __name__ == '__main__':
     res = ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFolds, nbCores, databaseType, path,
                  randomState, hyperParamSearch=hyperParamSearch,
                  metrics=metrics, nIter=nIter, **kwargs)
+
+    with open(directory + "res.pickle", "wb") as handle:
+        pickle.dump(randomState, handle)
 
 
     # Pickle the res in a file to be reused.
