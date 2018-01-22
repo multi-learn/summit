@@ -194,7 +194,7 @@ def parseTheArgs(arguments):
 
     groupFatLateFusion = parser.add_argument_group('Fat Late Fusion arguments')
     groupFatLateFusion.add_argument('--FLF_weights', metavar='FLOAT', action='store', nargs="+",
-                                 help='Determine which late fusion method of fusion to use', type=float,
+                                 help='Determine the weights of each monoview decision for FLF', type=float,
                                  default=[])
 
     args = parser.parse_args(arguments)
