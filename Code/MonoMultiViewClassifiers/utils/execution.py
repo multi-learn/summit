@@ -198,9 +198,22 @@ def parseTheArgs(arguments):
                                  default=[])
 
     groupMumboNew = parser.add_argument_group('New Mumbo implementation arguments')
-    groupFatLateFusion.add_argument('--MUN_n_estimators', metavar='INT', action='store',
+    groupMumboNew.add_argument('--MUN_n_estimators', metavar='INT', action='store',
                                     help='Determine the number of esitmators for mumbo', type=int,
                                     default=10)
+
+    groupFatSCMLateFusion = parser.add_argument_group('Fat SCM Late Fusion arguments')
+    groupFatSCMLateFusion.add_argument('--FSCMLF_p', metavar='FLOAT', action='store',
+                                    help='Determine the p argument of the SCM', type=float,
+                                    default=0.5)
+    groupFatSCMLateFusion.add_argument('--FSCMLF_max_attributes', metavar='INT', action='store',
+                                    help='Determine the maximum number of aibutes used by the SCM', type=int,
+                                    default=4)
+    groupFatSCMLateFusion.add_argument('--FSCMLF_model', metavar='STRING', action='store',
+                                    help='Determine the model type of the SCM',
+                                    default="conjunction")
+
+
 
     args = parser.parse_args(arguments)
     return args

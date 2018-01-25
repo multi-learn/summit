@@ -45,7 +45,6 @@ class DecisionStumpSCMNew(BaseEstimator, ClassifierMixin):
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
-    nbView = classificationKWARGS["nbView"]
     paramsSets = []
     for _ in range(nIter):
         max_attributes = randomState.randint(1, 20)

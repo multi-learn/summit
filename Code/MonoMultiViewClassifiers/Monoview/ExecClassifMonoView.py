@@ -23,88 +23,12 @@ __status__ = "Prototype"  # Production, Development, Prototype
 # __date__ = 2016 - 03 - 25
 
 
-def initConstants(args, X, classificationIndices, labelsNames, name, directory):
-    try:
-        kwargs = args["args"]
-    except KeyError:
-        kwargs = args
-    t_start = time.time()
-    if type(X.attrs["name"]) == bytes:
-        feat = X.attrs["name"].decode("utf-8")
-    else:
-        feat = X.attrs["name"]
-    CL_type = kwargs["CL_type"]
-    X = getValue(X)
-    learningRate = float(len(classificationIndices[0])) / (len(classificationIndices[0]) + len(classificationIndices[1]))
-    labelsString = "-".join(labelsNames)
-    CL_type_string = CL_type
-
-    outputFileName = directory + CL_type_string + "/" + feat + "/" + "Results-" + CL_type_string + "-" + labelsString + \
-                     '-learnRate' + str(learningRate) + '-' + name + "-" + feat + "-"
-    if not os.path.exists(os.path.dirname(outputFileName)):
-        try:
-            os.makedirs(os.path.dirname(outputFileName))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-    return kwargs, t_start, feat, CL_type, X, learningRate, labelsString, outputFileName
-
-
-def initTrainTest(X, Y, classificationIndices):
-    trainIndices, testIndices, testIndicesMulticlass = classificationIndices
-    X_train = extractSubset(X, trainIndices)
-    X_test = extractSubset(X, testIndices)
-    if testIndicesMulticlass != []:
-        X_test_multiclass = extractSubset(X, testIndicesMulticlass)
-    else:
-        X_test_multiclass = []
-    y_train = Y[trainIndices]
-    y_test = Y[testIndices]
-    return X_train, y_train, X_test, y_test, X_test_multiclass
-
-
-def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train, randomState,
-           outputFileName, KFolds, nbCores, metrics, kwargs):
-    if hyperParamSearch != "None":
-        logging.debug("Start:\t " + hyperParamSearch + " best settings with " + str(nIter) + " iterations for " + CL_type)
-        classifierHPSearch = getattr(classifierModule, hyperParamSearch)
-        cl_desc = classifierHPSearch(X_train, y_train, randomState, outputFileName, KFolds=KFolds, nbCores=nbCores,
-                                     metric=metrics[0], nIter=nIter)
-        clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
-        logging.debug("Done:\t " + hyperParamSearch + "RandomSearch best settings")
-    else:
-        clKWARGS = kwargs[CL_type + "KWARGS"]
-    return clKWARGS
-
-
-def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, y_train, imagesAnalysis):
-    logging.info(stringAnalysis)
-    outputTextFile = open(outputFileName + '.txt', 'w')
-    outputTextFile.write(stringAnalysis)
-    outputTextFile.close()
-    np.savetxt(outputFileName + "full_pred.csv", full_labels_pred.astype(np.int16), delimiter=",")
-    np.savetxt(outputFileName + "train_pred.csv", y_train_pred.astype(np.int16), delimiter=",")
-    np.savetxt(outputFileName + "train_labels.csv", y_train.astype(np.int16), delimiter=",")
-
-    if imagesAnalysis is not None:
-        for imageName in imagesAnalysis:
-            if os.path.isfile(outputFileName + imageName + ".png"):
-                for i in range(1, 20):
-                    testFileName = outputFileName + imageName + "-" + str(i) + ".png"
-                    if not os.path.isfile(testFileName):
-                        imagesAnalysis[imageName].savefig(testFileName)
-                        break
-
-            imagesAnalysis[imageName].savefig(outputFileName + imageName + '.png')
 
 
 def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices, KFolds, datasetFileIndex, databaseType,
                            path, randomState, labels, hyperParamSearch="randomizedSearch",
                            metrics=[["accuracy_score", None]], nIter=30, **args):
     DATASET = h5py.File(path + name + str(datasetFileIndex) + ".hdf5", "r")
-    # kwargs = args["args"]
-    # views = [DATASET.get("View" + str(viewIndex)).attrs["name"] for viewIndex in
-    #          range(DATASET.get("Metadata").attrs["nbView"])]
     neededViewIndex = args["viewIndex"]
     X = DATASET.get("View" + str(neededViewIndex))
     Y = labels
@@ -184,6 +108,82 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
     viewIndex = args["viewIndex"]
     return viewIndex, [CL_type, cl_desc + [feat], metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred]
+
+
+def initConstants(args, X, classificationIndices, labelsNames, name, directory):
+    try:
+        kwargs = args["args"]
+    except KeyError:
+        kwargs = args
+    t_start = time.time()
+    if type(X.attrs["name"]) == bytes:
+        feat = X.attrs["name"].decode("utf-8")
+    else:
+        feat = X.attrs["name"]
+    CL_type = kwargs["CL_type"]
+    X = getValue(X)
+    learningRate = float(len(classificationIndices[0])) / (len(classificationIndices[0]) + len(classificationIndices[1]))
+    labelsString = "-".join(labelsNames)
+    CL_type_string = CL_type
+
+    outputFileName = directory + CL_type_string + "/" + feat + "/" + "Results-" + CL_type_string + "-" + labelsString + \
+                     '-learnRate' + str(learningRate) + '-' + name + "-" + feat + "-"
+    if not os.path.exists(os.path.dirname(outputFileName)):
+        try:
+            os.makedirs(os.path.dirname(outputFileName))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+    return kwargs, t_start, feat, CL_type, X, learningRate, labelsString, outputFileName
+
+
+def initTrainTest(X, Y, classificationIndices):
+    trainIndices, testIndices, testIndicesMulticlass = classificationIndices
+    X_train = extractSubset(X, trainIndices)
+    X_test = extractSubset(X, testIndices)
+    if testIndicesMulticlass != []:
+        X_test_multiclass = extractSubset(X, testIndicesMulticlass)
+    else:
+        X_test_multiclass = []
+    y_train = Y[trainIndices]
+    y_test = Y[testIndices]
+    return X_train, y_train, X_test, y_test, X_test_multiclass
+
+
+def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train, randomState,
+           outputFileName, KFolds, nbCores, metrics, kwargs):
+    if hyperParamSearch != "None":
+        logging.debug("Start:\t " + hyperParamSearch + " best settings with " + str(nIter) + " iterations for " + CL_type)
+        classifierHPSearch = getattr(classifierModule, hyperParamSearch)
+        cl_desc = classifierHPSearch(X_train, y_train, randomState, outputFileName, KFolds=KFolds, nbCores=nbCores,
+                                     metric=metrics[0], nIter=nIter)
+        clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
+        logging.debug("Done:\t " + hyperParamSearch + "RandomSearch best settings")
+    else:
+        clKWARGS = kwargs[CL_type + "KWARGS"]
+    return clKWARGS
+
+
+def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, y_train, imagesAnalysis):
+    logging.info(stringAnalysis)
+    outputTextFile = open(outputFileName + '.txt', 'w')
+    outputTextFile.write(stringAnalysis)
+    outputTextFile.close()
+    np.savetxt(outputFileName + "full_pred.csv", full_labels_pred.astype(np.int16), delimiter=",")
+    np.savetxt(outputFileName + "train_pred.csv", y_train_pred.astype(np.int16), delimiter=",")
+    np.savetxt(outputFileName + "train_labels.csv", y_train.astype(np.int16), delimiter=",")
+
+    if imagesAnalysis is not None:
+        for imageName in imagesAnalysis:
+            if os.path.isfile(outputFileName + imageName + ".png"):
+                for i in range(1, 20):
+                    testFileName = outputFileName + imageName + "-" + str(i) + ".png"
+                    if not os.path.isfile(testFileName):
+                        imagesAnalysis[imageName].savefig(testFileName)
+                        break
+
+            imagesAnalysis[imageName].savefig(outputFileName + imageName + '.png')
+
 
 
 if __name__ == '__main__':
