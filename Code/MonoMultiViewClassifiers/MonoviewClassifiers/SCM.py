@@ -52,10 +52,10 @@ def canProbas():
 
 
 def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
-    modelType = kwargs['0']
-    maxRules = int(kwargs['1'])
-    p = float(kwargs["2"])
-    classifier = DecisionStumpSCMNew(model_type=modelType, max_rules=maxRules, p=p, random_state=randomState)
+    classifier = DecisionStumpSCMNew(model_type=kwargs['model_type'],
+                                     max_rules=kwargs['max_rules'],
+                                     p=kwargs['p'],
+                                     random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
 
@@ -67,47 +67,33 @@ def paramsToSet(nIter, randomState):
     return paramsSet
 
 
-def getKWARGS(kwargsList):
-    kwargsDict = {}
-    for (kwargName, kwargValue) in kwargsList:
-        if kwargName == "CL_SCM_model_type":
-            kwargsDict['0'] = kwargValue
-        elif kwargName == "CL_SCM_max_rules":
-            kwargsDict['1'] = int(kwargValue)
-        elif kwargName == "CL_SCM_p":
-            kwargsDict['2'] = float(kwargValue)
-        else:
-            raise ValueError("Wrong arguments served to SCM")
+def getKWARGS(args):
+    kwargsDict = {"model_type": args.SCM_model_type,
+                  "p": args.SCM_p,
+                  "max_rules": args.SCM_max_rules}
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, metric=["accuracy_score", None], nIter=30,
-                     nbCores=1):
-    pipeline = Pipeline([('classifier', DecisionStumpSCMNew())])
+def genPipeline():
+    return Pipeline([('classifier', DecisionStumpSCMNew())])
 
-    param = {"classifier__model_type": ['conjunction', 'disjunction'],
+
+def genParamsDict(randomState):
+    return {"classifier__model_type": ['conjunction', 'disjunction'],
              "classifier__p": uniform(),
-             "classifier__max_rules": randint(1,30)}
-    metricModule = getattr(Metrics, metric[0])
-    if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-    else:
-        metricKWARGS = {}
-    scorer = metricModule.get_scorer(**metricKWARGS)
-    grid = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=param, refit=True, n_jobs=nbCores,
-                              scoring=scorer, cv=KFolds, random_state=randomState)
-    detector = grid.fit(X_train, y_train)
-    desc_estimators = [detector.best_params_["classifier__model_type"],
-                       detector.best_params_["classifier__max_rules"],
-                       detector.best_params_["classifier__p"]]
+             "classifier__max_rules": np.arange(1,30)}
 
-    scoresArray = detector.cv_results_['mean_test_score']
-    params = [("model_type", np.array(detector.cv_results_['param_classifier__model_type'])),
-              ("maxRules", np.array(detector.cv_results_['param_classifier__max_rules'])),
-              ("p", np.array(detector.cv_results_['param_classifier__p']))]
 
-    genHeatMaps(params, scoresArray, outputFileName)
-    return desc_estimators
+def genBestParams(detector):
+    return {"model_type": detector.best_params_["classifier__model_type"],
+            "p": detector.best_params_["classifier__p"],
+            "max_rules": detector.best_params_["classifier__max_rules"]}
+
+
+def genParamsFromDetector(detector):
+    return [("model_type", np.array(detector.cv_results_['param_classifier__model_type'])),
+            ("maxRules", np.array(detector.cv_results_['param_classifier__max_rules'])),
+            ("p", np.array(detector.cv_results_['param_classifier__p']))]
 
 
 def getConfig(config):
@@ -115,12 +101,8 @@ def getConfig(config):
         return "\n\t\t- SCM with model_type: " + config.model_type + ", max_rules : " + str(config.max_rules) +\
                ", p : " + str(config.p)
     else:
-        try:
-            return "\n\t\t- SCM with model_type: " + config[0] + ", max_rules : " + str(config[1]) + ", p : " +\
-                   str(config[2])
-        except:
-            return "\n\t\t- SCM with model_type: " + config["0"] + ", max_rules : " + str(config["1"]) + ", p : " + \
-                   str(config["2"])
+        return "\n\t\t- SCM with model_type: " + config["model_type"] + ", max_rules : " + str(config["max_rules"]) + ", p : " + \
+                   str(config["p"])
 
 
 def getInterpret(classifier, directory):

@@ -8,9 +8,10 @@ import numpy as np
 # import matplotlib.pyplot as plt
 # from matplotlib.ticker import FuncFormatter
 
-from .. import Metrics
-from ..utils.HyperParameterSearch import genHeatMaps
+# from .. import Metrics
+# from ..utils.HyperParameterSearch import genHeatMaps
 from ..utils.Interpret import getFeatureImportance
+# from ..Monoview.MonoviewUtils import randomizedSearch
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -23,9 +24,8 @@ def canProbas():
 
 def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
     """Used to fit the monoview classifier with the args stored in kwargs"""
-    num_estimators = int(kwargs['0'])
-    base_estimators = DecisionTreeClassifier()
-    classifier = AdaBoostClassifier(n_estimators=num_estimators, base_estimator=base_estimators,
+    classifier = AdaBoostClassifier(n_estimators=kwargs['n_estimators'],
+                                    base_estimator=kwargs['base_estimator'],
                                     random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
@@ -35,61 +35,46 @@ def paramsToSet(nIter, randomState):
     """Used for weighted linear early fusion to generate random search sets"""
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append([randomState.randint(1, 15), DecisionTreeClassifier()])
+        paramsSet.append([randomState.randint(1, 15),
+                          DecisionTreeClassifier()])
     return paramsSet
 
 
-def getKWARGS(kwargsList):
+def getKWARGS(args):
     """Used to format kwargs for the parsed args"""
     kwargsDict = {}
-    for (kwargName, kwargValue) in kwargsList:
-        if kwargName == "CL_Adaboost_n_est":
-            kwargsDict['0'] = int(kwargValue)
-        elif kwargName == "CL_Adaboost_b_est":
-            kwargsDict['1'] = kwargValue
-        else:
-            raise ValueError("Wrong arguments served to Adaboost")
+    kwargsDict['n_estimators'] = args.Ada_n_est
+    kwargsDict['base_estimator'] = DecisionTreeClassifier() #args.Ada_b_est
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, metric=["accuracy_score", None], nIter=30,
-                     nbCores=1):
-    pipeline = Pipeline([('classifier', AdaBoostClassifier())])
+def genPipeline():
+    return Pipeline([('classifier', AdaBoostClassifier())])
 
-    param = {"classifier__n_estimators": randint(1, 150),
+
+def genParamsDict(randomState):
+    return {"classifier__n_estimators": np.arange(150)+1,
              "classifier__base_estimator": [DecisionTreeClassifier()]}
 
-    metricModule = getattr(Metrics, metric[0])
-    if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-    else:
-        metricKWARGS = {}
-    scorer = metricModule.get_scorer(**metricKWARGS)
 
-    grid = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=param, refit=True, n_jobs=nbCores,
-                              scoring=scorer, cv=KFolds, random_state=randomState)
-    detector = grid.fit(X_train, y_train)
-    desc_estimators = [detector.best_params_["classifier__n_estimators"],
-                       detector.best_params_["classifier__base_estimator"]]
+def genBestParams(detector):
+    return {"n_estimators": detector.best_params_["classifier__n_estimators"],
+            "base_estimator": detector.best_params_["classifier__base_estimator"]}
 
-    scoresArray = detector.cv_results_['mean_test_score']
-    params = [("baseEstimators", np.array(["DecisionTree" for _ in range(nIter)])),
+
+def genParamsFromDetector(detector):
+    nIter = len(detector.cv_results_['param_classifier__n_estimators'])
+    return [("baseEstimators", np.array(["DecisionTree" for _ in range(nIter)])),
               ("nEstimators", np.array(detector.cv_results_['param_classifier__n_estimators']))]
-
-    genHeatMaps(params, scoresArray, outputFileName)
-    return desc_estimators
 
 
 def getConfig(config):
-    if type(config) not in [list, dict]:  # Used in late fusion when config is a classifier
+    if type(config) is not dict:  # Used in late fusion when config is a classifier
         return "\n\t\t- Adaboost with num_esimators : " + str(config.n_estimators) + ", base_estimators : " + str(
             config.base_estimator)
     else:
-        try:
-            return "\n\t\t- Adaboost with num_esimators : " + str(config[0]) + ", base_estimators : " + str(config[1])
-        except:
-            return "\n\t\t- Adaboost with num_esimators : " + str(config["0"]) + ", base_estimators : " + str(
-                config["1"])
+        return "\n\t\t- Adaboost with n_estimators : " + str(config["n_estimators"]) + ", base_estimator : " + str(
+               config["base_estimator"])
 
 
 def getInterpret(classifier, directory):

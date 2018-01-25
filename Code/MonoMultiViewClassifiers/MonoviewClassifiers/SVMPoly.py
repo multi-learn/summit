@@ -18,9 +18,7 @@ def canProbas():
 
 
 def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
-    C = int(kwargs['0'])
-    degree = int(kwargs['1'])
-    classifier = SVC(C=C, kernel='poly', degree=degree, probability=True, max_iter=1000, random_state=randomState)
+    classifier = SVC(C=kwargs['C'], kernel='poly', degree=kwargs["degree"], probability=True, max_iter=1000, random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
 
@@ -32,51 +30,35 @@ def paramsToSet(nIter, randomState):
     return paramsSet
 
 
-def getKWARGS(kwargsList):
-    kwargsDict = {}
-    for (kwargName, kwargValue) in kwargsList:
-        if kwargName == "CL_SVMPoly_C":
-            kwargsDict['0'] = int(kwargValue)
-        elif kwargName == "CL_SVMPoly_deg":
-            kwargsDict['1'] = int(kwargValue)
-        else:
-            raise ValueError("Wrong arguments served to SVMPoly")
+def getKWARGS(args):
+    kwargsDict = {"C": args.SVMPoly_C, "degree": args.SVMPoly_deg}
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1,
-                     metric=["accuracy_score", None], nIter=30):
-    pipeline_SVMPoly = Pipeline([('classifier', SVC(kernel="poly", max_iter=1000))])
-    param_SVMPoly = {"classifier__C": randint(1, 10000),
-                     "classifier__degree": randint(1, 30)}
-    metricModule = getattr(Metrics, metric[0])
-    if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-    else:
-        metricKWARGS = {}
-    scorer = metricModule.get_scorer(**metricKWARGS)
-    grid_SVMPoly = RandomizedSearchCV(pipeline_SVMPoly, n_iter=nIter, param_distributions=param_SVMPoly, refit=True,
-                                      n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
-    SVMPoly_detector = grid_SVMPoly.fit(X_train, y_train)
-    desc_params = [SVMPoly_detector.best_params_["classifier__C"], SVMPoly_detector.best_params_["classifier__degree"]]
+def genPipeline():
+    return Pipeline([('classifier', SVC(kernel="poly", max_iter=1000))])
 
-    scoresArray = SVMPoly_detector.cv_results_['mean_test_score']
-    params = [("c", np.array(SVMPoly_detector.cv_results_['param_classifier__C'])),
-              ("degree", np.array(SVMPoly_detector.cv_results_['param_classifier__degree']))]
 
-    genHeatMaps(params, scoresArray, outputFileName)
+def genParamsDict(randomState):
+    return {"classifier__C": np.arange(1, 10000),
+                     "classifier__degree": np.arange(1, 30)}
 
-    return desc_params
+
+def genBestParams(detector):
+    return {"C": detector.best_params_["classifier__C"],
+                   "degree": detector.best_params_["classifier__degree"]}
+
+
+def genParamsFromDetector(detector):
+    return [("c", np.array(detector.cv_results_['param_classifier__C'])),
+              ("degree", np.array(detector.cv_results_['param_classifier__degree']))]
 
 
 def getConfig(config):
     if type(config) not in [list, dict]:
         return "\n\t\t- SVM Poly with C : " + str(config.C) + ", degree : " + str(config.degree)
     else:
-        try:
-            return "\n\t\t- SVM Poly with C : " + str(config[0]) + ", degree : " + str(config[1])
-        except:
-            return "\n\t\t- SVM Poly with C : " + str(config["0"]) + ", degree : " + str(config["1"])
+        return "\n\t\t- SVM Poly with C : " + str(config["C"]) + ", degree : " + str(config["degree"])
 
 def getInterpret(classifier, directory):
     return ""

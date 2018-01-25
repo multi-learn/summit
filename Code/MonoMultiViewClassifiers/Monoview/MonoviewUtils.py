@@ -1,18 +1,7 @@
-#!/usr/bin/env python
+from sklearn.model_selection import RandomizedSearchCV
 
-""" Library: MultiClass Classification with MonoView """
-
-# Import built-in modules
-
-# Import sci-kit learn party modules
-# from sklearn.tests import train_test_split   # For calculating the train/test split
-from sklearn.pipeline import Pipeline  # Pipelining in classification
-from sklearn.model_selection import GridSearchCV  # GridSearch for parameters of classification
-from sklearn.ensemble import RandomForestClassifier  # RandomForest-Classifier
-import sklearn
-import numpy as np
-
-# Import own modules
+from .. import Metrics
+from ..utils import HyperParameterSearch
 
 # Author-Info
 __author__ = "Nikolas Huelsmann, Baptiste Bauvin"
@@ -20,40 +9,65 @@ __status__ = "Prototype"  # Production, Development, Prototype
 # __date__ = 2016 - 03 - 25
 
 
-def isUseful(labelSupports, index, CLASS_LABELS, labelDict):
-    if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:
-        labelSupports[labelDict[CLASS_LABELS[index]]] -= 1
-        return True, labelSupports
+def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierModule, KFolds = 4, nbCores = 1,
+    metric = ["accuracy_score", None], nIter = 30):
+
+    pipeline = classifierModule.genPipeline()
+    params_dict = classifierModule.genParamsDict(randomState)
+
+    metricModule = getattr(Metrics, metric[0])
+    if metric[1] is not None:
+        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
     else:
-        return False, labelSupports
+        metricKWARGS = {}
+    scorer = metricModule.get_scorer(**metricKWARGS)
+    randomSearch = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=params_dict, refit=True, n_jobs = nbCores, scoring = scorer, cv = KFolds, random_state = randomState)
+    detector = randomSearch.fit(X_train, y_train)
+    bestParams = classifierModule.genBestParams(detector)
+    # desc_params = {"C": SVMPoly_detector.best_params_["classifier__C"], "degree": SVMPoly_detector.best_params_["classifier__degree"]}
 
+    scoresArray = detector.cv_results_['mean_test_score']
+    params = classifierModule.genParamsFromDetector(detector)
+    # params = [("c", np.array(SVMPoly_detector.cv_results_['param_classifier__C'])), ("degree", np.array(SVMPoly_detector.cv_results_['param_classifier__degree']))]
 
-def getLabelSupports(CLASS_LABELS):
-    labels = set(CLASS_LABELS)
-    supports = [CLASS_LABELS.tolist().count(label) for label in labels]
-    return supports, dict((label, index) for label, index in zip(labels, range(len(labels))))
+    HyperParameterSearch.genHeatMaps(params, scoresArray, outputFileName)
 
+    return bestParams
 
-def splitDataset(LABELS, NB_CLASS, LEARNING_RATE, DATASET_LENGTH, randomState):
-    validationIndices = extractRandomTrainingSet(LABELS, 1 - LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState)
-    validationIndices.sort()
-    return validationIndices
-
-
-def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState):
-    labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS))
-    nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
-    trainingExamplesIndices = []
-    usedIndices = []
-    while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
-        isUseFull = False
-        index = int(randomState.randint(0, DATASET_LENGTH - 1))
-        if index not in usedIndices:
-            isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
-        if isUseFull:
-            trainingExamplesIndices.append(index)
-            usedIndices.append(index)
-    return trainingExamplesIndices
+# def isUseful(labelSupports, index, CLASS_LABELS, labelDict):
+#     if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:
+#         labelSupports[labelDict[CLASS_LABELS[index]]] -= 1
+#         return True, labelSupports
+#     else:
+#         return False, labelSupports
+#
+#
+# def getLabelSupports(CLASS_LABELS):
+#     labels = set(CLASS_LABELS)
+#     supports = [CLASS_LABELS.tolist().count(label) for label in labels]
+#     return supports, dict((label, index) for label, index in zip(labels, range(len(labels))))
+#
+#
+# def splitDataset(LABELS, NB_CLASS, LEARNING_RATE, DATASET_LENGTH, randomState):
+#     validationIndices = extractRandomTrainingSet(LABELS, 1 - LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState)
+#     validationIndices.sort()
+#     return validationIndices
+#
+#
+# def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState):
+#     labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS))
+#     nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
+#     trainingExamplesIndices = []
+#     usedIndices = []
+#     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
+#         isUseFull = False
+#         index = int(randomState.randint(0, DATASET_LENGTH - 1))
+#         if index not in usedIndices:
+#             isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
+#         if isUseFull:
+#             trainingExamplesIndices.append(index)
+#             usedIndices.append(index)
+#     return trainingExamplesIndices
 
 
 ##### Generating Test and Train Data

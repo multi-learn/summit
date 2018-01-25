@@ -16,6 +16,7 @@ import h5py
 from .. import MonoviewClassifiers
 from .analyzeResult import execute
 from ..utils.Dataset import getValue, extractSubset
+from . import MonoviewUtils
 
 # Author-Info
 __author__ = "Nikolas Huelsmann, Baptiste BAUVIN"
@@ -154,10 +155,11 @@ def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train,
            outputFileName, KFolds, nbCores, metrics, kwargs):
     if hyperParamSearch != "None":
         logging.debug("Start:\t " + hyperParamSearch + " best settings with " + str(nIter) + " iterations for " + CL_type)
-        classifierHPSearch = getattr(classifierModule, hyperParamSearch)
-        cl_desc = classifierHPSearch(X_train, y_train, randomState, outputFileName, KFolds=KFolds, nbCores=nbCores,
-                                     metric=metrics[0], nIter=nIter)
-        clKWARGS = dict((str(index), desc) for index, desc in enumerate(cl_desc))
+        classifierHPSearch = getattr(MonoviewUtils, hyperParamSearch)
+        clKWARGS = classifierHPSearch(X_train, y_train, randomState,
+                                      outputFileName, classifierModule,
+                                      KFolds=KFolds, nbCores=nbCores,
+                                      metric=metrics[0], nIter=nIter)
         logging.debug("Done:\t " + hyperParamSearch + "RandomSearch best settings")
     else:
         clKWARGS = kwargs[CL_type + "KWARGS"]

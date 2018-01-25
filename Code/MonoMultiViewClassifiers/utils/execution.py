@@ -82,66 +82,66 @@ def parseTheArgs(arguments):
                             help='Determine which hyperparamter search function use', default="randomizedSearch")
 
     groupRF = parser.add_argument_group('Random Forest arguments')
-    groupRF.add_argument('--CL_RandomForest_trees', metavar='INT', type=int, action='store', help='Number max trees',
+    groupRF.add_argument('--RF_trees', metavar='INT', type=int, action='store', help='Number max trees',
                          default=25)
-    groupRF.add_argument('--CL_RandomForest_max_depth', metavar='INT', type=int, action='store',
+    groupRF.add_argument('--RF_max_depth', metavar='INT', type=int, action='store',
                          help='Max depth for the trees',
                          default=5)
-    groupRF.add_argument('--CL_RandomForest_criterion', metavar='STRING', action='store', help='Criterion for the trees',
+    groupRF.add_argument('--RF_criterion', metavar='STRING', action='store', help='Criterion for the trees',
                          default="entropy")
 
     groupSVMLinear = parser.add_argument_group('Linear SVM arguments')
-    groupSVMLinear.add_argument('--CL_SVMLinear_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
+    groupSVMLinear.add_argument('--SVML_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
                                 default=1)
 
     groupSVMRBF = parser.add_argument_group('SVW-RBF arguments')
-    groupSVMRBF.add_argument('--CL_SVMRBF_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
+    groupSVMRBF.add_argument('--SVMRBF_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
                              default=1)
 
     groupSVMPoly = parser.add_argument_group('Poly SVM arguments')
-    groupSVMPoly.add_argument('--CL_SVMPoly_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
+    groupSVMPoly.add_argument('--SVMPoly_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
                               default=1)
-    groupSVMPoly.add_argument('--CL_SVMPoly_deg', metavar='INT', type=int, action='store', help='Degree parameter used',
+    groupSVMPoly.add_argument('--SVMPoly_deg', metavar='INT', type=int, action='store', help='Degree parameter used',
                               default=2)
 
     groupAdaboost = parser.add_argument_group('Adaboost arguments')
-    groupAdaboost.add_argument('--CL_Adaboost_n_est', metavar='INT', type=int, action='store', help='Number of estimators',
+    groupAdaboost.add_argument('--Ada_n_est', metavar='INT', type=int, action='store', help='Number of estimators',
                                default=2)
-    groupAdaboost.add_argument('--CL_Adaboost_b_est', metavar='STRING', action='store', help='Estimators',
+    groupAdaboost.add_argument('--Ada_b_est', metavar='STRING', action='store', help='Estimators',
                                default='DecisionTreeClassifier')
 
     groupDT = parser.add_argument_group('Decision Trees arguments')
-    groupDT.add_argument('--CL_DecisionTree_depth', metavar='INT', type=int, action='store',
+    groupDT.add_argument('--DT_depth', metavar='INT', type=int, action='store',
                          help='Determine max depth for Decision Trees', default=3)
-    groupDT.add_argument('--CL_DecisionTree_criterion', metavar='STRING', action='store',
+    groupDT.add_argument('--DT_criterion', metavar='STRING', action='store',
                          help='Determine max depth for Decision Trees', default="entropy")
-    groupDT.add_argument('--CL_DecisionTree_splitter', metavar='STRING', action='store',
+    groupDT.add_argument('--DT_splitter', metavar='STRING', action='store',
                          help='Determine criterion for Decision Trees', default="random")
 
     groupSGD = parser.add_argument_group('SGD arguments')
-    groupSGD.add_argument('--CL_SGD_alpha', metavar='FLOAT', type=float, action='store',
+    groupSGD.add_argument('--SGD_alpha', metavar='FLOAT', type=float, action='store',
                           help='Determine alpha for SGDClassifier', default=0.1)
-    groupSGD.add_argument('--CL_SGD_loss', metavar='STRING', action='store',
+    groupSGD.add_argument('--SGD_loss', metavar='STRING', action='store',
                           help='Determine loss for SGDClassifier', default='log')
-    groupSGD.add_argument('--CL_SGD_penalty', metavar='STRING', action='store',
+    groupSGD.add_argument('--SGD_penalty', metavar='STRING', action='store',
                           help='Determine penalty for SGDClassifier', default='l2')
 
     groupKNN = parser.add_argument_group('KNN arguments')
-    groupKNN.add_argument('--CL_KNN_neigh', metavar='INT', type=int, action='store',
+    groupKNN.add_argument('--KNN_neigh', metavar='INT', type=int, action='store',
                           help='Determine number of neighbors for KNN', default=1)
-    groupKNN.add_argument('--CL_KNN_weights', metavar='STRING', action='store',
+    groupKNN.add_argument('--KNN_weights', metavar='STRING', action='store',
                           help='Determine number of neighbors for KNN', default="distance")
-    groupKNN.add_argument('--CL_KNN_algo', metavar='STRING', action='store',
+    groupKNN.add_argument('--KNN_algo', metavar='STRING', action='store',
                           help='Determine number of neighbors for KNN', default="auto")
-    groupKNN.add_argument('--CL_KNN_p', metavar='INT', type=int, action='store',
+    groupKNN.add_argument('--KNN_p', metavar='INT', type=int, action='store',
                           help='Determine number of neighbors for KNN', default=1)
 
     groupSCM = parser.add_argument_group('SCM arguments')
-    groupSCM.add_argument('--CL_SCM_max_rules', metavar='INT', type=int, action='store',
+    groupSCM.add_argument('--SCM_max_rules', metavar='INT', type=int, action='store',
                           help='Max number of rules for SCM', default=1)
-    groupSCM.add_argument('--CL_SCM_p', metavar='FLOAT', type=float, action='store',
+    groupSCM.add_argument('--SCM_p', metavar='FLOAT', type=float, action='store',
                           help='Max number of rules for SCM', default=1.0)
-    groupSCM.add_argument('--CL_SCM_model_type', metavar='STRING', action='store',
+    groupSCM.add_argument('--SCM_model_type', metavar='STRING', action='store',
                           help='Max number of rules for SCM', default="conjunction")
 
     groupMumbo = parser.add_argument_group('Mumbo arguments')

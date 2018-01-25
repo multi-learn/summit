@@ -19,10 +19,9 @@ def canProbas():
 
 
 def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
-    num_estimators = int(kwargs['0'])
-    maxDepth = int(kwargs['1'])
-    criterion = kwargs["2"]
-    classifier = RandomForestClassifier(n_estimators=num_estimators, max_depth=maxDepth, criterion=criterion,
+    classifier = RandomForestClassifier(n_estimators=kwargs['n_estimators'],
+                                        max_depth=kwargs['max_depth'],
+                                        criterion=kwargs['criterion'],
                                         n_jobs=NB_CORES, random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
@@ -36,47 +35,33 @@ def paramsToSet(nIter, randomState):
     return paramsSet
 
 
-def getKWARGS(kwargsList):
-    kwargsDict = {}
-    for (kwargName, kwargValue) in kwargsList:
-        if kwargName == "CL_RandomForest_trees":
-            kwargsDict['0'] = int(kwargValue)
-        elif kwargName == "CL_RandomForest_max_depth":
-            kwargsDict['1'] = kwargValue
-        elif kwargName == "CL_RandomForest_criterion":
-            kwargsDict['2'] = kwargValue
-        else:
-            raise ValueError("Wrong arguments served to RandomForest")
+def getKWARGS(args):
+    kwargsDict = {"n_estimators": args.RF_trees,
+                  "max_depth": args.RF_max_depth,
+                  "criterion": args.RF_criterion}
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1,
-                     metric=["accuracy_score", None], nIter=30):
-    pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
-    param_rf = {"classifier__n_estimators": randint(1, 300),
-                "classifier__max_depth": randint(1, 300),
+def genPipeline():
+    return Pipeline([('classifier', RandomForestClassifier())])
+
+
+def genParamsDict(randomState):
+    return {"classifier__n_estimators": np.arange(1, 300),
+                "classifier__max_depth": np.arange(1, 300),
                 "classifier__criterion": ["gini", "entropy"]}
-    metricModule = getattr(Metrics, metric[0])
-    if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-    else:
-        metricKWARGS = {}
-    scorer = metricModule.get_scorer(**metricKWARGS)
-    grid_rf = RandomizedSearchCV(pipeline_rf, n_iter=nIter, param_distributions=param_rf, refit=True, n_jobs=nbCores,
-                                 scoring=scorer, cv=KFolds, random_state=randomState)
-    rf_detector = grid_rf.fit(X_train, y_train)
 
-    desc_estimators = [rf_detector.best_params_["classifier__n_estimators"],
-                       rf_detector.best_params_["classifier__max_depth"],
-                       rf_detector.best_params_["classifier__criterion"]]
 
-    scoresArray = rf_detector.cv_results_['mean_test_score']
-    params = [("nEstimators", np.array(rf_detector.cv_results_['param_classifier__n_estimators'])),
-              ("maxDepth", np.array(rf_detector.cv_results_['param_classifier__max_depth'])),
-              ("criterion", np.array(rf_detector.cv_results_['param_classifier__criterion']))]
+def genBestParams(detector):
+    return {"n_estimators": detector.best_params_["classifier__n_estimators"],
+            "max_depth": detector.best_params_["classifier__max_depth"],
+            "criterion": detector.best_params_["classifier__criterion"]}
 
-    genHeatMaps(params, scoresArray, outputFileName)
-    return desc_estimators
+
+def genParamsFromDetector(detector):
+    return [("nEstimators", np.array(detector.cv_results_['param_classifier__n_estimators'])),
+              ("maxDepth", np.array(detector.cv_results_['param_classifier__max_depth'])),
+              ("criterion", np.array(detector.cv_results_['param_classifier__criterion']))]
 
 
 def getConfig(config):
@@ -84,12 +69,8 @@ def getConfig(config):
         return "\n\t\t- Random Forest with num_esimators : " + str(config.n_estimators) + ", max_depth : " + str(
             config.max_depth) + ", criterion : " + config.criterion
     else:
-        try:
-            return "\n\t\t- Random Forest with num_esimators : " + str(config[0]) + ", max_depth : " + str(
-                config[1]) + ", criterion : " + config[2]
-        except:
-            return "\n\t\t- Random Forest with num_esimators : " + str(config["0"]) + ", max_depth : " + str(
-                config["1"]) + ", criterion : " + config["2"]
+        return "\n\t\t- Random Forest with num_esimators : " + str(config["n_estimators"]) + \
+               ", max_depth : " + str(config["max_depth"]) + ", criterion : " + config["criterion"]
 
 
 def getInterpret(classifier, directory):

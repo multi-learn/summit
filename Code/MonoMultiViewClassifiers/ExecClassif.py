@@ -100,8 +100,8 @@ def initMonoviewKWARGS(args, classifiersNames):
     monoviewKWARGS = {}
     for classifiersName in classifiersNames:
         classifierModule = getattr(MonoviewClassifiers, classifiersName)
-        monoviewKWARGS[classifiersName + "KWARGSInit"] = classifierModule.getKWARGS(
-            [(key, value) for key, value in vars(args).items() if key.startswith("CL_" + classifiersName)])
+        monoviewKWARGS[classifiersName + "KWARGSInit"] = classifierModule.getKWARGS(args)
+            # [(key, value) for key, value in vars(args).items() if key.startswith("CL_" + classifiersName)])
     logging.debug("Done:\t Initializing Monoview classifiers arguments")
     return monoviewKWARGS
 

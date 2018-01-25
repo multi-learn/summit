@@ -20,11 +20,8 @@ def canProbas():
 
 
 def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
-    maxDepth = int(kwargs['0'])
-    criterion = kwargs['1']
-    splitter = kwargs['2']
-    classifier = tree.DecisionTreeClassifier(max_depth=maxDepth, criterion=criterion, splitter=splitter,
-                                        random_state=randomState)
+    classifier = tree.DecisionTreeClassifier(max_depth=kwargs['max_depth'], criterion=kwargs['criterion'],
+                                             splitter=kwargs['splitter'], random_state=randomState)
     classifier.fit(DATASET, CLASS_LABELS)
     return classifier
 
@@ -37,59 +34,40 @@ def paramsToSet(nIter, randomState):
     return paramsSet
 
 
-def getKWARGS(kwargsList):
-    kwargsDict = {}
-    for (kwargName, kwargValue) in kwargsList:
-        if kwargName == "CL_DecisionTree_depth":
-            kwargsDict['0'] = int(kwargValue)
-        elif kwargName == "CL_DecisionTree_criterion":
-            kwargsDict['1'] = kwargValue
-        elif kwargName == "CL_DecisionTree_splitter":
-            kwargsDict['2'] = kwargValue
-        else:
-            raise ValueError("Wrong arguments served to DecisionTree")
+def getKWARGS(args):
+    kwargsDict = {"max_depth": args.DT_depth, "criterion": args.DT_criterion, "splitter": args.DT_splitter}
     return kwargsDict
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, KFolds=4, nbCores=1,
-                     metric=["accuracy_score", None], nIter=30):
-    pipeline_DT = Pipeline([('classifier', tree.DecisionTreeClassifier())])
-    param_DT = {"classifier__max_depth": randint(1, 300),
+def genPipeline():
+    return Pipeline([('classifier', tree.DecisionTreeClassifier())])
+
+
+def genParamsDict(randomState):
+    return {"classifier__max_depth": np.arange(1, 300),
                 "classifier__criterion": ["gini", "entropy"],
                 "classifier__splitter": ["best", "random"]}
-    metricModule = getattr(Metrics, metric[0])
-    if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-    else:
-        metricKWARGS = {}
-    scorer = metricModule.get_scorer(**metricKWARGS)
-    grid_DT = RandomizedSearchCV(pipeline_DT, n_iter=nIter, param_distributions=param_DT, refit=True, n_jobs=nbCores,
-                                 scoring=scorer,
-                                 cv=KFolds, random_state=randomState)
-    DT_detector = grid_DT.fit(X_train, y_train)
-    desc_params = [DT_detector.best_params_["classifier__max_depth"], DT_detector.best_params_["classifier__criterion"],
-                   DT_detector.best_params_["classifier__splitter"]]
 
-    scoresArray = DT_detector.cv_results_['mean_test_score']
-    params = [("maxDepth", np.array(DT_detector.cv_results_['param_classifier__max_depth'])),
-              ("criterion", np.array(DT_detector.cv_results_['param_classifier__criterion'])),
-              ("splitter", np.array(DT_detector.cv_results_['param_classifier__splitter']))]
 
-    genHeatMaps(params, scoresArray, outputFileName)
-    return desc_params
+def genBestParams(detector):
+    return {"max_depth": detector.best_params_["classifier__max_depth"],
+            "criterion": detector.best_params_["classifier__criterion"],
+            "splitter": detector.best_params_["classifier__splitter"]}
+
+
+def genParamsFromDetector(detector):
+    return [("maxDepth", np.array(detector.cv_results_['param_classifier__max_depth'])),
+            ("criterion", np.array(detector.cv_results_['param_classifier__criterion'])),
+            ("splitter", np.array(detector.cv_results_['param_classifier__splitter']))]
 
 
 def getConfig(config):
-    if type(config) not in [list, dict]:
+    if type(config) is not dict:
         return "\n\t\t- Decision Tree with max_depth : " + str(
             config.max_depth) + ", criterion : " + config.criterion + ", splitter : " + config.splitter
     else:
-        try:
-            return "\n\t\t- Decision Tree with max_depth : " + str(config[0]) + ", criterion : " + config[
-                1] + ", splitter : " + config[2]
-        except:
-            return "\n\t\t- Decision Tree with max_depth : " + str(config["0"]) + ", criterion : " + config[
-                "1"] + ", splitter : " + config["2"]
+        return "\n\t\t- Decision Tree with max_depth : " + str(config["max_depth"]) + ", criterion : " + config[
+                "criterion"] + ", splitter : " + config["splitter"]
 
 def getInterpret(classifier, directory):
     dot_data = tree.export_graphviz(classifier, out_file=None)
