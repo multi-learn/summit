@@ -196,85 +196,106 @@ if __name__ == '__main__':
     import argparse
     import pickle
 
+    from ..utils import Dataset
+
     parser = argparse.ArgumentParser(
         description='This methods is used to execute a multiclass classification with one single view. ',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     groupStandard = parser.add_argument_group('Standard arguments')
     groupStandard.add_argument('-log', action='store_true', help='Use option to activate Logging to Console')
-    groupStandard.add_argument('--type', metavar='STRING', action='store', help='Type of Dataset', default=".hdf5")
     groupStandard.add_argument('--name', metavar='STRING', action='store',
-                               help='Name of Database (default: %(default)s)', default='DB')
+                               help='Name of Database', default='Plausible')
+    groupStandard.add_argument('--cl_name', metavar='STRING', action='store',
+                               help='THe name of the monoview classifier to use', default='DecisionTree')
     groupStandard.add_argument('--view', metavar='STRING', action='store',
-                               help='Name of Feature for Classification (default: %(default)s)', default='View0')
+                               help='Name of the view used', default='View0')
     groupStandard.add_argument('--pathF', metavar='STRING', action='store',
-                               help='Path to the views (default: %(default)s)', default='Results-FeatExtr/')
+                               help='Path to the database hdf5 file', default='../../../Data/Plausible')
     groupStandard.add_argument('--directory', metavar='STRING', action='store',
-                               help='Path to the views (default: %(default)s)', default='Results-FeatExtr/')
+                               help='Path of the output directory', default='')
     groupStandard.add_argument('--labelsNames', metavar='STRING', action='store', nargs='+',
-                               help='Name of classLabels CSV-file  (default: %(default)s)', default='classLabels.csv')
+                               help='Name of the labels used for classification', default=['Yes', 'No'])
     groupStandard.add_argument('--classificationIndices', metavar='STRING', action='store',
-                               help='Name of classLabels-Description CSV-file  (default: %(default)s)',
-                               default='classLabels-Description.csv')
-    groupStandard.add_argument('--nbCores', metavar='INT', action='store', help='Number of cores, -1 for all', type=int,
-                            default=1)
+                               help='Path to the classificationIndices pickle file',
+                               default='')
+    groupStandard.add_argument('--KFolds', metavar='STRING', action='store',
+                               help='Path to the kFolds pickle file',
+                               default='')
+    groupStandard.add_argument('--nbCores', metavar='INT', action='store', help='Number of cores, -1 for all',
+                               type=int, default=1)
     groupStandard.add_argument('--randomState', metavar='INT', action='store',
                                help='Seed for the random state or pickable randomstate file', default=42)
     groupStandard.add_argument('--hyperParamSearch', metavar='STRING', action='store',
-                               help='The type of method used tosearch the best set of hyper parameters', default='randomizedSearch')
-    groupStandard.add_argument('--metrics', metavar='STRING', action='store', nargs="+",
-                               help='Metrics used in the experimentation, the first will be the one used in CV',
-                               default=[''])
-    groupStandard.add_argument('--nIter', metavar='INT', action='store', help='Number of itetarion in hyper parameter search', type=int,
+                               help='The type of method used to search the best set of hyper parameters',
+                               default='randomizedSearch')
+    groupStandard.add_argument('--metrics', metavar='STRING', action='store',
+                               help='Path to the pickle file describing the metricsused to analyze the performance',
+                               default='')
+    groupStandard.add_argument('--kwargs', metavar='STRING', action='store',
+                               help='Path to the pickle file containing the key-words arguments used for classification',
+                               default='')
+    groupStandard.add_argument('--nIter', metavar='INT', action='store',
+                               help='Number of itetarion in hyper parameter search', type=int,
                                default=10)
 
     args = parser.parse_args()
 
     directory = args.directory
     name = args.name
+    classifierName = args.cl_name
     labelsNames = args.labelsNames
-    classificationIndices = args.classificationIndices
-    KFolds = args.KFolds
+    viewName = args.view
+    with open(args.classificationIndices, 'rb') as handle:
+        classificationIndices = pickle.load(handle)
+    with open(args.KFolds, 'rb') as handle:
+        KFolds = pickle.load(handle)
     nbCores = args.nbCores
-    databaseType = None
     path = args.pathF
-    randomState = args.randomState
+    with open(args.randomState, 'rb') as handle:
+        randomState = pickle.load(handle)
     hyperParamSearch = args.hyperParamSearch
-    metrics = args.metrics
+    with open(args.metrics, 'rb') as handle:
+        metrics = pickle.load(handle)
     nIter = args.nIter
-    kwargs = args.kwargs
+    with open(args.kwargs, 'rb') as handle:
+        kwargs = pickle.load(handle)
+
+    databaseType = None
+
 
     # Extract the data using MPI
-    X = None
-    Y = None
+    X, Y = Dataset.getMonoviewShared(path, name, viewName)
 
-    logfilename = "gen a goodlogfilename"
-
-
-
-    logfile = directory + logfilename
-    if os.path.isfile(logfile + ".log"):
+    # Init log
+    logFileName = time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + name + "-"+ viewName +"-" + classifierName +'-LOG'
+    if not os.path.exists(os.path.dirname(directory + logFileName)):
+        try:
+            os.makedirs(os.path.dirname(directory + logFileName))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+    logFile = directory + logFileName
+    if os.path.isfile(logFile + ".log"):
         for i in range(1, 20):
-            testFileName = logfilename + "-" + str(i) + ".log"
-            if not os.path.isfile(directory + testFileName):
-                logfile = directory + testFileName
+            testFileName = logFileName + "-" + str(i) + ".log"
+            if not (os.path.isfile(directory + testFileName)):
+                logFile = directory + testFileName
                 break
     else:
-        logfile += ".log"
-
-    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logfile, level=logging.DEBUG,
+        logFile += ".log"
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logFile, level=logging.DEBUG,
                         filemode='w')
-
     if args.log:
         logging.getLogger().addHandler(logging.StreamHandler())
 
-
+    # Computing on multiple cores
     res = ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFolds, nbCores, databaseType, path,
                  randomState, hyperParamSearch=hyperParamSearch,
                  metrics=metrics, nIter=nIter, **kwargs)
 
     with open(directory + "res.pickle", "wb") as handle:
-        pickle.dump(randomState, handle)
+        pickle.dump(res, handle)
 
 
     # Pickle the res in a file to be reused.

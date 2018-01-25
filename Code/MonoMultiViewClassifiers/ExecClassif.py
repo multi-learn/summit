@@ -167,7 +167,7 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, class
     resultsMonoview += [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
                                                coreIndex, args.type, args.pathF, randomState, labels,
                                                hyperParamSearch=hyperParamSearch, metrics=metrics,
-                                               nIter=args.CL_GS_iter, **argument)
+                                               nIter=args.CL_HPS_iter, **argument)
                         for argument in argumentDictionaries["Monoview"]]
     logging.debug("Done:\t Monoview benchmark")
 
@@ -181,7 +181,7 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, class
     resultsMultiview += [
         ExecMultiview_multicore(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
                                 args.pathF, LABELS_DICTIONARY, randomState, labels, hyperParamSearch=hyperParamSearch,
-                                metrics=metrics, nIter=args.CL_GS_iter, **arguments)
+                                metrics=metrics, nIter=args.CL_HPS_iter, **arguments)
         for arguments in argumentDictionaries["Multiview"]]
     logging.debug("Done:\t Multiview benchmark")
 
@@ -220,7 +220,7 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None, directory=Non
             delayed(ExecMonoview_multicore)(directory, args.name, labelsNames, classificationIndices, kFolds,
                                             coreIndex, args.type, args.pathF, randomState, labels,
                                             hyperParamSearch=hyperParamSearch,
-                                            metrics=metrics, nIter=args.CL_GS_iter,
+                                            metrics=metrics, nIter=args.CL_HPS_iter,
                                             **argumentDictionaries["Monoview"][coreIndex + stepIndex * nbCores])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores))))
     logging.debug("Done:\t Monoview benchmark")
@@ -238,7 +238,7 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None, directory=Non
         resultsMultiview += Parallel(n_jobs=nbCores)(
             delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, classificationIndices, kFolds,
                                              args.type, args.pathF, LABELS_DICTIONARY, randomState, labels,
-                                             hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=args.CL_GS_iter,
+                                             hyperParamSearch=hyperParamSearch, metrics=metrics, nIter=args.CL_HPS_iter,
                                              **argumentDictionaries["Multiview"][stepIndex * nbCores + coreIndex])
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
     logging.debug("Done:\t Multiview benchmark")
@@ -280,7 +280,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
         resultsMonoview += [ExecMonoview(directory, X, Y, args.name, labelsNames, classificationIndices, kFolds,
                                                    1, args.type, args.pathF, randomState,
                                                    hyperParamSearch=hyperParamSearch, metrics=metrics,
-                                                   nIter=args.CL_GS_iter, **arguments)]
+                                                   nIter=args.CL_HPS_iter, **arguments)]
     logging.debug("Done:\t Monoview benchmark")
 
     logging.debug("Start:\t Multiview arguments initialization")
@@ -294,7 +294,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
         resultsMultiview += [
             ExecMultiview(directory, DATASET, args.name, classificationIndices, kFolds, 1, args.type,
                                     args.pathF, LABELS_DICTIONARY, randomState, labels, hyperParamSearch=hyperParamSearch,
-                                    metrics=metrics, nIter=args.CL_GS_iter, **arguments)]
+                                    metrics=metrics, nIter=args.CL_HPS_iter, **arguments)]
     logging.debug("Done:\t Multiview benchmark")
 
     return [flag, resultsMonoview, resultsMultiview]
@@ -444,7 +444,7 @@ def execClassif(arguments):
 #     resultsMonoview += [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
 #                                                coreIndex, args.type, args.pathF, randomState,
 #                                                hyperParamSearch=hyperParamSearch,
-#                                                metrics=metrics, nIter=args.CL_GS_iter,
+#                                                metrics=metrics, nIter=args.CL_HPS_iter,
 #                                                **arguments)
 #                         for arguments in argumentDictionaries["Monoview"]]
 #     monoviewTime = time.time() - dataBaseTime - start
@@ -456,7 +456,7 @@ def execClassif(arguments):
 #     resultsMultiview += [
 #         ExecMultiview_multicore(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
 #                                 args.pathF, LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
-#                                 metrics=metrics, nIter=args.CL_GS_iter, **arguments)
+#                                 metrics=metrics, nIter=args.CL_HPS_iter, **arguments)
 #         for arguments in argumentDictionaries["Multiview"]]
 #     multiviewTime = time.time() - monoviewTime - dataBaseTime - start
 #
@@ -501,14 +501,14 @@ def execClassif(arguments):
 #                                                  args.type,
 #                                                  args.pathF,
 #                                                  LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
-#                                                  metrics=metrics, nIter=args.CL_GS_iter,
+#                                                  metrics=metrics, nIter=args.CL_HPS_iter,
 #                                                  **argumentDictionaries["Multiview"][stepIndex * nbCores + coreIndex])
 #                 for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
 #     else:
 #         resultsMultiview = [
 #             ExecMultiview(directory, DATASET, args.name, classificationIndices, kFolds, 1, args.type, args.pathF,
 #                           LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
-#                           metrics=metrics, nIter=args.CL_GS_iter, **arguments) for arguments in
+#                           metrics=metrics, nIter=args.CL_HPS_iter, **arguments) for arguments in
 #             argumentDictionaries["Multiview"]]
 #     multiviewTime = time.time() - monoviewTime - dataBaseTime - start
 #     if nbCores > 1:

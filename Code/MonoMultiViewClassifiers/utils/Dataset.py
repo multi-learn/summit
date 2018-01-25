@@ -2,7 +2,7 @@ import logging
 import os
 import select
 import sys
-
+import h5py
 import numpy as np
 from scipy import sparse
 
@@ -114,3 +114,10 @@ def input_(timeout=15):
     else:
         return "y"
 
+
+def getMonoviewShared(path, name, viewName, labelsNames, classificationIndices):
+    """ATM is not used with shared memory, but soon :)"""
+    HDF5_dataset_file = h5py.File(path + name + ".hdf5", "w")
+    X = HDF5_dataset_file.get(viewName).value
+    Y = HDF5_dataset_file.get("Labels").value
+    return X, Y

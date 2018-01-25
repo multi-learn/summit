@@ -76,7 +76,7 @@ def parseTheArgs(arguments):
                             , default=[''])
     groupClass.add_argument('--CL_metric_princ', metavar='STRING', action='store',
                             help='Determine which metric to use for randomSearch and optimization', default="f1_score")
-    groupClass.add_argument('--CL_GS_iter', metavar='INT', action='store',
+    groupClass.add_argument('--CL_HPS_iter', metavar='INT', action='store',
                             help='Determine how many hyper parameters optimization tests to do', type=int, default=2)
     groupClass.add_argument('--CL_HPS_type', metavar='STRING', action='store',
                             help='Determine which hyperparamter search function use', default="randomizedSearch")
@@ -239,7 +239,7 @@ def initRandomState(randomStateArg, directory):
 def initLogFile(args):
     """Used to init the directory where the preds will be stored and the log file"""
     resultDirectory = "../Results/" + args.name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
-    logFileName = time.strftime("%Y%m%d-%H%M%S") + "-" + ''.join(args.CL_type) + "-" + "_".join(
+    logFileName = time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + ''.join(args.CL_type) + "-" + "_".join(
         args.views) + "-" + args.name + "-LOG"
     if not os.path.exists(os.path.dirname(resultDirectory + logFileName)):
         try:
