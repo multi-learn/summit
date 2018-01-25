@@ -124,4 +124,4 @@ def getConfig(config):
 
 
 def getInterpret(classifier, directory):
-    return ""
+    return "Model used : " + str(classifier.clf.model_)
