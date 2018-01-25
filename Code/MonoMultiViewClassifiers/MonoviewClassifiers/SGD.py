@@ -28,8 +28,9 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
 def paramsToSet(nIter, randomState):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append([randomState.choice(['log', 'modified_huber']),
-                          randomState.choice(["l1", "l2", "elasticnet"]), randomState.random_sample()])
+        paramsSet.append({"loss": randomState.choice(['log', 'modified_huber']),
+                          "penalty": randomState.choice(["l1", "l2", "elasticnet"]),
+                          "alpha": randomState.random_sample()})
     return paramsSet
 
 

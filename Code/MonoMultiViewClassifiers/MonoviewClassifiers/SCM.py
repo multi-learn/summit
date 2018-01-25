@@ -63,7 +63,9 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
 def paramsToSet(nIter, randomState):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append([randomState.choice(["conjunction", "disjunction"]), randomState.randint(1, 15), randomState.random_sample()])
+        paramsSet.append({"model_type": randomState.choice(["conjunction", "disjunction"]),
+                          "max_rules": randomState.randint(1, 15),
+                          "p": randomState.random_sample()})
     return paramsSet
 
 

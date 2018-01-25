@@ -87,7 +87,7 @@ class WeightedLinear(EarlyFusionClassifier):
 
     def setParams(self, paramsSet):
         self.weights = paramsSet[0]
-        self.monoviewClassifiersConfig = dict((str(index), param) for index, param in enumerate(paramsSet[1]))
+        self.monoviewClassifiersConfig = paramsSet[1]
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
         if type(viewsIndices) == type(None):

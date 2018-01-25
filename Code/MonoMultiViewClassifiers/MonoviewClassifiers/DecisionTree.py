@@ -29,8 +29,9 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
 def paramsToSet(nIter, randomState):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append([randomState.randint(1, 300), randomState.choice(["gini", "entropy"]),
-                          randomState.choice(["best", "random"])])
+        paramsSet.append({"max_depth": randomState.randint(1, 300),
+                          "criterion": randomState.choice(["gini", "entropy"]),
+                          "splitter": randomState.choice(["best", "random"])})
     return paramsSet
 
 

@@ -29,8 +29,10 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
 def paramsToSet(nIter, randomState):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append([randomState.randint(1, 20), randomState.choice(["uniform", "distance"]),
-                          randomState.choice(["auto", "ball_tree", "kd_tree", "brute"]), randomState.choice([1, 2])])
+        paramsSet.append({"n_neighbors": randomState.randint(1, 20),
+                          "weights": randomState.choice(["uniform", "distance"]),
+                          "algorithm": randomState.choice(["auto", "ball_tree", "kd_tree", "brute"]),
+                          "p": randomState.choice([1, 2])})
     return paramsSet
 
 

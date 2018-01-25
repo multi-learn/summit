@@ -54,11 +54,11 @@ def intersect(allClassifersNames, directory, viewsIndices, resultsMonoview, clas
         if resultMonoview[1][0] in classifiersNames[resultMonoview[0]]:
             classifierIndex = classifiersNames.index(resultMonoview[1][0])
             wrongSets[resultMonoview[0]][classifierIndex] = np.where(
-                trainLabels + resultMonoview[1][3][classificationIndices[0]] == 1)
+                trainLabels + resultMonoview[1][3][classificationIndices[0]] == 1)[0]
         else:
             classifiersNames[resultMonoview[0]].append(resultMonoview[1][0])
             wrongSets[resultMonoview[0]].append(
-                np.where(trainLabels + resultMonoview[1][3][classificationIndices[0]] == 1))
+                np.where(trainLabels + resultMonoview[1][3][classificationIndices[0]] == 1)[0])
 
     combinations = itertools.combinations_with_replacement(range(len(classifiersNames[0])), nbViews)
     bestLen = length

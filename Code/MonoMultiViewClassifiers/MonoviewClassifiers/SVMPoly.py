@@ -26,7 +26,7 @@ def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
 def paramsToSet(nIter, randomState):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append([randomState.randint(1, 10000), randomState.randint(1, 30)])
+        paramsSet.append({"C": randomState.randint(1, 10000), "degree": randomState.randint(1, 30)})
     return paramsSet
 
 

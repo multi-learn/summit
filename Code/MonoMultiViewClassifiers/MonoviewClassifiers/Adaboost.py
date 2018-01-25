@@ -35,8 +35,8 @@ def paramsToSet(nIter, randomState):
     """Used for weighted linear early fusion to generate random search sets"""
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append([randomState.randint(1, 15),
-                          DecisionTreeClassifier()])
+        paramsSet.append({"n_estimators": randomState.randint(1, 15),
+                          "base_estimator": DecisionTreeClassifier()})
     return paramsSet
 
 
