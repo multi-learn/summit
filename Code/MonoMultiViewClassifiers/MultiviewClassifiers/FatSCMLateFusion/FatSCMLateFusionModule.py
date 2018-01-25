@@ -87,7 +87,7 @@ class FatSCMLateFusionClass:
         return "p : "+str(self.p)+", max_aributes : "+str(self.max_attributes)+", model : "+self.model
 
     def getSpecificAnalysis(self, classificationKWARGS):
-        stringAnalysis = ''
+        stringAnalysis = 'Rules used : ' + str(self.SCMClassifier.clf.model_)
         return stringAnalysis
 
 

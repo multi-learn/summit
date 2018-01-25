@@ -77,6 +77,6 @@ def execute(classifier, trainLabels,
     metricsScores = getMetricsScores(metrics, trainLabels, testLabels,
                                      validationIndices, learningIndices, labels)
     stringAnalysis += printMetricScore(metricsScores, metrics)
-    stringAnalysis += "\n\n" + classifier.getSpecificAnalysis(classificationKWARGS)
+    stringAnalysis += "\n\n Interpretation : \n\n" + classifier.getSpecificAnalysis(classificationKWARGS)
     imagesAnalysis = {}
     return stringAnalysis, imagesAnalysis, metricsScores

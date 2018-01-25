@@ -21,12 +21,12 @@ def getFeatureImportance(classifier, directory, interpretString=""):
     ax.yaxis.set_major_formatter(formatter)
     plt.bar(x, featureImportancesSorted)
     plt.title("Importance depending on feature")
-    fig.savefig(directory + "-feature_importances.png")
+    fig.savefig(directory + "feature_importances.png")
     plt.close()
     featuresImportancesDict = dict((featureIndex, featureImportance)
                                    for featureIndex, featureImportance in enumerate(featureImportances)
                                    if featureImportance != 0)
-    with open(directory+'-feature_importances.pickle', 'wb') as handle:
+    with open(directory+'feature_importances.pickle', 'wb') as handle:
         pickle.dump(featuresImportancesDict, handle)
     interpretString += "Feature importances : \n"
     for featureIndex, featureImportance in zip(featureIndicesSorted, featureImportancesSorted):

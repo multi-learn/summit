@@ -40,12 +40,12 @@ def initConstants(kwargs, classificationIndices, metrics, name, nbCores, KFolds,
 def saveResults(LABELS_DICTIONARY, stringAnalysis, views, classifierModule, classificationKWARGS, directory, learningRate, name, imagesAnalysis):
     labelsSet = set(LABELS_DICTIONARY.values())
     logging.info(stringAnalysis)
-    featureString = "-".join(views)
+    viewsString = "-".join(views)
     labelsString = "-".join(labelsSet)
-    timestr = time.strftime("%Y%m%d-%H%M%S")
+    timestr = time.strftime("%Y_%m_%d-%H:%M:%S")
     CL_type_string = classifierModule.genName(classificationKWARGS)
-    outputFileName = directory + "/" + CL_type_string + "/" + timestr + "Results-" + CL_type_string + "-" + featureString + '-' + labelsString + \
-                     '-learnRate' + str(learningRate) + '-' + name
+    outputFileName = directory + "/" + CL_type_string + "/" + timestr + "-Results-" + CL_type_string + "-" + viewsString + '-' + labelsString + \
+                     '-learnRate_{0:.2f}'.format(learningRate) + '-' + name
     if not os.path.exists(os.path.dirname(outputFileName)):
         try:
             os.makedirs(os.path.dirname(outputFileName))
