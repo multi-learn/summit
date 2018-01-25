@@ -107,7 +107,7 @@ def confirm(resp=True, timeout=15):
 
 def input_(timeout=15):
     """used as a UI to stop if too much HDD space will be used"""
-    print("You have " + str(timeout) + " seconds to stop the dataset copy by typing n")
+    logging.warning("You have " + str(timeout) + " seconds to stop the dataset copy by typing n")
     i, o, e = select.select([sys.stdin], [], [], timeout)
     if i:
         return sys.stdin.readline().strip()
