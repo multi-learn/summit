@@ -23,7 +23,7 @@ def genName(config):
         classifierRedNames = [classifierName[:4] for classifierName in config["classifiersNames"]]
         return "Late-" + str(config["fusionMethod"][:4])+"-"+"-".join(classifierRedNames)
     elif config["fusionType"] == "EarlyFusion":
-        return "Early-" + config["fusionMethod"] + "-" + config["classifiersNames"]
+        return "Early-" + config["fusionMethod"][:4] + "-" + config["classifiersNames"][:4]
 
 
 def getBenchmark(benchmark, args=None):
