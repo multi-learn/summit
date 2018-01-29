@@ -23,7 +23,7 @@ And the following python modules :
 * ([graphviz](https://pypi.python.org/pypi/graphviz) - Used for decision tree interpretation)
 
 
-They are all tested in  `multiview-machine-mearning-omis/Code/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `Exec` script
+They are all tested in  `multiview-machine-mearning-omis/multiview_platform/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `Exec` script
 
 ### Installing
 
@@ -33,14 +33,14 @@ No installation is needed, just the prerequisites.
 
 In order to run it you'll need to try on **simulated** data with the command
 ```
-cd multiview-machine-learning-omis/Code
+cd multiview-machine-learning-omis/multiview_platform
 python Exec.py -log
 ```
-Results will be stored in `multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/`
+Results will be stored in `multiview-machine-learning-omis/multiview_platform/MonoMultiViewClassifiers/Results/`
 
 If you want to run a multiclass (one versus one) benchmark on simulated data, use : 
 ```
-cd multiview-machine-learning-omis/Code
+cd multiview-machine-learning-omis/multiview_platform
 python Exec.py -log --CL_nbClass 3
 ```
 
@@ -51,14 +51,14 @@ If no path is specified, simulated hdf5 datasets are stored in `multiview-machin
 
 In order to see all the arguments of this script, their description and default values run :
 ```
-cd multiview-machine-learning-omis/Code
+cd multiview-machine-learning-omis/multiview_platform
 python Exec.py -h
 ```
 
 
 ### Understanding `Results/` architecture
 
-Results are stored in `multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/`
+Results are stored in `multiview-machine-learning-omis/multiview_platform/MonoMultiViewClassifiers/Results/`
 A directory will be created with the name of the database used to run the script.
 For each time the script is run, a new directory named after the running date and time will be created.
 In that directory:
@@ -66,7 +66,7 @@ In that directory:
 * If it is run with one iteration, the iteration results will be stored in the current directory
 
 The results for each iteration are graphs plotting the classifiers scores and the classifiers config and results are stored in a directory of their own.
-To explore the results run the `Exec` script and go in `multiview-machine-learning-omis/Code/MonoMultiViewClassifiers/Results/Plausible/`
+To explore the results run the `Exec` script and go in `multiview-machine-learning-omis/multiview_platform/MonoMultiViewClassifiers/Results/Plausible/`
 
 ### Dataset compatibility
 
@@ -98,7 +98,7 @@ One group for the additional data called `Metadata` containing at least 3 attrib
 
 In order to run the script on your dataset you need to use : 
 ```
-cd multiview-machine-learning-omis/Code
+cd multiview-machine-learning-omis/multiview_platform
 python Exec.py -log --name <your_dataset_name> --type <.cvs_or_.hdf5> --pathF <path_to_your_dataset>
 ```
 This will run a full benchmark on your dataset using all available views and labels.

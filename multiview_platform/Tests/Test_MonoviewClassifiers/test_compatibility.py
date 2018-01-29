@@ -8,7 +8,7 @@ from ...MonoMultiViewClassifiers import MonoviewClassifiers
 class Test_methods(unittest.TestCase):
 
     def test_simple(self):
-        for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
+        for fileName in os.listdir("multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
             if fileName[-3:] == ".py" and fileName != "__init__.py":
                 monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
                 self.assertIn("canProbas", dir(monoview_classifier_module),
@@ -29,14 +29,14 @@ class Test_methods(unittest.TestCase):
 class Test_canProbas(unittest.TestCase):
 
     def test_outputs(self):
-        for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
+        for fileName in os.listdir("multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
             if fileName[-3:] == ".py" and fileName != "__init__.py":
                 monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
                 res = monoview_classifier_module.canProbas()
                 self.assertEqual(type(res), bool, "canProbas must return a boolean")
 
     def test_inputs(self):
-        for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
+        for fileName in os.listdir("multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
             if fileName[-3:] == ".py" and fileName != "__init__.py":
                 monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
                 with self.assertRaises(TypeError, msg="canProbas must have 0 args") as catcher:
@@ -77,7 +77,7 @@ class Test_fit(unittest.TestCase):
 class Test_paramsToSet(unittest.TestCase):
 
     def test_inputs(self):
-        for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
+        for fileName in os.listdir("multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
             if fileName[-3:] == ".py" and fileName != "__init__.py":
                 monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
                 with self.assertRaises(TypeError, msg="paramsToSet must have 2 positional args") as catcher:
@@ -87,13 +87,13 @@ class Test_paramsToSet(unittest.TestCase):
                 res = monoview_classifier_module.paramsToSet(2, np.random.RandomState(42))
 
     def test_outputs(self):
-        for fileName in os.listdir("Code/MonoMultiViewClassifiers/MonoviewClassifiers"):
+        for fileName in os.listdir("multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
             if fileName[-3:] == ".py" and fileName != "__init__.py":
                 monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
                 res = monoview_classifier_module.paramsToSet(2, np.random.RandomState(42))
                 self.assertEqual(type(res), list)
                 self.assertEqual(len(res), 2)
-                self.assertEqual(type(res[0]), list)
+                self.assertEqual(type(res[0]), dict)
 
 # class Test_getKWARGS(unittest.TestCase):
 #

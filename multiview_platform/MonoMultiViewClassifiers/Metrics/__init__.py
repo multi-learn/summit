@@ -1,13 +1,4 @@
-import os
-modules = []
-for module in os.listdir(os.path.dirname(os.path.realpath(__file__))):
-    if module == '__init__.py' or module[-3:] != '.py':
-        continue
-    __import__(module[:-3], locals(), globals(), [], 1)
-    pass
-del module
-del os
-
+__version__ = "0.0.0.0"
 """
 To be able to add another metric to the benchmark you must :
 
@@ -31,3 +22,13 @@ Define a getConfig function
         configString : A string that gives the name of the metric and explains how it is configured. Must end by
                         (lower is better) or (higher is better) to be able to analyze the preds
 """
+
+import os
+modules = []
+for module in os.listdir(os.path.dirname(os.path.realpath(__file__))):
+    if module in ['__init__.py', 'framework.py'] or module[-3:] != '.py':
+        continue
+    __import__(module[:-3], locals(), globals(), [], 1)
+    pass
+del module
+del os

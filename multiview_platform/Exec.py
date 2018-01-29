@@ -1,4 +1,5 @@
-if __name__=="__main__":
+
+def Exec():
     import Versions
     Versions.testVersions()
     import sys
@@ -7,3 +8,5 @@ if __name__=="__main__":
     ExecClassif.execClassif(sys.argv[1:])
 
 
+if __name__=="__main__":
+    Exec()

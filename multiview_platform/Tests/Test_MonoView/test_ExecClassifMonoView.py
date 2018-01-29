@@ -10,8 +10,8 @@ class Test_initConstants(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        os.mkdir("Code/Tests/temp_tests")
-        cls.datasetFile = h5py.File("Code/Tests/temp_tests/test.hdf5", "w")
+        os.mkdir("multiview_platform/Tests/temp_tests")
+        cls.datasetFile = h5py.File("multiview_platform/Tests/temp_tests/test.hdf5", "w")
         cls.random_state = np.random.RandomState(42)
         cls.args = {"CL_type": "test_clf"}
         cls.X_value = cls.random_state.randint(0,500,(10,20))
@@ -21,7 +21,7 @@ class Test_initConstants(unittest.TestCase):
         cls.classificationIndices = [np.array([0,2,4,6,8]), np.array([1,3,5,7,9]), np.array([1,3,5,7,9])]
         cls.labelsNames = ["test_true", "test_false"]
         cls.name = "test"
-        cls.directory = "Code/Tests/temp_tests/test_dir/"
+        cls.directory = "multiview_platform/Tests/temp_tests/test_dir/"
 
     def test_simple(cls):
         kwargs, \
@@ -47,11 +47,11 @@ class Test_initConstants(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove("Code/Tests/temp_tests/test.hdf5")
-        os.rmdir("Code/Tests/temp_tests/test_dir/test_clf/test_dataset")
-        os.rmdir("Code/Tests/temp_tests/test_dir/test_clf")
-        os.rmdir("Code/Tests/temp_tests/test_dir")
-        os.rmdir("Code/Tests/temp_tests")
+        os.remove("multiview_platform/Tests/temp_tests/test.hdf5")
+        os.rmdir("multiview_platform/Tests/temp_tests/test_dir/test_clf/test_dataset")
+        os.rmdir("multiview_platform/Tests/temp_tests/test_dir/test_clf")
+        os.rmdir("multiview_platform/Tests/temp_tests/test_dir")
+        os.rmdir("multiview_platform/Tests/temp_tests")
 
 
 class Test_initTrainTest(unittest.TestCase):

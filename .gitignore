@@ -4,6 +4,6 @@ TODO
 .ipynb_checkpoints/**
 Results/**
 Data/**
-Code/MonoMultiviewClassifiers/Results/*
-Code/Tests/temp_tests/**
+multiview_platform/MonoMultiviewClassifiers/Results/*
+multiview_platform/Tests/temp_tests/**
 multiview-machine-learning-omis.iml

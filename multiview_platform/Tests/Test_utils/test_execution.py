@@ -22,23 +22,23 @@ class Test_parseTheArgs(unittest.TestCase):
 class Test_initRandomState(unittest.TestCase):
 
     def setUp(self):
-        os.mkdir("Code/Tests/temp_tests/")
+        os.mkdir("multiview_platform/Tests/temp_tests/")
 
     def tearDown(self):
-        os.rmdir("Code/Tests/temp_tests/")
+        os.rmdir("multiview_platform/Tests/temp_tests/")
 
     def test_random_state_42(self):
         randomState_42 = np.random.RandomState(42)
-        randomState = execution.initRandomState("42", "Code/Tests/temp_tests/")
-        os.remove("Code/Tests/temp_tests/randomState.pickle")
+        randomState = execution.initRandomState("42", "multiview_platform/Tests/temp_tests/")
+        os.remove("multiview_platform/Tests/temp_tests/randomState.pickle")
         np.testing.assert_array_equal(randomState.beta(1,100,100),
                                       randomState_42.beta(1,100,100))
 
     def test_random_state_pickle(self):
-        randomState_to_pickle = execution.initRandomState(None, "Code/Tests/temp_tests/")
-        pickled_randomState = execution.initRandomState("Code/Tests/temp_tests/randomState.pickle",
-                                                        "Code/Tests/temp_tests/")
-        os.remove("Code/Tests/temp_tests/randomState.pickle")
+        randomState_to_pickle = execution.initRandomState(None, "multiview_platform/Tests/temp_tests/")
+        pickled_randomState = execution.initRandomState("multiview_platform/Tests/temp_tests/randomState.pickle",
+                                                        "multiview_platform/Tests/temp_tests/")
+        os.remove("multiview_platform/Tests/temp_tests/randomState.pickle")
         np.testing.assert_array_equal(randomState_to_pickle.beta(1,100,100),
                                       pickled_randomState.beta(1,100,100))
 

@@ -58,8 +58,8 @@ class Test_execBenchmark(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        os.mkdir("Code/Tests/tmp_tests")
-        cls.Dataset = h5py.File("Code/Tests/tmp_tests/test_file.hdf5", "w")
+        os.mkdir("multiview_platform/Tests/tmp_tests")
+        cls.Dataset = h5py.File("multiview_platform/Tests/tmp_tests/test_file.hdf5", "w")
         cls.labels = cls.Dataset.create_dataset("Labels", data=np.array([0, 1, 2]))
         cls.argumentDictionaries = [{"a": 4, "args":FakeArg()}]
 
@@ -97,8 +97,8 @@ class Test_execBenchmark(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove("Code/Tests/tmp_tests/test_file.hdf5")
-        os.rmdir("Code/Tests/tmp_tests")
+        os.remove("multiview_platform/Tests/tmp_tests/test_file.hdf5")
+        os.rmdir("multiview_platform/Tests/tmp_tests")
 
 def fakeExecMono(directory, name, labelsNames, classificationIndices, kFolds, coreIndex, type, pathF, randomState, labels,
                  hyperParamSearch="try", metrics="try", nIter=1, **arguments):
@@ -120,7 +120,7 @@ class FakeArg(object):
         self.name = "chicken_is_heaven"
         self.type = "type"
         self.pathF = "pathF"
-        self.CL_GS_iter = 1
+        self.CL_HPS_iter = 1
 
 
 class Test_execOneBenchmark(unittest.TestCase):
@@ -128,12 +128,12 @@ class Test_execOneBenchmark(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
 
-        os.mkdir("Code/Tests/tmp_tests")
+        os.mkdir("multiview_platform/Tests/tmp_tests")
 
     def test_simple(cls):
         flag, resMono, resMulti = ExecClassif.execOneBenchmark(coreIndex=10,
                                                                LABELS_DICTIONARY={0: "a", 1: "b"},
-                                                               directory="Code/Tests/tmp_tests/",
+                                                               directory="multiview_platform/Tests/tmp_tests/",
                                                                classificationIndices=([1,2,3,4], [0,5,6,7,8]),
                                                                args=FakeArg(),
                                                                kFolds="try",
@@ -156,21 +156,21 @@ class Test_execOneBenchmark(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove("Code/Tests/tmp_tests/train_indices.csv")
-        os.remove("Code/Tests/tmp_tests/train_labels.csv")
-        os.rmdir("Code/Tests/tmp_tests")
+        os.remove("multiview_platform/Tests/tmp_tests/train_indices.csv")
+        os.remove("multiview_platform/Tests/tmp_tests/train_labels.csv")
+        os.rmdir("multiview_platform/Tests/tmp_tests")
 
 
 class Test_execOneBenchmark_multicore(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        os.mkdir("Code/Tests/tmp_tests")
+        os.mkdir("multiview_platform/Tests/tmp_tests")
 
     def test_simple(cls):
         flag, resMono, resMulti = ExecClassif.execOneBenchmark_multicore(nbCores=2,
                                                                LABELS_DICTIONARY={0: "a", 1: "b"},
-                                                               directory="Code/Tests/tmp_tests/",
+                                                               directory="multiview_platform/Tests/tmp_tests/",
                                                                classificationIndices=([1,2,3,4], [0,10,20,30,40]),
                                                                args=FakeArg(),
                                                                kFolds="try",
@@ -193,9 +193,9 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove("Code/Tests/tmp_tests/train_indices.csv")
-        os.remove("Code/Tests/tmp_tests/train_labels.csv")
-        os.rmdir("Code/Tests/tmp_tests")
+        os.remove("multiview_platform/Tests/tmp_tests/train_indices.csv")
+        os.remove("multiview_platform/Tests/tmp_tests/train_labels.csv")
+        os.rmdir("multiview_platform/Tests/tmp_tests")
 
 
 

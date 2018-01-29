@@ -597,7 +597,7 @@ def predict_ecoc(estimators, classes, code_book, X):
 
 
 class OutputCodeClassifier(BaseEstimator, ClassifierMixin, MetaEstimatorMixin):
-    """(Error-Correcting) Output-Code multiclass strategy
+    """(Error-Correcting) Output-multiview_platform multiclass strategy
     Output-code based strategies consist in representing each class with a
     binary code (an array of 0s and 1s). At fitting time, one binary
     classifier per bit in the code book is fitted.  At prediction time, the
