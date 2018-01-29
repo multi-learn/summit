@@ -1,9 +1,12 @@
 TODO
 *.pyc
 .idea/**
-.ipynb_checkpoints/**
+ipynb/.ipynb_checkpoints/**
 Results/**
 Data/**
 multiview_platform/MonoMultiviewClassifiers/Results/*
 multiview_platform/Tests/temp_tests/**
 multiview-machine-learning-omis.iml
+multiview_platform.egg-inf*
+build*
+dist*
