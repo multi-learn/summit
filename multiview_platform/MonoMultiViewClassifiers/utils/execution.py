@@ -265,7 +265,8 @@ def initLogFile(args):
 
 
 def genSplits(labels, splitRatio, statsIterRandomStates):
-    """Used to gen the train/test splits using one or multiple random states"""
+    """Used to gen the train/test splits using one or multiple random states
+    classificationIndices is a list of train/test splits"""
     indices = np.arange(len(labels))
     splits = []
     for randomState in statsIterRandomStates:

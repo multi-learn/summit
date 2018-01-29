@@ -4,6 +4,8 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.externals.six import iteritems
 
 
+from ...utils.Multiclass import isBiclass, genMulticlassMonoviewDecision
+
 def genName(config):
     return "FatSCMLateFusion"
 
@@ -13,9 +15,16 @@ def getBenchmark(benchmark, args=None):
     return benchmark
 
 
+
 def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview, classificationIndices):
     argumentsList = []
-    monoviewDecisions = np.transpose(np.array([monoviewResult[1][3] for monoviewResult in resultsMonoview]))
+    multiclass_preds = [monoviewResult[1][5] for monoviewResult in resultsMonoview]
+    if isBiclass(multiclass_preds):
+        monoviewDecisions = np.array([monoviewResult[1][3] for monoviewResult in resultsMonoview])
+    else:
+        monoviewDecisions = np.array([genMulticlassMonoviewDecision(monoviewResult, classificationIndices) for monoviewResult in resultsMonoview])
+    monoviewDecisions = np.transpose(monoviewDecisions)
+    #monoviewDecisions = np.transpose(np.array([monoviewResult[1][3] for monoviewResult in resultsMonoview]))
     arguments = {"CL_type": "FatSCMLateFusion",
                  "views": ["all"],
                  "NB_VIEW": len(resultsMonoview),

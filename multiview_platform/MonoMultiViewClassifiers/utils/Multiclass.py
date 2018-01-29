@@ -40,4 +40,17 @@ def genMulticlassLabels(labels, multiclassMethod, classificationIndices):
         # TODO : Implement one versus rest if probas are not a problem anymore
         pass
     return multiclassLabels, labelsIndices, indicesMulticlass
-#
+
+
+def genMulticlassMonoviewDecision(monoviewResult, classificationIndices):
+    learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
+    multiclassMonoviewDecisions = monoviewResult[1][3]
+    multiclassMonoviewDecisions[testIndicesMulticlass] = monoviewResult[1][5]
+    return multiclassMonoviewDecisions
+
+
+def isBiclass(multiclass_preds):
+    if multiclass_preds[0] is []:
+        return True
+    else:
+        return False
