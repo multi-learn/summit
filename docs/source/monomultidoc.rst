@@ -5,9 +5,7 @@ Mono and mutliview classification
    :maxdepth: 1
    :caption: Contents:
 
-   monomutli/metrics
-   monomutli/monoexec
-   monomutli/multiexec
-   monomutli/monoclf
-   monomutli/multiclf
-   monomutli/utils
+   monomulti/metrics
+   monomulti/exec_classif
+   monomulti/result_analysis
+   monomulti/multiview_classifier

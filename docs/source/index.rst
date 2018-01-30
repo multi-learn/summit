@@ -11,7 +11,7 @@ Welcome to MultiviewPlatform's documentation!
    :caption: Contents:
 
    api
-   examples
+.. examples
 
 
 

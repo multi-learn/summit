@@ -38,7 +38,7 @@ def initBenchmark(args):
 
         allMonoviewAlgos = [name for _, name, isPackage in
                             pkgutil.iter_modules(['./MonoMultiViewClassifiers/MonoviewClassifiers'])
-                            if (not isPackage)]
+                            if (not isPackage) and name not in ["framework"]]
         benchmark["Monoview"] = allMonoviewAlgos
         benchmark["Multiview"] = dict((multiviewPackageName, "_") for multiviewPackageName in allMultiviewPackages)
         for multiviewPackageName in allMultiviewPackages:
@@ -389,7 +389,7 @@ def execClassif(arguments):
     metrics = [metric.split(":") for metric in args.CL_metrics]
     if metrics == [[""]]:
         metricsNames = [name for _, name, isPackage
-                        in pkgutil.iter_modules(['./MonoMultiViewClassifiers/Metrics']) if not isPackage and name not in ["log_loss", "matthews_corrcoef", "roc_auc_score"]]
+                        in pkgutil.iter_modules(['./MonoMultiViewClassifiers/Metrics']) if not isPackage and name not in ["framework", "log_loss", "matthews_corrcoef", "roc_auc_score"]]
         metrics = [[metricName] for metricName in metricsNames]
         metrics = arangeMetrics(metrics, args.CL_metric_princ)
     for metricIndex, metric in enumerate(metrics):

@@ -1,6 +1,6 @@
-Welcome to the metrics documentation!
-=============================================
+Metrics framework
+=================
 
-.. automodule:: multiview_platform.Metrics.framework
+.. automodule:: multiview_platform.MonoMultiViewClassifiers.Metrics.framework
    :members:
    :inherited-members:
