@@ -2,6 +2,7 @@ TODO
 *.pyc
 .idea/**
 ipynb/.ipynb_checkpoints/**
+docs/source/monomulti/.ipynb_checkpoints/**
 Results/**
 Data/**
 multiview_platform/MonoMultiviewClassifiers/Results/*
