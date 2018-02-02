@@ -6,6 +6,7 @@ Mono and mutliview classification
    :caption: Contents:
 
    monomulti/metrics
+   monomulti/monoview_classifier
+   monomulti/multiview_classifier
    monomulti/exec_classif
    monomulti/result_analysis
-   monomulti/multiview_classifier
