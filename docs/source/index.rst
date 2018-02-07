@@ -14,7 +14,9 @@ The main advantage of the platform is that it allows to add and remove a classif
    :maxdepth: 3
    :caption: Contents:
 
-   api
+   readme
+..   api
+
 .. examples
 
 

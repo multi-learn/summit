@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from recommonmark.parser import CommonMarkParser
+from recommonmark.transform import AutoStructify
 #
 # MultiviewPlatform documentation build configuration file, created by
 # sphinx-quickstart on Mon Jan 29 17:13:09 2018.
@@ -50,8 +52,12 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
+# source_suffix = '.rst'
+
+source_parsers = {
+   '.md': CommonMarkParser,
+}
 
 # The master toctree document.
 master_doc = 'index'
@@ -169,3 +175,10 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
+
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+            'url_resolver': lambda url: github_doc_root + url,
+            'auto_toc_tree_section': 'Contents',
+            }, True)
+    app.add_transform(AutoStructify)
