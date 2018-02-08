@@ -190,7 +190,7 @@ def parseTheArgs(arguments):
                                  help='Names of the classifier used for late fusion', default=[''])
     groupLateFusion.add_argument('--FU_L_select_monoview', metavar='STRING', action='store',
                                  help='Determine which method to use to select the monoview classifiers',
-                                 default="intersect")
+                                 default="disagreement")
 
     groupFatLateFusion = parser.add_argument_group('Fat Late Fusion arguments')
     groupFatLateFusion.add_argument('--FLF_weights', metavar='FLOAT', action='store', nargs="+",

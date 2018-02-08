@@ -65,7 +65,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
     logging.debug("Start:\t Generate classifier args")
     classifierModule = getattr(MonoviewClassifiers, CL_type)
-    clKWARGS = getHPs(classifierModule, hyperParamSearch,
+    clKWARGS, testFoldsPreds = getHPs(classifierModule, hyperParamSearch,
                       nIter, CL_type, X_train, y_train,
                       randomState, outputFileName,
                       KFolds, nbCores, metrics, kwargs)
@@ -108,7 +108,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     logging.info("Done:\t Saving Results")
 
     viewIndex = args["viewIndex"]
-    return viewIndex, [CL_type, cl_desc + [feat], metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred]
+    return viewIndex, [CL_type, cl_desc + [feat], metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
 
 
 def initConstants(args, X, classificationIndices, labelsNames, name, directory):
@@ -156,14 +156,14 @@ def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train,
     if hyperParamSearch != "None":
         logging.debug("Start:\t " + hyperParamSearch + " best settings with " + str(nIter) + " iterations for " + CL_type)
         classifierHPSearch = getattr(MonoviewUtils, hyperParamSearch)
-        clKWARGS = classifierHPSearch(X_train, y_train, randomState,
+        clKWARGS, testFoldsPreds = classifierHPSearch(X_train, y_train, randomState,
                                       outputFileName, classifierModule,
                                       KFolds=KFolds, nbCores=nbCores,
                                       metric=metrics[0], nIter=nIter)
         logging.debug("Done:\t " + hyperParamSearch + "RandomSearch best settings")
     else:
         clKWARGS = kwargs[CL_type + "KWARGS"]
-    return clKWARGS
+    return clKWARGS, testFoldsPreds
 
 
 def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, y_train, imagesAnalysis):

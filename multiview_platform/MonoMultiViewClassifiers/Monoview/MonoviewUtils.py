@@ -1,4 +1,5 @@
 from sklearn.model_selection import RandomizedSearchCV
+import numpy as np
 
 from .. import Metrics
 from ..utils import HyperParameterSearch
@@ -21,7 +22,8 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
     else:
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
-    randomSearch = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=params_dict, refit=True, n_jobs = nbCores, scoring = scorer, cv = KFolds, random_state = randomState)
+    randomSearch = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=params_dict, refit=True,
+                                      n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
     detector = randomSearch.fit(X_train, y_train)
     bestParams = classifierModule.genBestParams(detector)
     # desc_params = {"C": SVMPoly_detector.best_params_["classifier__C"], "degree": SVMPoly_detector.best_params_["classifier__degree"]}
@@ -31,8 +33,21 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
     # params = [("c", np.array(SVMPoly_detector.cv_results_['param_classifier__C'])), ("degree", np.array(SVMPoly_detector.cv_results_['param_classifier__degree']))]
 
     HyperParameterSearch.genHeatMaps(params, scoresArray, outputFileName)
+    testFoldsPreds = genTestFoldsPreds(X_train, y_train, KFolds, detector.best_estimator_)
+    return bestParams, testFoldsPreds
 
-    return bestParams
+
+def genTestFoldsPreds(X_train, y_train, KFolds, estimator):
+    testFoldsPreds = []
+    folds = KFolds.split(X_train, y_train)
+    foldLengths = np.zeros(KFolds.n_splits,dtype=int)
+    for foldIndex, (trainIndices, testIndices) in enumerate(folds):
+        foldLengths[foldIndex] = len(testIndices)
+        estimator.fit(X_train[trainIndices], y_train[trainIndices])
+        testFoldsPreds.append(estimator.predict(X_train[trainIndices]))
+    minFoldLength = foldLengths.min()
+    testFoldsPreds = np.array([testFoldPreds[:minFoldLength] for testFoldPreds in testFoldsPreds])
+    return testFoldsPreds
 
 # def isUseful(labelSupports, index, CLASS_LABELS, labelDict):
 #     if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:

@@ -21,7 +21,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 def genName(config):
     if config["fusionType"] == "LateFusion":
         classifierRedNames = [classifierName[:4] for classifierName in config["classifiersNames"]]
-        return "Late-" + str(config["fusionMethod"][:4])+"-"+"-".join(classifierRedNames)
+        return "Late-" + str(config["fusionMethod"][:4])#+"-"+"-".join(classifierRedNames)
     elif config["fusionType"] == "EarlyFusion":
         return "Early-" + config["fusionMethod"][:4] + "-" + config["classifiersNames"][:4]
 
