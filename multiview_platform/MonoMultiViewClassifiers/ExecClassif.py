@@ -139,15 +139,7 @@ def arangeMetrics(metrics, metricPrinc):
         raise AttributeError(metricPrinc + " not in metric pool")
     return metrics
 
-
-def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, classificationIndices=None, args=None,
-                     kFolds=None, randomState=None, hyperParamSearch=None, metrics=None, argumentDictionaries=None,
-                     benchmark=None, views=None, viewsIndices=None, flag=None, labels=None,
-                     ExecMonoview_multicore=ExecMonoview_multicore, ExecMultiview_multicore=ExecMultiview_multicore,
-                     initMultiviewArguments=initMultiviewArguments):
-    """Used to run a benchmark using one core. ExecMonoview_multicore, initMultiviewArguments and
-     ExecMultiview_multicore args are only used for tests"""
-
+def benchmarkInit(directory, classificationIndices, labels, LABELS_DICTIONARY, kFolds):
     logging.debug("Start:\t Benchmark initialization")
     if not os.path.exists(os.path.dirname(directory + "train_labels.csv")):
         try:
@@ -158,10 +150,34 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, class
     trainIndices = classificationIndices[0]
     trainLabels = labels[trainIndices]
     np.savetxt(directory + "train_labels.csv", trainLabels, delimiter=",")
-    resultsMonoview = []
-    labelsNames = list(LABELS_DICTIONARY.values())
     np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
+    resultsMonoview = []
+
+    folds = kFolds.split(np.arange(len(trainLabels)), trainLabels)
+    for foldIndex, (trainCVIndices, testCVIndices) in enumerate(folds):
+        fileName = directory+"/folds/test_labels_fold_"+str(foldIndex)+".csv"
+        if not os.path.exists(os.path.dirname(fileName)):
+            try:
+                os.makedirs(os.path.dirname(fileName))
+            except OSError as exc:
+                if exc.errno != errno.EEXIST:
+                    raise
+        np.savetxt(fileName, trainLabels[testCVIndices], delimiter=",")
+    labelsNames = list(LABELS_DICTIONARY.values())
     logging.debug("Done:\t Benchmark initialization")
+    return resultsMonoview, labelsNames
+
+
+def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, classificationIndices=None, args=None,
+                     kFolds=None, randomState=None, hyperParamSearch=None, metrics=None, argumentDictionaries=None,
+                     benchmark=None, views=None, viewsIndices=None, flag=None, labels=None,
+                     ExecMonoview_multicore=ExecMonoview_multicore, ExecMultiview_multicore=ExecMultiview_multicore,
+                     initMultiviewArguments=initMultiviewArguments):
+    """Used to run a benchmark using one core. ExecMonoview_multicore, initMultiviewArguments and
+     ExecMultiview_multicore args are only used for tests"""
+
+    resultsMonoview, labelsNames = benchmarkInit(directory, classificationIndices, labels, LABELS_DICTIONARY, kFolds)
+
 
     logging.debug("Start:\t Monoview benchmark")
     resultsMonoview += [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
@@ -197,20 +213,7 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None, directory=Non
     """Used to run a benchmark using multiple cores. ExecMonoview_multicore, initMultiviewArguments and
      ExecMultiview_multicore args are only used for tests"""
 
-    logging.debug("Start:\t Benchmark initialization")
-    if not os.path.exists(os.path.dirname(directory + "train_labels.csv")):
-        try:
-            os.makedirs(os.path.dirname(directory + "train_labels.csv"))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-    trainIndices = classificationIndices[0]
-    trainLabels = labels[trainIndices]
-    np.savetxt(directory + "train_labels.csv", trainLabels, delimiter=",")
-    np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
-    resultsMonoview = []
-    labelsNames = list(LABELS_DICTIONARY.values())
-    logging.debug("Done:\t Benchmark initialization")
+    resultsMonoview, labelsNames = benchmarkInit(directory, classificationIndices, labels, LABELS_DICTIONARY, kFolds)
 
     logging.debug("Start:\t Monoview benchmark")
     nbExperiments = len(argumentDictionaries["Monoview"])
@@ -252,20 +255,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
                              ExecMonoview_multicore=ExecMonoview_multicore, ExecMultiview_multicore=ExecMultiview_multicore,
                              initMultiviewArguments=initMultiviewArguments):
 
-    logging.debug("Start:\t Benchmark initialization")
-    if not os.path.exists(os.path.dirname(directory + "train_labels.csv")):
-        try:
-            os.makedirs(os.path.dirname(directory + "train_labels.csv"))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-    trainIndices = classificationIndices[0]
-    trainLabels = labels[trainIndices]
-    np.savetxt(directory + "train_labels.csv", trainLabels, delimiter=",")
-    resultsMonoview = []
-    labelsNames = list(LABELS_DICTIONARY.values())
-    np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
-    logging.debug("Done:\t Benchmark initialization")
+    resultsMonoview, labelsNames = benchmarkInit(directory, classificationIndices, labels, LABELS_DICTIONARY, kFolds)
 
     logging.debug("Start:\t Monoview benchmark")
     for arguments in argumentDictionaries["Monoview"]:
