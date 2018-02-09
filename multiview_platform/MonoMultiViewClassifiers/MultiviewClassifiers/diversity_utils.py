@@ -24,7 +24,7 @@ def getClassifiersDecisions(allClassifersNames, viewsIndices, resultsMonoview):
     return classifiersDecisions, classifiersNames
 
 
-def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measurement):
+def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measurement, foldsGroudTruth):
 
     classifiersDecisions, classifiersNames = getClassifiersDecisions(allClassifersNames,
                                                                                      viewsIndices,
@@ -47,7 +47,7 @@ def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
         for binomeIndex, binome in enumerate(binomes):
             (viewIndex1, classifierIndex1), (viewIndex2, classifierIndex2) = binome
             nbDisagree = np.sum(measurement(classifiersDecisions[viewIndex1, classifierIndex1],
-                                               classifiersDecisions[viewIndex2, classifierIndex2])
+                                               classifiersDecisions[viewIndex2, classifierIndex2], foldsGroudTruth)
                                 , axis=1)/float(foldsLen)
             disagreement[binomeIndex] = np.mean(nbDisagree)
         div_measure[combinationsIndex] = np.mean(disagreement)
@@ -59,10 +59,12 @@ def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
 
 def getFoldsGroundTruth(directory):
     foldsFilesNames = os.listdir(directory+"folds/")
-    for fileName in os.listdir(directory+"folds/"):
+    foldLen = len(np.genfromtxt(directory+"folds/"+foldsFilesNames[0], delimiter=','))
+    foldsGroudTruth = np.zeros((len(foldsFilesNames), foldLen), dtype=int)
+    for fileName in foldsFilesNames:
         foldIndex = int(fileName[-5])
-
-
+        foldsGroudTruth[foldIndex] = np.genfromtxt(directory+"folds/"+fileName, delimiter=',')
+    return foldsGroudTruth
 
 
 def getArgs(args, benchmark, views, viewsIndices, randomState,
@@ -70,7 +72,7 @@ def getArgs(args, benchmark, views, viewsIndices, randomState,
     foldsGroundTruth = getFoldsGroundTruth(directory)
     monoviewClassifierModulesNames = benchmark["Monoview"]
     classifiersNames, div_measure = couple_div_measure(monoviewClassifierModulesNames,
-                                        viewsIndices, resultsMonoview, measurement)
+                                        viewsIndices, resultsMonoview, measurement, foldsGroundTruth)
     multiclass_preds = [monoviewResult[1][5] for monoviewResult in resultsMonoview]
     if isBiclass(multiclass_preds):
         monoviewDecisions = np.array([monoviewResult[1][3] for monoviewResult in resultsMonoview

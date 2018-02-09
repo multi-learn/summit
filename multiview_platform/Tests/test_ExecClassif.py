@@ -122,6 +122,14 @@ class FakeArg(object):
         self.pathF = "pathF"
         self.CL_HPS_iter = 1
 
+class FakeKfold():
+    def __init__(self):
+        self.n_splits = 2
+        pass
+
+    def split(self, X,Y):
+        return [([X[0], X[1]], [X[2],X[3]]), (([X[2], X[3]], [X[0],X[1]]))]
+
 
 class Test_execOneBenchmark(unittest.TestCase):
 
@@ -136,7 +144,7 @@ class Test_execOneBenchmark(unittest.TestCase):
                                                                directory="multiview_platform/Tests/tmp_tests/",
                                                                classificationIndices=([1,2,3,4], [0,5,6,7,8]),
                                                                args=FakeArg(),
-                                                               kFolds="try",
+                                                               kFolds=FakeKfold(),
                                                                randomState="try",
                                                                hyperParamSearch="try",
                                                                metrics="try",
@@ -145,7 +153,7 @@ class Test_execOneBenchmark(unittest.TestCase):
                                                                views="try",
                                                                viewsIndices="try",
                                                                flag=None,
-                                                               labels=np.array([0,1,2,3,4,2,2,12,1,2,1,1,2,1,21]),
+                                                               labels=np.array([0,1,2,1,2,2,2,12,1,2,1,1,2,1,21]),
                                                                ExecMonoview_multicore=fakeExecMono,
                                                                ExecMultiview_multicore=fakeExecMulti,
                                                                initMultiviewArguments=fakeInitMulti)
@@ -158,6 +166,9 @@ class Test_execOneBenchmark(unittest.TestCase):
     def tearDownClass(cls):
         os.remove("multiview_platform/Tests/tmp_tests/train_indices.csv")
         os.remove("multiview_platform/Tests/tmp_tests/train_labels.csv")
+        os.remove("multiview_platform/Tests/tmp_tests/folds/test_labels_fold_0.csv")
+        os.remove("multiview_platform/Tests/tmp_tests/folds/test_labels_fold_1.csv")
+        os.rmdir("multiview_platform/Tests/tmp_tests/folds")
         os.rmdir("multiview_platform/Tests/tmp_tests")
 
 
@@ -173,7 +184,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
                                                                directory="multiview_platform/Tests/tmp_tests/",
                                                                classificationIndices=([1,2,3,4], [0,10,20,30,40]),
                                                                args=FakeArg(),
-                                                               kFolds="try",
+                                                               kFolds=FakeKfold(),
                                                                randomState="try",
                                                                hyperParamSearch="try",
                                                                metrics="try",
@@ -195,6 +206,9 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
     def tearDownClass(cls):
         os.remove("multiview_platform/Tests/tmp_tests/train_indices.csv")
         os.remove("multiview_platform/Tests/tmp_tests/train_labels.csv")
+        os.remove("multiview_platform/Tests/tmp_tests/folds/test_labels_fold_0.csv")
+        os.remove("multiview_platform/Tests/tmp_tests/folds/test_labels_fold_1.csv")
+        os.rmdir("multiview_platform/Tests/tmp_tests/folds")
         os.rmdir("multiview_platform/Tests/tmp_tests")
 
 

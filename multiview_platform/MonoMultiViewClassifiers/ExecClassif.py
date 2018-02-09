@@ -139,6 +139,7 @@ def arangeMetrics(metrics, metricPrinc):
         raise AttributeError(metricPrinc + " not in metric pool")
     return metrics
 
+
 def benchmarkInit(directory, classificationIndices, labels, LABELS_DICTIONARY, kFolds):
     logging.debug("Start:\t Benchmark initialization")
     if not os.path.exists(os.path.dirname(directory + "train_labels.csv")):
@@ -152,8 +153,8 @@ def benchmarkInit(directory, classificationIndices, labels, LABELS_DICTIONARY, k
     np.savetxt(directory + "train_labels.csv", trainLabels, delimiter=",")
     np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
     resultsMonoview = []
-
     folds = kFolds.split(np.arange(len(trainLabels)), trainLabels)
+    minFoldLen = int(len(trainLabels)/kFolds.n_splits)
     for foldIndex, (trainCVIndices, testCVIndices) in enumerate(folds):
         fileName = directory+"/folds/test_labels_fold_"+str(foldIndex)+".csv"
         if not os.path.exists(os.path.dirname(fileName)):
@@ -162,7 +163,7 @@ def benchmarkInit(directory, classificationIndices, labels, LABELS_DICTIONARY, k
             except OSError as exc:
                 if exc.errno != errno.EEXIST:
                     raise
-        np.savetxt(fileName, trainLabels[testCVIndices], delimiter=",")
+        np.savetxt(fileName, trainLabels[testCVIndices[:minFoldLen]], delimiter=",")
     labelsNames = list(LABELS_DICTIONARY.values())
     logging.debug("Done:\t Benchmark initialization")
     return resultsMonoview, labelsNames

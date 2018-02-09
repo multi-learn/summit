@@ -39,7 +39,8 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
 
 def genTestFoldsPreds(X_train, y_train, KFolds, estimator):
     testFoldsPreds = []
-    folds = KFolds.split(X_train, y_train)
+    trainIndex = np.arange(len(y_train))
+    folds = KFolds.split(trainIndex, y_train)
     foldLengths = np.zeros(KFolds.n_splits,dtype=int)
     for foldIndex, (trainIndices, testIndices) in enumerate(folds):
         foldLengths[foldIndex] = len(testIndices)
