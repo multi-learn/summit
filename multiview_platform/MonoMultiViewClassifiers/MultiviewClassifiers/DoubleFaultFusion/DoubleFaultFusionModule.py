@@ -13,8 +13,8 @@ def getBenchmark(benchmark, args=None):
 
 
 def doubleFault(classifierDecision1, classifierDecision2, ground_truth):
-    return np.logical_and(np.logical_not(np.logical_and(classifierDecision1, ground_truth)),
-                          np.logical_not(np.logical_and(classifierDecision2, ground_truth)))
+    return np.logical_and(np.logical_xor(classifierDecision1, ground_truth),
+                          np.logical_xor(classifierDecision2, ground_truth))
 
 
 def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview, classificationIndices):

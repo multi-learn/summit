@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from ....MonoMultiViewClassifiers.MultiviewClassifiers.DisagreeFusion import DisagreeFusionModule
+from ....MonoMultiViewClassifiers.MultiviewClassifiers.DoubleFaultFusion import DoubleFaultFusionModule
 from ....MonoMultiViewClassifiers.MultiviewClassifiers import diversity_utils
 
 class Test_disagreement(unittest.TestCase):
@@ -38,10 +38,14 @@ class Test_disagreement(unittest.TestCase):
                                     ]]
                                ]
         cls.classificationIndices = []
+        cls.ground_truth = np.array([1,1,1,0,0,0])
 
     def test_simple(cls):
-        bestCombi, disagreement = diversity_utils.couple_div_measure(cls.allClassifiersNames, cls.viewsIndices, cls.resultsMonoview, DisagreeFusionModule.disagree, "")
-        cls.assertAlmostEqual(disagreement, 0.666666666667)
+        bestCombi, disagreement = diversity_utils.couple_div_measure(cls.allClassifiersNames, cls.viewsIndices,
+                                                                     cls.resultsMonoview,
+                                                                     DoubleFaultFusionModule.doubleFault,
+                                                                     cls.ground_truth)
+        cls.assertAlmostEqual(disagreement, 0.55555555555555547)
         cls.assertEqual(len(bestCombi), 2)
 
     def test_viewsIndices(cls):
@@ -72,9 +76,9 @@ class Test_disagreement(unittest.TestCase):
                                     ]]
                                ]
         bestCombi, disagreement = diversity_utils.couple_div_measure(cls.allClassifiersNames, cls.viewsIndices,
-                                                                     cls.resultsMonoview, DisagreeFusionModule.disagree,
-                                                                     "")
-        cls.assertAlmostEqual(disagreement, 0.611111111111)
+                                                                     cls.resultsMonoview, DoubleFaultFusionModule.doubleFault,
+                                                                     cls.ground_truth)
+        cls.assertAlmostEqual(disagreement, 0.33333333333333331)
         cls.assertEqual(len(bestCombi), 2)
 
     def test_multipleViews(cls):
@@ -117,19 +121,20 @@ class Test_disagreement(unittest.TestCase):
                                     ]]
                                ]
         bestCombi, disagreement = diversity_utils.couple_div_measure(cls.allClassifiersNames, cls.viewsIndices,
-                                                                     cls.resultsMonoview, DisagreeFusionModule.disagree,
-                                                                     "")
-        cls.assertAlmostEqual(disagreement, 0.592592592593)
+                                                                     cls.resultsMonoview, DoubleFaultFusionModule.doubleFault,
+                                                                     cls.ground_truth)
+        cls.assertAlmostEqual(disagreement, 0.31481481481481483)
         cls.assertEqual(len(bestCombi), 3)
 
-class Test_disagree(unittest.TestCase):
+
+class Test_doubleFault(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.monoviewDecision1 = np.array([0,0,1,1])
-        cls.monoviewDecision2 = np.array([0,1,0,1])
-        cls.ground_truth = None
+        cls.monoviewDecision1 = np.array([0,0,1,1,0,0,1,1])
+        cls.monoviewDecision2 = np.array([0,1,0,1,0,1,0,1])
+        cls.ground_truth = np.array([0,0,0,0,1,1,1,1])
 
     def test_simple(cls):
-        disagreement = DisagreeFusionModule.disagree(cls.monoviewDecision1, cls.monoviewDecision2, cls.ground_truth)
-        np.testing.assert_array_equal(disagreement, np.array([False,True,True, False]))
+        disagreement = DoubleFaultFusionModule.doubleFault(cls.monoviewDecision1, cls.monoviewDecision2, cls.ground_truth)
+        np.testing.assert_array_equal(disagreement, np.array([False,False,False,True,True,False,False,False]))
