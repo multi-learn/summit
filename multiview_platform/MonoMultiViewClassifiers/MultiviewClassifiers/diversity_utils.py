@@ -59,7 +59,6 @@ def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
 
 def getFoldsGroundTruth(directory):
     foldsFilesNames = os.listdir(directory+"folds/")
-    folds
     for fileName in os.listdir(directory+"folds/"):
         foldIndex = int(fileName[-5])
 
