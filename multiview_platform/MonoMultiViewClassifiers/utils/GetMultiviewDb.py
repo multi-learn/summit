@@ -333,6 +333,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomStat
         if viewFileName[-6:] != "-s.csv":
             viewMatrix = np.genfromtxt(viewFile, delimiter=delimiter)
             viewDset = datasetFile.create_dataset("View" + str(viewIndex), viewMatrix.shape, data=viewMatrix)
+            del viewMatrix
             viewDset.attrs["name"] = viewFileName[:-4]
             viewDset.attrs["sparse"] = False
         else:
