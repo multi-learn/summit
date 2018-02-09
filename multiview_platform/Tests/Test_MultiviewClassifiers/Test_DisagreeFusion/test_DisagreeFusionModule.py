@@ -1,7 +1,8 @@
 import unittest
 import numpy as np
 
-from .....MonoMultiViewClassifiers.MultiviewClassifiers.Fusion.Methods import LateFusion
+from ....MonoMultiViewClassifiers.MultiviewClassifiers.DisagreeFusion import DisagreeFusionModule
+
 
 class Test_disagreement(unittest.TestCase):
 
@@ -39,9 +40,9 @@ class Test_disagreement(unittest.TestCase):
         cls.classificationIndices = []
 
     def test_simple(cls):
-        bestCombi = LateFusion.disagreement(cls.allClassifiersNames, cls.directory, cls.viewsIndices,
-                                            cls.resultsMonoview, cls.classificationIndices)
-        cls.assertEqual(bestCombi, ["SCM", "DT"])
+        bestCombi, disagreement = DisagreeFusionModule.disagree(cls.allClassifiersNames, cls.viewsIndices, cls.resultsMonoview)
+        cls.assertAlmostEqual(disagreement, 0.666666666667)
+        cls.assertEqual(len(bestCombi), 2)
 
     def test_viewsIndices(cls):
         cls.viewsIndices = [0,6]
@@ -70,9 +71,9 @@ class Test_disagreement(unittest.TestCase):
                                                                         cls.randomState.random_integers(0, 1, 6)])
                                     ]]
                                ]
-        bestCombi = LateFusion.disagreement(cls.allClassifiersNames, cls.directory, cls.viewsIndices,
-                                            cls.resultsMonoview, cls.classificationIndices)
-        cls.assertEqual(bestCombi, ["DT", "DT"])
+        bestCombi, disagreement = DisagreeFusionModule.disagree(cls.allClassifiersNames, cls.viewsIndices, cls.resultsMonoview)
+        cls.assertAlmostEqual(disagreement, 0.611111111111)
+        cls.assertEqual(len(bestCombi), 2)
 
     def test_multipleViews(cls):
         cls.viewsIndices = [0, 6, 18]
@@ -113,6 +114,6 @@ class Test_disagreement(unittest.TestCase):
                                                                         cls.randomState.random_integers(0, 1, 6)])
                                     ]]
                                ]
-        bestCombi = LateFusion.disagreement(cls.allClassifiersNames, cls.directory, cls.viewsIndices,
-                                            cls.resultsMonoview, cls.classificationIndices)
-        cls.assertEqual(bestCombi, ['SCM', 'SVM', 'SVM'])
+        bestCombi, disagreement = DisagreeFusionModule.disagree(cls.allClassifiersNames, cls.viewsIndices, cls.resultsMonoview,)
+        cls.assertAlmostEqual(disagreement, 0.592592592593)
+        cls.assertEqual(len(bestCombi), 3)

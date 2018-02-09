@@ -190,17 +190,12 @@ def parseTheArgs(arguments):
                                  help='Names of the classifier used for late fusion', default=[''])
     groupLateFusion.add_argument('--FU_L_select_monoview', metavar='STRING', action='store',
                                  help='Determine which method to use to select the monoview classifiers',
-                                 default="disagreement")
+                                 default="intersect")
 
     groupFatLateFusion = parser.add_argument_group('Fat Late Fusion arguments')
     groupFatLateFusion.add_argument('--FLF_weights', metavar='FLOAT', action='store', nargs="+",
                                  help='Determine the weights of each monoview decision for FLF', type=float,
                                  default=[])
-
-    groupMumboNew = parser.add_argument_group('New Mumbo implementation arguments')
-    groupMumboNew.add_argument('--MUN_n_estimators', metavar='INT', action='store',
-                                    help='Determine the number of esitmators for mumbo', type=int,
-                                    default=10)
 
     groupFatSCMLateFusion = parser.add_argument_group('Fat SCM Late Fusion arguments')
     groupFatSCMLateFusion.add_argument('--FSCMLF_p', metavar='FLOAT', action='store',
@@ -212,6 +207,11 @@ def parseTheArgs(arguments):
     groupFatSCMLateFusion.add_argument('--FSCMLF_model', metavar='STRING', action='store',
                                     help='Determine the model type of the SCM',
                                     default="conjunction")
+
+    groupDisagreeFusion = parser.add_argument_group('Disagreement based fusion arguments')
+    groupDisagreeFusion.add_argument('--DGF_weights', metavar='FLOAT', action='store', nargs="+",
+                                    help='Determine the weights of each monoview decision for DFG', type=float,
+                                    default=[])
 
 
 
