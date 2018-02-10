@@ -34,7 +34,7 @@ def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
     nbViews = len(viewsIndices)
     nbClassifiers = len(allClassifersNames)
     combinations = itertools.combinations_with_replacement(range(nbClassifiers), nbViews)
-    nbCombinations = math.factorial(nbClassifiers+nbViews-1) / math.factorial(nbViews) / math.factorial(nbClassifiers-1)
+    nbCombinations = int(math.factorial(nbClassifiers+nbViews-1) / math.factorial(nbViews) / math.factorial(nbClassifiers-1))
     div_measure = np.zeros(nbCombinations)
     combis = np.zeros((nbCombinations, nbViews), dtype=int)
 
@@ -57,6 +57,29 @@ def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
     return [classifiersNames[viewIndex][index] for viewIndex, index in enumerate(bestCombination)], div_measure[bestCombiIndex]
 
 
+def global_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measurement, foldsGroudTruth):
+    classifiersDecisions, classifiersNames = getClassifiersDecisions(allClassifersNames,
+                                                                     viewsIndices,
+                                                                     resultsMonoview)
+
+    foldsLen = len(resultsMonoview[0][1][6][0])
+    nbViews = len(viewsIndices)
+    nbClassifiers = len(allClassifersNames)
+    combinations = itertools.combinations_with_replacement(range(nbClassifiers), nbViews)
+    nbCombinations = math.factorial(nbClassifiers + nbViews - 1) / math.factorial(nbViews) / math.factorial(
+        nbClassifiers - 1)
+    div_measure = np.zeros(nbCombinations)
+    combis = np.zeros((nbCombinations, nbViews), dtype=int)
+    for combinationsIndex, combination in enumerate(combinations):
+        div_measure[combinationsIndex] = measurement(classifiersDecisions, combination, foldsGroudTruth, foldsLen)
+    bestCombiIndex = np.argmax(div_measure)
+    bestCombination = combis[bestCombiIndex]
+
+    return [classifiersNames[viewIndex][index] for viewIndex, index in enumerate(bestCombination)], div_measure[
+        bestCombiIndex]
+
+
+
 def getFoldsGroundTruth(directory):
     foldsFilesNames = os.listdir(directory+"folds/")
     foldLen = len(np.genfromtxt(directory+"folds/"+foldsFilesNames[0], delimiter=','))
@@ -71,8 +94,12 @@ def getArgs(args, benchmark, views, viewsIndices, randomState,
             directory, resultsMonoview, classificationIndices, measurement, name):
     foldsGroundTruth = getFoldsGroundTruth(directory)
     monoviewClassifierModulesNames = benchmark["Monoview"]
-    classifiersNames, div_measure = couple_div_measure(monoviewClassifierModulesNames,
-                                        viewsIndices, resultsMonoview, measurement, foldsGroundTruth)
+    if name in ['DisagreeFusion', 'DoubleFaultFusion']:
+        classifiersNames, div_measure = couple_div_measure(monoviewClassifierModulesNames,
+                                            viewsIndices, resultsMonoview, measurement, foldsGroundTruth)
+    else:
+        classifiersNames, div_measure = global_div_measure(monoviewClassifierModulesNames,
+                                            viewsIndices, resultsMonoview, measurement, foldsGroundTruth)
     multiclass_preds = [monoviewResult[1][5] for monoviewResult in resultsMonoview]
     if isBiclass(multiclass_preds):
         monoviewDecisions = np.array([monoviewResult[1][3] for monoviewResult in resultsMonoview
