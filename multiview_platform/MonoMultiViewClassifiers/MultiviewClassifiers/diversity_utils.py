@@ -129,7 +129,7 @@ def getArgs(args, benchmark, views, viewsIndices, randomState,
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
     """Used to generate parameters sets for the random hyper parameters optimization function"""
-    weights = [randomState.random_sample(len(classificationKWARGS["classifiersNames"])) for _ in range(nIter)]
+    weights = [np.ones(len(classificationKWARGS["classifiersNames"])) for _ in range(nIter)]
     nomralizedWeights = [[weightVector/np.sum(weightVector)] for weightVector in weights]
     return nomralizedWeights
 
