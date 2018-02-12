@@ -71,6 +71,7 @@ def global_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
     div_measure = np.zeros(nbCombinations)
     combis = np.zeros((nbCombinations, nbViews), dtype=int)
     for combinationsIndex, combination in enumerate(combinations):
+        combis[combinationsIndex] = combination
         div_measure[combinationsIndex] = measurement(classifiersDecisions, combination, foldsGroudTruth, foldsLen)
     bestCombiIndex = np.argmax(div_measure)
     bestCombination = combis[bestCombiIndex]
