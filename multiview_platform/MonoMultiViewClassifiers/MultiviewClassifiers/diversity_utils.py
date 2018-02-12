@@ -42,7 +42,7 @@ def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
         combis[combinationsIndex] = combination
         combiWithView = [(viewIndex,combiIndex) for viewIndex, combiIndex in enumerate(combination)]
         binomes = itertools.combinations(combiWithView, 2)
-        nbBinomes = int(math.factorial(nbViews) / 2 / math.factorial(nbViews-2))
+        nbBinomes = math.factorial(nbViews) / 2 / math.factorial(nbViews-2)
         disagreement = np.zeros(nbBinomes)
         for binomeIndex, binome in enumerate(binomes):
             (viewIndex1, classifierIndex1), (viewIndex2, classifierIndex2) = binome
@@ -129,7 +129,7 @@ def getArgs(args, benchmark, views, viewsIndices, randomState,
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
     """Used to generate parameters sets for the random hyper parameters optimization function"""
-    weights = [np.ones(len(classificationKWARGS["classifiersNames"])) for _ in range(nIter)]
+    weights = [randomState.random_sample(len(classificationKWARGS["classifiersNames"])) for _ in range(nIter)]
     nomralizedWeights = [[weightVector/np.sum(weightVector)] for weightVector in weights]
     return nomralizedWeights
 
