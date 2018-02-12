@@ -4,7 +4,7 @@ import numpy as np
 from ....MonoMultiViewClassifiers.MultiviewClassifiers.DoubleFaultFusion import DoubleFaultFusionModule
 from ....MonoMultiViewClassifiers.MultiviewClassifiers import diversity_utils
 
-class Test_disagreement(unittest.TestCase):
+class Test_doubleFaultRatio(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
