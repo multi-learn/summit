@@ -594,7 +594,7 @@ def execClassif(arguments):
     #     m, s = divmod(totalDur, 60)
     #     h, m = divmod(m, 60)
     #     d, h = divmod(h, 24)
-    #     # print "%d:%02d:%02d" % (h, m, s)
+    #     # print "%d_%02d_%02d" % (h, m, s)
     #     logging.info("Info:\t Total duration : " + str(d) + " days, " + str(h) + " hours, " + str(m) + " mins, " + str(
     #         int(s)) + "secs.")
     #
@@ -618,7 +618,7 @@ def execClassif(arguments):
     #     m, s = divmod(totalDur, 60)
     #     h, m = divmod(m, 60)
     #     d, h = divmod(h, 24)
-    #     # print "%d:%02d:%02d" % (h, m, s)
+    #     # print "%d_%02d_%02d" % (h, m, s)
     #     logging.info("Info:\t Total duration : "+str(d)+ " days, "+str(h)+" hours, "+str(m)+" mins, "+str(int(s))+"secs.")
     #
     # if statsIter > 1:

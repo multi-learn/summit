@@ -239,7 +239,7 @@ def initRandomState(randomStateArg, directory):
 def initLogFile(args):
     """Used to init the directory where the preds will be stored and the log file"""
     resultDirectory = "../Results/" + args.name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
-    logFileName = time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + ''.join(args.CL_type) + "-" + "_".join(
+    logFileName = time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + ''.join(args.CL_type) + "-" + "_".join(
         args.views) + "-" + args.name + "-LOG"
     if not os.path.exists(os.path.dirname(resultDirectory + logFileName)):
         try:

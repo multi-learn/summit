@@ -126,7 +126,7 @@ def publishMetricsGraphs(metricsScores, directory, databaseName, labelsNames):
         testScores = metricScores["testScores"]
         names = metricScores["classifiersNames"]
         nbResults = len(testScores)
-        fileName = directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-" + metricName + ".png"
+        fileName = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-" + metricName + ".png"
         plotMetricOneIter(trainScores, testScores, names, nbResults, metricName, fileName)
         logging.debug("Done:\t Biclass score graph generation for " + metricName)
 
@@ -167,7 +167,7 @@ def publishExampleErrors(exampleErrors, directory, databaseName, labelsNames, mi
                borderaxespad=0,
                ncol=3)
     fig.tight_layout()
-    fig.savefig(directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-error_analysis.png", bbox_inches="tight")
+    fig.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-error_analysis.png", bbox_inches="tight")
     plt.close()
     logging.debug("Done:\t Biclass Label analysis figure generation")
 
@@ -180,7 +180,7 @@ def publishExampleErrors(exampleErrors, directory, databaseName, labelsNames, mi
     plt.bar(x, errorOnExamples)
     plt.ylim([0,nbClassifiers])
     plt.title("Number of classifiers that failed to classify each example")
-    fig.savefig(directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-example_errors.png")
+    fig.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-example_errors.png")
     plt.close()
     logging.debug("Done:\t Biclass Error by example figure generation")
 
@@ -290,7 +290,7 @@ def publishMulticlassScores(multiclassResults, metrics, statsIter, direcories, d
             ax.set_xticks(np.arange(nbResults) + barWidth)
             ax.set_xticklabels(names, rotation="vertical")
             plt.tight_layout()
-            f.savefig(directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + databaseName + "-" + metric[0] + ".png")
+            f.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + metric[0] + ".png")
             plt.close()
             logging.debug("Done:\t Multiclass score graph generation for " + metric[0])
 
@@ -326,20 +326,20 @@ def publishMulticlassExmapleErrors(multiclassResults, directories, databaseName,
         green_patch = mpatches.Patch(color='green', label='Classifier succeded')
         plt.legend(handles=[red_patch, green_patch], bbox_to_anchor=(0,1.02,1,0.2), loc="lower left",mode="expand", borderaxespad=0, ncol=2)
         fig.tight_layout()
-        fig.savefig(directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + databaseName +"-error_analysis.png", bbox_inches="tight")
+        fig.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-error_analysis.png", bbox_inches="tight")
         plt.close()
         logging.debug("Done:\t Label analysis figure generation")
 
         logging.debug("Start:\t Error by example figure generation")
         errorOnExamples = -1*np.sum(data, axis=1)/nbIter+nbClassifiers
-        np.savetxt(directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-clf_errors_doubled.csv", data, delimiter=",")
-        np.savetxt(directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-example_errors.csv", temp_data, delimiter=",")
+        np.savetxt(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-clf_errors_doubled.csv", data, delimiter=",")
+        np.savetxt(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-example_errors.csv", temp_data, delimiter=",")
         fig, ax = plt.subplots()
         x = np.arange(nbExamples)
         plt.bar(x, errorOnExamples)
         plt.ylim([0,nbClassifiers])
         plt.title("Number of classifiers that failed to classify each example")
-        fig.savefig(directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + databaseName +"-example_errors.png")
+        fig.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-example_errors.png")
         plt.close()
         logging.debug("Done:\t Error by example figure generation")
 
@@ -451,7 +451,7 @@ def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, cl
             ax.set_xticks(np.arange(nbResults) + barWidth)
             ax.set_xticklabels(names, rotation="vertical")
             f.tight_layout()
-            f.savefig(currentDirectory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + dataBaseName + "-Mean_on_"
+            f.savefig(currentDirectory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + dataBaseName + "-Mean_on_"
                       + str(statsIter) + "_iter-" + metricName + ".png")
             plt.close()
 
@@ -491,7 +491,7 @@ def publishIterBiclassExampleErrors(iterResults, directory, labelsDictionary, cl
         cbar = fig.colorbar(cax, ticks=[-100*statsIter/2, 0, statsIter])
         cbar.ax.set_yticklabels(['Unseen', 'Always Wrong', 'Always Right'])
         fig.tight_layout()
-        fig.savefig(currentDirectory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-error_analysis.png")
+        fig.savefig(currentDirectory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-error_analysis.png")
         plt.close()
         logging.debug("Done:\t Global label analysis figure generation")
 
@@ -504,7 +504,7 @@ def publishIterBiclassExampleErrors(iterResults, directory, labelsDictionary, cl
         plt.bar(x, errorOnExamples)
         plt.ylim([0,nbClassifiers*statsIter])
         plt.title("Number of classifiers that failed to classify each example")
-        fig.savefig(currentDirectory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-example_errors.png")
+        fig.savefig(currentDirectory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-example_errors.png")
         plt.close()
         logging.debug("Done:\t Global error by example figure generation")
 
@@ -542,7 +542,7 @@ def publishIterMulticlassMetricsScores(iterMulticlassResults, classifiersNames, 
         ax.set_xticks(np.arange(nbResults) + barWidth)
         ax.set_xticklabels(names, rotation="vertical")
         f.tight_layout()
-        f.savefig(directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + dataBaseName + "-Mean_on_"
+        f.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + dataBaseName + "-Mean_on_"
                   + str(statsIter) + "_iter-" + metricName + ".png")
         plt.close()
 
@@ -570,14 +570,14 @@ def publishIterMulticlassExampleErrors(iterMulticlassResults, directory, classif
 
     logging.debug("Start:\t Global error by example figure generation")
     errorOnExamples = -1 * np.sum(data, axis=1) + (nbClassifiers*statsIter)
-    np.savetxt(directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-clf_errors.csv", data, delimiter=",")
-    np.savetxt(directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
+    np.savetxt(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-clf_errors.csv", data, delimiter=",")
+    np.savetxt(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
     fig, ax = plt.subplots()
     x = np.arange(nbExamples)
     plt.bar(x, errorOnExamples)
     plt.ylim([0,nbClassifiers*statsIter])
     plt.title("Number of classifiers that failed to classify each example")
-    fig.savefig(directory + time.strftime("%Y_%m_%d-%H:%M:%S") + "-example_errors.png")
+    fig.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-example_errors.png")
     plt.close()
     logging.debug("Done:\t Global error by example figure generation")
 

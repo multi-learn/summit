@@ -42,7 +42,7 @@ def saveResults(LABELS_DICTIONARY, stringAnalysis, views, classifierModule, clas
     logging.info(stringAnalysis)
     viewsString = "-".join(views)
     labelsString = "-".join(labelsSet)
-    timestr = time.strftime("%Y_%m_%d-%H:%M:%S")
+    timestr = time.strftime("%Y_%m_%d-%H_%M_%S")
     CL_type_string = classifierModule.genName(classificationKWARGS)
     outputFileName = directory + "/" + CL_type_string + "/" + timestr + "-Results-" + CL_type_string + "-" + viewsString + '-' + labelsString + \
                      '-learnRate_{0:.2f}'.format(learningRate) + '-' + name

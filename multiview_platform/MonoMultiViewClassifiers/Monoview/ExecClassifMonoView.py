@@ -126,7 +126,7 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
     learningRate = float(len(classificationIndices[0])) / (len(classificationIndices[0]) + len(classificationIndices[1]))
     labelsString = "-".join(labelsNames)
     CL_type_string = CL_type
-    timestr = time.strftime("%Y_%m_%d-%H:%M:%S")
+    timestr = time.strftime("%Y_%m_%d-%H_%M_%S")
     outputFileName = directory + CL_type_string + "/" + feat + "/" + timestr + "-Results-" + CL_type_string + "-" + labelsString + \
                      '-learnRate_{0:.2f}'.format(learningRate) + '-' + name + "-" + feat + "-"
     if not os.path.exists(os.path.dirname(outputFileName)):
@@ -268,7 +268,7 @@ if __name__ == '__main__':
     X, Y = Dataset.getMonoviewShared(path, name, viewName)
 
     # Init log
-    logFileName = time.strftime("%Y_%m_%d-%H:%M:%S") + "-" + name + "-"+ viewName +"-" + classifierName +'-LOG'
+    logFileName = time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + name + "-"+ viewName +"-" + classifierName +'-LOG'
     if not os.path.exists(os.path.dirname(directory + logFileName)):
         try:
             os.makedirs(os.path.dirname(directory + logFileName))
