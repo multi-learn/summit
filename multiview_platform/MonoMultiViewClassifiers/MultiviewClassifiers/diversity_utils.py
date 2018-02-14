@@ -66,8 +66,8 @@ def global_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
     nbViews = len(viewsIndices)
     nbClassifiers = len(allClassifersNames)
     combinations = itertools.combinations_with_replacement(range(nbClassifiers), nbViews)
-    nbCombinations = math.factorial(nbClassifiers + nbViews - 1) / math.factorial(nbViews) / math.factorial(
-        nbClassifiers - 1)
+    nbCombinations = int(math.factorial(nbClassifiers + nbViews - 1) / math.factorial(nbViews) / math.factorial(
+        nbClassifiers - 1))
     div_measure = np.zeros(nbCombinations)
     combis = np.zeros((nbCombinations, nbViews), dtype=int)
     for combinationsIndex, combination in enumerate(combinations):
