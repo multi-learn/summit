@@ -42,7 +42,7 @@ def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
         combis[combinationsIndex] = combination
         combiWithView = [(viewIndex,combiIndex) for viewIndex, combiIndex in enumerate(combination)]
         binomes = itertools.combinations(combiWithView, 2)
-        nbBinomes = math.factorial(nbViews) / 2 / math.factorial(nbViews-2)
+        nbBinomes = int(math.factorial(nbViews) / 2 / math.factorial(nbViews-2))
         disagreement = np.zeros(nbBinomes)
         for binomeIndex, binome in enumerate(binomes):
             (viewIndex1, classifierIndex1), (viewIndex2, classifierIndex2) = binome
