@@ -24,7 +24,7 @@ def difficulty(classifiersDecisions, combination, foldsGroudTruth, foldsLen):
     difficulty_score = np.mean(
         np.var(
             np.array([
-                         np.sum((difficulty_scores==viewIndex), axis=1)
+                         np.sum((difficulty_scores==viewIndex), axis=1)/float(nbView)
                          for viewIndex in range(len(combination)+1)])
             , axis=0)
     )
