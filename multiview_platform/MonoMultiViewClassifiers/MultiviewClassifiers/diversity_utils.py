@@ -80,6 +80,44 @@ def global_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
         bestCombiIndex]
 
 
+def CQ_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measurement, foldsGroudTruth):
+    classifiersDecisions, classifiersNames = getClassifiersDecisions(allClassifersNames,
+                                                                     viewsIndices,
+                                                                     resultsMonoview)
+
+    foldsLen = len(resultsMonoview[0][1][6][0])
+    nbViews = len(viewsIndices)
+    nbClassifiers = len(allClassifersNames)
+    combinations = itertools.combinations_with_replacement(range(nbClassifiers), nbViews)
+    nbCombinations = int(
+        math.factorial(nbClassifiers + nbViews - 1) / math.factorial(nbViews) / math.factorial(nbClassifiers - 1))
+    div_measure = np.zeros(nbCombinations)
+    combis = np.zeros((nbCombinations, nbViews), dtype=int)
+
+    for combinationsIndex, combination in enumerate(combinations):
+        combis[combinationsIndex] = combination
+        combiWithView = [(viewIndex, combiIndex) for viewIndex, combiIndex in enumerate(combination)]
+        binomes = itertools.combinations(combiWithView, 2)
+        nbBinomes = int(math.factorial(nbViews) / 2 / math.factorial(nbViews - 2))
+        disagreement = np.zeros(nbBinomes)
+        difficulties = np.zeros(nbBinomes)
+        cqMeasures = np.zeros(nbBinomes)
+        for binomeIndex, binome in enumerate(binomes):
+            (viewIndex1, classifierIndex1), (viewIndex2, classifierIndex2) = binome
+            nbDisagree = np.sum(measurement[0](classifiersDecisions[viewIndex1, classifierIndex1],
+                                            classifiersDecisions[viewIndex2, classifierIndex2], foldsGroudTruth)
+                                , axis=1) / float(foldsLen)
+            disagreement[binomeIndex] = np.mean(nbDisagree)
+            difficulties[binomeIndex] = measurement[1](classifiersDecisions, [classifierIndex1, classifierIndex2], foldsGroudTruth, foldsLen)
+            cqMeasures = difficulties/disagreement
+        div_measure[combinationsIndex] = np.mean(cqMeasures)
+    bestCombiIndex = np.argmax(div_measure)
+    bestCombination = combis[bestCombiIndex]
+
+    return [classifiersNames[viewIndex][index] for viewIndex, index in enumerate(bestCombination)], div_measure[
+        bestCombiIndex]
+
+
 
 def getFoldsGroundTruth(directory):
     foldsFilesNames = os.listdir(directory+"folds/")
@@ -97,6 +135,9 @@ def getArgs(args, benchmark, views, viewsIndices, randomState,
     monoviewClassifierModulesNames = benchmark["Monoview"]
     if name in ['DisagreeFusion', 'DoubleFaultFusion']:
         classifiersNames, div_measure = couple_div_measure(monoviewClassifierModulesNames,
+                                            viewsIndices, resultsMonoview, measurement, foldsGroundTruth)
+    elif name == "PseudoCQFusion":
+        classifiersNames, div_measure = CQ_div_measure(monoviewClassifierModulesNames,
                                             viewsIndices, resultsMonoview, measurement, foldsGroundTruth)
     else:
         classifiersNames, div_measure = global_div_measure(monoviewClassifierModulesNames,
