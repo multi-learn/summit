@@ -27,4 +27,4 @@ class Test_difficulty(unittest.TestCase):
                                                                cls.combination,
                                                                cls.foldsGroudTruth,
                                                                cls.foldsLen)
-        cls.assertAlmostEqual(difficulty_measure, 0.11111111111)
+        cls.assertAlmostEqual(difficulty_measure, 2.6875)
