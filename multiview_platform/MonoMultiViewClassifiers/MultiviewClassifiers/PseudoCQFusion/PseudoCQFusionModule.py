@@ -4,6 +4,7 @@ from .. import diversity_utils
 from ..DifficultyFusion.DifficultyFusionModule import difficulty
 from ..DoubleFaultFusion.DoubleFaultFusionModule import doubleFault
 
+
 def genName(config):
     return "PseudoCQFusion"
 
@@ -15,8 +16,6 @@ def getBenchmark(benchmark, args=None):
 
 def pseudoCQ(difficulty, doubleFlaut):
     return difficulty/float(doubleFlaut)
-
-
 
 
 def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview, classificationIndices):

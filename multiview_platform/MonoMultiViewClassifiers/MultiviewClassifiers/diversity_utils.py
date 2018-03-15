@@ -100,23 +100,21 @@ def CQ_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measuremen
         binomes = itertools.combinations(combiWithView, 2)
         nbBinomes = int(math.factorial(nbViews) / 2 / math.factorial(nbViews - 2))
         disagreement = np.zeros(nbBinomes)
-        difficulties = np.zeros(nbBinomes)
-        cqMeasures = np.zeros(nbBinomes)
+        div_measure[combinationsIndex] = measurement[1](classifiersDecisions, combination, foldsGroudTruth, foldsLen)
         for binomeIndex, binome in enumerate(binomes):
             (viewIndex1, classifierIndex1), (viewIndex2, classifierIndex2) = binome
             nbDisagree = np.sum(measurement[0](classifiersDecisions[viewIndex1, classifierIndex1],
                                             classifiersDecisions[viewIndex2, classifierIndex2], foldsGroudTruth)
                                 , axis=1) / float(foldsLen)
             disagreement[binomeIndex] = np.mean(nbDisagree)
-            difficulties[binomeIndex] = measurement[1](classifiersDecisions, [classifierIndex1, classifierIndex2], foldsGroudTruth, foldsLen)
-            cqMeasures = difficulties/disagreement
-        div_measure[combinationsIndex] = np.mean(cqMeasures)
+            # difficulties[binomeIndex] = measurement[1](classifiersDecisions, [classifierIndex1, classifierIndex2], foldsGroudTruth, foldsLen)
+            # cqMeasures = difficulties/disagreement
+        div_measure[combinationsIndex] /= float(np.mean(disagreement))
     bestCombiIndex = np.argmax(div_measure)
     bestCombination = combis[bestCombiIndex]
 
     return [classifiersNames[viewIndex][index] for viewIndex, index in enumerate(bestCombination)], div_measure[
         bestCombiIndex]
-
 
 
 def getFoldsGroundTruth(directory):
