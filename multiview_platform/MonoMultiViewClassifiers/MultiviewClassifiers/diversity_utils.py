@@ -84,7 +84,6 @@ def CQ_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measuremen
     classifiersDecisions, classifiersNames = getClassifiersDecisions(allClassifersNames,
                                                                      viewsIndices,
                                                                      resultsMonoview)
-
     foldsLen = len(resultsMonoview[0][1][6][0])
     nbViews = len(viewsIndices)
     nbClassifiers = len(allClassifersNames)
@@ -107,10 +106,8 @@ def CQ_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measuremen
                                             classifiersDecisions[viewIndex2, classifierIndex2], foldsGroudTruth)
                                 , axis=1) / float(foldsLen)
             disagreement[binomeIndex] = np.mean(nbDisagree)
-            # difficulties[binomeIndex] = measurement[1](classifiersDecisions, [classifierIndex1, classifierIndex2], foldsGroudTruth, foldsLen)
-            # cqMeasures = difficulties/disagreement
         div_measure[combinationsIndex] /= float(np.mean(disagreement))
-    bestCombiIndex = np.argmax(div_measure)
+    bestCombiIndex = np.argmin(div_measure)
     bestCombination = combis[bestCombiIndex]
 
     return [classifiersNames[viewIndex][index] for viewIndex, index in enumerate(bestCombination)], div_measure[
