@@ -7,6 +7,13 @@ from ..utils.Multiclass import isBiclass, genMulticlassMonoviewDecision
 
 
 def getClassifiersDecisions(allClassifersNames, viewsIndices, resultsMonoview):
+    """
+    This function gets the monoview classifiers decisions from resultsMonoview.
+    The classifiersDecisions variable is ordered as :
+    classifiersDecisions[viewIndex, classifierIndex, foldIndex, exampleIndex]
+    And the classifiersNames variable is ordered as :
+    classifiersNames[viewIndex][classifierIndex]
+    """
     nbViews = len(viewsIndices)
     nbClassifiers = len(allClassifersNames)
     nbFolds = len(resultsMonoview[0][1][6])
@@ -25,12 +32,16 @@ def getClassifiersDecisions(allClassifersNames, viewsIndices, resultsMonoview):
 
 
 def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measurement, foldsGroudTruth):
+    """
+    This function is used to get the max of a couple diversity measurement,passed as an argument
+    It generates all possible combinations and all the couples to estimate the diversity on a combination
+    The best combination is the one that maximize the measurement.
+    """
 
     classifiersDecisions, classifiersNames = getClassifiersDecisions(allClassifersNames,
                                                                                      viewsIndices,
                                                                                      resultsMonoview)
 
-    foldsLen = len(resultsMonoview[0][1][6][0])
     nbViews = len(viewsIndices)
     nbClassifiers = len(allClassifersNames)
     combinations = itertools.combinations_with_replacement(range(nbClassifiers), nbViews)
@@ -43,14 +54,14 @@ def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
         combiWithView = [(viewIndex,combiIndex) for viewIndex, combiIndex in enumerate(combination)]
         binomes = itertools.combinations(combiWithView, 2)
         nbBinomes = int(math.factorial(nbViews) / 2 / math.factorial(nbViews-2))
-        disagreement = np.zeros(nbBinomes)
+        couple_diversities = np.zeros(nbBinomes)
         for binomeIndex, binome in enumerate(binomes):
             (viewIndex1, classifierIndex1), (viewIndex2, classifierIndex2) = binome
-            nbDisagree = np.sum(measurement(classifiersDecisions[viewIndex1, classifierIndex1],
+            folds_couple_diversity = np.mean(measurement(classifiersDecisions[viewIndex1, classifierIndex1],
                                                classifiersDecisions[viewIndex2, classifierIndex2], foldsGroudTruth)
-                                , axis=1)/float(foldsLen)
-            disagreement[binomeIndex] = np.mean(nbDisagree)
-        div_measure[combinationsIndex] = np.mean(disagreement)
+                                , axis=1)
+            couple_diversities[binomeIndex] = np.mean(folds_couple_diversity)
+        div_measure[combinationsIndex] = np.mean(couple_diversities)
     bestCombiIndex = np.argmax(div_measure)
     bestCombination = combis[bestCombiIndex]
 
@@ -58,6 +69,11 @@ def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
 
 
 def global_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measurement, foldsGroudTruth):
+    """
+    This function is used to get the max of a diversity measurement,passed as an argument
+    It generates all possible combinations to estimate the diversity on a combination
+    The best combination is the one that maximize the measurement.
+    """
     classifiersDecisions, classifiersNames = getClassifiersDecisions(allClassifersNames,
                                                                      viewsIndices,
                                                                      resultsMonoview)
@@ -81,6 +97,10 @@ def global_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
 
 
 def CQ_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measurement, foldsGroudTruth):
+    """
+    This function is used to measure a pseudo-CQ measurement based on the minCq algorithm.
+    It's a mix between couple_div_measure and global_div_measure that uses multiple measurements.
+    """
     classifiersDecisions, classifiersNames = getClassifiersDecisions(allClassifersNames,
                                                                      viewsIndices,
                                                                      resultsMonoview)
@@ -115,6 +135,9 @@ def CQ_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measuremen
 
 
 def getFoldsGroundTruth(directory):
+    """This function is used to get the labels of each fold example used in the measurements
+    foldsGroundTruth is formatted as
+    foldsGroundTruth[foldIndex, exampleIndex]"""
     foldsFilesNames = os.listdir(directory+"folds/")
     foldLen = len(np.genfromtxt(directory+"folds/"+foldsFilesNames[0], delimiter=','))
     foldsGroudTruth = np.zeros((len(foldsFilesNames), foldLen), dtype=int)
@@ -126,6 +149,7 @@ def getFoldsGroundTruth(directory):
 
 def getArgs(args, benchmark, views, viewsIndices, randomState,
             directory, resultsMonoview, classificationIndices, measurement, name):
+    """This function is a general function to get the args for all the measurements used"""
     foldsGroundTruth = getFoldsGroundTruth(directory)
     monoviewClassifierModulesNames = benchmark["Monoview"]
     if name in ['DisagreeFusion', 'DoubleFaultFusion']:
@@ -157,8 +181,8 @@ def getArgs(args, benchmark, views, viewsIndices, randomState,
                      "weights": args.DGF_weights,
                      "classifiersNames": classifiersNames,
                      "monoviewDecisions": monoviewDecisions,
-                     "nbCLass":len(args.CL_classes),
-                     "div_measure":div_measure
+                     "nbCLass": len(args.CL_classes),
+                     "div_measure": div_measure
                  }
                  }
     argumentsList.append(arguments)
@@ -170,9 +194,13 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     nomralizedWeights = [[weightVector/np.sum(weightVector)] for weightVector in weights]
     return nomralizedWeights
 
+
 class DiversityFusionClass:
 
+    """This is a parent class for all the diversity fusion based classifiers."""
+
     def __init__(self, randomState, NB_CORES=1, **kwargs):
+        """Used to init the instances"""
         if kwargs["weights"] == []:
             self.weights = [1.0/len(kwargs["classifiersNames"]) for _ in range(len(kwargs["classifiersNames"]))]
         else:
@@ -183,12 +211,15 @@ class DiversityFusionClass:
         self.div_measure = kwargs["div_measure"]
 
     def setParams(self, paramsSet):
+        """ Used to set the weights"""
         self.weights = paramsSet[0]
 
     def fit_hdf5(self, DATASET, labels, trainIndices=None, viewsIndices=None, metric=["f1_score", None]):
+        """No need to fit as the monoview classifiers are already fitted"""
         pass
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
+        """Just a weighted majority vote"""
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         votes = np.zeros((len(usedIndices), self.nbClass), dtype=float)

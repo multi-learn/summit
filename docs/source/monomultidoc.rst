@@ -10,3 +10,4 @@ Mono and mutliview classification
    monomulti/multiview_classifier
    monomulti/exec_classif
    monomulti/result_analysis
+   monomulti/multiview_classifiers/diversity_fusion
