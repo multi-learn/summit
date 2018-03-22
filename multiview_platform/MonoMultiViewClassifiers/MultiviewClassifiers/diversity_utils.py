@@ -225,7 +225,7 @@ class DiversityFusionClass:
         votes = np.zeros((len(usedIndices), self.nbClass), dtype=float)
         for usedIndex, exampleIndex in enumerate(usedIndices):
             for monoviewDecisionIndex, monoviewDecision in enumerate(self.monoviewDecisions):
-                votes[usedIndex, monoviewDecision[exampleIndex]] += self.weights[monoviewDecisionIndex]
+                votes[usedIndex, monoviewDecision[exampleIndex]] += 1#self.weights[monoviewDecisionIndex]
         predictedLabels = np.argmax(votes, axis=1)
         return predictedLabels
 
