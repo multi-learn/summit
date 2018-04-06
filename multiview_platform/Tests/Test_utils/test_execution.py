@@ -3,6 +3,8 @@ import argparse
 import os
 import h5py
 import numpy as np
+import shutil
+import time
 
 from sklearn.model_selection import StratifiedShuffleSplit
 
@@ -17,6 +19,52 @@ class Test_parseTheArgs(unittest.TestCase):
     def test_empty_args(self):
         args = execution.parseTheArgs([])
         # print args
+
+
+class Test_initStatsIterRandomStates(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.randomState = np.random.RandomState(42)
+        cls.statsIter = 1
+
+    def test_one_statiter(cls):
+        cls.state = cls.randomState.get_state()[1]
+        statsIterRandomStates = execution.initStatsIterRandomStates(cls.statsIter, cls.randomState)
+        np.testing.assert_array_equal(statsIterRandomStates[0].get_state()[1], cls.state)
+
+    def test_multiple_iter(cls):
+        cls.statsIter = 3
+        statsIterRandomStates = execution.initStatsIterRandomStates(cls.statsIter, cls.randomState)
+        cls.assertAlmostEqual(len(statsIterRandomStates), 3)
+        cls.assertNotEqual(statsIterRandomStates[0].randint(5000), statsIterRandomStates[1].randint(5000))
+        cls.assertNotEqual(statsIterRandomStates[0].randint(5000), statsIterRandomStates[2].randint(5000))
+        cls.assertNotEqual(statsIterRandomStates[2].randint(5000), statsIterRandomStates[1].randint(5000))
+
+class Test_getDatabaseFunction(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.name = "zrtTap"
+        cls.type = ".csv"
+
+    def test_simple(cls):
+        getDB = execution.getDatabaseFunction(cls.name, cls.type)
+        from ...MonoMultiViewClassifiers.utils.GetMultiviewDb import getClassicDBcsv
+        cls.assertEqual(getDB, getClassicDBcsv)
+
+    def test_hdf5(cls):
+        cls.type = ".hdf5"
+        getDB = execution.getDatabaseFunction(cls.name, cls.type)
+        from ...MonoMultiViewClassifiers.utils.GetMultiviewDb import getClassicDBhdf5
+        cls.assertEqual(getDB, getClassicDBhdf5)
+
+    def test_plausible_hdf5(cls):
+        cls.name = "Plausible"
+        cls.type = ".hdf5"
+        getDB = execution.getDatabaseFunction(cls.name, cls.type)
+        from ...MonoMultiViewClassifiers.utils.GetMultiviewDb import getPlausibleDBhdf5
+        cls.assertEqual(getDB, getPlausibleDBhdf5)
 
 
 class Test_initRandomState(unittest.TestCase):
@@ -43,10 +91,34 @@ class Test_initRandomState(unittest.TestCase):
                                       pickled_randomState.beta(1,100,100))
 
 
-class Test_initLogFile(unittest.TestCase):
+class FakeArg():
 
-    def test_initLogFile(self):
-        pass
+    def __init__(self):
+        self.name = "zrtTap"
+        self.CL_type = ["fromage","jambon"]
+        self.views = ["view1", "view2"]
+        self.log = True
+
+# Impossible to test as the main directory is notthe same for the exec and the test
+# class Test_initLogFile(unittest.TestCase):
+#
+#     @classmethod
+#     def setUpClass(cls):
+#         cls.fakeArgs = FakeArg()
+#         cls.timestr = time.strftime("%Y_%m_%d-%H_%M")
+#
+#     def test_initLogFile(cls):
+#         cls.timestr = time.strftime("%Y_%m_%d-%H_%M")
+#         execution.initLogFile(cls.fakeArgs)
+#         cls.assertIn("zrtTap", os.listdir("mutliview_platform/Results"), "Database directory not created")
+#         cls.assertIn("started_"+cls.timestr, os.listdir("mutliview_platform/Results/zrtTap"),"experimentation dir not created")
+#         cls.assertIn(cls.timestr + "-" + ''.join(cls.fakeArgs.CL_type) + "-" + "_".join(
+#         cls.fakeArgs.views) + "-" + cls.fakeArgs.name + "-LOG.log", os.listdir("mutliview_platform/Results/zrtTap/"+"started_"+cls.timestr), "logfile was not created")
+#
+#     @classmethod
+#     def tearDownClass(cls):
+#         shutil.rmtree("multiview_platform/Results/zrtTap")
+#         pass
 
 
 class Test_genSplits(unittest.TestCase):

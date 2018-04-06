@@ -8,6 +8,8 @@ import logging
 import sklearn
 
 
+from . import GetMultiviewDb as DB
+
 def parseTheArgs(arguments):
     """Used to parse the args entered by the user"""
 
@@ -220,7 +222,14 @@ def parseTheArgs(arguments):
 
 
 def initRandomState(randomStateArg, directory):
-    """Used to init a random state and multiple if needed (multicore)"""
+    """
+    Used to init a random state.
+    If no randomState is specified, it will take a 'random' seed.
+    If the arg is a string containing only numbers, it will be converted in an int to gen a seed.
+    If the arg is a string with letters, it must be a path to a pickled random state file that will be loaded.
+    The function will also pickle the new random state in a file tobe able to retrieve it later.
+    Tested
+    """
     if randomStateArg is None:
         randomState = np.random.RandomState(randomStateArg)
     else:
@@ -236,26 +245,33 @@ def initRandomState(randomStateArg, directory):
     return randomState
 
 
+def initStatsIterRandomStates(statsIter, randomState):
+    """Used to init multiple random states if needed because of multiple statsIter"""
+    if statsIter > 1:
+        statsIterRandomStates = [np.random.RandomState(randomState.randint(5000)) for _ in range(statsIter)]
+    else:
+        statsIterRandomStates = [randomState]
+    return statsIterRandomStates
+
+
+def getDatabaseFunction(name, type):
+    """Used to get the right databes extraction function according to the type of and it's name"""
+    if name not in ["Fake", "Plausible"]:
+        getDatabase = getattr(DB, "getClassicDB" + type[1:])
+    else:
+        getDatabase = getattr(DB, "get" + name + "DB" + type[1:])
+    return getDatabase
+
+
 def initLogFile(args):
     """Used to init the directory where the preds will be stored and the log file"""
     resultDirectory = "../Results/" + args.name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
-    logFileName = time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + ''.join(args.CL_type) + "-" + "_".join(
+    logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(args.CL_type) + "-" + "_".join(
         args.views) + "-" + args.name + "-LOG"
-    if not os.path.exists(os.path.dirname(resultDirectory + logFileName)):
-        try:
-            os.makedirs(os.path.dirname(resultDirectory + logFileName))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
+    if os.path.exists(os.path.dirname(resultDirectory)):
+        raise NameError("The result dir already exists, wait 1 min and retry")
     logFile = resultDirectory + logFileName
-    if os.path.isfile(logFile + ".log"):
-        for i in range(1, 20):
-            testFileName = logFileName + "-" + str(i) + ".log"
-            if not (os.path.isfile(resultDirectory + testFileName)):
-                logFile = resultDirectory + testFileName
-                break
-    else:
-        logFile += ".log"
+    logFile += ".log"
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logFile, level=logging.DEBUG,
                         filemode='w')
     if args.log:

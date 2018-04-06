@@ -344,15 +344,9 @@ def execClassif(arguments):
 
     directory = execution.initLogFile(args)
     randomState = execution.initRandomState(args.randomState, directory)
-    if statsIter > 1:
-        statsIterRandomStates = [np.random.RandomState(randomState.randint(500)) for _ in range(statsIter)]
-    else:
-        statsIterRandomStates = [randomState]
+    statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,randomState)
 
-    if args.name not in ["Fake", "Plausible"]:
-        getDatabase = getattr(DB, "getClassicDB" + args.type[1:])
-    else:
-        getDatabase = getattr(DB, "get" + args.name + "DB" + args.type[1:])
+    getDatabase = execution.getDatabaseFunction(args.name,args.type)
 
     DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nbClass,
                                              args.CL_classes, randomState, args.full)

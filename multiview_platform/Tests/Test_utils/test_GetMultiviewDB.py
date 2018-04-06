@@ -31,8 +31,6 @@ class Test_copyhdf5Dataset(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         os.remove("multiview_platform/Tests/temp_tests/test_copy.hdf5")
-        # for dir in os.listdir("multiview_platform/Tests/temp_tests"):print(dir)
-        # import pdb;pdb.set_trace()
         os.rmdir("multiview_platform/Tests/temp_tests")
 
 
@@ -126,8 +124,7 @@ class Test_filterLabels(unittest.TestCase):
                                         cls.availableLabelsNames,
                                         cls.askedLabelsNames)
         exception = catcher.exception
-        # cls.assertTrue("Asked more labels than available in the dataset. Available labels are : test_label_0, test_label_1, test_label_2, test_label_3" in exception)
-    #
+
     def test_asked_all_labels(cls):
         cls.askedLabelsNamesSet = {"test_label_0", "test_label_1", "test_label_2", "test_label_3"}
         cls.askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2", "test_label_3"]
