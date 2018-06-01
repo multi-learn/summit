@@ -329,6 +329,8 @@ def initViews(DATASET, args):
             if viewName in allowedViews:
                 views.append(viewName)
                 viewsIndices.append(viewsIndices)
+        print(views)
+        quit()
         return views, viewsIndices, allViews
     else:
         views = [str(DATASET.get("View" + str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
@@ -375,5 +377,3 @@ def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, lab
                                            "flag": [iterIndex, labelsCombination]}
             benchmarkArgumentDictionaries.append(benchmarkArgumentDictionary)
     return benchmarkArgumentDictionaries
-
-
