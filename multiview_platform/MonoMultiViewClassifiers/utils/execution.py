@@ -270,6 +270,7 @@ def initLogFile(args):
         args.views) + "-" + args.name + "-LOG"
     if os.path.exists(os.path.dirname(resultDirectory)):
         raise NameError("The result dir already exists, wait 1 min and retry")
+    os.makedirs(os.path.dirname(resultDirectory + logFileName))
     logFile = resultDirectory + logFileName
     logFile += ".log"
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logFile, level=logging.DEBUG,
