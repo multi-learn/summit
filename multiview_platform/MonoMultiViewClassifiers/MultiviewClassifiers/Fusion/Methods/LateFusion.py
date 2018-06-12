@@ -51,13 +51,13 @@ def intersect(allClassifersNames, directory, viewsIndices, resultsMonoview, clas
     trainLabels = np.genfromtxt(directory + "train_labels.csv", delimiter=",").astype(np.int16)
     length = len(trainLabels)
     for resultMonoview in resultsMonoview:
-        if resultMonoview[1][0] in classifiersNames[resultMonoview[0]]:
+        if resultMonoview[1][0] in classifiersNames[viewsIndices.index(resultMonoview[0])]:
             classifierIndex = classifiersNames.index(resultMonoview[1][0])
             wrongSets[resultMonoview[0]][classifierIndex] = np.where(
                 trainLabels + resultMonoview[1][3][classificationIndices[0]] == 1)[0]
         else:
-            classifiersNames[resultMonoview[0]].append(resultMonoview[1][0])
-            wrongSets[resultMonoview[0]].append(
+            classifiersNames[viewsIndices.index(resultMonoview[0])].append(resultMonoview[1][0])
+            wrongSets[viewsIndices.index(resultMonoview[0])].append(
                 np.where(trainLabels + resultMonoview[1][3][classificationIndices[0]] == 1)[0])
 
     combinations = itertools.combinations_with_replacement(range(len(classifiersNames[0])), nbViews)
@@ -106,12 +106,12 @@ def getClassifiers(selectionMethodName, allClassifiersNames, directory, viewsInd
     return classifiersNames
 
 
-def getConfig(classifiersNames, resultsMonoview):
+def getConfig(classifiersNames, resultsMonoview, viewsIndices):
     classifiersConfigs = [0 for _ in range(len(classifiersNames))]
-    for viewIndex, classifierName in enumerate(classifiersNames):
+    for classifierIndex, classifierName in enumerate(classifiersNames):
         for resultMonoview in resultsMonoview:
-            if resultMonoview[0] == viewIndex and resultMonoview[1][0] == classifierName:
-                classifiersConfigs[viewIndex] = resultMonoview[1][4]
+            if resultMonoview[0] == viewsIndices[classifierIndex] and resultMonoview[1][0] == classifierName:
+                classifiersConfigs[classifierIndex] = resultMonoview[1][4]
     return classifiersConfigs
 
 
@@ -135,7 +135,6 @@ class LateFusionClassifier(object):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
                 delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[index],
                                                getV(DATASET, viewIndex, trainIndices),

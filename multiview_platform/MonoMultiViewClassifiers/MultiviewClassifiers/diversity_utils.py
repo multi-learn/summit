@@ -238,4 +238,3 @@ class DiversityFusionClass:
     def getSpecificAnalysis(self, classificationKWARGS):
         stringAnalysis = "Classifiers used for each view : " + ', '.join(self.classifiersNames)
         return stringAnalysis
-

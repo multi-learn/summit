@@ -67,16 +67,16 @@ def initBenchmark(args):
     return benchmark
 
 
-def genViewsDictionnary(DATASET):
+def genViewsDictionnary(DATASET, views):
     datasetsNames = DATASET.keys()
     viewsDictionary = {}
     for datasetName in datasetsNames:
         if datasetName[:4]=="View":
             viewName = DATASET.get(datasetName).attrs["name"]
-            if type(viewName)!=bytes:
+            if type(viewName)==bytes:
+                viewName = viewName.decode("utf-8")
+            if viewName in views:
                 viewsDictionary[viewName] = int(datasetName[4:])
-            else:
-                viewsDictionary[viewName.decode("utf-8")] = int(datasetName[4:])
 
     return viewsDictionary
 
@@ -120,6 +120,7 @@ def initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDiction
         for multiviewAlgoName in benchmark["Multiview"]:
             multiviewPackage = getattr(MultiviewClassifiers, multiviewAlgoName)
             mutliviewModule = getattr(multiviewPackage, multiviewAlgoName+"Module")
+
             multiviewArguments += mutliviewModule.getArgs(args, benchmark, views, viewsIndices, randomState, directory,
                                                           resultsMonoview, classificationIndices)
     argumentDictionaries["Multiview"] = multiviewArguments
@@ -178,7 +179,6 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, class
      ExecMultiview_multicore args are only used for tests"""
 
     resultsMonoview, labelsNames = benchmarkInit(directory, classificationIndices, labels, LABELS_DICTIONARY, kFolds)
-
 
     logging.debug("Start:\t Monoview benchmark")
     resultsMonoview += [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
@@ -261,12 +261,12 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
     logging.debug("Start:\t Monoview benchmark")
     for arguments in argumentDictionaries["Monoview"]:
         kwargs = arguments["args"]
-        views = [DATASET.get("View" + str(viewIndex)).attrs["name"]
-                 if type(DATASET.get("View" + str(viewIndex)).attrs["name"])!=bytes
-                 else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
-                 for viewIndex in range(DATASET.get("Metadata").attrs["nbView"])]
-        neededViewIndex = views.index(kwargs["feat"])
-        X = DATASET.get("View" + str(neededViewIndex))
+        #views = [DATASET.get("View" + str(viewIndex)).attrs["name"]
+        #         if type(DATASET.get("View" + str(viewIndex)).attrs["name"])!=bytes
+        #         else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
+        #         for viewIndex in range(DATASET.get("Metadata").attrs["nbView"])]
+        #neededViewIndex = views.index(kwargs["feat"])
+        X = DATASET.get(kwargs["feat"])
         Y = labels
         resultsMonoview += [ExecMonoview(directory, X, Y, args.name, labelsNames, classificationIndices, kFolds,
                                                    1, args.type, args.pathF, randomState,
@@ -275,6 +275,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
     logging.debug("Done:\t Monoview benchmark")
 
     logging.debug("Start:\t Multiview arguments initialization")
+
     argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries,
                                                   randomState, directory, resultsMonoview, classificationIndices)
     logging.debug("Done:\t Multiview arguments initialization")
@@ -361,14 +362,13 @@ def execClassif(arguments):
 
     # if not views:
     #     raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
-    viewsDictionary = genViewsDictionnary(DATASET)
 
-    nbViews = DATASET.get("Metadata").attrs["nbView"]
 
-    views = [DATASET.get("View"+str(viewIndex)).attrs["name"]
-             if type(DATASET.get("View"+str(viewIndex)).attrs["name"])!=bytes
-             else DATASET.get("View"+str(viewIndex)).attrs["name"].decode("utf-8")
-             for viewIndex in range(nbViews)]
+    # nbViews = DATASET.get("Metadata").attrs["nbView"]
+
+    views, viewsIndices, allViews = execution.initViews(DATASET, args)
+    viewsDictionary = genViewsDictionnary(DATASET, views)
+    nbViews = len(views)
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
     metrics = [metric.split(":") for metric in args.CL_metrics]
@@ -397,7 +397,7 @@ def execClassif(arguments):
                                                                       labelsCombinations, indicesMulticlass,
                                                                       hyperParamSearch, args, kFolds,
                                                                       statsIterRandomStates, metrics,
-                                                                      argumentDictionaries, benchmark, nbViews, views)
+                                                                      argumentDictionaries, benchmark, nbViews, views, viewsIndices)
 
     nbMulticlass = len(labelsCombinations)
 

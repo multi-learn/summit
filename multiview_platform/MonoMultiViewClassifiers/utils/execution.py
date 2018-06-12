@@ -327,13 +327,15 @@ def initViews(DATASET, args):
             if type(viewName) == bytes:
                 viewName = viewName.decode("utf-8")
             if viewName in allowedViews:
+                viewIndex = int(viewName[4:])
                 views.append(viewName)
-                viewsIndices.append(viewsIndices)
-        print(views)
-        quit()
+                viewsIndices.append(viewIndex)
         return views, viewsIndices, allViews
     else:
-        views = [str(DATASET.get("View" + str(viewIndex)).attrs["name"]) for viewIndex in range(NB_VIEW)]
+        views = [str(DATASET.get("View" + str(viewIndex)).attrs["name"])
+                if type(DATASET.get("View" + str(viewIndex)).attrs["name"])!=bytes
+                else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
+                for viewIndex in range(NB_VIEW)]
         viewsIndices = np.arange(NB_VIEW)
         allViews = views
         return views, viewsIndices, allViews
@@ -351,7 +353,7 @@ def genDirecortiesNames(directory, statsIter):
 
 
 def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, labelsCombinations, indicesMulticlass, hyperParamSearch, args,
-                            kFolds, statsIterRandomStates, metrics, argumentDictionaries, benchmark, nbViews, views):
+                            kFolds, statsIterRandomStates, metrics, argumentDictionaries, benchmark, nbViews, views, viewsIndices):
     benchmarkArgumentDictionaries = []
     for combinationIndex, labelsCombination in enumerate(labelsCombinations):
         for iterIndex, iterRandomState in enumerate(statsIterRandomStates):
@@ -373,7 +375,7 @@ def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, lab
                                            "argumentDictionaries": argumentDictionaries,
                                            "benchmark": benchmark,
                                            "views": views,
-                                           "viewsIndices": range(nbViews),
+                                           "viewsIndices": viewsIndices,
                                            "flag": [iterIndex, labelsCombination]}
             benchmarkArgumentDictionaries.append(benchmarkArgumentDictionary)
     return benchmarkArgumentDictionaries

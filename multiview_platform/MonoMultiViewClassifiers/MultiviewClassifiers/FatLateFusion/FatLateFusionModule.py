@@ -20,7 +20,7 @@ def getArgs(args, benchmark, views, viewsIndices, randomState, directory, result
     else:
         monoviewDecisions = np.array([genMulticlassMonoviewDecision(monoviewResult, classificationIndices) for monoviewResult in resultsMonoview])
     arguments = {"CL_type": "FatLateFusion",
-                 "views": ["all"],
+                 "views": views,
                  "NB_VIEW": len(resultsMonoview),
                  "viewsIndices": range(len(resultsMonoview)),
                  "NB_CLASS": len(args.CL_classes),
@@ -38,7 +38,7 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
     """Used to generate parameters sets for the random hyper parameters optimization function"""
     nbMonoviewClassifiers = len(classificationKWARGS["monoviewDecisions"])
     weights = [randomState.random_sample(nbMonoviewClassifiers) for _ in range(nIter)]
-    nomralizedWeights = [[weightVector/np.sum(weightVector)] for weightVector in weights] 
+    nomralizedWeights = [[weightVector/np.sum(weightVector)] for weightVector in weights]
     return nomralizedWeights
 
 

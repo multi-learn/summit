@@ -35,7 +35,7 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
             for monoviewClassifierModule, classifierConfig
             in zip(monoviewClassifierModules, args.FU_L_cl_config)]
     else:
-        classifiersConfigs = getConfig(args.FU_L_cl_names, resultsMonoview)
+        classifiersConfigs = getConfig(args.FU_L_cl_names, resultsMonoview, viewsIndices)
     arguments = {"CL_type": "Fusion",
                  "views": views,
                  "NB_VIEW": len(views),
@@ -57,7 +57,6 @@ class BayesianInference(LateFusionClassifier):
         LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
                                       kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
-
         if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig'] == ['']:
             self.weights = np.array([1.0 for _ in kwargs['classifiersNames']])
         else:
