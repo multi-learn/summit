@@ -327,7 +327,6 @@ def initViews(DATASET, args):
             if type(viewName) == bytes:
                 viewName = viewName.decode("utf-8")
             if viewName in allowedViews:
-                viewIndex = int(viewName[4:])
                 views.append(viewName)
                 viewsIndices.append(viewIndex)
         return views, viewsIndices, allViews
