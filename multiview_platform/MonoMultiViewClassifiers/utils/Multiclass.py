@@ -2,14 +2,50 @@ import numpy as np
 import itertools
 
 
-def genMulticlassLabels(labels, multiclassMethod, classificationIndices):
+def genMulticlassLabels(labels, multiclassMethod, splits):
+    r"""Used to gen the train/test splits and to set up the framework of the adaptation of a multiclass dataset
+    to biclass algorithms.
+
+    First, the function checks whether the dataset is really multiclass.
+
+    Then, it generates all the possible couples of different labels in order to perform one versus one classification.
+
+    For each combination, it selects the examples in the training sets (for each statistical iteration) that have their
+    label in the combination and does the same for the testing set. It also saves the multiclass testing set in order to
+    use multiclass metrics on the decisions.
+
+    Lastly, it creates a new array of biclass labels (0/1) for the biclass classifications used in oneVersusOne
+
+    Parameters
+    ----------
+    labels : numpy.ndarray
+        Name of the database.
+    multiclassMethod : string
+        The name of the multiclass method used (oneVersusOne, oneVersusAll, ...).
+    splits : list of lists of numpy.ndarray
+        For each statistical iteration a couple of numpy.ndarrays is stored with the indices for the training set and
+        the ones of the testing set.
+
+    Returns
+    -------
+    multiclassLabels : list of lists of numpy.ndarray
+        For each label couple, for each statistical iteration a triplet of numpy.ndarrays is stored with the
+        indices for the biclass training set, the ones for the biclass testing set and the ones for the
+        multiclass testing set.
+
+    labelsIndices : list of lists of numpy.ndarray
+        Each original couple of different labels.
+
+    indicesMulticlass : list of lists of numpy.ndarray
+        For each combination, contains a biclass labels numpy.ndarray with the 0/1 labels of combination.
+    """
     if multiclassMethod == "oneVersusOne":
         nbLabels = len(set(list(labels)))
         if nbLabels == 2:
-            classificationIndices = [[trainIndices for trainIndices, _ in classificationIndices],
-                                     [testIndices for _, testIndices in classificationIndices],
-                                     [[] for _ in classificationIndices]]
-            return [labels], [(0,1)], [classificationIndices]
+            splits = [[trainIndices for trainIndices, _ in splits],
+                      [testIndices for _, testIndices in splits],
+                      [[] for _ in splits]]
+            return [labels], [(0,1)], [splits]
         else:
             combinations = itertools.combinations(np.arange(nbLabels), 2)
             multiclassLabels = []
@@ -21,10 +57,10 @@ def genMulticlassLabels(labels, multiclassMethod, classificationIndices):
                               for exampleIndex, exampleLabel in enumerate(labels)
                               if exampleLabel in combination]
                 trainIndices = [np.array([oldIndex for oldIndex in oldIndices if oldIndex in iterIndices[0]])
-                                   for iterIndices in classificationIndices]
+                                for iterIndices in splits]
                 testIndices = [np.array([oldIndex for oldIndex in oldIndices if oldIndex in iterindices[1]])
-                                  for iterindices in classificationIndices]
-                testIndicesMulticlass = [np.array(iterindices[1]) for iterindices in classificationIndices]
+                               for iterindices in splits]
+                testIndicesMulticlass = [np.array(iterindices[1]) for iterindices in splits]
                 indicesMulticlass.append([trainIndices, testIndices, testIndicesMulticlass])
                 newLabels = np.zeros(len(labels), dtype=int)-100
                 for labelIndex, label in enumerate(labels):

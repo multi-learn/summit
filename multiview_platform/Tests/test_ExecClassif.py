@@ -29,12 +29,12 @@ class Test_initMonoviewArguments(unittest.TestCase):
 
     def test_initMonoviewArguments_no_monoview(self):
         benchmark = {"Monoview":{}, "Multiview":{}}
-        arguments = ExecClassif.initMonoviewExps(benchmark, {}, {}, 0, {})
-        self.assertEqual(arguments, {})
+        arguments = ExecClassif.initMonoviewExps(benchmark, {}, 0, {})
+        self.assertEqual(arguments, {'Monoview':[], 'Multiview':[]})
 
     def test_initMonoviewArguments_empty(self):
         benchmark = {"Monoview":{}, "Multiview":{}}
-        arguments = ExecClassif.initMonoviewExps(benchmark, {}, {}, 0, {})
+        arguments = ExecClassif.initMonoviewExps(benchmark, {}, 0, {})
 
 
 def fakeBenchmarkExec(coreIndex=-1, a=7, args=1):

@@ -72,22 +72,39 @@ def extractSubset(matrix, usedIndices):
         return matrix[usedIndices]
 
 
-def initMultipleDatasets(args, nbCores):
-    """Used to create copies of the dataset if multicore computation is used"""
+def initMultipleDatasets(pathF, name, nbCores):
+    r"""Used to create copies of the dataset if multicore computation is used.
+
+    This is a temporary solution to fix the sharing memory issue with HDF5 datasets.
+
+    Parameters
+    ----------
+    pathF : string
+        Path to the original dataset directory
+    name : string
+        Name of the dataset
+    nbCores : int
+        The number of threads that the benchmark can use
+
+    Returns
+    -------
+    datasetFiles : None
+        Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.
+    """
     if nbCores > 1:
-        if DB.datasetsAlreadyExist(args.pathF, args.name, nbCores):
+        if DB.datasetsAlreadyExist(pathF, name, nbCores):
             logging.debug("Info:\t Enough copies of the dataset are already available")
             pass
         else:
             logging.debug("Start:\t Creating " + str(nbCores) + " temporary datasets for multiprocessing")
             logging.warning(" WARNING : /!\ This may use a lot of HDD storage space : " +
-                            str(os.path.getsize(args.pathF + args.name + ".hdf5") * nbCores / float(
+                            str(os.path.getsize(pathF + name + ".hdf5") * nbCores / float(
                                 1024) / 1000 / 1000) + " Gbytes /!\ ")
             confirmation = confirm()
             if not confirmation:
                 sys.exit(0)
             else:
-                datasetFiles = DB.copyHDF5(args.pathF, args.name, nbCores)
+                datasetFiles = DB.copyHDF5(pathF, name, nbCores)
                 logging.debug("Start:\t Creating datasets for multiprocessing")
                 return datasetFiles
 

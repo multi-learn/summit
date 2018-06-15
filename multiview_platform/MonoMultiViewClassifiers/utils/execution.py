@@ -222,13 +222,26 @@ def parseTheArgs(arguments):
 
 
 def initRandomState(randomStateArg, directory):
-    """
+    r"""
     Used to init a random state.
-    If no randomState is specified, it will take a 'random' seed.
-    If the arg is a string containing only numbers, it will be converted in an int to gen a seed.
-    If the arg is a string with letters, it must be a path to a pickled random state file that will be loaded.
+    If no random state is specified, it will generate a 'random' seed.
+    If the `randomSateArg` is a string containing only numbers, it will be converted in an int to generate a seed.
+    If the `randomSateArg` is a string with letters, it must be a path to a pickled random state file that will be loaded.
     The function will also pickle the new random state in a file tobe able to retrieve it later.
     Tested
+
+
+    Parameters
+    ----------
+    randomStateArg : None or string
+        See function description.
+    directory : string
+        Path to the results directory.
+
+    Returns
+    -------
+    randomState : numpy.random.RandomState object
+        This random state will be used all along the benchmark .
     """
     if randomStateArg is None:
         randomState = np.random.RandomState(randomStateArg)
@@ -246,7 +259,22 @@ def initRandomState(randomStateArg, directory):
 
 
 def initStatsIterRandomStates(statsIter, randomState):
-    """Used to init multiple random states if needed because of multiple statsIter"""
+    r"""
+    Used to initialize multiple random states if needed because of multiple statistical iteration of the same benchmark
+
+    Parameters
+    ----------
+    statsIter : int
+        Number of statistical iterations of the same benchmark done (with a different random state).
+    randomState : numpy.random.RandomState object
+        The random state of the whole experimentation, that will be used to generate the ones for each
+        statistical iteration.
+
+    Returns
+    -------
+    statsIterRandomStates : list of numpy.random.RandomState objects
+        Multiple random states, one for each sattistical iteration of the same benchmark.
+    """
     if statsIter > 1:
         statsIterRandomStates = [np.random.RandomState(randomState.randint(5000)) for _ in range(statsIter)]
     else:
@@ -255,7 +283,20 @@ def initStatsIterRandomStates(statsIter, randomState):
 
 
 def getDatabaseFunction(name, type):
-    """Used to get the right databes extraction function according to the type of and it's name"""
+    r"""Used to get the right database extraction function according to the type of database and it's name
+
+    Parameters
+    ----------
+    name : string
+        Name of the database.
+    type : string
+        type of dataset hdf5 or csv
+
+    Returns
+    -------
+    getDatabase : function
+        The function that will be used to extract the database
+    """
     if name not in ["Fake", "Plausible"]:
         getDatabase = getattr(DB, "getClassicDB" + type[1:])
     else:
@@ -263,11 +304,32 @@ def getDatabaseFunction(name, type):
     return getDatabase
 
 
-def initLogFile(args):
-    """Used to init the directory where the preds will be stored and the log file"""
-    resultDirectory = "../Results/" + args.name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
-    logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(args.CL_type) + "-" + "_".join(
-        args.views) + "-" + args.name + "-LOG"
+def initLogFile(name, views, CL_type, log):
+    r"""Used to init the directory where the preds will be stored and the log file.
+
+    First this function will check if the result directory already exists (only one per minute is allowed).
+
+    If the the result directory name is available, it is created, and the logfile is initiated.
+
+    Parameters
+    ----------
+    name : string
+        Name of the database.
+    views : list of strings
+        List of the view names that will be used in the benchmark.
+    CL_type : list of strings
+        Type of benchmark that will be made .
+    log : bool
+        Whether to show the log file in console or hide it.
+
+    Returns
+    -------
+    resultsDirectory : string
+        Reference to the main results directory for the benchmark.
+    """
+    resultDirectory = "../Results/" + name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
+    logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(CL_type) + "-" + "_".join(
+        views) + "-" + name + "-LOG"
     if os.path.exists(os.path.dirname(resultDirectory)):
         raise NameError("The result dir already exists, wait 1 min and retry")
     os.makedirs(os.path.dirname(resultDirectory + logFileName))
@@ -275,15 +337,30 @@ def initLogFile(args):
     logFile += ".log"
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logFile, level=logging.DEBUG,
                         filemode='w')
-    if args.log:
+    if log:
         logging.getLogger().addHandler(logging.StreamHandler())
 
     return resultDirectory
 
 
 def genSplits(labels, splitRatio, statsIterRandomStates):
-    """Used to gen the train/test splits using one or multiple random states
-    classificationIndices is a list of train/test splits"""
+    r"""Used to gen the train/test splits using one or multiple random states.
+
+    Parameters
+    ----------
+    labels : numpy.ndarray
+        Name of the database.
+    splitRatio : float
+        The ratio of examples between train and test set.
+    statsIterRandomStates : list of numpy.random.RandomState
+        The random states for each statistical iteration.
+
+    Returns
+    -------
+    splits : list of lists of numpy.ndarray
+        For each statistical iteration a couple of numpy.ndarrays is stored with the indices for the training set and
+        the ones of the testing set.
+    """
     indices = np.arange(len(labels))
     splits = []
     for randomState in statsIterRandomStates:
@@ -301,21 +378,53 @@ def genSplits(labels, splitRatio, statsIterRandomStates):
 
 
 def genKFolds(statsIter, nbFolds, statsIterRandomStates):
-    """Used to generate folds indices for cross validation and multiple if needed"""
+    r"""Used to generate folds indices for cross validation for each statistical iteration.
+
+    Parameters
+    ----------
+    statsIter : integer
+        Number of statistical iterations of the benchmark.
+    nbFolds : integer
+        The number of cross-validation folds for the benchmark.
+    statsIterRandomStates : list of numpy.random.RandomState
+        The random states for each statistical iteration.
+
+    Returns
+    -------
+    foldsList : list of list of sklearn.model_selection.StratifiedKFold
+        For each statistical iteration a Kfold stratified (keeping the ratio between classes in each fold).
+    """
     if statsIter > 1:
         foldsList = []
         for randomState in statsIterRandomStates:
             foldsList.append(sklearn.model_selection.StratifiedKFold(n_splits=nbFolds, random_state=randomState))
-        return foldsList
     else:
-        return [sklearn.model_selection.StratifiedKFold(n_splits=nbFolds, random_state=statsIterRandomStates)]
+        foldsList = [sklearn.model_selection.StratifiedKFold(n_splits=nbFolds, random_state=statsIterRandomStates)]
+    return foldsList
 
 
-def initViews(DATASET, args):
-    """Used to return the views names that will be used by the algos, their indices and all the views names"""
+def initViews(DATASET, argViews):
+    r"""Used to return the views names that will be used by the benchmark, their indices and all the views names.
+
+    Parameters
+    ----------
+    DATASET : HDF5 dataset file
+        The full dataset that wil be used by the benchmark.
+    argViews : list of strings
+        The views that will be used by the benchmark (arg).
+
+    Returns
+    -------
+    views : list of strings
+        Names of the views that will be used by the benchmark.
+    viewIndices : list of ints
+        The list of the indices of the view that will be used in the benchmark (according to the dataset).
+    allViews : list of strings
+        Names of all the available views in the dataset.
+    """
     NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
-    if args.views != [""]:
-        allowedViews = args.views
+    if argViews != [""]:
+        allowedViews = argViews
         allViews = [str(DATASET.get("View" + str(viewIndex)).attrs["name"])
                     if type(DATASET.get("View" + str(viewIndex)).attrs["name"])!=bytes
                     else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
@@ -329,19 +438,31 @@ def initViews(DATASET, args):
             if viewName in allowedViews:
                 views.append(viewName)
                 viewsIndices.append(viewIndex)
-        return views, viewsIndices, allViews
     else:
         views = [str(DATASET.get("View" + str(viewIndex)).attrs["name"])
                 if type(DATASET.get("View" + str(viewIndex)).attrs["name"])!=bytes
                 else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
                 for viewIndex in range(NB_VIEW)]
-        viewsIndices = np.arange(NB_VIEW)
+        viewsIndices = range(NB_VIEW)
         allViews = views
-        return views, viewsIndices, allViews
+    return views, viewsIndices, allViews
 
 
 def genDirecortiesNames(directory, statsIter):
-    """Used to generate the different directories of each iteration if needed"""
+    r"""Used to generate the different directories of each iteration if needed.
+
+    Parameters
+    ----------
+    directory : string
+        Path to the results directory.
+    statsIter : int
+        The number of statistical iterations.
+
+    Returns
+    -------
+    directories : list of strings
+        Paths to each statistical iterations result directory.
+    """
     if statsIter > 1:
         directories = []
         for i in range(statsIter):
@@ -351,8 +472,55 @@ def genDirecortiesNames(directory, statsIter):
     return directories
 
 
-def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, labelsCombinations, indicesMulticlass, hyperParamSearch, args,
-                            kFolds, statsIterRandomStates, metrics, argumentDictionaries, benchmark, nbViews, views, viewsIndices):
+def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, labelsCombinations, indicesMulticlass,
+                            hyperParamSearch, args, kFolds, statsIterRandomStates, metrics, argumentDictionaries,
+                            benchmark, nbViews, views, viewsIndices):
+    r"""Used to generate a dictionary for each benchmark.
+
+    One for each label combination (if multiclass), for each statistical iteration, generates an dictionary with
+    all necessary information to perform the benchmark
+
+    Parameters
+    ----------
+    labelsDictionary : dictionary
+        Dictionary mapping labels indices to labels names.
+    directories : list of strings
+        List of the paths to the result directories for each statistical iteration.
+    multiclassLabels : list of lists of numpy.ndarray
+        For each label couple, for each statistical iteration a triplet of numpy.ndarrays is stored with the
+        indices for the biclass training set, the ones for the biclass testing set and the ones for the
+        multiclass testing set.
+    labelsCombinations : list of lists of numpy.ndarray
+        Each original couple of different labels.
+    indicesMulticlass : list of lists of numpy.ndarray
+        For each combination, contains a biclass labels numpy.ndarray with the 0/1 labels of combination.
+    hyperParamSearch : string
+        Type of hyper parameter optimization method
+    args : parsed args objects
+        All the args passed by the user.
+    kFolds : list of list of sklearn.model_selection.StratifiedKFold
+        For each statistical iteration a Kfold stratified (keeping the ratio between classes in each fold).
+    statsIterRandomStates : list of numpy.random.RandomState objects
+        Multiple random states, one for each sattistical iteration of the same benchmark.
+    metrics : list of lists
+        Metrics that will be used to evaluate the algorithms performance.
+    argumentDictionaries : dictionary
+        Dictionary resuming all the specific arguments for the benchmark, oe dictionary for each classifier.
+    benchmark : dictionary
+        Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.
+    nbViews : int
+        THe number of views used by the benchmark.
+    views : list of strings
+        List of the names of the used views.
+    viewsIndices : list of ints
+        List of indices (according to the dataset) of the used views.
+
+    Returns
+    -------
+    benchmarkArgumentDictionaries : list of dicts
+        All the needed arguments for the benchmarks.
+
+    """
     benchmarkArgumentDictionaries = []
     for combinationIndex, labelsCombination in enumerate(labelsCombinations):
         for iterIndex, iterRandomState in enumerate(statsIterRandomStates):

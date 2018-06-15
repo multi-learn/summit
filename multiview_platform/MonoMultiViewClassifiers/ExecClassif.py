@@ -27,15 +27,54 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def initBenchmark(args):
-    """Used to create a list of all the algorithm packages names used for the benchmark
-    Needs args.CL_type, args.CL_algos_multiview, args.MU_types, args.FU_types, args.FU_late_methods,
-    args.FU_early_methods, args.CL_algos_monoview"""
+def initBenchmark(CL_type, multiviewAlgos, monoviewAlgos, args):
+    r"""Used to create a list of all the algorithm packages names used for the benchmark.
+
+    First this function will check if the benchmark need mono- or/and multiview algorithms and adds to the right
+    dictionary the asked algorithms. If none is asked by the user, all will be added.
+
+    If the keyword `"Benchmark"` is used, all mono- and multiview algorithms will be added.
+
+    Parameters
+    ----------
+    CL_type : List of string
+        List of types of needed benchmark
+    multiviewAlgos : List of strings
+        List of multiview algorithms needed for the benchmark
+    monoviewAlgos : Listof strings
+        List of monoview algorithms needed for the benchmark
+    args : ParsedArgumentParser args
+        All the input args (used to tune the algorithms)
+
+    Returns
+    -------
+    benchmark : Dictionary of dictionaries
+        Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.
+    """
     benchmark = {"Monoview": {}, "Multiview": {}}
     allMultiviewPackages = [name for _, name, isPackage
                             in pkgutil.iter_modules(['./MonoMultiViewClassifiers/MultiviewClassifiers/']) if isPackage]
-    if args.CL_type == ["Benchmark"]:
+    if "Monoview" in CL_type:
+        if monoviewAlgos == ['']:
+            benchmark["Monoview"] = [name for _, name, isPackage in pkgutil.iter_modules(["./MonoMultiViewClassifiers/MonoviewClassifiers"])
+                                     if not isPackage]
 
+        else:
+            benchmark["Monoview"] = monoviewAlgos
+
+    if "Multiview" in CL_type:
+        benchmark["Multiview"] = {}
+        if multiviewAlgos == [""]:
+            algosMutliview = allMultiviewPackages
+        else:
+            algosMutliview = multiviewAlgos
+        for multiviewPackageName in allMultiviewPackages:
+            if multiviewPackageName in algosMutliview:
+                multiviewPackage = getattr(MultiviewClassifiers, multiviewPackageName)
+                multiviewModule = getattr(multiviewPackage, multiviewPackageName+"Module")
+                benchmark = multiviewModule.getBenchmark(benchmark, args=args)
+
+    if CL_type == ["Benchmark"]:
         allMonoviewAlgos = [name for _, name, isPackage in
                             pkgutil.iter_modules(['./MonoMultiViewClassifiers/MonoviewClassifiers'])
                             if (not isPackage) and name not in ["framework"]]
@@ -46,28 +85,24 @@ def initBenchmark(args):
             multiviewModule = getattr(multiviewPackage, multiviewPackageName+"Module")
             benchmark = multiviewModule.getBenchmark(benchmark, args=args)
 
-    if "Multiview" in args.CL_type:
-        benchmark["Multiview"] = {}
-        if args.CL_algos_multiview == [""]:
-            algosMutliview = allMultiviewPackages
-        else:
-            algosMutliview = args.CL_algos_multiview
-        for multiviewPackageName in allMultiviewPackages:
-            if multiviewPackageName in algosMutliview:
-                multiviewPackage = getattr(MultiviewClassifiers, multiviewPackageName)
-                multiviewModule = getattr(multiviewPackage, multiviewPackageName+"Module")
-                benchmark = multiviewModule.getBenchmark(benchmark, args=args)
-    if "Monoview" in args.CL_type:
-        if args.CL_algos_monoview == ['']:
-            benchmark["Monoview"] = [name for _, name, isPackage in pkgutil.iter_modules(["./MonoMultiViewClassifiers/MonoviewClassifiers"])
-                                     if not isPackage]
-
-        else:
-            benchmark["Monoview"] = args.CL_algos_monoview
     return benchmark
 
 
 def genViewsDictionnary(DATASET, views):
+    r"""Used to generate a dictionary mapping a view name (key) to it's index in the dataset (value).
+
+    Parameters
+    ----------
+    DATASET : `h5py` dataset file
+        The full dataset on which the benchmark will be done
+    views : List of strings
+        Names of the selected views on which the banchmark will be done
+
+    Returns
+    -------
+    viewDictionary : Dictionary
+        Dictionary mapping the view names totheir indexin the full dataset.
+        """
     datasetsNames = DATASET.keys()
     viewsDictionary = {}
     for datasetName in datasetsNames:
@@ -81,27 +116,64 @@ def genViewsDictionnary(DATASET, views):
     return viewsDictionary
 
 
-def initMonoviewExps(benchmark, argumentDictionaries, viewsDictionary,  NB_CLASS, kwargsInit):
-    """Used to add each monoview exeperience args to the list of monoview experiences args"""
+def initMonoviewExps(benchmark, viewsDictionary, nbClass, kwargsInit):
+    r"""Used to add each monoview exeperience args to the list of monoview experiences args.
+
+    First this function will check if the benchmark need mono- or/and multiview algorithms and adds to the right
+    dictionary the asked algorithms. If none is asked by the user, all will be added.
+
+    If the keyword `"Benchmark"` is used, all mono- and multiview algorithms will be added.
+
+    Parameters
+    ----------
+    benchmark : dictionary
+        All types of monoview and multiview experiments that have to be benchmarked
+    argumentDictionaries : dictionary
+        Maps monoview and multiview experiments arguments.
+    viewDictionary : dictionary
+        Maps the view names to their index in the HDF5 dataset
+    nbClass : integer
+        Number of different labels in the classification
+
+    Returns
+    -------
+    benchmark : Dictionary of dictionaries
+        Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.
+    """
+    argumentDictionaries = {"Monoview":[], "Multiview":[]}
     if benchmark["Monoview"]:
         argumentDictionaries["Monoview"] = []
         for viewName, viewIndex in viewsDictionary.items():
             for classifier in benchmark["Monoview"]:
                 arguments = {
                     "args": {classifier + "KWARGS": kwargsInit[classifier + "KWARGSInit"], "feat": viewName,
-                             "CL_type": classifier, "nbClass": NB_CLASS}, "viewIndex": viewIndex}
+                             "CL_type": classifier, "nbClass": nbClass}, "viewIndex": viewIndex}
                 argumentDictionaries["Monoview"].append(arguments)
     return argumentDictionaries
 
 
 def initMonoviewKWARGS(args, classifiersNames):
-    """Used to init kwargs thanks to a function in each monoview classifier package"""
+    r"""Used to init kwargs thanks to a function in each monoview classifier package.
+
+    Parameters
+    ----------
+    args : parsed args objects
+        All the args passed by the user.
+    classifiersNames : list of strings
+        List of the benchmarks's monoview classifiers names.
+
+    Returns
+    -------
+    monoviewKWARGS : Dictionary of dictionaries
+        Dictionary resuming all the specific arguments for the benchmark, oe dictionary for each classifier.
+
+        For example, for Adaboost, the KWARGS will be `{"n_estimators":<value>, "base_estimator":<value>}`"""
+
     logging.debug("Start:\t Initializing Monoview classifiers arguments")
     monoviewKWARGS = {}
     for classifiersName in classifiersNames:
         classifierModule = getattr(MonoviewClassifiers, classifiersName)
         monoviewKWARGS[classifiersName + "KWARGSInit"] = classifierModule.getKWARGS(args)
-            # [(key, value) for key, value in vars(args).items() if key.startswith("CL_" + classifiersName)])
     logging.debug("Done:\t Initializing Monoview classifiers arguments")
     return monoviewKWARGS
 
@@ -296,10 +368,47 @@ def execBenchmark(nbCores, statsIter, nbMulticlass, benchmarkArgumentsDictionari
                   directory, multiClassLabels, metrics, labelsDictionary, nbLabels, DATASET,
                   execOneBenchmark=execOneBenchmark, execOneBenchmark_multicore=execOneBenchmark_multicore,
                   execOneBenchmarkMonoCore=execOneBenchmarkMonoCore, getResults=getResults, delete=DB.deleteHDF5):
-    """Used to execute the needed benchmark(s) on multicore or mono-core functions
-    The execOneBenchmark and execOneBenchmark_multicore keywords args are only used in the tests"""
-    # TODO :  find a way to flag
+    r"""Used to execute the needed benchmark(s) on multicore or mono-core functions.
 
+    Parameters
+    ----------
+    nbCores : int
+        Number of threads that the benchmarks can use.
+    statsIter : int
+        Number of statistical iterations that have to be done.
+    benchmarkArgumentsDictionaries : list of dictionaries
+        All the needed arguments for the benchmarks.
+    classificationIndices : list of lists of numpy.ndarray
+        For each statistical iteration a couple of numpy.ndarrays is stored with the indices for the training set and
+        the ones of the testing set.
+    directories : list of strings
+        List of the paths to the result directories for each statistical iteration.
+    directory : string
+        Path to the main results directory.
+    multiClassLabels : ist of lists of numpy.ndarray
+        For each label couple, for each statistical iteration a triplet of numpy.ndarrays is stored with the
+        indices for the biclass training set, the ones for the biclass testing set and the ones for the
+        multiclass testing set.
+    metrics : list of lists
+        Metrics that will be used to evaluate the algorithms performance.
+    labelsDictionary : dictionary
+        Dictionary mapping labels indices to labels names.
+    nbLabels : int
+        Total number of different labels in the dataset.
+    DATASET : HDF5 dataset file
+        The full dataset that wil be used by the benchmark.
+    classifiersNames : list of strings
+        List of the benchmarks's monoview classifiers names.
+    rest_of_the_args :
+        Just used for testing purposes
+
+
+    Returns
+    -------
+    results : list of lists
+        The results of the benchmark.
+    """
+    # TODO :  find a way to flag
     logging.debug("Start:\t Executing all the needed biclass benchmarks")
     results = []
     if nbCores > 1:
@@ -342,8 +451,11 @@ def execClassif(arguments):
     statsIter = args.CL_statsiter
     hyperParamSearch = args.CL_HPS_type
     multiclassMethod = args.CL_multiclassMethod
+    CL_type = args.CL_type
+    monoviewAlgos = args.CL_algos_monoview
+    multiviewAlgos = args.CL_algos_multiview
 
-    directory = execution.initLogFile(args)
+    directory = execution.initLogFile(args.name, args.views, args.CL_type, args.log)
     randomState = execution.initRandomState(args.randomState, directory)
     statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,randomState)
 
@@ -352,21 +464,18 @@ def execClassif(arguments):
     DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nbClass,
                                              args.CL_classes, randomState, args.full)
 
-    classificationIndices = execution.genSplits(DATASET.get("Labels").value, args.CL_split, statsIterRandomStates)
+    splits = execution.genSplits(DATASET.get("Labels").value, args.CL_split, statsIterRandomStates)
 
-    multiclassLabels, labelsCombinations, indicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod, classificationIndices)
+    multiclassLabels, labelsCombinations, indicesMulticlass = Multiclass.genMulticlassLabels(DATASET.get("Labels").value, multiclassMethod, splits)
 
     kFolds = execution.genKFolds(statsIter, args.CL_nbFolds, statsIterRandomStates)
 
-    datasetFiles = Dataset.initMultipleDatasets(args, nbCores)
+    datasetFiles = Dataset.initMultipleDatasets(args.pathF, args.name, nbCores)
 
     # if not views:
     #     raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
 
-
-    # nbViews = DATASET.get("Metadata").attrs["nbView"]
-
-    views, viewsIndices, allViews = execution.initViews(DATASET, args)
+    views, viewsIndices, allViews = execution.initViews(DATASET, args.views)
     viewsDictionary = genViewsDictionnary(DATASET, views)
     nbViews = len(views)
     NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
@@ -381,27 +490,23 @@ def execClassif(arguments):
         if len(metric) == 1:
             metrics[metricIndex] = [metric[0], None]
 
-    # logging.debug("Start:\t Finding all available mono- & multiview algorithms")
-
-    benchmark = initBenchmark(args)
+    benchmark = initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args)
 
     initKWARGS = initKWARGSFunc(args, benchmark)
 
     dataBaseTime = time.time() - start
 
-    argumentDictionaries = {"Monoview": [], "Multiview": []}
-    argumentDictionaries = initMonoviewExps(benchmark, argumentDictionaries, viewsDictionary, NB_CLASS,
-                                            initKWARGS)
+    argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary, NB_CLASS, initKWARGS)
     directories = execution.genDirecortiesNames(directory, statsIter)
     benchmarkArgumentDictionaries = execution.genArgumentDictionaries(LABELS_DICTIONARY, directories, multiclassLabels,
                                                                       labelsCombinations, indicesMulticlass,
                                                                       hyperParamSearch, args, kFolds,
                                                                       statsIterRandomStates, metrics,
-                                                                      argumentDictionaries, benchmark, nbViews, views, viewsIndices)
-
+                                                                      argumentDictionaries, benchmark, nbViews,
+                                                                      views, viewsIndices)
     nbMulticlass = len(labelsCombinations)
 
-    execBenchmark(nbCores, statsIter, nbMulticlass, benchmarkArgumentDictionaries, classificationIndices, directories,
+    execBenchmark(nbCores, statsIter, nbMulticlass, benchmarkArgumentDictionaries, splits, directories,
                   directory, multiclassLabels, metrics, LABELS_DICTIONARY, NB_CLASS, DATASET)
 
 
