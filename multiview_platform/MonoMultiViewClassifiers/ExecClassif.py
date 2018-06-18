@@ -338,7 +338,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
         #         else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
         #         for viewIndex in range(DATASET.get("Metadata").attrs["nbView"])]
         #neededViewIndex = views.index(kwargs["feat"])
-        X = DATASET.get(kwargs["feat"])
+        X = DATASET.get("View"+str(kwargs["viewIndex"]))
         Y = labels
         resultsMonoview += [ExecMonoview(directory, X, Y, args.name, labelsNames, classificationIndices, kFolds,
                                                    1, args.type, args.pathF, randomState,

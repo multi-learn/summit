@@ -77,7 +77,7 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", random
             viewData[fakeZeroIndices] = np.zeros((len(fakeZeroIndices), nbFeatures))
             viewData = makeMeNoisy(viewData, randomState)
             viewDset = datasetFile.create_dataset("View" + str(viewIndex), viewData.shape, data=viewData.astype(np.uint8))
-            viewDset.attrs["name"] = "View" + str(viewIndex)
+            viewDset.attrs["name"] = "ViewNumber" + str(viewIndex)
             viewDset.attrs["sparse"] = False
         labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
         labelsDset[...] = CLASS_LABELS
@@ -110,7 +110,7 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", random
             viewData[fakeTwoIndices] = np.ones((len(fakeTwoIndices), nbFeatures))+1
             viewData = makeMeNoisy(viewData, randomState)
             viewDset = datasetFile.create_dataset("View" + str(viewIndex), viewData.shape, data=viewData.astype(np.uint8))
-            viewDset.attrs["name"] = "View" + str(viewIndex)
+            viewDset.attrs["name"] = "ViewNumber" + str(viewIndex)
             viewDset.attrs["sparse"] = False
         labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
         labelsDset[...] = CLASS_LABELS
