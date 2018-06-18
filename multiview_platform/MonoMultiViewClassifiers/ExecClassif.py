@@ -329,16 +329,10 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
                              initMultiviewArguments=initMultiviewArguments):
 
     resultsMonoview, labelsNames = benchmarkInit(directory, classificationIndices, labels, LABELS_DICTIONARY, kFolds)
-
+    print argumentDictionaries["Monoview"][0]
     logging.debug("Start:\t Monoview benchmark")
     for arguments in argumentDictionaries["Monoview"]:
-        kwargs = arguments["args"]
-        #views = [DATASET.get("View" + str(viewIndex)).attrs["name"]
-        #         if type(DATASET.get("View" + str(viewIndex)).attrs["name"])!=bytes
-        #         else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
-        #         for viewIndex in range(DATASET.get("Metadata").attrs["nbView"])]
-        #neededViewIndex = views.index(kwargs["feat"])
-        X = DATASET.get("View"+str(kwargs["viewIndex"]))
+        X = DATASET.get("View"+str(arguments["viewIndex"]))
         Y = labels
         resultsMonoview += [ExecMonoview(directory, X, Y, args.name, labelsNames, classificationIndices, kFolds,
                                                    1, args.type, args.pathF, randomState,
@@ -497,6 +491,7 @@ def execClassif(arguments):
     dataBaseTime = time.time() - start
 
     argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary, NB_CLASS, initKWARGS)
+    print(argumentDictionaries)
     directories = execution.genDirecortiesNames(directory, statsIter)
     benchmarkArgumentDictionaries = execution.genArgumentDictionaries(LABELS_DICTIONARY, directories, multiclassLabels,
                                                                       labelsCombinations, indicesMulticlass,
