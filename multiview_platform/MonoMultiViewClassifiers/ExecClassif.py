@@ -329,7 +329,6 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
                              initMultiviewArguments=initMultiviewArguments):
 
     resultsMonoview, labelsNames = benchmarkInit(directory, classificationIndices, labels, LABELS_DICTIONARY, kFolds)
-    print argumentDictionaries["Monoview"][0]
     logging.debug("Start:\t Monoview benchmark")
     for arguments in argumentDictionaries["Monoview"]:
         X = DATASET.get("View"+str(arguments["viewIndex"]))
@@ -491,7 +490,6 @@ def execClassif(arguments):
     dataBaseTime = time.time() - start
 
     argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary, NB_CLASS, initKWARGS)
-    print(argumentDictionaries)
     directories = execution.genDirecortiesNames(directory, statsIter)
     benchmarkArgumentDictionaries = execution.genArgumentDictionaries(LABELS_DICTIONARY, directories, multiclassLabels,
                                                                       labelsCombinations, indicesMulticlass,
