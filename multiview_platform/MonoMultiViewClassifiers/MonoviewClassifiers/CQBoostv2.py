@@ -330,8 +330,8 @@ def paramsToSet(nIter, randomState):
     """Used for weighted linear early fusion to generate random search sets"""
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"mu": randomState.choice([0.001, 0.002]),
-                          "epsilon": randomState.choice([1e-08, 2e-08]),
+        paramsSet.append({"mu": randomState.uniform(1e-02, 10**(-0.5)),
+                          "epsilon": 10**-randomState.randint(1, 15),
                           "n_max_iterations": None})
     return paramsSet
 
