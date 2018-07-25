@@ -161,7 +161,7 @@ def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train,
                                       outputFileName, classifierModule,
                                       KFolds=KFolds, nbCores=nbCores,
                                       metric=metrics[0], nIter=nIter)
-        logging.debug("Done:\t " + hyperParamSearch + "RandomSearch best settings")
+        logging.debug("Done:\t " + hyperParamSearch + " best settings")
     else:
         clKWARGS = kwargs[CL_type + "KWARGS"]
     return clKWARGS, testFoldsPreds

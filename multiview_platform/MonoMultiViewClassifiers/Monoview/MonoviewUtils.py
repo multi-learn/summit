@@ -1,5 +1,6 @@
 from sklearn.model_selection import RandomizedSearchCV
 import numpy as np
+from scipy.stats import uniform, randint
 
 from .. import Metrics
 from ..utils import HyperParameterSearch
@@ -49,6 +50,29 @@ def genTestFoldsPreds(X_train, y_train, KFolds, estimator):
     minFoldLength = foldLengths.min()
     testFoldsPreds = np.array([testFoldPreds[:minFoldLength] for testFoldPreds in testFoldsPreds])
     return testFoldsPreds
+
+
+class CustomRandint:
+    def __init__(self, low=0, high=0, multiplier="e-"):
+        self.randint = randint(low, high)
+        self.multiplier = multiplier
+
+    def rvs(self, random_state=None):
+        randinteger = self.randint.rvs(random_state=random_state)
+        if self.multiplier == "e-":
+            return 10 ** -randinteger
+
+
+class CustomUniform:
+    def __init__(self, loc=0, state=1, multiplier="e-"):
+        self.uniform = uniform(loc, state)
+        self.multiplier = multiplier
+
+    def rvs(self, random_state=None):
+        unif = self.uniform.rvs(random_state=random_state)
+        if self.multiplier == 'e-':
+            return 10 ** -unif
+
 
 # def isUseful(labelSupports, index, CLASS_LABELS, labelDict):
 #     if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:

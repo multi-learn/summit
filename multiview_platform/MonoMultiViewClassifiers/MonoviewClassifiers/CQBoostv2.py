@@ -7,21 +7,23 @@ from collections import defaultdict, OrderedDict
 import pandas as pd
 import sys
 from functools import partial
-import numpy as np
-from scipy.spatial import distance
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.utils.validation import check_is_fitted
 from sklearn.preprocessing import LabelEncoder
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics.pairwise import rbf_kernel, linear_kernel
-import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.pipeline import Pipeline
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.tree import DecisionTreeClassifier
-from scipy.stats import randint
 import numpy as np
 
+# import numpy as np
+# from scipy.spatial import distance
+# from sklearn.tree import DecisionTreeClassifier
+# from sklearn.metrics.pairwise import rbf_kernel, linear_kernel
+# from sklearn.model_selection import RandomizedSearchCV
+# from sklearn.tree import DecisionTreeClassifier
+# from scipy.stats import randint
+
+
+from ..Monoview.MonoviewUtils import CustomRandint, CustomUniform
 
 class ColumnGenerationClassifierv2(BaseEstimator, ClassifierMixin):
     def __init__(self, epsilon=1e-06, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None):
@@ -350,8 +352,8 @@ def genPipeline():
 
 
 def genParamsDict(randomState):
-    return {"classifier__mu": [0.001, 0.002],
-                "classifier__epsilon": [1e-08, 2e-08],
+    return {"classifier__mu": CustomUniform(loc=.5, state=2, multiplier='e-'),
+                "classifier__epsilon": CustomRandint(low=1, high=15, multiplier='e-'),
                 "classifier__n_max_iterations": [None]}
 
 

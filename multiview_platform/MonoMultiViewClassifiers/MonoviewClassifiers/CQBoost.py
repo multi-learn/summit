@@ -19,8 +19,10 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.tree import DecisionTreeClassifier
-from scipy.stats import randint
+from scipy.stats import randint, uniform
 import numpy as np
+
+from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint
 
 
 
@@ -293,6 +295,10 @@ class CQBoost(CqBoostClassifier):
         return interpretString
 
 
+
+
+
+
 def canProbas():
     return False
 
@@ -311,7 +317,7 @@ def paramsToSet(nIter, randomState):
     """Used for weighted linear early fusion to generate random search sets"""
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"mu": randomState.uniform(1e-02, 10**(-0.5)),
+        paramsSet.append({"mu": 10**-randomState.uniform(0.5, 1.5),
                           "epsilon": 10**-randomState.randint(1, 15),
                           "n_max_iterations": None})
     return paramsSet
@@ -331,8 +337,8 @@ def genPipeline():
 
 
 def genParamsDict(randomState):
-    return {"classifier__mu": [0.001, 0.002],
-                "classifier__epsilon": [1e-08, 2e-08],
+    return {"classifier__mu": CustomUniform(loc=.5, state=2, multiplier='e-'),
+                "classifier__epsilon": CustomRandint(low=1, high=15, multiplier='e-'),
                 "classifier__n_max_iterations": [None]}
 
 
