@@ -146,6 +146,24 @@ def parseTheArgs(arguments):
     groupSCM.add_argument('--SCM_model_type', metavar='STRING', action='store',
                           help='Max number of rules for SCM', default="conjunction")
 
+    groupCQBoost = parser.add_argument_group('CQBoost arguments')
+    groupCQBoost.add_argument('--CQB_mu', metavar='FLOAT', type=float, action='store',
+                              help='Set the mu parameter for CQBoost', default=0.001)
+    groupCQBoost.add_argument('--CQB_epsilon', metavar='FLOAT', type=float, action='store',
+                              help='Set the epsilon parameter for CQBoost', default=1e-08)
+
+    groupCQBoostv2 = parser.add_argument_group('CQBoostv2 arguments')
+    groupCQBoostv2.add_argument('--CQB2_mu', metavar='FLOAT', type=float, action='store',
+                              help='Set the mu parameter for CQBoostv2', default=0.001)
+    groupCQBoostv2.add_argument('--CQB2_epsilon', metavar='FLOAT', type=float, action='store',
+                              help='Set the epsilon parameter for CQBoostv2', default=1e-08)
+
+    groupCQBoostv21 = parser.add_argument_group('CQBoostv21 arguments')
+    groupCQBoostv21.add_argument('--CQB21_mu', metavar='FLOAT', type=float, action='store',
+                                help='Set the mu parameter for CQBoostv2', default=0.001)
+    groupCQBoostv21.add_argument('--CQB21_epsilon', metavar='FLOAT', type=float, action='store',
+                                help='Set the epsilon parameter for CQBoostv2', default=1e-08)
+
     groupMumbo = parser.add_argument_group('Mumbo arguments')
     groupMumbo.add_argument('--MU_types', metavar='STRING', action='store', nargs="+",
                             help='Determine which monoview classifier to use with Mumbo',

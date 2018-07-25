@@ -59,6 +59,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
     logging.debug("Start:\t Determine Train/Test split")
     X_train, y_train, X_test, y_test, X_test_multiclass = initTrainTest(X, Y, classificationIndices)
+
     logging.debug("Info:\t Shape X_train:" + str(X_train.shape) + ", Length of y_train:" + str(len(y_train)))
     logging.debug("Info:\t Shape X_test:" + str(X_test.shape) + ", Length of y_test:" + str(len(y_test)))
     logging.debug("Done:\t Determine Train/Test split")
@@ -168,7 +169,7 @@ def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train,
 
 def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, y_train, imagesAnalysis):
     logging.info(stringAnalysis)
-    outputTextFile = open(outputFileName + '.txt', 'w')
+    outputTextFile = open(outputFileName + 'summary.txt', 'w')
     outputTextFile.write(stringAnalysis)
     outputTextFile.close()
     np.savetxt(outputFileName + "full_pred.csv", full_labels_pred.astype(np.int16), delimiter=",")

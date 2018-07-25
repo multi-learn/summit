@@ -27,7 +27,7 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def initBenchmark(CL_type, multiviewAlgos, monoviewAlgos, args):
+def initBenchmark(CL_type,  monoviewAlgos, multiviewAlgos, args):
     r"""Used to create a list of all the algorithm packages names used for the benchmark.
 
     First this function will check if the benchmark need mono- or/and multiview algorithms and adds to the right
@@ -54,6 +54,7 @@ def initBenchmark(CL_type, multiviewAlgos, monoviewAlgos, args):
     benchmark = {"Monoview": {}, "Multiview": {}}
     allMultiviewPackages = [name for _, name, isPackage
                             in pkgutil.iter_modules(['./MonoMultiViewClassifiers/MultiviewClassifiers/']) if isPackage]
+
     if "Monoview" in CL_type:
         if monoviewAlgos == ['']:
             benchmark["Monoview"] = [name for _, name, isPackage in pkgutil.iter_modules(["./MonoMultiViewClassifiers/MonoviewClassifiers"])

@@ -6,7 +6,7 @@ from .. import Metrics
 
 
 def getDBConfigString(name, feat, classificationIndices, shape, classLabelsNames, KFolds):
-    learningRate = float(len(classificationIndices[0])) / len(classificationIndices[0]) + len(classificationIndices[1])
+    learningRate = float(len(classificationIndices[0])) / (len(classificationIndices[0]) + len(classificationIndices[1]))
     dbConfigString = "Database configuration : \n"
     dbConfigString += "\t- Database name : " + name + "\n"
     dbConfigString += "\t- View name : " + feat + "\t View shape : " + str(shape) + "\n"
