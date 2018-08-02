@@ -41,6 +41,8 @@ def parseTheArgs(arguments):
     groupStandard.add_argument('--machine', metavar='STRING', action='store',
                                help='Type of machine on which the script runs', default="PC")
     groupStandard.add_argument('-full', action='store_true', help='Use option to use full dataset and no labels or view filtering')
+    groupStandard.add_argument('-debug', action='store_true',
+                               help='Use option to bebug implemented algorithms')
 
 
     groupClass = parser.add_argument_group('Classification arguments')
@@ -163,6 +165,37 @@ def parseTheArgs(arguments):
                                 help='Set the mu parameter for CQBoostv2', default=0.001)
     groupCQBoostv21.add_argument('--CQB21_epsilon', metavar='FLOAT', type=float, action='store',
                                 help='Set the epsilon parameter for CQBoostv2', default=1e-08)
+
+    groupQarBoost = parser.add_argument_group('QarBoost arguments')
+    groupQarBoost.add_argument('--QarB_mu', metavar='FLOAT', type=float, action='store',
+                                 help='Set the mu parameter for QarBoost', default=0.001)
+    groupQarBoost.add_argument('--QarB_epsilon', metavar='FLOAT', type=float, action='store',
+                                 help='Set the epsilon parameter for QarBoost', default=1e-08)
+
+    groupQarBoostv2 = parser.add_argument_group('QarBoostv2 arguments')
+    groupQarBoostv2.add_argument('--QarB2_mu', metavar='FLOAT', type=float, action='store',
+                               help='Set the mu parameter for QarBoostv2', default=0.001)
+    groupQarBoostv2.add_argument('--QarB2_epsilon', metavar='FLOAT', type=float, action='store',
+                                 help='Set the epsilon parameter for QarBoostv2', default=1e-08)
+
+    groupQarBoostv3 = parser.add_argument_group('QarBoostv3 arguments')
+    groupQarBoostv3.add_argument('--QarB3_mu', metavar='FLOAT', type=float, action='store',
+                                 help='Set the mu parameter for QarBoostv3', default=0.001)
+    groupQarBoostv3.add_argument('--QarB3_epsilon', metavar='FLOAT', type=float, action='store',
+                                 help='Set the epsilon parameter for QarBoostv3', default=1e-08)
+
+    groupQarBoostNC = parser.add_argument_group('QarBoostNC arguments')
+    groupQarBoostNC.add_argument('--QarBNC_mu', metavar='FLOAT', type=float, action='store',
+                                 help='Set the mu parameter for QarBoostNC', default=0.001)
+    groupQarBoostNC.add_argument('--QarBNC_epsilon', metavar='FLOAT', type=float, action='store',
+                                 help='Set the epsilon parameter for QarBoostNC', default=1e-08)
+
+    groupQarBoostNC2 = parser.add_argument_group('QarBoostNC2 arguments')
+    groupQarBoostNC2.add_argument('--QarBNC2_mu', metavar='FLOAT', type=float, action='store',
+                                 help='Set the mu parameter for QarBoostNC2', default=0.001)
+    groupQarBoostNC2.add_argument('--QarBNC2_epsilon', metavar='FLOAT', type=float, action='store',
+                                 help='Set the epsilon parameter for QarBoostNC2', default=1e-08)
+
 
     groupMumbo = parser.add_argument_group('Mumbo arguments')
     groupMumbo.add_argument('--MU_types', metavar='STRING', action='store', nargs="+",
@@ -322,7 +355,7 @@ def getDatabaseFunction(name, type):
     return getDatabase
 
 
-def initLogFile(name, views, CL_type, log):
+def initLogFile(name, views, CL_type, log, debug):
     r"""Used to init the directory where the preds will be stored and the log file.
 
     First this function will check if the result directory already exists (only one per minute is allowed).
@@ -345,7 +378,10 @@ def initLogFile(name, views, CL_type, log):
     resultsDirectory : string
         Reference to the main results directory for the benchmark.
     """
-    resultDirectory = "../Results/" + name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
+    if debug:
+        resultDirectory = "../Results/" + name + "/debug_started_" + time.strftime("%Y_%m_%d-%H_%M_%S") + "/"
+    else:
+        resultDirectory = "../Results/" + name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
     logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(CL_type) + "-" + "_".join(
         views) + "-" + name + "-LOG"
     if os.path.exists(os.path.dirname(resultDirectory)):

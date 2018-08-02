@@ -173,7 +173,11 @@ def initMonoviewKWARGS(args, classifiersNames):
     logging.debug("Start:\t Initializing Monoview classifiers arguments")
     monoviewKWARGS = {}
     for classifiersName in classifiersNames:
-        classifierModule = getattr(MonoviewClassifiers, classifiersName)
+        try:
+            classifierModule = getattr(MonoviewClassifiers, classifiersName)
+        except AttributeError:
+            raise AttributeError(classifiersName+" is not implemented in MonoviewClassifiers, "
+                                                 "please specify the name of the file in MonoviewClassifiers")
         monoviewKWARGS[classifiersName + "KWARGSInit"] = classifierModule.getKWARGS(args)
     logging.debug("Done:\t Initializing Monoview classifiers arguments")
     return monoviewKWARGS
@@ -449,7 +453,7 @@ def execClassif(arguments):
     monoviewAlgos = args.CL_algos_monoview
     multiviewAlgos = args.CL_algos_multiview
 
-    directory = execution.initLogFile(args.name, args.views, args.CL_type, args.log)
+    directory = execution.initLogFile(args.name, args.views, args.CL_type, args.log, args.debug)
     randomState = execution.initRandomState(args.randomState, directory)
     statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,randomState)
 
