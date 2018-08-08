@@ -6,23 +6,21 @@ from collections import defaultdict
 import math
 from sklearn.utils.validation import check_is_fitted
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score
 import time
 
-from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint
-from ..Monoview.Additions.BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost, getInterpretBase
+from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost
 
 
-class ColumnGenerationClassifierQarNC2(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, epsilon=1e-06, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None, random_state=42):
-        super(ColumnGenerationClassifierQarNC2, self).__init__()
-        self.epsilon = epsilon
+class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
+    def __init__(self, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None, random_state=42, self_complemented=True):
+        super(ColumnGenerationClassifierQar, self).__init__()
         self.n_max_iterations = n_max_iterations
         self.estimators_generator = estimators_generator
         self.dual_constraint_rhs = dual_constraint_rhs
         self.save_iteration_as_hyperparameter_each = save_iteration_as_hyperparameter_each
         self.random_state = random_state
+        self.self_complemented =self_complemented
 
     def fit(self, X, y):
         if scipy.sparse.issparse(X):
@@ -30,7 +28,7 @@ class ColumnGenerationClassifierQarNC2(BaseEstimator, ClassifierMixin, BaseBoost
             X = np.array(X.todense())
 
         if self.estimators_generator is None:
-            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps, self_complemented=False)
+            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps, self_complemented=self.self_complemented)
 
         y[y == 0] = -1
 
@@ -109,7 +107,7 @@ class ColumnGenerationClassifierQarNC2(BaseEstimator, ClassifierMixin, BaseBoost
 
             # Update the "previous vote" to prepare for the next iteration
             self.previous_vote = np.matmul(self.classification_matrix[:, self.chosen_columns_],
-                                           np.array(self.weights_).reshape((k + 1, 1))).reshape((m, 1))/np.sum(self.weights_)
+                                           np.array(self.weights_).reshape((k + 1, 1))).reshape((m, 1))
             self.previous_votes.append(self.previous_vote)
             self.train_accuracies.append(accuracy_score(y, np.sign(self.previous_vote)))
 
@@ -158,13 +156,14 @@ class ColumnGenerationClassifierQarNC2(BaseEstimator, ClassifierMixin, BaseBoost
         indices = []
         for hypothese_index, hypothese in enumerate(y_kernel_matrix.transpose()):
             causes = []
-            w = self._solve_two_weights_min_c(hypothese, y)
-            if w[0] != "break":
-                c_borns.append(self._cbound(w[0]))
-                possible_sols.append(w)
-                indices.append(hypothese_index)
-            else:
-                causes.append(w[1])
+            if hypothese_index not in self.chosen_columns_:
+                w = self._solve_two_weights_min_c(hypothese, y)
+                if w[0] != "break":
+                    c_borns.append(self._cbound(w[0]))
+                    possible_sols.append(w)
+                    indices.append(hypothese_index)
+                else:
+                    causes.append(w[1])
         if c_borns:
             min_c_born_index = ma.argmin(c_borns)
             selected_sol = possible_sols[min_c_born_index]
@@ -253,149 +252,14 @@ class ColumnGenerationClassifierQarNC2(BaseEstimator, ClassifierMixin, BaseBoost
 
 
 
-class QarBoostNC2Classifier(ColumnGenerationClassifierQarNC2):
-    def __init__(self, mu=0.001, epsilon=1e-08, n_max_iterations=None, estimators_generator=None, save_iteration_as_hyperparameter_each=None, random_state=42):
-        super(QarBoostNC2Classifier, self).__init__(epsilon, n_max_iterations, estimators_generator, dual_constraint_rhs=0,
-                                                    save_iteration_as_hyperparameter_each=save_iteration_as_hyperparameter_each, random_state=random_state)
-        self.mu = mu
+class QarBoostClassifier(ColumnGenerationClassifierQar):
+    def __init__(self, n_max_iterations=None, estimators_generator=None, save_iteration_as_hyperparameter_each=None, random_state=42, self_complemented=True):
+        super(QarBoostClassifier, self).__init__(n_max_iterations, estimators_generator, dual_constraint_rhs=0,
+                                                   save_iteration_as_hyperparameter_each=save_iteration_as_hyperparameter_each, random_state=random_state, self_complemente=self_complemented)
         self.train_time = 0
 
     def _initialize_alphas(self, n_examples):
         return 1.0 / n_examples * np.ones((n_examples,))
 
 
-class QarBoostNC2(QarBoostNC2Classifier):
-
-    def __init__(self, random_state, **kwargs):
-        super(QarBoostNC2, self).__init__(
-            mu=kwargs['mu'],
-            epsilon=kwargs['epsilon'],
-            n_max_iterations= kwargs['n_max_iterations'],
-            random_state = random_state)
-
-    def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
-        return False
-
-    def paramsToSrt(self, nIter=1):
-        """Used for weighted linear early fusion to generate random search sets"""
-        paramsSet = []
-        for _ in range(nIter):
-            paramsSet.append({"mu": 0.001,
-                              "epsilon": 1e-08,
-                              "n_max_iterations": None})
-        return paramsSet
-
-    def getKWARGS(self, args):
-        """Used to format kwargs for the parsed args"""
-        kwargsDict = {}
-        kwargsDict['mu'] = 0.001
-        kwargsDict['epsilon'] = 1e-08
-        kwargsDict['n_max_iterations'] = None
-        return kwargsDict
-
-    def genPipeline(self):
-        return Pipeline([('classifier', QarBoostNC2Classifier())])
-
-    def genParamsDict(self, randomState):
-        return {"classifier__mu": [0.001],
-                "classifier__epsilon": [1e-08],
-                "classifier__n_max_iterations": [None]}
-
-    def genBestParams(self, detector):
-        return {"mu": detector.best_params_["classifier__mu"],
-                "epsilon": detector.best_params_["classifier__epsilon"],
-                "n_max_iterations": detector.best_params_["classifier__n_max_iterations"]}
-
-    def genParamsFromDetector(self, detector):
-        nIter = len(detector.cv_results_['param_classifier__mu'])
-        return [("mu", np.array([0.001 for _ in range(nIter)])),
-                ("epsilon", np.array(detector.cv_results_['param_classifier__epsilon'])),
-                ("n_max_iterations", np.array(detector.cv_results_['param_classifier__n_max_iterations']))]
-
-    def getConfig(self, config):
-        if type(config) is not dict:  # Used in late fusion when config is a classifier
-            return "\n\t\t- QarBoost with mu : " + str(config.mu) + ", epsilon : " + str(
-                config.epsilon + ", n_max_iterations : " + str(config.n_max_iterations))
-        else:
-            return "\n\t\t- QarBoost with mu : " + str(config["mu"]) + ", epsilon : " + str(
-                   config["epsilon"] + ", n_max_iterations : " + str(config["n_max_iterations"]))
-
-
-    def getInterpret(self, classifier, directory):
-        interpretString = ""
-        return interpretString
-
-
-def canProbas():
-    return False
-
-
-def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
-    start =time.time()
-    """Used to fit the monoview classifier with the args stored in kwargs"""
-    classifier = QarBoostNC2Classifier(mu=kwargs['mu'],
-                                       epsilon=kwargs['epsilon'],
-                                       n_max_iterations=kwargs["n_max_iterations"],
-                                       random_state=randomState)
-    classifier.fit(DATASET, CLASS_LABELS)
-    end = time.time()
-    classifier.train_time = end-start
-    return classifier
-
-
-def paramsToSet(nIter, randomState):
-    """Used for weighted linear early fusion to generate random search sets"""
-    paramsSet = []
-    for _ in range(nIter):
-        paramsSet.append({"mu": randomState.uniform(1e-02, 10**(-0.5)),
-                          "epsilon": 10**-randomState.randint(1, 15),
-                          "n_max_iterations": None})
-    return paramsSet
-
-
-def getKWARGS(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {}
-    kwargsDict['mu'] = args.QarBNC2_mu
-    kwargsDict['epsilon'] = args.QarBNC2_epsilon
-    kwargsDict['n_max_iterations'] = None
-    return kwargsDict
-
-
-def genPipeline():
-    return Pipeline([('classifier', QarBoostNC2Classifier())])
-
-
-def genParamsDict(randomState):
-    return {"classifier__mu": CustomUniform(loc=.5, state=2, multiplier='e-'),
-            "classifier__epsilon": CustomRandint(low=1, high=15, multiplier='e-'),
-            "classifier__n_max_iterations": [None],
-            "classifier__random_state":[randomState]}
-
-
-def genBestParams(detector):
-    return {"mu": detector.best_params_["classifier__mu"],
-                "epsilon": detector.best_params_["classifier__epsilon"],
-                "n_max_iterations": detector.best_params_["classifier__n_max_iterations"]}
-
-
-def genParamsFromDetector(detector):
-    nIter = len(detector.cv_results_['param_classifier__mu'])
-    return [("mu", np.array(detector.cv_results_['param_classifier__mu'])),
-            ("epsilon", np.array(detector.cv_results_['param_classifier__epsilon'])),
-            ("n_max_iterations", np.array(detector.cv_results_['param_classifier__n_max_iterations']))]
-
-
-def getConfig(config):
-    if type(config) is not dict:  # Used in late fusion when config is a classifier
-        return "\n\t\t- QarBoost with mu : " + str(config.mu) + ", epsilon : " + str(
-            config.epsilon) + ", n_max_iterations : " + str(config.n_max_iterations)
-    else:
-        return "\n\t\t- QarBoost with mu : " + str(config["mu"]) + ", epsilon : " + str(
-            config["epsilon"]) + ", n_max_iterations : " + str(config["n_max_iterations"])
-
-
-def getInterpret(classifier, directory):
-    return getInterpretBase(classifier, directory, "QarBoost", classifier.weights_, classifier.break_cause)
 

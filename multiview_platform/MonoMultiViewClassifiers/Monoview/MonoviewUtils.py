@@ -223,96 +223,96 @@ class CustomUniform:
 # X_test: Test Data
 # y_test: Test Labels
 # num_estimators: number of trees
-def MonoviewClassifRandomForest(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
-    num_estimators = kwargs["classifier__n_estimators"]
-    # PipeLine with RandomForest classifier
-    pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
-
-    # Parameters for GridSearch: Number of Trees
-    # can be extended with: oob_score, min_samples_leaf, max_features
-    param_rf = kwargs
-
-    # pipeline: Gridsearch avec le pipeline comme estimator
-    # param: pour obtenir le meilleur model il va essayer tous les possiblites
-    # refit: pour utiliser le meilleur model apres girdsearch
-    # n_jobs: Nombre de CPU (Mon ordi a des problemes avec -1 (Bug Python 2.7 sur Windows))
-    # scoring: scoring...
-    # cv: Nombre de K-Folds pour CV
-    grid_rf = GridSearchCV(
-        pipeline_rf,
-        param_grid=param_rf,
-        refit=True,
-        n_jobs=nbCores,
-        scoring='accuracy',
-        cv=nbFolds,
-    )
-
-    rf_detector = grid_rf.fit(X_train, y_train)
-
-    desc_estimators = [rf_detector.best_params_["classifier__n_estimators"]]
-    description = "Classif_" + "RF" + "-" + "CV_" + str(nbFolds) + "-" + "Trees_" + str(map(str, desc_estimators))
-
-    return description, rf_detector
-
-
-def MonoviewClassifSVMLinear(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
-    pipeline_SVMLinear = Pipeline([('classifier', sklearn.svm.SVC())])
-    param_SVMLinear = kwargs
-
-    grid_SVMLinear = GridSearchCV(pipeline_SVMLinear, param_grid=param_SVMLinear, refit=True, n_jobs=nbCores,
-                                  scoring='accuracy',
-                                  cv=nbFolds)
-    SVMLinear_detector = grid_SVMLinear.fit(X_train, y_train)
-    desc_params = [SVMLinear_detector.best_params_["classifier__C"]]
-    description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
-    return description, SVMLinear_detector
-
-
-def MonoviewClassifSVMRBF(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
-    pipeline_SVMRBF = Pipeline([('classifier', sklearn.svm.SVC())])
-    param_SVMRBF = kwargs
-
-    grid_SVMRBF = GridSearchCV(pipeline_SVMRBF, param_grid=param_SVMRBF, refit=True, n_jobs=nbCores, scoring='accuracy',
-                               cv=nbFolds)
-    SVMRBF_detector = grid_SVMRBF.fit(X_train, y_train)
-    desc_params = [SVMRBF_detector.best_params_["classifier__C"]]
-    description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
-    return description, SVMRBF_detector
-
-
-def MonoviewClassifDecisionTree(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
-    pipeline_DT = Pipeline([('classifier', sklearn.tree.DecisionTreeClassifier())])
-    param_DT = kwargs
-
-    grid_DT = GridSearchCV(pipeline_DT, param_grid=param_DT, refit=True, n_jobs=nbCores, scoring='accuracy',
-                           cv=nbFolds)
-    DT_detector = grid_DT.fit(X_train, y_train)
-    desc_params = [DT_detector.best_params_["classifier__max_depth"]]
-    description = "Classif_" + "DT" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
-    return description, DT_detector
-
-
-def MonoviewClassifSGD(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
-    pipeline_SGD = Pipeline([('classifier', sklearn.linear_model.SGDClassifier())])
-    param_SGD = kwargs
-    grid_SGD = GridSearchCV(pipeline_SGD, param_grid=param_SGD, refit=True, n_jobs=nbCores, scoring='accuracy',
-                            cv=nbFolds)
-    SGD_detector = grid_SGD.fit(X_train, y_train)
-    desc_params = [SGD_detector.best_params_["classifier__loss"], SGD_detector.best_params_["classifier__penalty"],
-                   SGD_detector.best_params_["classifier__alpha"]]
-    description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
-    return description, SGD_detector
-
-
-def MonoviewClassifKNN(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
-    pipeline_KNN = Pipeline([('classifier', sklearn.neighbors.KNeighborsClassifier())])
-    param_KNN = kwargs
-    grid_KNN = GridSearchCV(pipeline_KNN, param_grid=param_KNN, refit=True, n_jobs=nbCores, scoring='accuracy',
-                            cv=nbFolds)
-    KNN_detector = grid_KNN.fit(X_train, y_train)
-    desc_params = [KNN_detector.best_params_["classifier__n_neighbors"]]
-    description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
-    return description, KNN_detector
+# def MonoviewClassifRandomForest(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+#     num_estimators = kwargs["classifier__n_estimators"]
+#     # PipeLine with RandomForest classifier
+#     pipeline_rf = Pipeline([('classifier', RandomForestClassifier())])
+#
+#     # Parameters for GridSearch: Number of Trees
+#     # can be extended with: oob_score, min_samples_leaf, max_features
+#     param_rf = kwargs
+#
+#     # pipeline: Gridsearch avec le pipeline comme estimator
+#     # param: pour obtenir le meilleur model il va essayer tous les possiblites
+#     # refit: pour utiliser le meilleur model apres girdsearch
+#     # n_jobs: Nombre de CPU (Mon ordi a des problemes avec -1 (Bug Python 2.7 sur Windows))
+#     # scoring: scoring...
+#     # cv: Nombre de K-Folds pour CV
+#     grid_rf = GridSearchCV(
+#         pipeline_rf,
+#         param_grid=param_rf,
+#         refit=True,
+#         n_jobs=nbCores,
+#         scoring='accuracy',
+#         cv=nbFolds,
+#     )
+#
+#     rf_detector = grid_rf.fit(X_train, y_train)
+#
+#     desc_estimators = [rf_detector.best_params_["classifier__n_estimators"]]
+#     description = "Classif_" + "RF" + "-" + "CV_" + str(nbFolds) + "-" + "Trees_" + str(map(str, desc_estimators))
+#
+#     return description, rf_detector
+#
+#
+# def MonoviewClassifSVMLinear(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+#     pipeline_SVMLinear = Pipeline([('classifier', sklearn.svm.SVC())])
+#     param_SVMLinear = kwargs
+#
+#     grid_SVMLinear = GridSearchCV(pipeline_SVMLinear, param_grid=param_SVMLinear, refit=True, n_jobs=nbCores,
+#                                   scoring='accuracy',
+#                                   cv=nbFolds)
+#     SVMLinear_detector = grid_SVMLinear.fit(X_train, y_train)
+#     desc_params = [SVMLinear_detector.best_params_["classifier__C"]]
+#     description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
+#     return description, SVMLinear_detector
+#
+#
+# def MonoviewClassifSVMRBF(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+#     pipeline_SVMRBF = Pipeline([('classifier', sklearn.svm.SVC())])
+#     param_SVMRBF = kwargs
+#
+#     grid_SVMRBF = GridSearchCV(pipeline_SVMRBF, param_grid=param_SVMRBF, refit=True, n_jobs=nbCores, scoring='accuracy',
+#                                cv=nbFolds)
+#     SVMRBF_detector = grid_SVMRBF.fit(X_train, y_train)
+#     desc_params = [SVMRBF_detector.best_params_["classifier__C"]]
+#     description = "Classif_" + "SVC" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
+#     return description, SVMRBF_detector
+#
+#
+# def MonoviewClassifDecisionTree(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+#     pipeline_DT = Pipeline([('classifier', sklearn.tree.DecisionTreeClassifier())])
+#     param_DT = kwargs
+#
+#     grid_DT = GridSearchCV(pipeline_DT, param_grid=param_DT, refit=True, n_jobs=nbCores, scoring='accuracy',
+#                            cv=nbFolds)
+#     DT_detector = grid_DT.fit(X_train, y_train)
+#     desc_params = [DT_detector.best_params_["classifier__max_depth"]]
+#     description = "Classif_" + "DT" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
+#     return description, DT_detector
+#
+#
+# def MonoviewClassifSGD(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+#     pipeline_SGD = Pipeline([('classifier', sklearn.linear_model.SGDClassifier())])
+#     param_SGD = kwargs
+#     grid_SGD = GridSearchCV(pipeline_SGD, param_grid=param_SGD, refit=True, n_jobs=nbCores, scoring='accuracy',
+#                             cv=nbFolds)
+#     SGD_detector = grid_SGD.fit(X_train, y_train)
+#     desc_params = [SGD_detector.best_params_["classifier__loss"], SGD_detector.best_params_["classifier__penalty"],
+#                    SGD_detector.best_params_["classifier__alpha"]]
+#     description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
+#     return description, SGD_detector
+#
+#
+# def MonoviewClassifKNN(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):
+#     pipeline_KNN = Pipeline([('classifier', sklearn.neighbors.KNeighborsClassifier())])
+#     param_KNN = kwargs
+#     grid_KNN = GridSearchCV(pipeline_KNN, param_grid=param_KNN, refit=True, n_jobs=nbCores, scoring='accuracy',
+#                             cv=nbFolds)
+#     KNN_detector = grid_KNN.fit(X_train, y_train)
+#     desc_params = [KNN_detector.best_params_["classifier__n_neighbors"]]
+#     description = "Classif_" + "Lasso" + "-" + "CV_" + str(nbFolds) + "-" + "-".join(map(str, desc_params))
+#     return description, KNN_detector
 
 
 

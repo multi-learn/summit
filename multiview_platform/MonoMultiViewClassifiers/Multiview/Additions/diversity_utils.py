@@ -3,7 +3,7 @@ import math
 import itertools
 import os
 
-from ..utils.Multiclass import isBiclass, genMulticlassMonoviewDecision
+from ...utils.Multiclass import isBiclass, genMulticlassMonoviewDecision
 
 
 def getClassifiersDecisions(allClassifersNames, viewsIndices, resultsMonoview):

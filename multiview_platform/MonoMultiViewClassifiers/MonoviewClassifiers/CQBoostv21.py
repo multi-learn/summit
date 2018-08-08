@@ -8,10 +8,9 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score
 import time
-import datetime
 
 from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint
-from ..Monoview.BoostUtils import StumpsClassifiersGenerator, sign, getInterpretBase, BaseBoost
+from ..Monoview.Additions.BoostUtils import StumpsClassifiersGenerator, sign, getInterpretBase, BaseBoost
 
 
 class ColumnGenerationClassifierv21(BaseEstimator, ClassifierMixin, BaseBoost):

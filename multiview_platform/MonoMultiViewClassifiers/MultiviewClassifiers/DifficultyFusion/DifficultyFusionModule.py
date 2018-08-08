@@ -1,6 +1,6 @@
 import numpy as np
 
-from .. import diversity_utils
+from ...Multiview.Additions import diversity_utils
 
 
 def genName(config):

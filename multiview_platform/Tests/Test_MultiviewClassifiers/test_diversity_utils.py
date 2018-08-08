@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from ...MonoMultiViewClassifiers.MultiviewClassifiers import diversity_utils
+from multiview_platform.MonoMultiViewClassifiers.Multiview.Additions import diversity_utils
 
 
 def fake_measure(a, b, c, d, e):

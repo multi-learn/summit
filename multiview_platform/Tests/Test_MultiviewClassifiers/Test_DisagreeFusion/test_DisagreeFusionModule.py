@@ -2,7 +2,8 @@ import unittest
 import numpy as np
 
 from ....MonoMultiViewClassifiers.MultiviewClassifiers.DisagreeFusion import DisagreeFusionModule
-from ....MonoMultiViewClassifiers.MultiviewClassifiers import diversity_utils
+from multiview_platform.MonoMultiViewClassifiers.Multiview.Additions import diversity_utils
+
 
 class Test_disagreement(unittest.TestCase):
 

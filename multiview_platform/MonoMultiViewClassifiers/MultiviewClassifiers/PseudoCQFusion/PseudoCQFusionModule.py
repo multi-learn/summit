@@ -1,6 +1,4 @@
-import numpy as np
-
-from .. import diversity_utils
+from multiview_platform.MonoMultiViewClassifiers.Multiview.Additions import diversity_utils
 from ..DifficultyFusion.DifficultyFusionModule import difficulty
 from ..DoubleFaultFusion.DoubleFaultFusionModule import doubleFault
 

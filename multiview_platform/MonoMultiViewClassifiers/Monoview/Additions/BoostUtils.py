@@ -659,8 +659,9 @@ class BaseBoost(object):
     def check_opposed_voters(self, ):
         nb_opposed = 0
         for column in self.classification_matrix[:, self.chosen_columns_].transpose():
-            if -column.reshape((self.n_total_examples, 1)) in self.classification_matrix[:, self.chosen_columns_]:
-                nb_opposed+=1
+            for chosen_col in self.chosen_columns_:
+                if (-column.reshape((self.n_total_examples, 1)) == self.classification_matrix[:, chosen_col]).all():
+                    nb_opposed+=1
         return int(nb_opposed/2)
 
 

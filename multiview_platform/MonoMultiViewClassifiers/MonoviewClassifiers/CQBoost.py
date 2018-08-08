@@ -8,10 +8,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score
 import numpy as np
 import time
-import datetime
 
 from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint
-from ..Monoview.BoostUtils import StumpsClassifiersGenerator, ConvexProgram, sign, getInterpretBase, BaseBoost
+from ..Monoview.Additions.BoostUtils import StumpsClassifiersGenerator, ConvexProgram, sign, getInterpretBase, BaseBoost
 
 
 class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):

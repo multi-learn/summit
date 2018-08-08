@@ -1,6 +1,5 @@
 import scipy
 import logging
-from copy import deepcopy
 import numpy.ma as ma
 from collections import defaultdict
 from sklearn.utils.validation import check_is_fitted
@@ -9,10 +8,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score
 import numpy as np
 import time
-import datetime
 
 from ..Monoview.MonoviewUtils import CustomRandint, CustomUniform
-from ..Monoview.BoostUtils import StumpsClassifiersGenerator, ConvexProgram, sign, getInterpretBase, BaseBoost
+from ..Monoview.Additions.BoostUtils import StumpsClassifiersGenerator, ConvexProgram, sign, getInterpretBase, BaseBoost
 
 
 class ColumnGenerationClassifierv2(BaseEstimator, ClassifierMixin, BaseBoost):
