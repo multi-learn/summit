@@ -110,6 +110,8 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     logging.info("Done:\t Saving Results")
 
     viewIndex = args["viewIndex"]
+    if testFoldsPreds is None:
+        testFoldsPreds = y_train_pred
     return viewIndex, [CL_type, cl_desc + [feat], metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
 
 
@@ -165,6 +167,7 @@ def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train,
         logging.debug("Done:\t " + hyperParamSearch + " best settings")
     else:
         clKWARGS = kwargs[CL_type + "KWARGS"]
+        testFoldsPreds = None
     return clKWARGS, testFoldsPreds
 
 

@@ -7,11 +7,12 @@ from .. import Metrics
 
 
 def searchBestSettings(dataset, labels, classifierPackage, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=None,
-                       searchingTool="hyperParamSearch", nIter=1, **kwargs):
+                       searchingTool="randomizedSearch", nIter=1, **kwargs):
     """Used to select the right hyperparam optimization function to optimize hyper parameters"""
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
     thismodule = sys.modules[__name__]
+    searchingTool = "randomizedSearch"  # Todo find a nice way to configure multiview classifier without hp search
     searchingToolMethod = getattr(thismodule, searchingTool)
     bestSettings = searchingToolMethod(dataset, labels, classifierPackage, classifierName, metrics, iLearningIndices, iKFolds, randomState,
                                        viewsIndices=viewsIndices, nIter=nIter, **kwargs)

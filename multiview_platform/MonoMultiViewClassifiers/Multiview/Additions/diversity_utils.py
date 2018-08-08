@@ -16,18 +16,29 @@ def getClassifiersDecisions(allClassifersNames, viewsIndices, resultsMonoview):
     """
     nbViews = len(viewsIndices)
     nbClassifiers = len(allClassifersNames)
-    nbFolds = len(resultsMonoview[0][1][6])
-    foldsLen = len(resultsMonoview[0][1][6][0])
     classifiersNames = [[] for _ in viewsIndices]
-    classifiersDecisions = np.zeros((nbViews, nbClassifiers, nbFolds, foldsLen))
+    if len(resultsMonoview[0][1][6].shape) is not 1:
+        nbFolds = resultsMonoview[0][1][6].shape[0]
+        foldsLen = resultsMonoview[0][1][6].shape[1]
+        classifiersDecisions = np.zeros((nbViews, nbClassifiers, nbFolds, foldsLen))
 
-    for resultMonoview in resultsMonoview:
-        if resultMonoview[1][0] in classifiersNames[viewsIndices.index(resultMonoview[0])]:
-            pass
-        else:
-            classifiersNames[viewsIndices.index(resultMonoview[0])].append(resultMonoview[1][0])
-        classifierIndex = classifiersNames[viewsIndices.index(resultMonoview[0])].index(resultMonoview[1][0])
-        classifiersDecisions[viewsIndices.index(resultMonoview[0]), classifierIndex] = resultMonoview[1][6]
+        for resultMonoview in resultsMonoview:
+            if resultMonoview[1][0] in classifiersNames[viewsIndices.index(resultMonoview[0])]:
+                pass
+            else:
+                classifiersNames[viewsIndices.index(resultMonoview[0])].append(resultMonoview[1][0])
+            classifierIndex = classifiersNames[viewsIndices.index(resultMonoview[0])].index(resultMonoview[1][0])
+            classifiersDecisions[viewsIndices.index(resultMonoview[0]), classifierIndex] = resultMonoview[1][6]
+    else:
+        train_len = resultsMonoview[0][1][6].shape[0]
+        classifiersDecisions = np.zeros((nbViews, nbClassifiers, 1, train_len))
+        for resultMonoview in resultsMonoview:
+            if resultMonoview[1][0] in classifiersNames[viewsIndices.index(resultMonoview[0])]:
+                pass
+            else:
+                classifiersNames[viewsIndices.index(resultMonoview[0])].append(resultMonoview[1][0])
+            classifierIndex = classifiersNames[viewsIndices.index(resultMonoview[0])].index(resultMonoview[1][0])
+            classifiersDecisions[viewsIndices.index(resultMonoview[0]), classifierIndex] = resultMonoview[1][6]
     return classifiersDecisions, classifiersNames
 
 
@@ -42,8 +53,7 @@ def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
                                                                                      viewsIndices,
                                                                                      resultsMonoview)
 
-    nbViews = len(viewsIndices)
-    nbClassifiers = len(allClassifersNames)
+    nbViews, nbClassifiers, nbFolds, foldsLen = classifiersDecisions.shape
     combinations = itertools.combinations_with_replacement(range(nbClassifiers), nbViews)
     nbCombinations = int(math.factorial(nbClassifiers+nbViews-1) / math.factorial(nbViews) / math.factorial(nbClassifiers-1))
     div_measure = np.zeros(nbCombinations)
@@ -78,9 +88,7 @@ def global_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
                                                                      viewsIndices,
                                                                      resultsMonoview)
 
-    foldsLen = len(resultsMonoview[0][1][6][0])
-    nbViews = len(viewsIndices)
-    nbClassifiers = len(allClassifersNames)
+    nbViews, nbClassifiers, nbFolds, foldsLen = classifiersDecisions.shape
     combinations = itertools.combinations_with_replacement(range(nbClassifiers), nbViews)
     nbCombinations = int(math.factorial(nbClassifiers + nbViews - 1) / math.factorial(nbViews) / math.factorial(
         nbClassifiers - 1))
@@ -104,9 +112,7 @@ def CQ_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measuremen
     classifiersDecisions, classifiersNames = getClassifiersDecisions(allClassifersNames,
                                                                      viewsIndices,
                                                                      resultsMonoview)
-    foldsLen = len(resultsMonoview[0][1][6][0])
-    nbViews = len(viewsIndices)
-    nbClassifiers = len(allClassifersNames)
+    nbViews, nbClassifiers, nbFolds, foldsLen = classifiersDecisions.shape
     combinations = itertools.combinations_with_replacement(range(nbClassifiers), nbViews)
     nbCombinations = int(
         math.factorial(nbClassifiers + nbViews - 1) / math.factorial(nbViews) / math.factorial(nbClassifiers - 1))
@@ -134,23 +140,33 @@ def CQ_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measuremen
         bestCombiIndex]
 
 
-def getFoldsGroundTruth(directory):
+def getFoldsGroundTruth(directory, folds=True):
     """This function is used to get the labels of each fold example used in the measurements
     foldsGroundTruth is formatted as
     foldsGroundTruth[foldIndex, exampleIndex]"""
-    foldsFilesNames = os.listdir(directory+"folds/")
-    foldLen = len(np.genfromtxt(directory+"folds/"+foldsFilesNames[0], delimiter=','))
-    foldsGroudTruth = np.zeros((len(foldsFilesNames), foldLen), dtype=int)
-    for fileName in foldsFilesNames:
-        foldIndex = int(fileName[-5])
-        foldsGroudTruth[foldIndex] = np.genfromtxt(directory+"folds/"+fileName, delimiter=',')
-    return foldsGroudTruth
+    if folds:
+        foldsFilesNames = os.listdir(directory+"folds/")
+        foldLen = len(np.genfromtxt(directory+"folds/"+foldsFilesNames[0], delimiter=','))
+        foldsGroudTruth = np.zeros((len(foldsFilesNames), foldLen), dtype=int)
+        for fileName in foldsFilesNames:
+            foldIndex = int(fileName[-5])
+            foldsGroudTruth[foldIndex] = np.genfromtxt(directory+"folds/"+fileName, delimiter=',')
+        return foldsGroudTruth
+    else:
+        train_labels = np.genfromtxt(directory+"train_labels.csv", delimiter=',')
+        foldsGroudTruth = np.zeros((1, train_labels.shape[0]))
+        foldsGroudTruth[0] = train_labels
+        return foldsGroudTruth
+
 
 
 def getArgs(args, benchmark, views, viewsIndices, randomState,
             directory, resultsMonoview, classificationIndices, measurement, name):
     """This function is a general function to get the args for all the measurements used"""
-    foldsGroundTruth = getFoldsGroundTruth(directory)
+    if len(resultsMonoview[0][1][6].shape) is not 1:
+        foldsGroundTruth = getFoldsGroundTruth(directory, folds=True)
+    else:
+        foldsGroundTruth = getFoldsGroundTruth(directory, folds=False)
     monoviewClassifierModulesNames = benchmark["Monoview"]
     if name in ['DisagreeFusion', 'DoubleFaultFusion']:
         classifiersNames, div_measure = couple_div_measure(monoviewClassifierModulesNames,

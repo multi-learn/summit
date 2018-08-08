@@ -19,6 +19,10 @@ def getArgs(args, benchmark, views, viewsIndices, randomState, directory, result
         monoviewDecisions = np.array([monoviewResult[1][3] for monoviewResult in resultsMonoview])
     else:
         monoviewDecisions = np.array([genMulticlassMonoviewDecision(monoviewResult, classificationIndices) for monoviewResult in resultsMonoview])
+    if len(args.FLF_weights) == 0:
+        weights = [1.0 for _ in range(monoviewDecisions.shape[0])]
+    else:
+        weights = args.FLF_weights
     arguments = {"CL_type": "FatLateFusion",
                  "views": views,
                  "NB_VIEW": len(resultsMonoview),
@@ -27,7 +31,7 @@ def getArgs(args, benchmark, views, viewsIndices, randomState, directory, result
                  "LABELS_NAMES": args.CL_classes,
                  "FatLateFusionKWARGS": {
                      "monoviewDecisions": monoviewDecisions,
-                     "weights": args.FLF_weights
+                     "weights": weights
                  }
                  }
     argumentsList.append(arguments)
@@ -63,6 +67,9 @@ class FatLateFusionClass:
         votes = np.zeros((len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]), dtype=float)
         for usedIndex, exampleIndex in enumerate(usedIndices):
             for monoviewDecisionIndex, monoviewDecision in enumerate(self.monoviewDecisions):
+                print(monoviewDecision[exampleIndex])
+                print(self.weights[monoviewDecisionIndex])
+                print(votes[usedIndex, monoviewDecision[exampleIndex]])
                 votes[usedIndex, monoviewDecision[exampleIndex]] += self.weights[monoviewDecisionIndex]
         predictedLabels = np.argmax(votes, axis=1)
         return predictedLabels
