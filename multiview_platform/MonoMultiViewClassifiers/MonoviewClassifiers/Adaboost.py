@@ -1,7 +1,6 @@
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 
-from ..utils.Interpret import getFeatureImportance
 from ..Monoview.MonoviewUtils import CustomRandint, BaseMonoviewClassifier
 
 # Author-Info
@@ -35,28 +34,9 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
                               "base_estimator": DecisionTreeClassifier()})
         return paramsSet
 
-    # def genPipeline(self):
-    #     return Pipeline([('classifier', AdaBoostClassifier())])
-
-    # def genDistribs(self,):
-    #     return {"classifier__n_estimators": CustomRandint(low=1, high=500),
-    #             "classifier__base_estimator": [DecisionTreeClassifier()]}
-
-    # def genParamsFromDetector(self, detector):
-    #     nIter = len(detector.cv_results_['param_classifier__n_estimators'])
-    #     return [("baseEstimators", np.array(["DecisionTree" for _ in range(nIter)])),
-    #             ("nEstimators", np.array(detector.cv_results_['param_classifier__n_estimators']))]
-
-    def getConfig(self, config):
-        if type(config) is not dict:  # Used in late fusion when config is a classifier
-            return "\n\t\t- Adaboost with num_esimators : " + str(config.n_estimators) + ", base_estimators : " + str(
-                config.base_estimator)
-        else:
-            return "\n\t\t- Adaboost with n_estimators : " + str(config["n_estimators"]) + ", base_estimator : " + str(
-                   config["base_estimator"])
-
-    def getInterpret(self, classifier, directory):
-        interpretString = getFeatureImportance(classifier, directory)
+    def getInterpret(self, directory):
+        interpretString = ""
+        interpretString += self.getFeatureImportance(directory)
         return interpretString
 
 

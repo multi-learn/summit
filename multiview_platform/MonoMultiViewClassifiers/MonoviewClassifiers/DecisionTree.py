@@ -8,7 +8,6 @@ import numpy as np
 
 from .. import Metrics
 from ..utils.HyperParameterSearch import genHeatMaps
-from ..utils.Interpret import getFeatureImportance
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

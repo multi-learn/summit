@@ -3,11 +3,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import randint
 import numpy as np
-# import cPickle
-
-from .. import Metrics
-from ..utils.HyperParameterSearch import genHeatMaps
-from ..utils.Interpret import getFeatureImportance
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
