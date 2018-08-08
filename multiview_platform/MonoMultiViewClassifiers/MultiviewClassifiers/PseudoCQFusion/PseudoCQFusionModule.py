@@ -1,4 +1,4 @@
-from multiview_platform.MonoMultiViewClassifiers.Multiview.Additions import diversity_utils
+from ...Multiview.Additions import diversity_utils
 from ..DifficultyFusion.DifficultyFusionModule import difficulty
 from ..DoubleFaultFusion.DoubleFaultFusionModule import doubleFault
 

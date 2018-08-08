@@ -1,6 +1,7 @@
 from sklearn.model_selection import RandomizedSearchCV
-import numpy as np
 from scipy.stats import uniform, randint
+from sklearn.pipeline import Pipeline
+import numpy as np
 
 from .. import Metrics
 from ..utils import HyperParameterSearch
@@ -11,11 +12,11 @@ __status__ = "Prototype"  # Production, Development, Prototype
 # __date__ = 2016 - 03 - 25
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierModule, KFolds = 4, nbCores = 1,
+def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierModule, CL_type, KFolds = 4, nbCores = 1,
     metric = ["accuracy_score", None], nIter = 30):
 
-    pipeline = classifierModule.genPipeline()
-    params_dict = classifierModule.genParamsDict(randomState)
+    estimator = getattr(classifierModule, CL_type)(randomState)
+    params_dict = estimator.genDistribs()
 
     metricModule = getattr(Metrics, metric[0])
     if metric[1] is not None:
@@ -23,15 +24,15 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
     else:
         metricKWARGS = {}
     scorer = metricModule.get_scorer(**metricKWARGS)
-    randomSearch = RandomizedSearchCV(pipeline, n_iter=nIter, param_distributions=params_dict, refit=True,
+
+    randomSearch = RandomizedSearchCV(estimator, n_iter=nIter, param_distributions=params_dict, refit=True,
                                       n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
     detector = randomSearch.fit(X_train, y_train)
-    bestParams = classifierModule.genBestParams(detector)
-    # desc_params = {"C": SVMPoly_detector.best_params_["classifier__C"], "degree": SVMPoly_detector.best_params_["classifier__degree"]}
+
+    bestParams = estimator.genBestParams(detector)
 
     scoresArray = detector.cv_results_['mean_test_score']
-    params = classifierModule.genParamsFromDetector(detector)
-    # params = [("c", np.array(SVMPoly_detector.cv_results_['param_classifier__C'])), ("degree", np.array(SVMPoly_detector.cv_results_['param_classifier__degree']))]
+    params = estimator.genParamsFromDetector(detector)
 
     HyperParameterSearch.genHeatMaps(params, scoresArray, outputFileName)
     testFoldsPreds = genTestFoldsPreds(X_train, y_train, KFolds, detector.best_estimator_)
@@ -53,7 +54,10 @@ def genTestFoldsPreds(X_train, y_train, KFolds, estimator):
 
 
 class CustomRandint:
-    def __init__(self, low=0, high=0, multiplier="e-"):
+    """Used as a distribution returning a integer between low and high-1.
+    It can be used with a multiplier agrument to be able to perform more complex generation
+    for example 10 e -(randint)"""
+    def __init__(self, low=0, high=0, multiplier=""):
         self.randint = randint(low, high)
         self.multiplier = multiplier
 
@@ -61,10 +65,15 @@ class CustomRandint:
         randinteger = self.randint.rvs(random_state=random_state)
         if self.multiplier == "e-":
             return 10 ** -randinteger
+        else:
+            return randinteger
 
 
 class CustomUniform:
-    def __init__(self, loc=0, state=1, multiplier="e-"):
+    """Used as a distribution returning a float between loc and loc + scale..
+        It can be used with a multiplier agrument to be able to perform more complex generation
+        for example 10 e -(float)"""
+    def __init__(self, loc=0, state=1, multiplier=""):
         self.uniform = uniform(loc, state)
         self.multiplier = multiplier
 
@@ -72,6 +81,43 @@ class CustomUniform:
         unif = self.uniform.rvs(random_state=random_state)
         if self.multiplier == 'e-':
             return 10 ** -unif
+        else:
+            return unif
+
+
+class BaseMonoviewClassifier(object):
+
+    def genBestParams(self, detector):
+        return dict((param_name, detector.best_params_[param_name]) for param_name in self.param_names)
+
+    def genParamsFromDetector(self, detector):
+        if self.classed_params is not None:
+            classed_dict = dict((classed_param, get_names(detector.cv_results_["param_"+classed_param]))
+                                for classed_param in self.classed_params)
+        return [(param_name, np.array(detector.cv_results_["param_"+param_name]))
+                    if param_name not in self.classed_params else (param_name, classed_dict[param_name])
+                    for param_name in self.param_names]
+
+    def genDistribs(self):
+        return dict((param_name, distrib) for param_name, distrib in zip(self.param_names, self.distribs))
+
+    def getConfig(self):
+        return "\n\t\t- "+self.__class__.__name__+ "with "+ ", ".join([ param_name+" : " + self.to_str(param_name) for param_name in self.param_names])
+
+    def to_str(self, param_name):
+        if param_name in self.weird_strings:
+            if self.weird_strings[param_name] == "class_name":
+                return self.get_params()[param_name].__class__.__name__
+            else:
+                return self.weird_strings[param_name](self.get_params()[param_name])
+        else:
+            return str(self.get_params()[param_name])
+
+
+def get_names(classed_list):
+    return np.array([object_.__class__.__name__ for object_ in classed_list])
+
+
 
 
 # def isUseful(labelSupports, index, CLASS_LABELS, labelDict):

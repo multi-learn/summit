@@ -73,19 +73,20 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     logging.debug("Done:\t Generate classifier args")
 
     logging.debug("Start:\t Training")
-    cl_res = classifierModule.fit(X_train, y_train, randomState, NB_CORES=nbCores, **clKWARGS)
+    classifier = getattr(classifierModule, CL_type)(randomState, **clKWARGS)
+    classifier.fit(X_train, y_train) #  NB_CORES=nbCores,
     logging.debug("Done:\t Training")
 
     logging.debug("Start:\t Predicting")
-    y_train_pred = cl_res.predict(X_train)
-    y_test_pred = cl_res.predict(X_test)
+    y_train_pred = classifier.predict(X_train)
+    y_test_pred = classifier.predict(X_test)
     full_labels_pred = np.zeros(Y.shape, dtype=int)-100
     for trainIndex, index in enumerate(classificationIndices[0]):
         full_labels_pred[index] = y_train_pred[trainIndex]
     for testIndex, index in enumerate(classificationIndices[1]):
         full_labels_pred[index] = y_test_pred[testIndex]
     if X_test_multiclass != []:
-        y_test_multiclass_pred = cl_res.predict(X_test_multiclass)
+        y_test_multiclass_pred = classifier.predict(X_test_multiclass)
     else:
         y_test_multiclass_pred = []
     logging.debug("Done:\t Predicting")
@@ -100,7 +101,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
                                                             hyperParamSearch, metrics, nIter, feat, CL_type,
                                                             clKWARGS, labelsNames, X.shape,
                                                             y_train, y_train_pred, y_test, y_test_pred, t_end,
-                                                            randomState, cl_res, outputFileName)
+                                                            randomState, classifier, outputFileName)
     cl_desc = [value for key, value in sorted(clKWARGS.items())]
     logging.debug("Done:\t Getting Results")
 
@@ -158,7 +159,7 @@ def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train,
         logging.debug("Start:\t " + hyperParamSearch + " best settings with " + str(nIter) + " iterations for " + CL_type)
         classifierHPSearch = getattr(MonoviewUtils, hyperParamSearch)
         clKWARGS, testFoldsPreds = classifierHPSearch(X_train, y_train, randomState,
-                                      outputFileName, classifierModule,
+                                      outputFileName, classifierModule, CL_type,
                                       KFolds=KFolds, nbCores=nbCores,
                                       metric=metrics[0], nIter=nIter)
         logging.debug("Done:\t " + hyperParamSearch + " best settings")

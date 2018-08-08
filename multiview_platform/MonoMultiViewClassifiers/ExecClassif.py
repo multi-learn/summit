@@ -166,7 +166,7 @@ def initMonoviewKWARGS(args, classifiersNames):
     Returns
     -------
     monoviewKWARGS : Dictionary of dictionaries
-        Dictionary resuming all the specific arguments for the benchmark, oe dictionary for each classifier.
+        Dictionary resuming all the specific arguments for the benchmark, one dictionary for each classifier.
 
         For example, for Adaboost, the KWARGS will be `{"n_estimators":<value>, "base_estimator":<value>}`"""
 
@@ -178,7 +178,7 @@ def initMonoviewKWARGS(args, classifiersNames):
         except AttributeError:
             raise AttributeError(classifiersName+" is not implemented in MonoviewClassifiers, "
                                                  "please specify the name of the file in MonoviewClassifiers")
-        monoviewKWARGS[classifiersName + "KWARGSInit"] = classifierModule.getKWARGS(args)
+        monoviewKWARGS[classifiersName + "KWARGSInit"] = classifierModule.formatCmdArgs(args)
     logging.debug("Done:\t Initializing Monoview classifiers arguments")
     return monoviewKWARGS
 

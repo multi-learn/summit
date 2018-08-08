@@ -16,15 +16,14 @@ def getDBConfigString(name, feat, classificationIndices, shape, classLabelsNames
     return dbConfigString
 
 
-def getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS, classifier, directory):
-    classifierModule = getattr(MonoviewClassifiers, CL_type)
+def getClassifierConfigString(gridSearch, nbCores, nIter, clKWARGS, classifier, directory):
     classifierConfigString = "Classifier configuration : \n"
-    classifierConfigString += "\t- " + classifierModule.getConfig(clKWARGS)[5:] + "\n"
+    classifierConfigString += "\t- " + classifier.getConfig(clKWARGS)[5:] + "\n"
     classifierConfigString += "\t- Executed on " + str(nbCores) + " core(s) \n"
     if gridSearch:
         classifierConfigString += "\t- Got configuration using randomized search with " + str(nIter) + " iterations \n"
     classifierConfigString += "\n\n"
-    classifierInterpretString = classifierModule.getInterpret(classifier, directory)
+    classifierInterpretString = classifier.getInterpret(classifier, directory)
     return classifierConfigString, classifierInterpretString
 
 
@@ -53,7 +52,7 @@ def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics, nIter, fea
     stringAnalysis += metrics[0][0] + " on train : " + str(trainScore) + "\n" + metrics[0][0] + " on test : " + str(
         testScore) + "\n\n"
     stringAnalysis += getDBConfigString(name, feat, learningRate, shape, classLabelsNames, KFolds)
-    classifierConfigString, classifierIntepretString = getClassifierConfigString(CL_type, gridSearch, nbCores, nIter, clKWARGS, classifier, directory)
+    classifierConfigString, classifierIntepretString = getClassifierConfigString(gridSearch, nbCores, nIter, clKWARGS, classifier, directory)
     stringAnalysis += classifierConfigString
     for metric in metrics:
         metricString, metricScore = getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred)
