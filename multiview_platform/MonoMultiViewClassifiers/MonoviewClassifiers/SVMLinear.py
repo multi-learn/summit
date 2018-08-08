@@ -1,26 +1,28 @@
-from sklearn.svm import SVC
-from sklearn.pipeline import Pipeline  # Pipelining in classification
-from sklearn.model_selection import RandomizedSearchCV
-from scipy.stats import randint
-import numpy as np
 
-from .. import Metrics
-from ..utils.HyperParameterSearch import genHeatMaps
-
+from ..Monoview.Additions.SVCClassifier import SVCClassifier
+from ..Monoview.MonoviewUtils import CustomUniform, BaseMonoviewClassifier
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def canProbas():
-    return True
+class SVMLinear(SVCClassifier, BaseMonoviewClassifier):
+
+    def __init__(self, random_state=None, C=1.0, **kwargs):
+        super(SVMLinear, self).__init__(
+            C=C,
+            kernel='linear',
+            random_state=random_state
+            )
+        self.param_names = ["C",]
+        self.distribs = [CustomUniform(loc=0, state=1), ]
 
 
-def fit(DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs):
-    classifier = SVC(C=kwargs['C'], kernel='linear', probability=True, max_iter=1000, random_state=randomState)
-    classifier.fit(DATASET, CLASS_LABELS)
-    return classifier
+def formatCmdArgs(args):
+    """Used to format kwargs for the parsed args"""
+    kwargsDict = {"C": args.SVML_C, }
+    return kwargsDict
 
 
 def paramsToSet(nIter, randomState):
@@ -28,37 +30,3 @@ def paramsToSet(nIter, randomState):
     for _ in range(nIter):
         paramsSet.append({"C": randomState.randint(1, 10000), })
     return paramsSet
-
-
-def getKWARGS(args):
-    kwargsDict = {"C":args.SVML_C, }
-    return kwargsDict
-
-
-def genPipeline():
-    return Pipeline([('classifier', SVC(kernel="linear", max_iter=1000))])
-
-
-def genParamsDict(randomState):
-    return {"classifier__C": np.arange(1, 10000)}
-
-
-def genBestParams(detector):
-    return {"C": detector.best_params_["classifier__C"]}
-
-
-def genParamsFromDetector(detector):
-    nIter = len(detector.cv_results_['param_classifier__C'])
-    return [("C", np.array(detector.cv_results_['param_classifier__C'])),
-              ("control", np.array(["control" for _ in range(nIter)]))]
-
-
-def getConfig(config):
-    if type(config) not in [list, dict]:
-        return "\n\t\t- SVM Linear with C : " + str(config.C)
-    else:
-        return "\n\t\t- SVM Linear with C : " + str(config["C"])
-
-def getInterpret(classifier, directory):
-    # TODO : coeffs
-    return ""
