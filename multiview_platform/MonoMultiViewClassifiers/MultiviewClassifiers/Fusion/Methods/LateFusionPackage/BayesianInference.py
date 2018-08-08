@@ -87,9 +87,8 @@ class BayesianInference(LateFusionClassifier):
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
         configString = "with Bayesian Inference using a weight for each view : " + ", ".join(map(str, self.weights)) + \
                        "\n\t-With monoview classifiers : "
-        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs,
-                                                                    monoviewClassifiersNames):
-            monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
-            configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
+        for monoviewClassifier in self.monoviewClassifiers:
+
+            configString += monoviewClassifier.getConfig()
         configString += "\n\t -Method used to select monoview classifiers : " + self.monoviewSelection
         return configString

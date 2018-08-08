@@ -100,8 +100,7 @@ class MajorityVoting(LateFusionClassifier):
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
         configString = "with Majority Voting \n\t-With weights : " + str(
             self.weights) + "\n\t-With monoview classifiers : "
-        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs,
-                                                                    monoviewClassifiersNames):
-            monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
-            configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
+        for monoviewClassifier in self.monoviewClassifiers:
+
+            configString += monoviewClassifier.getConfig()
         return configString

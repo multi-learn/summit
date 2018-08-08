@@ -12,30 +12,28 @@ from .... import Metrics
 from ....utils.Dataset import getV
 
 
-def canProbasClassifier(classifierConfig):
-    try:
-        _ = getattr(classifierConfig, "predict_proba")
-        return True
-    except AttributeError:
-        return False
+# def canProbasClassifier(classifierConfig):
+#     try:
+#         _ = getattr(classifierConfig, "predict_proba")
+#         return True
+#     except AttributeError:
+#         return False
 
 
-def fitMonoviewClassifier(classifierName, data, labels, classifierConfig, needProbas, randomState, nbCores=1):
-    if type(classifierConfig) == dict:
-        monoviewClassifier = getattr(MonoviewClassifiers, classifierName)
+def fitMonoviewClassifier(monoviewClassifier, data, labels, needProbas, randomState, nbCores=1):
         if needProbas and not monoviewClassifier.canProbas():
-            monoviewClassifier = getattr(MonoviewClassifiers, "DecisionTree")
             DTConfig = {"max_depth": 300, "criterion": "entropy", "splitter": "random"}
-            classifier = monoviewClassifier.fit(data, labels, randomState, nbCores, **DTConfig)
+            monoviewClassifier = getattr(MonoviewClassifiers, "DecisionTree")(random_state=randomState, **DTConfig)
+            classifier = monoviewClassifier.fit(data, labels)
             return classifier
         else:
-            if type(classifierConfig) is dict:
-                pass
-            else:
-                classifierConfig = dict((str(configIndex), config)
-                                         for configIndex, config in enumerate(classifierConfig))
+            # if type(classifierConfig) is dict:
+            #     pass
+            # else:
+            #     classifierConfig = dict((str(configIndex), config)
+            #                              for configIndex, config in enumerate(classifierConfig))
 
-            classifier = monoviewClassifier.fit(data, labels, randomState, nbCores, **classifierConfig)
+            classifier = monoviewClassifier.fit(data, labels)
             return classifier
 
 
@@ -119,11 +117,18 @@ class LateFusionClassifier(object):
     def __init__(self, randomState, monoviewClassifiersNames, monoviewClassifiersConfigs, monoviewSelection,
                  NB_CORES=1):
         self.monoviewClassifiersNames = monoviewClassifiersNames
+        monoviewClassifiersModules = [getattr(MonoviewClassifiers, classifierName)
+                                      for classifierName in self.monoviewClassifiersNames]
         if type(monoviewClassifiersConfigs[0]) == dict:
-            self.monoviewClassifiersConfigs = monoviewClassifiersConfigs
-            self.monoviewClassifiers = []
+            self.monoviewClassifiers = [
+                getattr(monoviewClassifiersModule, classifierName)(random_state=randomState, **config)
+                for monoviewClassifiersModule, config, classifierName
+                in zip(monoviewClassifiersModules, monoviewClassifiersConfigs, monoviewClassifiersNames)]
         else:
-            self.monoviewClassifiersConfigs = monoviewClassifiersConfigs
+            self.monoviewClassifiers = [
+                getattr(monoviewClassifiersModule, classifierName)(random_state=randomState,)
+                for monoviewClassifiersModule, config, classifierName
+                in zip(monoviewClassifiersModules, monoviewClassifiersConfigs, monoviewClassifiersNames)]
         self.nbCores = NB_CORES
         self.accuracies = np.zeros(len(monoviewClassifiersNames))
         self.needProbas = False
@@ -136,8 +141,8 @@ class LateFusionClassifier(object):
         if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
-                delayed(fitMonoviewClassifier)(self.monoviewClassifiersNames[index],
+                delayed(fitMonoviewClassifier)(self.monoviewClassifiers[index],
                                                getV(DATASET, viewIndex, trainIndices),
                                                labels[trainIndices],
-                                               self.monoviewClassifiersConfigs[index], self.needProbas, self.randomState)
+                                               self.needProbas, self.randomState)
                 for index, viewIndex in enumerate(viewsIndices))

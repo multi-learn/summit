@@ -61,7 +61,7 @@ def parseTheArgs(arguments):
                                  'selected', default=["yes", "no"])
     groupClass.add_argument('--CL_type', metavar='STRING', action='store', nargs="+",
                             help='Determine whether to use Multiview and/or Monoview, or Benchmark classification',
-                            default=['Benchmark'])
+                            default=['Monoview', 'Multiview'])
     groupClass.add_argument('--CL_algos_monoview', metavar='STRING', action='store', nargs="+",
                             help='Determine which monoview classifier to use if empty, considering all',
                             default=[''])

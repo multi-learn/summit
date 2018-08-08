@@ -62,21 +62,9 @@ class SVMForLinear(LateFusionClassifier):
             viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
         if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-        if type(self.monoviewClassifiersConfigs[0]) == dict:
-            for index, viewIndex in enumerate(viewsIndices):
-                monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[index])
-                if type(self.monoviewClassifiersConfigs[index]) is dict:
-                    pass
-                else:
-                    self.monoviewClassifiersConfigs[index] = dict((str(configIndex), config)
-                                            for configIndex, config in enumerate(self.monoviewClassifiersConfigs[index]))
-                self.monoviewClassifiers.append(
-                    monoviewClassifier.fit(getV(DATASET, viewIndex, trainIndices),
-                                           labels[trainIndices], self.randomState,
-                                           NB_CORES=self.nbCores,
-                                           **self.monoviewClassifiersConfigs[index]))
-        else:
-            self.monoviewClassifiers = self.monoviewClassifiersConfigs
+        for index, viewIndex in enumerate(viewsIndices):
+            self.monoviewClassifiers[index].fit(getV(DATASET, viewIndex, trainIndices),
+                                       labels[trainIndices])
         self.SVMForLinearFusionFit(DATASET, labels, usedIndices=trainIndices, viewsIndices=viewsIndices)
 
     def setParams(self, paramsSet):
@@ -109,8 +97,7 @@ class SVMForLinear(LateFusionClassifier):
 
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
         configString = "with SVM for linear \n\t-With monoview classifiers : "
-        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs,
-                                                                    monoviewClassifiersNames):
-            monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
-            configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
+        for monoviewClassifier in self.monoviewClassifiers:
+
+            configString += monoviewClassifier.getConfig()
         return configString

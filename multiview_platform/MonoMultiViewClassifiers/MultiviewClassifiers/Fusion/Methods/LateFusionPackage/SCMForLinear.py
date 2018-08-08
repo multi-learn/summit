@@ -119,12 +119,8 @@ class SCMForLinear(LateFusionClassifier):
         if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         for index, viewIndex in enumerate(viewsIndices):
-            monoviewClassifier = getattr(MonoviewClassifiers, self.monoviewClassifiersNames[index])
-            self.monoviewClassifiers.append(
-                monoviewClassifier.fit(getV(DATASET, viewIndex, trainIndices),
-                                       labels[trainIndices], self.randomState,
-                                       NB_CORES=self.nbCores,
-                                       **self.monoviewClassifiersConfigs[index]))
+            self.monoviewClassifiers[index].fit(getV(DATASET, viewIndex, trainIndices),
+                                       labels[trainIndices])
         self.SCMForLinearFusionFit(DATASET, labels, usedIndices=trainIndices, viewsIndices=viewsIndices)
 
     def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
@@ -184,8 +180,7 @@ class SCMForLinear(LateFusionClassifier):
         configString = "with SCM for linear with max_attributes : " + str(self.maxAttributes) + ", p : " + str(self.p) + \
                        " model_type : " + str(self.modelType) + " order : " + str(self.order)+ " has chosen " + \
                        str(0.1) + " rule(s) \n\t-With monoview classifiers : "
-        for monoviewClassifierConfig, monoviewClassifierName in zip(monoviewClassifiersConfigs,
-                                                                    monoviewClassifiersNames):
-            monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifierName)
-            configString += monoviewClassifierModule.getConfig(monoviewClassifierConfig)
+        for monoviewClassifier in self.monoviewClassifiers:
+
+            configString += monoviewClassifier.getConfig()
         return configString

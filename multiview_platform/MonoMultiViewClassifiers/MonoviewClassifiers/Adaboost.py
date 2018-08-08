@@ -10,7 +10,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, n_estimators=10,
+    def __init__(self, random_state=None, n_estimators=50,
                  base_estimator=None, **kwargs):
         super(Adaboost, self).__init__(
             random_state=random_state,
@@ -26,14 +26,6 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         """Used to know if the classifier can return label probabilities"""
         return True
 
-    def paramsToSrt(self, nIter=1):
-        """Used for weighted linear early fusion to generate random search sets"""
-        paramsSet = []
-        for _ in range(nIter):
-            paramsSet.append({"n_estimators": self.random_state.randint(1, 150),
-                              "base_estimator": None})
-        return paramsSet
-
     def getInterpret(self, directory):
         interpretString = ""
         interpretString += self.getFeatureImportance(directory)
@@ -45,6 +37,15 @@ def formatCmdArgs(args):
     kwargsDict = {'n_estimators': args.Ada_n_est,
                   'base_estimator': DecisionTreeClassifier()}
     return kwargsDict
+
+
+def paramsToSet(nIter, random_state):
+    """Used for weighted linear early fusion to generate random search sets"""
+    paramsSet = []
+    for _ in range(nIter):
+        paramsSet.append({"n_estimators": random_state.randint(1, 500),
+                          "base_estimator": None})
+    return paramsSet
 # def canProbas():
 #     return True
 #

@@ -3,7 +3,7 @@
 
 import numpy as np
 from ....utils.Dataset import getV
-
+from .... import MonoviewClassifiers
 
 class EarlyFusionClassifier(object):
     def __init__(self, randomState, monoviewClassifierName, monoviewClassifierConfig, NB_CORES=1):
@@ -16,8 +16,14 @@ class EarlyFusionClassifier(object):
             monoviewClassifierConfig = dict((str(configIndex), config[0]) for configIndex, config in
                                             enumerate(monoviewClassifierConfig
                                                       ))
+        monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
+        if monoviewClassifierConfig is not None:
+            self.monoviewClassifier = getattr(monoviewClassifierModule, self.monoviewClassifierName)(
+                random_state=randomState, **monoviewClassifierConfig)
+        else:
+            self.monoviewClassifier = getattr(monoviewClassifierModule, self.monoviewClassifierName)(
+                random_state=randomState)
         self.monoviewClassifiersConfig = monoviewClassifierConfig
-        self.monoviewClassifier = None
         self.nbCores = NB_CORES
         self.monoviewData = None
         self.randomState = randomState

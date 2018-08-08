@@ -70,6 +70,9 @@ class WeightedLinear(EarlyFusionClassifier):
             self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig']))
+        self.weights /= float(max(self.weights))
+
+
 
     def fit_hdf5(self, DATASET, labels, trainIndices=None, viewsIndices=None):
         if type(viewsIndices) == type(None):
@@ -78,12 +81,11 @@ class WeightedLinear(EarlyFusionClassifier):
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         self.weights /= float(max(self.weights))
         self.makeMonoviewData_hdf5(DATASET, weights=self.weights, usedIndices=trainIndices, viewsIndices=viewsIndices)
-        monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
-        self.monoviewClassifier = monoviewClassifierModule.fit(self.monoviewData,
-                                                               labels[trainIndices],
-                                                               self.randomState,
-                                                               NB_CORES=self.nbCores,
-                                                               **self.monoviewClassifiersConfig)
+        # monoviewClassifierModule = getattr(MonoviewClassifiers, self.monoviewClassifierName)
+        self.monoviewClassifier.fit(self.monoviewData, labels[trainIndices])
+                                                               # self.randomState,
+                                                               # NB_CORES=self.nbCores,
+                                                               # **self.monoviewClassifiersConfig)
 
     def setParams(self, paramsSet):
         self.weights = paramsSet[0]
@@ -110,8 +112,8 @@ class WeightedLinear(EarlyFusionClassifier):
     def getConfig(self, fusionMethodConfig, monoviewClassifiersNames, monoviewClassifiersConfigs):
         configString = "with weighted concatenation, using weights : " + ", ".join(map(str, self.weights)) + \
                        " with monoview classifier : "
-        monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifiersNames)
-        configString += monoviewClassifierModule.getConfig(self.monoviewClassifiersConfig)
+        # monoviewClassifierModule = getattr(MonoviewClassifiers, monoviewClassifiersNames)
+        configString += self.monoviewClassifier.getConfig()
         return configString
 
     def gridSearch(self, classificationKWARGS):
