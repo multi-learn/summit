@@ -9,6 +9,7 @@ import numpy as np
 from ..utils import HyperParameterSearch
 from ..utils.Dataset import getShape
 from .. import MultiviewClassifiers
+from .MultiviewUtils import MultiviewResult
 
 
 # Author-Info
@@ -157,7 +158,8 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds, nbCor
                 learningRate, name, imagesAnalysis)
     logging.debug("Start:\t Saving preds")
 
-    return CL_type, classificationKWARGS, metricsScores, fullLabels, testLabelsMulticlass
+    return MultiviewResult(CL_type, classificationKWARGS, metricsScores, fullLabels, testLabelsMulticlass)
+    # return CL_type, classificationKWARGS, metricsScores, fullLabels, testLabelsMulticlass
 
 if __name__ == "__main__":
 
