@@ -23,7 +23,9 @@ def genName(config):
         classifierRedNames = [classifierName[:4] for classifierName in config["classifiersNames"]]
         return "Late-" + str(config["fusionMethod"][:4])#+"-"+"-".join(classifierRedNames)
     elif config["fusionType"] == "EarlyFusion":
-        return "Early-" + config["fusionMethod"][:4] + "-" + config["classifiersNames"][:4]
+        monoview_short_name = getattr(getattr(MonoviewClassifiers, config["classifiersNames"]),
+                                         config["classifiersNames"])().get_name_for_fusion()
+        return "Early-" + config["fusionMethod"][:4] + "-" + monoview_short_name
 
 
 def getBenchmark(benchmark, args=None):

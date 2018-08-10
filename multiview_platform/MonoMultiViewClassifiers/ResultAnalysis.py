@@ -425,6 +425,7 @@ def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, cl
             testSTDs = np.std(testScores, axis=1)
             nbResults = len(trainMeans)
             reversedClassifiersDict = dict((value, key) for key, value in classifiersDict.items())
+            # import pdb;pdb.set_trace()
             names = [reversedClassifiersDict[i] for i in range(len(classifiersDict))]
             size=nbResults
             if nbResults<minSize:

@@ -23,6 +23,9 @@ class QarBoostv2(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
     def getInterpret(self, directory):
         return getInterpretBase(self, directory, "QarBoostv2", self.weights_, self.break_cause)
 
+    def get_name_for_fusion(self):
+        return "QBv2"
+
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""

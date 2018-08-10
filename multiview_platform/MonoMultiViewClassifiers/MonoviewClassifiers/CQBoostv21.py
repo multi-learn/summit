@@ -261,6 +261,9 @@ class CQBoostv21(CqBoostClassifierv21, BaseMonoviewClassifier):
     def getInterpret(self, directory):
         return getInterpretBase(self, directory, "CQBoostv21", self.weights_, self.break_cause)
 
+    def get_name_for_fusion(self):
+        return "CQ21"
+
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""

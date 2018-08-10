@@ -23,6 +23,9 @@ class QarBoostNC(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
     def getInterpret(self, directory):
         return getInterpretBase(self, directory, "QarBoostNC", self.weights_, self.break_cause)
 
+    def get_name_for_fusion(self):
+        return "QBNC"
+
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""

@@ -79,6 +79,9 @@ class CQBoostv2(ColumnGenerationClassifierv2, BaseMonoviewClassifier):
     def getInterpret(self, directory):
         return getInterpretBase(self, directory, "CQBoostv2", self.weights_,)
 
+    def get_name_for_fusion(self):
+        return "CQB2"
+
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
