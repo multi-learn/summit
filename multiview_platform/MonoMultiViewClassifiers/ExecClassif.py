@@ -358,7 +358,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=Non
                                     metrics=metrics, nIter=args.CL_HPS_iter, **arguments)]
     logging.debug("Done:\t Multiview benchmark")
 
-    return [flag, resultsMonoview, resultsMultiview]
+    return [flag, resultsMonoview + resultsMultiview]
 
 
 def execBenchmark(nbCores, statsIter, nbMulticlass, benchmarkArgumentsDictionaries, classificationIndices, directories,

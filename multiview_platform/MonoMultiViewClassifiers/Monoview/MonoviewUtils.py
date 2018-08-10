@@ -187,6 +187,8 @@ class MonoviewResult(object):
         self.y_test_multiclass_pred = y_test_multiclass_pred
         self.test_folds_preds = test_folds_preds
 
+    def get_classifier_name(self):
+        return self.classifier_name+"-"+self.view_name
 
 
 

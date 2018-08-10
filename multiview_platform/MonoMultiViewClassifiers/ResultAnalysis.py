@@ -59,65 +59,56 @@ def autolabel(rects, ax, set=1, std=None):
                     ha='center', va='bottom', size="small")
 
 
-def getMetricsScoresBiclass(metrics, monoviewResults, multiviewResults):
+def getMetricsScoresBiclass(metrics, results):
     r"""Used to extract metrics scores in case of biclass classification
 
         Parameters
         ----------
         metrics : list of lists
             The metrics names with configuration metrics[i][0] = name of metric i
-        monoviewResults : list of MonoviewResult objects
+        results : list of MonoviewResult and MultiviewResults objects
             A list containing all the resluts for all the monoview experimentations.
-        set : integer
-            1 means the test scores, anything else means the train score
-        std: None or array
-            The standard deviations in the case of statsIter results.
 
         Returns
         -------
+        metricsScores : dict of dict of list
+        Regroups all the scores for each metrics for each classifier and for the train and test sets.
+        organized as :
+        -`metricScores[metric_name]["classifiersNames"]` is a list of all the classifiers available for this metric,
+        -`metricScores[metric_name]["trainScores"]` is a list of all the available classifiers scores on the train set,
+        -`metricScores[metric_name]["testScores"]` is a list of all the available classifiers scores on the test set.
         """
     metricsScores = {}
+
     for metric in metrics:
         classifiersNames = []
         trainScores = []
         testScores = []
-        for classifierResult in monoviewResults:
+
+        for classifierResult in results:
             trainScores.append(classifierResult.metrics_scores[metric[0]][0])
             testScores.append(classifierResult.metrics_scores[metric[0]][1])
-            classifiersNames.append(classifierResult.classifier_name+"-"+classifierResult.view_name)
-        for classifierResult in multiviewResults:
-            trainScores.append(classifierResult.metrics_scores[metric[0]][0])
-            testScores.append(classifierResult.metrics_scores[metric[0]][1])
-            multiviewClassifierPackage = getattr(MultiviewClassifiers, classifierResult.classifier_name)
-            multiviewClassifierModule = getattr(multiviewClassifierPackage, classifierResult.classifier_name+"Module")
-            classifiersNames.append(multiviewClassifierModule.genName(classifierResult.classifier_config))
+            classifiersNames.append(classifierResult.get_classifier_name())
+
         metricsScores[metric[0]] = {"classifiersNames": classifiersNames,
                                     "trainScores": trainScores,
                                     "testScores": testScores}
     return metricsScores
 
 
-def getExampleErrorsBiclass(usedBenchmarkArgumentDictionary, monoviewResults, multiviewResults):
+def getExampleErrorsBiclass(usedBenchmarkArgumentDictionary, results):
     exampleErrors = {}
     trueLabels = usedBenchmarkArgumentDictionary["labels"]
-    for classifierResult in monoviewResults:
-        classifierName = classifierResult.classifier_name+"-"+classifierResult.view_name
+
+    for classifierResult in results:
+        classifierName = classifierResult.get_classifier_name()
         predictedLabels = classifierResult.full_labels_pred
         errorOnExamples = predictedLabels==trueLabels
         errorOnExamples = errorOnExamples.astype(int)
         unseenExamples = np.where(trueLabels==-100)[0]
         errorOnExamples[unseenExamples]=-100
         exampleErrors[classifierName] = errorOnExamples
-    for classifierResult in multiviewResults:
-        multiviewClassifierPackage = getattr(MultiviewClassifiers, classifierResult.classifier_name)
-        multiviewClassifierModule = getattr(multiviewClassifierPackage, classifierResult.classifier_name+"Module")
-        classifierName = multiviewClassifierModule.genName(classifierResult.classifier_config)
-        predictedLabels = classifierResult.full_labels
-        errorOnExamples = predictedLabels==trueLabels
-        errorOnExamples = errorOnExamples.astype(int)
-        unseenExamples = np.where(trueLabels==-100)[0]
-        errorOnExamples[unseenExamples]=-100
-        exampleErrors[classifierName] = errorOnExamples
+
     return exampleErrors
 
 
@@ -219,8 +210,7 @@ def publishExampleErrors(exampleErrors, directory, databaseName, labelsNames, mi
 def analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics):
     logging.debug("Srart:\t Analzing all biclass resuls")
     biclassResults = [{} for _ in range(statsIter)]
-    for result in results:
-        flag = result[0]
+    for flag, result in results:
         iteridex = flag[0]
         classifierPositive = flag[1][0]
         classifierNegative = flag[1][1]
@@ -229,10 +219,8 @@ def analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics):
         for benchmarkArgumentDictionary in benchmarkArgumentDictionaries:
             if benchmarkArgumentDictionary["flag"]==flag:
                 usedBenchmarkArgumentDictionary = benchmarkArgumentDictionary
-        monoviewResults = result[1]
-        multiviewResults = result[2]
-        metricsScores = getMetricsScoresBiclass(metrics, monoviewResults, multiviewResults)
-        exampleErrors = getExampleErrorsBiclass(usedBenchmarkArgumentDictionary, monoviewResults, multiviewResults)
+        metricsScores = getMetricsScoresBiclass(metrics, result)
+        exampleErrors = getExampleErrorsBiclass(usedBenchmarkArgumentDictionary, result)
         directory = usedBenchmarkArgumentDictionary["directory"]
         databaseName = usedBenchmarkArgumentDictionary["args"].name
         labelsNames = [usedBenchmarkArgumentDictionary["LABELS_DICTIONARY"][0],
@@ -380,15 +368,18 @@ def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamp
                       metrics, classificationIndices, directories):
     """Used to transform one versus one results in multiclass results and to publish it"""
     multiclassResults = [{} for _ in range(statsIter)]
-    for flag, resMono, resMulti in results:
+    
+    for flag, result in results:
         iterIndex = flag[0]
         classifierPositive = flag[1][0]
         classifierNegative = flag[1][1]
+
         for benchmarkArgumentDictionary in benchmarkArgumentDictionaries:
             if benchmarkArgumentDictionary["flag"] == flag:
                 trainIndices, testIndices, testMulticlassIndices = benchmarkArgumentDictionary["classificationIndices"]
-        for classifierResult in resMono:
-            classifierName = classifierResult.classifier_name+"-"+classifierResult.view_name
+
+        for classifierResult in result:
+            classifierName = classifierResult.get_classifier_name()
             if classifierName not in multiclassResults[iterIndex]:
                 multiclassResults[iterIndex][classifierName] = np.zeros((nbExamples, nbLabels),dtype=int)
             for exampleIndex in trainIndices:
@@ -403,31 +394,6 @@ def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamp
                     multiclassResults[iterIndex][classifierName][exampleIndex, classifierPositive] += 1
                 else:
                     multiclassResults[iterIndex][classifierName][exampleIndex, classifierNegative] += 1
-
-        for classifierResult in resMulti:
-            multiviewClassifierPackage = getattr(MultiviewClassifiers, classifierResult.classifier_name)
-            multiviewClassifierModule = getattr(multiviewClassifierPackage, classifierResult.classifier_name+"Module")
-            classifierName = multiviewClassifierModule.genName(classifierResult.classifier_config)
-            if classifierName not in multiclassResults[iterIndex]:
-                multiclassResults[iterIndex][classifierName] = np.zeros((nbExamples,nbLabels),dtype=int)
-            for exampleIndex in trainIndices:
-                label = classifierResult.full_labels[exampleIndex]
-                if label == 1:
-                    multiclassResults[iterIndex][classifierName][exampleIndex, classifierPositive] += 1
-                else:
-                    multiclassResults[iterIndex][classifierName][exampleIndex, classifierNegative] += 1
-            for multiclassIndex, exampleIndex in enumerate(testMulticlassIndices):
-                label = classifierResult.test_labels_multiclass[multiclassIndex]
-                if label == 1:
-                    multiclassResults[iterIndex][classifierName][exampleIndex, classifierPositive] += 1
-                else:
-                    multiclassResults[iterIndex][classifierName][exampleIndex, classifierNegative] += 1
-            # for exampleIndex, label in enumerate(classifierResult[3]):
-            #     if label == 1:
-            #         multiclassResults[iterIndex][classifierName][exampleIndex, classifierPositive] += 1
-            #     else:
-            #         multiclassResults[iterIndex][classifierName][exampleIndex, classifierNegative] += 1
-
 
     for iterIndex, multiclassiterResult in enumerate(multiclassResults):
         for key, value in multiclassiterResult.items():
