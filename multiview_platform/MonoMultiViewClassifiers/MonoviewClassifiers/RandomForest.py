@@ -9,8 +9,8 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, n_estimators=None,
-                 max_depth='gini', criterion='best', **kwargs):
+    def __init__(self, random_state=None, n_estimators=10,
+                 max_depth=None, criterion='gini', **kwargs):
         super(RandomForest, self).__init__(
             n_estimators=n_estimators,
             max_depth=max_depth,
@@ -18,7 +18,7 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
             random_state=random_state
             )
         self.param_names = ["n_estimators", "max_depth", "criterion",]
-        self.classed_params = None
+        self.classed_params = []
         self.distribs = [CustomRandint(low=1, high=300),
                          CustomRandint(low=1, high=300),
                          ["gini", "entropy"], ]

@@ -9,8 +9,8 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 class SGD(SGDClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, loss=None,
-                 penalty='gini', alpha='best', **kwargs):
+    def __init__(self, random_state=None, loss='hinge',
+                 penalty='l2', alpha=0.0001, **kwargs):
         super(SGD, self).__init__(
             loss=loss,
             penalty=penalty,
@@ -18,7 +18,7 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
             random_state=random_state
             )
         self.param_names = ["loss", "penalty", "alpha",]
-        self.classed_params = None
+        self.classed_params = []
         self.distribs = [['log', 'modified_huber'],
                          ["l1", "l2", "elasticnet"],
                          CustomUniform(loc=0, state=1), ]

@@ -49,14 +49,14 @@ def intersect(allClassifersNames, directory, viewsIndices, resultsMonoview, clas
     trainLabels = np.genfromtxt(directory + "train_labels.csv", delimiter=",").astype(np.int16)
     length = len(trainLabels)
     for resultMonoview in resultsMonoview:
-        if resultMonoview[1][0] in classifiersNames[viewsIndices.index(resultMonoview[0])]:
-            classifierIndex = classifiersNames.index(resultMonoview[1][0])
-            wrongSets[resultMonoview[0]][classifierIndex] = np.where(
-                trainLabels + resultMonoview[1][3][classificationIndices[0]] == 1)[0]
+        if resultMonoview.classifier_name in classifiersNames[viewsIndices.index(resultMonoview.view_index)]:
+            classifierIndex = classifiersNames.index(resultMonoview.classifier_name)
+            wrongSets[resultMonoview.view_index][classifierIndex] = np.where(
+                trainLabels + resultMonoview.full_labels_pred[classificationIndices[0]] == 1)[0]
         else:
-            classifiersNames[viewsIndices.index(resultMonoview[0])].append(resultMonoview[1][0])
-            wrongSets[viewsIndices.index(resultMonoview[0])].append(
-                np.where(trainLabels + resultMonoview[1][3][classificationIndices[0]] == 1)[0])
+            classifiersNames[viewsIndices.index(resultMonoview.view_index)].append(resultMonoview.classifier_name)
+            wrongSets[viewsIndices.index(resultMonoview.view_index)].append(
+                np.where(trainLabels + resultMonoview.full_labels_pred[classificationIndices[0]] == 1)[0])
 
     combinations = itertools.combinations_with_replacement(range(len(classifiersNames[0])), nbViews)
     bestLen = length
@@ -76,17 +76,17 @@ def bestScore(allClassifersNames, directory, viewsIndices, resultsMonoview, clas
     nbClassifiers = len(allClassifersNames)
     scores = np.zeros((nbViews, nbClassifiers))
     classifiersNames = [[] for _ in viewsIndices]
-    metricName = resultsMonoview[0][1][2].keys()[0]
+    metricName = resultsMonoview[0].metrics_scores.keys()[0]
     metricModule = getattr(Metrics, metricName)
     if metricModule.getConfig()[-14] == "h":
         betterHigh = True
     else:
         betterHigh = False
     for resultMonoview in resultsMonoview:
-        if resultMonoview[1][0] not in classifiersNames[resultMonoview[0]]:
-            classifiersNames[resultMonoview[0]].append(resultMonoview[1][0])
-        classifierIndex = classifiersNames[resultMonoview[0]].index(resultMonoview[1][0])
-        scores[resultMonoview[0], classifierIndex] = resultMonoview[1][2].values()[0][0]
+        if resultMonoview.classifier_name not in classifiersNames[resultMonoview.view_index]:
+            classifiersNames[resultMonoview.view_index].append(resultMonoview.classifier_name)
+        classifierIndex = classifiersNames[resultMonoview.view_index].index(resultMonoview.classifier_name)
+        scores[resultMonoview.view_index, classifierIndex] = resultMonoview.metrics_scores.values()[0][0]
 
     if betterHigh:
         classifierIndices = np.argmax(scores, axis=1)
@@ -108,8 +108,8 @@ def getConfig(classifiersNames, resultsMonoview, viewsIndices):
     classifiersConfigs = [0 for _ in range(len(classifiersNames))]
     for classifierIndex, classifierName in enumerate(classifiersNames):
         for resultMonoview in resultsMonoview:
-            if resultMonoview[0] == viewsIndices[classifierIndex] and resultMonoview[1][0] == classifierName:
-                classifiersConfigs[classifierIndex] = resultMonoview[1][4]
+            if resultMonoview.view_index == viewsIndices[classifierIndex] and resultMonoview.classifier_name == classifierName:
+                classifiersConfigs[classifierIndex] = resultMonoview.classifier_config
     return classifiersConfigs
 
 

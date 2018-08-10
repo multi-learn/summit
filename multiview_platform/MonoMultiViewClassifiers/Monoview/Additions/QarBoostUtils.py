@@ -13,7 +13,7 @@ from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost
 
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None, random_state=42, self_complemented=True):
+    def __init__(self, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None, random_state=42, self_complemented=True, twice_the_same=False):
         super(ColumnGenerationClassifierQar, self).__init__()
         self.n_max_iterations = n_max_iterations
         self.estimators_generator = estimators_generator
@@ -21,8 +21,11 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.save_iteration_as_hyperparameter_each = save_iteration_as_hyperparameter_each
         self.random_state = random_state
         self.self_complemented =self_complemented
+        self.twice_the_same = twice_the_same
+        self.train_time = 0
 
     def fit(self, X, y):
+        start = time.time()
         if scipy.sparse.issparse(X):
             logging.info('Converting to dense matrix.')
             X = np.array(X.todense())
@@ -59,15 +62,17 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         self.n_total_hypotheses_ = n
         self.n_total_examples = m
+        self.break_cause = " the maximum number of iterations was attained."
 
         for k in range(min(n, self.n_max_iterations if self.n_max_iterations is not None else np.inf)):
             # To choose the first voter, we select the one that has the best margin.
             if k == 0:
                 first_voter_index = self._find_best_margin(y_kernel_matrix)
                 self.chosen_columns_.append(first_voter_index)
+                self.new_voter = self.classification_matrix[:, first_voter_index].reshape((m,1))
 
-                self.previous_vote = self.classification_matrix[:, first_voter_index].reshape((m,1))
-                self.weighted_sum = self.classification_matrix[:, first_voter_index].reshape((m,1))
+                self.previous_vote = self.new_voter
+                self.weighted_sum = self.new_voter
 
                 epsilon = self._compute_epsilon()
                 self.epsilons.append(epsilon)
@@ -88,8 +93,9 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             # Append the weak hypothesis.
             self.chosen_columns_.append(new_voter_index)
+            self.new_voter = self.classification_matrix[:, new_voter_index].reshape((m, 1))
             self.weighted_sum = np.matmul(np.concatenate((self.previous_vote, self.classification_matrix[:, new_voter_index].reshape((m,1))), axis=1),
-                                           sol).reshape((m,1))
+                                          sol).reshape((m,1))
 
             # Generate the new weight for the new voter
             epsilon = self._compute_epsilon()
@@ -117,7 +123,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         self.weights_/=np.sum(self.weights_)
         y[y == -1] = 0
-
+        end = time.time()
+        self.train_time = end - start
         return self
 
     def predict(self, X):
@@ -156,7 +163,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         indices = []
         for hypothese_index, hypothese in enumerate(y_kernel_matrix.transpose()):
             causes = []
-            if hypothese_index not in self.chosen_columns_:
+            if (hypothese_index not in self.chosen_columns_ or self.twice_the_same) and set(self.chosen_columns_)!={hypothese_index}:
                 w = self._solve_two_weights_min_c(hypothese, y)
                 if w[0] != "break":
                     c_borns.append(self._cbound(w[0]))
@@ -177,26 +184,32 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.example_weights = new_weights/np.sum(new_weights)
 
     def _solve_two_weights_min_c(self, next_column, y):
-        """Here we solve the min C-bound problem for two voters and return the best 2-weights array"""
+        """Here we solve the min C-bound problem for two voters and return the best 2-weights array
+        No precalc because longer"""
         m = next_column.shape[0]
         zero_diag = np.ones((m, m)) - np.identity(m)
 
         weighted_previous_sum = np.multiply(np.multiply(y.reshape((m, 1)), self.previous_vote.reshape((m, 1))), self.example_weights.reshape((m,1)))
         weighted_next_column = np.multiply(next_column.reshape((m,1)), self.example_weights.reshape((m,1)))
-
-        mat_prev = np.repeat(weighted_previous_sum, m, axis=1) * zero_diag
-        mat_next = np.repeat(weighted_next_column, m, axis=1) * zero_diag
+        #
+        # mat_prev = np.repeat(weighted_previous_sum, m, axis=1) * zero_diag
+        # mat_next = np.repeat(weighted_next_column, m, axis=1) * zero_diag
 
         self.B2 = np.sum((weighted_previous_sum - weighted_next_column) ** 2)
         self.B1 = np.sum(2 * weighted_next_column * (weighted_previous_sum - 2 * weighted_next_column * weighted_next_column))
         self.B0 = np.sum(weighted_next_column * weighted_next_column)
 
-        self.A2 = self.B2 + np.sum((mat_prev - mat_next) * np.transpose(mat_prev - mat_next))
-        self.A1 = self.B1 + np.sum(mat_prev * np.transpose(mat_next) - mat_next * np.transpose(mat_prev) - 2 * mat_next * np.transpose(mat_next))
-        self.A0 = self.B0 + np.sum(mat_next * np.transpose(mat_next))
-        C2 = (self.A1 * self.B2 - self.A2 * self.B1)
-        C1 = 2 * (self.A0 * self.B2 - self.A2 * self.B0)
-        C0 = self.A0 * self.B1 - self.A1 * self.B0
+        M2 = np.sum(np.multiply(np.matmul((weighted_previous_sum - weighted_next_column), np.transpose(weighted_previous_sum - weighted_next_column)), zero_diag))
+        M1 = np.sum(np.multiply(np.matmul(weighted_previous_sum, np.transpose(weighted_next_column)) - np.matmul(weighted_next_column, np.transpose(weighted_previous_sum)) - 2*np.matmul(weighted_next_column, np.transpose(weighted_next_column)), zero_diag))
+        M0 = np.sum(np.multiply(np.matmul(weighted_next_column, np.transpose(weighted_next_column)), zero_diag))
+
+        self.A2 = self.B2 + M2
+        self.A1 = self.B1 + M1
+        self.A0 = self.B0 + M0
+
+        C2 = (M1 * self.B2 - M2 * self.B1)
+        C1 = 2 * (M0 * self.B2 - M2 * self.B0)
+        C0 = M0 * self.B1 - M1 * self.B0
 
         if C2 == 0:
             if C1 == 0:
@@ -250,16 +263,24 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         values = np.array([self._cbound(sol) for sol in sols])
         return sols[np.argmin(values)]
 
-
-
-class QarBoostClassifier(ColumnGenerationClassifierQar):
-    def __init__(self, n_max_iterations=None, estimators_generator=None, save_iteration_as_hyperparameter_each=None, random_state=42, self_complemented=True):
-        super(QarBoostClassifier, self).__init__(n_max_iterations, estimators_generator, dual_constraint_rhs=0,
-                                                   save_iteration_as_hyperparameter_each=save_iteration_as_hyperparameter_each, random_state=random_state, self_complemente=self_complemented)
-        self.train_time = 0
-
     def _initialize_alphas(self, n_examples):
         return 1.0 / n_examples * np.ones((n_examples,))
+
+
+# def to_mat(vect, n_cols):
+#     if vect.shape[1] == 1:
+#         return np.array([vect for _ in range(n_cols)])
+#     else:
+#         col_vect = np.reshape(vect, (vect.shape[0], 1))
+#         return np.array([col_vect for _ in range(n_cols)])
+# class QarBoostClassifier(ColumnGenerationClassifierQar):
+#     def __init__(self, n_max_iterations=None, estimators_generator=None, save_iteration_as_hyperparameter_each=None, random_state=42, self_complemented=True):
+#         super(QarBoostClassifier, self).__init__(n_max_iterations, estimators_generator, dual_constraint_rhs=0,
+#                                                    save_iteration_as_hyperparameter_each=save_iteration_as_hyperparameter_each, random_state=random_state, self_complemente=self_complemented)
+#
+#
+#     def _initialize_alphas(self, n_examples):
+#         return 1.0 / n_examples * np.ones((n_examples,))
 
 
 

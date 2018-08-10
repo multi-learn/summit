@@ -89,11 +89,17 @@ def genHeatMaps(params, scoresArray, outputFileName):
     nbParams = len(params)
     if nbParams > 2:
         combinations = itertools.combinations(range(nbParams), 2)
-    else:
+    elif nbParams==2:
         combinations = [(0, 1)]
+    else:
+        combinations = [()]
     for combination in combinations:
-        paramName1, paramArray1 = params[combination[0]]
-        paramName2, paramArray2 = params[combination[1]]
+        if combination:
+            paramName1, paramArray1 = params[combination[0]]
+            paramName2, paramArray2 = params[combination[1]]
+        else:
+            paramName1, paramArray1 = params[0]
+            paramName2, paramArray2 = ("Control", np.array([0]))
 
         paramArray1Set = np.sort(np.array(list(set(paramArray1))))
         paramArray2Set = np.sort(np.array(list(set(paramArray2))))

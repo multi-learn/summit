@@ -19,26 +19,42 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
 
     estimator = getattr(classifierModule, CL_type)(randomState)
     params_dict = estimator.genDistribs()
+    if params_dict:
+        nb_possible_combinations = compute_possible_combinations(params_dict)
+        metricModule = getattr(Metrics, metric[0])
+        if metric[1] is not None:
+            metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+        else:
+            metricKWARGS = {}
+        scorer = metricModule.get_scorer(**metricKWARGS)
+        if nIter > nb_possible_combinations:
+            nIter = nb_possible_combinations
+        randomSearch = RandomizedSearchCV(estimator, n_iter=nIter, param_distributions=params_dict, refit=True,
+                                          n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
+        detector = randomSearch.fit(X_train, y_train)
 
-    metricModule = getattr(Metrics, metric[0])
-    if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+        bestParams = estimator.genBestParams(detector)
+
+        scoresArray = detector.cv_results_['mean_test_score']
+        params = estimator.genParamsFromDetector(detector)
+
+        HyperParameterSearch.genHeatMaps(params, scoresArray, outputFileName)
+        best_estimator = detector.best_estimator_
     else:
-        metricKWARGS = {}
-    scorer = metricModule.get_scorer(**metricKWARGS)
-
-    randomSearch = RandomizedSearchCV(estimator, n_iter=nIter, param_distributions=params_dict, refit=True,
-                                      n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
-    detector = randomSearch.fit(X_train, y_train)
-
-    bestParams = estimator.genBestParams(detector)
-
-    scoresArray = detector.cv_results_['mean_test_score']
-    params = estimator.genParamsFromDetector(detector)
-
-    HyperParameterSearch.genHeatMaps(params, scoresArray, outputFileName)
-    testFoldsPreds = genTestFoldsPreds(X_train, y_train, KFolds, detector.best_estimator_)
+        best_estimator = estimator
+        bestParams = {}
+    testFoldsPreds = genTestFoldsPreds(X_train, y_train, KFolds, best_estimator)
     return bestParams, testFoldsPreds
+
+
+def compute_possible_combinations(params_dict):
+    n_possibs = np.ones(len(params_dict))*np.inf
+    for value_index, value in enumerate(params_dict.values()):
+        if type(value) == list:
+            n_possibs[value_index] = len(value)
+        elif isinstance(value, CustomRandint):
+            n_possibs[value_index] = value.get_nb_possibilities()
+    return np.prod(n_possibs)
 
 
 def genTestFoldsPreds(X_train, y_train, KFolds, estimator):
@@ -70,6 +86,9 @@ class CustomRandint:
         else:
             return randinteger
 
+    def get_nb_possibilities(self):
+        return self.randint.b-self.randint.a
+
 
 class CustomUniform:
     """Used as a distribution returning a float between loc and loc + scale..
@@ -93,18 +112,24 @@ class BaseMonoviewClassifier(object):
         return dict((param_name, detector.best_params_[param_name]) for param_name in self.param_names)
 
     def genParamsFromDetector(self, detector):
-        if self.classed_params is not None:
+        if self.classed_params:
             classed_dict = dict((classed_param, get_names(detector.cv_results_["param_"+classed_param]))
                                 for classed_param in self.classed_params)
-        return [(param_name, np.array(detector.cv_results_["param_"+param_name]))
-                    if param_name not in self.classed_params else (param_name, classed_dict[param_name])
-                    for param_name in self.param_names]
+        if self.param_names:
+            return [(param_name, np.array(detector.cv_results_["param_"+param_name]))
+                        if param_name not in self.classed_params else (param_name, classed_dict[param_name])
+                        for param_name in self.param_names]
+        else:
+            return [()]
 
     def genDistribs(self):
         return dict((param_name, distrib) for param_name, distrib in zip(self.param_names, self.distribs))
 
     def getConfig(self):
-        return "\n\t\t- "+self.__class__.__name__+ "with "+ ", ".join([ param_name+" : " + self.to_str(param_name) for param_name in self.param_names])
+        if self.param_names:
+            return "\n\t\t- "+self.__class__.__name__+ "with "+ ", ".join([ param_name+" : " + self.to_str(param_name) for param_name in self.param_names])
+        else:
+            return "\n\t\t- "+self.__class__.__name__+ "with no config."
 
     def to_str(self, param_name):
         if param_name in self.weird_strings:
@@ -148,6 +173,21 @@ def get_names(classed_list):
 def percent(x, pos):
     """Used to print percentage of importance on the y axis"""
     return '%1.1f %%' % (x * 100)
+
+
+class MonoviewResult(object):
+    def __init__(self, view_index, classifier_name, view_name, metrics_scores, full_labels_pred,
+                 classifier_config, y_test_multiclass_pred, test_folds_preds):
+        self.view_index = view_index
+        self.classifier_name = classifier_name
+        self.view_name = view_name
+        self.metrics_scores = metrics_scores
+        self.full_labels_pred = full_labels_pred
+        self.classifier_config = classifier_config
+        self.y_test_multiclass_pred = y_test_multiclass_pred
+        self.test_folds_preds = test_folds_preds
+
+
 
 
 # def isUseful(labelSupports, index, CLASS_LABELS, labelDict):

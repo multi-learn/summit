@@ -13,29 +13,29 @@ class Test_doubleFaultRatio(unittest.TestCase):
         cls.allClassifiersNames = ["SCM", "SVM", "DT"]
         cls.directory = ""
         cls.viewsIndices = [0,1]
-        cls.resultsMonoview = [[0, ["SCM", "", "", "", "", "", np.array([cls.randomState.random_integers(0,1,6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+        cls.resultsMonoview = [[0, ["SCM", "", "", "", "", "", np.array([cls.randomState.randint(0,2,6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [0, ["SVM", "", "", "", "", "", np.array([cls.randomState.random_integers(0,1,6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+                               [0, ["SVM", "", "", "", "", "", np.array([cls.randomState.randint(0,2,6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [0, ["DT", "", "", "", "", "", np.array([cls.randomState.random_integers(0,1,6),
-                                                                        cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1,6)])
+                               [0, ["DT", "", "", "", "", "", np.array([cls.randomState.randint(0,2,6),
+                                                                        cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2,6)])
                                     ]],
-                               [1, ["SCM", "", "", "", "", "", np.array([cls.randomState.random_integers(0,1,6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+                               [1, ["SCM", "", "", "", "", "", np.array([cls.randomState.randint(0,2,6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [1, ["SVM", "", "", "", "", "", np.array([cls.randomState.random_integers(0,1,6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+                               [1, ["SVM", "", "", "", "", "", np.array([cls.randomState.randint(0,2,6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [1, ["DT", "", "", "", "", "", np.array([cls.randomState.random_integers(0,1,6),
-                                                                        cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1, 6)])
+                               [1, ["DT", "", "", "", "", "", np.array([cls.randomState.randint(0,2,6),
+                                                                        cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2, 6)])
                                     ]]
                                ]
         cls.classificationIndices = []
@@ -51,29 +51,29 @@ class Test_doubleFaultRatio(unittest.TestCase):
 
     def test_viewsIndices(cls):
         cls.viewsIndices = [0,6]
-        cls.resultsMonoview = [[0, ["SCM", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+        cls.resultsMonoview = [[0, ["SCM", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [0, ["SVM", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+                               [0, ["SVM", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [0, ["DT", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1, 6)])
+                               [0, ["DT", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [6, ["SCM", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+                               [6, ["SCM", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [6, ["SVM", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+                               [6, ["SVM", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [6, ["DT", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1, 6)])
+                               [6, ["DT", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2, 6)])
                                     ]]
                                ]
         bestCombi, disagreement = diversity_utils.couple_div_measure(cls.allClassifiersNames, cls.viewsIndices,
@@ -84,41 +84,41 @@ class Test_doubleFaultRatio(unittest.TestCase):
 
     def test_multipleViews(cls):
         cls.viewsIndices = [0, 6, 18]
-        cls.resultsMonoview = [[0, ["SCM", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+        cls.resultsMonoview = [[0, ["SCM", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [0, ["SVM", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+                               [0, ["SVM", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [0, ["DT", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1, 6)])
+                               [0, ["DT", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [6, ["SCM", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+                               [6, ["SCM", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [6, ["SVM", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+                               [6, ["SVM", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [6, ["DT", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1, 6)])
+                               [6, ["DT", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [18, ["SCM", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+                               [18, ["SCM", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [18, ["SVM", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6),
-                                                                         cls.randomState.random_integers(0, 1, 6)])
+                               [18, ["SVM", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6),
+                                                                         cls.randomState.randint(0,2, 6)])
                                     ]],
-                               [18, ["DT", "", "", "", "", "", np.array([cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1, 6),
-                                                                        cls.randomState.random_integers(0, 1, 6)])
+                               [18, ["DT", "", "", "", "", "", np.array([cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2, 6),
+                                                                        cls.randomState.randint(0,2, 6)])
                                     ]]
                                ]
         bestCombi, disagreement = diversity_utils.couple_div_measure(cls.allClassifiersNames, cls.viewsIndices,

@@ -80,8 +80,8 @@ def genMulticlassLabels(labels, multiclassMethod, splits):
 
 def genMulticlassMonoviewDecision(monoviewResult, classificationIndices):
     learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
-    multiclassMonoviewDecisions = monoviewResult[1][3]
-    multiclassMonoviewDecisions[testIndicesMulticlass] = monoviewResult[1][5]
+    multiclassMonoviewDecisions = monoviewResult.full_labels_pred
+    multiclassMonoviewDecisions[testIndicesMulticlass] = monoviewResult.y_test_multiclass_pred
     return multiclassMonoviewDecisions
 
 

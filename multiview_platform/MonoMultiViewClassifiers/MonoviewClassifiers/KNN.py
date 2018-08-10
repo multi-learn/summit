@@ -9,7 +9,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, n_neighbors=50,
+    def __init__(self, random_state=None, n_neighbors=5,
                  weights='uniform', algorithm='auto', p=2, **kwargs):
         super(KNN, self).__init__(
             n_neighbors=n_neighbors,
@@ -18,7 +18,7 @@ class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
             p=p
             )
         self.param_names = ["n_neighbors", "weights", "algorithm", "p"]
-        self.classed_params = None
+        self.classed_params = []
         self.distribs = [CustomRandint(low=1, high=20), ["uniform", "distance"],
                          ["auto", "ball_tree", "kd_tree", "brute"], [1, 2]]
         self.weird_strings = {}

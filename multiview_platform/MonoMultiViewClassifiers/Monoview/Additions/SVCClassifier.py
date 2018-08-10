@@ -12,7 +12,7 @@ class SVCClassifier(SVC):
             max_iter=1000,
             random_state=random_state
             )
-        self.classed_params = None
+        self.classed_params = []
         self.weird_strings = {}
 
     def canProbas(self):

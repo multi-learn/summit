@@ -271,8 +271,7 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, class
     logging.debug("Done:\t Multiview arguments initialization")
 
     logging.debug("Start:\t Multiview benchmark")
-    resultsMultiview = []
-    resultsMultiview += [
+    resultsMultiview = [
         ExecMultiview_multicore(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
                                 args.pathF, LABELS_DICTIONARY, randomState, labels, hyperParamSearch=hyperParamSearch,
                                 metrics=metrics, nIter=args.CL_HPS_iter, **arguments)
@@ -406,7 +405,6 @@ def execBenchmark(nbCores, statsIter, nbMulticlass, benchmarkArgumentsDictionari
     results : list of lists
         The results of the benchmark.
     """
-    # TODO :  find a way to flag
     logging.debug("Start:\t Executing all the needed biclass benchmarks")
     results = []
     if nbCores > 1:

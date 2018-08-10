@@ -9,9 +9,9 @@ class Test_entropy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.classifiersDecisions = np.array([
-            [np.random.random_integers(0,1,(2,5)), [[0,0,1,0,1], [0,1,0,1,0]], np.random.random_integers(0,1,(2,5)), np.random.random_integers(0,1,(2,5)), np.random.random_integers(0,1,(2,5))],
-            [np.random.random_integers(0, 1, (2, 5)), np.random.random_integers(0, 1, (2, 5)), np.random.random_integers(0, 1, (2, 5)), [[0, 0, 1, 1, 0], [0, 1, 0, 1, 0]], np.random.random_integers(0, 1, (2, 5))],
-            [np.random.random_integers(0, 1, (2, 5)), np.random.random_integers(0, 1, (2, 5)), np.random.random_integers(0, 1, (2, 5)), np.random.random_integers(0, 1, (2, 5)), [[0, 1, 1, 1, 1], [0, 1, 0, 1, 0]]],
+            [np.random.randint(0,2,(2,5)), [[0,0,1,0,1], [0,1,0,1,0]], np.random.randint(0,2,(2,5)), np.random.randint(0,2,(2,5)), np.random.randint(0,2,(2,5))],
+            [np.random.randint(0,2, (2, 5)), np.random.randint(0,2, (2, 5)), np.random.randint(0,2, (2, 5)), [[0, 0, 1, 1, 0], [0, 1, 0, 1, 0]], np.random.randint(0,2, (2, 5))],
+            [np.random.randint(0,2, (2, 5)), np.random.randint(0,2, (2, 5)), np.random.randint(0,2, (2, 5)), np.random.randint(0,2, (2, 5)), [[0, 1, 1, 1, 1], [0, 1, 0, 1, 0]]],
             ])
         cls.combination = [1,3,4]
         cls.foldsGroudTruth = np.array([[1,1,0,0,1], [0,1,0,1,0]])

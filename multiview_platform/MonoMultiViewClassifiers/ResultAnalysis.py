@@ -25,7 +25,22 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 
 def autolabel(rects, ax, set=1, std=None):
-    """Used to print scores on top of the bars"""
+    r"""Used to print the score below the bars.
+
+    Parameters
+    ----------
+    rects : pyplot bar object
+        THe bars.
+    ax : pyplot ax object
+        The ax.
+    set : integer
+        1 means the test scores, anything else means the train score
+    std: None or array
+        The standard deviations in the case of statsIter results.
+
+    Returns
+    -------
+    """
     if set == 1:
         text_height = -0.05
         weight = "bold"
@@ -45,6 +60,22 @@ def autolabel(rects, ax, set=1, std=None):
 
 
 def getMetricsScoresBiclass(metrics, monoviewResults, multiviewResults):
+    r"""Used to extract metrics scores in case of biclass classification
+
+        Parameters
+        ----------
+        metrics : list of lists
+            The metrics names with configuration metrics[i][0] = name of metric i
+        monoviewResults : list of
+            The ax.
+        set : integer
+            1 means the test scores, anything else means the train score
+        std: None or array
+            The standard deviations in the case of statsIter results.
+
+        Returns
+        -------
+        """
     metricsScores = {}
     for metric in metrics:
         classifiersNames = []
@@ -194,6 +225,7 @@ def analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics):
         classifierPositive = flag[1][0]
         classifierNegative = flag[1][1]
         biclassResults[iteridex][str(classifierPositive) + str(classifierNegative)] = {}
+
         for benchmarkArgumentDictionary in benchmarkArgumentDictionaries:
             if benchmarkArgumentDictionary["flag"]==flag:
                 usedBenchmarkArgumentDictionary = benchmarkArgumentDictionary

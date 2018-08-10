@@ -14,9 +14,9 @@ def getBenchmark(benchmark, args=None):
 
 def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview, classificationIndices):
     argumentsList = []
-    multiclass_preds = [monoviewResult[1][5] for monoviewResult in resultsMonoview]
+    multiclass_preds = [monoviewResult.y_test_multiclass_pred for monoviewResult in resultsMonoview]
     if isBiclass(multiclass_preds):
-        monoviewDecisions = np.array([monoviewResult[1][3] for monoviewResult in resultsMonoview])
+        monoviewDecisions = np.array([monoviewResult.full_labels_pred for monoviewResult in resultsMonoview])
     else:
         monoviewDecisions = np.array([genMulticlassMonoviewDecision(monoviewResult, classificationIndices) for monoviewResult in resultsMonoview])
     if len(args.FLF_weights) == 0:

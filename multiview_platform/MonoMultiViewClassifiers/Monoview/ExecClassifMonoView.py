@@ -102,7 +102,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
                                                             clKWARGS, labelsNames, X.shape,
                                                             y_train, y_train_pred, y_test, y_test_pred, t_end,
                                                             randomState, classifier, outputFileName)
-    cl_desc = [value for key, value in sorted(clKWARGS.items())]
+    # cl_desc = [value for key, value in sorted(clKWARGS.items())]
     logging.debug("Done:\t Getting Results")
 
     logging.debug("Start:\t Saving preds")
@@ -112,7 +112,8 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     viewIndex = args["viewIndex"]
     if testFoldsPreds is None:
         testFoldsPreds = y_train_pred
-    return viewIndex, [CL_type, cl_desc + [feat], metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
+    return MonoviewUtils.MonoviewResult(viewIndex, CL_type, feat, metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds)
+    # return viewIndex, [CL_type, feat, metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
 
 
 def initConstants(args, X, classificationIndices, labelsNames, name, directory):
@@ -146,7 +147,7 @@ def initTrainTest(X, Y, classificationIndices):
     trainIndices, testIndices, testIndicesMulticlass = classificationIndices
     X_train = extractSubset(X, trainIndices)
     X_test = extractSubset(X, testIndices)
-    if testIndicesMulticlass != []:
+    if np.array(testIndicesMulticlass).size != 0 :
         X_test_multiclass = extractSubset(X, testIndicesMulticlass)
     else:
         X_test_multiclass = []

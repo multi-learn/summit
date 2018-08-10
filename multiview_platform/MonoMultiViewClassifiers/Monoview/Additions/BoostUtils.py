@@ -40,7 +40,9 @@ class DecisionStumpClassifier(BaseEstimator, ClassifierMixin):
         self.le_.fit(self.classes_)
         self.classes_ = self.le_.classes_
 
-        assert len(self.classes_) == 2, "DecisionStumpsVoter only supports binary classification"
+        if not len(self.classes_) == 2:
+            raise ValueError('DecisionStumpsVoter only supports binary classification')
+        # assert len(self.classes_) == 2, "DecisionStumpsVoter only supports binary classification"
         return self
 
     def predict(self, X):
@@ -155,11 +157,12 @@ class StumpsClassifiersGenerator(ClassifiersGenerator):
         Whether or not a binary complement voter must be generated for each voter. Defaults to False.
 
     """
-    def __init__(self, n_stumps_per_attribute=10, self_complemented=False):
+    def __init__(self, n_stumps_per_attribute=10, self_complemented=False, check_diff=True):
         super(StumpsClassifiersGenerator, self).__init__(self_complemented)
         self.n_stumps_per_attribute = n_stumps_per_attribute
+        self.check_diff = check_diff
 
-    def fit(self, X, y):
+    def fit(self, X, y=None):
         """Fits Decision Stump voters on a training set.
 
         Parameters
@@ -177,15 +180,40 @@ class StumpsClassifiersGenerator(ClassifiersGenerator):
         minimums = np.min(X, axis=0)
         maximums = np.max(X, axis=0)
         ranges = (maximums - minimums) / (self.n_stumps_per_attribute + 1)
+        if self.check_diff:
+            nb_differents = [np.unique(col) for col in np.transpose(X)]
+            self.estimators_ = []
+            for i in range(X.shape[1]):
+                nb_different = nb_differents[i].shape[0]
+                different = nb_differents[i]
+                if nb_different-1 < self.n_stumps_per_attribute:
+                    self.estimators_ += [DecisionStumpClassifier(i,
+                                                                 (different[stump_number]+different[
+                                                                     stump_number+1])/2, 1).fit(X, y)
+                                        for stump_number in range(nb_different-1)]
+                    if self.self_complemented:
+                        self.estimators_ += [DecisionStumpClassifier(i,
+                                                                     (different[stump_number] + different[
+                                                                         stump_number + 1]) / 2, -1).fit(X, y)
+                                             for stump_number in range(nb_different-1)]
+                else:
+                    self.estimators_ += [DecisionStumpClassifier(i, minimums[i] + ranges[i] * stump_number, 1).fit(X, y)
+                                        for stump_number in range(1, self.n_stumps_per_attribute + 1)
+                                        if ranges[i] != 0]
 
-        self.estimators_ = [DecisionStumpClassifier(i, minimums[i] + ranges[i] * stump_number, 1).fit(X, y)
-                            for i in range(X.shape[1]) for stump_number in range(1, self.n_stumps_per_attribute + 1)
-                            if ranges[i] != 0]
+                    if self.self_complemented:
+                        self.estimators_ += [DecisionStumpClassifier(i, minimums[i] + ranges[i] * stump_number, -1).fit(X, y)
+                                             for stump_number in range(1, self.n_stumps_per_attribute + 1)
+                                             if ranges[i] != 0]
+        else:
+            self.estimators_ = [DecisionStumpClassifier(i, minimums[i] + ranges[i] * stump_number, 1).fit(X, y)
+                                for i in range(X.shape[1]) for stump_number in range(1, self.n_stumps_per_attribute + 1)
+                                if ranges[i] != 0]
 
-        if self.self_complemented:
-            self.estimators_ += [DecisionStumpClassifier(i, minimums[i] + ranges[i] * stump_number, -1).fit(X, y)
-                                 for i in range(X.shape[1]) for stump_number in range(1, self.n_stumps_per_attribute + 1)
-                                 if ranges[i] != 0]
+            if self.self_complemented:
+                self.estimators_ += [DecisionStumpClassifier(i, minimums[i] + ranges[i] * stump_number, -1).fit(X, y)
+                                     for i in range(X.shape[1]) for stump_number in range(1, self.n_stumps_per_attribute + 1)
+                                     if ranges[i] != 0]
 
         self.estimators_ = np.asarray(self.estimators_)
         return self

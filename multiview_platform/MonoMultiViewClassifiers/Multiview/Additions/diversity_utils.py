@@ -9,6 +9,7 @@ from ...utils.Multiclass import isBiclass, genMulticlassMonoviewDecision
 def getClassifiersDecisions(allClassifersNames, viewsIndices, resultsMonoview):
     """
     This function gets the monoview classifiers decisions from resultsMonoview.
+    If no HP optimization is done, there is just one fold, the training set.
     The classifiersDecisions variable is ordered as :
     classifiersDecisions[viewIndex, classifierIndex, foldIndex, exampleIndex]
     And the classifiersNames variable is ordered as :
@@ -17,41 +18,42 @@ def getClassifiersDecisions(allClassifersNames, viewsIndices, resultsMonoview):
     nbViews = len(viewsIndices)
     nbClassifiers = len(allClassifersNames)
     classifiersNames = [[] for _ in viewsIndices]
-    if len(resultsMonoview[0][1][6].shape) is not 1:
-        nbFolds = resultsMonoview[0][1][6].shape[0]
-        foldsLen = resultsMonoview[0][1][6].shape[1]
-        classifiersDecisions = np.zeros((nbViews, nbClassifiers, nbFolds, foldsLen))
-
-        for resultMonoview in resultsMonoview:
-            if resultMonoview[1][0] in classifiersNames[viewsIndices.index(resultMonoview[0])]:
-                pass
-            else:
-                classifiersNames[viewsIndices.index(resultMonoview[0])].append(resultMonoview[1][0])
-            classifierIndex = classifiersNames[viewsIndices.index(resultMonoview[0])].index(resultMonoview[1][0])
-            classifiersDecisions[viewsIndices.index(resultMonoview[0]), classifierIndex] = resultMonoview[1][6]
+    more_than_one_fold = len(resultsMonoview[0].test_folds_preds.shape) is not 1
+    if more_than_one_fold:
+        nbFolds = resultsMonoview[0].test_folds_preds.shape[0]
+        foldsLen = resultsMonoview[0].test_folds_preds.shape[1]
     else:
-        train_len = resultsMonoview[0][1][6].shape[0]
-        classifiersDecisions = np.zeros((nbViews, nbClassifiers, 1, train_len))
-        for resultMonoview in resultsMonoview:
-            if resultMonoview[1][0] in classifiersNames[viewsIndices.index(resultMonoview[0])]:
-                pass
-            else:
-                classifiersNames[viewsIndices.index(resultMonoview[0])].append(resultMonoview[1][0])
-            classifierIndex = classifiersNames[viewsIndices.index(resultMonoview[0])].index(resultMonoview[1][0])
-            classifiersDecisions[viewsIndices.index(resultMonoview[0]), classifierIndex] = resultMonoview[1][6]
+        nbFolds = 1
+        foldsLen = resultsMonoview[0].test_folds_preds.shape[0]
+
+    classifiersDecisions = np.zeros((nbViews, nbClassifiers, nbFolds, foldsLen))
+
+    for resultMonoview in resultsMonoview:
+        if resultMonoview.classifier_name in classifiersNames[viewsIndices.index(resultMonoview.view_index)]:
+            pass
+        else:
+            classifiersNames[viewsIndices.index(resultMonoview.view_index)].append(resultMonoview.classifier_name)
+        classifierIndex = classifiersNames[viewsIndices.index(resultMonoview.view_index)].index(resultMonoview.classifier_name)
+        classifiersDecisions[viewsIndices.index(resultMonoview.view_index), classifierIndex] = resultMonoview.test_folds_preds
+    # else:
+    #     train_len = resultsMonoview[0].test_folds_preds.shape[0]
+    #     classifiersDecisions = np.zeros((nbViews, nbClassifiers, 1, train_len))
+    #     for resultMonoview in resultsMonoview:
+    #         if resultMonoview.classifier_name in classifiersNames[viewsIndices.index(resultMonoview[0])]:
+    #             pass
+    #         else:
+    #             classifiersNames[viewsIndices.index(resultMonoview[0])].append(resultMonoview[1][0])
+    #         classifierIndex = classifiersNames[viewsIndices.index(resultMonoview[0])].index(resultMonoview[1][0])
+    #         classifiersDecisions[viewsIndices.index(resultMonoview[0]), classifierIndex] = resultMonoview[1][6]
     return classifiersDecisions, classifiersNames
 
 
-def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measurement, foldsGroudTruth):
+def couple_div_measure(classifiersNames, classifiersDecisions, measurement, foldsGroudTruth):
     """
     This function is used to get the max of a couple diversity measurement,passed as an argument
     It generates all possible combinations and all the couples to estimate the diversity on a combination
     The best combination is the one that maximize the measurement.
     """
-
-    classifiersDecisions, classifiersNames = getClassifiersDecisions(allClassifersNames,
-                                                                                     viewsIndices,
-                                                                                     resultsMonoview)
 
     nbViews, nbClassifiers, nbFolds, foldsLen = classifiersDecisions.shape
     combinations = itertools.combinations_with_replacement(range(nbClassifiers), nbViews)
@@ -78,15 +80,13 @@ def couple_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
     return [classifiersNames[viewIndex][index] for viewIndex, index in enumerate(bestCombination)], div_measure[bestCombiIndex]
 
 
-def global_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measurement, foldsGroudTruth):
+def global_div_measure(classifiersNames, classifiersDecisions, measurement, foldsGroudTruth):
     """
     This function is used to get the max of a diversity measurement,passed as an argument
     It generates all possible combinations to estimate the diversity on a combination
     The best combination is the one that maximize the measurement.
     """
-    classifiersDecisions, classifiersNames = getClassifiersDecisions(allClassifersNames,
-                                                                     viewsIndices,
-                                                                     resultsMonoview)
+
 
     nbViews, nbClassifiers, nbFolds, foldsLen = classifiersDecisions.shape
     combinations = itertools.combinations_with_replacement(range(nbClassifiers), nbViews)
@@ -104,14 +104,11 @@ def global_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measur
         bestCombiIndex]
 
 
-def CQ_div_measure(allClassifersNames, viewsIndices, resultsMonoview, measurement, foldsGroudTruth):
+def CQ_div_measure(classifiersNames, classifiersDecisions, measurement, foldsGroudTruth):
     """
     This function is used to measure a pseudo-CQ measurement based on the minCq algorithm.
     It's a mix between couple_div_measure and global_div_measure that uses multiple measurements.
     """
-    classifiersDecisions, classifiersNames = getClassifiersDecisions(allClassifersNames,
-                                                                     viewsIndices,
-                                                                     resultsMonoview)
     nbViews, nbClassifiers, nbFolds, foldsLen = classifiersDecisions.shape
     combinations = itertools.combinations_with_replacement(range(nbClassifiers), nbViews)
     nbCombinations = int(
@@ -163,29 +160,32 @@ def getFoldsGroundTruth(directory, folds=True):
 def getArgs(args, benchmark, views, viewsIndices, randomState,
             directory, resultsMonoview, classificationIndices, measurement, name):
     """This function is a general function to get the args for all the measurements used"""
-    if len(resultsMonoview[0][1][6].shape) is not 1:
+    if len(resultsMonoview[0].test_folds_preds.shape) is not 1:
         foldsGroundTruth = getFoldsGroundTruth(directory, folds=True)
     else:
         foldsGroundTruth = getFoldsGroundTruth(directory, folds=False)
     monoviewClassifierModulesNames = benchmark["Monoview"]
+    classifiersDecisions, classifiersNames = getClassifiersDecisions(monoviewClassifierModulesNames,
+                                                                     viewsIndices,
+                                                                     resultsMonoview)
     if name in ['DisagreeFusion', 'DoubleFaultFusion']:
-        classifiersNames, div_measure = couple_div_measure(monoviewClassifierModulesNames,
-                                            viewsIndices, resultsMonoview, measurement, foldsGroundTruth)
+        classifiersNames, div_measure = couple_div_measure(classifiersNames, classifiersDecisions,
+                                                           measurement, foldsGroundTruth)
     elif name == "PseudoCQFusion":
-        classifiersNames, div_measure = CQ_div_measure(monoviewClassifierModulesNames,
-                                            viewsIndices, resultsMonoview, measurement, foldsGroundTruth)
+        classifiersNames, div_measure = CQ_div_measure(classifiersNames, classifiersDecisions,
+                                                           measurement, foldsGroundTruth)
     else:
-        classifiersNames, div_measure = global_div_measure(monoviewClassifierModulesNames,
-                                            viewsIndices, resultsMonoview, measurement, foldsGroundTruth)
-    multiclass_preds = [monoviewResult[1][5] for monoviewResult in resultsMonoview]
+        classifiersNames, div_measure = global_div_measure(classifiersNames, classifiersDecisions,
+                                                           measurement, foldsGroundTruth)
+    multiclass_preds = [monoviewResult.y_test_multiclass_pred for monoviewResult in resultsMonoview]
     if isBiclass(multiclass_preds):
-        monoviewDecisions = np.array([monoviewResult[1][3] for monoviewResult in resultsMonoview
-                                      if classifiersNames[viewsIndices.index(monoviewResult[0])] ==
-                                                          monoviewResult[1][0]])
+        monoviewDecisions = np.array([monoviewResult.full_labels_pred for monoviewResult in resultsMonoview
+                                      if classifiersNames[viewsIndices.index(monoviewResult.view_index)] ==
+                                                          monoviewResult.classifier_name])
     else:
         monoviewDecisions = np.array(
             [genMulticlassMonoviewDecision(monoviewResult, classificationIndices) for monoviewResult in
-             resultsMonoview if classifiersNames[viewsIndices.index(monoviewResult[0])] == monoviewResult[1][0]])
+             resultsMonoview if classifiersNames[viewsIndices.index(monoviewResult.view_index)] == monoviewResult.classifier_name])
     argumentsList = []
     arguments = {"CL_type": name,
                  "views": views,

@@ -57,7 +57,7 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", random
     """Used to generate a plausible dataset to test the algorithms"""
     randomStateInt = 42
     randomState = np.random.RandomState(randomStateInt)
-    nbFeatures = 250
+    nbFeatures = 100
     if not os.path.exists(os.path.dirname(pathF + "Plausible.hdf5")):
         try:
             os.makedirs(os.path.dirname(pathF + "Plausible.hdf5"))
