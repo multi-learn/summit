@@ -368,7 +368,7 @@ def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamp
                       metrics, classificationIndices, directories):
     """Used to transform one versus one results in multiclass results and to publish it"""
     multiclassResults = [{} for _ in range(statsIter)]
-    
+
     for flag, result in results:
         iterIndex = flag[0]
         classifierPositive = flag[1][0]
