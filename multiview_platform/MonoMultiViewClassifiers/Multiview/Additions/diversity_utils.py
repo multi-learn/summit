@@ -147,7 +147,7 @@ def getFoldsGroundTruth(directory, folds=True):
         foldsGroudTruth = np.zeros((len(foldsFilesNames), foldLen), dtype=int)
         for fileName in foldsFilesNames:
             foldIndex = int(fileName[-5])
-            foldsGroudTruth[foldIndex] = np.genfromtxt(directory+"folds/"+fileName, delimiter=',')
+            foldsGroudTruth[foldIndex] = np.genfromtxt(directory+"folds/"+fileName, delimiter=',')[:foldLen]
         return foldsGroudTruth
     else:
         train_labels = np.genfromtxt(directory+"train_labels.csv", delimiter=',')

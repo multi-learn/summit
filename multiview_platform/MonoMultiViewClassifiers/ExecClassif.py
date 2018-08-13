@@ -278,7 +278,7 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None, class
         for arguments in argumentDictionaries["Multiview"]]
     logging.debug("Done:\t Multiview benchmark")
 
-    return [flag, resultsMonoview, resultsMultiview]
+    return [flag, resultsMonoview + resultsMultiview]
 
 
 def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None, directory=None, classificationIndices=None, args=None,
@@ -323,7 +323,7 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None, directory=Non
             for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
     logging.debug("Done:\t Multiview benchmark")
 
-    return [flag, resultsMonoview, resultsMultiview]
+    return [flag, resultsMonoview + resultsMultiview]
 
 
 def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None, directory=None, classificationIndices=None, args=None,

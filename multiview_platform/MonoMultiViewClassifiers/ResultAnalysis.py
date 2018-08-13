@@ -62,22 +62,22 @@ def autolabel(rects, ax, set=1, std=None):
 def getMetricsScoresBiclass(metrics, results):
     r"""Used to extract metrics scores in case of biclass classification
 
-        Parameters
-        ----------
-        metrics : list of lists
-            The metrics names with configuration metrics[i][0] = name of metric i
-        results : list of MonoviewResult and MultiviewResults objects
-            A list containing all the resluts for all the monoview experimentations.
+    Parameters
+    ----------
+    metrics : list of lists
+        The metrics names with configuration metrics[i][0] = name of metric i
+    results : list of MonoviewResult and MultiviewResults objects
+        A list containing all the resluts for all the monoview experimentations.
 
-        Returns
-        -------
-        metricsScores : dict of dict of list
-        Regroups all the scores for each metrics for each classifier and for the train and test sets.
-        organized as :
-        -`metricScores[metric_name]["classifiersNames"]` is a list of all the classifiers available for this metric,
-        -`metricScores[metric_name]["trainScores"]` is a list of all the available classifiers scores on the train set,
-        -`metricScores[metric_name]["testScores"]` is a list of all the available classifiers scores on the test set.
-        """
+    Returns
+    -------
+    metricsScores : dict of dict of list
+    Regroups all the scores for each metrics for each classifier and for the train and test sets.
+    organized as :
+    -`metricScores[metric_name]["classifiersNames"]` is a list of all the classifiers available for this metric,
+    -`metricScores[metric_name]["trainScores"]` is a list of all the available classifiers scores on the train set,
+    -`metricScores[metric_name]["testScores"]` is a list of all the available classifiers scores on the test set.
+    """
     metricsScores = {}
 
     for metric in metrics:
@@ -96,60 +96,181 @@ def getMetricsScoresBiclass(metrics, results):
     return metricsScores
 
 
-def getExampleErrorsBiclass(usedBenchmarkArgumentDictionary, results):
+def getExampleErrorsBiclass(groud_truth, results):
+    r"""Used to get for each classifier and each example whether the classifier has misclassified the example or not.
+
+    Parameters
+    ----------
+    ground_truth : numpy array of 0, 1 and -100 (if multiclass)
+        The array with the real labels of the examples
+    results : list of MonoviewResult and MultiviewResults objects
+        A list containing all the resluts for all the mono- & multi-view experimentations.
+
+    Returns
+    -------
+    exampleErrors : dict of np.array
+        For each classifier, has an entry with a `np.array` over the examples, with a 1 if the examples was
+        well-classified, a 0 if not and if it's multiclass classification, a -100 if the examples was not seen during
+        the one versus one classification.
+    """
     exampleErrors = {}
-    trueLabels = usedBenchmarkArgumentDictionary["labels"]
 
     for classifierResult in results:
-        classifierName = classifierResult.get_classifier_name()
-        predictedLabels = classifierResult.full_labels_pred
-        errorOnExamples = predictedLabels==trueLabels
-        errorOnExamples = errorOnExamples.astype(int)
-        unseenExamples = np.where(trueLabels==-100)[0]
+        errorOnExamples = np.equal(classifierResult.full_labels_pred, groud_truth).astype(int)
+        unseenExamples = np.where(groud_truth==-100)[0]
         errorOnExamples[unseenExamples]=-100
-        exampleErrors[classifierName] = errorOnExamples
+        exampleErrors[classifierResult.get_classifier_name()] = errorOnExamples
 
     return exampleErrors
 
 
-def plotMetricOneIter(trainScores, testScores, names, nbResults, metricName, fileName, minSize=15):
-    testScores = np.array(testScores)
-    trainScores = np.array(trainScores)
-    names = np.array(names)
-    size = nbResults
-    if nbResults < minSize:
-        size = minSize
-    figKW = {"figsize" : (size, size/3)}
-    f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-    barWidth= 0.35
-    sorted_indices = np.argsort(testScores)
-    testScores = testScores[sorted_indices]
-    trainScores = trainScores[sorted_indices]
-    names = names[sorted_indices]
+def get_fig_size(nb_results, min_size=15, multiplier=1.0, bar_width=0.35):
+    r"""Used to get the image size to save the figure and the bar width, depending on the number of scores to plot.
 
-    ax.set_title(metricName + "\n scores for each classifier")
-    rects = ax.bar(range(nbResults), testScores, barWidth, color="r", )
-    rect2 = ax.bar(np.arange(nbResults) + barWidth, trainScores, barWidth, color="0.7", )
-    autolabel(rects, ax, set=1)
-    autolabel(rect2, ax, set=2)
+    Parameters
+    ----------
+    nb_results : int
+        The number of couple of bar to plot.
+    min_size : int
+        The minimum size of the image, if there are few classifiers to plot.
+    multiplier : float
+        The ratio between the image size and the number of classifiers.
+    bar_width : float
+        The width of the bars in the figure. Mainly here to centralize bar_width.
+
+    Returns
+    -------
+    fig_kwargs : dict of arguments
+        The argument restraining the size of the figure, usable directly in the `subplots` function of
+        `matplotlib.pyplot`.
+    bar_width : float
+        The width of the bars in the figure. Mainly here to centralize bar_width.
+    """
+    size = nb_results*multiplier
+    if size < min_size:
+        size = min_size
+    fig_kwargs = {"figsize": (size, size / 3)}
+    return fig_kwargs, bar_width
+
+
+def sort_by_test_score(train_scores,test_scores, names, train_STDs=None, test_STDs=None):
+    r"""Used to sort the results (names and both scores) in descending test score order.
+
+    Parameters
+    ----------
+    train_scores : np.array of floats
+        The scores of each classifier on the training set.
+    test_scores : np.array of floats
+        The scores of each classifier on the testing set.
+    names : np.array of strs
+        The names of all the classifiers.
+    train_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the training set.
+    test_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the testing set.
+
+    Returns
+    -------
+    sorted_names : np.array of strs
+        The names of all the classifiers, sorted in descending test score order.
+    sorted_train_scores : np.array of floats
+        The scores of each classifier on the training set, sorted in descending test score order.
+    sorted_test_scores : np.array of floats
+        The scores of each classifier on the testing set, sorted in descending test score order.
+    sorted_train_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the training set,
+        sorted in descending test score order.
+    sorted_test_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the testing set,
+        sorted in descending test score order.
+    """
+    sorted_indices = np.argsort(test_scores)
+    sorted_test_scores = test_scores[sorted_indices]
+    sorted_train_scores = train_scores[sorted_indices]
+    sorted_names = names[sorted_indices]
+    if train_STDs is not None and test_STDs is not None:
+        sorted_train_STDs = train_STDs[sorted_indices]
+        sorted_test_STDs = test_STDs[sorted_indices]
+    else:
+        sorted_train_STDs = None
+        sorted_test_STDs = None
+    return sorted_names, sorted_train_scores, sorted_test_scores, sorted_train_STDs, sorted_test_STDs
+
+
+def plotMetricScores(trainScores, testScores, names, nbResults, metricName, fileName,
+                     tag="", train_STDs=None, test_STDs=None):
+    r"""Used to plot and save the score barplot for a specific metric.
+
+    Parameters
+    ----------
+    trainScores : list or np.array of floats
+        The scores of each classifier on the training set.
+    testScores : list or np.array of floats
+        The scores of each classifier on the testing set.
+    names : list or np.array of strs
+        The names of all the classifiers.
+    nbResults: int
+        The number of classifiers to plot.
+    metricName : str
+        The plotted metric's name
+    fileName : str
+        The name of the file where the figure will be saved.
+
+    Returns
+    -------
+    """
+
+    figKW, barWidth = get_fig_size(nbResults)
+
+    names, trainScores, testScores, train_STDs, test_STDs = sort_by_test_score(trainScores, testScores, names,
+                                                                               train_STDs, test_STDs)
+
+    f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
+    ax.set_title(metricName + "\n"+ tag +" scores for each classifier")
+
+    rects = ax.bar(range(nbResults), testScores, barWidth, color="0.8", yerr=test_STDs)
+    rect2 = ax.bar(np.arange(nbResults) + barWidth, trainScores, barWidth, color="0.5", yerr=train_STDs)
+    autolabel(rects, ax, set=1, std=test_STDs)
+    autolabel(rect2, ax, set=2, std=train_STDs)
+
     ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
     ax.set_ylim(-0.1, 1.1)
     ax.set_xticks(np.arange(nbResults) + barWidth)
     ax.set_xticklabels(names, rotation="vertical")
+
     plt.tight_layout()
     f.savefig(fileName)
     plt.close()
 
 
 def publishMetricsGraphs(metricsScores, directory, databaseName, labelsNames):
+    r"""Used to sort the results (names and both scores) in descending test score order.
+
+    Parameters
+    ----------
+    metricsScores : dict of dicts of lists or np.arrays
+        Keys : The names of the metrics.
+        Values : The scores and names of each classifier .
+    directory : str
+        The path to the directory where the figures will be saved.
+    databaseName : str
+        The name of the database on which the experiments where conducted.
+    labelsNames : list of strs
+        The name corresponding to each numerical label.
+
+    Returns
+    -------
+    """
     for metricName, metricScores in metricsScores.items():
         logging.debug("Start:\t Biclass score graph generation for "+metricName)
-        trainScores = metricScores["trainScores"]
-        testScores = metricScores["testScores"]
-        names = metricScores["classifiersNames"]
-        nbResults = len(testScores)
+
+        nbResults = len(metricScores["testScores"])
+
         fileName = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-" + metricName + ".png"
-        plotMetricOneIter(trainScores, testScores, names, nbResults, metricName, fileName)
+
+        plotMetricScores(np.array(metricScores["trainScores"]), np.array(metricScores["testScores"]),
+                         np.array(metricScores["classifiersNames"]), nbResults, metricName, fileName, tag=" "+" vs ".join(labelsNames))
+
         logging.debug("Done:\t Biclass score graph generation for " + metricName)
 
 
@@ -220,7 +341,7 @@ def analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics):
             if benchmarkArgumentDictionary["flag"]==flag:
                 usedBenchmarkArgumentDictionary = benchmarkArgumentDictionary
         metricsScores = getMetricsScoresBiclass(metrics, result)
-        exampleErrors = getExampleErrorsBiclass(usedBenchmarkArgumentDictionary, result)
+        exampleErrors = getExampleErrorsBiclass(usedBenchmarkArgumentDictionary["labels"], result)
         directory = usedBenchmarkArgumentDictionary["directory"]
         databaseName = usedBenchmarkArgumentDictionary["args"].name
         labelsNames = [usedBenchmarkArgumentDictionary["LABELS_DICTIONARY"][0],
@@ -277,41 +398,18 @@ def publishMulticlassScores(multiclassResults, metrics, statsIter, direcories, d
         directory = direcories[iterIndex]
         for metric in metrics:
             logging.debug("Start:\t Multiclass score graph generation for "+metric[0])
-            classifiersNames = []
-            validationScores = []
-            trainScores = []
-            for classifierName in multiclassResults[iterIndex].keys():
-                classifiersNames.append(classifierName)
-                validationScores.append(multiclassResults[iterIndex][classifierName]["metricsScores"][metric[0]][1])
-                trainScores.append(multiclassResults[iterIndex][classifierName]["metricsScores"][metric[0]][0])
-            nbResults = len(validationScores)
+            classifiersNames = np.array([classifierName for classifierName in multiclassResults[iterIndex].keys()])
+            trainScores = np.array([multiclassResults[iterIndex][classifierName]["metricsScores"][metric[0]][0]
+                                for classifierName in classifiersNames])
+            validationScores = np.array([multiclassResults[iterIndex][classifierName]["metricsScores"][metric[0]][1]
+                                for classifierName in classifiersNames])
 
-            validationScores = np.array(validationScores)
-            trainScores = np.array(trainScores)
-            names = np.array(classifiersNames)
-            size = nbResults
-            if nbResults < minSize:
-                size = minSize
-            figKW = {"figsize" : (size, size/3)}
-            f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-            barWidth= 0.35
-            sorted_indices = np.argsort(validationScores)
-            validationScores = validationScores[sorted_indices]
-            trainScores = trainScores[sorted_indices]
-            names = names[sorted_indices]
 
-            ax.set_title(metric[0] + "\n on validation set for each classifier")
-            rects = ax.bar(range(nbResults), validationScores, barWidth, color="r", )
-            rect2 = ax.bar(np.arange(nbResults) + barWidth, trainScores, barWidth, color="0.7", )
-            autolabel(rects, ax, set=1)
-            autolabel(rect2, ax, set=2)
-            ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
-            ax.set_ylim(-0.1, 1.1)
-            ax.set_xticks(np.arange(nbResults) + barWidth)
-            ax.set_xticklabels(names, rotation="vertical")
-            plt.tight_layout()
-            f.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + metric[0] + ".png")
-            plt.close()
+            nbResults = classifiersNames.shape[0]
+            fileName = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + metric[0] + ".png"
+
+            plotMetricScores(trainScores, validationScores, classifiersNames, nbResults, metric[0], fileName, tag=" multiclass")
+
             logging.debug("Done:\t Multiclass score graph generation for " + metric[0])
 
 
@@ -406,6 +504,9 @@ def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamp
     publishMulticlassExmapleErrors(multiclassResults, directories, benchmarkArgumentDictionaries[0]["args"].name)
     return multiclassResults
 
+def numpy_mean_and_std(scores_array):
+    return np.mean(scores_array, axis=1), np.std(scores_array, axis=1)
+
 
 def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, classifiersDict, dataBaseName, statsIter, minSize=10):
     for labelsCombination, iterResult in iterResults.items():
@@ -416,43 +517,19 @@ def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, cl
             except OSError as exc:
                 if exc.errno != errno.EEXIST:
                     raise
-        for metricName, scores in iterResult["metricsScores"].items():
-            trainScores = scores["trainScores"]
-            testScores = scores["testScores"]
-            trainMeans = np.mean(trainScores, axis=1)
-            testMeans = np.mean(testScores, axis=1)
-            trainSTDs = np.std(trainScores, axis=1)
-            testSTDs = np.std(testScores, axis=1)
-            nbResults = len(trainMeans)
-            reversedClassifiersDict = dict((value, key) for key, value in classifiersDict.items())
-            # import pdb;pdb.set_trace()
-            names = [reversedClassifiersDict[i] for i in range(len(classifiersDict))]
-            size=nbResults
-            if nbResults<minSize:
-                size=minSize
-            figKW = {"figsize" : (size, size/3)}
-            f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-            barWidth = 0.35
-            sorted_indices = np.argsort(testMeans)
-            testMeans = testMeans[sorted_indices]
-            testSTDs = testSTDs[sorted_indices]
-            trainSTDs = trainSTDs[sorted_indices]
-            trainMeans = trainMeans[sorted_indices]
-            names = np.array(names)[sorted_indices]
 
-            ax.set_title(metricName + " for each classifier")
-            rects = ax.bar(range(nbResults), testMeans, barWidth, color="r", yerr=testSTDs)
-            rect2 = ax.bar(np.arange(nbResults) + barWidth, trainMeans, barWidth, color="0.7", yerr=trainSTDs)
-            autolabel(rects, ax, set=1, std=testSTDs)
-            autolabel(rect2, ax, set=2, std=trainSTDs)
-            ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
-            ax.set_ylim(-0.1, 1.1)
-            ax.set_xticks(np.arange(nbResults) + barWidth)
-            ax.set_xticklabels(names, rotation="vertical")
-            f.tight_layout()
-            f.savefig(currentDirectory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + dataBaseName + "-Mean_on_"
-                      + str(statsIter) + "_iter-" + metricName + ".png")
-            plt.close()
+        for metricName, scores in iterResult["metricsScores"].items():
+            trainMeans, trainSTDs = numpy_mean_and_std(scores["trainScores"])
+            testMeans, testSTDs = numpy_mean_and_std(scores["testScores"])
+
+            names = np.array([name for name in classifiersDict.keys()])
+            fileName = currentDirectory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + dataBaseName + "-Mean_on_" + str(statsIter) + "_iter-" + metricName + ".png"
+            nbResults = names.shape[0]
+
+            plotMetricScores(trainScores=trainMeans, testScores=testMeans, names=names, nbResults=nbResults,
+                             metricName=metricName, fileName=fileName, tag=" averaged",
+                             train_STDs=trainSTDs, test_STDs=testSTDs)
+
 
 
 def iterCmap(statsIter):
@@ -510,40 +587,18 @@ def publishIterBiclassExampleErrors(iterResults, directory, labelsDictionary, cl
 
 def publishIterMulticlassMetricsScores(iterMulticlassResults, classifiersNames, dataBaseName, directory, statsIter, minSize=10):
     for metricName, scores in iterMulticlassResults["metricsScores"].items():
-        trainScores = scores["trainScores"]
-        testScores = scores["testScores"]
-        trainMeans = np.mean(trainScores, axis=1)
-        testMeans = np.mean(testScores, axis=1)
-        trainSTDs = np.std(trainScores, axis=1)
-        testSTDs = np.std(testScores, axis=1)
-        nbResults = len(trainMeans)
-        names = classifiersNames
-        size=nbResults
-        if nbResults<minSize:
-            size=minSize
-        figKW = {"figsize" : (size, size/3)}
-        f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-        barWidth = 0.35  # the width of the bars
-        sorted_indices = np.argsort(testMeans)
-        testMeans = testMeans[sorted_indices]
-        testSTDs = testSTDs[sorted_indices]
-        trainSTDs = trainSTDs[sorted_indices]
-        trainMeans = trainMeans[sorted_indices]
-        names = np.array(names)[sorted_indices]
 
-        ax.set_title(metricName + " for each classifier")
-        rects = ax.bar(range(nbResults), testMeans, barWidth, color="r", yerr=testSTDs)
-        rect2 = ax.bar(np.arange(nbResults) + barWidth, trainMeans, barWidth, color="0.7", yerr=trainSTDs)
-        autolabel(rects, ax, set=1)
-        autolabel(rect2, ax, set=2)
-        ax.set_ylim(-0.1, 1.1)
-        ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
-        ax.set_xticks(np.arange(nbResults) + barWidth)
-        ax.set_xticklabels(names, rotation="vertical")
-        f.tight_layout()
-        f.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + dataBaseName + "-Mean_on_"
-                  + str(statsIter) + "_iter-" + metricName + ".png")
-        plt.close()
+        trainMeans, trainSTDs = numpy_mean_and_std(scores["trainScores"])
+        testMeans, testSTDs = numpy_mean_and_std(scores["testScores"])
+
+        nbResults = classifiersNames.shape[0]
+
+        fileName = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + dataBaseName + "-Mean_on_" + str(statsIter) + "_iter-" + metricName + ".png"
+
+        plotMetricScores(trainScores=trainMeans, testScores=testMeans, names=classifiersNames, nbResults=nbResults,
+                         metricName=metricName, fileName=fileName, tag=" averaged multiclass",
+                         train_STDs=trainSTDs, test_STDs=testSTDs)
+
 
 
 def publishIterMulticlassExampleErrors(iterMulticlassResults, directory, classifiersNames, statsIter, minSize=10):
@@ -641,6 +696,7 @@ def analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics, data
             iterMulticlassResults["errorOnExamples"][classifierIndex, :] += classifierResults["errorOnExample"]
     logging.debug("Start:\t Getting mean results for multiclass classification")
 
+    classifiersNames = np.array(classifiersNames)
     publishIterMulticlassMetricsScores(iterMulticlassResults, classifiersNames, dataBaseName, directory, statsIter)
     publishIterMulticlassExampleErrors(iterMulticlassResults, directory, classifiersNames, statsIter)
 
