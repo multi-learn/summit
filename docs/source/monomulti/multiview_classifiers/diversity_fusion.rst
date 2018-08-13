@@ -1,6 +1,5 @@
-Metrics framework
-=================
+Diversity Fusion Classifiers
+============================
 
-.. automodule:: multiview_platform.MonoMultiViewClassifiers.MultiviewClassifiers.diversity_utils
+.. automodule:: multiview_platform.MonoMultiViewClassifiers.Multiview.Additions.diversity_utils
    :members:
-   :inherited-members:

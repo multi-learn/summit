@@ -7,3 +7,4 @@ Multiview Platform
 
    execution
    monomultidoc
+   analyzeresult

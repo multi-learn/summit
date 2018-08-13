@@ -1,18 +1,12 @@
 # Import built-in modules
 import time
 import os
-import pylab
 import errno
 import logging
 
 # Import third party modules
-import matplotlib
-
-# matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 import numpy as np
-# from matplotlib import cm
 import matplotlib as mpl
 
 # Import own Modules
@@ -72,11 +66,11 @@ def getMetricsScoresBiclass(metrics, results):
     Returns
     -------
     metricsScores : dict of dict of list
-    Regroups all the scores for each metrics for each classifier and for the train and test sets.
-    organized as :
-    -`metricScores[metric_name]["classifiersNames"]` is a list of all the classifiers available for this metric,
-    -`metricScores[metric_name]["trainScores"]` is a list of all the available classifiers scores on the train set,
-    -`metricScores[metric_name]["testScores"]` is a list of all the available classifiers scores on the test set.
+        Regroups all the scores for each metrics for each classifier and for the train and test sets.
+        organized as :
+        -`metricScores[metric_name]["classifiersNames"]` is a list of all the classifiers available for this metric,
+        -`metricScores[metric_name]["trainScores"]` is a list of all the available classifiers scores on the train set,
+        -`metricScores[metric_name]["testScores"]` is a list of all the available classifiers scores on the test set.
     """
     metricsScores = {}
 
@@ -281,6 +275,20 @@ def publishMetricsGraphs(metricsScores, directory, databaseName, labelsNames):
 
 
 def iterCmap(statsIter):
+    r"""Used to generate a colormap that will have a tick for each iteration : the whiter the better.
+
+    Parameters
+    ----------
+    statsIter : int
+        The number of statistical iterations.
+
+    Returns
+    -------
+    cmap : matplotlib.colors.ListedColorMap object
+        The colormap.
+    norm : matplotlib.colors.BoundaryNorm object
+        The bounds for the colormap.
+    """
     cmapList = ["red", "0.0"]+[str(float((i+1))/statsIter) for i in range(statsIter)]
     cmap = mpl.colors.ListedColormap(cmapList)
     bounds = [-100*statsIter-0.5, -0.5]
@@ -293,6 +301,35 @@ def iterCmap(statsIter):
 
 def publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nbCopies, fileName, minSize=10,
                   width_denominator=2.0, height_denominator=20.0, statsIter=1):
+    r"""Used to generate a 2D plot of the errors.
+
+    Parameters
+    ----------
+    data : np.array of shape `(nbClassifiers, nbExamples)`
+        A matrix with zeros where the classifier failed to classifiy the example, ones where it classified it well
+        and -100 if the example was not classified.
+    classifiersNames : list of str
+        The names of the classifiers.
+    nbClassifiers : int
+        The number of classifiers.
+    nbExamples : int
+        The number of examples.
+    nbCopies : int
+        The number of times the data is copied (classifier wise) in order for the figure to be more readable
+    fileName : str
+        The name of the file in which the figure will be saved ("error_analysis_2D.png" will be added at the end)
+    minSize : int, optinal, default: 10
+        The minimum width and height of the figure.
+    width_denominator : float, optional, default: 1.0
+        To obtain the image width, the number of classifiers will be divided by this number.
+    height_denominator : float, optional, default: 1.0
+        To obtain the image width, the number of examples will be divided by this number.
+    statsIter : int, optional, default: 1
+        The number of statistical iterations realized.
+
+    Returns
+    -------
+    """
     figWidth = max(nbClassifiers / width_denominator, minSize)
     figHeight = max(nbExamples / height_denominator, minSize)
     figKW = {"figsize": (figWidth, figHeight)}
@@ -311,6 +348,24 @@ def publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nbCopies, f
 
 
 def publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples, fileName):
+    r"""Used to generate a barplot of the muber of classifiers that failed to classify each examples
+
+    Parameters
+    ----------
+    errorOnExamples : np.array of shape `(nbExamples,)`
+        An array counting how many classifiers failed to classifiy each examples.
+    classifiersNames : list of str
+        The names of the classifiers.
+    nbClassifiers : int
+        The number of classifiers.
+    nbExamples : int
+        The number of examples.
+    fileName : str
+        The name of the file in which the figure will be saved ("error_analysis_2D.png" will be added at the end)
+
+    Returns
+    -------
+    """
     fig, ax = plt.subplots()
     x = np.arange(nbExamples)
     plt.bar(x, errorOnExamples)
@@ -321,6 +376,39 @@ def publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples, fileName):
 
 
 def gen_error_data(example_errors, base_file_name, nbCopies=2):
+    r"""Used to format the error data in order to plot it efficiently. The data is saves in a `.csv` file.
+
+    Parameters
+    ----------
+    example_errors : dict of dicts of np.arrays
+        A dictionary conatining all the useful data. Organized as :
+        `example_errors[<classifier_name>]["errorOnExamples"]` is a np.array of ints with a
+        - 1 if the classifier `<classifier_name>` classifier well the example,
+        - 0 if it fail to classify the example,
+        - -100 if it did not classify the example (multiclass one versus one).
+    base_file_name : list of str
+        The name of the file in which the figure will be saved ("2D_plot_data.csv" and "bar_plot_data.csv" will
+        be added at the end)
+    nbCopies : int, optinal, default: 2
+        The number of times the data is copied (classifier wise) in order for the figure to be more readable.
+
+
+    Returns
+    -------
+    nbClassifiers : int
+        Number of different classifiers
+    nbExamples : int
+        NUmber of examples
+    nbCopies : int
+        The number of times the data is copied (classifier wise) in order for the figure to be more readable.
+    classifiersNames : list of strs
+        The names fo the classifiers.
+    data : np.array of shape `(nbClassifiers, nbExamples)`
+        A matrix with zeros where the classifier failed to classifiy the example, ones where it classified it well
+        and -100 if the example was not classified.
+    errorOnExamples : np.array of shape `(nbExamples,)`
+        An array counting how many classifiers failed to classifiy each examples.
+    """
     nbClassifiers = len(example_errors)
     nbExamples = len(list(example_errors.values())[0]["errorOnExamples"])
     classifiersNames = example_errors.keys()
