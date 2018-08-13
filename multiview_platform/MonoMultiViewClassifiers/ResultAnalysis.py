@@ -119,7 +119,7 @@ def getExampleErrorsBiclass(groud_truth, results):
         errorOnExamples = np.equal(classifierResult.full_labels_pred, groud_truth).astype(int)
         unseenExamples = np.where(groud_truth==-100)[0]
         errorOnExamples[unseenExamples]=-100
-        exampleErrors[classifierResult.get_classifier_name()] = errorOnExamples
+        exampleErrors[classifierResult.get_classifier_name()] = {"errorOnExamples": errorOnExamples}
 
     return exampleErrors
 
@@ -215,6 +215,12 @@ def plotMetricScores(trainScores, testScores, names, nbResults, metricName, file
         The plotted metric's name
     fileName : str
         The name of the file where the figure will be saved.
+    tag : str
+        Some text to personalize the title, must start with a whitespace.
+    train_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the training set.
+    test_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the testing set.
 
     Returns
     -------
@@ -228,8 +234,8 @@ def plotMetricScores(trainScores, testScores, names, nbResults, metricName, file
     f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
     ax.set_title(metricName + "\n"+ tag +" scores for each classifier")
 
-    rects = ax.bar(range(nbResults), testScores, barWidth, color="0.8", yerr=test_STDs)
-    rect2 = ax.bar(np.arange(nbResults) + barWidth, trainScores, barWidth, color="0.5", yerr=train_STDs)
+    rects = ax.bar(range(nbResults), testScores, barWidth, color="0.1", yerr=test_STDs)
+    rect2 = ax.bar(np.arange(nbResults) + barWidth, trainScores, barWidth, color="0.8", yerr=train_STDs)
     autolabel(rects, ax, set=1, std=test_STDs)
     autolabel(rect2, ax, set=2, std=train_STDs)
 
@@ -274,58 +280,81 @@ def publishMetricsGraphs(metricsScores, directory, databaseName, labelsNames):
         logging.debug("Done:\t Biclass score graph generation for " + metricName)
 
 
-def publishExampleErrors(exampleErrors, directory, databaseName, labelsNames, minSize=10):
-    logging.debug("Start:\t Biclass Label analysis figure generation")
-    nbClassifiers = len(exampleErrors)
-    nbExamples = len(list(exampleErrors.values())[0])
-    nbIter = 2
-    data = np.zeros((nbExamples, nbClassifiers * nbIter))
-    temp_data = np.zeros((nbExamples, nbClassifiers))
-    classifiersNames = exampleErrors.keys()
-    for classifierIndex, (classifierName, errorOnExamples) in enumerate(exampleErrors.items()):
-        for iterIndex in range(nbIter):
-            data[:, classifierIndex * nbIter + iterIndex] = errorOnExamples
-            temp_data[:,classifierIndex] = errorOnExamples
-
-    figWidth = max(nbClassifiers/2, minSize)
-    figHeight = max(nbExamples/20, minSize)
-    figKW = {"figsize":(figWidth, figHeight)}
-    fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-    cmap = mpl.colors.ListedColormap(['black', 'red', 'green'])
-    bounds = [-100.5,-0.5, 0.5, 1.5]
+def iterCmap(statsIter):
+    cmapList = ["red", "0.0"]+[str(float((i+1))/statsIter) for i in range(statsIter)]
+    cmap = mpl.colors.ListedColormap(cmapList)
+    bounds = [-100*statsIter-0.5, -0.5]
+    for i in range(statsIter):
+        bounds.append(i+0.5)
+    bounds.append(statsIter+0.5)
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+    return cmap, norm
 
-    plt.imshow(data, interpolation='none', cmap=cmap, norm=norm, aspect='auto')
+
+def publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nbCopies, fileName, minSize=10,
+                  width_denominator=2.0, height_denominator=20.0, statsIter=1):
+    figWidth = max(nbClassifiers / width_denominator, minSize)
+    figHeight = max(nbExamples / height_denominator, minSize)
+    figKW = {"figsize": (figWidth, figHeight)}
+    fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
+    cmap, norm = iterCmap(statsIter)
+    cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm, aspect='auto')
     plt.title('Errors depending on the classifier')
-    ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)
+    ticks = np.arange(nbCopies / 2 - 0.5, nbClassifiers * nbCopies, nbCopies)
     labels = classifiersNames
     plt.xticks(ticks, labels, rotation="vertical")
-    red_patch = mpatches.Patch(color='red', label='Classifier failed')
-    green_patch = mpatches.Patch(color='green', label='Classifier succeded')
-    black_patch = mpatches.Patch(color='black', label='Unseen data')
-    plt.legend(handles=[red_patch, green_patch, black_patch],
-               bbox_to_anchor=(0,1.02,1,0.2),
-               loc="lower left",
-               mode="expand",
-               borderaxespad=0,
-               ncol=3)
+    cbar = fig.colorbar(cax, ticks=[-100 * statsIter / 2, 0, statsIter])
+    cbar.ax.set_yticklabels(['Unseen', 'Always Wrong', 'Always Right'])
     fig.tight_layout()
-    fig.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-error_analysis.png", bbox_inches="tight")
+    fig.savefig(fileName+"error_analysis_2D.png", bbox_inches="tight")
     plt.close()
-    logging.debug("Done:\t Biclass Label analysis figure generation")
 
-    logging.debug("Start:\t Biclass Error by example figure generation")
-    errorOnExamples = -1*np.sum(data, axis=1)/nbIter+nbClassifiers
-    np.savetxt(directory + "clf_errors_doubled.csv", data, delimiter=",")
-    np.savetxt(directory + "example_errors.csv", temp_data, delimiter=",")
+
+def publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples, fileName):
     fig, ax = plt.subplots()
     x = np.arange(nbExamples)
     plt.bar(x, errorOnExamples)
-    plt.ylim([0,nbClassifiers])
+    plt.ylim([0, nbClassifiers])
     plt.title("Number of classifiers that failed to classify each example")
-    fig.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-example_errors.png")
+    fig.savefig(fileName+"error_analysis_bar.png")
     plt.close()
-    logging.debug("Done:\t Biclass Error by example figure generation")
+
+
+def gen_error_data(example_errors, base_file_name, nbCopies=2):
+    nbClassifiers = len(example_errors)
+    nbExamples = len(list(example_errors.values())[0]["errorOnExamples"])
+    classifiersNames = example_errors.keys()
+
+    data = np.zeros((nbExamples, nbClassifiers * nbCopies))
+    temp_data = np.zeros((nbExamples, nbClassifiers))
+    for classifierIndex, (classifierName, errorOnExamples) in enumerate(example_errors.items()):
+        for iterIndex in range(nbCopies):
+            data[:, classifierIndex * nbCopies + iterIndex] = errorOnExamples["errorOnExamples"]
+            temp_data[:, classifierIndex] = errorOnExamples["errorOnExamples"]
+    errorOnExamples = -1 * np.sum(data, axis=1) / nbCopies + nbClassifiers
+
+    np.savetxt(base_file_name + "2D_plot_data.csv", data, delimiter=",")
+    np.savetxt(base_file_name + "bar_plot_data.csv", temp_data, delimiter=",")
+
+    return nbClassifiers, nbExamples, nbCopies, classifiersNames, data, errorOnExamples
+
+
+def publishExampleErrors(exampleErrors, directory, databaseName, labelsNames):
+
+    logging.debug("Start:\t Biclass Label analysis figure generation")
+
+    base_file_name = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + "_vs_".join(
+        labelsNames) + "-"
+
+    nbClassifiers, nbExamples, nCopies, classifiersNames, data, errorOnExamples = gen_error_data(exampleErrors,
+                                                                                                 base_file_name)
+
+
+    publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nCopies, base_file_name)
+
+    publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples, base_file_name)
+
+    logging.debug("Done:\t Biclass Label analysis figures generation")
 
 
 def analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics):
@@ -386,7 +415,7 @@ def getErrorOnLabelsMulticlass(multiclassResults, multiclassLabels):
     for iterIndex, iterResults in enumerate(multiclassResults):
         for classifierName, classifierResults in iterResults.items():
             errorOnExamples = classifierResults["labels"] == multiclassLabels
-            multiclassResults[iterIndex][classifierName]["errorOnExample"] = errorOnExamples.astype(int)
+            multiclassResults[iterIndex][classifierName]["errorOnExamples"] = errorOnExamples.astype(int)
 
     logging.debug("Done:\t Getting errors on each example for each classifier")
 
@@ -416,50 +445,18 @@ def publishMulticlassScores(multiclassResults, metrics, statsIter, direcories, d
 def publishMulticlassExmapleErrors(multiclassResults, directories, databaseName, minSize=10):
     for iterIndex, multiclassResult in enumerate(multiclassResults):
         directory = directories[iterIndex]
-        logging.debug("Start:\t Label analysis figure generation")
-        nbClassifiers = len(multiclassResult)
-        nbExamples = len(list(multiclassResult.values())[0]["errorOnExample"])
-        nbIter = 2
-        data = np.zeros((nbExamples, nbClassifiers * nbIter))
-        temp_data = np.zeros((nbExamples, nbClassifiers))
-        classifiersNames = multiclassResult.keys()
-        for classifierIndex, (classifierName, errorOnExamplesDict) in enumerate(multiclassResult.items()):
-            for iterIndex in range(nbIter):
-                data[:, classifierIndex * nbIter + iterIndex] = errorOnExamplesDict["errorOnExample"]
-                temp_data[:,classifierIndex] = errorOnExamplesDict["errorOnExample"]
-        figWidth = max(nbClassifiers/2, minSize)
-        figHeight = max(nbExamples/20, minSize)
-        figKW = {"figsize":(figWidth, figHeight)}
-        fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-        cmap = mpl.colors.ListedColormap(['red', 'green'])
-        bounds = [-0.5, 0.5, 1.5]
-        norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+        logging.debug("Start:\t Multiclass Label analysis figure generation")
 
-        cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm, aspect='auto')
-        plt.title('Errors depending on the classifier')
-        ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)
-        labels = classifiersNames
-        plt.xticks(ticks, labels, rotation="vertical")
-        red_patch = mpatches.Patch(color='red', label='Classifier failed')
-        green_patch = mpatches.Patch(color='green', label='Classifier succeded')
-        plt.legend(handles=[red_patch, green_patch], bbox_to_anchor=(0,1.02,1,0.2), loc="lower left",mode="expand", borderaxespad=0, ncol=2)
-        fig.tight_layout()
-        fig.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-error_analysis.png", bbox_inches="tight")
-        plt.close()
-        logging.debug("Done:\t Label analysis figure generation")
+        base_file_name = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-"
 
-        logging.debug("Start:\t Error by example figure generation")
-        errorOnExamples = -1*np.sum(data, axis=1)/nbIter+nbClassifiers
-        np.savetxt(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-clf_errors_doubled.csv", data, delimiter=",")
-        np.savetxt(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-example_errors.csv", temp_data, delimiter=",")
-        fig, ax = plt.subplots()
-        x = np.arange(nbExamples)
-        plt.bar(x, errorOnExamples)
-        plt.ylim([0,nbClassifiers])
-        plt.title("Number of classifiers that failed to classify each example")
-        fig.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-example_errors.png")
-        plt.close()
-        logging.debug("Done:\t Error by example figure generation")
+        nbClassifiers, nbExamples, nCopies, classifiersNames, data, errorOnExamples = gen_error_data(multiclassResult,
+                                                                                                     base_file_name)
+
+        publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nCopies, base_file_name)
+
+        publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples, base_file_name)
+
+        logging.debug("Done:\t Multiclass Label analysis figure generation")
 
 
 def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamples, nbLabels, multiclassLabels,
@@ -504,6 +501,7 @@ def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamp
     publishMulticlassExmapleErrors(multiclassResults, directories, benchmarkArgumentDictionaries[0]["args"].name)
     return multiclassResults
 
+
 def numpy_mean_and_std(scores_array):
     return np.mean(scores_array, axis=1), np.std(scores_array, axis=1)
 
@@ -532,57 +530,30 @@ def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, cl
 
 
 
-def iterCmap(statsIter):
-    cmapList = ["red", "0.0"]
-    for i in range(statsIter):
-        cmapList.append(str(float((i+1))/statsIter))
-    cmap = mpl.colors.ListedColormap(cmapList)
-    bounds = [-100*statsIter-0.5, -0.5]
-    for i in range(statsIter):
-        bounds.append(i+0.5)
-    bounds.append(statsIter+0.5)
-    norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
-    return cmap, norm
+def gen_error_dat_glob(combiResults, statsIter, base_file_name):
+    nbExamples = combiResults["errorOnExamples"].shape[1]
+    nbClassifiers = combiResults["errorOnExamples"].shape[0]
+    data = np.transpose(combiResults["errorOnExamples"])
+    errorOnExamples = -1 * np.sum(data, axis=1) + (nbClassifiers * statsIter)
+    np.savetxt(base_file_name + "clf_errors.csv", data, delimiter=",")
+    np.savetxt(base_file_name + "example_errors.csv", errorOnExamples, delimiter=",")
+    return nbExamples, nbClassifiers, data, errorOnExamples
 
 
 def publishIterBiclassExampleErrors(iterResults, directory, labelsDictionary, classifiersDict, statsIter, minSize=10):
     for labelsCombination, combiResults in iterResults.items():
-        currentDirectory = directory+ labelsDictionary[int(labelsCombination[0])]+"-vs-"+labelsDictionary[int(labelsCombination[1])]+"/"
-        reversedClassifiersDict = dict((value, key) for key, value in classifiersDict.items())
-        classifiersNames = [reversedClassifiersDict[i] for i in range(len(classifiersDict))]
+        base_file_name = directory + labelsDictionary[int(labelsCombination[0])]+"-vs-"+\
+                         labelsDictionary[int(labelsCombination[1])]+"/" + time.strftime("%Y_%m_%d-%H_%M_%S") + "-"
+        classifiersNames = [classifierName for classifierName in classifiersDict.values()]
+        logging.debug("Start:\t Global biclass label analysis figure generation")
 
-        logging.debug("Start:\t Global label analysis figure generation")
-        nbExamples = combiResults["errorOnExamples"].shape[1]
-        nbClassifiers = combiResults["errorOnExamples"].shape[0]
-        figWidth = max(nbClassifiers / 2, minSize)
-        figHeight = max(nbExamples / 20, minSize)
-        figKW = {"figsize": (figWidth, figHeight)}
-        fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-        data = np.transpose(combiResults["errorOnExamples"])
-        cmap, norm = iterCmap(statsIter)
-        cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm, aspect='auto')
-        plt.title('Errors depending on the classifier')
-        ticks = np.arange(nbClassifiers)
-        plt.xticks(ticks, classifiersNames, rotation="vertical")
-        cbar = fig.colorbar(cax, ticks=[-100*statsIter/2, 0, statsIter])
-        cbar.ax.set_yticklabels(['Unseen', 'Always Wrong', 'Always Right'])
-        fig.tight_layout()
-        fig.savefig(currentDirectory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-error_analysis.png")
-        plt.close()
-        logging.debug("Done:\t Global label analysis figure generation")
+        nbExamples, nbClassifiers, data, errorOnExamples = gen_error_dat_glob(combiResults, statsIter, base_file_name)
 
-        logging.debug("Start:\t Global error by example figure generation")
-        errorOnExamples = -1 * np.sum(data, axis=1) + (nbClassifiers*statsIter)
-        np.savetxt(currentDirectory + time.strftime("%Y%m%d-%H%M%S") + "-clf_errors.csv", data, delimiter=",")
-        np.savetxt(currentDirectory + time.strftime("%Y%m%d-%H%M%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
-        fig, ax = plt.subplots()
-        x = np.arange(nbExamples)
-        plt.bar(x, errorOnExamples)
-        plt.ylim([0,nbClassifiers*statsIter])
-        plt.title("Number of classifiers that failed to classify each example")
-        fig.savefig(currentDirectory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-example_errors.png")
-        plt.close()
-        logging.debug("Done:\t Global error by example figure generation")
+        publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, 1, base_file_name, statsIter=statsIter)
+
+        publishErrorsBarPlot(errorOnExamples, nbClassifiers*statsIter, nbExamples, base_file_name)
+
+        logging.debug("Done:\t Global biclass label analysis figures generation")
 
 
 def publishIterMulticlassMetricsScores(iterMulticlassResults, classifiersNames, dataBaseName, directory, statsIter, minSize=10):
@@ -600,40 +571,18 @@ def publishIterMulticlassMetricsScores(iterMulticlassResults, classifiersNames, 
                          train_STDs=trainSTDs, test_STDs=testSTDs)
 
 
-
 def publishIterMulticlassExampleErrors(iterMulticlassResults, directory, classifiersNames, statsIter, minSize=10):
 
-    logging.debug("Start:\t Global label analysis figure generation")
-    nbExamples = iterMulticlassResults["errorOnExamples"].shape[1]
-    nbClassifiers = iterMulticlassResults["errorOnExamples"].shape[0]
-    figWidth = max(nbClassifiers / 2, minSize)
-    figHeight = max(nbExamples / 20, minSize)
-    figKW = {"figsize": (figWidth, figHeight)}
-    fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-    data = np.transpose(iterMulticlassResults["errorOnExamples"])
-    cax = plt.imshow(-data, interpolation='none', cmap="Greys", aspect='auto')
-    plt.title('Errors depending on the classifier')
-    ticks = np.arange(nbClassifiers)
-    plt.xticks(ticks, classifiersNames, rotation="vertical")
-    cbar = fig.colorbar(cax, ticks=[0, -statsIter])
-    cbar.ax.set_yticklabels(['Always Wrong', 'Always Right'])
-    fig.tight_layout()
-    fig.savefig(directory + time.strftime("%Y%m%d-%H%M%S") + "-error_analysis.png")
-    plt.close()
-    logging.debug("Done:\t Global label analysis figure generation")
+    logging.debug("Start:\t Global multiclass label analysis figures generation")
+    base_file_name = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-"
 
-    logging.debug("Start:\t Global error by example figure generation")
-    errorOnExamples = -1 * np.sum(data, axis=1) + (nbClassifiers*statsIter)
-    np.savetxt(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-clf_errors.csv", data, delimiter=",")
-    np.savetxt(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-example_errors.csv", errorOnExamples, delimiter=",")
-    fig, ax = plt.subplots()
-    x = np.arange(nbExamples)
-    plt.bar(x, errorOnExamples)
-    plt.ylim([0,nbClassifiers*statsIter])
-    plt.title("Number of classifiers that failed to classify each example")
-    fig.savefig(directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-example_errors.png")
-    plt.close()
-    logging.debug("Done:\t Global error by example figure generation")
+    nbExamples, nbClassifiers, data, errorOnExamples = gen_error_dat_glob(iterMulticlassResults, statsIter, base_file_name)
+
+    publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, 1, base_file_name, statsIter=statsIter)
+
+    publishErrorsBarPlot(errorOnExamples, nbClassifiers * statsIter, nbExamples, base_file_name)
+
+    logging.debug("Done:\t Global multiclass label analysis figures generation")
 
 
 def analyzebiclassIter(biclassResults, metrics, statsIter, directory, labelsDictionary, dataBaseName, nbExamples):
@@ -666,7 +615,7 @@ def analyzebiclassIter(biclassResults, metrics, statsIter, directory, labelsDict
                     iterBiclassResults[labelsComination]["metricsScores"][metric[0]]["trainScores"][classifiersDict[classifierName], iterIndex] = trainScore
                     iterBiclassResults[labelsComination]["metricsScores"][metric[0]]["testScores"][classifiersDict[classifierName], iterIndex] = testScore
             for classifierName, errorOnExample in results["exampleErrors"].items():
-                iterBiclassResults[labelsComination]["errorOnExamples"][classifiersDict[classifierName], :] += errorOnExample
+                iterBiclassResults[labelsComination]["errorOnExamples"][classifiersDict[classifierName], :] += errorOnExample["errorOnExamples"]
     publishIterBiclassMetricsScores(iterBiclassResults, directory, labelsDictionary, classifiersDict, dataBaseName, statsIter)
     publishIterBiclassExampleErrors(iterBiclassResults, directory, labelsDictionary, classifiersDict, statsIter)
 
@@ -693,7 +642,7 @@ def analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics, data
                                                                              np.zeros((nbClassifiers, statsIter))}
                 iterMulticlassResults["metricsScores"][metric[0]]["trainScores"][classifierIndex, iterIndex] = classifierResults["metricsScores"][metric[0]][0]
                 iterMulticlassResults["metricsScores"][metric[0]]["testScores"][classifierIndex, iterIndex] = classifierResults["metricsScores"][metric[0]][1]
-            iterMulticlassResults["errorOnExamples"][classifierIndex, :] += classifierResults["errorOnExample"]
+            iterMulticlassResults["errorOnExamples"][classifierIndex, :] += classifierResults["errorOnExamples"]
     logging.debug("Start:\t Getting mean results for multiclass classification")
 
     classifiersNames = np.array(classifiersNames)
