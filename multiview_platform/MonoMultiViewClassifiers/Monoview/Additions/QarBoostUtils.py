@@ -13,7 +13,9 @@ from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost
 
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None, random_state=42, self_complemented=True, twice_the_same=False):
+    def __init__(self, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0,
+                 save_iteration_as_hyperparameter_each=None, random_state=42,
+                 self_complemented=True, twice_the_same=False, old_fashioned=False):
         super(ColumnGenerationClassifierQar, self).__init__()
         self.n_max_iterations = n_max_iterations
         self.estimators_generator = estimators_generator
@@ -23,6 +25,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.self_complemented =self_complemented
         self.twice_the_same = twice_the_same
         self.train_time = 0
+        self.old_fashioned = old_fashioned
 
     def fit(self, X, y):
         start = time.time()
@@ -143,10 +146,31 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def _compute_epsilon(self,):
         """Updating the \epsilon varaible"""
+        if self.old_fashioned:
+            return self._compute_epsilon_old()
+        ones_matrix = np.zeros(self.new_voter.shape)
+        ones_matrix[self.new_voter < 0] = 1
+        epsilon = (1.0/self.n_total_examples)*np.sum(self.example_weights*ones_matrix, axis=0)
+        return epsilon
+
+    def _update_example_weights(self, y):
+        if self.old_fashioned:
+            self._update_example_weights(y)
+        else:
+            new_weights = self.example_weights*np.exp(-self.q*y.reshape((self.n_total_examples, 1))*self.new_voter)
+            self.example_weights = new_weights/np.sum(new_weights)
+
+    def _compute_epsilon_old(self,):
+        """Updating the \epsilon varaible computed on the combination of the old vote and the new voter"""
         ones_matrix = np.zeros(self.weighted_sum.shape)
         ones_matrix[self.weighted_sum < 0] = 1
         epsilon = (1.0/self.n_total_examples)*np.sum(self.example_weights*ones_matrix, axis=0)
         return epsilon
+
+    def _update_example_weights_old(self, y):
+        """computed on the combination of the old vote and the new voter"""
+        new_weights = self.example_weights*np.exp(-self.q*y.reshape((self.n_total_examples, 1))*self.weighted_sum)
+        self.example_weights = new_weights/np.sum(new_weights)
 
     def _find_best_margin(self, y_kernel_matrix):
         """Used only on the first iteration to select the voter with the largest margin"""
@@ -179,9 +203,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         else:
             return "break", "smthng"
 
-    def _update_example_weights(self, y):
-        new_weights = self.example_weights*np.exp(-self.q*y.reshape((self.n_total_examples, 1))*self.weighted_sum)
-        self.example_weights = new_weights/np.sum(new_weights)
 
     def _solve_two_weights_min_c(self, next_column, y):
         """Here we solve the min C-bound problem for two voters and return the best 2-weights array
