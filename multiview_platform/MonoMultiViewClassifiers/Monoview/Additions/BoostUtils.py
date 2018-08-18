@@ -698,7 +698,7 @@ def getInterpretBase(classifier, directory, classifier_name, weights,
     interpretString = "\t "+classifier_name+" permformed classification with weights : \n"
     weights_sort = np.argsort(-weights)
     interpretString += np.array2string(weights[weights_sort], precision=4, separator=',', suppress_small=True)
-    interpretString += "\n \t It used {} iterations to converge, and selected {} couple(s) of opposed voters".format(
+    interpretString += "\n \t It generated {} columns by attributes and used {} iterations to converge, and selected {} couple(s) of opposed voters".format(classifier.n_stumps,
         len(weights_sort), classifier.nb_opposed_voters)
     if len(weights_sort) == classifier.n_max_iterations or len(weights) == classifier.n_total_hypotheses_:
         if len(weights) == classifier.n_max_iterations:
