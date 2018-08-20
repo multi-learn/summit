@@ -5,38 +5,39 @@ from ..Monoview.Additions.BoostUtils import getInterpretBase
 from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
 
 
-class ColumnGenerationClassifierQar3(ColumnGenerationClassifierQar):
-    def __init__(self, n_max_iterations=None, estimators_generator=None,
-                 dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None,
-                 random_state=42, self_complemented=True, twice_the_same=False):
-        super(ColumnGenerationClassifierQar3, self).__init__(n_max_iterations=n_max_iterations,
-                                                             estimators_generator=estimators_generator,
-                                                             dual_constraint_rhs=dual_constraint_rhs,
-                                                             save_iteration_as_hyperparameter_each=save_iteration_as_hyperparameter_each,
-                                                             random_state=random_state,
-                                                             self_complemented=self_complemented,
-                                                             twice_the_same=twice_the_same)
+# class ColumnGenerationClassifierQar3(ColumnGenerationClassifierQar):
+#     def __init__(self, n_max_iterations=None, estimators_generator=None,
+#                  dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None,
+#                  random_state=42, self_complemented=True, twice_the_same=False):
+#         super(ColumnGenerationClassifierQar3, self).__init__(n_max_iterations=n_max_iterations,
+#                                                              estimators_generator=estimators_generator,
+#                                                              dual_constraint_rhs=dual_constraint_rhs,
+#                                                              save_iteration_as_hyperparameter_each=save_iteration_as_hyperparameter_each,
+#                                                              random_state=random_state,
+#                                                              self_complemented=self_complemented,
+#                                                              twice_the_same=twice_the_same)
+#
+#     def _compute_epsilon(self,):
+#         """Updating the \epsilon varaible"""
+#         ones_matrix = np.zeros(self.new_voter.shape)
+#         ones_matrix[self.new_voter < 0] = 1
+#         epsilon = (1.0/self.n_total_examples)*np.sum(self.example_weights*ones_matrix, axis=0)
+#         return epsilon
+#
+#     def _update_example_weights(self, y):
+#         new_weights = self.example_weights*np.exp(-self.q*y.reshape((self.n_total_examples, 1))*self.new_voter)
+#         self.example_weights = new_weights/np.sum(new_weights)
 
-    def _compute_epsilon(self,):
-        """Updating the \epsilon varaible"""
-        ones_matrix = np.zeros(self.new_voter.shape)
-        ones_matrix[self.new_voter < 0] = 1
-        epsilon = (1.0/self.n_total_examples)*np.sum(self.example_weights*ones_matrix, axis=0)
-        return epsilon
-
-    def _update_example_weights(self, y):
-        new_weights = self.example_weights*np.exp(-self.q*y.reshape((self.n_total_examples, 1))*self.new_voter)
-        self.example_weights = new_weights/np.sum(new_weights)
 
 
-
-class QarBoostv3(ColumnGenerationClassifierQar3, BaseMonoviewClassifier):
+class QarBoostv3(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, **kwargs):
         super(QarBoostv3, self).__init__(
             random_state=random_state,
             self_complemented=True,
-            twice_the_same=True
+            twice_the_same=True,
+            previous_vote_weighted=False
         )
         self.param_names = []
         self.distribs = []

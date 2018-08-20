@@ -15,7 +15,7 @@ from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def __init__(self, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0,
                  save_iteration_as_hyperparameter_each=None, random_state=42,
-                 self_complemented=True, twice_the_same=False, old_fashioned=False):
+                 self_complemented=True, twice_the_same=False, old_fashioned=False, previous_vote_weighted=True):
         super(ColumnGenerationClassifierQar, self).__init__()
         self.n_max_iterations = n_max_iterations
         self.estimators_generator = estimators_generator
@@ -26,6 +26,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.twice_the_same = twice_the_same
         self.train_time = 0
         self.old_fashioned = old_fashioned
+        self.previous_vote_weighted = previous_vote_weighted
+        self.mu = 0.0649091
 
     def fit(self, X, y):
         start = time.time()
@@ -34,7 +36,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             X = np.array(X.todense())
 
         if self.estimators_generator is None:
-            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps, self_complemented=self.self_complemented)
+            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps,
+                                                                   self_complemented=self.self_complemented)
 
         y[y == 0] = -1
 
@@ -46,7 +49,9 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.infos_per_iteration_ = defaultdict(list)
 
         m, n = self.classification_matrix.shape
-        y_kernel_matrix = np.multiply(y.reshape((len(y), 1)), self.classification_matrix)
+        y = y.reshape((m,1))
+        y_kernel_matrix = np.multiply(y, self.classification_matrix)
+
 
        # Initialization
 
@@ -77,7 +82,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self.previous_vote = self.new_voter
                 self.weighted_sum = self.new_voter
 
-                epsilon = self._compute_epsilon()
+                epsilon = self._compute_epsilon(y)
                 self.epsilons.append(epsilon)
                 self.q = math.log((1-epsilon)/epsilon)
                 self.weights_.append(self.q)
@@ -89,19 +94,21 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             # Find best weak hypothesis given example_weights. Select the one that has the lowest minimum
             # C-bound with the previous vote
+            # new_voter_index,sol = self._find_best_weighted_margin(y_kernel_matrix)
             sol, new_voter_index = self._find_new_voter(y_kernel_matrix, y)
+
             if type(sol) == str:
-                self.break_cause = " no more hypothesis were able to improve the boosted vote."
+                self.break_cause = new_voter_index  # " no more hypothesis were able to improve the boosted vote."
                 break
 
             # Append the weak hypothesis.
             self.chosen_columns_.append(new_voter_index)
             self.new_voter = self.classification_matrix[:, new_voter_index].reshape((m, 1))
-            self.weighted_sum = np.matmul(np.concatenate((self.previous_vote, self.classification_matrix[:, new_voter_index].reshape((m,1))), axis=1),
-                                          sol).reshape((m,1))
+            # self.weighted_sum = np.matmul(np.concatenate((self.previous_vote, self.classification_matrix[:, new_voter_index].reshape((m,1))), axis=1),
+            #                               sol).reshape((m,1))
 
             # Generate the new weight for the new voter
-            epsilon = self._compute_epsilon()
+            epsilon = self._compute_epsilon(y)
             self.epsilons.append(epsilon)
             if epsilon == 0. or math.log((1 - epsilon) / epsilon) == math.inf:
                 self.chosen_columns_.pop()
@@ -126,8 +133,10 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         self.weights_/=np.sum(self.weights_)
         y[y == -1] = 0
+        y = y.reshape((m,))
         end = time.time()
         self.train_time = end - start
+        print([epsi for epsi in self.epsilons])# if epsi >0.50])
         return self
 
     def predict(self, X):
@@ -144,20 +153,20 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.predict_time = end - start
         return signs_array
 
-    def _compute_epsilon(self,):
+    def _compute_epsilon(self,y):
         """Updating the \epsilon varaible"""
         if self.old_fashioned:
             return self._compute_epsilon_old()
-        ones_matrix = np.zeros(self.new_voter.shape)
-        ones_matrix[self.new_voter < 0] = 1
-        epsilon = (1.0/self.n_total_examples)*np.sum(self.example_weights*ones_matrix, axis=0)
+        ones_matrix = np.zeros(y.shape)
+        ones_matrix[np.multiply(y, self.new_voter.reshape(y.shape)) < 0] = 1
+        epsilon = np.average(ones_matrix, weights=self.example_weights, axis=0)
         return epsilon
 
     def _update_example_weights(self, y):
         if self.old_fashioned:
             self._update_example_weights(y)
         else:
-            new_weights = self.example_weights*np.exp(-self.q*y.reshape((self.n_total_examples, 1))*self.new_voter)
+            new_weights = self.example_weights*np.exp(-self.q*y*self.new_voter)
             self.example_weights = new_weights/np.sum(new_weights)
 
     def _compute_epsilon_old(self,):
@@ -169,7 +178,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def _update_example_weights_old(self, y):
         """computed on the combination of the old vote and the new voter"""
-        new_weights = self.example_weights*np.exp(-self.q*y.reshape((self.n_total_examples, 1))*self.weighted_sum)
+        new_weights = self.example_weights*np.exp(-self.q*y*self.weighted_sum)
         self.example_weights = new_weights/np.sum(new_weights)
 
     def _find_best_margin(self, y_kernel_matrix):
@@ -179,15 +188,32 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         worst_h_index = ma.argmax(pseudo_h_values)
         return worst_h_index
 
+    def _find_best_weighted_margin(self, y_kernel_matrix):
+        """Just a try"""
+        if len(self.chosen_columns_) < 30:
+            weighted_kernel_matrix = np.multiply(y_kernel_matrix, self.example_weights.reshape((self.n_total_examples, 1)))
+            pseudo_h_values = ma.array(np.sum(weighted_kernel_matrix, axis=0), fill_value=-np.inf)
+            pseudo_h_values[self.chosen_columns_] = ma.masked
+            worst_h_index = ma.argmax(pseudo_h_values)
+            return worst_h_index, [0]
+        else:
+            return "plif", "plouf"
+
+    def _is_not_too_wrong(self, hypothese, y):
+        ones_matrix = np.zeros(y.shape)
+        ones_matrix[hypothese.reshape(y.shape) < 0] = 1
+        epsilon = np.average(ones_matrix, weights=self.example_weights, axis=0)
+        return epsilon < 0.5
+
     def _find_new_voter(self, y_kernel_matrix, y):
         """Here, we solve the two_voters_mincq_problem for each potential new voter,
         and select the one that has the smallest minimum"""
         c_borns = []
         possible_sols = []
         indices = []
+        causes = []
         for hypothese_index, hypothese in enumerate(y_kernel_matrix.transpose()):
-            causes = []
-            if (hypothese_index not in self.chosen_columns_ or self.twice_the_same) and set(self.chosen_columns_)!={hypothese_index}:
+            if (hypothese_index not in self.chosen_columns_ or self.twice_the_same) and set(self.chosen_columns_)!={hypothese_index} and self._is_not_too_wrong(hypothese, y):
                 w = self._solve_two_weights_min_c(hypothese, y)
                 if w[0] != "break":
                     c_borns.append(self._cbound(w[0]))
@@ -195,26 +221,26 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                     indices.append(hypothese_index)
                 else:
                     causes.append(w[1])
+        if not causes:
+            causes = ["no feature was better than random and acceptable"]
         if c_borns:
             min_c_born_index = ma.argmin(c_borns)
             selected_sol = possible_sols[min_c_born_index]
             selected_voter_index = indices[min_c_born_index]
             return selected_sol, selected_voter_index
         else:
-            return "break", "smthng"
-
+            return "break", " and ".join(set(causes))
 
     def _solve_two_weights_min_c(self, next_column, y):
         """Here we solve the min C-bound problem for two voters and return the best 2-weights array
         No precalc because longer"""
         m = next_column.shape[0]
         zero_diag = np.ones((m, m)) - np.identity(m)
-
-        weighted_previous_sum = np.multiply(np.multiply(y.reshape((m, 1)), self.previous_vote.reshape((m, 1))), self.example_weights.reshape((m,1)))
+        if self.previous_vote_weighted:
+            weighted_previous_sum = np.multiply(np.multiply(y, self.previous_vote.reshape((m, 1))), self.example_weights.reshape((m,1)))
+        else:
+            weighted_previous_sum = np.multiply(y, self.previous_vote.reshape((m, 1)))
         weighted_next_column = np.multiply(next_column.reshape((m,1)), self.example_weights.reshape((m,1)))
-        #
-        # mat_prev = np.repeat(weighted_previous_sum, m, axis=1) * zero_diag
-        # mat_next = np.repeat(weighted_next_column, m, axis=1) * zero_diag
 
         self.B2 = np.sum((weighted_previous_sum - weighted_next_column) ** 2)
         self.B1 = np.sum(2 * weighted_next_column * (weighted_previous_sum - 2 * weighted_next_column * weighted_next_column))
@@ -238,9 +264,9 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             elif abs(C1) > 0:
                 return np.array([0., 1.])
             else:
-                return ['break', "the derivate was constant."]
+                return ['break', "the derivate was constant"]
         elif C2 == 0:
-            return ["break", "the derivate was affine."]
+            return ["break", "the derivate was affine"]
         try:
             sols = np.roots(np.array([C2, C1, C0]))
         except:
@@ -262,19 +288,19 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             if self._cbound(sols[0]) < self._cbound(sols[0] + 1):
                 best_sol = sols[0]
             else:
-                return False, " the only solution was a maximum."
+                return False, "the only solution was a maximum."
         elif sols.shape[0] == 2:
             best_sol = self._best_sol(sols)
         else:
-            return False, " no solution were found."
+            return False, "no solution were found"
 
         if 0 < best_sol < 1:
             return True, self._best_sol(sols)
 
         elif best_sol <= 0:
-            return False, " the minimum was below 0."
+            return False, "the minimum was below 0"
         else:
-            return False, " the minimum was over 1."
+            return False, "the minimum was over 1"
 
     def _cbound(self, sol):
         """Computing the objective function"""

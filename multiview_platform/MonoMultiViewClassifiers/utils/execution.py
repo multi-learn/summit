@@ -196,6 +196,12 @@ def parseTheArgs(arguments):
     groupQarBoostNC2.add_argument('--QarBNC2_epsilon', metavar='FLOAT', type=float, action='store',
                                  help='Set the epsilon parameter for QarBoostNC2', default=1e-08)
 
+    groupQarBoostNC3 = parser.add_argument_group('QarBoostNC3 arguments')
+    groupQarBoostNC3.add_argument('--QarBNC3_mu', metavar='FLOAT', type=float, action='store',
+                                  help='Set the mu parameter for QarBoostNC3', default=0.001)
+    groupQarBoostNC3.add_argument('--QarBNC3_epsilon', metavar='FLOAT', type=float, action='store',
+                                  help='Set the epsilon parameter for QarBoostNC3', default=1e-08)
+
 
     groupMumbo = parser.add_argument_group('Mumbo arguments')
     groupMumbo.add_argument('--MU_types', metavar='STRING', action='store', nargs="+",

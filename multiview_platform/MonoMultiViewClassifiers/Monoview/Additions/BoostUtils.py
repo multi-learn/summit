@@ -686,10 +686,12 @@ class BaseBoost(object):
 
     def check_opposed_voters(self, ):
         nb_opposed = 0
+        oppposed = []
         for column in self.classification_matrix[:, self.chosen_columns_].transpose():
             for chosen_col in self.chosen_columns_:
-                if (-column.reshape((self.n_total_examples, 1)) == self.classification_matrix[:, chosen_col]).all():
+                if (-column.reshape((self.n_total_examples, 1)) == self.classification_matrix[:, chosen_col].reshape((self.n_total_examples, 1))).all():
                     nb_opposed+=1
+                    break
         return int(nb_opposed/2)
 
 
@@ -710,7 +712,7 @@ def getInterpretBase(classifier, directory, classifier_name, weights,
         else:
             interpretString += "."
     else:
-        interpretString += ", and the loop was broken because"+break_cause
+        interpretString += ", and the loop was broken because "+break_cause
     interpretString += "\n\t Selected voters : \n"
     interpretString += np.array2string(np.array(classifier.chosen_columns_)[weights_sort])
     interpretString += "\n\t Trained in "+str(datetime.timedelta(seconds=classifier.train_time))+" and predicted in "+str(datetime.timedelta(seconds=classifier.predict_time))+"."

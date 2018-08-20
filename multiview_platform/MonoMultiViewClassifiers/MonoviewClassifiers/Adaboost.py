@@ -29,6 +29,8 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
     def getInterpret(self, directory):
         interpretString = ""
         interpretString += self.getFeatureImportance(directory)
+        interpretString += "\n\n"
+        interpretString += str(self.estimator_errors_)
         return interpretString
 
 
