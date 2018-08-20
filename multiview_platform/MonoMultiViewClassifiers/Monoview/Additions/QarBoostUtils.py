@@ -83,6 +83,11 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self.weighted_sum = self.new_voter
 
                 epsilon = self._compute_epsilon(y)
+                if epsilon == 0. or math.log((1 - epsilon) / epsilon) == math.inf:
+                    self.break_cause = " epsilon was too small"
+                    self.weights_ = [1.0]
+                    self.train_accuracies = [1.0]
+                    break
                 self.epsilons.append(epsilon)
                 self.q = math.log((1-epsilon)/epsilon)
                 self.weights_.append(self.q)

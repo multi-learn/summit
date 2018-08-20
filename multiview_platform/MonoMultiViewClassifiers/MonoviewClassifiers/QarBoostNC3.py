@@ -9,7 +9,7 @@ class QarBoostNC3(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         super(QarBoostNC3, self).__init__(
             random_state=random_state,
             self_complemented=False,
-            twice_the_same=False,
+            twice_the_same=True,
             previous_vote_weighted=False
             )
         self.param_names = []
