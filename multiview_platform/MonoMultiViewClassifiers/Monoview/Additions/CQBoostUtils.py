@@ -192,7 +192,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
 #     def __init__(self, mu=0.001, epsilon=1e-08, n_max_iterations=None, estimators_generator=None, save_iteration_as_hyperparameter_each=None):
 #         super(CqBoostClassifier, self).__init__(epsilon, n_max_iterations, estimators_generator, dual_constraint_rhs=0,
 #                                                 save_iteration_as_hyperparameter_each=save_iteration_as_hyperparameter_each)
-#         # TODO: Vérifier la valeur de nu (dual_constraint_rhs) à l'initialisation, mais de toute manière ignorée car
+#         # TODO: Verifier la valeur de nu (dual_constraint_rhs) a l'initialisation, mais de toute maniere ignoree car
 #         # on ne peut pas quitter la boucle principale avec seulement un votant.
 #         self.mu = mu
 #         self.train_time = 0

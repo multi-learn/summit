@@ -79,7 +79,7 @@ class ColumnGenerationClassifierv21(BaseEstimator, ClassifierMixin, BaseBoost):
                 self.train_accuracies.append(accuracy_score(y, np.sign(self.previous_vote)))
                 continue
 
-            # ---- On résoud le problème à deux votants analytiquement.
+            # ---- On resoud le probleme a deux votants analytiquement.
             w = self._solve_two_weights_min_c(new_voter_margin, example_weights)
             if w[0] == "break":
                 self.chosen_columns_.pop()

@@ -19,7 +19,7 @@ class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
             )
         self.param_names = ["n_neighbors", "weights", "algorithm", "p"]
         self.classed_params = []
-        self.distribs = [CustomRandint(low=1, high=20), ["uniform", "distance"],
+        self.distribs = [CustomRandint(low=1, high=10), ["uniform", "distance"],
                          ["auto", "ball_tree", "kd_tree", "brute"], [1, 2]]
         self.weird_strings = {}
         self.random_state=random_state

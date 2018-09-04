@@ -20,13 +20,13 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
     estimator = getattr(classifierModule, CL_type)(randomState)
     params_dict = estimator.genDistribs()
     if params_dict:
-        nb_possible_combinations = compute_possible_combinations(params_dict)
         metricModule = getattr(Metrics, metric[0])
         if metric[1] is not None:
             metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
         else:
             metricKWARGS = {}
         scorer = metricModule.get_scorer(**metricKWARGS)
+        nb_possible_combinations = compute_possible_combinations(params_dict)
         if nIter > nb_possible_combinations:
             nIter = nb_possible_combinations
         randomSearch = RandomizedSearchCV(estimator, n_iter=nIter, param_distributions=params_dict, refit=True,

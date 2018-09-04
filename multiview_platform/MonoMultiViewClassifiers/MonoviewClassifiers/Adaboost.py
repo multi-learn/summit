@@ -16,11 +16,12 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
             random_state=random_state,
             n_estimators=n_estimators,
             base_estimator=base_estimator,
+            algorithm="SAMME"
             )
         self.param_names = ["n_estimators", "base_estimator"]
         self.classed_params = ["base_estimator"]
         self.distribs = [CustomRandint(low=1, high=500), [None]]
-        self.weird_strings = {"base_estimator":"class_name"}
+        self.weird_strings = {"base_estimator": "class_name"}
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
@@ -29,8 +30,8 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
     def getInterpret(self, directory):
         interpretString = ""
         interpretString += self.getFeatureImportance(directory)
-        interpretString += "\n\n"
-        interpretString += str(self.estimator_errors_)
+        interpretString += "\n\n Estimator error | Estimator weight\n"
+        interpretString += "\n".join([str(error) +" | "+ str(weight/sum(self.estimator_weights_)) for error, weight in zip(self.estimator_errors_, self.estimator_weights_)])
         return interpretString
 
 

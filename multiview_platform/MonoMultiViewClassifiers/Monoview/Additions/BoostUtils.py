@@ -666,6 +666,7 @@ def get_accuracy_graph(train_accuracies, classifier_name, file_name):
     f.savefig(file_name)
     plt.close()
 
+
 class BaseBoost(object):
 
     def __init__(self):
@@ -702,6 +703,8 @@ def getInterpretBase(classifier, directory, classifier_name, weights,
     interpretString += np.array2string(weights[weights_sort], precision=4, separator=',', suppress_small=True)
     interpretString += "\n \t It generated {} columns by attributes and used {} iterations to converge, and selected {} couple(s) of opposed voters".format(classifier.n_stumps,
         len(weights_sort), classifier.nb_opposed_voters)
+    if max(weights) > 0.50:
+        interpretString += "\n \t The vote is useless in this context : voter n°{} is a dictator of weight > 0.50".format(classifier.chosen_columns_[np.argmax(np.array(weights))])
     if len(weights_sort) == classifier.n_max_iterations or len(weights) == classifier.n_total_hypotheses_:
         if len(weights) == classifier.n_max_iterations:
             interpretString += ", and used all available iterations, "
