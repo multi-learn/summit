@@ -10,14 +10,14 @@ from sklearn.metrics import accuracy_score
 import time
 import matplotlib.pyplot as plt
 
-from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost
+from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost, getInterpretBase
 
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0,
+    def __init__(self, n_max_iterations=100, estimators_generator=None, dual_constraint_rhs=0,
                  random_state=42, self_complemented=True, twice_the_same=False, old_fashioned=False,
                  previous_vote_weighted=True, c_bound_choice = True, random_start = True,
-                 two_wieghts_problem=False):
+                 two_wieghts_problem=False, divided_ponderation=True):
         super(ColumnGenerationClassifierQar, self).__init__()
         self.n_max_iterations = n_max_iterations
         self.estimators_generator = estimators_generator
@@ -31,12 +31,19 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.train_time = 0
         self.old_fashioned = old_fashioned
         self.previous_vote_weighted = previous_vote_weighted
-        self.c_bound_choice = True
-        self.random_start = True
-        self.two_wieghts_problem = False
         self.c_bound_choice = c_bound_choice
         self.random_start = random_start
         self.two_wieghts_problem = two_wieghts_problem
+        self.divided_ponderation = divided_ponderation
+
+    def set_params(self, **params):
+        self.self_complemented = params["self_complemented"]
+        self.twice_the_same = params["twice_the_same"]
+        self.old_fashioned = params["old_fashioned"]
+        self.previous_vote_weighted = params["previous_vote_weighted"]
+        self.c_bound_choice = params["c_bound_choice"]
+        self.random_start = params["random_start"]
+        self.two_wieghts_problem = params["two_wieghts_problem"]
 
     def fit(self, X, y):
         start = time.time()
@@ -116,7 +123,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             if self.c_bound_choice:
                 sol, new_voter_index = self._find_new_voter(y_kernel_matrix, y)
             else:
-                new_voter_index,sol = self._find_best_weighted_margin(y_kernel_matrix)
+                new_voter_index, sol = self._find_best_weighted_margin(y_kernel_matrix)
 
             # If the new voter selector could not find one, break the loop
             if type(sol) == str:
@@ -134,7 +141,10 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self.chosen_columns_.pop()
                 self.break_cause = " epsilon was too small."
                 break
-            self.q = math.log((1 - epsilon) / epsilon)
+            if self.divided_ponderation:
+                self.q = (1/(self.n_max_iterations-k))*math.log((1 - epsilon) / epsilon)
+            else:
+                self.q = math.log((1 - epsilon) / epsilon)
             self.weights_.append(self.q)
 
             # Update the distribution on the examples.
@@ -217,7 +227,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         pseudo_h_values = ma.array(np.sum(weighted_kernel_matrix, axis=0), fill_value=-np.inf)
         pseudo_h_values[self.chosen_columns_] = ma.masked
         acceptable_indices = np.where(np.logical_and(np.greater(upper_bound, pseudo_h_values), np.greater(pseudo_h_values, 0.5)))[0]
-        print(acceptable_indices, np.sum(self.example_weights))
         if acceptable_indices.size > 0:
             worst_h_index = self.random_state.choice(acceptable_indices)
             return worst_h_index, [0]
@@ -264,7 +273,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             causes = ["no feature was better than random and acceptable"]
         if c_borns:
             min_c_born_index = ma.argmin(c_borns)
-            print(c_borns[min_c_born_index])
             self.c_bounds.append(c_borns[min_c_born_index])
             selected_sol = possible_sols[min_c_born_index]
             selected_voter_index = indices[min_c_born_index]
@@ -449,6 +457,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         imageio.mimsave(path+'/weights.gif', images, duration=1. / 2)
         import shutil
         shutil.rmtree(path+"/gif_images")
+        return getInterpretBase(self, directory, "QarBoost", self.weights_, self.break_cause)
 
 
 

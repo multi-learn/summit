@@ -699,7 +699,8 @@ class BaseBoost(object):
 def getInterpretBase(classifier, directory, classifier_name, weights,
                      break_cause=" the dual constrail was not violated"):
     interpretString = "\t "+classifier_name+" permformed classification with weights : \n"
-    weights_sort = np.argsort(-weights)
+    # weights_sort = np.argsort(-weights)
+    weights_sort = np.arange(weights.shape[0])
     interpretString += np.array2string(weights[weights_sort], precision=4, separator=',', suppress_small=True)
     interpretString += "\n \t It generated {} columns by attributes and used {} iterations to converge, and selected {} couple(s) of opposed voters".format(classifier.n_stumps,
         len(weights_sort), classifier.nb_opposed_voters)

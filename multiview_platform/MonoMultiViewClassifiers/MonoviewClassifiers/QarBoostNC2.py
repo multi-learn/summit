@@ -9,7 +9,13 @@ class QarBoostNC2(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         super(QarBoostNC2, self).__init__(
             random_state=random_state,
             self_complemented=False,
-            twice_the_same=True
+            twice_the_same=False,
+            old_fashioned=False,
+            previous_vote_weighted=False,
+            c_bound_choice=True,
+            random_start=True,
+            two_wieghts_problem=False,
+            divided_ponderation=True
             )
         self.param_names = []
         self.distribs = []
@@ -21,7 +27,7 @@ class QarBoostNC2(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         return True
 
     def getInterpret(self, directory):
-        return getInterpretBase(self, directory, "QarBoostNC2", self.weights_, self.break_cause)
+        return self.getInterpretQar(directory)
 
     def get_name_for_fusion(self):
         return "QBN2"

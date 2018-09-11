@@ -21,8 +21,7 @@ class QarBoost(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         return True
 
     def getInterpret(self, directory):
-        self.getInterpretQar(directory)
-        return getInterpretBase(self, directory, "QarBoost", self.weights_, self.break_cause)
+        return self.getInterpretQar(directory)
 
 
 def formatCmdArgs(args):
