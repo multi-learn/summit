@@ -656,12 +656,12 @@ class ConvexProgram(object):
         signs[array == 0] = -1
         return signs
 
-def get_accuracy_graph(train_accuracies, classifier_name, file_name):
+def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accuracies"):
     f, ax = plt.subplots(nrows=1, ncols=1)
-    ax.set_title("Accuracies during train for "+classifier_name)
+    ax.set_title(name+" during train for "+classifier_name)
     x = np.arange(len(train_accuracies))
     scat = ax.scatter(x, np.array(train_accuracies), )
-    ax.legend((scat,), ("Accuracies",))
+    ax.legend((scat,), (name,))
     plt.tight_layout()
     f.savefig(file_name)
     plt.close()
@@ -670,7 +670,7 @@ def get_accuracy_graph(train_accuracies, classifier_name, file_name):
 class BaseBoost(object):
 
     def __init__(self):
-        self.n_stumps = 10
+        self.n_stumps = 1
 
     def _collect_probas(self, X):
         return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])

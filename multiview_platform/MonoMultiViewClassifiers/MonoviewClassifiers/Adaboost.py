@@ -1,7 +1,9 @@
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
 
 from ..Monoview.MonoviewUtils import CustomRandint, BaseMonoviewClassifier
+from ..Monoview.Additions.BoostUtils import get_accuracy_graph
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -20,8 +22,11 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
             )
         self.param_names = ["n_estimators", "base_estimator"]
         self.classed_params = ["base_estimator"]
-        self.distribs = [CustomRandint(low=1, high=500), [None]]
+        self.distribs = [CustomRandint(low=1, high=500), [DecisionTreeClassifier(max_depth=1)]]
         self.weird_strings = {"base_estimator": "class_name"}
+
+    def fit(self, X, y, sample_weight=None):
+        super(Adaboost, self).fit(X, y, sample_weight=sample_weight)
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
@@ -38,7 +43,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
     kwargsDict = {'n_estimators': args.Ada_n_est,
-                  'base_estimator': DecisionTreeClassifier()}
+                  'base_estimator': DecisionTreeClassifier(max_depth=1)}
     return kwargsDict
 
 

@@ -10,11 +10,11 @@ from sklearn.metrics import accuracy_score
 import time
 import matplotlib.pyplot as plt
 
-from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost, getInterpretBase
+from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost, getInterpretBase, get_accuracy_graph
 
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, n_max_iterations=100, estimators_generator=None, dual_constraint_rhs=0,
+    def __init__(self, n_max_iterations=350, estimators_generator=None, dual_constraint_rhs=0,
                  random_state=42, self_complemented=True, twice_the_same=False, old_fashioned=False,
                  previous_vote_weighted=True, c_bound_choice = True, random_start = True,
                  two_wieghts_problem=False, divided_ponderation=True):
@@ -84,9 +84,11 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         self.n_total_hypotheses_ = n
         self.n_total_examples = m
+        self.n_max_iterations = n
         self.break_cause = " the maximum number of iterations was attained."
 
         for k in range(min(n, self.n_max_iterations if self.n_max_iterations is not None else np.inf)):
+
             # To choose the first voter, we select the one that has the best margin or a random one..
             if k == 0:
                 if self.random_start:
@@ -107,7 +109,11 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                     self.train_accuracies = [1.0]
                     break
                 self.epsilons.append(epsilon)
-                self.q = math.log((1-epsilon)/epsilon)
+                if self.divided_ponderation:
+                    self.q = (1 / (self.n_max_iterations - k)) * math.log((1 - epsilon) / epsilon)
+                else:
+                    # self.q = math.log((1 - epsilon) / epsilon)
+                    self.q = math.log((1 + epsilon) / (1-epsilon))
                 self.weights_.append(self.q)
 
                 # Update the boosting variables
@@ -116,7 +122,9 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self.previous_margins.append(np.multiply(y, self.previous_vote))
                 self.train_accuracies.append(accuracy_score(y, np.sign(self.previous_vote)))
                 continue
-
+            if epsilon > 0.5:
+                import pdb;pdb.set_trace()
+            print("{}/{}, eps :{}".format(k, self.n_max_iterations, self.epsilons[-1]), end="\r")
             # Find best weak hypothesis given example_weights. Select the one that has the lowest minimum
             # C-bound with the previous vote or the one with the best weighted margin
 
@@ -144,7 +152,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             if self.divided_ponderation:
                 self.q = (1/(self.n_max_iterations-k))*math.log((1 - epsilon) / epsilon)
             else:
-                self.q = math.log((1 - epsilon) / epsilon)
+                # self.q = math.log((1 - epsilon) / epsilon)
+                self.q = math.log((1 + epsilon) / (1 - epsilon))
             self.weights_.append(self.q)
 
             # Update the distribution on the examples.
@@ -197,7 +206,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         if self.old_fashioned:
             self._update_example_weights_old(y)
         else:
-            new_weights = self.example_weights.reshape((self.n_total_examples, 1))*np.exp(-self.q*y*self.new_voter)
+            new_weights = self.example_weights.reshape((self.n_total_examples, 1))*np.exp(-self.q*np.multiply(y,self.new_voter))
             self.example_weights = new_weights/np.sum(new_weights)
 
     def _compute_epsilon_old(self,):
@@ -437,6 +446,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             raise
         filenames=[]
         max_weight = max([np.max(examples_weights) for examples_weights in self.example_weights_])
+        min_weight = min([np.max(examples_weights) for examples_weights in self.example_weights_])
         for iterIndex, examples_weights in enumerate(self.example_weights_):
             r = np.array(examples_weights)
             theta = np.arange(self.n_total_examples)
@@ -444,7 +454,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             fig = plt.figure(figsize=(5, 5), dpi=80)
             ax = fig.add_subplot(111)
             c = ax.scatter(theta, r, c=colors, cmap='RdYlGn', alpha=0.75)
-            ax.set_ylim(0.0, max_weight)
+            ax.set_ylim(min_weight, max_weight)
             filename = path+"/gif_images/"+str(iterIndex)+".png"
             filenames.append(filename)
             plt.savefig(filename)
@@ -452,11 +462,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         import imageio
         images = []
+        logging.getLogger("PIL").setLevel(logging.WARNING)
         for filename in filenames:
             images.append(imageio.imread(filename))
         imageio.mimsave(path+'/weights.gif', images, duration=1. / 2)
         import shutil
         shutil.rmtree(path+"/gif_images")
+        get_accuracy_graph(self.epsilons, self.__class__.__name__, directory + 'epsilons.png', "Errors")
         return getInterpretBase(self, directory, "QarBoost", self.weights_, self.break_cause)
 
 
