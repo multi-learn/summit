@@ -1,8 +1,11 @@
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
+import numpy as np
 from sklearn.metrics import accuracy_score
 
 from ..Monoview.MonoviewUtils import CustomRandint, BaseMonoviewClassifier
+from ..Monoview.Additions.BoostUtils import get_accuracy_graph
+from .. import Metrics
 from ..Monoview.Additions.BoostUtils import get_accuracy_graph
 
 # Author-Info
@@ -24,9 +27,14 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         self.classed_params = ["base_estimator"]
         self.distribs = [CustomRandint(low=1, high=500), [DecisionTreeClassifier(max_depth=1)]]
         self.weird_strings = {"base_estimator": "class_name"}
+        self.plotted_metric = Metrics.zero_one_loss
+        self.plotted_metric_name = "zero_one_loss"
 
     def fit(self, X, y, sample_weight=None):
         super(Adaboost, self).fit(X, y, sample_weight=sample_weight)
+        self.base_predictions = np.array([estim.predict(X) for estim in self.estimators_])
+        self.metrics = np.array([self.plotted_metric.score(pred, y) for pred in self.staged_predict(X)])
+        self.bounds = np.array([np.prod(np.sqrt(1-4*np.square(0.5-self.estimator_errors_[:i+1]))) for i in range(self.estimator_errors_.shape[0])])
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
@@ -37,6 +45,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         interpretString += self.getFeatureImportance(directory)
         interpretString += "\n\n Estimator error | Estimator weight\n"
         interpretString += "\n".join([str(error) +" | "+ str(weight/sum(self.estimator_weights_)) for error, weight in zip(self.estimator_errors_, self.estimator_weights_)])
+        get_accuracy_graph(self.metrics, "Adaboost", directory+"metrics.png", self.plotted_metric_name, bounds=list(self.bounds))
         return interpretString
 
 

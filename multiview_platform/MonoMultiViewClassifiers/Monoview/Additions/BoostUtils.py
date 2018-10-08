@@ -145,6 +145,18 @@ class ClassifiersGenerator(BaseEstimator, TransformerMixin):
         check_is_fitted(self, 'estimators_')
         return np.array([voter.predict(X) for voter in self.estimators_]).T
 
+# class TreesClassifiersGenerator(ClassifiersGenerator):
+#     """A generator to widen the voter's pool of our boosting algorithms.
+#     """
+#
+#     def __init__(self, n_stumps_per_attribute=10, self_complemented=False, check_diff=True, max_depth=3):
+#         super(TreesClassifiersGenerator, self).__init__(self_complemented)
+#         self.n_stumps_per_attribute = n_stumps_per_attribute
+#         self.check_diff = check_diff
+#         self.max_depth = max_depth
+#
+#     def fit(self, X, y=None):
+
 class StumpsClassifiersGenerator(ClassifiersGenerator):
     """Decision Stump Voters transformer.
 
@@ -656,15 +668,29 @@ class ConvexProgram(object):
         signs[array == 0] = -1
         return signs
 
-def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accuracies"):
-    f, ax = plt.subplots(nrows=1, ncols=1)
-    ax.set_title(name+" during train for "+classifier_name)
-    x = np.arange(len(train_accuracies))
-    scat = ax.scatter(x, np.array(train_accuracies), )
-    ax.legend((scat,), (name,))
-    plt.tight_layout()
-    f.savefig(file_name)
-    plt.close()
+
+def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accuracies", bounds=None):
+    if type(name) is not str:
+        name = " ".join(name.getConfig().strip().split(" ")[:2])
+    if bounds:
+        f, ax = plt.subplots(nrows=1, ncols=1)
+        ax.set_title(name+" during train for "+classifier_name)
+        x = np.arange(len(train_accuracies))
+        scat = ax.scatter(x, np.array(train_accuracies), )
+        scat2 = ax.scatter(x, np.array(bounds), )
+        ax.legend((scat,scat2), (name,"Bounds"))
+        plt.tight_layout()
+        f.savefig(file_name)
+        plt.close()
+    else:
+        f, ax = plt.subplots(nrows=1, ncols=1)
+        ax.set_title(name+" during train for "+classifier_name)
+        x = np.arange(len(train_accuracies))
+        scat = ax.scatter(x, np.array(train_accuracies), )
+        ax.legend((scat,), (name,))
+        plt.tight_layout()
+        f.savefig(file_name)
+        plt.close()
 
 
 class BaseBoost(object):
@@ -725,5 +751,5 @@ def getInterpretBase(classifier, directory, classifier_name, weights,
                                        separator=',', suppress_small=True)
     np.savetxt(directory + "voters.csv", classifier.classification_matrix[:, classifier.chosen_columns_], delimiter=',')
     np.savetxt(directory + "weights.csv", classifier.weights_, delimiter=',')
-    get_accuracy_graph(classifier.train_accuracies, classifier_name, directory + 'accuracies.png')
+    get_accuracy_graph(classifier.train_metrics, classifier_name, directory + 'metrics.png', classifier.plotted_metric, classifier.bounds)
     return interpretString

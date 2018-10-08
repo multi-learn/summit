@@ -7,8 +7,10 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.metrics import accuracy_score
 import numpy as np
 import time
+import math
 
 from .BoostUtils import StumpsClassifiersGenerator, ConvexProgram, sign, BaseBoost
+from ... import Metrics
 
 
 class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
@@ -20,8 +22,10 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         self.dual_constraint_rhs = dual_constraint_rhs
         self.mu = mu
         self.train_time = 0
+        self.plotted_metric = Metrics.accuracy_score
 
     def fit(self, X, y):
+        start = time.time()
         if scipy.sparse.issparse(X):
             X = np.array(X.todense())
 
@@ -45,7 +49,9 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         # Initialization
         alpha = self._initialize_alphas(m)
         self.initialize()
-        self.train_accuracies = []
+        self.train_metrics = []
+        self.gammas = []
+        self.bounds = []
         self.previous_votes = []
         # w = [0.5,0.5]
         w= None
@@ -74,14 +80,17 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
 
             margins = self.get_margins(w)
             signs_array = np.array([int(x) for x in sign(margins)])
-            self.train_accuracies.append(accuracy_score(y, signs_array))
+            self.train_metrics.append(self.plotted_metric.score(y, signs_array))
+            self.gammas.append(accuracy_score(y, signs_array))
+            self.bounds.append(math.exp(-2 * np.sum(np.square(np.array(self.gammas)))))
 
         self.nb_opposed_voters = self.check_opposed_voters()
         self.compute_weights_(w)
         # self.weights_ = w
         self.estimators_generator.estimators_ = self.estimators_generator.estimators_[self.chosen_columns_]
+        end = time.time()
 
-
+        self.train_time = end-start
         y[y == -1] = 0
         return self
 

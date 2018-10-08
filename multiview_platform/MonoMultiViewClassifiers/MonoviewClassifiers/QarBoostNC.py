@@ -16,7 +16,8 @@ class QarBoostNC(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
             c_bound_choice=True,
             random_start=True,
             two_wieghts_problem=False,
-            divided_ponderation=False
+            divided_ponderation=False,
+            n_stumps_per_attribute=1
             )
         self.param_names = []
         self.distribs = []

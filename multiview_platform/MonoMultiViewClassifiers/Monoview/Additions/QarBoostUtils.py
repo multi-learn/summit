@@ -11,13 +11,14 @@ import time
 import matplotlib.pyplot as plt
 
 from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost, getInterpretBase, get_accuracy_graph
+from ... import Metrics
 
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def __init__(self, n_max_iterations=350, estimators_generator=None, dual_constraint_rhs=0,
                  random_state=42, self_complemented=True, twice_the_same=False, old_fashioned=False,
                  previous_vote_weighted=True, c_bound_choice = True, random_start = True,
-                 two_wieghts_problem=False, divided_ponderation=True):
+                 two_wieghts_problem=False, divided_ponderation=True, n_stumps_per_attribute=None):
         super(ColumnGenerationClassifierQar, self).__init__()
         self.n_max_iterations = n_max_iterations
         self.estimators_generator = estimators_generator
@@ -35,6 +36,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.random_start = random_start
         self.two_wieghts_problem = two_wieghts_problem
         self.divided_ponderation = divided_ponderation
+        self.plotted_metric = Metrics.zero_one_loss
+        if n_stumps_per_attribute:
+            self.n_stumps = n_stumps_per_attribute
+
+        self.printed_args_name_list = ["n_max_iterations", "self_complemented", "twice_the_same", "old_fashioned",
+                                       "previous_vote_weighted", "c_bound_choice", "random_start",
+                                       "two_wieghts_problem", "divided_ponderation", "n_stumps"]
 
     def set_params(self, **params):
         self.self_complemented = params["self_complemented"]
@@ -78,7 +86,9 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.c_bounds = []
         self.epsilons = []
         self.example_weights_ = [self.example_weights]
-        self.train_accuracies = []
+        self.train_metrics = []
+        self.gammas = []
+        self.bounds = []
         self.previous_votes = []
         self.previous_margins = [np.multiply(y,y)]
 
@@ -94,7 +104,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 if self.random_start:
                     first_voter_index = self.random_state.choice(self.get_possible(y_kernel_matrix, y))
                 else:
-                    first_voter_index, plif = self._find_best_weighted_margin(y_kernel_matrix)
+                    first_voter_index, _ = self._find_best_weighted_margin(y_kernel_matrix)
                 self.chosen_columns_.append(first_voter_index)
                 self.new_voter = self.classification_matrix[:, first_voter_index].reshape((m,1))
 
@@ -120,11 +130,14 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self._update_example_weights(y)
                 self.example_weights_.append(self.example_weights)
                 self.previous_margins.append(np.multiply(y, self.previous_vote))
-                self.train_accuracies.append(accuracy_score(y, np.sign(self.previous_vote)))
+                self.train_metrics.append(self.plotted_metric.score(y, np.sign(self.previous_vote)))
+                self.gammas.append(accuracy_score(y, np.sign(self.previous_vote))-0.5)
+                self.bounds.append(math.exp(-2*self.gammas[-1]**2))
                 continue
-            if epsilon > 0.5:
-                import pdb;pdb.set_trace()
+
+            # Print dynamicly the step and the error of the current classifier
             print("{}/{}, eps :{}".format(k, self.n_max_iterations, self.epsilons[-1]), end="\r")
+
             # Find best weak hypothesis given example_weights. Select the one that has the lowest minimum
             # C-bound with the previous vote or the one with the best weighted margin
 
@@ -152,8 +165,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             if self.divided_ponderation:
                 self.q = (1/(self.n_max_iterations-k))*math.log((1 - epsilon) / epsilon)
             else:
-                # self.q = math.log((1 - epsilon) / epsilon)
-                self.q = math.log((1 + epsilon) / (1 - epsilon))
+                self.q = math.log((1 - epsilon) / epsilon)
+                # self.q = math.log((1 + epsilon) / (1 - epsilon))
             self.weights_.append(self.q)
 
             # Update the distribution on the examples.
@@ -165,7 +178,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                                            np.array(self.weights_).reshape((k + 1, 1))).reshape((m, 1))
             self.previous_votes.append(self.previous_vote)
             self.previous_margins.append(np.multiply(y, self.previous_vote))
-            self.train_accuracies.append(accuracy_score(y, np.sign(self.previous_vote)))
+            self.train_metrics.append(self.plotted_metric.score(y, np.sign(self.previous_vote)))
+            self.bounds.append(np.prod(np.sqrt(1-4*np.square(0.5-np.array(self.epsilons)))))
 
         self.nb_opposed_voters = self.check_opposed_voters()
         self.estimators_generator.estimators_ = self.estimators_generator.estimators_[self.chosen_columns_]
@@ -469,7 +483,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         import shutil
         shutil.rmtree(path+"/gif_images")
         get_accuracy_graph(self.epsilons, self.__class__.__name__, directory + 'epsilons.png', "Errors")
-        return getInterpretBase(self, directory, "QarBoost", self.weights_, self.break_cause)
+        interpretString = getInterpretBase(self, directory, "QarBoost", self.weights_, self.break_cause)
+
+        args_dict = dict((arg_name, str(self.__dict__[arg_name])) for arg_name in self.printed_args_name_list)
+        interpretString += "\n \n With arguments : \n"+u'\u2022 '+ ("\n"+u'\u2022 ').join(['%s: \t%s' % (key, value)
+                                                                                         for (key, value) in args_dict.items()])
+
+        return interpretString
 
 
 

@@ -28,5 +28,5 @@ def getConfig(**kwargs):
         sample_weight = kwargs["0"]
     except:
         sample_weight = None
-    configString = "Zero one loss using " + str(sample_weight) + " as sample_weights (lower is better)"
+    configString = "Zero_one loss using " + str(sample_weight) + " as sample_weights (lower is better)"
     return configString

@@ -28,5 +28,5 @@ def getConfig(**kwargs):
         sample_weight = kwargs["0"]
     except:
         sample_weight = None
-    configString = "Jaccard similarity score using " + str(sample_weight) + " as sample_weights (higher is better)"
+    configString = "Jaccard_similarity score using " + str(sample_weight) + " as sample_weights (higher is better)"
     return configString
