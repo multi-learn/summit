@@ -140,7 +140,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             # Find best weak hypothesis given example_weights. Select the one that has the lowest minimum
             # C-bound with the previous vote or the one with the best weighted margin
-
             if self.c_bound_choice:
                 sol, new_voter_index = self._find_new_voter(y_kernel_matrix, y)
             else:
