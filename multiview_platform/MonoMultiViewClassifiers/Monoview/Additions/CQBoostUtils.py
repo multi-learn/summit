@@ -32,7 +32,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         y[y == 0] = -1
 
         if self.estimators_generator is None:
-            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps, self_complemented=True)
+            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps_per_attribute, self_complemented=True)
 
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)

@@ -8,14 +8,16 @@ class QarBoostNC2(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
     def __init__(self, random_state=None, **kwargs):
         super(QarBoostNC2, self).__init__(
             random_state=random_state,
-            self_complemented=False,
+            self_complemented=True,
             twice_the_same=False,
             old_fashioned=False,
             previous_vote_weighted=False,
             c_bound_choice=True,
             random_start=True,
             two_wieghts_problem=False,
-            divided_ponderation=True
+            divided_ponderation=False,
+            n_stumps_per_attribute=10,
+            use_r=True
             )
         self.param_names = []
         self.distribs = []

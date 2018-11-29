@@ -15,8 +15,9 @@ class QarBoostNC3(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
             c_bound_choice=True,
             random_start=True,
             two_wieghts_problem=False,
-            divided_ponderation=False,
-            n_stumps_per_attribute=10
+            divided_ponderation=True,
+            n_stumps_per_attribute=1,
+            use_r=True
             )
         self.param_names = []
         self.distribs = []
@@ -31,7 +32,7 @@ class QarBoostNC3(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         return self.getInterpretQar(directory)
 
     def get_name_for_fusion(self):
-        return "QBN2"
+        return "QBN3"
 
 
 def formatCmdArgs(args):

@@ -6,7 +6,6 @@ from collections import defaultdict
 import math
 from sklearn.utils.validation import check_is_fitted
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.metrics import accuracy_score
 import time
 import matplotlib.pyplot as plt
 
@@ -15,19 +14,18 @@ from ... import Metrics
 
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, n_max_iterations=350, estimators_generator=None, dual_constraint_rhs=0,
+    def __init__(self, n_max_iterations=350, estimators_generator=None,
                  random_state=42, self_complemented=True, twice_the_same=False, old_fashioned=False,
                  previous_vote_weighted=True, c_bound_choice = True, random_start = True,
-                 two_wieghts_problem=False, divided_ponderation=True, n_stumps_per_attribute=None):
+                 two_wieghts_problem=False, divided_ponderation=True, n_stumps_per_attribute=None, use_r=True, plotted_metric=Metrics.zero_one_loss):
         super(ColumnGenerationClassifierQar, self).__init__()
         self.n_max_iterations = n_max_iterations
         self.estimators_generator = estimators_generator
-        self.dual_constraint_rhs = dual_constraint_rhs
         if type(random_state) is int:
             self.random_state = np.random.RandomState(random_state)
         else:
             self.random_state = random_state
-        self.self_complemented =self_complemented
+        self.self_complemented = self_complemented
         self.twice_the_same = twice_the_same
         self.train_time = 0
         self.old_fashioned = old_fashioned
@@ -36,13 +34,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.random_start = random_start
         self.two_wieghts_problem = two_wieghts_problem
         self.divided_ponderation = divided_ponderation
-        self.plotted_metric = Metrics.zero_one_loss
+        self.plotted_metric = plotted_metric
         if n_stumps_per_attribute:
-            self.n_stumps = n_stumps_per_attribute
-
+            self.n_stumps_per_attribute = n_stumps_per_attribute
+        self.use_r = use_r
         self.printed_args_name_list = ["n_max_iterations", "self_complemented", "twice_the_same", "old_fashioned",
                                        "previous_vote_weighted", "c_bound_choice", "random_start",
-                                       "two_wieghts_problem", "divided_ponderation", "n_stumps"]
+                                       "two_wieghts_problem", "divided_ponderation", "n_stumps", "use_r"]
 
     def set_params(self, **params):
         self.self_complemented = params["self_complemented"]
@@ -60,7 +58,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             X = np.array(X.todense())
 
         if self.estimators_generator is None:
-            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps,
+            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps_per_attribute,
                                                                    self_complemented=self.self_complemented)
         # Initialization
         y[y == 0] = -1
@@ -93,7 +91,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         self.n_total_hypotheses_ = n
         self.n_total_examples = m
-        self.n_max_iterations = 100
+        self.n_max_iterations = n
         self.break_cause = " the maximum number of iterations was attained."
 
         for k in range(min(n, self.n_max_iterations if self.n_max_iterations is not None else np.inf)):
@@ -134,14 +132,24 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             # Generate the new weight for the new voter
             epsilon = self._compute_epsilon(y)
             self.epsilons.append(epsilon)
+
+            r = self._compute_r(y)
+
             if epsilon == 0. or math.log((1 - epsilon) / epsilon) == math.inf:
                 self.chosen_columns_.pop()
                 self.break_cause = " epsilon was too small."
                 break
+
             if self.divided_ponderation:
-                self.q = (1/(self.n_max_iterations-k))*math.log((1 - epsilon) / epsilon)
+                if self.use_r:
+                    self.q = (1 / (self.n_max_iterations - k)) * 0.5*math.log((1+r)/(1-r))
+                else:
+                    self.q = (1/(self.n_max_iterations-k))*math.log((1 - epsilon) / epsilon)
             else:
-                self.q = math.log((1 - epsilon) / epsilon)
+                if self.use_r:
+                    self.q = 0.5*math.log((1+r)/(1-r))
+                else:
+                    self.q = math.log((1 - epsilon) / epsilon)
             self.weights_.append(self.q)
 
             # Update the distribution on the examples.
@@ -156,7 +164,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             self.previous_margins.append(np.multiply(y, self.previous_vote))
             self.train_metrics.append(self.plotted_metric.score(y, np.sign(self.previous_vote)))
             # self.bounds.append(np.prod(np.sqrt(1-4*np.square(0.5-np.array(self.epsilons)))))
-            r = self._compute_r(y)
+
             if k!=0:
                 self.bounds.append(self.bounds[-1]*math.sqrt(1-r**2))
             else:
@@ -322,7 +330,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             if C1 == 0:
                 return ['break', "the derivate was constant"]
             else :
-                is_acceptable, sol = self._analyze_solutions_one_weight(np.array(float(C0)/C1))
+                is_acceptable, sol = self._analyze_solutions_one_weight(np.array(float(C0)/C1).reshape((1,1)))
                 if is_acceptable:
                     return np.array([sol])
         try:

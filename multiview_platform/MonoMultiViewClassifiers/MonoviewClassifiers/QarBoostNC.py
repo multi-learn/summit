@@ -3,7 +3,6 @@ from ..Monoview.Additions.BoostUtils import getInterpretBase
 from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
 
 
-
 class QarBoostNC(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, **kwargs):
@@ -13,11 +12,12 @@ class QarBoostNC(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
             twice_the_same=False,
             old_fashioned=False,
             previous_vote_weighted=False,
-            c_bound_choice=False,
-            random_start=True,
-            two_wieghts_problem=True,
+            c_bound_choice=True,
+            random_start=False,
+            two_wieghts_problem=False,
             divided_ponderation=False,
-            n_stumps_per_attribute=100
+            n_stumps_per_attribute=1,
+            use_r=True
             )
         self.param_names = []
         self.distribs = []
