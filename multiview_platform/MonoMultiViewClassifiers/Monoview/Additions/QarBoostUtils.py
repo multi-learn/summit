@@ -48,23 +48,17 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def fit(self, X, y):
         start = time.time()
-        if scipy.sparse.issparse(X):
-            logging.info('Converting to dense matrix.')
-            X = np.array(X.todense())
-        # Initialization
-        y[y == 0] = -1
-        y = y.reshape((y.shape[0], 1))
 
+        formatted_X, formatted_y = self.format_X_y(X, y)
 
         self.init_info_containers()
 
-
-        m,n,y_kernel_matrix = self.init_hypotheses(X, y)
+        m,n,y_kernel_matrix = self.init_hypotheses(formatted_X, formatted_y)
 
         self.example_weights = self._initialize_alphas(m).reshape((m,1))
 
 
-        self.previous_margins.append(np.multiply(y,y))
+        self.previous_margins.append(np.multiply(formatted_y, formatted_y))
         self.example_weights_.append(self.example_weights)
         self.n_total_hypotheses_ = n
         self.n_total_examples = m
@@ -75,7 +69,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             # To choose the first voter, we select the one that has the best margin or a random one..
             if k == 0:
                 if self.random_start:
-                    first_voter_index = self.random_state.choice(self.get_possible(y_kernel_matrix, y))
+                    first_voter_index = self.random_state.choice(self.get_possible(y_kernel_matrix, formatted_y))
                 else:
                     first_voter_index, _ = self._find_best_weighted_margin(y_kernel_matrix)
 
@@ -92,7 +86,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 # Find best weak hypothesis given example_weights. Select the one that has the lowest minimum
                 # C-bound with the previous vote or the one with the best weighted margin
                 if self.c_bound_choice:
-                    sol, new_voter_index = self._find_new_voter(y_kernel_matrix, y)
+                    sol, new_voter_index = self._find_new_voter(y_kernel_matrix, formatted_y)
                 else:
                     new_voter_index, sol = self._find_best_weighted_margin(y_kernel_matrix)
 
@@ -106,10 +100,10 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self.new_voter = self.classification_matrix[:, new_voter_index].reshape((m, 1))
 
             # Generate the new weight for the new voter
-            epsilon = self._compute_epsilon(y)
+            epsilon = self._compute_epsilon(formatted_y)
             self.epsilons.append(epsilon)
 
-            r = self._compute_r(y)
+            r = self._compute_r(formatted_y)
 
             if epsilon == 0. or math.log((1 - epsilon) / epsilon) == math.inf:
                 self.chosen_columns_.pop()
@@ -123,7 +117,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             self.weights_.append(self.q)
 
             # Update the distribution on the examples.
-            self._update_example_weights(y)
+            self._update_example_weights(formatted_y)
             self.example_weights_.append(self.example_weights)
 
             if k != 0:
@@ -131,8 +125,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self.previous_vote = np.matmul(self.classification_matrix[:, self.chosen_columns_],
                                                np.array(self.weights_).reshape((k + 1, 1))).reshape((m, 1))
                 self.previous_votes.append(self.previous_vote)
-            self.previous_margins.append(np.multiply(y, self.previous_vote))
-            self.train_metrics.append(self.plotted_metric.score(y, np.sign(self.previous_vote)))
+            self.previous_margins.append(np.multiply(formatted_y, self.previous_vote))
+            self.train_metrics.append(self.plotted_metric.score(formatted_y, np.sign(self.previous_vote)))
             # self.bounds.append(np.prod(np.sqrt(1-4*np.square(0.5-np.array(self.epsilons)))))
 
             if k!=0:
@@ -145,8 +139,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.weights_ = np.array(self.weights_)
 
         self.weights_/= np.sum(self.weights_)
-        y[y == -1] = 0
-        y = y.reshape((m,))
+        formatted_y[formatted_y == -1] = 0
+        formatted_y = formatted_y.reshape((m,))
         end = time.time()
         self.train_time = end - start
         return self
@@ -164,6 +158,15 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         end = time.time()
         self.predict_time = end - start
         return signs_array
+
+    def format_X_y(self, X, y):
+        if scipy.sparse.issparse(X):
+            logging.info('Converting to dense matrix.')
+            X = np.array(X.todense())
+        # Initialization
+        y[y == 0] = -1
+        y = y.reshape((y.shape[0], 1))
+        return X, y
 
     def init_hypotheses(self, X, y):
         if self.estimators_generator is None:
