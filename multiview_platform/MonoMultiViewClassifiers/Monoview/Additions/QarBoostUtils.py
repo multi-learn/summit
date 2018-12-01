@@ -51,23 +51,15 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         if scipy.sparse.issparse(X):
             logging.info('Converting to dense matrix.')
             X = np.array(X.todense())
-
-        if self.estimators_generator is None:
-            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps,
-                                                                   self_complemented=self.self_complemented)
         # Initialization
         y[y == 0] = -1
+        y = y.reshape((y.shape[0], 1))
+
 
         self.init_info_containers()
 
-        self.estimators_generator.fit(X, y)
-        self.classification_matrix = self._binary_classification_matrix(X)
 
-        
-        m, n = self.classification_matrix.shape
-        y = y.reshape((m,1))
-        y_kernel_matrix = np.multiply(y, self.classification_matrix)
-
+        m,n,y_kernel_matrix = self.init_hypotheses(X, y)
 
         self.example_weights = self._initialize_alphas(m).reshape((m,1))
 
@@ -172,6 +164,17 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         end = time.time()
         self.predict_time = end - start
         return signs_array
+
+    def init_hypotheses(self, X, y):
+        if self.estimators_generator is None:
+            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps,
+                                                                   self_complemented=self.self_complemented)
+        self.estimators_generator.fit(X, y)
+        self.classification_matrix = self._binary_classification_matrix(X)
+
+        m, n = self.classification_matrix.shape
+        y_kernel_matrix = np.multiply(y, self.classification_matrix)
+        return m,n,y_kernel_matrix
 
     def init_info_containers(self):
         self.weights_ = []
