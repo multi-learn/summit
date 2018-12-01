@@ -15,16 +15,19 @@ from ... import Metrics
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def __init__(self, n_max_iterations=None, estimators_generator=None,
-                 random_state=42, self_complemented=True, twice_the_same=False, c_bound_choice = True, random_start = True, n_stumps_per_attribute=None, use_r=True, plotted_metric=Metrics.zero_one_loss):
+                 random_state=42, self_complemented=True, twice_the_same=False,
+                 c_bound_choice = True, random_start = True,
+                 n_stumps_per_attribute=None, use_r=True,
+                 plotted_metric=Metrics.zero_one_loss):
         super(ColumnGenerationClassifierQar, self).__init__()
 
-        self.train_time = 0
-        self.n_max_iterations = n_max_iterations
-        self.estimators_generator = estimators_generator
         if type(random_state) is int:
             self.random_state = np.random.RandomState(random_state)
         else:
             self.random_state = random_state
+        self.train_time = 0
+        self.n_max_iterations = n_max_iterations
+        self.estimators_generator = estimators_generator
         self.self_complemented = self_complemented
         self.twice_the_same = twice_the_same
         self.c_bound_choice = c_bound_choice
@@ -55,32 +58,22 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         # Initialization
         y[y == 0] = -1
 
+        self.init_info_containers()
+
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)
 
-        self.weights_ = []
-        self.infos_per_iteration_ = defaultdict(list)
-
+        
         m, n = self.classification_matrix.shape
         y = y.reshape((m,1))
         y_kernel_matrix = np.multiply(y, self.classification_matrix)
 
-        self.collected_weight_vectors_ = {}
-        self.collected_dual_constraint_violations_ = {}
 
         self.example_weights = self._initialize_alphas(m).reshape((m,1))
 
-        self.chosen_columns_ = []
-        self.fobidden_columns = []
-        self.edge_scores = []
-        self.c_bounds = []
-        self.epsilons = []
-        self.example_weights_ = [self.example_weights]
-        self.train_metrics = []
-        self.bounds = []
-        self.previous_votes = []
-        self.previous_margins = [np.multiply(y,y)]
 
+        self.previous_margins.append(np.multiply(y,y))
+        self.example_weights_.append(self.example_weights)
         self.n_total_hypotheses_ = n
         self.n_total_examples = m
         self.break_cause = " the maximum number of iterations was attained."
@@ -180,6 +173,18 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.predict_time = end - start
         return signs_array
 
+    def init_info_containers(self):
+        self.weights_ = []
+        self.chosen_columns_ = []
+        self.fobidden_columns = []
+        self.c_bounds = []
+        self.epsilons = []
+        self.example_weights_ = []
+        self.train_metrics = []
+        self.bounds = []
+        self.previous_votes = []
+        self.previous_margins = []
+
     def _compute_epsilon(self,y):
         """Updating the error variable, the old fashioned way uses the whole majority vote to update the error"""
         ones_matrix = np.zeros(y.shape)
@@ -197,13 +202,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         """Old fashioned exaple weights update uses the whole majority vote, the other way uses only the last voter."""
         new_weights = self.example_weights.reshape((self.n_total_examples, 1))*np.exp(-self.q*np.multiply(y,self.new_voter))
         self.example_weights = new_weights/np.sum(new_weights)
-
-    def _find_best_margin(self, y_kernel_matrix):
-        """Used only on the first iteration to select the voter with the largest margin"""
-        pseudo_h_values = ma.array(np.sum(y_kernel_matrix, axis=0), fill_value=-np.inf)
-        pseudo_h_values[self.fobidden_columns] = ma.masked
-        worst_h_index = ma.argmax(pseudo_h_values)
-        return worst_h_index
 
     def _find_best_weighted_margin(self, y_kernel_matrix, upper_bound=1.0, lower_bound=0.0):
         """Finds the new voter by choosing the one that has the best weighted margin between 0.5 and 0.55
