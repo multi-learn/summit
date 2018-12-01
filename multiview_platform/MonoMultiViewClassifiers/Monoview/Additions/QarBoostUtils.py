@@ -14,11 +14,13 @@ from ... import Metrics
 
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, n_max_iterations=350, estimators_generator=None,
+    def __init__(self, n_max_iterations=None, estimators_generator=None,
                  random_state=42, self_complemented=True, twice_the_same=False, old_fashioned=False,
                  previous_vote_weighted=True, c_bound_choice = True, random_start = True,
                  two_wieghts_problem=False, divided_ponderation=True, n_stumps_per_attribute=None, use_r=True, plotted_metric=Metrics.zero_one_loss):
         super(ColumnGenerationClassifierQar, self).__init__()
+
+        self.train_time = 0
         self.n_max_iterations = n_max_iterations
         self.estimators_generator = estimators_generator
         if type(random_state) is int:
@@ -27,8 +29,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             self.random_state = random_state
         self.self_complemented = self_complemented
         self.twice_the_same = twice_the_same
-        self.train_time = 0
-        self.old_fashioned = old_fashioned
         self.previous_vote_weighted = previous_vote_weighted
         self.c_bound_choice = c_bound_choice
         self.random_start = random_start
@@ -38,14 +38,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         if n_stumps_per_attribute:
             self.n_stumps = n_stumps_per_attribute
         self.use_r = use_r
-        self.printed_args_name_list = ["n_max_iterations", "self_complemented", "twice_the_same", "old_fashioned",
+        self.printed_args_name_list = ["n_max_iterations", "self_complemented", "twice_the_same",
                                        "previous_vote_weighted", "c_bound_choice", "random_start",
                                        "two_wieghts_problem", "divided_ponderation", "n_stumps", "use_r"]
 
     def set_params(self, **params):
         self.self_complemented = params["self_complemented"]
         self.twice_the_same = params["twice_the_same"]
-        self.old_fashioned = params["old_fashioned"]
         self.previous_vote_weighted = params["previous_vote_weighted"]
         self.c_bound_choice = params["c_bound_choice"]
         self.random_start = params["random_start"]
@@ -91,7 +90,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         self.n_total_hypotheses_ = n
         self.n_total_examples = m
-        self.n_max_iterations = n
         self.break_cause = " the maximum number of iterations was attained."
 
         for k in range(min(n, self.n_max_iterations if self.n_max_iterations is not None else np.inf)):
@@ -197,8 +195,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def _compute_epsilon(self,y):
         """Updating the error variable, the old fashioned way uses the whole majority vote to update the error"""
-        if self.old_fashioned:
-            return self._compute_epsilon_old()
         ones_matrix = np.zeros(y.shape)
         ones_matrix[np.multiply(y, self.new_voter.reshape(y.shape)) < 0] = 1  # can np.divide if needed
         epsilon = np.average(ones_matrix, weights=self.example_weights, axis=0)
@@ -212,22 +208,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def _update_example_weights(self, y):
         """Old fashioned exaple weights update uses the whole majority vote, the other way uses only the last voter."""
-        if self.old_fashioned:
-            self._update_example_weights_old(y)
-        else:
-            new_weights = self.example_weights.reshape((self.n_total_examples, 1))*np.exp(-self.q*np.multiply(y,self.new_voter))
-            self.example_weights = new_weights/np.sum(new_weights)
-
-    def _compute_epsilon_old(self,):
-        """Updating the error variable computed on the combination of the old vote and the new voter"""
-        ones_matrix = np.zeros(self.weighted_sum.shape)
-        ones_matrix[self.weighted_sum < 0] = 1
-        epsilon = (1.0/self.n_total_examples)*np.sum(self.example_weights*ones_matrix, axis=0)
-        return epsilon
-
-    def _update_example_weights_old(self, y):
-        """computed on the combination of the old vote and the new voter"""
-        new_weights = self.example_weights*np.exp(-self.q*y*self.weighted_sum)
+        new_weights = self.example_weights.reshape((self.n_total_examples, 1))*np.exp(-self.q*np.multiply(y,self.new_voter))
         self.example_weights = new_weights/np.sum(new_weights)
 
     def _find_best_margin(self, y_kernel_matrix):

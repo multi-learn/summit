@@ -6,7 +6,7 @@ from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
 class QarBoostNC(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, **kwargs):
-        super(QarBoostNC, self).__init__(
+        super(QarBoostNC, self).__init__(n_max_iterations=50,
             random_state=random_state,
             self_complemented=True,
             twice_the_same=False,
