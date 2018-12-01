@@ -15,7 +15,7 @@ from ... import Metrics
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def __init__(self, n_max_iterations=None, estimators_generator=None,
-                 random_state=42, self_complemented=True, twice_the_same=False, c_bound_choice = True, random_start = True, divided_ponderation=True, n_stumps_per_attribute=None, use_r=True, plotted_metric=Metrics.zero_one_loss):
+                 random_state=42, self_complemented=True, twice_the_same=False, c_bound_choice = True, random_start = True, n_stumps_per_attribute=None, use_r=True, plotted_metric=Metrics.zero_one_loss):
         super(ColumnGenerationClassifierQar, self).__init__()
 
         self.train_time = 0
@@ -29,14 +29,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.twice_the_same = twice_the_same
         self.c_bound_choice = c_bound_choice
         self.random_start = random_start
-        self.divided_ponderation = divided_ponderation
         self.plotted_metric = plotted_metric
         if n_stumps_per_attribute:
             self.n_stumps = n_stumps_per_attribute
         self.use_r = use_r
         self.printed_args_name_list = ["n_max_iterations", "self_complemented", "twice_the_same",
                                        "c_bound_choice", "random_start",
-                                       "divided_ponderation", "n_stumps", "use_r"]
+                                       "n_stumps", "use_r"]
 
     def set_params(self, **params):
         self.self_complemented = params["self_complemented"]
@@ -132,16 +131,10 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self.break_cause = " epsilon was too small."
                 break
 
-            if self.divided_ponderation:
-                if self.use_r:
-                    self.q = (1 / (self.n_max_iterations - k)) * 0.5*math.log((1+r)/(1-r))
-                else:
-                    self.q = (1/(self.n_max_iterations-k))*math.log((1 - epsilon) / epsilon)
+            if self.use_r:
+                self.q = 0.5*math.log((1+r)/(1-r))
             else:
-                if self.use_r:
-                    self.q = 0.5*math.log((1+r)/(1-r))
-                else:
-                    self.q = math.log((1 - epsilon) / epsilon)
+                self.q = math.log((1 - epsilon) / epsilon)
             self.weights_.append(self.q)
 
             # Update the distribution on the examples.
