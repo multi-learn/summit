@@ -15,8 +15,7 @@ from ... import Metrics
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def __init__(self, n_max_iterations=None, estimators_generator=None,
-                 random_state=42, self_complemented=True, twice_the_same=False, old_fashioned=False,
-                 previous_vote_weighted=True, c_bound_choice = True, random_start = True,
+                 random_state=42, self_complemented=True, twice_the_same=False, c_bound_choice = True, random_start = True,
                  two_wieghts_problem=False, divided_ponderation=True, n_stumps_per_attribute=None, use_r=True, plotted_metric=Metrics.zero_one_loss):
         super(ColumnGenerationClassifierQar, self).__init__()
 
@@ -29,7 +28,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             self.random_state = random_state
         self.self_complemented = self_complemented
         self.twice_the_same = twice_the_same
-        self.previous_vote_weighted = previous_vote_weighted
         self.c_bound_choice = c_bound_choice
         self.random_start = random_start
         self.two_wieghts_problem = two_wieghts_problem
@@ -39,13 +37,12 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             self.n_stumps = n_stumps_per_attribute
         self.use_r = use_r
         self.printed_args_name_list = ["n_max_iterations", "self_complemented", "twice_the_same",
-                                       "previous_vote_weighted", "c_bound_choice", "random_start",
+                                       "c_bound_choice", "random_start",
                                        "two_wieghts_problem", "divided_ponderation", "n_stumps", "use_r"]
 
     def set_params(self, **params):
         self.self_complemented = params["self_complemented"]
         self.twice_the_same = params["twice_the_same"]
-        self.previous_vote_weighted = params["previous_vote_weighted"]
         self.c_bound_choice = params["c_bound_choice"]
         self.random_start = params["random_start"]
         self.two_wieghts_problem = params["two_wieghts_problem"]
@@ -283,10 +280,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         No precalc because longer ; see the "derivee" latex document for more precision"""
         m = next_column.shape[0]
         zero_diag = np.ones((m, m)) - np.identity(m)
-        if self.previous_vote_weighted:
-            weighted_previous_sum = np.multiply(np.multiply(y, self.previous_vote.reshape((m, 1))), self.example_weights.reshape((m,1)))
-        else:
-            weighted_previous_sum = np.multiply(y, self.previous_vote.reshape((m, 1)))
+        weighted_previous_sum = np.multiply(y, self.previous_vote.reshape((m, 1)))
         weighted_next_column = np.multiply(next_column.reshape((m,1)), self.example_weights.reshape((m,1)))
 
         self.B2 = np.sum(weighted_next_column ** 2)
@@ -347,10 +341,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         No precalc because longer"""
         m = next_column.shape[0]
         zero_diag = np.ones((m, m)) - np.identity(m)
-        if self.previous_vote_weighted:
-            weighted_previous_sum = np.multiply(np.multiply(y, self.previous_vote.reshape((m, 1))), self.example_weights.reshape((m,1)))
-        else:
-            weighted_previous_sum = np.multiply(y, self.previous_vote.reshape((m, 1)))
+        weighted_previous_sum = np.multiply(y, self.previous_vote.reshape((m, 1)))
         weighted_next_column = np.multiply(next_column.reshape((m,1)), self.example_weights.reshape((m,1)))
 
         self.B2 = np.sum((weighted_previous_sum - weighted_next_column) ** 2)
