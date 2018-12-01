@@ -55,49 +55,33 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         m,n,y_kernel_matrix = self.init_hypotheses(formatted_X, formatted_y)
 
-        self.example_weights = self._initialize_alphas(m).reshape((m,1))
-
-
-        self.previous_margins.append(np.multiply(formatted_y, formatted_y))
-        self.example_weights_.append(self.example_weights)
         self.n_total_hypotheses_ = n
         self.n_total_examples = m
+
+        self.init_boosting(m, formatted_y, y_kernel_matrix)
         self.break_cause = " the maximum number of iterations was attained."
 
-        for k in range(min(n, self.n_max_iterations if self.n_max_iterations is not None else np.inf)):
+        for k in range(min(n-1, self.n_max_iterations-1 if self.n_max_iterations is not None else np.inf)):
 
-            # To choose the first voter, we select the one that has the best margin or a random one..
-            if k == 0:
-                if self.random_start:
-                    first_voter_index = self.random_state.choice(self.get_possible(y_kernel_matrix, formatted_y))
-                else:
-                    first_voter_index, _ = self._find_best_weighted_margin(y_kernel_matrix)
+            # Print dynamically the step and the error of the current classifier
+            print("{}/{}, eps :{}".format(k+2, self.n_max_iterations, self.epsilons[-1]), end="\r")
 
-                self.chosen_columns_.append(first_voter_index)
-                self.new_voter = self.classification_matrix[:, first_voter_index].reshape((m,1))
-
-                self.previous_vote = self.new_voter
-                self.weighted_sum = self.new_voter
-
+            # Find best weak hypothesis given example_weights. Select the one that has the lowest minimum
+            # C-bound with the previous vote or the one with the best weighted margin
+            if self.c_bound_choice:
+                sol, new_voter_index = self._find_new_voter(y_kernel_matrix, formatted_y)
             else:
-                # Print dynamically the step and the error of the current classifier
-                print("{}/{}, eps :{}".format(k, self.n_max_iterations, self.epsilons[-1]), end="\r")
+                new_voter_index, sol = self._find_best_weighted_margin(y_kernel_matrix)
 
-                # Find best weak hypothesis given example_weights. Select the one that has the lowest minimum
-                # C-bound with the previous vote or the one with the best weighted margin
-                if self.c_bound_choice:
-                    sol, new_voter_index = self._find_new_voter(y_kernel_matrix, formatted_y)
-                else:
-                    new_voter_index, sol = self._find_best_weighted_margin(y_kernel_matrix)
+            # If the new voter selector could not find one, break the loop
+            if type(sol) == str:
+                self.break_cause = new_voter_index  #
+                break
 
-                # If the new voter selector could not find one, break the loop
-                if type(sol) == str:
-                    self.break_cause = new_voter_index  #
-                    break
+            # Append the weak hypothesis.
+            self.chosen_columns_.append(new_voter_index)
+            self.new_voter = self.classification_matrix[:, new_voter_index].reshape((m, 1))
 
-                # Append the weak hypothesis.
-                self.chosen_columns_.append(new_voter_index)
-                self.new_voter = self.classification_matrix[:, new_voter_index].reshape((m, 1))
 
             # Generate the new weight for the new voter
             epsilon = self._compute_epsilon(formatted_y)
@@ -120,19 +104,16 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             self._update_example_weights(formatted_y)
             self.example_weights_.append(self.example_weights)
 
-            if k != 0:
-                # Update the "previous vote" to prepare for the next iteration
-                self.previous_vote = np.matmul(self.classification_matrix[:, self.chosen_columns_],
-                                               np.array(self.weights_).reshape((k + 1, 1))).reshape((m, 1))
-                self.previous_votes.append(self.previous_vote)
+            # Update the "previous vote" to prepare for the next iteration
+            self.previous_vote = np.matmul(self.classification_matrix[:, self.chosen_columns_],
+                                           np.array(self.weights_).reshape((k + 2, 1))).reshape((m, 1))
+            self.previous_votes.append(self.previous_vote)
+
             self.previous_margins.append(np.multiply(formatted_y, self.previous_vote))
             self.train_metrics.append(self.plotted_metric.score(formatted_y, np.sign(self.previous_vote)))
             # self.bounds.append(np.prod(np.sqrt(1-4*np.square(0.5-np.array(self.epsilons)))))
 
-            if k!=0:
-                self.bounds.append(self.bounds[-1]*math.sqrt(1-r**2))
-            else:
-                self.bounds.append(math.sqrt(1 - r ** 2))
+            self.bounds.append(self.bounds[-1]*math.sqrt(1-r**2))
 
         self.nb_opposed_voters = self.check_opposed_voters()
         self.estimators_generator.estimators_ = self.estimators_generator.estimators_[self.chosen_columns_]
@@ -158,6 +139,46 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         end = time.time()
         self.predict_time = end - start
         return signs_array
+
+    def init_boosting(self, m, y, y_kernel_matrix):
+        self.example_weights = self._initialize_alphas(m).reshape((m, 1))
+
+        self.previous_margins.append(np.multiply(y, y))
+        self.example_weights_.append(self.example_weights)
+        if self.random_start:
+            first_voter_index = self.random_state.choice(
+                self.get_possible(y_kernel_matrix, y))
+        else:
+            first_voter_index, _ = self._find_best_weighted_margin(
+                y_kernel_matrix)
+
+        self.chosen_columns_.append(first_voter_index)
+        self.new_voter = self.classification_matrix[:,
+                         first_voter_index].reshape((m, 1))
+
+        self.previous_vote = self.new_voter
+
+        epsilon = self._compute_epsilon(y)
+        self.epsilons.append(epsilon)
+
+        r = self._compute_r(y)
+
+        if self.use_r:
+            self.q = 0.5 * math.log((1 + r) / (1 - r))
+        else:
+            self.q = math.log((1 - epsilon) / epsilon)
+        self.weights_.append(self.q)
+
+        # Update the distribution on the examples.
+        self._update_example_weights(y)
+        self.example_weights_.append(self.example_weights)
+
+        self.previous_margins.append(
+            np.multiply(y, self.previous_vote))
+        self.train_metrics.append(
+            self.plotted_metric.score(y, np.sign(self.previous_vote)))
+
+        self.bounds.append(math.sqrt(1 - r ** 2))
 
     def format_X_y(self, X, y):
         if scipy.sparse.issparse(X):
