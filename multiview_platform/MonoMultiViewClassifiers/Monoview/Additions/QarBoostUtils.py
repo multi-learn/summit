@@ -15,8 +15,7 @@ from ... import Metrics
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def __init__(self, n_max_iterations=None, estimators_generator=None,
-                 random_state=42, self_complemented=True, twice_the_same=False, c_bound_choice = True, random_start = True,
-                 two_wieghts_problem=False, divided_ponderation=True, n_stumps_per_attribute=None, use_r=True, plotted_metric=Metrics.zero_one_loss):
+                 random_state=42, self_complemented=True, twice_the_same=False, c_bound_choice = True, random_start = True, divided_ponderation=True, n_stumps_per_attribute=None, use_r=True, plotted_metric=Metrics.zero_one_loss):
         super(ColumnGenerationClassifierQar, self).__init__()
 
         self.train_time = 0
@@ -30,7 +29,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.twice_the_same = twice_the_same
         self.c_bound_choice = c_bound_choice
         self.random_start = random_start
-        self.two_wieghts_problem = two_wieghts_problem
         self.divided_ponderation = divided_ponderation
         self.plotted_metric = plotted_metric
         if n_stumps_per_attribute:
@@ -38,14 +36,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.use_r = use_r
         self.printed_args_name_list = ["n_max_iterations", "self_complemented", "twice_the_same",
                                        "c_bound_choice", "random_start",
-                                       "two_wieghts_problem", "divided_ponderation", "n_stumps", "use_r"]
+                                       "divided_ponderation", "n_stumps", "use_r"]
 
     def set_params(self, **params):
         self.self_complemented = params["self_complemented"]
         self.twice_the_same = params["twice_the_same"]
         self.c_bound_choice = params["c_bound_choice"]
         self.random_start = params["random_start"]
-        self.two_wieghts_problem = params["two_wieghts_problem"]
 
     def fit(self, X, y):
         start = time.time()
@@ -254,10 +251,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             if (hypothese_index not in self.chosen_columns_ or self.twice_the_same)\
             and set(self.chosen_columns_)!={hypothese_index} \
             and self._is_not_too_wrong(hypothese, y):
-                if self.two_wieghts_problem:
-                    w = self._solve_two_weights_min_c(hypothese, y)
-                else:
-                    w = self._solve_one_weight_min_c(hypothese, y)
+                w = self._solve_one_weight_min_c(hypothese, y)
                 if w[0] != "break":
                     c_borns.append(self._cbound(w[0]))
                     possible_sols.append(w)
@@ -335,73 +329,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             return False, "the sol was complex"
         else:
             return True, best_sol
-
-    def _solve_two_weights_min_c(self, next_column, y):
-        """Here we solve the min C-bound problem for two voters and return the best 2-weights array
-        No precalc because longer"""
-        m = next_column.shape[0]
-        zero_diag = np.ones((m, m)) - np.identity(m)
-        weighted_previous_sum = np.multiply(y, self.previous_vote.reshape((m, 1)))
-        weighted_next_column = np.multiply(next_column.reshape((m,1)), self.example_weights.reshape((m,1)))
-
-        self.B2 = np.sum((weighted_previous_sum - weighted_next_column) ** 2)
-        self.B1 = np.sum(2 * weighted_next_column * (weighted_previous_sum - weighted_next_column))
-        self.B0 = np.sum(weighted_next_column * weighted_next_column)
-
-        M2 = np.sum(np.multiply(np.matmul((weighted_previous_sum - weighted_next_column), np.transpose(weighted_previous_sum - weighted_next_column)), zero_diag))
-        M1 = np.sum(np.multiply(np.matmul(weighted_previous_sum, np.transpose(weighted_next_column)) + np.matmul(weighted_next_column, np.transpose(weighted_previous_sum)) - 2*np.matmul(weighted_next_column, np.transpose(weighted_next_column)), zero_diag))
-        M0 = np.sum(np.multiply(np.matmul(weighted_next_column, np.transpose(weighted_next_column)), zero_diag))
-
-        self.A2 = self.B2 + M2
-        self.A1 = self.B1 + M1
-        self.A0 = self.B0 + M0
-
-        C2 = (M1 * self.B2 - M2 * self.B1)
-        C1 = 2 * (M0 * self.B2 - M2 * self.B0)
-        C0 = M0 * self.B1 - M1 * self.B0
-
-        if C2 == 0:
-            if C1 == 0:
-                return np.array([0.5, 0.5])
-            elif abs(C1) > 0:
-                return np.array([0., 1.])
-            else:
-                return ['break', "the derivate was constant"]
-        elif C2 == 0:
-            return ["break", "the derivate was affine"]
-        try:
-            sols = np.roots(np.array([C2, C1, C0]))
-        except:
-            return ["break", "nan"]
-        is_acceptable, sol = self._analyze_solutions(sols)
-        if is_acceptable:
-            return np.array([sol, 1-sol])
-        else:
-            return ["break", sol]
-
-    def _analyze_solutions(self, sols):
-        """"We just check that the solution found by np.roots is acceptable under our constraints
-        (real, a minimum and between 0 and 1)"""
-        for sol_index, sol in enumerate(sols):
-            if isinstance(sol, complex):
-                sols[sol_index] = -1
-        if sols.shape[0] == 1:
-            if self._cbound(sols[0]) < self._cbound(sols[0] + 1):
-                best_sol = sols[0]
-            else:
-                return False, "the only solution was a maximum."
-        elif sols.shape[0] == 2:
-            best_sol = self._best_sol(sols)
-        else:
-            return False, "no solution were found"
-
-        if 0 < best_sol < 1:
-            return True, self._best_sol(sols)
-
-        elif best_sol <= 0:
-            return False, "the minimum was below 0"
-        else:
-            return False, "the minimum was over 1"
 
     def _cbound(self, sol):
         """Computing the objective function"""
