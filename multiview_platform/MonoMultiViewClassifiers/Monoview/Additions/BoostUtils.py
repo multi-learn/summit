@@ -696,7 +696,7 @@ def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accur
 class BaseBoost(object):
 
     def __init__(self):
-        self.n_stumps_per_attribute = 1
+        self.n_stumps = 1
 
     def _collect_probas(self, X):
         return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])

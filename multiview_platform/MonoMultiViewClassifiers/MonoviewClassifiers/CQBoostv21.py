@@ -28,7 +28,7 @@ class ColumnGenerationClassifierv21(BaseEstimator, ClassifierMixin, BaseBoost):
             X = np.array(X.todense())
 
         if self.estimators_generator is None:
-            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps_per_attribute, self_complemented=True)
+            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps, self_complemented=True)
 
         y[y == 0] = -1
 

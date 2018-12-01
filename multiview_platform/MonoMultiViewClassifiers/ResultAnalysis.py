@@ -237,7 +237,10 @@ def plotMetricScores(trainScores, testScores, names, nbResults, metricName, file
     ax.set_xticks(np.arange(nbResults) + barWidth)
     ax.set_xticklabels(names, rotation="vertical")
 
-    plt.tight_layout()
+    try:
+        plt.tight_layout()
+    except:
+        pass
     f.savefig(fileName)
     plt.close()
 

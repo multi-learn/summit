@@ -36,7 +36,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.divided_ponderation = divided_ponderation
         self.plotted_metric = plotted_metric
         if n_stumps_per_attribute:
-            self.n_stumps_per_attribute = n_stumps_per_attribute
+            self.n_stumps = n_stumps_per_attribute
         self.use_r = use_r
         self.printed_args_name_list = ["n_max_iterations", "self_complemented", "twice_the_same", "old_fashioned",
                                        "previous_vote_weighted", "c_bound_choice", "random_start",
@@ -58,7 +58,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             X = np.array(X.todense())
 
         if self.estimators_generator is None:
-            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps_per_attribute,
+            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps,
                                                                    self_complemented=self.self_complemented)
         # Initialization
         y[y == 0] = -1
@@ -237,14 +237,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         worst_h_index = ma.argmax(pseudo_h_values)
         return worst_h_index
 
-    def _find_best_weighted_margin(self, y_kernel_matrix):
+    def _find_best_weighted_margin(self, y_kernel_matrix, upper_bound=1.0, lower_bound=0.0):
         """Finds the new voter by choosing the one that has the best weighted margin between 0.5 and 0.55
         to avoid too god voters that will get all the votes weights"""
-        upper_bound = 0.55
         weighted_kernel_matrix = np.multiply(y_kernel_matrix, self.example_weights.reshape((self.n_total_examples, 1)))
         pseudo_h_values = ma.array(np.sum(weighted_kernel_matrix, axis=0), fill_value=-np.inf)
         pseudo_h_values[self.chosen_columns_] = ma.masked
-        acceptable_indices = np.where(np.logical_and(np.greater(upper_bound, pseudo_h_values), np.greater(pseudo_h_values, 0.5)))[0]
+        acceptable_indices = np.where(np.logical_and(np.greater(upper_bound, pseudo_h_values), np.greater(pseudo_h_values, lower_bound)))[0]
         if acceptable_indices.size > 0:
             worst_h_index = self.random_state.choice(acceptable_indices)
             return worst_h_index, [0]
