@@ -66,22 +66,15 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             # Print dynamically the step and the error of the current classifier
             print("{}/{}, eps :{}".format(k+2, self.n_max_iterations, self.epsilons[-1]), end="\r")
 
-            # Find best weak hypothesis given example_weights. Select the one that has the lowest minimum
-            # C-bound with the previous vote or the one with the best weighted margin
-
             sol, new_voter_index = self.choose_new_voter(y_kernel_matrix, formatted_y)
 
-            # If the new voter selector could not find one, break the loop
             if type(sol) == str:
                 self.break_cause = new_voter_index  #
                 break
 
-            # Append the weak hypothesis.
             self.append_new_voter(new_voter_index)
 
-            # Generate the new weight for the new voter
             epsilon, r = self.compute_voter_perf(formatted_y)
-
 
             if epsilon == 0. or math.log((1 - epsilon) / epsilon) == math.inf:
                 self.chosen_columns_.pop()
@@ -90,20 +83,20 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             self.compute_voter_weight(r, epsilon)
 
-            # Update the distribution on the examples.
             self.update_example_weights(formatted_y)
 
-            # Update the "previous vote" to prepare for the next iteration
             self.update_info_containers(formatted_y, r, k)
 
 
         self.nb_opposed_voters = self.check_opposed_voters()
         self.estimators_generator.estimators_ = self.estimators_generator.estimators_[self.chosen_columns_]
-        self.weights_ = np.array(self.weights_)
 
+        self.weights_ = np.array(self.weights_)
         self.weights_/= np.sum(self.weights_)
+
         formatted_y[formatted_y == -1] = 0
         formatted_y = formatted_y.reshape((m,))
+
         end = time.time()
         self.train_time = end - start
         return self
@@ -123,6 +116,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         return signs_array
 
     def update_info_containers(self, y, r, k):
+        """Is used at each iteration to compute and store all the needed quantities for later analysis"""
         self.example_weights_.append(self.example_weights)
         self.previous_vote = np.matmul(
             self.classification_matrix[:, self.chosen_columns_],
@@ -137,6 +131,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         # self.bounds.append(np.prod(np.sqrt(1-4*np.square(0.5-np.array(self.epsilons)))))
 
     def compute_voter_weight(self, r, epsilon):
+        """used to compute the voter's weight according to the specified method (edge or error) """
         if self.use_r:
             self.q = 0.5 * math.log((1 + r) / (1 - r))
         else:
@@ -144,6 +139,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.weights_.append(self.q)
 
     def compute_voter_perf(self, formatted_y):
+        """Used to computer the performance (error or edge) of the selected voter"""
         epsilon = self._compute_epsilon(formatted_y)
         self.epsilons.append(epsilon)
 
@@ -151,11 +147,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         return epsilon, r
 
     def append_new_voter(self, new_voter_index):
+        """Used to append the voter to the majority vote"""
         self.chosen_columns_.append(new_voter_index)
         self.new_voter = self.classification_matrix[:, new_voter_index].reshape(
             (self.n_total_examples, 1))
 
     def choose_new_voter(self, y_kernel_matrix, formatted_y):
+        """Used to chhoose the voter according to the specified criterion (margin or C-Bound"""
         if self.c_bound_choice:
             sol, new_voter_index = self._find_new_voter(y_kernel_matrix,
                                                         formatted_y)
@@ -166,6 +164,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
 
     def init_boosting(self, m, y, y_kernel_matrix):
+        """THis initialization corressponds to the first round of boosting with equal weights for each examples and the voter chosen by it's margin."""
         self.example_weights = self._initialize_alphas(m).reshape((m, 1))
 
         self.previous_margins.append(np.multiply(y, y))
@@ -206,6 +205,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.bounds.append(math.sqrt(1 - r ** 2))
 
     def format_X_y(self, X, y):
+        """Formats the data  : X -the examples- and y -the labels- to be used properly by the algorithm """
         if scipy.sparse.issparse(X):
             logging.info('Converting to dense matrix.')
             X = np.array(X.todense())
@@ -215,6 +215,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         return X, y
 
     def init_hypotheses(self, X, y):
+        """Inintialization for the hyptotheses used to build the boosted vote"""
         if self.estimators_generator is None:
             self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps,
                                                                    self_complemented=self.self_complemented)
@@ -226,6 +227,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         return m,n,y_kernel_matrix
 
     def init_info_containers(self):
+        """Initialize the containers that will be collected at each iteration for the analysis"""
         self.weights_ = []
         self.chosen_columns_ = []
         self.fobidden_columns = []
