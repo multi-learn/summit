@@ -78,12 +78,10 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             # Append the weak hypothesis.
             self.append_new_voter(new_voter_index)
-  
-            # Generate the new weight for the new voter
-            epsilon = self._compute_epsilon(formatted_y)
-            self.epsilons.append(epsilon)
 
-            r = self._compute_r(formatted_y)
+            # Generate the new weight for the new voter
+            epsilon, r = self.compute_voter_perf(formatted_y)
+
 
             if epsilon == 0. or math.log((1 - epsilon) / epsilon) == math.inf:
                 self.chosen_columns_.pop()
@@ -136,11 +134,17 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.predict_time = end - start
         return signs_array
 
+    def compute_voter_perf(self, formatted_y):
+        epsilon = self._compute_epsilon(formatted_y)
+        self.epsilons.append(epsilon)
+
+        r = self._compute_r(formatted_y)
+        return epsilon, r
+
     def append_new_voter(self, new_voter_index):
         self.chosen_columns_.append(new_voter_index)
         self.new_voter = self.classification_matrix[:, new_voter_index].reshape(
             (self.n_total_examples, 1))
-
 
     def choose_new_voter(self, y_kernel_matrix, formatted_y):
         if self.c_bound_choice:
