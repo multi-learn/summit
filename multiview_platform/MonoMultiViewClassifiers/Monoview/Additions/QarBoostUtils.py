@@ -68,10 +68,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             # Find best weak hypothesis given example_weights. Select the one that has the lowest minimum
             # C-bound with the previous vote or the one with the best weighted margin
-            if self.c_bound_choice:
-                sol, new_voter_index = self._find_new_voter(y_kernel_matrix, formatted_y)
-            else:
-                new_voter_index, sol = self._find_best_weighted_margin(y_kernel_matrix)
+
+            sol, new_voter_index = self.choose_new_voter(y_kernel_matrix, formatted_y)
 
             # If the new voter selector could not find one, break the loop
             if type(sol) == str:
@@ -79,10 +77,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 break
 
             # Append the weak hypothesis.
-            self.chosen_columns_.append(new_voter_index)
-            self.new_voter = self.classification_matrix[:, new_voter_index].reshape((m, 1))
-
-
+            self.append_new_voter(new_voter_index)
+  
             # Generate the new weight for the new voter
             epsilon = self._compute_epsilon(formatted_y)
             self.epsilons.append(epsilon)
@@ -139,6 +135,22 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         end = time.time()
         self.predict_time = end - start
         return signs_array
+
+    def append_new_voter(self, new_voter_index):
+        self.chosen_columns_.append(new_voter_index)
+        self.new_voter = self.classification_matrix[:, new_voter_index].reshape(
+            (self.n_total_examples, 1))
+
+
+    def choose_new_voter(self, y_kernel_matrix, formatted_y):
+        if self.c_bound_choice:
+            sol, new_voter_index = self._find_new_voter(y_kernel_matrix,
+                                                        formatted_y)
+        else:
+            new_voter_index, sol = self._find_best_weighted_margin(
+                y_kernel_matrix)
+        return sol, new_voter_index
+
 
     def init_boosting(self, m, y, y_kernel_matrix):
         self.example_weights = self._initialize_alphas(m).reshape((m, 1))
