@@ -64,7 +64,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         for k in range(min(n-1, self.n_max_iterations-1 if self.n_max_iterations is not None else np.inf)):
 
             # Print dynamically the step and the error of the current classifier
-            print("{}/{}, eps :{}".format(k+2, self.n_max_iterations, self.epsilons[-1]), end="\r")
+            print("{}/{}, eps :{}".format(k+2, self.n_max_iterations, self.voter_perfs[-1]), end="\r")
 
             sol, new_voter_index = self.choose_new_voter(y_kernel_matrix, formatted_y)
 
@@ -74,18 +74,18 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             self.append_new_voter(new_voter_index)
 
-            epsilon, r = self.compute_voter_perf(formatted_y)
+            voter_perf = self.compute_voter_perf(formatted_y)
 
-            if epsilon == 0. or math.log((1 - epsilon) / epsilon) == math.inf:
-                self.chosen_columns_.pop()
-                self.break_cause = " epsilon was too small."
-                break
+            # if epsilon == 0. or math.log((1 - epsilon) / epsilon) == math.inf:
+            #     self.chosen_columns_.pop()
+            #     self.break_cause = " epsilon was too small."
+            #     break
 
-            self.compute_voter_weight(r, epsilon)
+            self.compute_voter_weight(voter_perf)
 
             self.update_example_weights(formatted_y)
 
-            self.update_info_containers(formatted_y, r, k)
+            self.update_info_containers(formatted_y, voter_perf, k)
 
 
         self.nb_opposed_voters = self.check_opposed_voters()
@@ -115,7 +115,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.predict_time = end - start
         return signs_array
 
-    def update_info_containers(self, y, r, k):
+    def update_info_containers(self, y, voter_perf, k):
         """Is used at each iteration to compute and store all the needed quantities for later analysis"""
         self.example_weights_.append(self.example_weights)
         self.previous_vote = np.matmul(
@@ -127,24 +127,29 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             np.multiply(y, self.previous_vote))
         self.train_metrics.append(
             self.plotted_metric.score(y, np.sign(self.previous_vote)))
-        self.bounds.append(self.bounds[-1] * math.sqrt(1 - r ** 2))
-        # self.bounds.append(np.prod(np.sqrt(1-4*np.square(0.5-np.array(self.epsilons)))))
+        if self.use_r:
+            self.bounds.append(self.bounds[-1] * math.sqrt(1 - voter_perf ** 2))
+        else:
+            self.bounds.append(np.prod(np.sqrt(1-4*np.square(0.5-np.array(self.voter_perfs)))))
 
-    def compute_voter_weight(self, r, epsilon):
+    def compute_voter_weight(self, voter_perf):
         """used to compute the voter's weight according to the specified method (edge or error) """
         if self.use_r:
-            self.q = 0.5 * math.log((1 + r) / (1 - r))
+            self.q = 0.5 * math.log((1 + voter_perf) / (1 - voter_perf))
         else:
-            self.q = math.log((1 - epsilon) / epsilon)
+            self.q = math.log((1 - voter_perf) / voter_perf)
         self.weights_.append(self.q)
 
     def compute_voter_perf(self, formatted_y):
         """Used to computer the performance (error or edge) of the selected voter"""
-        epsilon = self._compute_epsilon(formatted_y)
-        self.epsilons.append(epsilon)
-
-        r = self._compute_r(formatted_y)
-        return epsilon, r
+        if self.use_r:
+            r = self._compute_r(formatted_y)
+            self.voter_perfs.append(r)
+            return r
+        else:
+            epsilon = self._compute_epsilon(formatted_y)
+            self.voter_perfs.append(epsilon)
+            return epsilon
 
     def append_new_voter(self, new_voter_index):
         """Used to append the voter to the majority vote"""
@@ -182,10 +187,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         self.previous_vote = self.new_voter
 
-        epsilon = self._compute_epsilon(y)
-        self.epsilons.append(epsilon)
+        if self.use_r:
+            r = self._compute_r(y)
+            self.voter_perfs.append(r)
+        else:
+            epsilon = self._compute_epsilon(y)
+            self.voter_perfs.append(epsilon)
 
-        r = self._compute_r(y)
 
         if self.use_r:
             self.q = 0.5 * math.log((1 + r) / (1 - r))
@@ -232,7 +240,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.chosen_columns_ = []
         self.fobidden_columns = []
         self.c_bounds = []
-        self.epsilons = []
+        self.voter_perfs = []
         self.example_weights_ = []
         self.train_metrics = []
         self.bounds = []
@@ -420,7 +428,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         imageio.mimsave(path+'/weights.gif', images, duration=1. / 2)
         import shutil
         shutil.rmtree(path+"/gif_images")
-        get_accuracy_graph(self.epsilons, self.__class__.__name__, directory + 'epsilons.png', "Errors")
+        get_accuracy_graph(self.voter_perfs, self.__class__.__name__, directory + 'voter_perfs.png', "Errors")
         interpretString = getInterpretBase(self, directory, "QarBoost", self.weights_, self.break_cause)
 
         args_dict = dict((arg_name, str(self.__dict__[arg_name])) for arg_name in self.printed_args_name_list)
