@@ -76,11 +76,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             voter_perf = self.compute_voter_perf(formatted_y)
 
-            # if epsilon == 0. or math.log((1 - epsilon) / epsilon) == math.inf:
-            #     self.chosen_columns_.pop()
-            #     self.break_cause = " epsilon was too small."
-            #     break
-
             self.compute_voter_weight(voter_perf)
 
             self.update_example_weights(formatted_y)
