@@ -669,7 +669,7 @@ class ConvexProgram(object):
         return signs
 
 
-def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accuracies", bounds=None):
+def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accuracies", bounds=None, bound_name=None, boosting_bound=None):
     if type(name) is not str:
         name = " ".join(name.getConfig().strip().split(" ")[:2])
     if bounds:
@@ -677,8 +677,14 @@ def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accur
         ax.set_title(name+" during train for "+classifier_name)
         x = np.arange(len(train_accuracies))
         scat = ax.scatter(x, np.array(train_accuracies), )
-        scat2 = ax.scatter(x, np.array(bounds), )
-        ax.legend((scat,scat2), (name,"Bounds"))
+        if boosting_bound:
+            scat2 = ax.scatter(x, boosting_bound)
+            scat3 = ax.scatter(x, np.array(bounds), )
+            ax.legend((scat, scat2, scat3), (name,"Boosting bound", bound_name))
+        else:
+            scat2 = ax.scatter(x, np.array(bounds), )
+            ax.legend((scat, scat2),
+                      (name, bound_name))
         plt.tight_layout()
         f.savefig(file_name)
         plt.close()
@@ -751,5 +757,5 @@ def getInterpretBase(classifier, directory, classifier_name, weights,
                                        separator=',', suppress_small=True)
     np.savetxt(directory + "voters.csv", classifier.classification_matrix[:, classifier.chosen_columns_], delimiter=',')
     np.savetxt(directory + "weights.csv", classifier.weights_, delimiter=',')
-    get_accuracy_graph(classifier.train_metrics, classifier_name, directory + 'metrics.png', classifier.plotted_metric, classifier.bounds)
+    get_accuracy_graph(classifier.train_metrics, classifier_name, directory + 'metrics.png', classifier.plotted_metric, classifier.bounds, "Boosting bound")
     return interpretString

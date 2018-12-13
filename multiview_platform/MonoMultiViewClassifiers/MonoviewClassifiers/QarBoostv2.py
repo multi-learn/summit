@@ -6,18 +6,15 @@ from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
 class QarBoostv2(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, **kwargs):
-        super(QarBoostv2, self).__init__(
+        super(QarBoostv2, self).__init__(n_max_iterations=500,
             random_state=random_state,
-            self_complemented=False,
-            twice_the_same=False,
-            old_fashioned=False,
-            previous_vote_weighted=False,
+            self_complemented=True,
+            twice_the_same=True,
             c_bound_choice=True,
             random_start=False,
-            two_wieghts_problem=False,
-            divided_ponderation=False,
             n_stumps_per_attribute=1,
-            use_r=True
+            use_r=True,
+            c_bound_sol=True
             )
         self.param_names = []
         self.distribs = []

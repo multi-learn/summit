@@ -18,8 +18,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def __init__(self, n_max_iterations=None, estimators_generator=None,
                  random_state=42, self_complemented=True, twice_the_same=False,
                  c_bound_choice=True, random_start=True,
-                 n_stumps_per_attribute=None, use_r=True,
-                 plotted_metric=Metrics.zero_one_loss):
+                 n_stumps_per_attribute=None, use_r=True, c_bound_sol=True,
+                 plotted_metric=Metrics.zero_one_loss, save_train_data=True):
         super(ColumnGenerationClassifierQar, self).__init__()
         r"""
 
@@ -60,10 +60,12 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         if n_stumps_per_attribute:
             self.n_stumps = n_stumps_per_attribute
         self.use_r = use_r
+        self.c_bound_sol = c_bound_sol
+        self.save_train_data = save_train_data
         self.printed_args_name_list = ["n_max_iterations", "self_complemented",
                                        "twice_the_same",
                                        "c_bound_choice", "random_start",
-                                       "n_stumps", "use_r"]
+                                       "n_stumps", "use_r", "c_bound_sol"]
 
     def set_params(self, **params):
         self.self_complemented = params["self_complemented"]
@@ -94,7 +96,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             # Print dynamically the step and the error of the current classifier
             print(
-                "Resp. bound : {}, {}/{}, eps :{}".format(self.respected_bound,
+                "Resp. bound : {}, {}; {}/{}, eps :{}".format(self.respected_bound,
+                                                              self.bounds[-1] > self.train_metrics[-1],
                                                           k + 2,
                                                           self.n_max_iterations,
                                                           self.voter_perfs[-1]),
@@ -111,7 +114,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             voter_perf = self.compute_voter_perf(formatted_y)
 
-            self.compute_voter_weight(voter_perf)
+            self.compute_voter_weight(voter_perf, sol)
 
             self.update_example_weights(formatted_y)
 
@@ -120,6 +123,10 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.nb_opposed_voters = self.check_opposed_voters()
         self.estimators_generator.estimators_ = \
         self.estimators_generator.estimators_[self.chosen_columns_]
+
+        if self.save_train_data:
+            self.X_train = self.classification_matrix[:, self.chosen_columns_]
+            self.y_train = formatted_y
 
         self.weights_ = np.array(self.weights_)
         self.weights_ /= np.sum(self.weights_)
@@ -170,12 +177,15 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.train_metrics.append(train_metric)
         self.bounds.append(bound)
 
-    def compute_voter_weight(self, voter_perf):
+    def compute_voter_weight(self, voter_perf, sol):
         """used to compute the voter's weight according to the specified method (edge or error) """
-        if self.use_r:
-            self.q = 0.5 * math.log((1 + voter_perf) / (1 - voter_perf))
+        if self.c_bound_sol:
+            self.q = sol
         else:
-            self.q = math.log((1 - voter_perf) / voter_perf)
+            if self.use_r:
+                self.q = 0.5 * math.log((1 + voter_perf) / (1 - voter_perf))
+            else:
+                self.q = math.log((1 - voter_perf) / voter_perf)
         self.weights_.append(self.q)
 
     def compute_voter_perf(self, formatted_y):
@@ -230,11 +240,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         else:
             epsilon = self._compute_epsilon(y)
             self.voter_perfs.append(epsilon)
-
-        if self.use_r:
-            self.q = 0.5 * math.log((1 + r) / (1 - r))
+        if self.c_bound_sol:
+            self.q = 1
         else:
-            self.q = math.log((1 - epsilon) / epsilon)
+            if self.use_r:
+                self.q = 0.5 * math.log((1 + r) / (1 - r))
+            else:
+                self.q = math.log((1 - epsilon) / epsilon)
         self.weights_.append(self.q)
 
         # Update the distribution on the examples.
@@ -290,6 +302,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.example_weights_ = []
         self.train_metrics = []
         self.bounds = []
+        self.disagreements = []
+        self.margins = []
         self.previous_votes = []
         self.previous_margins = []
         self.respected_bound = True
@@ -373,11 +387,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         if not causes:
             causes = ["no feature was better than random and acceptable"]
         if c_borns:
-            min_c_born_index = ma.argmin(c_borns)
-            self.c_bounds.append(c_borns[min_c_born_index])
-            selected_sol = possible_sols[min_c_born_index]
-            selected_voter_index = indices[min_c_born_index]
-            return selected_sol, selected_voter_index
+            min_c_bound_index = ma.argmin(c_borns)
+            self.c_bounds.append(c_borns[min_c_bound_index])
+            selected_sol = possible_sols[min_c_bound_index]
+            self.margins.append(self.margin(selected_sol))
+            self.disagreements.append(self.disagreement(selected_sol))
+            selected_voter_index = indices[min_c_bound_index]
+            return selected_sol/(1+selected_sol), selected_voter_index
         else:
             return "break", " and ".join(set(causes))
 
@@ -388,7 +404,10 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         zero_diag = np.ones((m, m)) - np.identity(m)
         weighted_previous_sum = np.multiply(y,
                                             self.previous_vote.reshape((m, 1)))
-        weighted_next_column = np.multiply(next_column.reshape((m, 1)),
+        if self.c_bound_sol:
+            weighted_next_column = next_column.reshape((m, 1))
+        else:
+            weighted_next_column = np.multiply(next_column.reshape((m, 1)),
                                            self.example_weights.reshape((m, 1)))
 
         self.B2 = np.sum(weighted_next_column ** 2)
@@ -437,12 +456,17 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         """"We just check that the solution found by np.roots is acceptable under our constraints
         (real, a minimum and over 0)"""
         if sols.shape[0] == 1:
-            if self._cbound(sols[0]) < self._cbound(sols[0] + 1):
+            if self._cbound(sols[0]) < self._cbound(sols[0] + 1) and sols[0] > 0:
                 best_sol = sols[0]
             else:
-                return False, "the only solution was a maximum."
-        elif sols.shape[0] == 2:
+                if sols[0] > 0:
+                    return False, "the only solution was a maximum."
+                else:
+                    return False, "the only solution was negative"
+        elif sols.shape[0] == 2 and sols[0] > 0 and sols[1] > 1:
             best_sol = self._best_sol(sols)
+        elif np.greater(sols, np.zeros(2)).any():
+            return self._analyze_solutions_one_weight(np.array([np.max(sols)]))
         else:
             return False, "no solution were found"
 
@@ -453,8 +477,14 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def _cbound(self, sol):
         """Computing the objective function"""
-        return 1 - (self.A2 * sol ** 2 + self.A1 * sol + self.A0) / (
-                    self.B2 * sol ** 2 + self.B1 * sol + self.B0) / self.n_total_examples
+        return 1 - (self.A2 * sol ** 2 + self.A1 * sol + self.A0) / ((
+                    self.B2 * sol ** 2 + self.B1 * sol + self.B0) * self.n_total_examples)
+
+    def disagreement(self, sol):
+        return self.B2 * sol ** 2 + self.B1 * sol + self.B0
+
+    def margin(self, sol):
+        return (self.A2 * sol ** 2 + self.A1 * sol + self.A0)/self.n_total_examples
 
     def _best_sol(self, sols):
         """Return the best min in the two possible sols"""
@@ -501,9 +531,20 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         shutil.rmtree(path + "/gif_images")
         get_accuracy_graph(self.voter_perfs, self.__class__.__name__,
                            directory + 'voter_perfs.png', "Errors")
+        get_accuracy_graph(self.c_bounds, self.__class__.__name__,
+                           directory + 'c_bounds.png', "C-Bounds")
+        get_accuracy_graph(self.margins, self.__class__.__name__,
+                           directory + 'margins.png', "Margins")
+        self.disagreements[0] = 0
+        get_accuracy_graph(self.disagreements, self.__class__.__name__,
+                           directory + 'disagreements.png', "disagreements")
+        get_accuracy_graph(self.train_metrics[1:], self.__class__.__name__,
+                           directory + 'c_bounds_train_metrics.png', self.plotted_metric, self.c_bounds, "C-Bound", self.bounds[1:])
         interpretString = getInterpretBase(self, directory, "QarBoost",
                                            self.weights_, self.break_cause)
-
+        if self.save_train_data:
+            np.savetxt(directory+"x_train.csv", self.X_train, delimiter=',')
+            np.savetxt(directory+"y_train.csv", self.y_train, delimiter=',')
         args_dict = dict(
             (arg_name, str(self.__dict__[arg_name])) for arg_name in
             self.printed_args_name_list)
