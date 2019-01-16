@@ -567,8 +567,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                            directory + 'c_bounds.png', "C-Bounds")
         get_accuracy_graph(self.margins, self.__class__.__name__,
                            directory + 'margins.png', "Squared Margins")
-        print(self.selected_margins)
-        print(len(self.selected_margins))
         get_accuracy_graph(self.selected_margins, self.__class__.__name__,
                            directory + 'selected_margins.png', "Selected Margins")
         self.disagreements[0] = 0
