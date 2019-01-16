@@ -106,7 +106,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     logging.debug("Done:\t Getting Results")
 
     logging.debug("Start:\t Saving preds")
-    saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, y_train, imagesAnalysis)
+    saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, y_train, imagesAnalysis, y_test)
     logging.info("Done:\t Saving Results")
 
     viewIndex = args["viewIndex"]
@@ -172,7 +172,7 @@ def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train,
     return clKWARGS, testFoldsPreds
 
 
-def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, y_train, imagesAnalysis):
+def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, y_train, imagesAnalysis, y_test):
     logging.info(stringAnalysis)
     outputTextFile = open(outputFileName + 'summary.txt', 'w')
     outputTextFile.write(stringAnalysis)
@@ -180,6 +180,8 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, 
     np.savetxt(outputFileName + "full_pred.csv", full_labels_pred.astype(np.int16), delimiter=",")
     np.savetxt(outputFileName + "train_pred.csv", y_train_pred.astype(np.int16), delimiter=",")
     np.savetxt(outputFileName + "train_labels.csv", y_train.astype(np.int16), delimiter=",")
+    np.savetxt(outputFileName + "test_labels.csv", y_test.astype(np.int16),
+               delimiter=",")
 
     if imagesAnalysis is not None:
         for imageName in imagesAnalysis:

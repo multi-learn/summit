@@ -40,6 +40,7 @@ def getShape(DATASET, viewIndex):
         return DATASET.get("View" + str(viewIndex)).attrs["shape"]
 
 
+
 def getValue(DATASET):
     """Used to get the value of a view in the HDF5 dataset even if it sparse"""
     if not DATASET.attrs["sparse"]:

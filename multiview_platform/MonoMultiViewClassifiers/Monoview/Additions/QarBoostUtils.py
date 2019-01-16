@@ -19,7 +19,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                  random_state=42, self_complemented=True, twice_the_same=False,
                  c_bound_choice=True, random_start=True,
                  n_stumps_per_attribute=None, use_r=True, c_bound_sol=True,
-                 plotted_metric=Metrics.zero_one_loss, save_train_data=True):
+                 plotted_metric=Metrics.zero_one_loss, save_train_data=True,
+                 test_graph=True):
         super(ColumnGenerationClassifierQar, self).__init__()
         r"""
 
@@ -62,6 +63,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.use_r = use_r
         self.c_bound_sol = c_bound_sol
         self.save_train_data = save_train_data
+        self.test_graph = test_graph
         self.printed_args_name_list = ["n_max_iterations", "self_complemented",
                                        "twice_the_same",
                                        "c_bound_choice", "random_start",
@@ -102,7 +104,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                                                           self.n_max_iterations,
                                                           self.voter_perfs[-1]),
                 end="\r")
-
             sol, new_voter_index = self.choose_new_voter(y_kernel_matrix,
                                                          formatted_y)
 
@@ -145,6 +146,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             logging.warning('Converting sparse matrix to dense matrix.')
             X = np.array(X.todense())
         classification_matrix = self._binary_classification_matrix(X)
+        # if self.test_graph:
+        #     self.make_test_graph(classification_matrix)
         margins = np.squeeze(
             np.asarray(np.matmul(classification_matrix, self.weights_)))
         signs_array = np.array([int(x) for x in sign(margins)])
@@ -164,6 +167,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         self.previous_margins.append(
             np.multiply(y, self.previous_vote))
+        self.selected_margins.append(np.sum(np.multiply(y, self.new_voter)))
         train_metric = self.plotted_metric.score(y, np.sign(self.previous_vote))
         if self.use_r:
             bound = self.bounds[-1] * math.sqrt(1 - voter_perf ** 2)
@@ -187,6 +191,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             else:
                 self.q = math.log((1 - voter_perf) / voter_perf)
         self.weights_.append(self.q)
+        # self.weights_ = [weight/(1.0*sum(self.weights_)) for weight in self.weights_]
 
     def compute_voter_perf(self, formatted_y):
         """Used to computer the performance (error or edge) of the selected voter"""
@@ -219,7 +224,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         """THis initialization corressponds to the first round of boosting with equal weights for each examples and the voter chosen by it's margin."""
         self.example_weights = self._initialize_alphas(m).reshape((m, 1))
 
-        self.previous_margins.append(np.multiply(y, y))
+        # self.previous_margins.append(np.multiply(y, y))
         self.example_weights_.append(self.example_weights)
         if self.random_start:
             first_voter_index = self.random_state.choice(
@@ -255,6 +260,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         self.previous_margins.append(
             np.multiply(y, self.previous_vote))
+        self.selected_margins.append(np.sum(np.multiply(y, self.previous_vote)))
 
         train_metric = self.plotted_metric.score(y, np.sign(self.previous_vote))
         if self.use_r:
@@ -307,6 +313,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.previous_votes = []
         self.previous_margins = []
         self.respected_bound = True
+        self.selected_margins = []
 
     def _compute_epsilon(self, y):
         """Updating the error variable, the old fashioned way uses the whole majority vote to update the error"""
@@ -318,6 +325,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def _compute_r(self, y):
         ones_matrix = np.ones(y.shape)
+
         ones_matrix[np.multiply(y, self.new_voter.reshape(
             y.shape)) < 0] = -1  # can np.divide if needed
         r = np.average(ones_matrix, weights=self.example_weights, axis=0)
@@ -340,14 +348,15 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         pseudo_h_values = ma.array(np.sum(weighted_kernel_matrix, axis=0),
                                    fill_value=-np.inf)
         pseudo_h_values[self.chosen_columns_] = ma.masked
-        acceptable_indices = np.where(
-            np.logical_and(np.greater(upper_bound, pseudo_h_values),
-                           np.greater(pseudo_h_values, lower_bound)))[0]
-        if acceptable_indices.size > 0:
-            worst_h_index = self.random_state.choice(acceptable_indices)
-            return worst_h_index, [0]
-        else:
-            return " no margin over random and acceptable", ""
+        return np.argmax(pseudo_h_values), [0]
+        # acceptable_indices = np.where(
+        #     np.logical_and(np.greater(upper_bound, pseudo_h_values),
+        #                    np.greater(pseudo_h_values, lower_bound)))[0]
+        # if acceptable_indices.size > 0:
+        #     worst_h_index = self.random_state.choice(acceptable_indices)
+        #     return worst_h_index, [0]
+        # else:
+        #     return " no margin over random and acceptable", ""
 
     def _is_not_too_wrong(self, hypothese, y):
         """Check if the weighted margin is better than random"""
@@ -367,7 +376,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def _find_new_voter(self, y_kernel_matrix, y):
         """Here, we solve the two_voters_mincq_problem for each potential new voter,
         and select the one that has the smallest minimum"""
-        c_borns = []
+        c_bounds = []
         possible_sols = []
         indices = []
         causes = []
@@ -379,21 +388,21 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                     and self._is_not_too_wrong(hypothese, y):
                 w = self._solve_one_weight_min_c(hypothese, y)
                 if w[0] != "break":
-                    c_borns.append(self._cbound(w[0]))
+                    c_bounds.append(self._cbound(w[0]))
                     possible_sols.append(w)
                     indices.append(hypothese_index)
                 else:
                     causes.append(w[1])
         if not causes:
             causes = ["no feature was better than random and acceptable"]
-        if c_borns:
-            min_c_bound_index = ma.argmin(c_borns)
-            self.c_bounds.append(c_borns[min_c_bound_index])
+        if c_bounds:
+            min_c_bound_index = ma.argmin(c_bounds)
+            self.c_bounds.append(c_bounds[min_c_bound_index])
             selected_sol = possible_sols[min_c_bound_index]
             self.margins.append(self.margin(selected_sol))
             self.disagreements.append(self.disagreement(selected_sol))
             selected_voter_index = indices[min_c_bound_index]
-            return selected_sol/(1+selected_sol), selected_voter_index
+            return selected_sol, selected_voter_index  #selected_sol/(1+selected_sol)
         else:
             return "break", " and ".join(set(causes))
 
@@ -441,10 +450,18 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                     np.array(float(C0) / C1).reshape((1, 1)))
                 if is_acceptable:
                     return np.array([sol])
-        try:
-            sols = np.roots(np.array([C2, C1, C0]))
-        except:
-            return ["break", "nan"]
+        if C1*C1 < 4*C2*C0:
+            return ['break', "no roots"]
+        if C2 > 0 and C1*C1 == 4*C2*C0:
+            return ['break', "maximum"]
+
+        if C1*C1-4*C2*C0<=0:
+            try:
+                sols = np.roots(np.array([C2, C1, C0]))
+            except:
+                return ["break", "nan"]
+        else:
+            sols = np.array([(-C1-math.sqrt(C1*C1-4*C2*C0))/(2*C2), (-C1+math.sqrt(C1*C1-4*C2*C0))/(2*C2)])
 
         is_acceptable, sol = self._analyze_solutions_one_weight(sols)
         if is_acceptable:
@@ -481,7 +498,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                     self.B2 * sol ** 2 + self.B1 * sol + self.B0) * self.n_total_examples)
 
     def disagreement(self, sol):
-        return self.B2 * sol ** 2 + self.B1 * sol + self.B0
+        return (self.B2 * sol ** 2 + self.B1 * sol + self.B0)/self.n_total_examples
 
     def margin(self, sol):
         return (self.A2 * sol ** 2 + self.A1 * sol + self.A0)/self.n_total_examples
@@ -495,51 +512,70 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         """Initialize the examples wieghts"""
         return 1.0 / n_examples * np.ones((n_examples,))
 
+    # def make_test_graph(self, classification_matrix):
+    #     signs_arrays = np.array([self.predict_classification_matrix(classification_matrix, index+1) for index in range(self.weights_.shape[0])]).reshape((classification_matrix.shape))
+    #     np.savetxt("/home/baptiste/signs_arrays.csv",
+    #                signs_arrays.astype(np.int16), delimiter=",")
+    #
+    # def predict_classification_matrix(self, classification_matrix, index):
+    #     margins = np.squeeze(
+    #         np.asarray(np.matmul(classification_matrix[:, :index], self.weights_[:index])))
+    #     signs_array = np.array([int(x) for x in sign(margins)])
+    #     signs_array[signs_array == -1] = 0
+    #     return signs_array
+
     def getInterpretQar(self, directory):
+        self.directory = directory
         """Used to interpret the functionning of the algorithm"""
         path = "/".join(directory.split("/")[:-1])
-        try:
-            import os
-            os.makedirs(path + "/gif_images")
-        except:
-            raise
-        filenames = []
-        max_weight = max([np.max(examples_weights) for examples_weights in
-                          self.example_weights_])
-        min_weight = min([np.max(examples_weights) for examples_weights in
-                          self.example_weights_])
-        for iterIndex, examples_weights in enumerate(self.example_weights_):
-            r = np.array(examples_weights)
-            theta = np.arange(self.n_total_examples)
-            colors = np.sign(self.previous_margins[iterIndex])
-            fig = plt.figure(figsize=(5, 5), dpi=80)
-            ax = fig.add_subplot(111)
-            c = ax.scatter(theta, r, c=colors, cmap='RdYlGn', alpha=0.75)
-            ax.set_ylim(min_weight, max_weight)
-            filename = path + "/gif_images/" + str(iterIndex) + ".png"
-            filenames.append(filename)
-            plt.savefig(filename)
-            plt.close()
-
-        import imageio
-        images = []
-        logging.getLogger("PIL").setLevel(logging.WARNING)
-        for filename in filenames:
-            images.append(imageio.imread(filename))
-        imageio.mimsave(path + '/weights.gif', images, duration=1. / 2)
-        import shutil
-        shutil.rmtree(path + "/gif_images")
-        get_accuracy_graph(self.voter_perfs, self.__class__.__name__,
-                           directory + 'voter_perfs.png', "Errors")
+        # try:
+        #     import os
+        #     os.makedirs(path + "/gif_images")
+        # except:
+        #     raise
+        # filenames = []
+        # max_weight = max([np.max(examples_weights) for examples_weights in
+        #                   self.example_weights_])
+        # min_weight = min([np.max(examples_weights) for examples_weights in
+        #                   self.example_weights_])
+        # for iterIndex, examples_weights in enumerate(self.example_weights_):
+        #     r = np.array(examples_weights)
+        #     theta = np.arange(self.n_total_examples)
+        #     colors = np.sign(self.previous_margins[iterIndex])
+        #     fig = plt.figure(figsize=(5, 5), dpi=80)
+        #     ax = fig.add_subplot(111)
+        #     c = ax.scatter(theta, r, c=colors, cmap='RdYlGn', alpha=0.75)
+        #     ax.set_ylim(min_weight, max_weight)
+        #     filename = path + "/gif_images/" + str(iterIndex) + ".png"
+        #     filenames.append(filename)
+        #     plt.savefig(filename)
+        #     plt.close()
+        #
+        # import imageio
+        # images = []
+        # logging.getLogger("PIL").setLevel(logging.WARNING)
+        # for filename in filenames:
+        #     images.append(imageio.imread(filename))
+        # imageio.mimsave(path + '/weights.gif', images, duration=1. / 2)
+        # import shutil
+        # shutil.rmtree(path + "/gif_images")
+        get_accuracy_graph(self.voter_perfs[:20], self.__class__.__name__,
+                           directory + 'voter_perfs.png', "Rs")
+        get_accuracy_graph(self.weights_, self.__class__.__name__,
+                           directory+'vote_weights.png', "weights")
         get_accuracy_graph(self.c_bounds, self.__class__.__name__,
                            directory + 'c_bounds.png', "C-Bounds")
         get_accuracy_graph(self.margins, self.__class__.__name__,
-                           directory + 'margins.png', "Margins")
+                           directory + 'margins.png', "Squared Margins")
+        print(self.selected_margins)
+        print(len(self.selected_margins))
+        get_accuracy_graph(self.selected_margins, self.__class__.__name__,
+                           directory + 'selected_margins.png', "Selected Margins")
         self.disagreements[0] = 0
         get_accuracy_graph(self.disagreements, self.__class__.__name__,
                            directory + 'disagreements.png', "disagreements")
-        get_accuracy_graph(self.train_metrics[1:], self.__class__.__name__,
-                           directory + 'c_bounds_train_metrics.png', self.plotted_metric, self.c_bounds, "C-Bound", self.bounds[1:])
+        get_accuracy_graph(self.train_metrics[:-1], self.__class__.__name__,
+                           directory + 'c_bounds_train_metrics.png', self.plotted_metric, self.c_bounds, "C-Bound", self.bounds[:-1])
         interpretString = getInterpretBase(self, directory, "QarBoost",
                                            self.weights_, self.break_cause)
         if self.save_train_data:
