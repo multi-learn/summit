@@ -246,7 +246,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.example_weights_.append(self.example_weights)
         if self.random_start:
             first_voter_index = self.random_state.choice(
-                self.get_possible(y_kernel_matrix, y))
+                np.where(np.sum(y_kernel_matrix, axis=0)>0)[0])
         else:
             first_voter_index, _ = self._find_best_weighted_margin(
                 y_kernel_matrix)
@@ -374,8 +374,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         if self.c_bound_sol:
             return np.sum(hypothese) > 0
         else:
-            # ones_matrix = np.zeros(y.shape)
-            # ones_matrix[hypothese.reshape(y.shape) < 0] = 1
             print(np.average(hypothese.reshape(y.shape), weights=self.example_weights))
             quit()
             weighted_margin = np.average(hypothese.reshape(y.shape), weights=self.example_weights)#ondes matrix, axis=0
@@ -392,10 +390,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def _find_new_voter(self, y_kernel_matrix, y):
         """Here, we solve the two_voters_mincq_problem for each potential new voter,
         and select the one that has the smallest minimum"""
-        c_bounds = []
-        possible_sols = []
-        indices = []
-        causes = []
         m = y_kernel_matrix.shape[0]
         weighted_previous_sum = np.multiply(y,
                                             self.previous_vote.reshape((m, 1)))
@@ -431,7 +425,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.disagreements.append(0.5*self.B1s[best_hyp_index]/m)
 
         return sols[best_hyp_index], best_hyp_index
-
 
     def make_masked_c_bounds(self, sols, bad_margins):
         c_bounds = self.compute_c_bounds(sols)
@@ -519,135 +512,3 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             interpretString += "\n\n The bound was not respected"
 
         return interpretString
-
-
-# def _solve_one_weight_min_c(self, next_column, y, margin_old, m):
-    #     """Here we solve the min C-bound problem for two voters using one weight only and return the best weight
-    #     No precalc because longer ; see the "derivee" latex document for more precision"""
-    #     # zero_diag = np.ones((m, m)) - np.identity(m)
-    #     weighted_previous_sum = np.multiply(y,
-    #                                         self.previous_vote.reshape(
-    #                                             (m, 1)))
-    #     if self.c_bound_sol:
-    #         weighted_next_column = next_column.reshape((m, 1))
-    #     else:
-    #         weighted_next_column = np.multiply(next_column.reshape((m, 1)),
-    #                                        self.example_weights.reshape((m, 1)))
-    #
-    #     self.B1 = np.sum(2 * weighted_next_column * weighted_previous_sum)
-    #     self.B0 = np.sum(weighted_previous_sum ** 2)
-    #     self.B2 = m
-    #
-    #     # M2 = np.sum(np.multiply(
-    #     #     np.matmul(weighted_next_column, np.transpose(weighted_next_column)),
-    #     #     zero_diag))
-    #     # plif = np.sum(np.multiply(weighted_next_column, y))**2 - m
-    #     # print(M2, plif, "plouf")
-    #     # M1 = np.sum(np.multiply(np.matmul(weighted_previous_sum,
-    #     #                                   np.transpose(weighted_next_column)) +
-    #     #                         np.matmul(weighted_next_column,
-    #     #                                   np.transpose(weighted_previous_sum))
-    #     #                         , zero_diag))
-    #     # M0 = np.sum(np.multiply(np.matmul(weighted_previous_sum,
-    #     #                                   np.transpose(weighted_previous_sum)),
-    #     #                         zero_diag))
-    #     # self.A2 = self.B2 + M2
-    #     # self.A1 = self.B1 + M1
-    #     # self.A0 = self.B0 + M0
-    #
-    #     # C2 = (M1 * self.B2 - M2 * self.B1)
-    #     # C1 = 2 * (M0 * self.B2 - M2 * self.B0)
-    #     # C0 = M0 * self.B1 - M1 * self.B0
-    #
-    #     margin_new = np.sum(weighted_next_column)
-    #     # margin_old = np.sum(weighted_previous_sum)
-    #
-    #     self.A2 = margin_new**2
-    #     self.A1 = 2*margin_new*margin_old
-    #     self.A0 = margin_old**2
-    #
-    #     C2 = (self.A1 * self.B2 - self.A2 * self.B1)
-    #     C1 = 2 * (self.A0 * self.B2 - self.A2 * self.B0)
-    #     C0 = self.A0 * self.B1 - self.A1 * self.B0
-    #
-    #
-    #     det = C1*C1-4*C2*C0
-    #
-    #     if C2 == 0:
-    #         if C1 == 0:
-    #             return ['break', "the derivate was constant"]
-    #         else:
-    #             sols = np.array([float(C0) / C1])
-    #     elif det < 0:
-    #         return ['break', "no real roots"]
-    #     elif det == 0 :
-    #         sols = np.array([-C1/(2*C2)])
-    #     else:
-    #         # print('yes')
-    #         sols = np.array([(-C1 + math.sqrt(C1 * C1 - 4 * C2 * C0)) / (2 * C2)])
-    #
-    #     is_acceptable, sol = self._analyze_solutions_one_weight(sols)
-    #     if is_acceptable:
-    #         return np.array([sol])
-    #     else:
-    #         return ["break", sol]
-    #
-    # def _analyze_solutions_one_weight(self, sols):
-    #     """"We just check that the solution found by np.roots is acceptable under our constraints
-    #     (real, a minimum and over 0)"""
-    #     if sols.shape[0] == 2:
-    #         best_sol = self._best_sol(sols)
-    #         if best_sol > 0:
-    #             if best_sol == sols[0]:
-    #                 print("moins")
-    #             return True, best_sol
-    #         else:
-    #             return False, "sol < 0"
-    #     elif sols.shape[0] == 1:
-    #         if self._cbound(sols[0]) < self._cbound(sols[0] + 1) and sols[0] > 0:
-    #             return True, sols[0]
-    #         else:
-    #             return False, "sol was max"
-    #     else:
-    #         return False, "no sol"
-
-        # elif sols.shape[0] == 2 and sols[0] > 0 and sols[1] > 1:
-        #     best_sol = self._best_sol(sols)
-        # elif np.greater(sols, np.zeros(2)).any():
-        #     return self._analyze_solutions_one_weight(np.array([np.max(sols)]))
-        # else:
-        #     return False, "no solution were found"
-        #
-        # if isinstance(best_sol, complex):
-        #     return False, "the sol was complex"
-        # else:
-        #     return True, best_sol
-
-        #
-        # else:
-        #     for hypothese_index, hypothese in enumerate(
-        #             weighted_hypothesis.transpose()):
-        #         if (
-        #                 hypothese_index not in self.chosen_columns_
-        #                 or self.twice_the_same) \
-        #                 and set(self.chosen_columns_) != {hypothese_index} \
-        #                 and self._is_not_too_wrong(hypothese, y):
-        #             w = self._solve_one_weight_min_c(hypothese, y, margin_old, m)
-        #             if w[0] != "break":
-        #                 c_bounds.append(self._cbound(w[0]))
-        #                 possible_sols.append(w)
-        #                 indices.append(hypothese_index)
-        #             else:
-        #                 causes.append(w[1])
-        #     if not causes:
-        #         causes = ["no feature was better than random and acceptable"]
-        #     if c_bounds:
-        #         min_c_bound_index = ma.argmin(c_bounds)
-        #         self.c_bounds.append(c_bounds[min_c_bound_index])
-        #         selected_sol = possible_sols[min_c_bound_index]
-        #         self.margins.append(self.margin(selected_sol))
-        #         self.disagreements.append(self.disagreement(selected_sol))
-        #         selected_voter_index = indices[min_c_bound_index]
-        #         return selected_sol, selected_voter_index  #selected_sol/(1+selected_sol)
-        #     else:
-        #         return "break", " and ".join(set(causes))
