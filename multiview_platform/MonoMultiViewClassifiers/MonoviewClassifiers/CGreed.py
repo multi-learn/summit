@@ -3,10 +3,10 @@ from ..Monoview.Additions.BoostUtils import getInterpretBase
 from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
 
 
-class QarBoostNC(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
+class CGreed(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, **kwargs):
-        super(QarBoostNC, self).__init__(n_max_iterations=300,
+        super(CGreed, self).__init__(n_max_iterations=500,
             random_state=random_state,
             self_complemented=True,
             twice_the_same=True,
@@ -25,11 +25,11 @@ class QarBoostNC(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         """Used to know if the classifier can return label probabilities"""
         return True
 
-    def getInterpret(self, directory):
-        return self.getInterpretQar(directory)
+    def getInterpret(self, directory, y_test):
+        return self.getInterpretQar(directory, y_test)
 
     def get_name_for_fusion(self):
-        return "QBNC"
+        return "CGr"
 
 
 def formatCmdArgs(args):

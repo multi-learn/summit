@@ -62,7 +62,7 @@ class SCM(scm, BaseMonoviewClassifier):
         """Used to know if the classifier can return label probabilities"""
         return True
 
-    def getInterpret(self, directory):
+    def getInterpret(self, directory, y_test):
         interpretString = "Model used : " + str(self.model_)
         return interpretString
 

@@ -21,8 +21,8 @@ class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
         """Used to know if the classifier can return label probabilities"""
         return True
 
-    def getInterpret(self, directory):
-        return getInterpretBase(self, directory, "CQBoost", self.weights_,)
+    def getInterpret(self, directory, y_test):
+        return getInterpretBase(self, directory, "CQBoost", self.weights_, y_test)
 
 
 def formatCmdArgs(args):

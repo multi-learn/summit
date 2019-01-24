@@ -6,13 +6,18 @@ from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
 class QarBoost(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, **kwargs):
-        super(QarBoost, self).__init__(
-            random_state=random_state)
-
-        self.param_names = ["self_complemented", "twice_the_same", "old_fashioned", "previous_vote_weighted",
-                            "c_bound_choice", "random_start", "two_wieghts_problem"]
-        self.distribs = [[True, False], [True, False], [True, False], [True, False],
-                         [True, False], [True, False], [True, False]]
+        super(QarBoost, self).__init__(n_max_iterations=500,
+            random_state=random_state,
+            self_complemented=True,
+            twice_the_same=True,
+            c_bound_choice=True,
+            random_start=False,
+            n_stumps_per_attribute=1,
+            use_r=True,
+            c_bound_sol=False
+            )
+        self.param_names = []
+        self.distribs = []
         self.classed_params = []
         self.weird_strings = {}
 
@@ -20,8 +25,11 @@ class QarBoost(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         """Used to know if the classifier can return label probabilities"""
         return True
 
-    def getInterpret(self, directory):
-        return self.getInterpretQar(directory)
+    def getInterpret(self, directory, y_test):
+        return self.getInterpretQar(directory, y_test)
+
+    def get_name_for_fusion(self):
+        return "QB"
 
 
 def formatCmdArgs(args):

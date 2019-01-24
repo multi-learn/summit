@@ -14,6 +14,8 @@ from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost, \
 from ... import Metrics
 
 
+# Used for QarBoost and CGreed
+
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def __init__(self, n_max_iterations=None, estimators_generator=None,
                  random_state=42, self_complemented=True, twice_the_same=False,
@@ -51,6 +53,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         else:
             self.random_state = random_state
         self.train_time = 0
+        self.train_shape = None
+        self.step_decisions = None
         self.n_max_iterations = n_max_iterations
         self.estimators_generator = estimators_generator
         self.self_complemented = self_complemented
@@ -68,6 +72,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                                        "twice_the_same",
                                        "c_bound_choice", "random_start",
                                        "n_stumps", "use_r", "c_bound_sol"]
+        self.matrix_compute = False
 
     def set_params(self, **params):
         self.self_complemented = params["self_complemented"]
@@ -79,6 +84,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.use_r = params["use_r"]
 
     def fit(self, X, y):
+
+
         start = time.time()
 
         formatted_X, formatted_y = self.format_X_y(X, y)
@@ -97,6 +104,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                            self.n_max_iterations - 1 if self.n_max_iterations is not None else np.inf)):
 
             # Print dynamically the step and the error of the current classifier
+            self.it = k
             print(
                 "Resp. bound : {}, {}; {}/{}, eps :{}".format(self.respected_bound,
                                                               self.bounds[-1] > self.train_metrics[-1],
@@ -127,6 +135,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         if self.save_train_data:
             self.X_train = self.classification_matrix[:, self.chosen_columns_]
+            self.raw_weights = self.weights_
             self.y_train = formatted_y
 
         self.weights_ = np.array(self.weights_)
@@ -146,8 +155,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             logging.warning('Converting sparse matrix to dense matrix.')
             X = np.array(X.todense())
         classification_matrix = self._binary_classification_matrix(X)
-        # if self.test_graph:
-        #     self.make_test_graph(classification_matrix)
+        self.step_predict(classification_matrix)
         margins = np.squeeze(
             np.asarray(np.matmul(classification_matrix, self.weights_)))
         signs_array = np.array([int(x) for x in sign(margins)])
@@ -155,6 +163,16 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         end = time.time()
         self.predict_time = end - start
         return signs_array
+
+    def step_predict(self, classification_matrix):
+        if classification_matrix.shape != self.train_shape:
+            self.step_decisions = np.zeros(classification_matrix.shape)
+            for weight_index in range(self.weights_.shape[0]-1):
+                margins = np.squeeze(
+                    np.asarray(np.matmul(classification_matrix[:, :weight_index+1], self.weights_[:weight_index+1])))
+                signs_array = np.array([int(x) for x in sign(margins)])
+                signs_array[signs_array == -1] = 0
+                self.step_decisions[:, weight_index] = signs_array
 
     def update_info_containers(self, y, voter_perf, k):
         """Is used at each iteration to compute and store all the needed quantities for later analysis"""
@@ -293,6 +311,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self_complemented=self.self_complemented)
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)
+        self.train_shape = self.classification_matrix.shape
 
         m, n = self.classification_matrix.shape
         y_kernel_matrix = np.multiply(y, self.classification_matrix)
@@ -349,21 +368,18 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                                    fill_value=-np.inf)
         pseudo_h_values[self.chosen_columns_] = ma.masked
         return np.argmax(pseudo_h_values), [0]
-        # acceptable_indices = np.where(
-        #     np.logical_and(np.greater(upper_bound, pseudo_h_values),
-        #                    np.greater(pseudo_h_values, lower_bound)))[0]
-        # if acceptable_indices.size > 0:
-        #     worst_h_index = self.random_state.choice(acceptable_indices)
-        #     return worst_h_index, [0]
-        # else:
-        #     return " no margin over random and acceptable", ""
 
     def _is_not_too_wrong(self, hypothese, y):
         """Check if the weighted margin is better than random"""
-        ones_matrix = np.zeros(y.shape)
-        ones_matrix[hypothese.reshape(y.shape) < 0] = 1
-        epsilon = np.average(ones_matrix, weights=self.example_weights, axis=0)
-        return epsilon < 0.5
+        if self.c_bound_sol:
+            return np.sum(hypothese) > 0
+        else:
+            # ones_matrix = np.zeros(y.shape)
+            # ones_matrix[hypothese.reshape(y.shape) < 0] = 1
+            print(np.average(hypothese.reshape(y.shape), weights=self.example_weights))
+            quit()
+            weighted_margin = np.average(hypothese.reshape(y.shape), weights=self.example_weights)#ondes matrix, axis=0
+            return weighted_margin > 0
 
     def get_possible(self, y_kernel_matrix, y):
         """Get all the indices of the hypothesis that are good enough to be chosen"""
@@ -380,117 +396,61 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         possible_sols = []
         indices = []
         causes = []
-        for hypothese_index, hypothese in enumerate(
-                y_kernel_matrix.transpose()):
-            if (
-                    hypothese_index not in self.chosen_columns_ or self.twice_the_same) \
-                    and set(self.chosen_columns_) != {hypothese_index} \
-                    and self._is_not_too_wrong(hypothese, y):
-                w = self._solve_one_weight_min_c(hypothese, y)
-                if w[0] != "break":
-                    c_bounds.append(self._cbound(w[0]))
-                    possible_sols.append(w)
-                    indices.append(hypothese_index)
-                else:
-                    causes.append(w[1])
-        if not causes:
-            causes = ["no feature was better than random and acceptable"]
-        if c_bounds:
-            min_c_bound_index = ma.argmin(c_bounds)
-            self.c_bounds.append(c_bounds[min_c_bound_index])
-            selected_sol = possible_sols[min_c_bound_index]
-            self.margins.append(self.margin(selected_sol))
-            self.disagreements.append(self.disagreement(selected_sol))
-            selected_voter_index = indices[min_c_bound_index]
-            return selected_sol, selected_voter_index  #selected_sol/(1+selected_sol)
-        else:
-            return "break", " and ".join(set(causes))
-
-    def _solve_one_weight_min_c(self, next_column, y):
-        """Here we solve the min C-bound problem for two voters using one weight only and return the best weight
-        No precalc because longer ; see the "derivee" latex document for more precision"""
-        m = next_column.shape[0]
-        zero_diag = np.ones((m, m)) - np.identity(m)
+        m = y_kernel_matrix.shape[0]
         weighted_previous_sum = np.multiply(y,
                                             self.previous_vote.reshape((m, 1)))
+        margin_old = np.sum(weighted_previous_sum)
         if self.c_bound_sol:
-            weighted_next_column = next_column.reshape((m, 1))
+            weighted_hypothesis = y_kernel_matrix
         else:
-            weighted_next_column = np.multiply(next_column.reshape((m, 1)),
-                                           self.example_weights.reshape((m, 1)))
+            weighted_hypothesis = y_kernel_matrix * self.example_weights.reshape((m, 1))
 
-        self.B2 = np.sum(weighted_next_column ** 2)
-        self.B1 = np.sum(2 * weighted_next_column * weighted_previous_sum)
+        bad_margins = np.where(np.sum(weighted_hypothesis, axis=0)<=0.0)[0]
+
+        self.B2 = m
+        self.B1s = np.sum(2 * (weighted_previous_sum * weighted_hypothesis),
+                          axis=0)
         self.B0 = np.sum(weighted_previous_sum ** 2)
 
-        M2 = np.sum(np.multiply(
-            np.matmul(weighted_next_column, np.transpose(weighted_next_column)),
-            zero_diag))
-        M1 = np.sum(np.multiply(np.matmul(weighted_previous_sum,
-                                          np.transpose(weighted_next_column)) +
-                                np.matmul(weighted_next_column,
-                                          np.transpose(weighted_previous_sum))
-                                , zero_diag))
-        M0 = np.sum(np.multiply(np.matmul(weighted_previous_sum,
-                                          np.transpose(weighted_previous_sum)),
-                                zero_diag))
+        self.A2s = np.sum(weighted_hypothesis, axis=0) ** 2
+        self.A1s = np.sum(weighted_hypothesis, axis=0) * margin_old * 2
+        self.A0 = margin_old**2
 
-        self.A2 = self.B2 + M2
-        self.A1 = self.B1 + M1
-        self.A0 = self.B0 + M0
+        C2s = (self.A1s * self.B2 - self.A2s * self.B1s)
+        C1s = 2 * (self.A0 * self.B2 - self.A2s * self.B0)
+        C0s = self.A0 * self.B1s - self.A1s * self.B0
 
-        C2 = (M1 * self.B2 - M2 * self.B1)
-        C1 = 2 * (M0 * self.B2 - M2 * self.B0)
-        C0 = M0 * self.B1 - M1 * self.B0
-        if C2 == 0:
-            if C1 == 0:
-                return ['break', "the derivate was constant"]
-            else:
-                is_acceptable, sol = self._analyze_solutions_one_weight(
-                    np.array(float(C0) / C1).reshape((1, 1)))
-                if is_acceptable:
-                    return np.array([sol])
-        if C1*C1 < 4*C2*C0:
-            return ['break', "no roots"]
-        if C2 > 0 and C1*C1 == 4*C2*C0:
-            return ['break', "maximum"]
+        sols = (-C1s + np.sqrt(C1s * C1s - 4 * C2s * C0s)) / (2 * C2s)
+        sols[np.where(C2s == 0)[0]] = C0s[np.where(C2s == 0)[0]] / C1s[np.where(C2s == 0)[0]]
 
-        if C1*C1-4*C2*C0<=0:
-            try:
-                sols = np.roots(np.array([C2, C1, C0]))
-            except:
-                return ["break", "nan"]
-        else:
-            sols = np.array([(-C1-math.sqrt(C1*C1-4*C2*C0))/(2*C2), (-C1+math.sqrt(C1*C1-4*C2*C0))/(2*C2)])
+        masked_c_bounds = self.make_masked_c_bounds(sols, bad_margins)
+        best_hyp_index = np.argmin(masked_c_bounds)
 
-        is_acceptable, sol = self._analyze_solutions_one_weight(sols)
-        if is_acceptable:
-            return np.array([sol])
-        else:
-            return ["break", sol]
+        self.c_bounds.append(masked_c_bounds[best_hyp_index])
+        self.margins.append(math.sqrt(self.A2s[best_hyp_index]/m))
+        self.disagreements.append(0.5*self.B1s[best_hyp_index]/m)
 
-    def _analyze_solutions_one_weight(self, sols):
-        """"We just check that the solution found by np.roots is acceptable under our constraints
-        (real, a minimum and over 0)"""
-        if sols.shape[0] == 1:
-            if self._cbound(sols[0]) < self._cbound(sols[0] + 1) and sols[0] > 0:
-                best_sol = sols[0]
-            else:
-                if sols[0] > 0:
-                    return False, "the only solution was a maximum."
-                else:
-                    return False, "the only solution was negative"
-        elif sols.shape[0] == 2 and sols[0] > 0 and sols[1] > 1:
-            best_sol = self._best_sol(sols)
-        elif np.greater(sols, np.zeros(2)).any():
-            return self._analyze_solutions_one_weight(np.array([np.max(sols)]))
-        else:
-            return False, "no solution were found"
+        return sols[best_hyp_index], best_hyp_index
 
-        if isinstance(best_sol, complex):
-            return False, "the sol was complex"
-        else:
-            return True, best_sol
+
+    def make_masked_c_bounds(self, sols, bad_margins):
+        c_bounds = self.compute_c_bounds(sols)
+        trans_c_bounds = self.compute_c_bounds(sols + 1)
+        masked_c_bounds = ma.array(c_bounds, fill_value=np.inf)
+        # Masing Maximums
+        masked_c_bounds[c_bounds >= trans_c_bounds] = ma.masked
+        # Masking magrins <= 0
+        masked_c_bounds[bad_margins] = ma.masked
+        # Masking weights < 0 (because self-complemented)
+        masked_c_bounds[sols < 0] = ma.masked
+        # Masking nan c_bounds
+        masked_c_bounds[np.isnan(c_bounds)] = ma.masked
+        return masked_c_bounds
+
+    def compute_c_bounds(self, sols):
+        return 1 - (self.A2s * sols ** 2 + self.A1s * sols + self.A0) / ((
+                    self.B2 * sols ** 2 + self.B1s * sols + self.B0) * self.n_total_examples)
+
 
     def _cbound(self, sol):
         """Computing the objective function"""
@@ -512,53 +472,20 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         """Initialize the examples wieghts"""
         return 1.0 / n_examples * np.ones((n_examples,))
 
-    # def make_test_graph(self, classification_matrix):
-    #     signs_arrays = np.array([self.predict_classification_matrix(classification_matrix, index+1) for index in range(self.weights_.shape[0])]).reshape((classification_matrix.shape))
-    #     np.savetxt("/home/baptiste/signs_arrays.csv",
-    #                signs_arrays.astype(np.int16), delimiter=",")
-    #
-    # def predict_classification_matrix(self, classification_matrix, index):
-    #     margins = np.squeeze(
-    #         np.asarray(np.matmul(classification_matrix[:, :index], self.weights_[:index])))
-    #     signs_array = np.array([int(x) for x in sign(margins)])
-    #     signs_array[signs_array == -1] = 0
-    #     return signs_array
+    def get_step_decision_test_graph(self, directory, y_test):
+        np.savetxt(directory + "y_test_step.csv", self.step_decisions, delimiter=',')
+        step_metrics = []
+        for step_index in range(self.step_decisions.shape[1]-1):
+            step_metrics.append(self.plotted_metric.score(y_test, self.step_decisions[:, step_index]))
+        step_metrics = np.array(step_metrics)
+        get_accuracy_graph(step_metrics, self.__class__.__name__,
+                           directory + 'step_test_metrics.png', self.plotted_metric)
 
-    def getInterpretQar(self, directory):
+    def getInterpretQar(self, directory, y_test=None):
         self.directory = directory
         """Used to interpret the functionning of the algorithm"""
-        path = "/".join(directory.split("/")[:-1])
-        # try:
-        #     import os
-        #     os.makedirs(path + "/gif_images")
-        # except:
-        #     raise
-        # filenames = []
-        # max_weight = max([np.max(examples_weights) for examples_weights in
-        #                   self.example_weights_])
-        # min_weight = min([np.max(examples_weights) for examples_weights in
-        #                   self.example_weights_])
-        # for iterIndex, examples_weights in enumerate(self.example_weights_):
-        #     r = np.array(examples_weights)
-        #     theta = np.arange(self.n_total_examples)
-        #     colors = np.sign(self.previous_margins[iterIndex])
-        #     fig = plt.figure(figsize=(5, 5), dpi=80)
-        #     ax = fig.add_subplot(111)
-        #     c = ax.scatter(theta, r, c=colors, cmap='RdYlGn', alpha=0.75)
-        #     ax.set_ylim(min_weight, max_weight)
-        #     filename = path + "/gif_images/" + str(iterIndex) + ".png"
-        #     filenames.append(filename)
-        #     plt.savefig(filename)
-        #     plt.close()
-        #
-        # import imageio
-        # images = []
-        # logging.getLogger("PIL").setLevel(logging.WARNING)
-        # for filename in filenames:
-        #     images.append(imageio.imread(filename))
-        # imageio.mimsave(path + '/weights.gif', images, duration=1. / 2)
-        # import shutil
-        # shutil.rmtree(path + "/gif_images")
+        if self.step_decisions is not None:
+            self.get_step_decision_test_graph(directory, y_test)
         get_accuracy_graph(self.voter_perfs[:20], self.__class__.__name__,
                            directory + 'voter_perfs.png', "Rs")
         get_accuracy_graph(self.weights_, self.__class__.__name__,
@@ -574,11 +501,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                            directory + 'disagreements.png', "disagreements")
         get_accuracy_graph(self.train_metrics[:-1], self.__class__.__name__,
                            directory + 'c_bounds_train_metrics.png', self.plotted_metric, self.c_bounds, "C-Bound", self.bounds[:-1])
-        interpretString = getInterpretBase(self, directory, "QarBoost",
+        interpretString = getInterpretBase(self, directory, self.__class__.__name__,
                                            self.weights_, self.break_cause)
         if self.save_train_data:
             np.savetxt(directory+"x_train.csv", self.X_train, delimiter=',')
             np.savetxt(directory+"y_train.csv", self.y_train, delimiter=',')
+            np.savetxt(directory + "raw_weights.csv", self.raw_weights, delimiter=',')
+            np.savetxt(directory + "c_bounds.csv", self.c_bounds, delimiter=',')
         args_dict = dict(
             (arg_name, str(self.__dict__[arg_name])) for arg_name in
             self.printed_args_name_list)
@@ -590,3 +519,135 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             interpretString += "\n\n The bound was not respected"
 
         return interpretString
+
+
+# def _solve_one_weight_min_c(self, next_column, y, margin_old, m):
+    #     """Here we solve the min C-bound problem for two voters using one weight only and return the best weight
+    #     No precalc because longer ; see the "derivee" latex document for more precision"""
+    #     # zero_diag = np.ones((m, m)) - np.identity(m)
+    #     weighted_previous_sum = np.multiply(y,
+    #                                         self.previous_vote.reshape(
+    #                                             (m, 1)))
+    #     if self.c_bound_sol:
+    #         weighted_next_column = next_column.reshape((m, 1))
+    #     else:
+    #         weighted_next_column = np.multiply(next_column.reshape((m, 1)),
+    #                                        self.example_weights.reshape((m, 1)))
+    #
+    #     self.B1 = np.sum(2 * weighted_next_column * weighted_previous_sum)
+    #     self.B0 = np.sum(weighted_previous_sum ** 2)
+    #     self.B2 = m
+    #
+    #     # M2 = np.sum(np.multiply(
+    #     #     np.matmul(weighted_next_column, np.transpose(weighted_next_column)),
+    #     #     zero_diag))
+    #     # plif = np.sum(np.multiply(weighted_next_column, y))**2 - m
+    #     # print(M2, plif, "plouf")
+    #     # M1 = np.sum(np.multiply(np.matmul(weighted_previous_sum,
+    #     #                                   np.transpose(weighted_next_column)) +
+    #     #                         np.matmul(weighted_next_column,
+    #     #                                   np.transpose(weighted_previous_sum))
+    #     #                         , zero_diag))
+    #     # M0 = np.sum(np.multiply(np.matmul(weighted_previous_sum,
+    #     #                                   np.transpose(weighted_previous_sum)),
+    #     #                         zero_diag))
+    #     # self.A2 = self.B2 + M2
+    #     # self.A1 = self.B1 + M1
+    #     # self.A0 = self.B0 + M0
+    #
+    #     # C2 = (M1 * self.B2 - M2 * self.B1)
+    #     # C1 = 2 * (M0 * self.B2 - M2 * self.B0)
+    #     # C0 = M0 * self.B1 - M1 * self.B0
+    #
+    #     margin_new = np.sum(weighted_next_column)
+    #     # margin_old = np.sum(weighted_previous_sum)
+    #
+    #     self.A2 = margin_new**2
+    #     self.A1 = 2*margin_new*margin_old
+    #     self.A0 = margin_old**2
+    #
+    #     C2 = (self.A1 * self.B2 - self.A2 * self.B1)
+    #     C1 = 2 * (self.A0 * self.B2 - self.A2 * self.B0)
+    #     C0 = self.A0 * self.B1 - self.A1 * self.B0
+    #
+    #
+    #     det = C1*C1-4*C2*C0
+    #
+    #     if C2 == 0:
+    #         if C1 == 0:
+    #             return ['break', "the derivate was constant"]
+    #         else:
+    #             sols = np.array([float(C0) / C1])
+    #     elif det < 0:
+    #         return ['break', "no real roots"]
+    #     elif det == 0 :
+    #         sols = np.array([-C1/(2*C2)])
+    #     else:
+    #         # print('yes')
+    #         sols = np.array([(-C1 + math.sqrt(C1 * C1 - 4 * C2 * C0)) / (2 * C2)])
+    #
+    #     is_acceptable, sol = self._analyze_solutions_one_weight(sols)
+    #     if is_acceptable:
+    #         return np.array([sol])
+    #     else:
+    #         return ["break", sol]
+    #
+    # def _analyze_solutions_one_weight(self, sols):
+    #     """"We just check that the solution found by np.roots is acceptable under our constraints
+    #     (real, a minimum and over 0)"""
+    #     if sols.shape[0] == 2:
+    #         best_sol = self._best_sol(sols)
+    #         if best_sol > 0:
+    #             if best_sol == sols[0]:
+    #                 print("moins")
+    #             return True, best_sol
+    #         else:
+    #             return False, "sol < 0"
+    #     elif sols.shape[0] == 1:
+    #         if self._cbound(sols[0]) < self._cbound(sols[0] + 1) and sols[0] > 0:
+    #             return True, sols[0]
+    #         else:
+    #             return False, "sol was max"
+    #     else:
+    #         return False, "no sol"
+
+        # elif sols.shape[0] == 2 and sols[0] > 0 and sols[1] > 1:
+        #     best_sol = self._best_sol(sols)
+        # elif np.greater(sols, np.zeros(2)).any():
+        #     return self._analyze_solutions_one_weight(np.array([np.max(sols)]))
+        # else:
+        #     return False, "no solution were found"
+        #
+        # if isinstance(best_sol, complex):
+        #     return False, "the sol was complex"
+        # else:
+        #     return True, best_sol
+
+        #
+        # else:
+        #     for hypothese_index, hypothese in enumerate(
+        #             weighted_hypothesis.transpose()):
+        #         if (
+        #                 hypothese_index not in self.chosen_columns_
+        #                 or self.twice_the_same) \
+        #                 and set(self.chosen_columns_) != {hypothese_index} \
+        #                 and self._is_not_too_wrong(hypothese, y):
+        #             w = self._solve_one_weight_min_c(hypothese, y, margin_old, m)
+        #             if w[0] != "break":
+        #                 c_bounds.append(self._cbound(w[0]))
+        #                 possible_sols.append(w)
+        #                 indices.append(hypothese_index)
+        #             else:
+        #                 causes.append(w[1])
+        #     if not causes:
+        #         causes = ["no feature was better than random and acceptable"]
+        #     if c_bounds:
+        #         min_c_bound_index = ma.argmin(c_bounds)
+        #         self.c_bounds.append(c_bounds[min_c_bound_index])
+        #         selected_sol = possible_sols[min_c_bound_index]
+        #         self.margins.append(self.margin(selected_sol))
+        #         self.disagreements.append(self.disagreement(selected_sol))
+        #         selected_voter_index = indices[min_c_bound_index]
+        #         return selected_sol, selected_voter_index  #selected_sol/(1+selected_sol)
+        #     else:
+        #         return "break", " and ".join(set(causes))

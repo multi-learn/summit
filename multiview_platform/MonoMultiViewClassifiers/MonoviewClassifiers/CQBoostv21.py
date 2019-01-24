@@ -258,7 +258,7 @@ class CQBoostv21(CqBoostClassifierv21, BaseMonoviewClassifier):
         """Used to know if the classifier can return label probabilities"""
         return True
 
-    def getInterpret(self, directory):
+    def getInterpret(self, directory, y_test):
         return getInterpretBase(self, directory, "CQBoostv21", self.weights_, self.break_cause)
 
     def get_name_for_fusion(self):

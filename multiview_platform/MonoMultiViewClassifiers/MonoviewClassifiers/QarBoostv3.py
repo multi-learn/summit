@@ -28,8 +28,8 @@ class QarBoostv3(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         """Used to know if the classifier can return label probabilities"""
         return True
 
-    def getInterpret(self, directory):
-        return self.getInterpretQar(directory)
+    def getInterpret(self, directory, y_test):
+        return self.getInterpretQar(directory, y_test)
 
     def get_name_for_fusion(self):
         return "QBv3"

@@ -28,7 +28,7 @@ class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
         """Used to know if the classifier can return label probabilities"""
         return True
 
-    def getInterpret(self, directory):
+    def getInterpret(self, directory, y_test):
         interpretString = ""
         return interpretString
 
