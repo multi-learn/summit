@@ -175,10 +175,10 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def update_info_containers(self, y, voter_perf, k):
         """Is used at each iteration to compute and store all the needed quantities for later analysis"""
         self.example_weights_.append(self.example_weights)
+        print(self.previous_margins[-1]>np.sum(self.previous_vote*self.new_voter))
         self.previous_vote += self.q * self.new_voter
 
         self.previous_votes.append(self.previous_vote)
-
         self.previous_margins.append(
             np.multiply(y, self.previous_vote))
         self.selected_margins.append(np.sum(np.multiply(y, self.new_voter)))
