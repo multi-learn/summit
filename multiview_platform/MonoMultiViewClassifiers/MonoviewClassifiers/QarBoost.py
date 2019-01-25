@@ -12,7 +12,7 @@ class QarBoost(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
             twice_the_same=True,
             c_bound_choice=True,
             random_start=False,
-            n_stumps_per_attribute=1,
+            n_stumps_per_attribute=10,
             use_r=True,
             c_bound_sol=False
             )
