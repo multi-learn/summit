@@ -444,6 +444,8 @@ def execClassif(arguments):
 
     os.nice(args.nice)
     nbCores = args.nbCores
+    if nbCores == 1:
+        os.environ['OPENBLAS_NUM_THREADS'] = '1'
     statsIter = args.CL_statsiter
     hyperParamSearch = args.CL_HPS_type
     multiclassMethod = args.CL_multiclassMethod

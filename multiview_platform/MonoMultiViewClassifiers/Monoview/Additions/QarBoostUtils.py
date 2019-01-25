@@ -13,7 +13,6 @@ from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost, \
     getInterpretBase, get_accuracy_graph
 from ... import Metrics
 
-
 # Used for QarBoost and CGreed
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
@@ -155,8 +154,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             X = np.array(X.todense())
         classification_matrix = self._binary_classification_matrix(X)
         self.step_predict(classification_matrix)
-        margins = np.squeeze(
-            np.asarray(np.matmul(classification_matrix, self.weights_)))
+        margins = np.sum(classification_matrix * self.weights_, axis=1)
+        # print(margins)
         signs_array = np.array([int(x) for x in sign(margins)])
         signs_array[signs_array == -1] = 0
         end = time.time()
@@ -167,8 +166,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         if classification_matrix.shape != self.train_shape:
             self.step_decisions = np.zeros(classification_matrix.shape)
             for weight_index in range(self.weights_.shape[0]-1):
-                margins = np.squeeze(
-                    np.asarray(np.matmul(classification_matrix[:, :weight_index+1], self.weights_[:weight_index+1])))
+                margins = np.sum(classification_matrix[:, :weight_index+1]* self.weights_[:weight_index+1], axis=1)
+                # print(margins)
                 signs_array = np.array([int(x) for x in sign(margins)])
                 signs_array[signs_array == -1] = 0
                 self.step_decisions[:, weight_index] = signs_array
@@ -176,10 +175,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def update_info_containers(self, y, voter_perf, k):
         """Is used at each iteration to compute and store all the needed quantities for later analysis"""
         self.example_weights_.append(self.example_weights)
-        self.previous_vote = np.matmul(
-            self.classification_matrix[:, self.chosen_columns_],
-            np.array(self.weights_).reshape((k + 2, 1))).reshape(
-            (self.n_total_examples, 1))
+        self.previous_vote += self.q * self.new_voter
+
         self.previous_votes.append(self.previous_vote)
 
         self.previous_margins.append(
