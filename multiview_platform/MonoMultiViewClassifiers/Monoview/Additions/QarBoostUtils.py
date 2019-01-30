@@ -175,7 +175,12 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def update_info_containers(self, y, voter_perf, k):
         """Is used at each iteration to compute and store all the needed quantities for later analysis"""
         self.example_weights_.append(self.example_weights)
-        print(self.previous_margins[-1]>np.sum(self.previous_vote*self.new_voter))
+        m =  self.new_voter.shape[0]
+        t = np.sum(self.previous_vote * self.new_voter)/m
+        print(np.linalg.norm(self.previous_vote)>1)
+        # if abs((g_g*f2*(2*g_f+self.q*g_g))/(g_f**2*(2*d_fg+self.q * m)))<=1:
+        #     print((g_g*f2*(2*g_f+self.q*g_g))/(g_f**2*(2*d_fg+self.q * m)))
+        # print((g_g*f2*(2*g_f+self.q*g_g))/(g_f**2*(2*d_fg+self.q * m))>=1)
         self.previous_vote += self.q * self.new_voter
 
         self.previous_votes.append(self.previous_vote)
