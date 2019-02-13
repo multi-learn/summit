@@ -81,6 +81,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.n_max_iterations = params["n_max_iterations"]
         # self.n_stumps = params["n_stumps_per_attribute"]
         # self.use_r = params["use_r"]
+        return self
 
     def fit(self, X, y):
 

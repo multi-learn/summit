@@ -739,7 +739,7 @@ def getInterpretBase(classifier, directory, classifier_name, weights,
     interpretString += "\n \t It generated {} columns by attributes and used {} iterations to converge, and selected {} couple(s) of opposed voters".format(classifier.n_stumps,
         len(weights_sort), classifier.nb_opposed_voters)
     if max(weights) > 0.50:
-        interpretString += "\n \t The vote is useless in this context : voter n°{} is a dictator of weight > 0.50".format(classifier.chosen_columns_[np.argmax(np.array(weights))])
+        interpretString += "\n \t The vote is useless in this context : voter nb {} is a dictator of weight > 0.50".format(classifier.chosen_columns_[np.argmax(np.array(weights))])
     if len(weights_sort) == classifier.n_max_iterations or len(weights) == classifier.n_total_hypotheses_:
         if len(weights) == classifier.n_max_iterations:
             interpretString += ", and used all available iterations, "
