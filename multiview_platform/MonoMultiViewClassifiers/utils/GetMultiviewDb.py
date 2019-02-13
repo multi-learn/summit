@@ -23,6 +23,8 @@ def copyHDF5(pathF, name, nbCores):
         newDataSet.close()
 
 
+
+
 def datasetsAlreadyExist(pathF, name, nbCores):
     """Used to check if it's necessary to copy datasets"""
     allDatasetExist = True
@@ -52,7 +54,7 @@ def makeMeNoisy(viewData, randomState, percentage=15):
     return noisyViewData
 
 
-def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", randomState=None, full=True, nbView=3,
+def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", randomState=None, full=True, add_noise=False, noise_std=0.15, nbView=3,
                        nbClass=2, datasetLength=34, randomStateInt=None):
     """Used to generate a plausible dataset to test the algorithms"""
     randomStateInt = 42
@@ -289,38 +291,74 @@ def copyhdf5Dataset(sourceDataFile, destinationDataFile, sourceDatasetName, dest
             newDset.attrs[key] = value
 
 
-def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState, full=False):
+def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState, full=False, add_noise=False, noise_std=0.15):
     """Used to load a hdf5 database"""
     if full:
         datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
+        dataset_name = nameDB
         labelsDictionary = dict((labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
                                 enumerate(datasetFile.get("Labels").attrs["names"]))
-        return datasetFile, labelsDictionary
     else:
         askedLabelsNames = [askedLabelName.encode("utf8") for askedLabelName in askedLabelsNames]
-        datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
-        fullLabels = datasetFile.get("Labels").value
-        temp_dataset = h5py.File(pathF+nameDB+"_temp_view_label_select.hdf5", "w")
-        datasetFile.copy("Metadata", temp_dataset)
+        baseDatasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
+        fullLabels = baseDatasetFile.get("Labels").value
+        datasetFile = h5py.File(pathF+nameDB+"_temp_view_label_select.hdf5", "w")
+        dataset_name = nameDB+"_temp_view_label_select"
+        baseDatasetFile.copy("Metadata", datasetFile)
         labelsSet = getClasses(fullLabels)
-        availableLabelsNames = list(datasetFile.get("Labels").attrs["names"])
+        availableLabelsNames = list(baseDatasetFile.get("Labels").attrs["names"])
         askedLabelsNames, askedLabelsNamesSet = fillLabelNames(NB_CLASS, askedLabelsNames,
                                                                randomState, availableLabelsNames)
 
         newLabels, newLabelsNames, usedIndices = filterLabels(labelsSet, askedLabelsNamesSet, fullLabels,
                                                               availableLabelsNames, askedLabelsNames)
-        temp_dataset.get("Metadata").attrs["datasetLength"] = len(usedIndices)
-        temp_dataset.get("Metadata").attrs["nbClass"] = NB_CLASS
-        temp_dataset.create_dataset("Labels", data=newLabels)
-        temp_dataset.get("Labels").attrs["names"] = newLabelsNames
-        filterViews(datasetFile, temp_dataset, views, usedIndices)
+        datasetFile.get("Metadata").attrs["datasetLength"] = len(usedIndices)
+        datasetFile.get("Metadata").attrs["nbClass"] = NB_CLASS
+        datasetFile.create_dataset("Labels", data=newLabels)
+        datasetFile.get("Labels").attrs["names"] = newLabelsNames
+        filterViews(baseDatasetFile, datasetFile, views, usedIndices)
 
         labelsDictionary = dict((labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
-                                enumerate(temp_dataset.get("Labels").attrs["names"]))
-        return temp_dataset, labelsDictionary
+                                enumerate(datasetFile.get("Labels").attrs["names"]))
+
+    if add_noise:
+        datasetFile = add_gaussian_noise(datasetFile, randomState, pathF, dataset_name, noise_std)
+    else:
+        pass
+    return datasetFile, labelsDictionary
 
 
-def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState, full=False, delimiter=","):
+def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name, noise_std=0.15):
+    """In this function, we add a guaussian noise centered in 0 with specified
+    std to each view, according to it's range (the noise will be
+    mutliplied by this range) and we crop the noisy signal according to the
+    view's attributes limits.
+    This is done by creating a new dataset, to keep clean data."""
+    noisy_dataset = h5py.File(path_f+dataset_name+"_noised.hdf5", "w")
+    dataset_file.copy("Metadata", noisy_dataset)
+    dataset_file.copy("Labels", noisy_dataset)
+    for view_index in range(dataset_file.get("Metadata").attrs["nbView"]):
+        dataset_file.copy("View"+str(view_index), noisy_dataset)
+    # dataset_file.close()
+    for view_index in range(noisy_dataset.get("Metadata").attrs["nbView"]):
+        view_name = "View" + str(view_index)
+        view_dset = noisy_dataset.get(view_name)
+        orig_shape = view_dset.value.shape
+        view_ranges = view_dset.attrs["ranges"]
+        view_limits = view_dset.attrs["limits"]
+        normal_dist = random_state.normal(0, noise_std, view_dset.value.shape)
+        noise = normal_dist*view_ranges
+        noised_data = view_dset.value+noise
+        noised_data = np.where(noised_data<view_limits[:,0], view_limits[:,0], noised_data)
+        noised_data = np.where(noised_data>view_limits[:,1], view_limits[:,1], noised_data)
+        noisy_dataset[view_name][...] = noised_data
+        final_shape = noised_data.shape
+    return noisy_dataset
+
+
+
+
+def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState, full=False, add_noise=False, noise_std=0.15, delimiter=","):
     # TODO : Update this one
     labelsNames = np.genfromtxt(pathF + nameDB + "-labels-names.csv", dtype='str', delimiter=delimiter)
     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")

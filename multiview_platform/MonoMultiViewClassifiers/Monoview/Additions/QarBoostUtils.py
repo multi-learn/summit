@@ -54,6 +54,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.train_time = 0
         self.train_shape = None
         self.step_decisions = None
+        self.step_prod = None
         self.n_max_iterations = n_max_iterations
         self.estimators_generator = estimators_generator
         self.self_complemented = self_complemented
@@ -73,13 +74,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                                        "n_stumps", "use_r", "c_bound_sol"]
 
     def set_params(self, **params):
-        self.self_complemented = params["self_complemented"]
-        self.twice_the_same = params["twice_the_same"]
-        self.c_bound_choice = params["c_bound_choice"]
-        self.random_start = params["random_start"]
+        # self.self_complemented = params["self_complemented"]
+        # self.twice_the_same = params["twice_the_same"]
+        # self.c_bound_choice = params["c_bound_choice"]
+        # self.random_start = params["random_start"]
         self.n_max_iterations = params["n_max_iterations"]
-        self.n_stumps = params["n_stumps_per_attribute"]
-        self.use_r = params["use_r"]
+        # self.n_stumps = params["n_stumps_per_attribute"]
+        # self.use_r = params["use_r"]
 
     def fit(self, X, y):
 
@@ -96,20 +97,23 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.n_total_examples = m
 
         self.init_boosting(m, formatted_y, y_kernel_matrix)
+
         self.break_cause = " the maximum number of iterations was attained."
 
         for k in range(min(n - 1,
                            self.n_max_iterations - 1 if self.n_max_iterations is not None else np.inf)):
 
+
             # Print dynamically the step and the error of the current classifier
             self.it = k
-            print(
-                "Resp. bound : {}, {}; {}/{}, eps :{}".format(self.respected_bound,
-                                                              self.bounds[-1] > self.train_metrics[-1],
-                                                          k + 2,
-                                                          self.n_max_iterations,
-                                                          self.voter_perfs[-1]),
-                end="\r")
+
+            # print(
+            #     "Resp. bound : {}, {}; {}/{}, eps :{}".format(self.respected_bound,
+            #                                                   self.bounds[-1] > self.train_metrics[-1],
+            #                                               k + 2,
+            #                                               self.n_max_iterations,
+            #                                               self.voter_perfs[-1]),
+            #     end="\r")
             sol, new_voter_index = self.choose_new_voter(y_kernel_matrix,
                                                          formatted_y)
 
@@ -125,7 +129,9 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             self.update_example_weights(formatted_y)
 
+
             self.update_info_containers(formatted_y, voter_perf, k)
+
 
         self.nb_opposed_voters = self.check_opposed_voters()
         self.estimators_generator.estimators_ = \
@@ -155,7 +161,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         classification_matrix = self._binary_classification_matrix(X)
         self.step_predict(classification_matrix)
         margins = np.sum(classification_matrix * self.weights_, axis=1)
-        # print(margins)
         signs_array = np.array([int(x) for x in sign(margins)])
         signs_array[signs_array == -1] = 0
         end = time.time()
@@ -165,24 +170,18 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def step_predict(self, classification_matrix):
         if classification_matrix.shape != self.train_shape:
             self.step_decisions = np.zeros(classification_matrix.shape)
+            self.step_prod = np.zeros(classification_matrix.shape)
             for weight_index in range(self.weights_.shape[0]-1):
                 margins = np.sum(classification_matrix[:, :weight_index+1]* self.weights_[:weight_index+1], axis=1)
-                # print(margins)
                 signs_array = np.array([int(x) for x in sign(margins)])
                 signs_array[signs_array == -1] = 0
                 self.step_decisions[:, weight_index] = signs_array
+                self.step_prod[:, weight_index] = np.sum(classification_matrix[:, :weight_index+1]* self.weights_[:weight_index+1], axis=1)
 
     def update_info_containers(self, y, voter_perf, k):
         """Is used at each iteration to compute and store all the needed quantities for later analysis"""
         self.example_weights_.append(self.example_weights)
-        m =  self.new_voter.shape[0]
-        t = np.sum(self.previous_vote * self.new_voter)/m
-        print(np.linalg.norm(self.previous_vote)>1)
-        # if abs((g_g*f2*(2*g_f+self.q*g_g))/(g_f**2*(2*d_fg+self.q * m)))<=1:
-        #     print((g_g*f2*(2*g_f+self.q*g_g))/(g_f**2*(2*d_fg+self.q * m)))
-        # print((g_g*f2*(2*g_f+self.q*g_g))/(g_f**2*(2*d_fg+self.q * m))>=1)
         self.previous_vote += self.q * self.new_voter
-
         self.previous_votes.append(self.previous_vote)
         self.previous_margins.append(
             np.multiply(y, self.previous_vote))
@@ -226,6 +225,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def append_new_voter(self, new_voter_index):
         """Used to append the voter to the majority vote"""
         self.chosen_columns_.append(new_voter_index)
+        # print((self.classification_matrix[:, new_voter_index] == self.chosen_one).all())
         self.new_voter = self.classification_matrix[:, new_voter_index].reshape(
             (self.n_total_examples, 1))
 
@@ -244,6 +244,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.example_weights = self._initialize_alphas(m).reshape((m, 1))
 
         self.example_weights_.append(self.example_weights)
+
         if self.random_start:
             first_voter_index = self.random_state.choice(
                 np.where(np.sum(y_kernel_matrix, axis=0)>0)[0])
@@ -252,8 +253,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 y_kernel_matrix)
 
         self.chosen_columns_.append(first_voter_index)
-        self.new_voter = self.classification_matrix[:,
-                         first_voter_index].reshape((m, 1))
+        self.new_voter = np.array(self.classification_matrix[:,
+                         first_voter_index].reshape((m, 1)), copy=True)
 
         self.previous_vote = self.new_voter
 
@@ -276,6 +277,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.update_example_weights(y)
         self.example_weights_.append(self.example_weights)
 
+
         self.previous_margins.append(
             np.multiply(y, self.previous_vote))
         self.selected_margins.append(np.sum(np.multiply(y, self.previous_vote)))
@@ -292,6 +294,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.train_metrics.append(train_metric)
 
         self.bounds.append(bound)
+
+
 
     def format_X_y(self, X, y):
         """Formats the data  : X -the examples- and y -the labels- to be used properly by the algorithm """
@@ -315,6 +319,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         m, n = self.classification_matrix.shape
         y_kernel_matrix = np.multiply(y, self.classification_matrix)
+
         return m, n, y_kernel_matrix
 
     def init_info_containers(self):
@@ -374,7 +379,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         and select the one that has the smallest minimum"""
         m = y_kernel_matrix.shape[0]
         weighted_previous_sum = np.multiply(y,
-                                            self.previous_vote.reshape((m, 1)))
+                                            self.previous_vote.reshape(m,1))
         margin_old = np.sum(weighted_previous_sum)
         if self.c_bound_sol:
             weighted_hypothesis = y_kernel_matrix
@@ -384,7 +389,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         bad_margins = np.where(np.sum(weighted_hypothesis, axis=0)<=0.0)[0]
 
         self.B2 = m
-        self.B1s = np.sum(2 * (weighted_previous_sum * weighted_hypothesis),
+        self.B1s = np.sum(2 * np.multiply(weighted_previous_sum, weighted_hypothesis),
                           axis=0)
         self.B0 = np.sum(weighted_previous_sum ** 2)
 
@@ -405,6 +410,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.c_bounds.append(masked_c_bounds[best_hyp_index])
         self.margins.append(math.sqrt(self.A2s[best_hyp_index]/m))
         self.disagreements.append(0.5*self.B1s[best_hyp_index]/m)
+
 
         return sols[best_hyp_index], best_hyp_index
 
@@ -453,8 +459,20 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         for step_index in range(self.step_decisions.shape[1]-1):
             step_metrics.append(self.plotted_metric.score(y_test, self.step_decisions[:, step_index]))
         step_metrics = np.array(step_metrics)
+        np.savetxt(directory + "step_test_metrics.csv", step_metrics, delimiter=',')
         get_accuracy_graph(step_metrics, self.__class__.__name__,
-                           directory + 'step_test_metrics.png', self.plotted_metric)
+                           directory + 'step_test_metrics.png', self.plotted_metric, set="test")
+        step_cbounds = []
+        for step_index in range(self.step_prod.shape[1]):
+            num = np.sum(y_test*self.step_prod[:, step_index])**2
+            den = np.sum((self.step_prod[:, step_index])**2)
+            step_cbounds.append(1-num/(den*self.step_prod.shape[0]))
+        step_cbounds = np.array(step_cbounds)
+        np.savetxt(directory + "step_test_c_bounds.csv", step_cbounds,
+                   delimiter=',')
+        get_accuracy_graph(step_cbounds, self.__class__.__name__,
+                           directory + 'step_test_c_bounds.png',
+                           "C_bound", set="test")
 
     def getInterpretQar(self, directory, y_test=None):
         self.directory = directory

@@ -669,12 +669,13 @@ class ConvexProgram(object):
         return signs
 
 
-def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accuracies", bounds=None, bound_name=None, boosting_bound=None):
+def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accuracies", bounds=None, bound_name=None, boosting_bound=None, set="train"):
     if type(name) is not str:
         name = " ".join(name.getConfig().strip().split(" ")[:2])
     if bounds:
         f, ax = plt.subplots(nrows=1, ncols=1)
-        ax.set_title(name+" during train for "+classifier_name)
+        ax.set_ylim(bottom=0.0,top=1.0)
+        ax.set_title(name+" during "+set+" for "+classifier_name)
         x = np.arange(len(train_accuracies))
         scat = ax.scatter(x, np.array(train_accuracies), marker=".")
         if boosting_bound:
@@ -690,7 +691,8 @@ def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accur
         plt.close()
     else:
         f, ax = plt.subplots(nrows=1, ncols=1)
-        ax.set_title(name+" during train for "+classifier_name)
+        ax.set_ylim(bottom=0.0, top=1.0)
+        ax.set_title(name + " during "+set+" for " + classifier_name)
         x = np.arange(len(train_accuracies))
         scat = ax.scatter(x, np.array(train_accuracies), marker=".", )
         ax.legend((scat,), (name,))
@@ -702,7 +704,7 @@ def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accur
 class BaseBoost(object):
 
     def __init__(self):
-        self.n_stumps = 1
+        self.n_stumps = 10
 
     def _collect_probas(self, X):
         return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])

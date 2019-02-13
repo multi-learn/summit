@@ -43,6 +43,11 @@ def parseTheArgs(arguments):
     groupStandard.add_argument('-full', action='store_true', help='Use option to use full dataset and no labels or view filtering')
     groupStandard.add_argument('-debug', action='store_true',
                                help='Use option to bebug implemented algorithms')
+    groupStandard.add_argument('-add_noise', action='store_true',
+                               help='Use option to add noise to the data')
+    groupStandard.add_argument('--noise_std', metavar='FLOAT', action='store',
+                               help='The std of the gaussian noise that will be added to the data.',
+                               type=float, default=0.15)
 
 
     groupClass = parser.add_argument_group('Classification arguments')
@@ -172,11 +177,11 @@ def parseTheArgs(arguments):
     groupQarBoost.add_argument('--QarB_epsilon', metavar='FLOAT', type=float, action='store',
                                  help='Set the epsilon parameter for QarBoost', default=1e-08)
 
-    groupQarBoostv2 = parser.add_argument_group('QarBoostv2 arguments')
-    groupQarBoostv2.add_argument('--QarB2_mu', metavar='FLOAT', type=float, action='store',
-                               help='Set the mu parameter for QarBoostv2', default=0.001)
-    groupQarBoostv2.add_argument('--QarB2_epsilon', metavar='FLOAT', type=float, action='store',
-                                 help='Set the epsilon parameter for QarBoostv2', default=1e-08)
+    groupCGreed = parser.add_argument_group('CGreed arguments')
+    groupCGreed.add_argument('--CGR_stumps', metavar='INT', type=int, action='store',
+                               help='Set the n_stumps_per_attribute parameter for CGreed', default=1)
+    groupCGreed.add_argument('--CGR_n_iter', metavar='INT', type=int, action='store',
+                                 help='Set the n_max_iterations parameter for CGreed', default=100)
 
     groupQarBoostv3 = parser.add_argument_group('QarBoostv3 arguments')
     groupQarBoostv3.add_argument('--QarB3_mu', metavar='FLOAT', type=float, action='store',

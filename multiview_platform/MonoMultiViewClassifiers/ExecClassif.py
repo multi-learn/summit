@@ -460,7 +460,7 @@ def execClassif(arguments):
     getDatabase = execution.getDatabaseFunction(args.name,args.type)
 
     DATASET, LABELS_DICTIONARY = getDatabase(args.views, args.pathF, args.name, args.CL_nbClass,
-                                             args.CL_classes, randomState, args.full)
+                                             args.CL_classes, randomState, args.full, args.add_noise, args.noise_std)
 
     splits = execution.genSplits(DATASET.get("Labels").value, args.CL_split, statsIterRandomStates)
 

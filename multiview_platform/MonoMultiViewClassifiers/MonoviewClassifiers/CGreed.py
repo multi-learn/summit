@@ -1,23 +1,24 @@
-from ..Monoview.MonoviewUtils import BaseMonoviewClassifier
+from ..Monoview.MonoviewUtils import BaseMonoviewClassifier, CustomRandint
 from ..Monoview.Additions.BoostUtils import getInterpretBase
 from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
 
 
 class CGreed(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, **kwargs):
-        super(CGreed, self).__init__(n_max_iterations=500,
+    def __init__(self, random_state=None, n_max_iterations=500, n_stumps_per_attribute=10, **kwargs):
+        super(CGreed, self).__init__(n_max_iterations=n_max_iterations,
             random_state=random_state,
             self_complemented=True,
             twice_the_same=True,
             c_bound_choice=True,
             random_start=False,
-            n_stumps_per_attribute=10,
+            n_stumps_per_attribute=n_stumps_per_attribute,
             use_r=True,
             c_bound_sol=True
             )
-        self.param_names = []
-        self.distribs = []
+
+        self.param_names = ["n_max_iterations"]
+        self.distribs = [CustomRandint(low=1, high=500)]
         self.classed_params = []
         self.weird_strings = {}
 
@@ -34,7 +35,8 @@ class CGreed(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {}
+    kwargsDict = {"n_stumps_per_attribute":args.CGR_stumps,
+    "n_max_iterations":args.CGR_n_iter}
     return kwargsDict
 
 
