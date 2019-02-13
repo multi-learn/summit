@@ -502,6 +502,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             np.savetxt(directory+"y_train.csv", self.y_train, delimiter=',')
             np.savetxt(directory + "raw_weights.csv", self.raw_weights, delimiter=',')
             np.savetxt(directory + "c_bounds.csv", self.c_bounds, delimiter=',')
+            np.savetxt(directory + "train_metrics.csv", self.train_metrics, delimiter=',')
         args_dict = dict(
             (arg_name, str(self.__dict__[arg_name])) for arg_name in
             self.printed_args_name_list)

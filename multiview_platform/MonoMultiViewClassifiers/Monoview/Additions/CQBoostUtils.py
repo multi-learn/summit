@@ -22,7 +22,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         self.dual_constraint_rhs = dual_constraint_rhs
         self.mu = mu
         self.train_time = 0
-        self.plotted_metric = Metrics.accuracy_score
+        self.plotted_metric = Metrics.zero_one_loss
 
     def fit(self, X, y):
         start = time.time()

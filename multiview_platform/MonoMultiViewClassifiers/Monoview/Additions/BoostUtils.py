@@ -202,12 +202,12 @@ class StumpsClassifiersGenerator(ClassifiersGenerator):
                     self.estimators_ += [DecisionStumpClassifier(i,
                                                                  (different[stump_number]+different[
                                                                      stump_number+1])/2, 1).fit(X, y)
-                                        for stump_number in range(nb_different-1)]
+                                        for stump_number in range(int(nb_different)-1)]
                     if self.self_complemented:
                         self.estimators_ += [DecisionStumpClassifier(i,
                                                                      (different[stump_number] + different[
                                                                          stump_number + 1]) / 2, -1).fit(X, y)
-                                             for stump_number in range(nb_different-1)]
+                                             for stump_number in range(int(nb_different)-1)]
                 else:
                     self.estimators_ += [DecisionStumpClassifier(i, minimums[i] + ranges[i] * stump_number, 1).fit(X, y)
                                         for stump_number in range(1, self.n_stumps_per_attribute + 1)

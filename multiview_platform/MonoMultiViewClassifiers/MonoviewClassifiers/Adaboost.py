@@ -46,6 +46,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         interpretString += "\n\n Estimator error | Estimator weight\n"
         interpretString += "\n".join([str(error) +" | "+ str(weight/sum(self.estimator_weights_)) for error, weight in zip(self.estimator_errors_, self.estimator_weights_)])
         get_accuracy_graph(self.metrics, "Adaboost", directory+"metrics.png", self.plotted_metric_name, bounds=list(self.bounds))
+        np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')
         return interpretString
 
 

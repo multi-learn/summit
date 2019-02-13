@@ -2,6 +2,7 @@ from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint, BaseMonoviewC
 from ..Monoview.Additions.CQBoostUtils import ColumnGenerationClassifier
 from ..Monoview.Additions.BoostUtils import getInterpretBase
 
+import numpy as np
 
 class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
@@ -22,6 +23,7 @@ class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
         return True
 
     def getInterpret(self, directory, y_test):
+        np.savetxt(directory + "train_metrics.csv", self.train_metrics, delimiter=',')
         return getInterpretBase(self, directory, "CQBoost", self.weights_, y_test)
 
 
