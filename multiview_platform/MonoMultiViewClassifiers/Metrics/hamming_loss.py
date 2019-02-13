@@ -11,7 +11,7 @@ def score(y_true, y_pred, multiclass=False, **kwargs):
         classes = kwargs["0"]
     except:
         classes = None
-    score = metric(y_true, y_pred, classes=classes)
+    score = metric(y_true, y_pred)
     return score
 
 
