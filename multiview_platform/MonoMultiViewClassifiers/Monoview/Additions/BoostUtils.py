@@ -750,7 +750,8 @@ def getInterpretBase(classifier, directory, classifier_name, weights,
         else:
             interpretString += "."
     else:
-        interpretString += ", and the loop was broken because "+break_cause
+        pass
+        # interpretString += ", and the loop was broken because "+break_cause
     interpretString += "\n\t Selected voters : \n"
     interpretString += np.array2string(np.array(classifier.chosen_columns_)[weights_sort])
     interpretString += "\n\t Trained in "+str(datetime.timedelta(seconds=classifier.train_time))+" and predicted in "+str(datetime.timedelta(seconds=classifier.predict_time))+"."
