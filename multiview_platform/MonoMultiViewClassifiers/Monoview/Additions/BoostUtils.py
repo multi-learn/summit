@@ -760,5 +760,7 @@ def getInterpretBase(classifier, directory, classifier_name, weights,
                                        separator=',', suppress_small=True)
     np.savetxt(directory + "voters.csv", classifier.classification_matrix[:, classifier.chosen_columns_], delimiter=',')
     np.savetxt(directory + "weights.csv", classifier.weights_, delimiter=',')
+    np.savetxt(directory + "times.csv", np.array([classifier.train_time, classifier.predict_time]), delimiter=',')
+    np.savetxt(directory + "sparsity.csv", np.array([len(weights_sort)]), delimiter=',')
     get_accuracy_graph(classifier.train_metrics, classifier_name, directory + 'metrics.png', classifier.plotted_metric, classifier.bounds, "Boosting bound")
     return interpretString

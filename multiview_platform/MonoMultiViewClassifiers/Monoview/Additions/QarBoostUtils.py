@@ -160,12 +160,12 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             logging.warning('Converting sparse matrix to dense matrix.')
             X = np.array(X.todense())
         classification_matrix = self._binary_classification_matrix(X)
-        self.step_predict(classification_matrix)
         margins = np.sum(classification_matrix * self.weights_, axis=1)
         signs_array = np.array([int(x) for x in sign(margins)])
         signs_array[signs_array == -1] = 0
         end = time.time()
         self.predict_time = end - start
+        self.step_predict(classification_matrix)
         return signs_array
 
     def step_predict(self, classification_matrix):

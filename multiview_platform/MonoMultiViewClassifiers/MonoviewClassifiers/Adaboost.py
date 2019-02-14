@@ -1,6 +1,7 @@
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 import numpy as np
+import time
 from sklearn.metrics import accuracy_score
 
 from ..Monoview.MonoviewUtils import CustomRandint, BaseMonoviewClassifier
@@ -32,7 +33,11 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         self.step_predictions = None
 
     def fit(self, X, y, sample_weight=None):
+        begin = time.time()
         super(Adaboost, self).fit(X, y, sample_weight=sample_weight)
+        end = time.time()
+        self.train_time = end-begin
+        self.train_shape = X.shape
         self.base_predictions = np.array([estim.predict(X) for estim in self.estimators_])
         self.metrics = np.array([self.plotted_metric.score(pred, y) for pred in self.staged_predict(X)])
         self.bounds = np.array([np.prod(np.sqrt(1-4*np.square(0.5-self.estimator_errors_[:i+1]))) for i in range(self.estimator_errors_.shape[0])])
@@ -42,8 +47,13 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         return True
 
     def predict(self, X):
-        super(Adaboost, self).predict(X)
-        self.step_predictions = np.array([step_pred for step_pred in self.staged_predict(X)])
+        begin = time.time()
+        pred = super(Adaboost, self).predict(X)
+        end = time.time()
+        self.pred_time = end - begin
+        if X.shape != self.train_shape:
+            self.step_predictions = np.array([step_pred for step_pred in self.staged_predict(X)])
+        return pred
 
     def getInterpret(self, directory, y_test):
         interpretString = ""
@@ -56,6 +66,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         get_accuracy_graph(self.metrics, "Adaboost", directory+"metrics.png", self.plotted_metric_name, bounds=list(self.bounds))
         np.savetxt(directory + "test_metrics.csv", step_test_metrics, delimiter=',')
         np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')
+        np.savetxt(directory + "times.csv", np.array([self.train_time, self.pred_time]), delimiter=',')
         return interpretString
 
 

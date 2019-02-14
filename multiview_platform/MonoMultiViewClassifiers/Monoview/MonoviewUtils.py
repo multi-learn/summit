@@ -31,7 +31,6 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
             nIter = nb_possible_combinations
         randomSearch = RandomizedSearchCV(estimator, n_iter=nIter, param_distributions=params_dict, refit=True,
                                           n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
-        print(X_train)
         detector = randomSearch.fit(X_train, y_train)
 
         bestParams = estimator.genBestParams(detector)

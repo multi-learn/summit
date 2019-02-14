@@ -43,6 +43,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         self.chosen_columns_ = []
         self.n_total_hypotheses_ = n
         self.n_total_examples = m
+        self.train_shape = self.classification_matrix.shape
 
         y_kernel_matrix = np.multiply(y.reshape((len(y), 1)), self.classification_matrix)
 
@@ -103,13 +104,25 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
             X = np.array(X.todense())
 
         classification_matrix = self._binary_classification_matrix(X)
-
         margins = np.squeeze(np.asarray(np.dot(classification_matrix, self.weights_)))
+
         signs_array = np.array([int(x) for x in sign(margins)])
         signs_array[signs_array == -1] = 0
         end = time.time()
         self.predict_time = end-start
+        self.step_predict(classification_matrix)
         return signs_array
+
+    def step_predict(self, classification_matrix):
+        if classification_matrix.shape != self.train_shape:
+            self.step_decisions = np.zeros(classification_matrix.shape)
+            self.step_prod = np.zeros(classification_matrix.shape)
+            for weight_index in range(self.weights_.shape[0]-1):
+                margins = np.sum(classification_matrix[:, :weight_index+1]* self.weights_[:weight_index+1], axis=1)
+                signs_array = np.array([int(x) for x in sign(margins)])
+                signs_array[signs_array == -1] = 0
+                self.step_decisions[:, weight_index] = signs_array
+                self.step_prod[:, weight_index] = np.sum(classification_matrix[:, :weight_index+1]* self.weights_[:weight_index+1], axis=1)
 
     def initialize(self):
         pass
