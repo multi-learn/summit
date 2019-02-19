@@ -3,6 +3,7 @@ from ..Monoview.Additions.CQBoostUtils import ColumnGenerationClassifier
 from ..Monoview.Additions.BoostUtils import getInterpretBase
 
 import numpy as np
+import os
 
 class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
@@ -17,6 +18,19 @@ class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
                          CustomRandint(low=1, high=15, multiplier="e-")]
         self.classed_params = []
         self.weird_strings = {}
+        if "nbCores" not in kwargs:
+            self.nbCores = 1
+        else:
+            self.nbCores = kwargs["nbCores"]
+
+    def fit(self, X, y):
+        if self.nbCores == 1:
+            pass
+        super(CQBoost, self).fit(X,y)
+        if self.nbCores == 1:
+            # os.environ['OMP_NUM_THREADS'] = num_threads
+            pass
+
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""

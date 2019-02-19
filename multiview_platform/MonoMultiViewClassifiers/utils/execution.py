@@ -21,6 +21,9 @@ def parseTheArgs(arguments):
     groupStandard.add_argument('-log', action='store_true', help='Use option to activate logging to console')
     groupStandard.add_argument('--name', metavar='STRING', action='store', help='Name of Database (default: %(default)s)',
                                default='Plausible')
+    groupStandard.add_argument('--label', metavar='STRING', action='store',
+                               help='Labeling the results directory (default: %(default)s)',
+                               default='')
     groupStandard.add_argument('--type', metavar='STRING', action='store',
                                help='Type of database : .hdf5 or .csv (default: %(default)s)',
                                default='.hdf5')
@@ -366,7 +369,7 @@ def getDatabaseFunction(name, type):
     return getDatabase
 
 
-def initLogFile(name, views, CL_type, log, debug):
+def initLogFile(name, views, CL_type, log, debug, label):
     r"""Used to init the directory where the preds will be stored and the log file.
 
     First this function will check if the result directory already exists (only one per minute is allowed).
@@ -390,9 +393,9 @@ def initLogFile(name, views, CL_type, log, debug):
         Reference to the main results directory for the benchmark.
     """
     if debug:
-        resultDirectory = "../Results/" + name + "/debug_started_" + time.strftime("%Y_%m_%d-%H_%M_%S") + "/"
+        resultDirectory = "../Results/" + name + "/debug_started_" + time.strftime("%Y_%m_%d-%H_%M_%S") + "_" + label + "/"
     else:
-        resultDirectory = "../Results/" + name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "/"
+        resultDirectory = "../Results/" + name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") +"_" + label + "/"
     logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(CL_type) + "-" + "_".join(
         views) + "-" + name + "-LOG"
     if os.path.exists(os.path.dirname(resultDirectory)):

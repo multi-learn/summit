@@ -453,7 +453,7 @@ def execClassif(arguments):
     monoviewAlgos = args.CL_algos_monoview
     multiviewAlgos = args.CL_algos_multiview
 
-    directory = execution.initLogFile(args.name, args.views, args.CL_type, args.log, args.debug)
+    directory = execution.initLogFile(args.name, args.views, args.CL_type, args.log, args.debug, args.label)
     randomState = execution.initRandomState(args.randomState, directory)
     statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,randomState)
 
