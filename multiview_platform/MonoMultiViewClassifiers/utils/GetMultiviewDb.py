@@ -125,7 +125,7 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", random
         datasetFile.close()
         datasetFile = h5py.File(pathF + "Plausible.hdf5", "r")
         LABELS_DICTIONARY = {0: "No", 1: "Yes", 2:"Maybe"}
-        return datasetFile, LABELS_DICTIONARY
+        return datasetFile, LABELS_DICTIONARY, "Plausible"
 
 
 # def getFakeDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, randomState):
@@ -322,10 +322,10 @@ def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomSta
                                 enumerate(datasetFile.get("Labels").attrs["names"]))
 
     if add_noise:
-        datasetFile = add_gaussian_noise(datasetFile, randomState, pathF, dataset_name, noise_std)
+        datasetFile, dataset_name = add_gaussian_noise(datasetFile, randomState, pathF, dataset_name, noise_std)
     else:
         pass
-    return datasetFile, labelsDictionary
+    return datasetFile, labelsDictionary, dataset_name
 
 
 def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name, noise_std=0.15):
@@ -353,7 +353,7 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name, noise_s
         noised_data = np.where(noised_data>view_limits[:,1], view_limits[:,1], noised_data)
         noisy_dataset[view_name][...] = noised_data
         final_shape = noised_data.shape
-    return noisy_dataset
+    return noisy_dataset, dataset_name+"_noised"
 
 
 
