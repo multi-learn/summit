@@ -186,6 +186,16 @@ def parseTheArgs(arguments):
     groupCGreed.add_argument('--CGR_n_iter', metavar='INT', type=int, action='store',
                                  help='Set the n_max_iterations parameter for CGreed', default=100)
 
+    groupCGDesc = parser.add_argument_group('CGDesc arguments')
+    groupCGDesc.add_argument('--CGD_stumps', metavar='INT', type=int,
+                             action='store',
+                             help='Set the n_stumps_per_attribute parameter for CGreed',
+                             default=1)
+    groupCGDesc.add_argument('--CGD_n_iter', metavar='INT', type=int,
+                             action='store',
+                             help='Set the n_max_iterations parameter for CGreed',
+                             default=100)
+
     groupQarBoostv3 = parser.add_argument_group('QarBoostv3 arguments')
     groupQarBoostv3.add_argument('--QarB3_mu', metavar='FLOAT', type=float, action='store',
                                  help='Set the mu parameter for QarBoostv3', default=0.001)
@@ -395,7 +405,7 @@ def initLogFile(name, views, CL_type, log, debug, label):
     if debug:
         resultDirectory = "../Results/" + name + "/debug_started_" + time.strftime("%Y_%m_%d-%H_%M_%S") + "_" + label + "/"
     else:
-        resultDirectory = "../Results/" + name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") +"_" + label + "/"
+        resultDirectory = "../Results/" + name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "_" + label + "/"
     logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(CL_type) + "-" + "_".join(
         views) + "-" + name + "-LOG"
     if os.path.exists(os.path.dirname(resultDirectory)):

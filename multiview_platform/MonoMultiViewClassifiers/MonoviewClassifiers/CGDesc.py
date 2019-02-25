@@ -3,13 +3,13 @@ from ..Monoview.Additions.BoostUtils import getInterpretBase
 from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
 
 
-class CGreed(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
+class CGDesc(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, n_max_iterations=500, n_stumps_per_attribute=10, **kwargs):
-        super(CGreed, self).__init__(n_max_iterations=n_max_iterations,
+        super(CGDesc, self).__init__(n_max_iterations=n_max_iterations,
             random_state=random_state,
             self_complemented=True,
-            twice_the_same=False,
+            twice_the_same=True,
             c_bound_choice=True,
             random_start=False,
             n_stumps_per_attribute=n_stumps_per_attribute,
@@ -35,8 +35,8 @@ class CGreed(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_stumps_per_attribute":args.CGR_stumps,
-    "n_max_iterations":args.CGR_n_iter}
+    kwargsDict = {"n_stumps_per_attribute":args.CGD_stumps,
+    "n_max_iterations":args.CGD_n_iter}
     return kwargsDict
 
 

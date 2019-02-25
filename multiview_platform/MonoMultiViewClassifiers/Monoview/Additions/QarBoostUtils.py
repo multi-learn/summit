@@ -182,11 +182,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def update_info_containers(self, y, voter_perf, k):
         """Is used at each iteration to compute and store all the needed quantities for later analysis"""
         self.example_weights_.append(self.example_weights)
+        self.tau.append(np.sum(np.multiply(self.previous_vote, self.new_voter))/float(self.n_total_examples))
         self.previous_vote += self.q * self.new_voter
+        self.norm.append(np.linalg.norm(self.previous_vote)**2)
         self.previous_votes.append(self.previous_vote)
         self.previous_margins.append(
-            np.multiply(y, self.previous_vote))
-        self.selected_margins.append(np.sum(np.multiply(y, self.new_voter)))
+            np.sum(np.multiply(y, self.previous_vote))/float(self.n_total_examples))
+        self.selected_margins.append(np.sum(np.multiply(y, self.new_voter))/float(self.n_total_examples))
         train_metric = self.plotted_metric.score(y, np.sign(self.previous_vote))
         if self.use_r:
             bound = self.bounds[-1] * math.sqrt(1 - voter_perf ** 2)
@@ -258,6 +260,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                          first_voter_index].reshape((m, 1)), copy=True)
 
         self.previous_vote = self.new_voter
+        self.norm.append(np.linalg.norm(self.previous_vote) ** 2)
 
         if self.use_r:
             r = self._compute_r(y)
@@ -280,8 +283,11 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
 
         self.previous_margins.append(
-            np.multiply(y, self.previous_vote))
+            np.sum(np.multiply(y, self.previous_vote))/float(self.n_total_examples))
         self.selected_margins.append(np.sum(np.multiply(y, self.previous_vote)))
+        self.tau.append(
+            np.sum(np.multiply(self.previous_vote, self.new_voter)) / float(
+                self.n_total_examples))
 
         train_metric = self.plotted_metric.score(y, np.sign(self.previous_vote))
         if self.use_r:
@@ -339,6 +345,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.previous_margins = []
         self.respected_bound = True
         self.selected_margins = []
+        self.tau = []
+        self.norm=[]
 
     def _compute_epsilon(self, y):
         """Updating the error variable, the old fashioned way uses the whole majority vote to update the error"""
@@ -480,21 +488,24 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         """Used to interpret the functionning of the algorithm"""
         if self.step_decisions is not None:
             self.get_step_decision_test_graph(directory, y_test)
-        get_accuracy_graph(self.voter_perfs[:20], self.__class__.__name__,
-                           directory + 'voter_perfs.png', "Rs")
+        # get_accuracy_graph(self.voter_perfs[:20], self.__class__.__name__,
+        #                    directory + 'voter_perfs.png', "Rs")
         get_accuracy_graph(self.weights_, self.__class__.__name__,
-                           directory+'vote_weights.png', "weights")
+                           directory+'vote_weights.png', "weights", zero_to_one=False)
         get_accuracy_graph(self.c_bounds, self.__class__.__name__,
                            directory + 'c_bounds.png', "C-Bounds")
-        get_accuracy_graph(self.margins, self.__class__.__name__,
-                           directory + 'margins.png', "Squared Margins")
+        get_accuracy_graph(self.previous_margins, self.__class__.__name__,
+                           directory + 'margins.png', "Margins", zero_to_one=False)
         get_accuracy_graph(self.selected_margins, self.__class__.__name__,
                            directory + 'selected_margins.png', "Selected Margins")
-        self.disagreements[0] = 0
-        get_accuracy_graph(self.disagreements, self.__class__.__name__,
-                           directory + 'disagreements.png', "disagreements")
+        self.tau[0] = 0
+        get_accuracy_graph(self.tau, self.__class__.__name__,
+                           directory + 'disagreements.png', "disagreements", zero_to_one=False)
         get_accuracy_graph(self.train_metrics[:-1], self.__class__.__name__,
                            directory + 'c_bounds_train_metrics.png', self.plotted_metric, self.c_bounds, "C-Bound", self.bounds[:-1])
+        get_accuracy_graph(self.norm, self.__class__.__name__,
+                           directory + 'norms.png',
+                           "squared 2-norm",zero_to_one=False)
         interpretString = getInterpretBase(self, directory, self.__class__.__name__,
                                            self.weights_, self.break_cause)
         if self.save_train_data:
@@ -503,6 +514,12 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             np.savetxt(directory + "raw_weights.csv", self.raw_weights, delimiter=',')
             np.savetxt(directory + "c_bounds.csv", self.c_bounds, delimiter=',')
             np.savetxt(directory + "train_metrics.csv", self.train_metrics, delimiter=',')
+            np.savetxt(directory + "margins.csv", self.previous_margins,
+                       delimiter=',')
+            np.savetxt(directory + "disagreements.csv", self.tau,
+                       delimiter=',')
+            np.savetxt(directory + "disagreements.csv", self.norm,
+                       delimiter=',')
         args_dict = dict(
             (arg_name, str(self.__dict__[arg_name])) for arg_name in
             self.printed_args_name_list)

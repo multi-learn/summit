@@ -669,15 +669,18 @@ class ConvexProgram(object):
         return signs
 
 
-def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accuracies", bounds=None, bound_name=None, boosting_bound=None, set="train"):
+def get_accuracy_graph(plotted_data, classifier_name, file_name, name="Accuracies", bounds=None, bound_name=None, boosting_bound=None, set="train", zero_to_one=True):
     if type(name) is not str:
         name = " ".join(name.getConfig().strip().split(" ")[:2])
-    if bounds:
-        f, ax = plt.subplots(nrows=1, ncols=1)
+    f, ax = plt.subplots(nrows=1, ncols=1)
+    if zero_to_one:
         ax.set_ylim(bottom=0.0,top=1.0)
-        ax.set_title(name+" during "+set+" for "+classifier_name)
-        x = np.arange(len(train_accuracies))
-        scat = ax.scatter(x, np.array(train_accuracies), marker=".")
+    ax.set_title(name+" during "+set+" for "+classifier_name)
+    x = np.arange(len(plotted_data))
+    if name == "zero_one_loss":
+        print(plotted_data)
+    scat = ax.scatter(x, np.array(plotted_data), marker=".")
+    if bounds:
         if boosting_bound:
             scat2 = ax.scatter(x, boosting_bound, marker=".")
             scat3 = ax.scatter(x, np.array(bounds), marker=".", )
@@ -687,18 +690,10 @@ def get_accuracy_graph(train_accuracies, classifier_name, file_name, name="Accur
             ax.legend((scat, scat2),
                       (name, bound_name))
         # plt.tight_layout()
-        f.savefig(file_name)
-        plt.close()
     else:
-        f, ax = plt.subplots(nrows=1, ncols=1)
-        ax.set_ylim(bottom=0.0, top=1.0)
-        ax.set_title(name + " during "+set+" for " + classifier_name)
-        x = np.arange(len(train_accuracies))
-        scat = ax.scatter(x, np.array(train_accuracies), marker=".", )
         ax.legend((scat,), (name,))
-        plt.tight_layout()
-        f.savefig(file_name)
-        plt.close()
+    f.savefig(file_name)
+    plt.close()
 
 
 class BaseBoost(object):
