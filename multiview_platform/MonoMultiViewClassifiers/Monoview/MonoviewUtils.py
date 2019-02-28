@@ -27,9 +27,8 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
             metricKWARGS = {}
         scorer = metricModule.get_scorer(**metricKWARGS)
         nb_possible_combinations = compute_possible_combinations(params_dict)
-        if nIter > nb_possible_combinations:
-            nIter = nb_possible_combinations
-        randomSearch = RandomizedSearchCV(estimator, n_iter=nIter, param_distributions=params_dict, refit=True,
+        min_list = np.array([min(nb_possible_combination, nIter) for nb_possible_combination in nb_possible_combinations])
+        randomSearch = RandomizedSearchCV(estimator, n_iter=np.sum(min_list), param_distributions=params_dict, refit=True,
                                           n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
         detector = randomSearch.fit(X_train, y_train)
 
@@ -54,7 +53,7 @@ def compute_possible_combinations(params_dict):
             n_possibs[value_index] = len(value)
         elif isinstance(value, CustomRandint):
             n_possibs[value_index] = value.get_nb_possibilities()
-    return np.prod(n_possibs)
+    return n_possibs
 
 
 def genTestFoldsPreds(X_train, y_train, KFolds, estimator):

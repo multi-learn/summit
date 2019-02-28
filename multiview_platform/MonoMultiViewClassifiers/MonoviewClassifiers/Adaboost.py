@@ -63,7 +63,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         step_test_metrics = np.array([self.plotted_metric.score(y_test, step_pred) for step_pred in self.step_predictions])
         get_accuracy_graph(step_test_metrics, "Adaboost", directory + "test_metrics.png",
                            self.plotted_metric_name, set="test")
-        get_accuracy_graph(self.metrics, "Adaboost", directory+"metrics.png", self.plotted_metric_name, bounds=list(self.bounds))
+        get_accuracy_graph(self.metrics, "Adaboost", directory+"metrics.png", self.plotted_metric_name, bounds=list(self.bounds), bound_name="boosting bound")
         np.savetxt(directory + "test_metrics.csv", step_test_metrics, delimiter=',')
         np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')
         np.savetxt(directory + "times.csv", np.array([self.train_time, self.pred_time]), delimiter=',')

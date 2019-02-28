@@ -18,7 +18,7 @@ class CGreed(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
             )
 
         self.param_names = ["n_max_iterations"]
-        self.distribs = [CustomRandint(low=1, high=500)]
+        self.distribs = [CustomRandint(low=2, high=1000)]
         self.classed_params = []
         self.weird_strings = {}
 

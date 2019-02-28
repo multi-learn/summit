@@ -677,8 +677,6 @@ def get_accuracy_graph(plotted_data, classifier_name, file_name, name="Accuracie
         ax.set_ylim(bottom=0.0,top=1.0)
     ax.set_title(name+" during "+set+" for "+classifier_name)
     x = np.arange(len(plotted_data))
-    if name == "zero_one_loss":
-        print(plotted_data)
     scat = ax.scatter(x, np.array(plotted_data), marker=".")
     if bounds:
         if boosting_bound:
