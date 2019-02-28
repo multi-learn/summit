@@ -5,7 +5,7 @@ from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
 
 class CGreed(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, n_max_iterations=500, n_stumps_per_attribute=10, **kwargs):
+    def __init__(self, random_state=None, n_max_iterations=500, n_stumps_per_attribute=1, **kwargs):
         super(CGreed, self).__init__(n_max_iterations=n_max_iterations,
             random_state=random_state,
             self_complemented=True,

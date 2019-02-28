@@ -16,7 +16,6 @@ class CGDesc(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
             use_r=True,
             c_bound_sol=True
             )
-
         self.param_names = ["n_max_iterations"]
         self.distribs = [CustomRandint(low=2, high=1000)]
         self.classed_params = []
@@ -30,7 +29,7 @@ class CGDesc(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         return self.getInterpretQar(directory, y_test)
 
     def get_name_for_fusion(self):
-        return "CGr"
+        return "CGD"
 
 
 def formatCmdArgs(args):

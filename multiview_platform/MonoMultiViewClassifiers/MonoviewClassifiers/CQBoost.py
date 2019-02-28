@@ -7,7 +7,7 @@ import os
 
 class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, **kwargs):
+    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=10, **kwargs):
         super(CQBoost, self).__init__(
             random_state=random_state,
             mu=mu,
@@ -18,6 +18,7 @@ class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
                          CustomRandint(low=1, high=15, multiplier="e-")]
         self.classed_params = []
         self.weird_strings = {}
+        self.n_stumps = n_stumps
         if "nbCores" not in kwargs:
             self.nbCores = 1
         else:

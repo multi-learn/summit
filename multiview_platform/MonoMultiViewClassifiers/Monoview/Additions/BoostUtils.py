@@ -696,9 +696,6 @@ def get_accuracy_graph(plotted_data, classifier_name, file_name, name="Accuracie
 
 class BaseBoost(object):
 
-    def __init__(self):
-        self.n_stumps = 10
-
     def _collect_probas(self, X):
         return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])
 

@@ -23,7 +23,7 @@ from sklearn import metrics  # For stastics on classification
 # Author-Info
 __author__ = "Nikolas Huelsmann"
 __status__ = "Prototype"  # Production, Development, Prototype
-__date__ = 2016 - 03 - 25
+__date__ = 2016_03_25
 
 
 #### Export Features to CSV

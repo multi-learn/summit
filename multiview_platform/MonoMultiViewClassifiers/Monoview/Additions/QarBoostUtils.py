@@ -19,9 +19,9 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
     def __init__(self, n_max_iterations=None, estimators_generator=None,
                  random_state=42, self_complemented=True, twice_the_same=False,
                  c_bound_choice=True, random_start=True,
-                 n_stumps_per_attribute=None, use_r=True, c_bound_sol=True,
+                 n_stumps_per_attribute=1, use_r=True, c_bound_sol=True,
                  plotted_metric=Metrics.zero_one_loss, save_train_data=True,
-                 test_graph=True, mincq_tracking=True):
+                 test_graph=True, mincq_tracking=False):
         super(ColumnGenerationClassifierQar, self).__init__()
         r"""
 
@@ -46,7 +46,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             plotted_metric : Metric module
                 The metric that will be plotted for each iteration of boosting. 
             """
-
         if type(random_state) is int:
             self.random_state = np.random.RandomState(random_state)
         else:
@@ -62,8 +61,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.c_bound_choice = c_bound_choice
         self.random_start = random_start
         self.plotted_metric = plotted_metric
-        if n_stumps_per_attribute:
-            self.n_stumps = n_stumps_per_attribute
+        self.n_stumps = n_stumps_per_attribute
         self.use_r = use_r
         self.c_bound_sol = c_bound_sol
         self.save_train_data = save_train_data
@@ -74,15 +72,16 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                                        "n_stumps", "use_r", "c_bound_sol"]
         self.mincq_tracking = mincq_tracking
 
+    def get_params(self, deep=True):
+        return {"random_state":self.random_state, "n_max_iterations":self.n_max_iterations}
+
     def set_params(self, **params):
         self.n_max_iterations = params["n_max_iterations"]
         return self
 
     def fit(self, X, y):
 
-
         start = time.time()
-
         formatted_X, formatted_y = self.format_X_y(X, y)
 
         self.init_info_containers()
