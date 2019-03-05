@@ -200,7 +200,7 @@ def parseTheArgs(arguments):
     groupGradientBoosting.add_argument('--GB_n_est', metavar='INT', type=int,
                              action='store',
                              help='Set the n_estimators_parameter for Gradient Boosting',
-                             default=1)
+                             default=100)
 
     groupQarBoostv3 = parser.add_argument_group('QarBoostv3 arguments')
     groupQarBoostv3.add_argument('--QarB3_mu', metavar='FLOAT', type=float, action='store',
