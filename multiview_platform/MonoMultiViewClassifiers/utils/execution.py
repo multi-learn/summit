@@ -186,12 +186,12 @@ def parseTheArgs(arguments):
     groupCGreed.add_argument('--CGR_n_iter', metavar='INT', type=int, action='store',
                                  help='Set the n_max_iterations parameter for CGreed', default=100)
 
-    groupGradientBoosting = parser.add_argument_group('CGDesc arguments')
-    groupGradientBoosting.add_argument('--CGD_stumps', metavar='INT', type=int,
+    groupCGDesc = parser.add_argument_group('CGDesc arguments')
+    groupCGDesc.add_argument('--CGD_stumps', metavar='INT', type=int,
                              action='store',
                              help='Set the n_stumps_per_attribute parameter for CGreed',
                              default=1)
-    groupGradientBoosting.add_argument('--CGD_n_iter', metavar='INT', type=int,
+    groupCGDesc.add_argument('--CGD_n_iter', metavar='INT', type=int,
                              action='store',
                              help='Set the n_max_iterations parameter for CGreed',
                              default=100)
