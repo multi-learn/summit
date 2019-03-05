@@ -186,15 +186,21 @@ def parseTheArgs(arguments):
     groupCGreed.add_argument('--CGR_n_iter', metavar='INT', type=int, action='store',
                                  help='Set the n_max_iterations parameter for CGreed', default=100)
 
-    groupCGDesc = parser.add_argument_group('CGDesc arguments')
-    groupCGDesc.add_argument('--CGD_stumps', metavar='INT', type=int,
+    groupGradientBoosting = parser.add_argument_group('CGDesc arguments')
+    groupGradientBoosting.add_argument('--CGD_stumps', metavar='INT', type=int,
                              action='store',
                              help='Set the n_stumps_per_attribute parameter for CGreed',
                              default=1)
-    groupCGDesc.add_argument('--CGD_n_iter', metavar='INT', type=int,
+    groupGradientBoosting.add_argument('--CGD_n_iter', metavar='INT', type=int,
                              action='store',
                              help='Set the n_max_iterations parameter for CGreed',
                              default=100)
+
+    groupGradientBoosting = parser.add_argument_group('Gradient Boosting arguments')
+    groupGradientBoosting.add_argument('--GB_n_est', metavar='INT', type=int,
+                             action='store',
+                             help='Set the n_estimators_parameter for Gradient Boosting',
+                             default=1)
 
     groupQarBoostv3 = parser.add_argument_group('QarBoostv3 arguments')
     groupQarBoostv3.add_argument('--QarB3_mu', metavar='FLOAT', type=float, action='store',
