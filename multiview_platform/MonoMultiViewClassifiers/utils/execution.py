@@ -202,6 +202,13 @@ def parseTheArgs(arguments):
                              help='Set the n_estimators_parameter for Gradient Boosting',
                              default=100)
 
+    groupMinCQ = parser.add_argument_group(
+        'MinCQ arguments')
+    groupMinCQ.add_argument('--MCQ_mu', metavar='float', type=int,
+                                       action='store',
+                                       help='Set the mu_parameter for MinCQ',
+                                       default=1e-3)
+
     groupQarBoostv3 = parser.add_argument_group('QarBoostv3 arguments')
     groupQarBoostv3.add_argument('--QarB3_mu', metavar='FLOAT', type=float, action='store',
                                  help='Set the mu parameter for QarBoostv3', default=0.001)

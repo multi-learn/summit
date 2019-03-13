@@ -75,13 +75,16 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
         X : ndarray, shape=(n_samples, n_features)
             Training data
 
-        y : ndarray, shape=(n_samples,), optional
+        y_reworked : ndarray, shape=(n_samples,), optional
             Training labels
 
         voters : shape=(n_voters,), optional
             A priori generated voters
         """
         # Preparation of the majority vote, using a voter generator that depends on class attributes
+        if (np.unique(y)!= [-1,1]).any():
+            y_reworked = np.copy(y)
+            y_reworked[np.where(y_reworked==0)] = -1
 
         assert self.voters_type in ['stumps', 'kernel', 'manual'], "MinCqLearner: voters_type must be 'stumps', 'kernel' or 'manual'"
 
@@ -111,7 +114,7 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
                 elif self.kernel == 'rbf':
                     voters_generator = KernelVotersGenerator(rbf_kernel, gamma=gamma)
 
-            voters = voters_generator.generate(X, y)
+            voters = voters_generator.generate(X, y_reworked)
 
         if self.log:
             logging.info("MinCq training started...")
@@ -125,7 +128,7 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
 
         if self.log:
             logging.info("Preparing QP...")
-        self._prepare_qp(X, y)
+        self._prepare_qp(X, y_reworked)
 
         try:
             if self.log:
@@ -136,15 +139,16 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
             # See Section 7.1 of [2] for an explanation.
             self.majority_vote.weights = np.array([2 * q - 1.0 / n_base_voters for q in solver_weights])
             if self.log:
-                logging.info("First moment of the margin on the training set: {:.4f}".format(np.mean(y * self.majority_vote.margin(X))))
+                logging.info("First moment of the margin on the training set: {:.4f}".format(np.mean(y_reworked * self.majority_vote.margin(X))))
 
         except Exception as e:
             logging.error("{}: Error while solving the quadratic program: {}.".format(str(self), str(e)))
             self.majority_vote = None
+        self.cbound_train = self.majority_vote.cbound_value(X, y_reworked)
 
         return self
 
-    def predict(self, X):
+    def predict(self, X, save_data=True):
         """ Using previously learned majority vote weights, predict the labels of new data points.
 
         Parameters
@@ -162,8 +166,12 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
         if self.majority_vote is None:
             logging.error("{}: Error while predicting: MinCq has not been fit or fitting has failed. Will output invalid labels".format(str(self)))
             return np.zeros((len(X),))
+        if save_data:
+            self.x_test = X
 
-        return self.majority_vote.vote(X)
+        vote = self.majority_vote.vote(X)
+        vote[np.where(vote==-1)] = 0
+        return vote
 
     def predict_proba(self, X):
         """ Using previously learned majority vote weights, predict the labels of new data points with a confidence
@@ -516,38 +524,39 @@ class KernelVotersGenerator(VotersGenerator):
 
 class MinCQ(MinCqLearner, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, **kwargs):
-        def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, **kwargs):
-            super(MinCQ, self).__init__(
-                random_state=random_state,
-                mu=mu,
-                voters_type='stumps',
-                n_stumps_per_attribute = 1
-            )
-            self.param_names = ["mu"]
-            self.distribs = [CustomUniform(loc=0.5, state=1.0, multiplier="e-"),
-                             ]
-            self.classed_params = []
-            self.weird_strings = {}
-            if "nbCores" not in kwargs:
-                self.nbCores = 1
-            else:
-                self.nbCores = kwargs["nbCores"]
+    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, **kwargs):
+        super(MinCQ, self).__init__(mu=mu,
+            voters_type='stumps',
+            n_stumps_per_attribute = 10
+        )
+        self.param_names = ["mu"]
+        self.distribs = [CustomUniform(loc=0.5, state=1.0, multiplier="e-"),
+                         ]
+        self.classed_params = []
+        self.weird_strings = {}
+        if "nbCores" not in kwargs:
+            self.nbCores = 1
+        else:
+            self.nbCores = kwargs["nbCores"]
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
         return True
 
     def getInterpret(self, directory, y_test):
-        return getInterpretBase(directory, y_test, "MinCq", self.majority_vote.weights)
+        interpret_string = "Train C_bound value : "+str(self.cbound_train)
+        y_rework = np.copy(y_test)
+        y_rework[np.where(y_rework==0)] = -1
+        interpret_string += "\n Test c_bound value : "+str(self.majority_vote.cbound_value(self.x_test, y_rework))
+        return interpret_string
 
     def get_name_for_fusion(self):
-        return "QBN2"
+        return "MCQ"
 
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {}
+    kwargsDict = {"mu":args.MCQ_mu,}
     return kwargsDict
 
 
