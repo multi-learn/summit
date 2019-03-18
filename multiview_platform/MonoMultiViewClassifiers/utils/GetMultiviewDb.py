@@ -343,16 +343,16 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name, noise_s
     for view_index in range(noisy_dataset.get("Metadata").attrs["nbView"]):
         view_name = "View" + str(view_index)
         view_dset = noisy_dataset.get(view_name)
-        orig_shape = view_dset.value.shape
-        view_ranges = view_dset.attrs["ranges"]
-        view_limits = view_dset.attrs["limits"]
+        # orig_shape = view_dset.value.shape
+        view_limits = dataset_file["Metadata/View"+str(view_index)+"_limits"].value
+        view_ranges = view_limits[:,1]-view_limits[:,0]
         normal_dist = random_state.normal(0, noise_std, view_dset.value.shape)
         noise = normal_dist*view_ranges
         noised_data = view_dset.value+noise
         noised_data = np.where(noised_data<view_limits[:,0], view_limits[:,0], noised_data)
         noised_data = np.where(noised_data>view_limits[:,1], view_limits[:,1], noised_data)
         noisy_dataset[view_name][...] = noised_data
-        final_shape = noised_data.shape
+        # final_shape = noised_data.shape
     return noisy_dataset, dataset_name+"_noised"
 
 

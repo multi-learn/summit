@@ -187,7 +187,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         """Is used at each iteration to compute and store all the needed quantities for later analysis"""
         self.example_weights_.append(self.example_weights)
         self.tau.append(np.sum(np.multiply(self.previous_vote, self.new_voter))/float(self.n_total_examples))
-        print(np.sum(np.multiply(self.previous_vote, self.new_voter))/float(self.n_total_examples))
+        # print(np.sum(np.multiply(self.previous_vote, self.new_voter))/float(self.n_total_examples))
         self.previous_vote += self.q * self.new_voter
         self.norm.append(np.linalg.norm(self.previous_vote)**2)
         self.previous_votes.append(self.previous_vote)

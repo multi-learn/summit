@@ -241,8 +241,11 @@ def plotMetricScores(trainScores, testScores, names, nbResults, metricName, file
         plt.tight_layout()
     except:
         pass
-    f.savefig(fileName)
+    f.savefig(fileName+'.png')
     plt.close()
+    import pandas as pd
+    dataframe = pd.DataFrame(np.transpose(np.concatenate((trainScores.reshape((trainScores.shape[0], 1)), testScores.reshape((trainScores.shape[0], 1))), axis=1)), columns=names)
+    dataframe.to_csv(fileName+".csv")
 
 
 def publishMetricsGraphs(metricsScores, directory, databaseName, labelsNames):
@@ -268,7 +271,7 @@ def publishMetricsGraphs(metricsScores, directory, databaseName, labelsNames):
 
         nbResults = len(metricScores["testScores"])
 
-        fileName = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-" + metricName + ".png"
+        fileName = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-" + metricName
 
         plotMetricScores(np.array(metricScores["trainScores"]), np.array(metricScores["testScores"]),
                          np.array(metricScores["classifiersNames"]), nbResults, metricName, fileName, tag=" "+" vs ".join(labelsNames))

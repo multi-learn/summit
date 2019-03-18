@@ -161,6 +161,10 @@ def parseTheArgs(arguments):
                               help='Set the mu parameter for CQBoost', default=0.001)
     groupCQBoost.add_argument('--CQB_epsilon', metavar='FLOAT', type=float, action='store',
                               help='Set the epsilon parameter for CQBoost', default=1e-08)
+    groupCQBoost.add_argument('--CQB_stump', metavar='INT', type=int,
+                              action='store',
+                              help='Set the number of stumps for CQBoost',
+                              default=10)
 
     groupCQBoostv2 = parser.add_argument_group('CQBoostv2 arguments')
     groupCQBoostv2.add_argument('--CQB2_mu', metavar='FLOAT', type=float, action='store',
@@ -182,7 +186,7 @@ def parseTheArgs(arguments):
 
     groupCGreed = parser.add_argument_group('CGreed arguments')
     groupCGreed.add_argument('--CGR_stumps', metavar='INT', type=int, action='store',
-                               help='Set the n_stumps_per_attribute parameter for CGreed', default=1)
+                               help='Set the n_stumps_per_attribute parameter for CGreed', default=10)
     groupCGreed.add_argument('--CGR_n_iter', metavar='INT', type=int, action='store',
                                  help='Set the n_max_iterations parameter for CGreed', default=100)
 
@@ -190,7 +194,7 @@ def parseTheArgs(arguments):
     groupCGDesc.add_argument('--CGD_stumps', metavar='INT', type=int,
                              action='store',
                              help='Set the n_stumps_per_attribute parameter for CGreed',
-                             default=1)
+                             default=10)
     groupCGDesc.add_argument('--CGD_n_iter', metavar='INT', type=int,
                              action='store',
                              help='Set the n_max_iterations parameter for CGreed',

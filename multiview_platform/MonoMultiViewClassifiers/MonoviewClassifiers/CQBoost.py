@@ -55,7 +55,8 @@ class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
     kwargsDict = {"mu": args.CQB_mu,
-                  "epsilon": args.CQB_epsilon}
+                  "epsilon": args.CQB_epsilon,
+                  "n_stumps":args.CQB_stumps}
     return kwargsDict
 
 

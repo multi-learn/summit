@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
+from Cython.Build import cythonize
 
 import multiview_platform
 
@@ -27,7 +28,7 @@ setup(
 
     # Votre email, sachant qu'il sera publique visible, avec tous les risques
     # que ça implique.
-    author_email="baptiste.bauvin.1@ulaval.ca",
+    author_email="baptiste.bauvin@lis-lab.fr",
 
     # Une description courte
     description="Plateforme de test d'algorithmes multivues et monovue",
@@ -87,5 +88,5 @@ setup(
 
     # Il y a encore une chiée de paramètres possibles, mais avec ça vous
     # couvrez 90% des besoins
-
+    ext_modules=cythonize("multiview_platform/MonoMultiViewClassifiers/Monoview/Additions/_custom_criterion.pyx"),
 )
