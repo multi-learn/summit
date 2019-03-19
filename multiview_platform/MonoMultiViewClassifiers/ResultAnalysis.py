@@ -244,7 +244,17 @@ def plotMetricScores(trainScores, testScores, names, nbResults, metricName, file
     f.savefig(fileName+'.png')
     plt.close()
     import pandas as pd
-    dataframe = pd.DataFrame(np.transpose(np.concatenate((trainScores.reshape((trainScores.shape[0], 1)), testScores.reshape((trainScores.shape[0], 1))), axis=1)), columns=names)
+    if train_STDs is None :
+        dataframe = pd.DataFrame(np.transpose(np.concatenate((
+            trainScores.reshape((trainScores.shape[0], 1)),
+            testScores.reshape((trainScores.shape[0], 1))), axis=1)),
+            columns=names)
+    else:
+        dataframe = pd.DataFrame(np.transpose(np.concatenate((
+            trainScores.reshape((trainScores.shape[0], 1)),
+            train_STDs.reshape((trainScores.shape[0], 1)),
+            testScores.reshape((trainScores.shape[0], 1)),
+            test_STDs.reshape((trainScores.shape[0], 1))), axis=1)), columns=names)
     dataframe.to_csv(fileName+".csv")
 
 
