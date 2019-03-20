@@ -39,6 +39,8 @@ class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
     def getInterpret(self, directory, y_test):
         np.savetxt(directory + "train_metrics.csv", self.train_metrics, delimiter=',')
+        np.savetxt(directory + "c_bounds.csv", self.c_bounds,
+                   delimiter=',')
         np.savetxt(directory + "y_test_step.csv", self.step_decisions,
                    delimiter=',')
         step_metrics = []

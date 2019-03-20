@@ -14,7 +14,7 @@ from ... import Metrics
 
 
 class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, mu=0.01, epsilon=1e-06, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None, random_state=None):
+    def __init__(self, mu=0.01, epsilon=1e-06, n_max_iterations=100, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None, random_state=None):
         super(ColumnGenerationClassifier, self).__init__()
         self.epsilon = epsilon
         self.n_max_iterations = n_max_iterations
@@ -36,6 +36,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
 
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)
+        self.c_bounds = []
 
         self.infos_per_iteration_ = defaultdict(list)
 
@@ -76,6 +77,8 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
 
             # Solve restricted master for new costs.
             w, alpha = self._restricted_master_problem(previous_w=w, previous_alpha=alpha)
+            cbound = self.compute_empiric_cbound(w, y_kernel_matrix)
+            self.c_bounds.append(cbound)
 
             self.update_values(h_values, worst_h_index, alpha, w)
 
@@ -112,6 +115,11 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         self.predict_time = end-start
         self.step_predict(classification_matrix)
         return signs_array
+
+    def compute_empiric_cbound(self, w, y_kernel_matrix):
+        cbound = 1 - (1.0/self.n_total_examples) * (np.sum(np.average(y_kernel_matrix[:, self.chosen_columns_], axis=1, weights=w))**2/
+                                                    np.sum(np.average(y_kernel_matrix[:, self.chosen_columns_], axis=1, weights=w)**2))
+        return cbound
 
     def step_predict(self, classification_matrix):
         if classification_matrix.shape != self.train_shape:
