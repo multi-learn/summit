@@ -186,31 +186,31 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         if previous_w is not None:
             qp.initial_values = np.append(previous_w, [0])
 
-        # try:
-        solver_result = qp.solve(abstol=1e-10, reltol=1e-10, feastol=1e-10, return_all_information=True)
-        w = np.asarray(np.array(solver_result['x']).T[0])[:n_hypotheses]
+        try:
+            solver_result = qp.solve(abstol=1e-10, reltol=1e-10, feastol=1e-10, return_all_information=True)
+            w = np.asarray(np.array(solver_result['x']).T[0])[:n_hypotheses]
 
-        # The alphas are the Lagrange multipliers associated with the equality constraints (returned as the y vector in CVXOPT).
-        dual_variables = np.asarray(np.array(solver_result['y']).T[0])
-        alpha = dual_variables[:n_examples]
+            # The alphas are the Lagrange multipliers associated with the equality constraints (returned as the y vector in CVXOPT).
+            dual_variables = np.asarray(np.array(solver_result['y']).T[0])
+            alpha = dual_variables[:n_examples]
 
-        # Set the dual constraint right-hand side to be equal to the last lagrange multiplier (nu).
-        # Hack: do not change nu if the QP didn't fully solve...
-        if solver_result['dual slack'] <= 1e-8:
-            self.dual_constraint_rhs = dual_variables[-1]
-            # logging.info('Updating dual constraint rhs: {}'.format(self.dual_constraint_rhs))
+            # Set the dual constraint right-hand side to be equal to the last lagrange multiplier (nu).
+            # Hack: do not change nu if the QP didn't fully solve...
+            if solver_result['dual slack'] <= 1e-8:
+                self.dual_constraint_rhs = dual_variables[-1]
+                # logging.info('Updating dual constraint rhs: {}'.format(self.dual_constraint_rhs))
 
-        # except:
-        #     logging.warning('QP Solving failed at iteration {}.'.format(n_hypotheses))
-        #     if previous_w is not None:
-        #         w = np.append(previous_w, [0])
-        #     else:
-        #         w = np.array([1.0 / n_hypotheses] * n_hypotheses)
-        #
-        #     if previous_alpha is not None:
-        #         alpha = previous_alpha
-        #     else:
-        #         alpha = self._initialize_alphas(n_examples)
+        except:
+            logging.warning('QP Solving failed at iteration {}.'.format(n_hypotheses))
+            if previous_w is not None:
+                w = np.append(previous_w, [0])
+            else:
+                w = np.array([1.0 / n_hypotheses] * n_hypotheses)
+
+            if previous_alpha is not None:
+                alpha = previous_alpha
+            else:
+                alpha = self._initialize_alphas(n_examples)
 
         return w, alpha
 
