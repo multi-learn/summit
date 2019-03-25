@@ -28,6 +28,7 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
         scorer = metricModule.get_scorer(**metricKWARGS)
         nb_possible_combinations = compute_possible_combinations(params_dict)
         min_list = np.array([min(nb_possible_combination, nIter) for nb_possible_combination in nb_possible_combinations])
+        print(nbCores)
         randomSearch = RandomizedSearchCV(estimator, n_iter=int(np.sum(min_list)), param_distributions=params_dict, refit=True,
                                           n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
         detector = randomSearch.fit(X_train, y_train)
