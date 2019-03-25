@@ -61,6 +61,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         self.collected_dual_constraint_violations_ = {}
 
         for k in range(min(n, self.n_max_iterations if self.n_max_iterations is not None else np.inf)):
+            beg=time.time()
             # Find worst weak hypothesis given alpha.
             h_values = ma.array(np.squeeze(np.array((alpha).T.dot(y_kernel_matrix).T)), fill_value=-np.inf)
             h_values[self.chosen_columns_] = ma.masked
@@ -87,6 +88,8 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
             self.train_metrics.append(self.plotted_metric.score(y, signs_array))
             self.gammas.append(accuracy_score(y, signs_array))
             self.bounds.append(math.exp(-2 * np.sum(np.square(np.array(self.gammas)))))
+            end=time.time()
+            print(beg-end)
 
         self.nb_opposed_voters = self.check_opposed_voters()
         self.compute_weights_(w)
