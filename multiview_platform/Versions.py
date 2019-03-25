@@ -14,6 +14,12 @@ def testVersions():
         raise
 
     try:
+        import cvxopt
+    except ImportError:
+        isUpToDate = False
+        toInstall.append("cvxopt")
+
+    try:
         import pyscm
     except ImportError:
         isUpToDate = False
