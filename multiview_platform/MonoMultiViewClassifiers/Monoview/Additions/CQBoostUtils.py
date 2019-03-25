@@ -14,7 +14,7 @@ from ... import Metrics
 
 
 class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, mu=0.01, epsilon=1e-06, n_max_iterations=100, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None, random_state=None):
+    def __init__(self, mu=0.01, epsilon=1e-06, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None, random_state=None):
         super(ColumnGenerationClassifier, self).__init__()
         self.epsilon = epsilon
         self.n_max_iterations = n_max_iterations

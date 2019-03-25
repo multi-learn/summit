@@ -200,6 +200,16 @@ def parseTheArgs(arguments):
                              help='Set the n_max_iterations parameter for CGreed',
                              default=100)
 
+    groupLasso = parser.add_argument_group('Lasso arguments')
+    groupLasso.add_argument('--LA_n_iter', metavar='INT', type=int,
+                             action='store',
+                             help='Set the max_iter parameter for Lasso',
+                             default=1)
+    groupLasso.add_argument('--LA_alpha', metavar='FLOAT', type=float,
+                             action='store',
+                             help='Set the alpha parameter for Lasso',
+                             default=1.0)
+
     groupGradientBoosting = parser.add_argument_group('Gradient Boosting arguments')
     groupGradientBoosting.add_argument('--GB_n_est', metavar='INT', type=int,
                              action='store',

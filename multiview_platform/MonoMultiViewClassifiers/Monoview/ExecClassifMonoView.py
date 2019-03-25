@@ -80,6 +80,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     logging.debug("Start:\t Predicting")
     y_train_pred = classifier.predict(X_train)
     y_test_pred = classifier.predict(X_test)
+    print(np.unique(y_test_pred))
     full_labels_pred = np.zeros(Y.shape, dtype=int)-100
     for trainIndex, index in enumerate(classificationIndices[0]):
         full_labels_pred[index] = y_train_pred[trainIndex]
