@@ -59,6 +59,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         w= None
         self.collected_weight_vectors_ = {}
         self.collected_dual_constraint_violations_ = {}
+        print("Begin")
 
         for k in range(min(n, self.n_max_iterations if self.n_max_iterations is not None else np.inf)):
             beg=time.time()
