@@ -122,6 +122,28 @@ def parseTheArgs(arguments):
     groupAdaboost.add_argument('--Ada_b_est', metavar='STRING', action='store', help='Estimators',
                                default='DecisionTreeClassifier')
 
+    groupAdaboostPregen = parser.add_argument_group('AdaboostPregen arguments')
+    groupAdaboostPregen.add_argument('--AdP_n_est', metavar='INT', type=int,
+                               action='store', help='Number of estimators',
+                               default=2)
+    groupAdaboostPregen.add_argument('--AdP_b_est', metavar='STRING', action='store',
+                               help='Estimators',
+                               default='DecisionTreeClassifier')
+    groupAdaboostPregen.add_argument('--AdP_stumps', metavar='INT', type=int,
+                                     action='store',
+                                     help='Number of stumps inthe pregenerated dataset',
+                                     default=1)
+
+    groupAdaboostGraalpy = parser.add_argument_group('AdaboostGraalpy arguments')
+    groupAdaboostGraalpy.add_argument('--AdG_n_iter', metavar='INT', type=int,
+                                     action='store',
+                                     help='Number of estimators',
+                                     default=2)
+    groupAdaboostGraalpy.add_argument('--AdG_stumps', metavar='INT', type=int,
+                                     action='store',
+                                     help='Number of stumps inthe pregenerated dataset',
+                                     default=1)
+
     groupDT = parser.add_argument_group('Decision Trees arguments')
     groupDT.add_argument('--DT_depth', metavar='INT', type=int, action='store',
                          help='Determine max depth for Decision Trees', default=3)
@@ -222,6 +244,10 @@ def parseTheArgs(arguments):
                                        action='store',
                                        help='Set the mu_parameter for MinCQ',
                                        default=1e-3)
+    groupMinCQ.add_argument('--MCQ_stumps', metavar='INT', type=int,
+                             action='store',
+                             help='Set the n_stumps_per_attribute parameter for MinCQ',
+                             default=1)
 
     groupQarBoostv3 = parser.add_argument_group('QarBoostv3 arguments')
     groupQarBoostv3.add_argument('--QarB3_mu', metavar='FLOAT', type=float, action='store',

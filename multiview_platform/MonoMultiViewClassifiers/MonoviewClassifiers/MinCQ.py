@@ -527,7 +527,7 @@ class MinCQ(MinCqLearner, BaseMonoviewClassifier):
     def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, **kwargs):
         super(MinCQ, self).__init__(mu=mu,
             voters_type='stumps',
-            n_stumps_per_attribute = 10
+            n_stumps_per_attribute =10
         )
         self.param_names = ["mu"]
         self.distribs = [CustomUniform(loc=0.5, state=1.0, multiplier="e-"),
@@ -556,7 +556,8 @@ class MinCQ(MinCqLearner, BaseMonoviewClassifier):
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {"mu":args.MCQ_mu,}
+    kwargsDict = {"mu":args.MCQ_mu,
+                  "n_stumps_per_attribute":args.MCQ_stumps}
     return kwargsDict
 
 

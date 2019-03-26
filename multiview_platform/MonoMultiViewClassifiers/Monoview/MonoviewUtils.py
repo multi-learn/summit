@@ -46,6 +46,16 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
     testFoldsPreds = genTestFoldsPreds(X_train, y_train, KFolds, best_estimator)
     return bestParams, testFoldsPreds
 
+def change_label_to_minus(y):
+    minus_y = np.copy(y)
+    minus_y[np.where(y==0)]=-1
+    return minus_y
+
+def change_label_to_zero(y):
+    zeroed_y = np.copy(y)
+    zeroed_y[np.where(y==-1)]=0
+    return zeroed_y
+
 
 def compute_possible_combinations(params_dict):
     n_possibs = np.ones(len(params_dict))*np.inf

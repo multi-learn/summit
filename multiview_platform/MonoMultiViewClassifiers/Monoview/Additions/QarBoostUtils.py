@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost, \
     getInterpretBase, get_accuracy_graph
+from ..MonoviewUtils import change_label_to_zero, change_label_to_minus
 from ... import Metrics
 
 # Used for QarBoost and CGreed
@@ -328,9 +329,9 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             logging.info('Converting to dense matrix.')
             X = np.array(X.todense())
         # Initialization
-        y[y == 0] = -1
-        y = y.reshape((y.shape[0], 1))
-        return X, y
+        y_neg = change_label_to_minus(y)
+        y_neg = y_neg.reshape((y.shape[0], 1))
+        return X, y_neg
 
     def init_hypotheses(self, X, y):
         """Inintialization for the hyptotheses used to build the boosted vote"""

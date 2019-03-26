@@ -61,6 +61,7 @@ class DecisionStumpClassifier(BaseEstimator, ClassifierMixin):
 
         """
         check_is_fitted(self, 'classes_')
+        import pdb;pdb.set_trace()
         return self.le_.inverse_transform(np.argmax(self.predict_proba(X), axis=1))
 
     def predict_proba(self, X):
@@ -191,6 +192,8 @@ class StumpsClassifiersGenerator(ClassifiersGenerator):
         """
         minimums = np.min(X, axis=0)
         maximums = np.max(X, axis=0)
+        if y.ndim > 1:
+            y = np.reshape(y, (y.shape[0], ))
         ranges = (maximums - minimums) / (self.n_stumps_per_attribute + 1)
         if self.check_diff:
             nb_differents = [np.unique(col) for col in np.transpose(X)]
@@ -226,7 +229,6 @@ class StumpsClassifiersGenerator(ClassifiersGenerator):
                 self.estimators_ += [DecisionStumpClassifier(i, minimums[i] + ranges[i] * stump_number, -1).fit(X, y)
                                      for i in range(X.shape[1]) for stump_number in range(1, self.n_stumps_per_attribute + 1)
                                      if ranges[i] != 0]
-
         self.estimators_ = np.asarray(self.estimators_)
         return self
 
