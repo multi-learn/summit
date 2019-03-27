@@ -125,7 +125,7 @@ def parseTheArgs(arguments):
     groupAdaboostPregen = parser.add_argument_group('AdaboostPregen arguments')
     groupAdaboostPregen.add_argument('--AdP_n_est', metavar='INT', type=int,
                                action='store', help='Number of estimators',
-                               default=2)
+                               default=100)
     groupAdaboostPregen.add_argument('--AdP_b_est', metavar='STRING', action='store',
                                help='Estimators',
                                default='DecisionTreeClassifier')

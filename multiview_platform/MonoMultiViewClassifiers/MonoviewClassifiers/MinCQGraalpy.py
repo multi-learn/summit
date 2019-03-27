@@ -331,8 +331,10 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
         self.param_names = ["mu"]
         self.distribs = [CustomUniform(loc=0.5, state=2.0, multiplier="e-"),
                          ]
+        self.n_stumps_per_attribute = n_stumps_per_attribute
         self.classed_params = []
         self.weird_strings = {}
+        self.random_state = random_state
         if "nbCores" not in kwargs:
             self.nbCores = 1
         else:
@@ -341,6 +343,12 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
         return True
+
+    def set_params(self, **params):
+        self.mu = params["mu"]
+
+    def get_params(self, deep=True):
+        return {"random_state":self.random_state, "mu":self.mu}
 
     def getInterpret(self, directory, y_test):
         interpret_string = ""
