@@ -54,7 +54,7 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
         Kernel coefficient for 'rbf' and 'poly'.
         If gamma is 0.0 then 1/n_features will be used instead.
     """
-    def __init__(self, mu, voters_type, n_stumps_per_attribute=10, kernel='rbf', degree=3, gamma=0.0):
+    def __init__(self, mu, voters_type, n_stumps_per_attribute=10, kernel='rbf', degree=3, gamma=0.0, self_complemented=True):
         assert mu > 0 and mu <= 1, "MinCqLearner: mu parameter must be in (0, 1]"
         self.mu = mu
         self.voters_type = voters_type
@@ -63,6 +63,7 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
         self.degree = degree
         self.gamma = gamma
         self.log = False
+        self.self_complemented = self_complemented
 
         self.majority_vote = None
         self.qp = None
@@ -114,7 +115,7 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
                 elif self.kernel == 'rbf':
                     voters_generator = KernelVotersGenerator(rbf_kernel, gamma=gamma)
 
-            voters = voters_generator.generate(X, y_reworked)
+            voters = voters_generator.generate(X, y_reworked, self_complemented=self.self_complemented)
 
         if self.log:
             logging.info("MinCq training started...")
@@ -524,13 +525,14 @@ class KernelVotersGenerator(VotersGenerator):
 
 class MinCQ(MinCqLearner, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, **kwargs):
+    def __init__(self, random_state=None, mu=0.01, self_complemented=True , **kwargs):
         super(MinCQ, self).__init__(mu=mu,
             voters_type='stumps',
-            n_stumps_per_attribute =10
+            n_stumps_per_attribute =10,
+            self_complemented=self_complemented
         )
         self.param_names = ["mu"]
-        self.distribs = [CustomUniform(loc=0.5, state=1.0, multiplier="e-"),
+        self.distribs = [CustomUniform(loc=0.5, state=2.0, multiplier="e-"),
                          ]
         self.classed_params = []
         self.weird_strings = {}

@@ -138,7 +138,7 @@ def parseTheArgs(arguments):
     groupAdaboostGraalpy.add_argument('--AdG_n_iter', metavar='INT', type=int,
                                      action='store',
                                      help='Number of estimators',
-                                     default=2)
+                                     default=100)
     groupAdaboostGraalpy.add_argument('--AdG_stumps', metavar='INT', type=int,
                                      action='store',
                                      help='Number of stumps inthe pregenerated dataset',
@@ -182,7 +182,7 @@ def parseTheArgs(arguments):
     groupCQBoost.add_argument('--CQB_mu', metavar='FLOAT', type=float, action='store',
                               help='Set the mu parameter for CQBoost', default=0.001)
     groupCQBoost.add_argument('--CQB_epsilon', metavar='FLOAT', type=float, action='store',
-                              help='Set the epsilon parameter for CQBoost', default=1e-08)
+                              help='Set the epsilon parameter for CQBoost', default=1e-06)
     groupCQBoost.add_argument('--CQB_stumps', metavar='INT', type=int,
                               action='store',
                               help='Set the number of stumps for CQBoost',
@@ -190,7 +190,7 @@ def parseTheArgs(arguments):
 
     groupCQBoostv2 = parser.add_argument_group('CQBoostv2 arguments')
     groupCQBoostv2.add_argument('--CQB2_mu', metavar='FLOAT', type=float, action='store',
-                              help='Set the mu parameter for CQBoostv2', default=0.001)
+                              help='Set the mu parameter for CQBoostv2', default=0.002)
     groupCQBoostv2.add_argument('--CQB2_epsilon', metavar='FLOAT', type=float, action='store',
                               help='Set the epsilon parameter for CQBoostv2', default=1e-08)
 
@@ -238,16 +238,25 @@ def parseTheArgs(arguments):
                              help='Set the n_estimators_parameter for Gradient Boosting',
                              default=100)
 
-    groupMinCQ = parser.add_argument_group(
-        'MinCQ arguments')
-    groupMinCQ.add_argument('--MCQ_mu', metavar='float', type=int,
-                                       action='store',
-                                       help='Set the mu_parameter for MinCQ',
-                                       default=1e-3)
+    groupMinCQ = parser.add_argument_group('MinCQ arguments')
+    groupMinCQ.add_argument('--MCQ_mu', metavar='FLOAT', type=float,
+                            action='store',
+                            help='Set the mu_parameter for MinCQ',
+                            default=0.05)
     groupMinCQ.add_argument('--MCQ_stumps', metavar='INT', type=int,
                              action='store',
                              help='Set the n_stumps_per_attribute parameter for MinCQ',
                              default=1)
+
+    groupMinCQGraalpy = parser.add_argument_group('MinCQGraalpy arguments')
+    groupMinCQGraalpy.add_argument('--MCG_mu', metavar='FLOAT', type=float,
+                            action='store',
+                            help='Set the mu_parameter for MinCQGraalpy',
+                            default=0.05)
+    groupMinCQGraalpy.add_argument('--MCG_stumps', metavar='INT', type=int,
+                            action='store',
+                            help='Set the n_stumps_per_attribute parameter for MinCQGraalpy',
+                            default=1)
 
     groupQarBoostv3 = parser.add_argument_group('QarBoostv3 arguments')
     groupQarBoostv3.add_argument('--QarB3_mu', metavar='FLOAT', type=float, action='store',
