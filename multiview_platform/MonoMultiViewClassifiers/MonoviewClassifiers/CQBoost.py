@@ -7,7 +7,7 @@ import os
 
 class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=10, **kwargs):
+    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1, **kwargs):
         super(CQBoost, self).__init__(
             random_state=random_state,
             mu=mu,

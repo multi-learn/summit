@@ -240,7 +240,9 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
         n_examples, n_voters = np.shape(classification_matrix)
 
         if self.zeta == 0:
-            ftf = classification_matrix.T.dot(classification_matrix)
+            print(classification_matrix.shape)
+            np.transpose(classification_matrix)
+            ftf = np.dot(np.transpose(classification_matrix),classification_matrix)
         else:
             I = np.eye(n_examples)
             L = build_laplacian(X, n_neighbors=self.n_neighbors)
@@ -324,11 +326,11 @@ def build_laplacian(X, n_neighbors=None):
 
 class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, self_complemented=True, n_stumps_per_attribute=10 , **kwargs):
+    def __init__(self, random_state=None, mu=0.01, self_complemented=True, n_stumps_per_attribute=1, **kwargs):
         super(MinCQGraalpy, self).__init__(mu=mu,
             estimators_generator=StumpsClassifiersGenerator(n_stumps_per_attribute=n_stumps_per_attribute, self_complemented=self_complemented),
         )
-        self.param_names = ["mu"]
+        self.param_names = ["mu",]
         self.distribs = [CustomUniform(loc=0.5, state=2.0, multiplier="e-"),
                          ]
         self.n_stumps_per_attribute = n_stumps_per_attribute

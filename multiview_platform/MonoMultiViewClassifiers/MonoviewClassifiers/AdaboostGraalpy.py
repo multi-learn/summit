@@ -143,13 +143,13 @@ class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
 
 class AdaboostGraalpy(AdaBoostGP, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, n_iterations=200, n_stumps=10, **kwargs):
+    def __init__(self, random_state=None, n_iterations=200, n_stumps=1, **kwargs):
         super(AdaboostGraalpy, self).__init__(
             n_iterations=n_iterations,
             n_stumps=n_stumps
         )
-        self.param_names = []
-        self.distribs = []
+        self.param_names = ["n_iterations",]
+        self.distribs = [CustomRandint(low=1, high=500)]
         self.classed_params = []
         self.weird_strings = {}
         self.n_stumps = n_stumps
