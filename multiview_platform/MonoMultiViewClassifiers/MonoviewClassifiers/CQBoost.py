@@ -13,9 +13,9 @@ class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
             mu=mu,
             epsilon=epsilon
         )
-        self.param_names = ["mu", "epsilon"]
+        self.param_names = ["mu", "epsilon", "n_stumps", "random_state"]
         self.distribs = [CustomUniform(loc=0.5, state=1.0, multiplier="e-"),
-                         CustomRandint(low=1, high=15, multiplier="e-")]
+                         CustomRandint(low=1, high=15, multiplier="e-"), [n_stumps], [random_state]]
         self.classed_params = []
         self.weird_strings = {}
         self.n_stumps = n_stumps

@@ -17,11 +17,11 @@ class DecisionTree(DecisionTreeClassifier, BaseMonoviewClassifier):
             splitter=splitter,
             random_state=random_state
             )
-        self.param_names = ["max_depth", "criterion", "splitter",]
+        self.param_names = ["max_depth", "criterion", "splitter",'random_state']
         self.classed_params = []
         self.distribs = [CustomRandint(low=1, high=300),
                          ["gini", "entropy"],
-                         ["best", "random"], ]
+                         ["best", "random"], [random_state]]
         self.weird_strings = {}
 
     def canProbas(self):

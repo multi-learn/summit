@@ -15,8 +15,8 @@ class SVMPoly(SVCClassifier, BaseMonoviewClassifier):
             degree=degree,
             random_state=random_state
         )
-        self.param_names = ["C", "degree"]
-        self.distribs = [CustomUniform(loc=0, state=1), CustomRandint(low=2, high=30)]
+        self.param_names = ["C", "degree", "random_state"]
+        self.distribs = [CustomUniform(loc=0, state=1), CustomRandint(low=2, high=30), [random_state]]
 
 
 def formatCmdArgs(args):

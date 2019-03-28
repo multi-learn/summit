@@ -148,8 +148,8 @@ class AdaboostGraalpy(AdaBoostGP, BaseMonoviewClassifier):
             n_iterations=n_iterations,
             n_stumps=n_stumps
         )
-        self.param_names = ["n_iterations",]
-        self.distribs = [CustomRandint(low=1, high=500)]
+        self.param_names = ["n_iterations","n_stumps", "random_state"]
+        self.distribs = [CustomRandint(low=1, high=500), [n_stumps], [random_state]]
         self.classed_params = []
         self.weird_strings = {}
         self.n_stumps = n_stumps

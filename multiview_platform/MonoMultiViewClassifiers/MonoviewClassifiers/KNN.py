@@ -17,10 +17,10 @@ class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
             algorithm=algorithm,
             p=p
             )
-        self.param_names = ["n_neighbors", "weights", "algorithm", "p"]
+        self.param_names = ["n_neighbors", "weights", "algorithm", "p", "random_state",]
         self.classed_params = []
         self.distribs = [CustomRandint(low=1, high=10), ["uniform", "distance"],
-                         ["auto", "ball_tree", "kd_tree", "brute"], [1, 2]]
+                         ["auto", "ball_tree", "kd_tree", "brute"], [1, 2], [random_state]]
         self.weird_strings = {}
         self.random_state=random_state
 

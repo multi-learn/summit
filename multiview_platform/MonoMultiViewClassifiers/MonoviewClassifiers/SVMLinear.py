@@ -15,8 +15,8 @@ class SVMLinear(SVCClassifier, BaseMonoviewClassifier):
             kernel='linear',
             random_state=random_state
             )
-        self.param_names = ["C",]
-        self.distribs = [CustomUniform(loc=0, state=1), ]
+        self.param_names = ["C", "random_state"]
+        self.distribs = [CustomUniform(loc=0, state=1), [random_state]]
 
 
 

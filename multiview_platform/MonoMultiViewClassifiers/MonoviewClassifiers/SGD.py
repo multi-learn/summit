@@ -17,11 +17,11 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
             alpha=alpha,
             random_state=random_state
             )
-        self.param_names = ["loss", "penalty", "alpha",]
+        self.param_names = ["loss", "penalty", "alpha", "random_state"]
         self.classed_params = []
         self.distribs = [['log', 'modified_huber'],
                          ["l1", "l2", "elasticnet"],
-                         CustomUniform(loc=0, state=1), ]
+                         CustomUniform(loc=0, state=1), [random_state]]
         self.weird_strings = {}
 
     def canProbas(self):

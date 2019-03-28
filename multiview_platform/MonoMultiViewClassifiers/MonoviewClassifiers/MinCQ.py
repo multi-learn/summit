@@ -525,15 +525,16 @@ class KernelVotersGenerator(VotersGenerator):
 
 class MinCQ(MinCqLearner, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, self_complemented=True , **kwargs):
+    def __init__(self, random_state=None, mu=0.01, self_complemented=True , n_stumps_per_attribute=10, **kwargs):
         super(MinCQ, self).__init__(mu=mu,
             voters_type='stumps',
-            n_stumps_per_attribute =10,
+            n_stumps_per_attribute =n_stumps_per_attribute,
             self_complemented=self_complemented
         )
-        self.param_names = ["mu"]
+        self.param_names = ["mu", "n_stumps_per_attribute", "random_state"]
         self.distribs = [CustomUniform(loc=0.5, state=2.0, multiplier="e-"),
-                         ]
+                         [n_stumps_per_attribute], [random_state]]
+        self.random_state=random_state
         self.classed_params = []
         self.weird_strings = {}
         if "nbCores" not in kwargs:
@@ -544,6 +545,16 @@ class MinCQ(MinCqLearner, BaseMonoviewClassifier):
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
         return True
+
+    def set_params(self, **params):
+        self.mu = params["mu"]
+        self.random_state = params["random_state"]
+        self.n_stumps_per_attribute = params["n_stumps_per_attribute"]
+        return self
+
+    def get_params(self, deep=True):
+        return {"random_state": self.random_state, "mu": self.mu,
+                "n_stumps_per_attribute": self.n_stumps_per_attribute}
 
     def getInterpret(self, directory, y_test):
         interpret_string = "Train C_bound value : "+str(self.cbound_train)

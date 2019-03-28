@@ -43,7 +43,7 @@ class MinCqClassifier(VotingClassifier):
         if estimators is None:
             estimators = []
 
-        super().__init__(estimators=estimators, voting='soft')
+        super().__init__(estimators=estimators, voting='soft', flatten_transform=False)
         self.estimators_generator = estimators_generator
         self.mu = mu
         self.omega = omega
@@ -86,11 +86,13 @@ class MinCqClassifier(VotingClassifier):
         else:
             self.le_ = LabelEncoder()
             self.le_.fit(y)
+            self.clean_me =True
 
             if isinstance(y, np.ma.MaskedArray):
                 transformed_y = np.ma.MaskedArray(self.le_.transform(y), y.mask)
             else:
-                transformed_y = self.le_.transform(y)
+                # transformed_y = self.le_.transform(y)
+                transformed_y = y
 
             self.estimators_generator.fit(X, transformed_y)
             self.estimators = [('ds{}'.format(i), estimator) for i, estimator in enumerate(self.estimators_generator.estimators_)]
@@ -106,7 +108,8 @@ class MinCqClassifier(VotingClassifier):
         # Preparation and resolution of the quadratic program
         # logger.info("Preparing and solving QP...")
         self.weights = self._solve(X, y)
-
+        if self.clean_me:
+            self.estimators = []
         return self
 
     # def evaluate_metrics(self, X, y, metrics_list=None, functions_list=None):
@@ -137,6 +140,16 @@ class MinCqClassifier(VotingClassifier):
         matrix = probas[np.arange(probas.shape[0]), :, y]
 
         return (matrix - self.omega)
+
+    def predict(self, X):
+        if not self.estimators:
+            self.estimators = [('ds{}'.format(i), estimator) for i, estimator in
+                               enumerate(self.estimators_generator.estimators_)]
+            self.clean_me = True
+        pred = super().predict(X)
+        if self.clean_me:
+            self.estimators = []
+        return pred
 
     def _solve(self, X, y):
         y = self.le_.transform(y)
@@ -240,7 +253,6 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
         n_examples, n_voters = np.shape(classification_matrix)
 
         if self.zeta == 0:
-            print(classification_matrix.shape)
             np.transpose(classification_matrix)
             ftf = np.dot(np.transpose(classification_matrix),classification_matrix)
         else:
@@ -273,7 +285,12 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
         lower_bound = 0.0
         upper_bound = 1.0 / n_voters
 
-        weights = self._solve_qp(objective_matrix, objective_vector, equality_matrix, equality_vector, lower_bound, upper_bound)
+        try:
+            weights = self._solve_qp(objective_matrix, objective_vector, equality_matrix, equality_vector, lower_bound, upper_bound)
+        except ValueError as e:
+            if "domain error" in e.args:
+                weights = np.ones(len(self.estimators_))
+
 
         # Keep learning information for further use.
         self.learner_info_ = {}
@@ -330,9 +347,9 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
         super(MinCQGraalpy, self).__init__(mu=mu,
             estimators_generator=StumpsClassifiersGenerator(n_stumps_per_attribute=n_stumps_per_attribute, self_complemented=self_complemented),
         )
-        self.param_names = ["mu",]
-        self.distribs = [CustomUniform(loc=0.5, state=2.0, multiplier="e-"),
-                         ]
+        self.param_names = ["mu", "n_stumps_per_attribute", "random_state"]
+        self.distribs = [CustomUniform(loc=0.05, state=2.0, multiplier="e-"),
+                         [n_stumps_per_attribute], [random_state]]
         self.n_stumps_per_attribute = n_stumps_per_attribute
         self.classed_params = []
         self.weird_strings = {}
@@ -348,9 +365,12 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
 
     def set_params(self, **params):
         self.mu = params["mu"]
+        self.random_state = params["random_state"]
+        self.n_stumps_per_attribute = params["n_stumps_per_attribute"]
+        return self
 
     def get_params(self, deep=True):
-        return {"random_state":self.random_state, "mu":self.mu}
+        return {"random_state":self.random_state, "mu":self.mu, "n_stumps_per_attribute":self.n_stumps_per_attribute}
 
     def getInterpret(self, directory, y_test):
         interpret_string = ""

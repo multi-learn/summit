@@ -24,9 +24,9 @@ class AdaboostPregen(AdaBoostClassifier, BaseBoost, BaseMonoviewClassifier):
             base_estimator=base_estimator,
             algorithm="SAMME"
             )
-        self.param_names = ["n_estimators", "base_estimator"]
+        self.param_names = ["n_estimators", "base_estimator", "n_stumps", "random_state"]
         self.classed_params = ["base_estimator"]
-        self.distribs = [CustomRandint(low=1, high=500), [DecisionTreeClassifier(max_depth=1)]]
+        self.distribs = [CustomRandint(low=1, high=500), [DecisionTreeClassifier(max_depth=1)], [n_stumps], [random_state]]
         self.weird_strings = {"base_estimator": "class_name"}
         self.plotted_metric = Metrics.zero_one_loss
         self.plotted_metric_name = "zero_one_loss"
@@ -60,6 +60,13 @@ class AdaboostPregen(AdaBoostClassifier, BaseBoost, BaseMonoviewClassifier):
         if pregen_X.shape != self.train_shape:
             self.step_predictions = np.array([change_label_to_zero(step_pred) for step_pred in self.staged_predict(pregen_X)])
         return change_label_to_zero(pred)
+
+    # def set_params(self, **params):
+    #     super().set_params(params)
+    #     self.random_state = params["random_state"]
+    #     self.n_stumps_per_attribute = params["n_tumps"]
+    #     return self
+
 
     def getInterpret(self, directory, y_test):
         interpretString = ""

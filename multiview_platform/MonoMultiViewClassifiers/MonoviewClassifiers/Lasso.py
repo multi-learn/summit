@@ -18,10 +18,10 @@ class Lasso(Lasso, BaseMonoviewClassifier):
             warm_start=warm_start,
             random_state=random_state
             )
-        self.param_names = ["max_iter", "alpha",]
+        self.param_names = ["max_iter", "alpha", "random_state"]
         self.classed_params = []
         self.distribs = [CustomRandint(low=1, high=300),
-                         CustomUniform(),]
+                         CustomUniform(), [random_state]]
         self.weird_strings = {}
 
     def fit(self, X, y, check_input=True):

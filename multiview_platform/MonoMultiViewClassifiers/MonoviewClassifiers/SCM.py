@@ -51,10 +51,10 @@ class SCM(scm, BaseMonoviewClassifier):
             max_rules=max_rules,
             p=p
             )
-        self.param_names = ["model_type", "max_rules", "p"]
+        self.param_names = ["model_type", "max_rules", "p", "random_state"]
         self.distribs = [["conjunction", "disjunction"],
                          CustomRandint(low=1, high=15),
-                         CustomUniform(loc=0, state=1)]
+                         CustomUniform(loc=0, state=1), [random_state]]
         self.classed_params = []
         self.weird_strings = {}
 

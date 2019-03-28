@@ -15,9 +15,8 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 
 def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierModule, CL_type, KFolds = 4, nbCores = 1,
-    metric = ["accuracy_score", None], nIter = 30):
-
-    estimator = getattr(classifierModule, CL_type)(randomState)
+    metric = ["accuracy_score", None], nIter = 30, classifier_KWARGS=None):
+    estimator = getattr(classifierModule, CL_type)(randomState, **classifier_KWARGS)
     params_dict = estimator.genDistribs()
     if params_dict:
         metricModule = getattr(Metrics, metric[0])
@@ -28,12 +27,11 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
         scorer = metricModule.get_scorer(**metricKWARGS)
         nb_possible_combinations = compute_possible_combinations(params_dict)
         min_list = np.array([min(nb_possible_combination, nIter) for nb_possible_combination in nb_possible_combinations])
-        print(nbCores)
         randomSearch = RandomizedSearchCV(estimator, n_iter=int(np.sum(min_list)), param_distributions=params_dict, refit=True,
                                           n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
         detector = randomSearch.fit(X_train, y_train)
 
-        bestParams = estimator.genBestParams(detector)
+        bestParams = dict((key, value) for key, value in estimator.genBestParams(detector).items() if key is not "random_state")
 
         scoresArray = detector.cv_results_['mean_test_score']
         params = estimator.genParamsFromDetector(detector)
@@ -148,6 +146,7 @@ class BaseMonoviewClassifier(object):
             else:
                 return self.weird_strings[param_name](self.get_params()[param_name])
         else:
+            print(self.get_params())
             return str(self.get_params()[param_name])
 
     def getFeatureImportance(self, directory, nb_considered_feats=50):
