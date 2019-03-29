@@ -52,7 +52,6 @@ class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
         if self.estimators_generator is None:
             self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps, self_complemented=self.self_complemented)
 
-
         # Step 1: We fit the classifiers generator and get its classification matrix.
         self.estimators_generator.fit(X, y_neg)
         # hint: This is equivalent to construct a new X

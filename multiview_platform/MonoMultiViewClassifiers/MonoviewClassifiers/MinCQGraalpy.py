@@ -22,7 +22,7 @@ from sklearn.preprocessing import LabelEncoder
 
 
 from ..Monoview.Additions.BoostUtils import ConvexProgram, StumpsClassifiersGenerator
-from ..Monoview.MonoviewUtils import BaseMonoviewClassifier, CustomUniform
+from ..Monoview.MonoviewUtils import BaseMonoviewClassifier, CustomUniform, change_label_to_zero, change_label_to_minus
 from ..Metrics import zero_one_loss
 
 # logger = logging.getLogger('MinCq')
@@ -71,7 +71,7 @@ class MinCqClassifier(VotingClassifier):
         # Validations
         assert 0 < self.mu <= 1, "MinCqClassifier: mu parameter must be in (0, 1]"
         assert xor(bool(self.estimators_generator), bool(self.estimators)), "MinCqClassifier: exactly one of estimator_generator or estimators must be used."
-        X, y = check_X_y(X, y)
+        X, y = check_X_y(X, change_label_to_minus(y))
 
         # Fit the estimators using VotingClassifier's fit method. This will also fit a LabelEncoder that can be
         # used to "normalize" labels (0, 1, 2, ...). In the case of binary classification, the two classes will be 0 and 1.
@@ -98,35 +98,16 @@ class MinCqClassifier(VotingClassifier):
             self.estimators = [('ds{}'.format(i), estimator) for i, estimator in enumerate(self.estimators_generator.estimators_)]
             super().fit(X, y)
 
-            # We clean the estimators attribute (as we do not want it to be cloned later)
-            # self.estimators_ = []
-
-        # logger.info("Training started...")
-        # logger.info("Training dataset shape: {}".format(str(np.shape(X))))
-        # logger.info("Number of voters: {}".format(len(self.estimators_)))
-
         # Preparation and resolution of the quadratic program
         # logger.info("Preparing and solving QP...")
         self.weights = self._solve(X, y)
         if self.clean_me:
             self.estimators = []
+        # print(self.weights.shape)
+        # print(np.unique(self.weights)[0:10])
+        # import pdb;pdb.set_trace()
+        self.train_cbound = 1 - (1.0/X.shape[0])*(np.sum(np.multiply(change_label_to_minus(y), np.average(self._binary_classification_matrix(X), axis=1, weights=self.weights)))**2)/(np.sum(np.average(self._binary_classification_matrix(X), axis=1,  weights=self.weights)**2))
         return self
-
-    # def evaluate_metrics(self, X, y, metrics_list=None, functions_list=None):
-    #     if metrics_list is None:
-    #         metrics_list = [zero_one_loss]
-    #
-    #     if functions_list is None:
-    #         functions_list = []
-    #     else:
-    #         raise NotImplementedError
-    #
-    #     # Predict, evaluate metrics.
-    #     predictions = self.predict(X)
-    #     metrics_results = {metric.__name__: metric(y, predictions) for metric in metrics_list}
-    #
-    #     metrics_dataframe = ResultsDataFrame([metrics_results])
-    #     return metrics_dataframe
 
     def _binary_classification_matrix(self, X):
         probas = self.transform(X)
@@ -149,7 +130,7 @@ class MinCqClassifier(VotingClassifier):
         pred = super().predict(X)
         if self.clean_me:
             self.estimators = []
-        return pred
+        return change_label_to_zero(pred)
 
     def _solve(self, X, y):
         y = self.le_.transform(y)
@@ -294,6 +275,7 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
 
         # Keep learning information for further use.
         self.learner_info_ = {}
+        print(np.unique(weights))
 
         # We count the number of non-zero weights, including the implicit voters.
         # TODO: Verify how we define non-zero weights here, could be if the weight is near 1/2n.
@@ -303,35 +285,8 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
 
         # Conversion of the weights of the n first voters to weights on the implicit 2n voters.
         # See Section 7.1 of [2] for an explanation.
-        return np.array([2 * q - 1.0 / len(self.estimators_) for q in weights])
-
-    # def evaluate_metrics(self, X, y, metrics_list=None, functions_list=None):
-    #     if metrics_list is None:
-    #         metrics_list = [zero_one_loss]
-    #
-    #     if functions_list is None:
-    #         functions_list = []
-    #
-    #     # Transductive setting: we only predict the X for labeled y
-    #     if isinstance(y, np.ma.MaskedArray):
-    #         labeled = np.where(np.logical_not(y.mask))[0]
-    #         X = np.array(X[labeled])
-    #         y = np.array(y[labeled])
-    #
-    #     # Predict, evaluate metrics.
-    #     predictions = self.predict(X)
-    #     metrics_results = {metric.__name__: metric(y, predictions) for metric in metrics_list}
-    #
-    #     # TODO: Repair in the case of non-{-1, 1} labels.
-    #     assert set(y) == {-1, 1}
-    #     classification_matrix = self._binary_classification_matrix(X)
-    #
-    #     for function in functions_list:
-    #         metrics_results[function.__name__] = function(classification_matrix, y, self.weights)
-    #
-    #     metrics_dataframe = ResultsDataFrame([metrics_results])
-    #     return metrics_dataframe
-
+        # return np.array([2 * q - 1.0 / len(self.estimators_) for q in weights])
+        return np.array(weights)
 
 def build_laplacian(X, n_neighbors=None):
     clf = SpectralEmbedding(n_neighbors=n_neighbors)
@@ -373,7 +328,7 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
         return {"random_state":self.random_state, "mu":self.mu, "n_stumps_per_attribute":self.n_stumps_per_attribute}
 
     def getInterpret(self, directory, y_test):
-        interpret_string = ""
+        interpret_string = "Cbound on train :"+str(self.train_cbound)
         # interpret_string += "Train C_bound value : "+str(self.cbound_train)
         # y_rework = np.copy(y_test)
         # y_rework[np.where(y_rework==0)] = -1

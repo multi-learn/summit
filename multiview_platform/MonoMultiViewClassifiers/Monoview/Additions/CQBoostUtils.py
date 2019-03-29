@@ -14,7 +14,7 @@ from ... import Metrics
 
 
 class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, mu=0.01, epsilon=1e-06, n_max_iterations=None, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None, random_state=None):
+    def __init__(self, mu=0.01, epsilon=1e-06, n_max_iterations=100, estimators_generator=None, dual_constraint_rhs=0, save_iteration_as_hyperparameter_each=None, random_state=None):
         super(ColumnGenerationClassifier, self).__init__()
         self.epsilon = epsilon
         self.n_max_iterations = n_max_iterations
@@ -53,6 +53,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         self.initialize()
         self.train_metrics = []
         self.gammas = []
+        self.list_weights= []
         self.bounds = []
         self.previous_votes = []
         # w = [0.5,0.5]
@@ -79,6 +80,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
             w, alpha = self._restricted_master_problem(previous_w=w, previous_alpha=alpha)
             cbound = self.compute_empiric_cbound(w, y_kernel_matrix)
             self.c_bounds.append(cbound)
+            self.list_weights.append(w)
 
             self.update_values(h_values, worst_h_index, alpha, w)
 
@@ -126,7 +128,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
             self.step_decisions = np.zeros(classification_matrix.shape)
             self.step_prod = np.zeros(classification_matrix.shape)
             for weight_index in range(self.weights_.shape[0]-1):
-                margins = np.sum(classification_matrix[:, :weight_index+1]* self.weights_[:weight_index+1], axis=1)
+                margins = np.sum(classification_matrix[:, :weight_index+1]* self.list_weights[weight_index], axis=1)
                 signs_array = np.array([int(x) for x in sign(margins)])
                 signs_array[signs_array == -1] = 0
                 self.step_decisions[:, weight_index] = signs_array

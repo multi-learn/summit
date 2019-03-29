@@ -92,6 +92,40 @@ class DecisionStumpClassifier(BaseEstimator, ClassifierMixin):
 
         return probas
 
+    def predict_proba_t(self, X):
+        """Compute probabilities of possible outcomes for samples in X.
+
+        Parameters
+        ----------
+        X : array-like, shape = [n_samples, n_features]
+            Training vectors, where n_samples is the number of samples and
+            n_features is the number of features.
+
+        Returns
+        -------
+        avg : array-like, shape = [n_samples, n_classes]
+            Weighted average probability for each class per sample.
+
+        """
+        try:
+            print('plouf')
+            print(X)
+            print("plaf")
+        except:
+            X=np.ones(X.shape)
+        check_is_fitted(self, 'classes_')
+        X = np.asarray(X)
+        probas = np.zeros((X.shape[0], 2))
+        positive_class = np.argwhere(X[:, self.attribute_index] > self.threshold)
+        negative_class = np.setdiff1d(range(X.shape[0]), positive_class)
+        probas[positive_class, 1] = 1.0
+        probas[negative_class, 0] = 1.0
+
+        if self.direction == -1:
+            probas = 1 - probas
+
+        return probas
+
     def reverse_decision(self):
         self.direction *= -1
 
@@ -170,7 +204,7 @@ class StumpsClassifiersGenerator(ClassifiersGenerator):
         Whether or not a binary complement voter must be generated for each voter. Defaults to False.
 
     """
-    def __init__(self, n_stumps_per_attribute=10, self_complemented=False, check_diff=True):
+    def __init__(self, n_stumps_per_attribute=10, self_complemented=False, check_diff=False):
         super(StumpsClassifiersGenerator, self).__init__(self_complemented)
         self.n_stumps_per_attribute = n_stumps_per_attribute
         self.check_diff = check_diff

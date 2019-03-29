@@ -178,6 +178,20 @@ def parseTheArgs(arguments):
     groupSCM.add_argument('--SCM_model_type', metavar='STRING', action='store',
                           help='Max number of rules for SCM', default="conjunction")
 
+    groupSCMPregen = parser.add_argument_group('SCMPregen arguments')
+    groupSCMPregen.add_argument('--SCP_max_rules', metavar='INT', type=int,
+                          action='store',
+                          help='Max number of rules for SCM', default=1)
+    groupSCMPregen.add_argument('--SCP_p', metavar='FLOAT', type=float,
+                          action='store',
+                          help='Max number of rules for SCM', default=1.0)
+    groupSCMPregen.add_argument('--SCP_model_type', metavar='STRING', action='store',
+                          help='Max number of rules for SCM',
+                          default="conjunction")
+    groupSCMPregen.add_argument('--SCP_stumps', metavar='INT', type=int,
+                                action='store',
+                                help='Number of stumps per attribute', default=1)
+
     groupCQBoost = parser.add_argument_group('CQBoost arguments')
     groupCQBoost.add_argument('--CQB_mu', metavar='FLOAT', type=float, action='store',
                               help='Set the mu parameter for CQBoost', default=0.001)
