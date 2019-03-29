@@ -35,10 +35,11 @@ class SCMPregen(scm, BaseMonoviewClassifier, BaseBoost):
         return self
 
     def predict(self, X):
+        h = np.ones(X.shape)
         print('poul')
-        pregen_X, _ = self.pregen_voters(X)
+        pregen_h, _ = self.pregen_voters(h)
         print('from')
-        pred = super(SCMPregen, self).predict(pregen_X)
+        pred = super(SCMPregen, self).predict(pregen_h)
         return pred
 
     def pregen_voters(self, X, y=None):
