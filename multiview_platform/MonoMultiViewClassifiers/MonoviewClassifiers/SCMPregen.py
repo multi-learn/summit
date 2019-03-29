@@ -5,11 +5,12 @@ import numpy as np
 
 from ..Monoview.MonoviewUtils import CustomRandint, CustomUniform, BaseMonoviewClassifier, change_label_to_minus, change_label_to_zero
 from ..Monoview.Additions.BoostUtils import StumpsClassifiersGenerator, BaseBoost
+from ..Monoview.Additions.PregenUtils import PregenClassifier
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
-class SCMPregen(scm, BaseMonoviewClassifier, BaseBoost):
+class SCMPregen(scm, BaseMonoviewClassifier, PregenClassifier):
 
     def __init__(self, random_state=None, model_type="conjunction",
                  max_rules=10, p=0.1, n_stumps=10,self_complemented=True, **kwargs):
@@ -35,44 +36,45 @@ class SCMPregen(scm, BaseMonoviewClassifier, BaseBoost):
         return self
 
     def predict(self, X):
-        h = np.ones(X.shape)
-        print('poul')
-        pregen_h, _ = self.pregen_voters(h)
-        print('from')
-        pred = super(SCMPregen, self).predict(pregen_h)
-        return pred
+        pregen_h, _ = self.pregen_voters(X)
+        return self.classes_[self.model_.predict(X)]
 
-    def pregen_voters(self, X, y=None):
-        if y is not None:
-            if self.estimators_generator is None:
-                self.estimators_generator = StumpsClassifiersGenerator(
-                    n_stumps_per_attribute=self.n_stumps,
-                    self_complemented=self.self_complemented)
-            self.estimators_generator.fit(X, y)
-        else:
-            neg_y=None
-        classification_matrix = self._binary_classification_matrix_t(X)
-        return classification_matrix, y
+    def get_params(self, deep=True):
+        return {"p": self.p, "model_type": self.model_type,
+         "max_rules": self.max_rules,
+         "random_state": self.random_state, "n_stumps":self.n_stumps}
 
-    def _collect_probas_t(self, X):
-        print('jb')
-        for est in self.estimators_generator.estimators_:
-            print(type(est))
-            print(est.predict_proba_t(X))
-        print('ha')
-        return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])
-
-    def _binary_classification_matrix_t(self, X):
-        probas = self._collect_probas_t(X)
-        predicted_labels = np.argmax(probas, axis=2)
-        predicted_labels[predicted_labels == 0] = -1
-        values = np.max(probas, axis=2)
-        return (predicted_labels * values).T
+    # def pregen_voters(self, X, y=None):
+    #     if y is not None:
+    #         if self.estimators_generator is None:
+    #             self.estimators_generator = StumpsClassifiersGenerator(
+    #                 n_stumps_per_attribute=self.n_stumps,
+    #                 self_complemented=self.self_complemented)
+    #         self.estimators_generator.fit(X, y)
+    #     else:
+    #         neg_y=None
+    #     classification_matrix = self._binary_classification_matrix_t(X)
+    #     return classification_matrix, y
+    #
+    # def _collect_probas_t(self, X):
+    #     print('jb')
+    #     for est in self.estimators_generator.estimators_:
+    #         print(type(est))
+    #         print(est.predict_proba_t(X))
+    #     print('ha')
+    #     return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])
+    #
+    # def _binary_classification_matrix_t(self, X):
+    #     probas = self._collect_probas_t(X)
+    #     predicted_labels = np.argmax(probas, axis=2)
+    #     predicted_labels[predicted_labels == 0] = -1
+    #     values = np.max(probas, axis=2)
+    #     return (predicted_labels * values).T
 
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
-        return True
+        return False
 
     def getInterpret(self, directory, y_test):
         interpretString = "Model used : " + str(self.model_)
