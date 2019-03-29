@@ -107,12 +107,8 @@ class DecisionStumpClassifier(BaseEstimator, ClassifierMixin):
             Weighted average probability for each class per sample.
 
         """
-        try:
-            print('plouf')
-            print(X)
-            print("plaf")
-        except:
-            X=np.ones(X.shape)
+
+        X=np.ones(X.shape)
         check_is_fitted(self, 'classes_')
         X = np.asarray(X)
         probas = np.zeros((X.shape[0], 2))
