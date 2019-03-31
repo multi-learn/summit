@@ -51,6 +51,9 @@ def parseTheArgs(arguments):
     groupStandard.add_argument('--noise_std', metavar='FLOAT', action='store',
                                help='The std of the gaussian noise that will be added to the data.',
                                type=float, default=0.15)
+    groupStandard.add_argument('--res_dir', metavar='STRING', action='store',
+                               help='The path to the result directory',
+                               default="../Results/")
 
 
     groupClass = parser.add_argument_group('Classification arguments')
@@ -191,6 +194,18 @@ def parseTheArgs(arguments):
     groupSCMPregen.add_argument('--SCP_stumps', metavar='INT', type=int,
                                 action='store',
                                 help='Number of stumps per attribute', default=1)
+
+    groupSCMSparsity = parser.add_argument_group('SCMSparsity arguments')
+    groupSCMSparsity.add_argument('--SCS_max_rules', metavar='INT', type=int,
+                                action='store',
+                                help='Max number of rules for SCM', default=1)
+    groupSCMSparsity.add_argument('--SCS_p', metavar='FLOAT', type=float,
+                                action='store',
+                                help='Max number of rules for SCM', default=1.0)
+    groupSCMSparsity.add_argument('--SCS_model_type', metavar='STRING',
+                                action='store',
+                                help='Max number of rules for SCM',
+                                default="conjunction")
 
     groupCQBoost = parser.add_argument_group('CQBoost arguments')
     groupCQBoost.add_argument('--CQB_mu', metavar='FLOAT', type=float, action='store',
@@ -455,7 +470,7 @@ def getDatabaseFunction(name, type):
     return getDatabase
 
 
-def initLogFile(name, views, CL_type, log, debug, label):
+def initLogFile(name, views, CL_type, log, debug, label, result_directory):
     r"""Used to init the directory where the preds will be stored and the log file.
 
     First this function will check if the result directory already exists (only one per minute is allowed).
@@ -479,9 +494,9 @@ def initLogFile(name, views, CL_type, log, debug, label):
         Reference to the main results directory for the benchmark.
     """
     if debug:
-        resultDirectory = "../Results/" + name + "/debug_started_" + time.strftime("%Y_%m_%d-%H_%M_%S") + "_" + label + "/"
+        resultDirectory = result_directory + name + "/debug_started_" + time.strftime("%Y_%m_%d-%H_%M_%S") + "_" + label + "/"
     else:
-        resultDirectory = "../Results/" + name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "_" + label + "/"
+        resultDirectory = result_directory + name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "_" + label + "/"
     logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(CL_type) + "-" + "_".join(
         views) + "-" + name + "-LOG"
     if os.path.exists(os.path.dirname(resultDirectory)):
