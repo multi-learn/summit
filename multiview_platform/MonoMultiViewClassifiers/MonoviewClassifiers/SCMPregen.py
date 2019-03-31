@@ -37,6 +37,7 @@ class SCMPregen(scm, BaseMonoviewClassifier, PregenClassifier):
 
     def predict(self, X):
         pregen_h, _ = self.pregen_voters(X)
+        from time import sleep;sleep(1)
         return self.classes_[self.model_.predict(X)]
 
     def get_params(self, deep=True):
