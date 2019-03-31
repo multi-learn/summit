@@ -51,7 +51,7 @@ class SCMSparsity(BaseMonoviewClassifier):
         self.scm_estimators = [scm(
             random_state=random_state,
             model_type=model_type,
-            max_rules=max_rule,
+            max_rules=max_rule+1,
             p=p
             ) for max_rule in range(max_rules)]
         self.model_type = model_type
