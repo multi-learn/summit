@@ -332,7 +332,7 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
 
     def getInterpret(self, directory, y_test):
         interpret_string = "Cbound on train :"+str(self.train_cbound)
-        np.savetxt(directory+"times.csv", np.array(self.train_time))
+        np.savetxt(directory+"times.csv", np.array([self.train_time, 0]))
         # interpret_string += "Train C_bound value : "+str(self.cbound_train)
         # y_rework = np.copy(y_test)
         # y_rework[np.where(y_rework==0)] = -1
