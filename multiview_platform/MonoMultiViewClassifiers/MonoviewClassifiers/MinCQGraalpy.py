@@ -206,6 +206,8 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
 
     """
     def fit(self, X, y):
+        import time
+        beg = time.time()
         # We first fit and learn the weights.
         super().fit(X, y)
 
@@ -221,7 +223,8 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
                 # logger.debug("Reversing decision of a binary voter")
                 self.weights[i] *= -1
                 self.estimators_[i].reverse_decision()
-
+        end=time.time()
+        self.train_time = end-beg
         return self
 
     def _solve(self, X, y):
@@ -329,6 +332,7 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
 
     def getInterpret(self, directory, y_test):
         interpret_string = "Cbound on train :"+str(self.train_cbound)
+        np.savetxt(directory+"times.csv", np.array(self.train_time))
         # interpret_string += "Train C_bound value : "+str(self.cbound_train)
         # y_rework = np.copy(y_test)
         # y_rework[np.where(y_rework==0)] = -1
