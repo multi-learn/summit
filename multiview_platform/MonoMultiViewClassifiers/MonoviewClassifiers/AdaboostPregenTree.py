@@ -15,31 +15,33 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier, PregenClassifier):
+class AdaboostPregenTree(AdaBoostClassifier, BaseMonoviewClassifier, PregenClassifier):
 
     def __init__(self, random_state=None, n_estimators=50,
-                 base_estimator=None, n_stumps=1, self_complemeted=True , **kwargs):
-        super(AdaboostPregen, self).__init__(
+                 base_estimator=None, n_stumps=1, self_complemeted=True, max_depth=2 , **kwargs):
+        super(AdaboostPregenTree, self).__init__(
             random_state=random_state,
             n_estimators=n_estimators,
             base_estimator=base_estimator,
             algorithm="SAMME"
             )
-        self.param_names = ["n_estimators", "base_estimator", "n_stumps", "random_state"]
+        self.param_names = ["n_estimators", "base_estimator", "n_stumps", "random_state", "max_depth"]
         self.classed_params = ["base_estimator"]
-        self.distribs = [CustomRandint(low=1, high=500), [DecisionTreeClassifier(max_depth=1)], [n_stumps], [random_state]]
+        self.distribs = [CustomRandint(low=1, high=500), [DecisionTreeClassifier(max_depth=1)], [n_stumps], [random_state], [max_depth]]
         self.weird_strings = {"base_estimator": "class_name"}
         self.plotted_metric = Metrics.zero_one_loss
         self.plotted_metric_name = "zero_one_loss"
         self.step_predictions = None
-        self.estimators_generator = "Stumps"
+        self.estimators_generator = "Trees"
         self.n_stumps=n_stumps
+        self.max_depth = max_depth
         self.self_complemented=self_complemeted
+        self.random_state = random_state
 
     def fit(self, X, y, sample_weight=None):
         begin = time.time()
         pregen_X, pregen_y = self.pregen_voters(X, y)
-        super(AdaboostPregen, self).fit(pregen_X, pregen_y, sample_weight=sample_weight)
+        super(AdaboostPregenTree, self).fit(pregen_X, pregen_y, sample_weight=sample_weight)
         end = time.time()
         self.train_time = end-begin
         self.train_shape = pregen_X.shape
@@ -55,18 +57,13 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier, PregenClassifie
     def predict(self, X):
         begin = time.time()
         pregen_X, _ = self.pregen_voters(X)
-        pred = super(AdaboostPregen, self).predict(pregen_X)
+        pred = super(AdaboostPregenTree, self).predict(pregen_X)
         end = time.time()
         self.pred_time = end - begin
         if pregen_X.shape != self.train_shape:
             self.step_predictions = np.array([change_label_to_zero(step_pred) for step_pred in self.staged_predict(pregen_X)])
         return change_label_to_zero(pred)
 
-    # def set_params(self, **params):
-    #     super().set_params(params)
-    #     self.random_state = params["random_state"]
-    #     self.n_stumps_per_attribute = params["n_tumps"]
-    #     return self
 
 
     def getInterpret(self, directory, y_test):
@@ -83,23 +80,12 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier, PregenClassifie
         np.savetxt(directory + "times.csv", np.array([self.train_time, self.pred_time]), delimiter=',')
         return interpretString
 
-    # def pregen_voters(self, X, y=None):
-    #     if y is not None:
-    #         neg_y = change_label_to_minus(y)
-    #         if self.estimators_generator is None:
-    #             self.estimators_generator = StumpsClassifiersGenerator(
-    #                 n_stumps_per_attribute=self.n_stumps,
-    #                 self_complemented=self.self_complemented)
-    #         self.estimators_generator.fit(X, neg_y)
-    #     else:
-    #         neg_y=None
-    #     classification_matrix = self._binary_classification_matrix(X)
-
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {'n_estimators': args.AdP_n_est,
+    kwargsDict = {'n_estimators': args.AdPT_n_est,
                   'base_estimator': DecisionTreeClassifier(max_depth=1),
-                  'n_stumps':args.AdP_stumps}
+                  'n_stumps':args.AdPT_trees,
+                  "max_depth":args.AdPT_max_depth}
     return kwargsDict
 
 

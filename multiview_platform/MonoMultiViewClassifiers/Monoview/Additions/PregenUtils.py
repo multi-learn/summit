@@ -1,16 +1,19 @@
 
 from ..MonoviewUtils import change_label_to_minus
-from .BoostUtils import StumpsClassifiersGenerator, BaseBoost
+from .BoostUtils import StumpsClassifiersGenerator, BaseBoost, TreeClassifiersGenerator
+import numpy as np
 
 class PregenClassifier(BaseBoost):
 
-    def pregen_voters(self, X, y=None):
+    def pregen_voters(self, X, y=None, generator="Stumps"):
         if y is not None:
             neg_y = change_label_to_minus(y)
-            if self.estimators_generator is None:
+            if generator is "Stumps":
                 self.estimators_generator = StumpsClassifiersGenerator(
                     n_stumps_per_attribute=self.n_stumps,
                     self_complemented=self.self_complemented)
+            elif generator is "Trees":
+                self.estimators_generator = TreeClassifiersGenerator(self.random_state, n_trees=self.n_stumps, max_depth=self.max_depth)
             self.estimators_generator.fit(X, neg_y)
         else:
             neg_y=None

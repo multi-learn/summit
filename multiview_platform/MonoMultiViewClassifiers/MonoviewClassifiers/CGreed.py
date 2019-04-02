@@ -1,6 +1,6 @@
 from ..Monoview.MonoviewUtils import BaseMonoviewClassifier, CustomRandint
 from ..Monoview.Additions.BoostUtils import getInterpretBase
-from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
+from ..Monoview.Additions.CGDescUtils import ColumnGenerationClassifierQar
 
 
 class CGreed(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
@@ -14,7 +14,8 @@ class CGreed(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
             random_start=False,
             n_stumps=n_stumps,
             use_r=True,
-            c_bound_sol=True
+            c_bound_sol=True,
+            estimators_generator="Stumps"
             )
 
         self.param_names = ["n_max_iterations", "n_stumps", "random_state"]

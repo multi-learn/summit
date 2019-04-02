@@ -1,23 +1,27 @@
 import numpy as np
 
 from ..Monoview.Additions.MinCQUtils import RegularizedBinaryMinCqClassifier
-from ..Monoview.Additions.BoostUtils import StumpsClassifiersGenerator
+from ..Monoview.Additions.BoostUtils import TreeClassifiersGenerator
 from ..Monoview.MonoviewUtils import BaseMonoviewClassifier, CustomUniform
 
 
 
-class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
+class MinCQGraalpyTree(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, self_complemented=True, n_stumps_per_attribute=1, **kwargs):
-        super(MinCQGraalpy, self).__init__(mu=mu,
-            estimators_generator=StumpsClassifiersGenerator(n_stumps_per_attribute=n_stumps_per_attribute, self_complemented=self_complemented),
+    def __init__(self, random_state=None, mu=0.01, self_complemented=True, n_stumps_per_attribute=1, max_depth=2, **kwargs):
+        super(MinCQGraalpyTree, self).__init__(mu=mu,
+            estimators_generator=TreeClassifiersGenerator(random_state=random_state,
+                                                          n_trees=n_stumps_per_attribute,
+                                                          max_depth=max_depth,
+                                                          self_complemented=self_complemented),
         )
-        self.param_names = ["mu", "n_stumps_per_attribute", "random_state"]
+        self.param_names = ["mu", "n_stumps_per_attribute", "random_state", "max_depth"]
         self.distribs = [CustomUniform(loc=0.05, state=2.0, multiplier="e-"),
-                         [n_stumps_per_attribute], [random_state]]
+                         [n_stumps_per_attribute], [random_state], [max_depth]]
         self.n_stumps_per_attribute = n_stumps_per_attribute
         self.classed_params = []
         self.weird_strings = {}
+        self.max_depth = max_depth
         self.random_state = random_state
         if "nbCores" not in kwargs:
             self.nbCores = 1
@@ -32,10 +36,11 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
         self.mu = params["mu"]
         self.random_state = params["random_state"]
         self.n_stumps_per_attribute = params["n_stumps_per_attribute"]
+        self.max_depth = params["max_depth"]
         return self
 
     def get_params(self, deep=True):
-        return {"random_state":self.random_state, "mu":self.mu, "n_stumps_per_attribute":self.n_stumps_per_attribute}
+        return {"random_state":self.random_state, "mu":self.mu, "n_stumps_per_attribute":self.n_stumps_per_attribute, "max_depth":self.max_depth}
 
     def getInterpret(self, directory, y_test):
         interpret_string = "Cbound on train :"+str(self.train_cbound)
@@ -52,8 +57,9 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {"mu":args.MCG_mu,
-                  "n_stumps_per_attribute":args.MCG_stumps}
+    kwargsDict = {"mu":args.MCGT_mu,
+                  "n_stumps_per_attribute":args.MCGT_trees,
+                  "max_depth":args.MCGT_max_depth}
     return kwargsDict
 
 

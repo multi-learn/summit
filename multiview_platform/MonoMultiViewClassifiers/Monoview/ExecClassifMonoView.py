@@ -17,6 +17,7 @@ from .. import MonoviewClassifiers
 from .analyzeResult import execute
 from ..utils.Dataset import getValue, extractSubset
 from . import MonoviewUtils
+from ..utils.GetMultiviewDb import TanhNormalizer
 
 # Author-Info
 __author__ = "Nikolas Huelsmann, Baptiste BAUVIN"
@@ -74,6 +75,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
 
     logging.debug("Start:\t Training")
     classifier = getattr(classifierModule, CL_type)(randomState, **clKWARGS)
+
     classifier.fit(X_train, y_train) #  NB_CORES=nbCores,
     logging.debug("Done:\t Training")
 
@@ -194,6 +196,7 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred, 
                         break
 
             imagesAnalysis[imageName].savefig(outputFileName + imageName + '.png')
+
 
 
 

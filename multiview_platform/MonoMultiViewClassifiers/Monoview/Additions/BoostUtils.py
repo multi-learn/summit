@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.preprocessing import LabelEncoder
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.utils.validation import check_is_fitted
 import sys
 import matplotlib.pyplot as plt
@@ -187,6 +188,30 @@ class ClassifiersGenerator(BaseEstimator, TransformerMixin):
 #         self.max_depth = max_depth
 #
 #     def fit(self, X, y=None):
+
+class TreeClassifiersGenerator(ClassifiersGenerator):
+
+    def __init__(self, random_state, max_depth=2, self_complemented=True, criterion="gini", splitter="best", n_trees=100, distribution_type="uniform", low=0, high=10):
+        super(TreeClassifiersGenerator, self).__init__(self_complemented)
+        self.max_depth=max_depth
+        self.criterion=criterion
+        self.splitter=splitter
+        self.n_trees=n_trees
+        self.random_state=random_state
+        self.distribution_type = distribution_type
+        self.low = low
+        self.high = high
+
+    def fit(self, X, y=None):
+        estimators_ = []
+        self.distributions = np.zeros((self.n_trees, X.shape[0]))
+        distrib_method = getattr(self.random_state, self.distribution_type)
+        for i in range(self.n_trees):
+            self.distributions[i,:] = distrib_method(self.low, self.high, size=X.shape[0])
+            estimators_.append(DecisionTreeClassifier(criterion=self.criterion, splitter=self.splitter, max_depth=self.max_depth).fit(X, y, sample_weight=self.distributions[i,:]))
+        self.estimators_ = np.asarray(estimators_)
+        return self
+
 
 class StumpsClassifiersGenerator(ClassifiersGenerator):
     """Decision Stump Voters transformer.

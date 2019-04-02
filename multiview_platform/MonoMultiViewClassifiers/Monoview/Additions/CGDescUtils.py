@@ -10,7 +10,7 @@ import time
 import matplotlib.pyplot as plt
 
 from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost, \
-    getInterpretBase, get_accuracy_graph
+    getInterpretBase, get_accuracy_graph, TreeClassifiersGenerator
 from ..MonoviewUtils import change_label_to_zero, change_label_to_minus
 from ... import Metrics
 
@@ -328,9 +328,12 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def init_hypotheses(self, X, y):
         """Inintialization for the hyptotheses used to build the boosted vote"""
-        if self.estimators_generator is None:
+        if self.estimators_generator is "Stumps":
             self.estimators_generator = StumpsClassifiersGenerator(
                 n_stumps_per_attribute=self.n_stumps,
+                self_complemented=self.self_complemented)
+        if self.estimators_generator is "Trees":
+            self.estimators_generator = TreeClassifiersGenerator(self.random_state, n_trees=self.n_stumps, max_depth=self.max_depth,
                 self_complemented=self.self_complemented)
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)

@@ -5,26 +5,26 @@ from ..Monoview.Additions.BoostUtils import getInterpretBase
 import numpy as np
 import os
 
-class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
+class CQBoostTree(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1, **kwargs):
-        super(CQBoost, self).__init__(
+    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1, max_depth=2, **kwargs):
+        super(CQBoostTree, self).__init__(
             random_state=random_state,
             mu=mu,
             epsilon=epsilon,
-            estimators_generator="Stumps"
+            estimators_generator="Trees"
         )
-        self.param_names = ["mu", "epsilon", "n_stumps", "random_state"]
+        self.param_names = ["mu", "epsilon", "n_stumps", "random_state", "max_depth"]
         self.distribs = [CustomUniform(loc=0.5, state=1.0, multiplier="e-"),
-                         CustomRandint(low=1, high=15, multiplier="e-"), [n_stumps], [random_state]]
+                         CustomRandint(low=1, high=15, multiplier="e-"), [n_stumps], [random_state], [max_depth]]
         self.classed_params = []
         self.weird_strings = {}
         self.n_stumps = n_stumps
+        self.max_depth = max_depth
         if "nbCores" not in kwargs:
             self.nbCores = 1
         else:
             self.nbCores = kwargs["nbCores"]
-
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
@@ -49,9 +49,10 @@ class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {"mu": args.CQB_mu,
-                  "epsilon": args.CQB_epsilon,
-                  "n_stumps":args.CQB_stumps}
+    kwargsDict = {"mu": args.CQBT_mu,
+                  "epsilon": args.CQBT_epsilon,
+                  "n_stumps":args.CQBT_trees,
+                  "max_depth":args.CQBT_max_depth}
     return kwargsDict
 
 

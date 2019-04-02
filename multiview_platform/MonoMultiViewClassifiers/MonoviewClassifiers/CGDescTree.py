@@ -1,23 +1,26 @@
-from ..Monoview.MonoviewUtils import BaseMonoviewClassifier
+from ..Monoview.MonoviewUtils import BaseMonoviewClassifier, CustomRandint
 from ..Monoview.Additions.BoostUtils import getInterpretBase
 from ..Monoview.Additions.CGDescUtils import ColumnGenerationClassifierQar
 
 
-class QarBoostv2(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
+class CGDescTree(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, **kwargs):
-        super(QarBoostv2, self).__init__(n_max_iterations=300,
+    def __init__(self, random_state=None, n_max_iterations=500, n_stumps=1, max_depth=2, **kwargs):
+        super(CGDescTree, self).__init__(n_max_iterations=n_max_iterations,
             random_state=random_state,
             self_complemented=True,
-            twice_the_same=False,
+            twice_the_same=True,
             c_bound_choice=True,
             random_start=False,
-            n_stumps_per_attribute=1,
+            n_stumps=n_stumps,
             use_r=True,
-            c_bound_sol=False
+            c_bound_sol=True,
+            estimators_generator="Trees"
             )
-        self.param_names = []
-        self.distribs = []
+        self.max_depth = max_depth
+        self.param_names = ["n_max_iterations", "n_stumps", "random_state", "max_depth"]
+        self.distribs = [CustomRandint(low=2, high=1000), [n_stumps],
+                         [random_state], [max_depth]]
         self.classed_params = []
         self.weird_strings = {}
 
@@ -29,12 +32,14 @@ class QarBoostv2(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         return self.getInterpretQar(directory, y_test)
 
     def get_name_for_fusion(self):
-        return "QBv2"
+        return "CGDT"
 
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {}
+    kwargsDict = {"n_stumps":args.CGDT_trees,
+                  "n_max_iterations":args.CGDT_n_iter,
+                  "max_depth": args.CGDT_max_depth}
     return kwargsDict
 
 

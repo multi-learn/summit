@@ -1,6 +1,6 @@
 from ..Monoview.MonoviewUtils import BaseMonoviewClassifier
 from ..Monoview.Additions.BoostUtils import getInterpretBase
-from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
+from ..Monoview.Additions.CGDescUtils import ColumnGenerationClassifierQar
 
 
 class QarBoost(ColumnGenerationClassifierQar, BaseMonoviewClassifier):

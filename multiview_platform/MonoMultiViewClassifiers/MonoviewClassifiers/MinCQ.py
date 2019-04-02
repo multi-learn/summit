@@ -1,6 +1,6 @@
 from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint, BaseMonoviewClassifier
 from ..Monoview.Additions.BoostUtils import getInterpretBase
-from ..Monoview.Additions.QarBoostUtils import ColumnGenerationClassifierQar
+from ..Monoview.Additions.CGDescUtils import ColumnGenerationClassifierQar
 
 #### Algorithm code ####
 

@@ -9,7 +9,7 @@ import numpy as np
 import time
 import math
 
-from .BoostUtils import StumpsClassifiersGenerator, ConvexProgram, sign, BaseBoost
+from .BoostUtils import StumpsClassifiersGenerator, ConvexProgram, sign, BaseBoost, TreeClassifiersGenerator
 from ... import Metrics
 
 
@@ -23,6 +23,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         self.mu = mu
         self.train_time = 0
         self.plotted_metric = Metrics.zero_one_loss
+        self.random_state = random_state
 
     def fit(self, X, y):
         start = time.time()
@@ -31,8 +32,10 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
 
         y[y == 0] = -1
 
-        if self.estimators_generator is None:
+        if self.estimators_generator is "Stumps":
             self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps, self_complemented=True)
+        elif self.estimators_generator is "Trees":
+            self.estimators_generator = TreeClassifiersGenerator( self.random_state, max_depth=self.max_depth, n_trees=self.n_stumps, self_complemented=True)
 
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)

@@ -7,6 +7,8 @@ import h5py
 import operator
 import errno
 import csv
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.utils.validation import check_array
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -21,6 +23,31 @@ def copyHDF5(pathF, name, nbCores):
         for dataset in datasetFile:
             datasetFile.copy("/" + dataset, newDataSet["/"])
         newDataSet.close()
+
+class TanhNormalizer(BaseEstimator, TransformerMixin):
+    """Normalize data using a tanh function. This is the normalizer used in the so-called "Never-ending paper".
+    It remains here for reproduceability purposes, but you should use Scikit-Learn normalizers instead!
+
+    """
+    def __init__(self):
+        self.mean = None
+        self.std = None
+
+    def fit(self, X, y=None, **fit_params):
+        X = check_array(X)
+        self.mean = X.mean(0)
+        self.mean.shape = (1, len(self.mean))
+        self.std = X.std(0)
+        self.std[self.std == 0] = 1
+        self.std.shape = (1, len(self.std))
+        return self
+
+    def transform(self, X):
+        return np.tanh((X - self.mean) / self.std)
+
+    def fit_transform(self, X, y=None, **fit_params):
+        self.fit(X, **fit_params)
+        return self.transform(X)
 
 
 

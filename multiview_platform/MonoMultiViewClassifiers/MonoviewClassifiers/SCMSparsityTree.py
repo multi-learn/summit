@@ -14,10 +14,10 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-class SCMSparsity(BaseMonoviewClassifier, PregenClassifier):
+class SCMSparsityTree(BaseMonoviewClassifier, PregenClassifier):
 
     def __init__(self, random_state=None, model_type="conjunction",
-                 max_rules=10, p=0.1, n_stumps=1, self_complemented=True, **kwargs):
+                 max_rules=10, p=0.1, n_stumps=1, max_depth=2, **kwargs):
         self.scm_estimators = [scm(
             random_state=random_state,
             model_type=model_type,
@@ -25,23 +25,23 @@ class SCMSparsity(BaseMonoviewClassifier, PregenClassifier):
             p=p
             ) for max_rule in range(max_rules)]
         self.model_type = model_type
-        self.self_complemented = self_complemented
-        self.n_stumps = n_stumps
+        self.max_depth=max_depth
         self.p = p
+        self.n_stumps = n_stumps
         self.random_state = random_state
         self.max_rules = max_rules
-        self.param_names = ["model_type", "max_rules", "p", "random_state", "n_stumps"]
+        self.param_names = ["model_type", "max_rules", "p", "random_state", "max_depth"]
         self.distribs = [["conjunction", "disjunction"],
                          CustomRandint(low=1, high=15),
-                         CustomUniform(loc=0, state=1), [random_state], [n_stumps]]
+                         CustomUniform(loc=0, state=1), [random_state], [max_depth]]
         self.classed_params = []
         self.weird_strings = {}
 
     def get_params(self):
-        return {"model_type":self.model_type, "p":self.p, "max_rules":self.max_rules, "random_state":self.random_state, "n_stumps":self.n_stumps}
+        return {"model_type":self.model_type, "p":self.p, "max_rules":self.max_rules, "random_state":self.random_state, "max_depth":self.max_depth, "n_stumps":self.n_stumps}
 
     def fit(self, X, y, tiebreaker=None, iteration_callback=None, **fit_params):
-        pregen_X, _ = self.pregen_voters(X, y)
+        pregen_X, _ = self.pregen_voters(X, y, generator="Trees")
         np.savetxt("pregen_x.csv", pregen_X, delimiter=',')
         place_holder = np.genfromtxt("pregen_x.csv", delimiter=',')
         os.remove("pregen_x.csv")
@@ -54,7 +54,7 @@ class SCMSparsity(BaseMonoviewClassifier, PregenClassifier):
         return self.scm_estimators[-1]
 
     def predict(self, X):
-        pregen_X, _ = self.pregen_voters(X,)
+        pregen_X, _ = self.pregen_voters(X, generator="Trees")
         np.savetxt("pregen_x.csv", pregen_X, delimiter=',')
         place_holder = np.genfromtxt("pregen_x.csv", delimiter=',')
         os.remove("pregen_x.csv")
@@ -75,10 +75,11 @@ class SCMSparsity(BaseMonoviewClassifier, PregenClassifier):
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {"model_type": args.SCS_model_type,
-                  "p": args.SCS_p,
-                  "max_rules": args.SCS_max_rules,
-                  "n_stumps": args.SCS_stumps}
+    kwargsDict = {"model_type": args.SCST_model_type,
+                  "p": args.SCST_p,
+                  "max_rules": args.SCST_max_rules,
+                  "n_stumps": args.SCST_trees,
+                  "max_depth": args.SCST_max_depth}
     return kwargsDict
 
 
