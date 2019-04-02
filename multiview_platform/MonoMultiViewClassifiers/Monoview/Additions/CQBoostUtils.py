@@ -26,7 +26,6 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         self.random_state = random_state
 
     def fit(self, X, y):
-        start = time.time()
         if scipy.sparse.issparse(X):
             X = np.array(X.todense())
 
@@ -35,8 +34,9 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         if self.estimators_generator is "Stumps":
             self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps, self_complemented=True)
         elif self.estimators_generator is "Trees":
-            self.estimators_generator = TreeClassifiersGenerator( self.random_state, max_depth=self.max_depth, n_trees=self.n_stumps, self_complemented=True)
+            self.estimators_generator = TreeClassifiersGenerator(max_depth=self.max_depth, n_trees=self.n_stumps, self_complemented=True)
 
+        print(self.max_depth, self.n_stumps)
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)
         self.c_bounds = []
@@ -63,6 +63,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         w= None
         self.collected_weight_vectors_ = {}
         self.collected_dual_constraint_violations_ = {}
+        start = time.time()
 
         for k in range(min(n, self.n_max_iterations if self.n_max_iterations is not None else np.inf)):
             # Find worst weak hypothesis given alpha.

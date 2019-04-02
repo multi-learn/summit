@@ -333,7 +333,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 n_stumps_per_attribute=self.n_stumps,
                 self_complemented=self.self_complemented)
         if self.estimators_generator is "Trees":
-            self.estimators_generator = TreeClassifiersGenerator(self.random_state, n_trees=self.n_stumps, max_depth=self.max_depth,
+            self.estimators_generator = TreeClassifiersGenerator(n_trees=self.n_stumps, max_depth=self.max_depth,
                 self_complemented=self.self_complemented)
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)

@@ -191,13 +191,16 @@ class ClassifiersGenerator(BaseEstimator, TransformerMixin):
 
 class TreeClassifiersGenerator(ClassifiersGenerator):
 
-    def __init__(self, random_state, max_depth=2, self_complemented=True, criterion="gini", splitter="best", n_trees=100, distribution_type="uniform", low=0, high=10, attributes_ratio=0.6, examples_ratio=0.95):
+    def __init__(self, random_state=42, max_depth=2, self_complemented=True, criterion="gini", splitter="best", n_trees=100, distribution_type="uniform", low=0, high=10, attributes_ratio=0.6, examples_ratio=0.95):
         super(TreeClassifiersGenerator, self).__init__(self_complemented)
         self.max_depth=max_depth
         self.criterion=criterion
         self.splitter=splitter
         self.n_trees=n_trees
-        self.random_state=random_state
+        if type(random_state) is int:
+            self.random_state = np.random.RandomState(random_state)
+        else:
+            self.random_state=random_state
         self.distribution_type = distribution_type
         self.low = low
         self.high = high
@@ -208,6 +211,7 @@ class TreeClassifiersGenerator(ClassifiersGenerator):
         estimators_ = []
         self.attribute_indices = [self.sub_sample_attributes(X) for _ in range(self.n_trees)]
         self.example_indices = [self.sub_sample_examples(X) for _ in range(self.n_trees)]
+        print(self.example_indices)
         for i in range(self.n_trees):
             estimators_.append(DecisionTreeClassifier(criterion=self.criterion, splitter=self.splitter, max_depth=self.max_depth).fit(X[:, self.attribute_indices[i]][self.example_indices[i], :], y[self.example_indices[i]]))
         self.estimators_ = np.asarray(estimators_)
