@@ -12,7 +12,7 @@ class AdaboostPregen10(AdaboostPregen):
                  base_estimator=None, n_stumps=1, self_complemeted=True , **kwargs):
         super(AdaboostPregen10, self).__init__(
             random_state=random_state,
-            n_estimators=n_estimators,
+            n_estimators=100,
             base_estimator=base_estimator,
             n_stumps=10,
             self_complemeted=self_complemeted

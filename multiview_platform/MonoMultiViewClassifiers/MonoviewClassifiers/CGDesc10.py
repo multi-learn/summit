@@ -6,7 +6,7 @@ from .CGDesc import CGDesc
 class CGDesc10(CGDesc):
 
     def __init__(self, random_state=None, n_max_iterations=500, n_stumps=1, **kwargs):
-        super(CGDesc10, self).__init__(n_max_iterations=n_max_iterations,
+        super(CGDesc10, self).__init__(n_max_iterations=100,
             random_state=random_state,
             n_stumps=10,)
 
