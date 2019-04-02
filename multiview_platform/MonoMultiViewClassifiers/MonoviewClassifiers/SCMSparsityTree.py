@@ -43,7 +43,7 @@ class SCMSparsityTree(BaseMonoviewClassifier, PregenClassifier):
     def fit(self, X, y, tiebreaker=None, iteration_callback=None, **fit_params):
         pregen_X, _ = self.pregen_voters(X, y, generator="Trees")
         list_files = os.listdir(".")
-        a = int(np.random.randint(0, 10000))
+        a = int(self.random_state.randint(0, 10000))
         if "pregen_x"+str(a)+".csv" in list_files:
             a = int(np.random.randint(0, 10000))
             file_name = "pregen_x" + str(a) + ".csv"
@@ -65,7 +65,7 @@ class SCMSparsityTree(BaseMonoviewClassifier, PregenClassifier):
     def predict(self, X):
         pregen_X, _ = self.pregen_voters(X, generator="Trees")
         list_files = os.listdir(".")
-        a = int(np.random.randint(0, 10000))
+        a = int(self.random_state.randint(0, 10000))
         if "pregen_x"+str(a)+".csv" in list_files:
             a = int(np.random.randint(0, 10000))
             file_name = "pregen_x" + str(a) + ".csv"

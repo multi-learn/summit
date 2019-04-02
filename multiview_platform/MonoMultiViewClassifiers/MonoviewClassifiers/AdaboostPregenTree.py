@@ -18,7 +18,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 class AdaboostPregenTree(AdaBoostClassifier, BaseMonoviewClassifier, PregenClassifier):
 
     def __init__(self, random_state=None, n_estimators=50,
-                 base_estimator=None, n_stumps=1, self_complemeted=True, max_depth=2 , **kwargs):
+                 base_estimator=None, n_stumps=1, self_complemeted=True, max_depth=2, **kwargs):
         super(AdaboostPregenTree, self).__init__(
             random_state=random_state,
             n_estimators=n_estimators,
@@ -40,7 +40,7 @@ class AdaboostPregenTree(AdaBoostClassifier, BaseMonoviewClassifier, PregenClass
 
     def fit(self, X, y, sample_weight=None):
         begin = time.time()
-        pregen_X, pregen_y = self.pregen_voters(X, y)
+        pregen_X, pregen_y = self.pregen_voters(X, y, generator=self.estimators_generator)
         super(AdaboostPregenTree, self).fit(pregen_X, pregen_y, sample_weight=sample_weight)
         end = time.time()
         self.train_time = end-begin

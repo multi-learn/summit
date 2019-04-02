@@ -191,7 +191,7 @@ class ClassifiersGenerator(BaseEstimator, TransformerMixin):
 
 class TreeClassifiersGenerator(ClassifiersGenerator):
 
-    def __init__(self, random_state, max_depth=2, self_complemented=True, criterion="gini", splitter="best", n_trees=100, distribution_type="uniform", low=0, high=10):
+    def __init__(self, random_state, max_depth=2, self_complemented=True, criterion="gini", splitter="best", n_trees=100, distribution_type="uniform", low=0, high=10, attributes_ratio=0.6, examples_ratio=0.95):
         super(TreeClassifiersGenerator, self).__init__(self_complemented)
         self.max_depth=max_depth
         self.criterion=criterion
@@ -201,16 +201,31 @@ class TreeClassifiersGenerator(ClassifiersGenerator):
         self.distribution_type = distribution_type
         self.low = low
         self.high = high
+        self.attributes_ratio = attributes_ratio
+        self.examples_ratio = examples_ratio
 
     def fit(self, X, y=None):
         estimators_ = []
-        self.distributions = np.zeros((self.n_trees, X.shape[0]))
-        distrib_method = getattr(self.random_state, self.distribution_type)
+        self.attribute_indices = [self.sub_sample_attributes(X) for _ in range(self.n_trees)]
+        self.example_indices = [self.sub_sample_examples(X) for _ in range(self.n_trees)]
         for i in range(self.n_trees):
-            self.distributions[i,:] = distrib_method(self.low, self.high, size=X.shape[0])
-            estimators_.append(DecisionTreeClassifier(criterion=self.criterion, splitter=self.splitter, max_depth=self.max_depth).fit(X, y, sample_weight=self.distributions[i,:]))
+            estimators_.append(DecisionTreeClassifier(criterion=self.criterion, splitter=self.splitter, max_depth=self.max_depth).fit(X[:, self.attribute_indices[i]][self.example_indices[i], :], y[self.example_indices[i]]))
         self.estimators_ = np.asarray(estimators_)
         return self
+
+    def sub_sample_attributes(self, X):
+        n_attributes = X.shape[1]
+        attributes_indices = np.arange(n_attributes)
+        kept_indices = self.random_state.choice(attributes_indices, size=int(self.attributes_ratio*n_attributes), replace=True)
+        return kept_indices
+
+    def sub_sample_examples(self, X):
+        n_examples = X.shape[0]
+        examples_indices = np.arange(n_examples)
+        kept_indices = self.random_state.choice(examples_indices, size=int(self.examples_ratio*n_examples), replace=True)
+        return kept_indices
+
+
 
 
 class StumpsClassifiersGenerator(ClassifiersGenerator):
@@ -753,8 +768,11 @@ def get_accuracy_graph(plotted_data, classifier_name, file_name, name="Accuracie
 
 class BaseBoost(object):
 
-    def _collect_probas(self, X):
-        return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])
+    def _collect_probas(self, X, sub_sampled=False):
+        if self.estimators_generator.__class__.__name__ == "TreeClassifiersGenerator":
+            return np.asarray([clf.predict_proba(X[:,attribute_indices]) for clf, attribute_indices in zip(self.estimators_generator.estimators_, self.estimators_generator.attribute_indices)])
+        else:
+            return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])
 
     def _binary_classification_matrix(self, X):
         probas = self._collect_probas(X)

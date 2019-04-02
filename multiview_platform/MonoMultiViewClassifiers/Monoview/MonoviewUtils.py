@@ -146,7 +146,6 @@ class BaseMonoviewClassifier(object):
             else:
                 return self.weird_strings[param_name](self.get_params()[param_name])
         else:
-            print(self.get_params())
             return str(self.get_params()[param_name])
 
     def getFeatureImportance(self, directory, nb_considered_feats=50):
