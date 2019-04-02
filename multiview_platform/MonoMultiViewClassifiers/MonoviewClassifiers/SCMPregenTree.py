@@ -53,7 +53,6 @@ class SCMPregenTree(scm, BaseMonoviewClassifier, PregenClassifier):
     def predict(self, X):
         pregen_X, _ = self.pregen_voters(X,)
         list_files = os.listdir(".")
-        print(list_files)
         a = int(self.random_state.randint(0, 10000))
         if "pregen_x"+str(a)+".csv" in list_files:
             a = int(np.random.randint(0, 10000))

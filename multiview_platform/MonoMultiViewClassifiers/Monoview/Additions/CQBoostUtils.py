@@ -153,15 +153,15 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
     def get_matrix_to_optimize(self, y_kernel_matrix, w=None):
         return y_kernel_matrix[:, self.chosen_columns_]
 
-    def _binary_classification_matrix(self, X):
-        probas = self._collect_probas(X)
-        predicted_labels = np.argmax(probas, axis=2)
-        predicted_labels[predicted_labels == 0] = -1
-        values = np.max(probas, axis=2)
-        return (predicted_labels * values).T
-
-    def _collect_probas(self, X):
-        return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])
+    # def _binary_classification_matrix(self, X):
+    #     probas = self._collect_probas(X)
+    #     predicted_labels = np.argmax(probas, axis=2)
+    #     predicted_labels[predicted_labels == 0] = -1
+    #     values = np.max(probas, axis=2)
+    #     return (predicted_labels * values).T
+    #
+    # def _collect_probas(self, X):
+    #     return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])
 
     def _restricted_master_problem(self, previous_w=None, previous_alpha=None):
         n_examples, n_hypotheses = self.matrix_to_optimize.shape

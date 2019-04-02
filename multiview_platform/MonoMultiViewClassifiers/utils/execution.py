@@ -221,6 +221,10 @@ def parseTheArgs(arguments):
                               action='store',
                               help='Set the number of stumps for CQBoost',
                               default=1)
+    groupCQBoost.add_argument('--CQB_n_iter', metavar='INT', type=int,
+                                  action='store',
+                                  help='Set the maximum number of iteration in CQBoost',
+                                  default=None)
 
 
 
@@ -305,6 +309,11 @@ def parseTheArgs(arguments):
                                   action='store',
                                   help='Set the number of stumps for CQBoost',
                                   default=2)
+    groupCQBoostTree.add_argument('--CQBT_n_iter', metavar='INT', type=int,
+                                  action='store',
+                                  help='Set the maximum number of iteration in CQBoostTree',
+                                  default=None)
+
     groupSCMPregenTree = parser.add_argument_group('SCMPregenTree arguments')
     groupSCMPregenTree.add_argument('--SCPT_max_rules', metavar='INT', type=int,
                                 action='store',

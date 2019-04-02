@@ -7,16 +7,18 @@ import os
 
 class CQBoostTree(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1, max_depth=2, **kwargs):
+    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1, max_depth=2, n_max_iterations=100, **kwargs):
+        print(n_max_iterations)
         super(CQBoostTree, self).__init__(
             random_state=random_state,
             mu=mu,
             epsilon=epsilon,
-            estimators_generator="Trees"
+            estimators_generator="Trees",
+            n_max_iterations=n_max_iterations
         )
-        self.param_names = ["mu", "epsilon", "n_stumps", "random_state", "max_depth"]
+        self.param_names = ["mu", "epsilon", "n_stumps", "random_state", "max_depth", "n_max_iterations"]
         self.distribs = [CustomUniform(loc=0.5, state=1.0, multiplier="e-"),
-                         CustomRandint(low=1, high=15, multiplier="e-"), [n_stumps], [random_state], [max_depth]]
+                         CustomRandint(low=1, high=15, multiplier="e-"), [n_stumps], [random_state], [max_depth], [n_max_iterations]]
         self.classed_params = []
         self.weird_strings = {}
         self.n_stumps = n_stumps
@@ -52,7 +54,8 @@ def formatCmdArgs(args):
     kwargsDict = {"mu": args.CQBT_mu,
                   "epsilon": args.CQBT_epsilon,
                   "n_stumps":args.CQBT_trees,
-                  "max_depth":args.CQBT_max_depth}
+                  "max_depth":args.CQBT_max_depth,
+                  "n_max_iterations":args.CQBT_n_iter}
     return kwargsDict
 
 

@@ -7,16 +7,17 @@ import os
 
 class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1, **kwargs):
+    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1, n_max_iterations=100, **kwargs):
         super(CQBoost, self).__init__(
             random_state=random_state,
             mu=mu,
             epsilon=epsilon,
-            estimators_generator="Stumps"
+            estimators_generator="Stumps",
+            n_max_iterations=100
         )
-        self.param_names = ["mu", "epsilon", "n_stumps", "random_state"]
+        self.param_names = ["mu", "epsilon", "n_stumps", "random_state", "n_max_iterations"]
         self.distribs = [CustomUniform(loc=0.5, state=1.0, multiplier="e-"),
-                         CustomRandint(low=1, high=15, multiplier="e-"), [n_stumps], [random_state]]
+                         CustomRandint(low=1, high=15, multiplier="e-"), [n_stumps], [random_state], [n_max_iterations]]
         self.classed_params = []
         self.weird_strings = {}
         self.n_stumps = n_stumps
@@ -51,7 +52,8 @@ def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
     kwargsDict = {"mu": args.CQB_mu,
                   "epsilon": args.CQB_epsilon,
-                  "n_stumps":args.CQB_stumps}
+                  "n_stumps":args.CQB_stumps,
+                  "n_max_iterations":args.CQB_n_iter}
     return kwargsDict
 
 
