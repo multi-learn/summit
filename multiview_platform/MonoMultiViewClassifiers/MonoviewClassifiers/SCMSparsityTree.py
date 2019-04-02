@@ -49,6 +49,7 @@ class SCMSparsityTree(BaseMonoviewClassifier, PregenClassifier):
             file_name = "pregen_x" + str(a) + ".csv"
             while file_name in list_files:
                 a = int(np.random.randint(0, 10000))
+                file_name = "pregen_x" + str(a) + ".csv"
         else:
             file_name = "pregen_x"+str(a)+".csv"
         np.savetxt(file_name, pregen_X, delimiter=',')
@@ -59,7 +60,7 @@ class SCMSparsityTree(BaseMonoviewClassifier, PregenClassifier):
             scm_estimator.fit(place_holder, y, tiebreaker=None, iteration_callback=None, **fit_params)
             end = time.time()
         self.times = np.array([end-beg, 0])
-        self.train_metrics = [zero_one_loss.score(y, scm_estimator.predict(X)) for scm_estimator in self.scm_estimators]
+        self.train_metrics = [zero_one_loss.score(y, scm_estimator.predict(place_holder)) for scm_estimator in self.scm_estimators]
         return self.scm_estimators[-1]
 
     def predict(self, X):
@@ -71,6 +72,7 @@ class SCMSparsityTree(BaseMonoviewClassifier, PregenClassifier):
             file_name = "pregen_x" + str(a) + ".csv"
             while file_name in list_files:
                 a = int(np.random.randint(0, 10000))
+                file_name = "pregen_x" + str(a) + ".csv"
         else:
             file_name = "pregen_x"+str(a)+".csv"
         np.savetxt(file_name, pregen_X, delimiter=',')

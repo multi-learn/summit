@@ -42,6 +42,7 @@ class SCMPregenTree(scm, BaseMonoviewClassifier, PregenClassifier):
             file_name = "pregen_x" + str(a) + ".csv"
             while file_name in list_files:
                 a = int(np.random.randint(0, 10000))
+                file_name = "pregen_x" + str(a) + ".csv"
         else:
             file_name = "pregen_x"+str(a)+".csv"
         np.savetxt(file_name, pregen_X, delimiter=',')
@@ -59,6 +60,7 @@ class SCMPregenTree(scm, BaseMonoviewClassifier, PregenClassifier):
             file_name = "pregen_x" + str(a) + ".csv"
             while file_name in list_files:
                 a = int(np.random.randint(0, 10000))
+                file_name = "pregen_x" + str(a) + ".csv"
         else:
             file_name = "pregen_x"+str(a)+".csv"
         np.savetxt(file_name, pregen_X, delimiter=',')
