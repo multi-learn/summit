@@ -75,13 +75,14 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def fit(self, X, y):
 
-        start = time.time()
+
         formatted_X, formatted_y = self.format_X_y(X, y)
 
         self.init_info_containers()
 
         m, n, y_kernel_matrix = self.init_hypotheses(formatted_X, formatted_y)
 
+        start = time.time()
         self.n_total_hypotheses_ = n
         self.n_total_examples = m
 

@@ -39,8 +39,8 @@ class AdaboostPregenTree(AdaBoostClassifier, BaseMonoviewClassifier, PregenClass
         self.random_state = random_state
 
     def fit(self, X, y, sample_weight=None):
-        begin = time.time()
         pregen_X, pregen_y = self.pregen_voters(X, y, generator=self.estimators_generator)
+        begin = time.time()
         super(AdaboostPregenTree, self).fit(pregen_X, pregen_y, sample_weight=sample_weight)
         end = time.time()
         self.train_time = end-begin
