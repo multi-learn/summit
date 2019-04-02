@@ -36,13 +36,14 @@ class SCMPregenTree(scm, BaseMonoviewClassifier, PregenClassifier):
     def fit(self, X, y, tiebreaker=None, iteration_callback=None, **fit_params):
         pregen_X, _ = self.pregen_voters(X, y, generator="Trees")
         list_files = os.listdir(".")
-        if "pregen_x.csv" in list_files:
-            i = 0
-            file_name = "pregen_x" + str(i) + ".csv"
+        a = int(np.random.randint(0, 10000))
+        if "pregen_x"+str(a)+".csv" in list_files:
+            a = int(np.random.randint(0, 10000))
+            file_name = "pregen_x" + str(a) + ".csv"
             while file_name in list_files:
-                i += 1
+                a = int(np.random.randint(0, 10000))
         else:
-            file_name = "pregen_x.csv"
+            file_name = "pregen_x"+str(a)+".csv"
         np.savetxt(file_name, pregen_X, delimiter=',')
         place_holder = np.genfromtxt(file_name, delimiter=',')
         os.remove(file_name)
@@ -52,13 +53,14 @@ class SCMPregenTree(scm, BaseMonoviewClassifier, PregenClassifier):
     def predict(self, X):
         pregen_X, _ = self.pregen_voters(X, generator="Trees")
         list_files = os.listdir(".")
-        if "pregen_x.csv" in list_files:
-            i = 0
-            file_name = "pregen_x" + str(i) + ".csv"
+        a = int(np.random.randint(0, 10000))
+        if "pregen_x"+str(a)+".csv" in list_files:
+            a = int(np.random.randint(0, 10000))
+            file_name = "pregen_x" + str(a) + ".csv"
             while file_name in list_files:
-                i += 1
+                a = int(np.random.randint(0, 10000))
         else:
-            file_name="pregen_x.csv"
+            file_name = "pregen_x"+str(a)+".csv"
         np.savetxt(file_name, pregen_X, delimiter=',')
         place_holder = np.genfromtxt(file_name, delimiter=',')
         os.remove(file_name)
