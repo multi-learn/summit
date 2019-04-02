@@ -55,9 +55,17 @@ class SCMSparsity(BaseMonoviewClassifier, PregenClassifier):
 
     def predict(self, X):
         pregen_X, _ = self.pregen_voters(X,)
-        np.savetxt("pregen_x.csv", pregen_X, delimiter=',')
-        place_holder = np.genfromtxt("pregen_x.csv", delimiter=',')
-        os.remove("pregen_x.csv")
+        list_files = os.listdir(".")
+        if "pregen_x.csv" in list_files:
+            i = 0
+            file_name = "pregen_x" + str(i) + ".csv"
+            while file_name in list_files:
+                i += 1
+        else:
+            file_name="pregen_x.csv"
+        np.savetxt(file_name, pregen_X, delimiter=',')
+        place_holder = np.genfromtxt(file_name, delimiter=',')
+        os.remove(file_name)
         self.preds = [scm_estimator.predict(place_holder) for scm_estimator in self.scm_estimators]
         return self.preds[-1]
 
