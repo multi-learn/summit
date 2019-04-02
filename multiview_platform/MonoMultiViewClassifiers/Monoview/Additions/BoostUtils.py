@@ -211,7 +211,6 @@ class TreeClassifiersGenerator(ClassifiersGenerator):
         estimators_ = []
         self.attribute_indices = [self.sub_sample_attributes(X) for _ in range(self.n_trees)]
         self.example_indices = [self.sub_sample_examples(X) for _ in range(self.n_trees)]
-        print(self.example_indices)
         for i in range(self.n_trees):
             estimators_.append(DecisionTreeClassifier(criterion=self.criterion, splitter=self.splitter, max_depth=self.max_depth).fit(X[:, self.attribute_indices[i]][self.example_indices[i], :], y[self.example_indices[i]]))
         self.estimators_ = np.asarray(estimators_)
