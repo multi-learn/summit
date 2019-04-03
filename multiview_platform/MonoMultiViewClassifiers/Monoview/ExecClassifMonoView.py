@@ -52,6 +52,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices, KFol
     learningRate, \
     labelsString, \
     outputFileName = initConstants(args, X, classificationIndices, labelsNames, name, directory)
+
     logging.debug("Done:\t Loading data")
 
     logging.debug("Info:\t Classification - Database:" + str(name) + " Feature:" + str(feat) + " train ratio:"

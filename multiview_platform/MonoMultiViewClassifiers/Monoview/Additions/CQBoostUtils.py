@@ -36,7 +36,6 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         elif self.estimators_generator is "Trees":
             self.estimators_generator = TreeClassifiersGenerator(max_depth=self.max_depth, n_trees=self.n_stumps, self_complemented=True)
 
-        print(self.max_depth, self.n_stumps)
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)
         self.c_bounds = []

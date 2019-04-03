@@ -157,6 +157,20 @@ def parseTheArgs(arguments):
     groupDT.add_argument('--DT_splitter', metavar='STRING', action='store',
                          help='Determine criterion for Decision Trees', default="random")
 
+    groupDTP = parser.add_argument_group('Decision Trees pregen arguments')
+    groupDTP.add_argument('--DTP_depth', metavar='INT', type=int, action='store',
+                         help='Determine max depth for Decision Trees',
+                         default=3)
+    groupDTP.add_argument('--DTP_criterion', metavar='STRING', action='store',
+                         help='Determine max depth for Decision Trees',
+                         default="entropy")
+    groupDTP.add_argument('--DTP_splitter', metavar='STRING', action='store',
+                         help='Determine criterion for Decision Trees',
+                         default="random")
+    groupDTP.add_argument('--DTP_stumps', metavar='INT', type=int, action='store',
+                          help='Determine the number of stumps for Decision Trees pregen',
+                          default=1)
+
     groupSGD = parser.add_argument_group('SGD arguments')
     groupSGD.add_argument('--SGD_alpha', metavar='FLOAT', type=float, action='store',
                           help='Determine alpha for SGDClassifier', default=0.1)

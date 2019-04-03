@@ -7,13 +7,13 @@ import os
 
 class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1, n_max_iterations=100, **kwargs):
+    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1, n_max_iterations=None, **kwargs):
         super(CQBoost, self).__init__(
             random_state=random_state,
             mu=mu,
             epsilon=epsilon,
             estimators_generator="Stumps",
-            n_max_iterations=100
+            n_max_iterations=n_max_iterations
         )
         self.param_names = ["mu", "epsilon", "n_stumps", "random_state", "n_max_iterations"]
         self.distribs = [CustomUniform(loc=0.5, state=1.0, multiplier="e-"),

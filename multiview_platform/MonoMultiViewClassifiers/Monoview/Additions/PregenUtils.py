@@ -1,7 +1,7 @@
 
 from ..MonoviewUtils import change_label_to_minus
 from .BoostUtils import StumpsClassifiersGenerator, BaseBoost, TreeClassifiersGenerator
-import numpy as np
+
 
 class PregenClassifier(BaseBoost):
 

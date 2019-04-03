@@ -8,7 +8,6 @@ import os
 class CQBoostTree(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1, max_depth=2, n_max_iterations=100, **kwargs):
-        print(n_max_iterations)
         super(CQBoostTree, self).__init__(
             random_state=random_state,
             mu=mu,

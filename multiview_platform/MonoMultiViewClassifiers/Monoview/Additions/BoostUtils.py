@@ -782,7 +782,6 @@ class BaseBoost(object):
 
     def _collect_probas(self, X, sub_sampled=False):
         if self.estimators_generator.__class__.__name__ == "TreeClassifiersGenerator":
-            print("frogom")
             return np.asarray([clf.predict_proba(X[:,attribute_indices]) for clf, attribute_indices in zip(self.estimators_generator.estimators_, self.estimators_generator.attribute_indices)])
         else:
             return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])

@@ -272,7 +272,6 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
 
         # Keep learning information for further use.
         self.learner_info_ = {}
-        print(np.unique(weights))
 
         # We count the number of non-zero weights, including the implicit voters.
         # TODO: Verify how we define non-zero weights here, could be if the weight is near 1/2n.

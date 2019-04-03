@@ -18,7 +18,7 @@ class CGDesc(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
             estimators_generator="Stumps"
             )
         self.param_names = ["n_max_iterations", "n_stumps", "random_state"]
-        self.distribs = [CustomRandint(low=2, high=1000), [n_stumps],
+        self.distribs = [CustomRandint(low=2, high=500), [n_stumps],
                          [random_state]]
         self.classed_params = []
         self.weird_strings = {}
