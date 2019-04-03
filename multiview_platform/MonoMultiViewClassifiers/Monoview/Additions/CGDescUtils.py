@@ -124,8 +124,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
 
         self.nb_opposed_voters = self.check_opposed_voters()
-        self.estimators_generator.estimators_ = \
-        self.estimators_generator.estimators_[self.chosen_columns_]
+        self.estimators_generator.choose(self.chosen_columns_)
 
         if self.save_train_data:
             self.X_train = self.classification_matrix[:, self.chosen_columns_]
@@ -155,6 +154,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         end = time.time()
         self.predict_time = end - start
         self.step_predict(classification_matrix)
+        print(np.unique(signs_array))
         return signs_array
 
     def step_predict(self, classification_matrix):
@@ -338,6 +338,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self_complemented=self.self_complemented)
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)
+        print(np.unique(y), np.unique(self.classification_matrix))
         self.train_shape = self.classification_matrix.shape
 
         m, n = self.classification_matrix.shape
@@ -489,6 +490,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         return 1.0 / n_examples * np.ones((n_examples,))
 
     def get_step_decision_test_graph(self, directory, y_test):
+        print(np.unique(y_test))
         np.savetxt(directory + "y_test_step.csv", self.step_decisions, delimiter=',')
         step_metrics = []
         for step_index in range(self.step_decisions.shape[1]-1):

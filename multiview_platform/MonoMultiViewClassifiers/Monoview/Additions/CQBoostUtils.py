@@ -97,7 +97,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         self.nb_opposed_voters = self.check_opposed_voters()
         self.compute_weights_(w)
         # self.weights_ = w
-        self.estimators_generator.estimators_ = self.estimators_generator.estimators_[self.chosen_columns_]
+        self.estimators_generator.choose(self.chosen_columns_)
         end = time.time()
 
         self.train_time = end-start

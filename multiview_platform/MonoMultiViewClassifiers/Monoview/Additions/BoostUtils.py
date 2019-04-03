@@ -209,10 +209,10 @@ class TreeClassifiersGenerator(ClassifiersGenerator):
 
     def fit(self, X, y=None):
         estimators_ = []
-        self.attribute_indices = [self.sub_sample_attributes(X) for _ in range(self.n_trees)]
-        self.example_indices = [self.sub_sample_examples(X) for _ in range(self.n_trees)]
+        self.attribute_indices = np.array([self.sub_sample_attributes(X) for _ in range(self.n_trees)])
+        self.example_indices = np.array([self.sub_sample_examples(X) for _ in range(self.n_trees)])
         for i in range(self.n_trees):
-            estimators_.append(DecisionTreeClassifier(criterion=self.criterion, splitter=self.splitter, max_depth=self.max_depth).fit(X[:, self.attribute_indices[i]][self.example_indices[i], :], y[self.example_indices[i]]))
+            estimators_.append(DecisionTreeClassifier(criterion=self.criterion, splitter=self.splitter, max_depth=self.max_depth).fit(X[:, self.attribute_indices[i, :]][self.example_indices[i], :], y[self.example_indices[i, :]]))
         self.estimators_ = np.asarray(estimators_)
         return self
 
@@ -227,6 +227,11 @@ class TreeClassifiersGenerator(ClassifiersGenerator):
         examples_indices = np.arange(n_examples)
         kept_indices = self.random_state.choice(examples_indices, size=int(self.examples_ratio*n_examples), replace=True)
         return kept_indices
+
+    def choose(self, chosen_columns):
+        self.estimators_ = self.estimators_[chosen_columns]
+        self.attribute_indices = self.attribute_indices[chosen_columns, :]
+        self.example_indices = self.example_indices[chosen_columns, :]
 
 
 
@@ -304,6 +309,10 @@ class StumpsClassifiersGenerator(ClassifiersGenerator):
                                      if ranges[i] != 0]
         self.estimators_ = np.asarray(self.estimators_)
         return self
+
+    def choose(self, chosen_columns):
+        self.estimators_ = self.estimators_[chosen_columns]
+
 
 def _as_matrix(element):
     """ Utility function to convert "anything" to a Numpy matrix.
@@ -773,6 +782,7 @@ class BaseBoost(object):
 
     def _collect_probas(self, X, sub_sampled=False):
         if self.estimators_generator.__class__.__name__ == "TreeClassifiersGenerator":
+            print("frogom")
             return np.asarray([clf.predict_proba(X[:,attribute_indices]) for clf, attribute_indices in zip(self.estimators_generator.estimators_, self.estimators_generator.attribute_indices)])
         else:
             return np.asarray([clf.predict_proba(X) for clf in self.estimators_generator.estimators_])
