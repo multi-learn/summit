@@ -337,7 +337,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self_complemented=self.self_complemented)
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)
-        print(np.unique(y), np.unique(self.classification_matrix))
         self.train_shape = self.classification_matrix.shape
 
         m, n = self.classification_matrix.shape

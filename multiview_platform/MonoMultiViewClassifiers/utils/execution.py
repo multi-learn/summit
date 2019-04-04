@@ -15,7 +15,7 @@ def parseTheArgs(arguments):
 
     parser = argparse.ArgumentParser(
         description='This file is used to benchmark the scores fo multiple classification algorithm on multiview data.',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,)
 
     groupStandard = parser.add_argument_group('Standard arguments')
     groupStandard.add_argument('-log', action='store_true', help='Use option to activate logging to console')
