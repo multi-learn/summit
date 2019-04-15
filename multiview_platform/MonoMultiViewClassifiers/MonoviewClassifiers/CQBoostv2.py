@@ -1,61 +1,61 @@
-import scipy
-import logging
-import numpy.ma as ma
-from collections import defaultdict
-from sklearn.utils.validation import check_is_fitted
-from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.pipeline import Pipeline
-from sklearn.metrics import accuracy_score
 import numpy as np
-import time
 
-from ..Monoview.MonoviewUtils import CustomRandint, CustomUniform, BaseMonoviewClassifier
 from ..Monoview.Additions.BoostUtils import getInterpretBase
 from ..Monoview.Additions.CQBoostUtils import ColumnGenerationClassifier
+from ..Monoview.MonoviewUtils import CustomRandint, CustomUniform, \
+    BaseMonoviewClassifier
+
 
 class ColumnGenerationClassifierv2(ColumnGenerationClassifier):
 
     def __init__(self, mu=0.01, epsilon=1e-06, random_state=None):
-        super(ColumnGenerationClassifierv2, self).__init__(mu=mu, epsilon=epsilon, random_state=random_state)
+        super(ColumnGenerationClassifierv2, self).__init__(mu=mu,
+                                                           epsilon=epsilon,
+                                                           random_state=random_state)
 
     def initialize(self):
         self.weights_ = []
         self.edge_scores = []
         self.alphas = []
 
-    def update_values(self, h_values=None, worst_h_index=None, alpha=None, w=None):
+    def update_values(self, h_values=None, worst_h_index=None, alpha=None,
+                      w=None):
         self.edge_scores.append(h_values[worst_h_index])
         self.alphas.append(alpha)
         self.weights_.append(w[-1])
 
     def get_margins(self, w=None):
         self.weights = np.array(self.weights_)
-        self.final_vote_weights = np.array([np.prod(1 - self.weights[t + 1:]) * self.weights_[t] if t <
-                                                                                                    self.weights.shape[
-                                                                                                        0] - 1 else
-                                            self.weights[t] for t in range(self.weights.shape[0])])
-        margins = np.squeeze(np.asarray(np.matmul(self.classification_matrix[:, self.chosen_columns_],
-                                                  self.final_vote_weights)))
+        self.final_vote_weights = np.array(
+            [np.prod(1 - self.weights[t + 1:]) * self.weights_[t] if t <
+                                                                     self.weights.shape[
+                                                                         0] - 1 else
+             self.weights[t] for t in range(self.weights.shape[0])])
+        margins = np.squeeze(np.asarray(
+            np.matmul(self.classification_matrix[:, self.chosen_columns_],
+                      self.final_vote_weights)))
         return margins
 
     def compute_weights_(self, w=None):
         self.weights_ = np.array(self.weights_)
-        self.final_vote_weights = np.array([np.prod(1 - self.weights_[t + 1:]) * self.weights_[t] if t <
-                                                                                                     self.weights_.shape[
-                                                                                                         0] - 1 else
-                                            self.weights_[t] for t in range(self.weights_.shape[0])])
+        self.final_vote_weights = np.array(
+            [np.prod(1 - self.weights_[t + 1:]) * self.weights_[t] if t <
+                                                                      self.weights_.shape[
+                                                                          0] - 1 else
+             self.weights_[t] for t in range(self.weights_.shape[0])])
         self.weights_ = self.final_vote_weights
 
     def get_matrix_to_optimize(self, y_kernel_matrix, w=None):
         m = self.n_total_examples
         if w is not None:
-            matrix_to_optimize = np.concatenate((np.matmul(self.matrix_to_optimize, w).reshape((m, 1)),
-                                                                  y_kernel_matrix[:, self.chosen_columns_[-1]].reshape((m, 1))),
-                                                                 axis=1)
+            matrix_to_optimize = np.concatenate(
+                (np.matmul(self.matrix_to_optimize, w).reshape((m, 1)),
+                 y_kernel_matrix[:, self.chosen_columns_[-1]].reshape((m, 1))),
+                axis=1)
         else:
-            matrix_to_optimize = y_kernel_matrix[:, self.chosen_columns_[-1]].reshape((m, 1))
+            matrix_to_optimize = y_kernel_matrix[:,
+                                 self.chosen_columns_[-1]].reshape((m, 1))
         return matrix_to_optimize
-
 
 
 class CQBoostv2(ColumnGenerationClassifierv2, BaseMonoviewClassifier):
@@ -77,7 +77,7 @@ class CQBoostv2(ColumnGenerationClassifierv2, BaseMonoviewClassifier):
         return True
 
     def getInterpret(self, directory, y_test):
-        return getInterpretBase(self, directory, "CQBoostv2", self.weights_,)
+        return getInterpretBase(self, directory, "CQBoostv2", self.weights_, )
 
     def get_name_for_fusion(self):
         return "CQB2"
@@ -94,10 +94,9 @@ def paramsToSet(nIter, randomState):
     """Used for weighted linear early fusion to generate random search sets"""
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"mu": 10**-randomState.uniform(0.5, 1.5),
-                          "epsilon": 10**-randomState.randint(1, 15)})
+        paramsSet.append({"mu": 10 ** -randomState.uniform(0.5, 1.5),
+                          "epsilon": 10 ** -randomState.randint(1, 15)})
     return paramsSet
-
 
 # class CQBoostv2(CqBoostClassifierv2):
 #
@@ -232,4 +231,3 @@ def paramsToSet(nIter, randomState):
 #
 # def getInterpret(classifier, directory):
 #     return getInterpretBase(classifier, directory, "CQBoostv2", classifier.final_vote_weights)
-

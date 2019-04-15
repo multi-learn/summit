@@ -1,5 +1,6 @@
 from ..Monoview.Additions.SVCClassifier import SVCClassifier
-from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint, BaseMonoviewClassifier
+from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint, \
+    BaseMonoviewClassifier
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -16,7 +17,8 @@ class SVMPoly(SVCClassifier, BaseMonoviewClassifier):
             random_state=random_state
         )
         self.param_names = ["C", "degree", "random_state"]
-        self.distribs = [CustomUniform(loc=0, state=1), CustomRandint(low=2, high=30), [random_state]]
+        self.distribs = [CustomUniform(loc=0, state=1),
+                         CustomRandint(low=2, high=30), [random_state]]
 
 
 def formatCmdArgs(args):
@@ -28,6 +30,6 @@ def formatCmdArgs(args):
 def paramsToSet(nIter, randomState):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"C": randomState.randint(1, 10000), "degree": randomState.randint(1, 30)})
+        paramsSet.append({"C": randomState.randint(1, 10000),
+                          "degree": randomState.randint(1, 30)})
     return paramsSet
-

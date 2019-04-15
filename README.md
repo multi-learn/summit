@@ -18,7 +18,7 @@ And the following python modules :
 * [matplotlib](http://matplotlib.org/) - Used to plot results
 * [sklearn](http://scikit-learn.org/stable/) - Used for the monoview classifiers
 * [joblib](https://pypi.python.org/pypi/joblib) - Used to compute on multiple threads
-* [h5py](www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to spare RAM
+* [h5py](https://www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to spare RAM
 * [pickle](https://docs.python.org/3/library/pickle.html) - Used to store some results
 * ([graphviz](https://pypi.python.org/pypi/graphviz) - Used for decision tree interpretation)
 

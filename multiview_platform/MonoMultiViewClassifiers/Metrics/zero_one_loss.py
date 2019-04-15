@@ -1,5 +1,5 @@
-from sklearn.metrics import zero_one_loss as metric
 from sklearn.metrics import make_scorer
+from sklearn.metrics import zero_one_loss as metric
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -20,7 +20,8 @@ def get_scorer(**kwargs):
         sample_weight = kwargs["0"]
     except:
         sample_weight = None
-    return make_scorer(metric, greater_is_better=False, sample_weight=sample_weight)
+    return make_scorer(metric, greater_is_better=False,
+                       sample_weight=sample_weight)
 
 
 def getConfig(**kwargs):
@@ -28,5 +29,6 @@ def getConfig(**kwargs):
         sample_weight = kwargs["0"]
     except:
         sample_weight = None
-    configString = "Zero_one loss using " + str(sample_weight) + " as sample_weights (lower is better)"
+    configString = "Zero_one loss using " + str(
+        sample_weight) + " as sample_weights (lower is better)"
     return configString

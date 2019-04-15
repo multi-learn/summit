@@ -1,11 +1,12 @@
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import GradientBoostingClassifier
 import time
-import numpy as np
 
-from ..Monoview.MonoviewUtils import CustomRandint, BaseMonoviewClassifier
+import numpy as np
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.tree import DecisionTreeClassifier
+
 from .. import Metrics
 from ..Monoview.Additions.BoostUtils import get_accuracy_graph
+from ..Monoview.MonoviewUtils import CustomRandint, BaseMonoviewClassifier
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -14,8 +15,10 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 class CustomDecisionTree(DecisionTreeClassifier):
     def predict(self, X, check_input=True):
-        y_pred = super(CustomDecisionTree, self).predict(X, check_input=check_input)
+        y_pred = super(CustomDecisionTree, self).predict(X,
+                                                         check_input=check_input)
         return y_pred.reshape((y_pred.shape[0], 1)).astype(float)
+
 
 class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
 
@@ -29,10 +32,10 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
             n_estimators=n_estimators,
             init=init,
             random_state=random_state
-            )
-        self.param_names = ["n_estimators",]
+        )
+        self.param_names = ["n_estimators", ]
         self.classed_params = []
-        self.distribs = [CustomRandint(low=50, high=500),]
+        self.distribs = [CustomRandint(low=50, high=500), ]
         self.weird_strings = {}
         self.plotted_metric = Metrics.zero_one_loss
         self.plotted_metric_name = "zero_one_loss"
@@ -47,7 +50,8 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
         self.base_predictions = np.array(
             [estim[0].predict(X) for estim in self.estimators_])
         self.metrics = np.array(
-            [self.plotted_metric.score(pred, y) for pred in self.staged_predict(X)])
+            [self.plotted_metric.score(pred, y) for pred in
+             self.staged_predict(X)])
         # self.bounds = np.array([np.prod(
         #     np.sqrt(1 - 4 * np.square(0.5 - self.estimator_errors_[:i + 1]))) for i
         #                         in range(self.estimator_errors_.shape[0])])
@@ -59,7 +63,8 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
         end = time.time()
         self.pred_time = end - begin
         if X.shape != self.train_shape:
-            self.step_predictions = np.array([step_pred for step_pred in self.staged_predict(X)])
+            self.step_predictions = np.array(
+                [step_pred for step_pred in self.staged_predict(X)])
         return pred
 
     def canProbas(self):
@@ -69,24 +74,30 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
     def getInterpret(self, directory, y_test):
         interpretString = ""
         interpretString += self.getFeatureImportance(directory)
-        step_test_metrics = np.array([self.plotted_metric.score(y_test, step_pred) for step_pred in self.step_predictions])
-        get_accuracy_graph(step_test_metrics, "AdaboostClassic", directory + "test_metrics.png",
+        step_test_metrics = np.array(
+            [self.plotted_metric.score(y_test, step_pred) for step_pred in
+             self.step_predictions])
+        get_accuracy_graph(step_test_metrics, "AdaboostClassic",
+                           directory + "test_metrics.png",
                            self.plotted_metric_name, set="test")
-        get_accuracy_graph(self.metrics, "AdaboostClassic", directory+"metrics.png", self.plotted_metric_name)
-        np.savetxt(directory + "test_metrics.csv", step_test_metrics, delimiter=',')
+        get_accuracy_graph(self.metrics, "AdaboostClassic",
+                           directory + "metrics.png", self.plotted_metric_name)
+        np.savetxt(directory + "test_metrics.csv", step_test_metrics,
+                   delimiter=',')
         np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')
-        np.savetxt(directory + "times.csv", np.array([self.train_time, self.pred_time]), delimiter=',')
+        np.savetxt(directory + "times.csv",
+                   np.array([self.train_time, self.pred_time]), delimiter=',')
         return interpretString
 
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_estimators": args.GB_n_est,}
+    kwargsDict = {"n_estimators": args.GB_n_est, }
     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"n_estimators": randomState.randint(50, 500),})
+        paramsSet.append({"n_estimators": randomState.randint(50, 500), })
     return paramsSet

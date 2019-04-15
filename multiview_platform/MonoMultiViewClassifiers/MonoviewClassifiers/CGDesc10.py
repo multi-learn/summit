@@ -1,19 +1,19 @@
-from ..Monoview.MonoviewUtils import BaseMonoviewClassifier, CustomRandint
-from ..Monoview.Additions.BoostUtils import getInterpretBase
-from ..Monoview.Additions.CGDescUtils import ColumnGenerationClassifierQar
 from .CGDesc import CGDesc
+
 
 class CGDesc10(CGDesc):
 
-    def __init__(self, random_state=None, n_max_iterations=500, n_stumps=1, **kwargs):
+    def __init__(self, random_state=None, n_max_iterations=500, n_stumps=1,
+                 **kwargs):
         super(CGDesc10, self).__init__(n_max_iterations=100,
-            random_state=random_state,
-            n_stumps=10,)
+                                       random_state=random_state,
+                                       n_stumps=10, )
+
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_stumps":args.CGD_stumps,
-    "n_max_iterations":args.CGD_n_iter}
+    kwargsDict = {"n_stumps": args.CGD_stumps,
+                  "n_max_iterations": args.CGD_n_iter}
     return kwargsDict
 
 

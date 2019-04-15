@@ -1,5 +1,5 @@
-from sklearn.metrics import matthews_corrcoef as metric
 from sklearn.metrics import make_scorer
+from sklearn.metrics import matthews_corrcoef as metric
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

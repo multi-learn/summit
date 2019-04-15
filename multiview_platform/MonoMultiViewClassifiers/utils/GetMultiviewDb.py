@@ -1,12 +1,8 @@
-import numpy as np
-import math
-from scipy import sparse
-import os
-import logging
-import h5py
-import operator
 import errno
-import csv
+import os
+
+import h5py
+import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils.validation import check_array
 
@@ -24,11 +20,13 @@ def copyHDF5(pathF, name, nbCores):
             datasetFile.copy("/" + dataset, newDataSet["/"])
         newDataSet.close()
 
+
 class TanhNormalizer(BaseEstimator, TransformerMixin):
     """Normalize data using a tanh function. This is the normalizer used in the so-called "Never-ending paper".
     It remains here for reproduceability purposes, but you should use Scikit-Learn normalizers instead!
 
     """
+
     def __init__(self):
         self.mean = None
         self.std = None
@@ -50,14 +48,13 @@ class TanhNormalizer(BaseEstimator, TransformerMixin):
         return self.transform(X)
 
 
-
-
 def datasetsAlreadyExist(pathF, name, nbCores):
     """Used to check if it's necessary to copy datasets"""
     allDatasetExist = True
     for coreIndex in range(nbCores):
         import os.path
-        allDatasetExist *= os.path.isfile(pathF + name + str(coreIndex) + ".hdf5")
+        allDatasetExist *= os.path.isfile(
+            pathF + name + str(coreIndex) + ".hdf5")
     return allDatasetExist
 
 
@@ -70,7 +67,8 @@ def deleteHDF5(pathF, name, nbCores):
 def makeMeNoisy(viewData, randomState, percentage=15):
     """used to introduce some noise in the generated data"""
     viewData = viewData.astype(bool)
-    nbNoisyCoord = int(percentage / 100.0 * viewData.shape[0] * viewData.shape[1])
+    nbNoisyCoord = int(
+        percentage / 100.0 * viewData.shape[0] * viewData.shape[1])
     rows = range(viewData.shape[0])
     cols = range(viewData.shape[1])
     for _ in range(nbNoisyCoord):
@@ -81,7 +79,9 @@ def makeMeNoisy(viewData, randomState, percentage=15):
     return noisyViewData
 
 
-def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", randomState=None, full=True, add_noise=False, noise_std=0.15, nbView=3,
+def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
+                       randomState=None, full=True, add_noise=False,
+                       noise_std=0.15, nbView=3,
                        nbClass=2, datasetLength=34, randomStateInt=None):
     """Used to generate a plausible dataset to test the algorithms"""
     randomStateInt = 42
@@ -95,17 +95,29 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", random
                 raise
     datasetFile = h5py.File(pathF + "/Plausible.hdf5", "w")
     if NB_CLASS == 2:
-        CLASS_LABELS = np.array([0 for _ in range(int(datasetLength/2))] + [1 for _ in range(datasetLength-int(datasetLength/2))])
+        CLASS_LABELS = np.array(
+            [0 for _ in range(int(datasetLength / 2))] + [1 for _ in range(
+                datasetLength - int(datasetLength / 2))])
         for viewIndex in range(nbView):
-            viewData = np.array([np.zeros(nbFeatures) for _ in range(int(datasetLength/2))] +
-                                [np.ones(nbFeatures)for _ in range(datasetLength-int(datasetLength/2))])
-            fakeOneIndices = randomState.randint(0, int(datasetLength/2), int(datasetLength / 12))
-            fakeZeroIndices = randomState.randint(int(datasetLength/2), datasetLength, int(datasetLength / 12))
+            viewData = np.array(
+                [np.zeros(nbFeatures) for _ in range(int(datasetLength / 2))] +
+                [np.ones(nbFeatures) for _ in
+                 range(datasetLength - int(datasetLength / 2))])
+            fakeOneIndices = randomState.randint(0, int(datasetLength / 2),
+                                                 int(datasetLength / 12))
+            fakeZeroIndices = randomState.randint(int(datasetLength / 2),
+                                                  datasetLength,
+                                                  int(datasetLength / 12))
 
-            viewData[fakeOneIndices] = np.ones((len(fakeOneIndices), nbFeatures))
-            viewData[fakeZeroIndices] = np.zeros((len(fakeZeroIndices), nbFeatures))
+            viewData[fakeOneIndices] = np.ones(
+                (len(fakeOneIndices), nbFeatures))
+            viewData[fakeZeroIndices] = np.zeros(
+                (len(fakeZeroIndices), nbFeatures))
             viewData = makeMeNoisy(viewData, randomState)
-            viewDset = datasetFile.create_dataset("View" + str(viewIndex), viewData.shape, data=viewData.astype(np.uint8))
+            viewDset = datasetFile.create_dataset("View" + str(viewIndex),
+                                                  viewData.shape,
+                                                  data=viewData.astype(
+                                                      np.uint8))
             viewDset.attrs["name"] = "ViewNumber" + str(viewIndex)
             viewDset.attrs["sparse"] = False
         labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
@@ -122,36 +134,53 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", random
         return datasetFile, LABELS_DICTIONARY
     elif NB_CLASS >= 3:
         firstBound = int(datasetLength / 3)
-        rest = datasetLength - 2*int(datasetLength / 3)
-        scndBound = 2*int(datasetLength / 3)
+        rest = datasetLength - 2 * int(datasetLength / 3)
+        scndBound = 2 * int(datasetLength / 3)
         thrdBound = datasetLength
-        CLASS_LABELS = np.array([0 for _ in range(firstBound)] + [1 for _ in range(firstBound)] + [2 for _ in range(rest)])
+        CLASS_LABELS = np.array(
+            [0 for _ in range(firstBound)] + [1 for _ in range(firstBound)] + [2
+                                                                               for
+                                                                               _
+                                                                               in
+                                                                               range(
+                                                                                   rest)])
         for viewIndex in range(nbView):
-            viewData = np.array([np.zeros(nbFeatures) for _ in range(firstBound)] +
-                                [np.ones(nbFeatures)for _ in range(firstBound)] +
-                                [np.ones(nbFeatures)+1 for _ in range(rest)])
-            fakeOneIndices = randomState.randint(0, firstBound, int(datasetLength / 12))
-            fakeTwoIndices = randomState.randint(firstBound, scndBound, int(datasetLength / 12))
-            fakeZeroIndices = randomState.randint(scndBound, thrdBound, int(datasetLength / 12))
+            viewData = np.array(
+                [np.zeros(nbFeatures) for _ in range(firstBound)] +
+                [np.ones(nbFeatures) for _ in range(firstBound)] +
+                [np.ones(nbFeatures) + 1 for _ in range(rest)])
+            fakeOneIndices = randomState.randint(0, firstBound,
+                                                 int(datasetLength / 12))
+            fakeTwoIndices = randomState.randint(firstBound, scndBound,
+                                                 int(datasetLength / 12))
+            fakeZeroIndices = randomState.randint(scndBound, thrdBound,
+                                                  int(datasetLength / 12))
 
-            viewData[fakeOneIndices] = np.ones((len(fakeOneIndices), nbFeatures))
-            viewData[fakeZeroIndices] = np.zeros((len(fakeZeroIndices), nbFeatures))
-            viewData[fakeTwoIndices] = np.ones((len(fakeTwoIndices), nbFeatures))+1
+            viewData[fakeOneIndices] = np.ones(
+                (len(fakeOneIndices), nbFeatures))
+            viewData[fakeZeroIndices] = np.zeros(
+                (len(fakeZeroIndices), nbFeatures))
+            viewData[fakeTwoIndices] = np.ones(
+                (len(fakeTwoIndices), nbFeatures)) + 1
             viewData = makeMeNoisy(viewData, randomState)
-            viewDset = datasetFile.create_dataset("View" + str(viewIndex), viewData.shape, data=viewData.astype(np.uint8))
+            viewDset = datasetFile.create_dataset("View" + str(viewIndex),
+                                                  viewData.shape,
+                                                  data=viewData.astype(
+                                                      np.uint8))
             viewDset.attrs["name"] = "ViewNumber" + str(viewIndex)
             viewDset.attrs["sparse"] = False
         labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
         labelsDset[...] = CLASS_LABELS
         labelsDset.attrs["name"] = "Labels"
-        labelsDset.attrs["names"] = ["No".encode(), "Yes".encode(), "Maybe".encode()]
+        labelsDset.attrs["names"] = ["No".encode(), "Yes".encode(),
+                                     "Maybe".encode()]
         metaDataGrp = datasetFile.create_group("Metadata")
         metaDataGrp.attrs["nbView"] = nbView
         metaDataGrp.attrs["nbClass"] = 3
         metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
         datasetFile.close()
         datasetFile = h5py.File(pathF + "Plausible.hdf5", "r")
-        LABELS_DICTIONARY = {0: "No", 1: "Yes", 2:"Maybe"}
+        LABELS_DICTIONARY = {0: "No", 1: "Yes", 2: "Maybe"}
         return datasetFile, LABELS_DICTIONARY, "Plausible"
 
 
@@ -207,7 +236,6 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="", random
 #     return datasetFile, LABELS_DICTIONARY
 
 
-
 class DatasetError(Exception):
     def __init__(self, *args, **kwargs):
         Exception.__init__(self, *args, **kwargs)
@@ -231,17 +259,21 @@ def allAskedLabelsAreAvailable(askedLabelsNamesSet, availableLabelsNames):
     return True
 
 
-def fillLabelNames(NB_CLASS, askedLabelsNames, randomState, availableLabelsNames):
+def fillLabelNames(NB_CLASS, askedLabelsNames, randomState,
+                   availableLabelsNames):
     if len(askedLabelsNames) < NB_CLASS:
-        nbLabelsToAdd = NB_CLASS-len(askedLabelsNames)
-        labelsNamesToChoose = [availableLabelName for availableLabelName in availableLabelsNames
+        nbLabelsToAdd = NB_CLASS - len(askedLabelsNames)
+        labelsNamesToChoose = [availableLabelName for availableLabelName in
+                               availableLabelsNames
                                if availableLabelName not in askedLabelsNames]
-        addedLabelsNames = randomState.choice(labelsNamesToChoose, nbLabelsToAdd, replace=False)
+        addedLabelsNames = randomState.choice(labelsNamesToChoose,
+                                              nbLabelsToAdd, replace=False)
         askedLabelsNames = list(askedLabelsNames) + list(addedLabelsNames)
         askedLabelsNamesSet = set(askedLabelsNames)
 
     elif len(askedLabelsNames) > NB_CLASS:
-        askedLabelsNames = list(randomState.choice(askedLabelsNames, NB_CLASS, replace=False))
+        askedLabelsNames = list(
+            randomState.choice(askedLabelsNames, NB_CLASS, replace=False))
         askedLabelsNamesSet = set(askedLabelsNames)
 
     else:
@@ -257,30 +289,41 @@ def getAllLabels(fullLabels, availableLabelsNames):
     return newLabels, newLabelsNames, usedIndices
 
 
-def selectAskedLabels(askedLabelsNamesSet, availableLabelsNames, askedLabelsNames, fullLabels):
+def selectAskedLabels(askedLabelsNamesSet, availableLabelsNames,
+                      askedLabelsNames, fullLabels):
     if allAskedLabelsAreAvailable(askedLabelsNamesSet, availableLabelsNames):
-        usedLabels = [availableLabelsNames.index(askedLabelName) for askedLabelName in askedLabelsNames]
-        usedIndices = np.array([labelIndex for labelIndex, label in enumerate(fullLabels) if label in usedLabels])
-        newLabels = np.array([usedLabels.index(label) for label in fullLabels if label in usedLabels])
-        newLabelsNames = [availableLabelsNames[usedLabel] for usedLabel in usedLabels]
+        usedLabels = [availableLabelsNames.index(askedLabelName) for
+                      askedLabelName in askedLabelsNames]
+        usedIndices = np.array(
+            [labelIndex for labelIndex, label in enumerate(fullLabels) if
+             label in usedLabels])
+        newLabels = np.array([usedLabels.index(label) for label in fullLabels if
+                              label in usedLabels])
+        newLabelsNames = [availableLabelsNames[usedLabel] for usedLabel in
+                          usedLabels]
         return newLabels, newLabelsNames, usedIndices
     else:
         raise DatasetError("Asked labels are not all available in the dataset")
 
 
-def filterLabels(labelsSet, askedLabelsNamesSet, fullLabels, availableLabelsNames, askedLabelsNames):
+def filterLabels(labelsSet, askedLabelsNamesSet, fullLabels,
+                 availableLabelsNames, askedLabelsNames):
     if len(labelsSet) > 2:
         if askedLabelsNames == availableLabelsNames:
-            newLabels, newLabelsNames, usedIndices = getAllLabels(fullLabels, availableLabelsNames)
+            newLabels, newLabelsNames, usedIndices = getAllLabels(fullLabels,
+                                                                  availableLabelsNames)
         elif len(askedLabelsNamesSet) <= len(labelsSet):
-            newLabels, newLabelsNames, usedIndices = selectAskedLabels(askedLabelsNamesSet, availableLabelsNames,
-                                                                       askedLabelsNames, fullLabels)
+            newLabels, newLabelsNames, usedIndices = selectAskedLabels(
+                askedLabelsNamesSet, availableLabelsNames,
+                askedLabelsNames, fullLabels)
         else:
-            raise DatasetError("Asked more labels than available in the dataset. Available labels are : "+
-                    ", ".join(availableLabelsNames))
+            raise DatasetError(
+                "Asked more labels than available in the dataset. Available labels are : " +
+                ", ".join(availableLabelsNames))
 
     else:
-        newLabels, newLabelsNames, usedIndices = getAllLabels(fullLabels, availableLabelsNames)
+        newLabels, newLabelsNames, usedIndices = getAllLabels(fullLabels,
+                                                              availableLabelsNames)
     return newLabels, newLabelsNames, usedIndices
 
 
@@ -288,17 +331,22 @@ def filterViews(datasetFile, temp_dataset, views, usedIndices):
     newViewIndex = 0
     if views == [""]:
         for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
-            copyhdf5Dataset(datasetFile, temp_dataset, "View" + str(viewIndex), "View" + str(viewIndex), usedIndices)
+            copyhdf5Dataset(datasetFile, temp_dataset, "View" + str(viewIndex),
+                            "View" + str(viewIndex), usedIndices)
     for askedViewName in views:
         for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
             viewName = datasetFile.get("View" + str(viewIndex)).attrs["name"]
             if type(viewName) == bytes:
                 viewName = viewName.decode("utf-8")
             if viewName == askedViewName:
-                copyhdf5Dataset(datasetFile, temp_dataset, "View" + str(viewIndex), "View" + str(newViewIndex), usedIndices)
-                newViewName = temp_dataset.get("View"+str(newViewIndex)).attrs["name"]
+                copyhdf5Dataset(datasetFile, temp_dataset,
+                                "View" + str(viewIndex),
+                                "View" + str(newViewIndex), usedIndices)
+                newViewName = \
+                temp_dataset.get("View" + str(newViewIndex)).attrs["name"]
                 if type(newViewName) == bytes:
-                    temp_dataset.get("View"+str(newViewIndex)).attrs["name"] = newViewName.decode("utf-8")
+                    temp_dataset.get("View" + str(newViewIndex)).attrs[
+                        "name"] = newViewName.decode("utf-8")
 
                 newViewIndex += 1
             else:
@@ -306,11 +354,15 @@ def filterViews(datasetFile, temp_dataset, views, usedIndices):
     temp_dataset.get("Metadata").attrs["nbView"] = len(views)
 
 
-def copyhdf5Dataset(sourceDataFile, destinationDataFile, sourceDatasetName, destinationDatasetName, usedIndices):
+def copyhdf5Dataset(sourceDataFile, destinationDataFile, sourceDatasetName,
+                    destinationDatasetName, usedIndices):
     """Used to copy a view in a new dataset file using only the examples of usedIndices, and copying the args"""
     newDset = destinationDataFile.create_dataset(destinationDatasetName,
-                                                 data=sourceDataFile.get(sourceDatasetName).value[usedIndices,:])
-    if "sparse" in sourceDataFile.get(sourceDatasetName).attrs.keys() and sourceDataFile.get(sourceDatasetName).attrs["sparse"]:
+                                                 data=sourceDataFile.get(
+                                                     sourceDatasetName).value[
+                                                      usedIndices, :])
+    if "sparse" in sourceDataFile.get(sourceDatasetName).attrs.keys() and \
+            sourceDataFile.get(sourceDatasetName).attrs["sparse"]:
         # TODO : Support sparse
         pass
     else:
@@ -318,86 +370,108 @@ def copyhdf5Dataset(sourceDataFile, destinationDataFile, sourceDatasetName, dest
             newDset.attrs[key] = value
 
 
-def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState, full=False, add_noise=False, noise_std=0.15):
+def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
+                     randomState, full=False, add_noise=False, noise_std=0.15):
     """Used to load a hdf5 database"""
     if full:
         datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
         dataset_name = nameDB
-        labelsDictionary = dict((labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
-                                enumerate(datasetFile.get("Labels").attrs["names"]))
+        labelsDictionary = dict(
+            (labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
+            enumerate(datasetFile.get("Labels").attrs["names"]))
     else:
-        askedLabelsNames = [askedLabelName.encode("utf8") for askedLabelName in askedLabelsNames]
+        askedLabelsNames = [askedLabelName.encode("utf8") for askedLabelName in
+                            askedLabelsNames]
         baseDatasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
         fullLabels = baseDatasetFile.get("Labels").value
-        datasetFile = h5py.File(pathF+nameDB+"_temp_view_label_select.hdf5", "w")
-        dataset_name = nameDB+"_temp_view_label_select"
+        datasetFile = h5py.File(pathF + nameDB + "_temp_view_label_select.hdf5",
+                                "w")
+        dataset_name = nameDB + "_temp_view_label_select"
         baseDatasetFile.copy("Metadata", datasetFile)
         labelsSet = getClasses(fullLabels)
-        availableLabelsNames = list(baseDatasetFile.get("Labels").attrs["names"])
-        askedLabelsNames, askedLabelsNamesSet = fillLabelNames(NB_CLASS, askedLabelsNames,
-                                                               randomState, availableLabelsNames)
+        availableLabelsNames = list(
+            baseDatasetFile.get("Labels").attrs["names"])
+        askedLabelsNames, askedLabelsNamesSet = fillLabelNames(NB_CLASS,
+                                                               askedLabelsNames,
+                                                               randomState,
+                                                               availableLabelsNames)
 
-        newLabels, newLabelsNames, usedIndices = filterLabels(labelsSet, askedLabelsNamesSet, fullLabels,
-                                                              availableLabelsNames, askedLabelsNames)
+        newLabels, newLabelsNames, usedIndices = filterLabels(labelsSet,
+                                                              askedLabelsNamesSet,
+                                                              fullLabels,
+                                                              availableLabelsNames,
+                                                              askedLabelsNames)
         datasetFile.get("Metadata").attrs["datasetLength"] = len(usedIndices)
         datasetFile.get("Metadata").attrs["nbClass"] = NB_CLASS
         datasetFile.create_dataset("Labels", data=newLabels)
         datasetFile.get("Labels").attrs["names"] = newLabelsNames
         filterViews(baseDatasetFile, datasetFile, views, usedIndices)
 
-        labelsDictionary = dict((labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
-                                enumerate(datasetFile.get("Labels").attrs["names"]))
+        labelsDictionary = dict(
+            (labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
+            enumerate(datasetFile.get("Labels").attrs["names"]))
 
     if add_noise:
-        datasetFile, dataset_name = add_gaussian_noise(datasetFile, randomState, pathF, dataset_name, noise_std)
+        datasetFile, dataset_name = add_gaussian_noise(datasetFile, randomState,
+                                                       pathF, dataset_name,
+                                                       noise_std)
     else:
         pass
     return datasetFile, labelsDictionary, dataset_name
 
 
-def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name, noise_std=0.15):
+def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
+                       noise_std=0.15):
     """In this function, we add a guaussian noise centered in 0 with specified
     std to each view, according to it's range (the noise will be
     mutliplied by this range) and we crop the noisy signal according to the
     view's attributes limits.
     This is done by creating a new dataset, to keep clean data."""
-    noisy_dataset = h5py.File(path_f+dataset_name+"_noised.hdf5", "w")
+    noisy_dataset = h5py.File(path_f + dataset_name + "_noised.hdf5", "w")
     dataset_file.copy("Metadata", noisy_dataset)
     dataset_file.copy("Labels", noisy_dataset)
     for view_index in range(dataset_file.get("Metadata").attrs["nbView"]):
-        dataset_file.copy("View"+str(view_index), noisy_dataset)
+        dataset_file.copy("View" + str(view_index), noisy_dataset)
     # dataset_file.close()
     for view_index in range(noisy_dataset.get("Metadata").attrs["nbView"]):
         view_name = "View" + str(view_index)
         view_dset = noisy_dataset.get(view_name)
         # orig_shape = view_dset.value.shape
-        view_limits = dataset_file["Metadata/View"+str(view_index)+"_limits"].value
-        view_ranges = view_limits[:,1]-view_limits[:,0]
+        view_limits = dataset_file[
+            "Metadata/View" + str(view_index) + "_limits"].value
+        view_ranges = view_limits[:, 1] - view_limits[:, 0]
         normal_dist = random_state.normal(0, noise_std, view_dset.value.shape)
-        noise = normal_dist*view_ranges
-        noised_data = view_dset.value+noise
-        noised_data = np.where(noised_data<view_limits[:,0], view_limits[:,0], noised_data)
-        noised_data = np.where(noised_data>view_limits[:,1], view_limits[:,1], noised_data)
+        noise = normal_dist * view_ranges
+        noised_data = view_dset.value + noise
+        noised_data = np.where(noised_data < view_limits[:, 0],
+                               view_limits[:, 0], noised_data)
+        noised_data = np.where(noised_data > view_limits[:, 1],
+                               view_limits[:, 1], noised_data)
         noisy_dataset[view_name][...] = noised_data
         # final_shape = noised_data.shape
-    return noisy_dataset, dataset_name+"_noised"
+    return noisy_dataset, dataset_name + "_noised"
 
 
-
-
-def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState, full=False, add_noise=False, noise_std=0.15, delimiter=","):
+def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
+                    randomState, full=False, add_noise=False, noise_std=0.15,
+                    delimiter=","):
     # TODO : Update this one
-    labelsNames = np.genfromtxt(pathF + nameDB + "-labels-names.csv", dtype='str', delimiter=delimiter)
+    labelsNames = np.genfromtxt(pathF + nameDB + "-labels-names.csv",
+                                dtype='str', delimiter=delimiter)
     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")
     labels = np.genfromtxt(pathF + nameDB + "-labels.csv", delimiter=delimiter)
     labelsDset = datasetFile.create_dataset("Labels", labels.shape, data=labels)
-    labelsDset.attrs["names"] = [labelName.encode() for labelName in labelsNames]
-    viewFileNames = [viewFileName for viewFileName in os.listdir(pathF+"Views/")]
-    for viewIndex, viewFileName in enumerate(os.listdir(pathF+"Views/")):
+    labelsDset.attrs["names"] = [labelName.encode() for labelName in
+                                 labelsNames]
+    viewFileNames = [viewFileName for viewFileName in
+                     os.listdir(pathF + "Views/")]
+    for viewIndex, viewFileName in enumerate(os.listdir(pathF + "Views/")):
         viewFile = pathF + "Views/" + viewFileName
         if viewFileName[-6:] != "-s.csv":
             viewMatrix = np.genfromtxt(viewFile, delimiter=delimiter)
-            viewDset = datasetFile.create_dataset("View" + str(viewIndex), viewMatrix.shape, data=viewMatrix)
+            viewDset = datasetFile.create_dataset("View" + str(viewIndex),
+                                                  viewMatrix.shape,
+                                                  data=viewMatrix)
             del viewMatrix
             viewDset.attrs["name"] = viewFileName[:-4]
             viewDset.attrs["sparse"] = False
@@ -408,7 +482,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomStat
     metaDataGrp.attrs["nbClass"] = len(labelsNames)
     metaDataGrp.attrs["datasetLength"] = len(labels)
     datasetFile.close()
-    datasetFile, labelsDictionary = getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomState, full)
+    datasetFile, labelsDictionary = getClassicDBhdf5(views, pathF, nameDB,
+                                                     NB_CLASS, askedLabelsNames,
+                                                     randomState, full)
 
     return datasetFile, labelsDictionary
 
@@ -476,7 +552,6 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomStat
 #     return usedIndices
 
 
-
 # def getCaltechDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES, randomState):
 #     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")
 #     labelsNamesFile = open(pathF + nameDB + '-ClassLabels-Description.csv')
@@ -510,11 +585,11 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames, randomStat
 #     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
 #     return datasetFile, labelsDictionary
 
-#--------------------------------------------#
+# --------------------------------------------#
 # All the functions below are not useful     #
 # anymore but the binarization methods in    #
 # it must be kept                            #
-#--------------------------------------------#
+# --------------------------------------------#
 
 
 # def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES, randomState):

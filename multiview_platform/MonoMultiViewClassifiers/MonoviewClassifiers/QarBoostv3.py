@@ -1,6 +1,5 @@
-from ..Monoview.MonoviewUtils import BaseMonoviewClassifier
-from ..Monoview.Additions.BoostUtils import getInterpretBase
 from ..Monoview.Additions.CGDescUtils import ColumnGenerationClassifierQar
+from ..Monoview.MonoviewUtils import BaseMonoviewClassifier
 
 
 class QarBoostv3(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
@@ -34,10 +33,12 @@ class QarBoostv3(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
     def get_name_for_fusion(self):
         return "QBv3"
 
+
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
     kwargsDict = {}
     return kwargsDict
+
 
 def paramsToSet(nIter, randomState):
     """Used for weighted linear early fusion to generate random search sets"""

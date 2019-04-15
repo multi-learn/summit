@@ -7,18 +7,18 @@ Related papers:
 
 """
 from __future__ import print_function, division, absolute_import
+
 from operator import xor
 
 import numpy as np
-from sklearn.utils.validation import check_X_y
 from sklearn.ensemble import VotingClassifier
 from sklearn.manifold import SpectralEmbedding
-from sklearn.utils.graph import graph_laplacian
 from sklearn.preprocessing import LabelEncoder
+from sklearn.utils.graph import graph_laplacian
+from sklearn.utils.validation import check_X_y
 
-
-from .BoostUtils import ConvexProgram, StumpsClassifiersGenerator
-from ..MonoviewUtils import BaseMonoviewClassifier, CustomUniform, change_label_to_zero, change_label_to_minus
+from .BoostUtils import ConvexProgram
+from ..MonoviewUtils import change_label_to_zero, change_label_to_minus
 
 
 class MinCqClassifier(VotingClassifier):
@@ -33,11 +33,14 @@ class MinCqClassifier(VotingClassifier):
         The fixed value of the first moment of the margin.
 
     """
-    def __init__(self, estimators_generator=None, estimators=None, mu=0.001, omega=0.5, use_binary=False, zeta=0, gamma=1, n_neighbors=5):
+
+    def __init__(self, estimators_generator=None, estimators=None, mu=0.001,
+                 omega=0.5, use_binary=False, zeta=0, gamma=1, n_neighbors=5):
         if estimators is None:
             estimators = []
 
-        super().__init__(estimators=estimators, voting='soft', flatten_transform=False)
+        super().__init__(estimators=estimators, voting='soft',
+                         flatten_transform=False)
         self.estimators_generator = estimators_generator
         self.mu = mu
         self.omega = omega
@@ -64,7 +67,8 @@ class MinCqClassifier(VotingClassifier):
         """
         # Validations
         assert 0 < self.mu <= 1, "MinCqClassifier: mu parameter must be in (0, 1]"
-        assert xor(bool(self.estimators_generator), bool(self.estimators)), "MinCqClassifier: exactly one of estimator_generator or estimators must be used."
+        assert xor(bool(self.estimators_generator), bool(
+            self.estimators)), "MinCqClassifier: exactly one of estimator_generator or estimators must be used."
         X, y = check_X_y(X, change_label_to_minus(y))
 
         # Fit the estimators using VotingClassifier's fit method. This will also fit a LabelEncoder that can be
@@ -80,7 +84,7 @@ class MinCqClassifier(VotingClassifier):
         else:
             self.le_ = LabelEncoder()
             self.le_.fit(y)
-            self.clean_me =True
+            self.clean_me = True
 
             if isinstance(y, np.ma.MaskedArray):
                 transformed_y = np.ma.MaskedArray(self.le_.transform(y), y.mask)
@@ -89,7 +93,8 @@ class MinCqClassifier(VotingClassifier):
                 transformed_y = y
 
             self.estimators_generator.fit(X, transformed_y)
-            self.estimators = [('ds{}'.format(i), estimator) for i, estimator in enumerate(self.estimators_generator.estimators_)]
+            self.estimators = [('ds{}'.format(i), estimator) for i, estimator in
+                               enumerate(self.estimators_generator.estimators_)]
             super().fit(X, y)
 
         # Preparation and resolution of the quadratic program
@@ -100,7 +105,13 @@ class MinCqClassifier(VotingClassifier):
         # print(self.weights.shape)
         # print(np.unique(self.weights)[0:10])
         # import pdb;pdb.set_trace()
-        self.train_cbound = 1 - (1.0/X.shape[0])*(np.sum(np.multiply(change_label_to_minus(y), np.average(self._binary_classification_matrix(X), axis=1, weights=self.weights)))**2)/(np.sum(np.average(self._binary_classification_matrix(X), axis=1,  weights=self.weights)**2))
+        self.train_cbound = 1 - (1.0 / X.shape[0]) * (np.sum(
+            np.multiply(change_label_to_minus(y),
+                        np.average(self._binary_classification_matrix(X),
+                                   axis=1, weights=self.weights))) ** 2) / (
+                                np.sum(np.average(
+                                    self._binary_classification_matrix(X),
+                                    axis=1, weights=self.weights) ** 2))
         return self
 
     def _binary_classification_matrix(self, X):
@@ -139,7 +150,8 @@ class MinCqClassifier(VotingClassifier):
             binary_labels = np.copy(y)
             binary_labels[y == 0] = -1
 
-            multi_matrix = binary_labels.reshape((len(binary_labels), 1)) * classification_matrix
+            multi_matrix = binary_labels.reshape(
+                (len(binary_labels), 1)) * classification_matrix
 
         else:
             multi_matrix = self._multiclass_classification_matrix(X, y)
@@ -153,7 +165,8 @@ class MinCqClassifier(VotingClassifier):
         objective_vector = None
 
         # Equality constraints (first moment of the margin equal to mu, Q sums to one)
-        equality_matrix = np.vstack((yf.reshape((1, n_voters)), np.ones((1, n_voters))))
+        equality_matrix = np.vstack(
+            (yf.reshape((1, n_voters)), np.ones((1, n_voters))))
         equality_vector = np.array([self.mu, 1.0])
 
         # Lower and upper bounds, no quasi-uniformity.
@@ -164,7 +177,9 @@ class MinCqClassifier(VotingClassifier):
         # upper_bound = 2.0/n_voters
         upper_bound = None
 
-        weights = self._solve_qp(objective_matrix, objective_vector, equality_matrix, equality_vector, lower_bound, upper_bound)
+        weights = self._solve_qp(objective_matrix, objective_vector,
+                                 equality_matrix, equality_vector, lower_bound,
+                                 upper_bound)
 
         # Keep learning information for further use.
         self.learner_info_ = {}
@@ -172,12 +187,14 @@ class MinCqClassifier(VotingClassifier):
         # We count the number of non-zero weights, including the implicit voters.
         # TODO: Verify how we define non-zero weights here, could be if the weight is near 1/2n.
         n_nonzero_weights = np.sum(np.asarray(weights) > 1e-12)
-        n_nonzero_weights += np.sum(np.asarray(weights) < 1.0 / len(self.estimators_) - 1e-12)
+        n_nonzero_weights += np.sum(
+            np.asarray(weights) < 1.0 / len(self.estimators_) - 1e-12)
         self.learner_info_.update(n_nonzero_weights=n_nonzero_weights)
 
         return weights
 
-    def _solve_qp(self, objective_matrix, objective_vector, equality_matrix, equality_vector, lower_bound, upper_bound):
+    def _solve_qp(self, objective_matrix, objective_vector, equality_matrix,
+                  equality_vector, lower_bound, upper_bound):
         try:
             qp = ConvexProgram()
             qp.quadratic_func, qp.linear_func = objective_matrix, objective_vector
@@ -199,6 +216,7 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
     [2] Risk Bounds for the Majority Vote: From a PAC-Bayesian Analysis to a Learning Algorithm (Germain et al., 2015)
 
     """
+
     def fit(self, X, y):
         import time
         beg = time.time()
@@ -207,9 +225,11 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
 
         # Validations
         if isinstance(y, np.ma.MaskedArray):
-            assert len(self.classes_[np.where(np.logical_not(self.classes_.mask))]) == 2, "RegularizedBinaryMinCqClassifier: only supports binary classification."
+            assert len(self.classes_[np.where(np.logical_not(
+                self.classes_.mask))]) == 2, "RegularizedBinaryMinCqClassifier: only supports binary classification."
         else:
-            assert len(self.classes_), "RegularizedBinaryMinCqClassifier: only supports binary classification."
+            assert len(
+                self.classes_), "RegularizedBinaryMinCqClassifier: only supports binary classification."
 
         # Then we "reverse" the negative weights and their associated voter's output.
         for i, weight in enumerate(self.weights):
@@ -217,8 +237,8 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
                 # logger.debug("Reversing decision of a binary voter")
                 self.weights[i] *= -1
                 self.estimators_[i].reverse_decision()
-        end=time.time()
-        self.train_time = end-beg
+        end = time.time()
+        self.train_time = end - beg
         return self
 
     def _solve(self, X, y):
@@ -232,11 +252,13 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
 
         if self.zeta == 0:
             np.transpose(classification_matrix)
-            ftf = np.dot(np.transpose(classification_matrix),classification_matrix)
+            ftf = np.dot(np.transpose(classification_matrix),
+                         classification_matrix)
         else:
             I = np.eye(n_examples)
             L = build_laplacian(X, n_neighbors=self.n_neighbors)
-            ftf = classification_matrix.T.dot(I + (self.zeta / n_examples) * L).dot(classification_matrix)
+            ftf = classification_matrix.T.dot(
+                I + (self.zeta / n_examples) * L).dot(classification_matrix)
 
         # We use {-1, 1} labels.
         binary_labels = np.ma.copy(y)
@@ -264,11 +286,12 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
         upper_bound = 1.0 / n_voters
 
         try:
-            weights = self._solve_qp(objective_matrix, objective_vector, equality_matrix, equality_vector, lower_bound, upper_bound)
+            weights = self._solve_qp(objective_matrix, objective_vector,
+                                     equality_matrix, equality_vector,
+                                     lower_bound, upper_bound)
         except ValueError as e:
             if "domain error" in e.args:
                 weights = np.ones(len(self.estimators_))
-
 
         # Keep learning information for further use.
         self.learner_info_ = {}
@@ -276,13 +299,15 @@ class RegularizedBinaryMinCqClassifier(MinCqClassifier):
         # We count the number of non-zero weights, including the implicit voters.
         # TODO: Verify how we define non-zero weights here, could be if the weight is near 1/2n.
         n_nonzero_weights = np.sum(np.asarray(weights) > 1e-12)
-        n_nonzero_weights += np.sum(np.asarray(weights) < 1.0 / len(self.estimators_) - 1e-12)
+        n_nonzero_weights += np.sum(
+            np.asarray(weights) < 1.0 / len(self.estimators_) - 1e-12)
         self.learner_info_.update(n_nonzero_weights=n_nonzero_weights)
 
         # Conversion of the weights of the n first voters to weights on the implicit 2n voters.
         # See Section 7.1 of [2] for an explanation.
         # return np.array([2 * q - 1.0 / len(self.estimators_) for q in weights])
         return np.array(weights)
+
 
 def build_laplacian(X, n_neighbors=None):
     clf = SpectralEmbedding(n_neighbors=n_neighbors)

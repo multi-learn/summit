@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from recommonmark.parser import CommonMarkParser
-from recommonmark.transform import AutoStructify
+
 # import os, sys
 #
 # MultiviewPlatform documentation build configuration file, created by
@@ -38,18 +37,17 @@ add_module_names = False
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'nbsphinx',
-    'sphinx.ext.coverage',
-    'sphinx.ext.mathjax',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages',
-    'sphinx.ext.napoleon',
-    'recommonmark']
-
+              'sphinx.ext.doctest',
+              'sphinx.ext.intersphinx',
+              'sphinx.ext.todo',
+              'nbsphinx',
+              'sphinx.ext.coverage',
+              'sphinx.ext.mathjax',
+              'sphinx.ext.ifconfig',
+              'sphinx.ext.viewcode',
+              'sphinx.ext.githubpages',
+              'sphinx.ext.napoleon',
+              'recommonmark']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -57,7 +55,7 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-source_suffix = {'.rst': 'restructuredtext', '.md':'markdown'}
+source_suffix = {'.rst': 'restructuredtext', '.md': 'markdown'}
 # source_suffix = '.rst'
 # source_suffix = ['.rst', '.md']
 
@@ -100,7 +98,6 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
-
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -119,12 +116,10 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = []
 
-
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'MultiviewPlatformdoc'
-
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -154,7 +149,6 @@ latex_documents = [
      u'Baptiste BAUVIN', 'manual'),
 ]
 
-
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
@@ -163,7 +157,6 @@ man_pages = [
     (master_doc, 'multiviewplatform', u'MultiviewPlatform Documentation',
      [author], 1)
 ]
-
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -175,9 +168,6 @@ texinfo_documents = [
      author, 'MultiviewPlatform', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}

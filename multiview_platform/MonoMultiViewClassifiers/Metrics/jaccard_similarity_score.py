@@ -20,7 +20,8 @@ def get_scorer(**kwargs):
         sample_weight = kwargs["0"]
     except:
         sample_weight = None
-    return make_scorer(metric, greater_is_better=True, sample_weight=sample_weight)
+    return make_scorer(metric, greater_is_better=True,
+                       sample_weight=sample_weight)
 
 
 def getConfig(**kwargs):
@@ -28,5 +29,6 @@ def getConfig(**kwargs):
         sample_weight = kwargs["0"]
     except:
         sample_weight = None
-    configString = "Jaccard_similarity score using " + str(sample_weight) + " as sample_weights (higher is better)"
+    configString = "Jaccard_similarity score using " + str(
+        sample_weight) + " as sample_weights (higher is better)"
     return configString

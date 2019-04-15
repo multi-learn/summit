@@ -1,7 +1,8 @@
-import unittest
-import numpy as np
-import h5py
 import os
+import unittest
+
+import h5py
+import numpy as np
 
 from ...MonoMultiViewClassifiers.Monoview import ExecClassifMonoView
 
@@ -11,14 +12,17 @@ class Test_initConstants(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         os.mkdir("multiview_platform/Tests/temp_tests")
-        cls.datasetFile = h5py.File("multiview_platform/Tests/temp_tests/test.hdf5", "w")
+        cls.datasetFile = h5py.File(
+            "multiview_platform/Tests/temp_tests/test.hdf5", "w")
         cls.random_state = np.random.RandomState(42)
         cls.args = {"CL_type": "test_clf"}
-        cls.X_value = cls.random_state.randint(0,500,(10,20))
+        cls.X_value = cls.random_state.randint(0, 500, (10, 20))
         cls.X = cls.datasetFile.create_dataset("View0", data=cls.X_value)
         cls.X.attrs["name"] = "test_dataset"
         cls.X.attrs["sparse"] = False
-        cls.classificationIndices = [np.array([0,2,4,6,8]), np.array([1,3,5,7,9]), np.array([1,3,5,7,9])]
+        cls.classificationIndices = [np.array([0, 2, 4, 6, 8]),
+                                     np.array([1, 3, 5, 7, 9]),
+                                     np.array([1, 3, 5, 7, 9])]
         cls.labelsNames = ["test_true", "test_false"]
         cls.name = "test"
         cls.directory = "multiview_platform/Tests/temp_tests/test_dir/"
@@ -48,7 +52,8 @@ class Test_initConstants(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         os.remove("multiview_platform/Tests/temp_tests/test.hdf5")
-        os.rmdir("multiview_platform/Tests/temp_tests/test_dir/test_clf/test_dataset")
+        os.rmdir(
+            "multiview_platform/Tests/temp_tests/test_dir/test_clf/test_dataset")
         os.rmdir("multiview_platform/Tests/temp_tests/test_dir/test_clf")
         os.rmdir("multiview_platform/Tests/temp_tests/test_dir")
         os.rmdir("multiview_platform/Tests/temp_tests")
@@ -59,24 +64,29 @@ class Test_initTrainTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.random_state = np.random.RandomState(42)
-        cls.X = cls.random_state.randint(0,500,(10,5))
-        cls.Y = cls.random_state.randint(0,2,10)
-        cls.classificationIndices = [np.array([0,2,4,6,8]),np.array([1,3,5,7,9]), np.array([1,3,5,7,9])]
+        cls.X = cls.random_state.randint(0, 500, (10, 5))
+        cls.Y = cls.random_state.randint(0, 2, 10)
+        cls.classificationIndices = [np.array([0, 2, 4, 6, 8]),
+                                     np.array([1, 3, 5, 7, 9]),
+                                     np.array([1, 3, 5, 7, 9])]
 
     def test_simple(cls):
-        X_train, y_train, X_test, y_test, X_test_multiclass = ExecClassifMonoView.initTrainTest(cls.X, cls.Y, cls.classificationIndices)
-        np.testing.assert_array_equal(X_train, np.array([np.array([102,435,348,270,106]),
-                                                         np.array([466,214,330,458,87]),
-                                                         np.array([149,308,257,343,491]),
-                                                         np.array([276,160,459,313,21]),
-                                                         np.array([58,169,475,187,463])]))
-        np.testing.assert_array_equal(X_test, np.array([np.array([71,188,20,102,121]),
-                                                        np.array([372,99,359,151,130]),
-                                                        np.array([413,293,385,191,443]),
-                                                        np.array([252,235,344,48,474]),
-                                                        np.array([270,189,445,174,445])]))
-        np.testing.assert_array_equal(y_train, np.array([0,0,1,0,0]))
-        np.testing.assert_array_equal(y_test, np.array([1,1,0,0,0]))
+        X_train, y_train, X_test, y_test, X_test_multiclass = ExecClassifMonoView.initTrainTest(
+            cls.X, cls.Y, cls.classificationIndices)
+        np.testing.assert_array_equal(X_train, np.array(
+            [np.array([102, 435, 348, 270, 106]),
+             np.array([466, 214, 330, 458, 87]),
+             np.array([149, 308, 257, 343, 491]),
+             np.array([276, 160, 459, 313, 21]),
+             np.array([58, 169, 475, 187, 463])]))
+        np.testing.assert_array_equal(X_test, np.array(
+            [np.array([71, 188, 20, 102, 121]),
+             np.array([372, 99, 359, 151, 130]),
+             np.array([413, 293, 385, 191, 443]),
+             np.array([252, 235, 344, 48, 474]),
+             np.array([270, 189, 445, 174, 445])]))
+        np.testing.assert_array_equal(y_train, np.array([0, 0, 1, 0, 0]))
+        np.testing.assert_array_equal(y_test, np.array([1, 1, 0, 0, 0]))
 
 # class Test_getKWARGS(unittest.TestCase):
 #

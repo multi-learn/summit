@@ -16,8 +16,9 @@ class DecisionTree(DecisionTreeClassifier, BaseMonoviewClassifier):
             criterion=criterion,
             splitter=splitter,
             random_state=random_state
-            )
-        self.param_names = ["max_depth", "criterion", "splitter",'random_state']
+        )
+        self.param_names = ["max_depth", "criterion", "splitter",
+                            'random_state']
         self.classed_params = []
         self.distribs = [CustomRandint(low=1, high=300),
                          ["gini", "entropy"],

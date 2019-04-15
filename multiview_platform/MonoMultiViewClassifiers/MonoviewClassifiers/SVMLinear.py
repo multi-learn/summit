@@ -1,4 +1,3 @@
-
 from ..Monoview.Additions.SVCClassifier import SVCClassifier
 from ..Monoview.MonoviewUtils import CustomUniform, BaseMonoviewClassifier
 
@@ -14,10 +13,9 @@ class SVMLinear(SVCClassifier, BaseMonoviewClassifier):
             C=C,
             kernel='linear',
             random_state=random_state
-            )
+        )
         self.param_names = ["C", "random_state"]
         self.distribs = [CustomUniform(loc=0, state=1), [random_state]]
-
 
 
 def formatCmdArgs(args):

@@ -1,65 +1,87 @@
-import unittest
 import os
-import h5py
+import unittest
+
 import numpy as np
-from sklearn.utils.estimator_checks import check_estimator
 
 from ...MonoMultiViewClassifiers import MonoviewClassifiers
+
 
 class Test_methods(unittest.TestCase):
 
     def test_simple(self):
-        for fileName in os.listdir("multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
+        for fileName in os.listdir(
+                "multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
             if fileName[-3:] == ".py" and fileName != "__init__.py":
-                monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
+                monoview_classifier_module = getattr(MonoviewClassifiers,
+                                                     fileName[:-3])
                 self.assertIn("formatCmdArgs", dir(monoview_classifier_module),
-                              fileName[:-3]+" must have getKWARGS method implemented")
+                              fileName[
+                              :-3] + " must have getKWARGS method implemented")
                 self.assertIn("paramsToSet", dir(monoview_classifier_module),
-                              fileName[:-3]+" must have randomizedSearch method implemented")
+                              fileName[
+                              :-3] + " must have randomizedSearch method implemented")
                 self.assertIn(fileName[:-3], dir(monoview_classifier_module),
-                              fileName[:-3] + " must have it's own class implemented")
+                              fileName[
+                              :-3] + " must have it's own class implemented")
 
-                monoview_classifier_class = getattr(monoview_classifier_module, fileName[:-3])
-                self.assertTrue(hasattr(monoview_classifier_class, "getInterpret"),
-                                fileName[:-3] + " class must have getInterpret implemented")
-                self.assertTrue(hasattr(monoview_classifier_class, "canProbas",),
-                                fileName[:-3] + " class must have canProbas implemented")
+                monoview_classifier_class = getattr(monoview_classifier_module,
+                                                    fileName[:-3])
+                self.assertTrue(
+                    hasattr(monoview_classifier_class, "getInterpret"),
+                    fileName[:-3] + " class must have getInterpret implemented")
+                self.assertTrue(
+                    hasattr(monoview_classifier_class, "canProbas", ),
+                    fileName[:-3] + " class must have canProbas implemented")
                 monoview_classifier_instance = monoview_classifier_class()
-                self.assertTrue(hasattr(monoview_classifier_instance, "param_names", ),
-                                fileName[:-3] + " class must have param_names attribute")
-                self.assertTrue(hasattr(monoview_classifier_instance, "classed_params", ),
-                                fileName[:-3] + " class must have classed_params attribute")
-                self.assertTrue(hasattr(monoview_classifier_instance, "distribs", ),
-                                fileName[:-3] + " class must have distribs attribute")
-                self.assertTrue(hasattr(monoview_classifier_instance, "weird_strings", ),
-                                fileName[:-3] + " class must have weird_strings attribute")
+                self.assertTrue(
+                    hasattr(monoview_classifier_instance, "param_names", ),
+                    fileName[:-3] + " class must have param_names attribute")
+                self.assertTrue(
+                    hasattr(monoview_classifier_instance, "classed_params", ),
+                    fileName[:-3] + " class must have classed_params attribute")
+                self.assertTrue(
+                    hasattr(monoview_classifier_instance, "distribs", ),
+                    fileName[:-3] + " class must have distribs attribute")
+                self.assertTrue(
+                    hasattr(monoview_classifier_instance, "weird_strings", ),
+                    fileName[:-3] + " class must have weird_strings attribute")
                 # check_estimator(monoview_classifier_instance)
+
 
 class Test_canProbas(unittest.TestCase):
 
     def test_outputs(self):
-        for fileName in os.listdir("multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
+        for fileName in os.listdir(
+                "multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
             if fileName[-3:] == ".py" and fileName != "__init__.py":
-                monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
-                monoview_classifier_class = getattr(monoview_classifier_module, fileName[:-3])()
+                monoview_classifier_module = getattr(MonoviewClassifiers,
+                                                     fileName[:-3])
+                monoview_classifier_class = getattr(monoview_classifier_module,
+                                                    fileName[:-3])()
                 res = monoview_classifier_class.canProbas()
-                self.assertEqual(type(res), bool, "canProbas must return a boolean")
+                self.assertEqual(type(res), bool,
+                                 "canProbas must return a boolean")
 
     def test_inputs(self):
-        for fileName in os.listdir("multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
+        for fileName in os.listdir(
+                "multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
             if fileName[-3:] == ".py" and fileName != "__init__.py":
-                monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
-                monoview_classifier_class = getattr(monoview_classifier_module, fileName[:-3])()
-                with self.assertRaises(TypeError, msg="canProbas must have 0 args") as catcher:
+                monoview_classifier_module = getattr(MonoviewClassifiers,
+                                                     fileName[:-3])
+                monoview_classifier_class = getattr(monoview_classifier_module,
+                                                    fileName[:-3])()
+                with self.assertRaises(TypeError,
+                                       msg="canProbas must have 0 args") as catcher:
                     monoview_classifier_class.canProbas(35)
+
 
 class Test_fit(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         cls.random_state = np.random.RandomState(42)
-        cls.dataset = cls.random_state.random_sample((10,20))
-        cls.labels = cls.random_state.randint(0,2,10)
+        cls.dataset = cls.random_state.random_sample((10, 20))
+        cls.labels = cls.random_state.randint(0, 2, 10)
 
     # def test_inputs(cls):
     #     # DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs
@@ -88,20 +110,31 @@ class Test_fit(unittest.TestCase):
 class Test_paramsToSet(unittest.TestCase):
 
     def test_inputs(self):
-        for fileName in os.listdir("multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
+        for fileName in os.listdir(
+                "multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
             if fileName[-3:] == ".py" and fileName != "__init__.py":
-                monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
-                with self.assertRaises(TypeError, msg="paramsToSet must have 2 positional args") as catcher:
-                    monoview_classifier_module.paramsToSet(2, np.random.RandomState(42), 10)
+                monoview_classifier_module = getattr(MonoviewClassifiers,
+                                                     fileName[:-3])
+                with self.assertRaises(TypeError,
+                                       msg="paramsToSet must have 2 positional args") as catcher:
+                    monoview_classifier_module.paramsToSet(2,
+                                                           np.random.RandomState(
+                                                               42), 10)
                     monoview_classifier_module.paramsToSet(2)
                     monoview_classifier_module.paramsToSet()
-                res = monoview_classifier_module.paramsToSet(2, np.random.RandomState(42))
+                res = monoview_classifier_module.paramsToSet(2,
+                                                             np.random.RandomState(
+                                                                 42))
 
     def test_outputs(self):
-        for fileName in os.listdir("multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
+        for fileName in os.listdir(
+                "multiview_platform/MonoMultiViewClassifiers/MonoviewClassifiers"):
             if fileName[-3:] == ".py" and fileName != "__init__.py":
-                monoview_classifier_module = getattr(MonoviewClassifiers, fileName[:-3])
-                res = monoview_classifier_module.paramsToSet(2, np.random.RandomState(42))
+                monoview_classifier_module = getattr(MonoviewClassifiers,
+                                                     fileName[:-3])
+                res = monoview_classifier_module.paramsToSet(2,
+                                                             np.random.RandomState(
+                                                                 42))
                 self.assertEqual(type(res), list)
                 self.assertEqual(len(res), 2)
                 self.assertEqual(type(res[0]), dict)
@@ -117,4 +150,3 @@ class Test_paramsToSet(unittest.TestCase):
 #                 with self.assertRaises(TypeError, msg="getKWARGS must have 1 positional args") as catcher:
 #                     monoview_classifier_module.getKWARGS()
 #                     monoview_classifier_module.getKWARGS([1],2)
-

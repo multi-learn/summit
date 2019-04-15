@@ -1,12 +1,12 @@
-from sklearn.externals.six import iteritems
 from pyscm.scm import SetCoveringMachineClassifier as scm
-from sklearn.base import BaseEstimator, ClassifierMixin
 
-from ..Monoview.MonoviewUtils import CustomRandint, CustomUniform, BaseMonoviewClassifier
+from ..Monoview.MonoviewUtils import CustomRandint, CustomUniform, \
+    BaseMonoviewClassifier
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
+
 
 # class DecisionStumpSCMNew(scm, BaseEstimator, ClassifierMixin):
 #     """docstring for SCM
@@ -50,7 +50,7 @@ class SCM(scm, BaseMonoviewClassifier):
             model_type=model_type,
             max_rules=max_rules,
             p=p
-            )
+        )
         self.param_names = ["model_type", "max_rules", "p", "random_state"]
         self.distribs = [["conjunction", "disjunction"],
                          CustomRandint(low=1, high=15),
@@ -78,7 +78,8 @@ def formatCmdArgs(args):
 def paramsToSet(nIter, randomState):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"model_type": randomState.choice(["conjunction", "disjunction"]),
-                          "max_rules": randomState.randint(1, 15),
-                          "p": randomState.random_sample()})
+        paramsSet.append(
+            {"model_type": randomState.choice(["conjunction", "disjunction"]),
+             "max_rules": randomState.randint(1, 15),
+             "p": randomState.random_sample()})
     return paramsSet

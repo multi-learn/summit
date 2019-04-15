@@ -6,16 +6,15 @@
 import os  # for iteration throug directories
 import string  # to generate a range of letters
 
+import matplotlib.pyplot as plt  # for Plots
+import numpy as np  # for Numpy Arrays
 # Import 3rd party modules
 import pandas as pd  # for Series and DataFrames
-import numpy as np  # for Numpy Arrays
-import matplotlib.pyplot as plt  # for Plots
-from scipy.interpolate import interp1d  # to Interpolate Data
-import matplotlib
-
 # matplotlib.use('Agg')
-from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker  # to generate the Annotations in plot
+from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, \
+    HPacker  # to generate the Annotations in plot
 from pylab import rcParams  # to change size of plot
+from scipy.interpolate import interp1d  # to Interpolate Data
 from sklearn import metrics  # For stastics on classification
 
 # Import own modules
@@ -50,7 +49,8 @@ def exportNumpyToCSV(numpyArray, directory, filename, format):
         for i in range(1, 20):
             testFileName = filename + "-" + str(i) + ".csv"
             if not os.path.isfile(directory + testFileName):
-                np.savetxt(directory + testFileName, numpyArray, delimiter=";", fmt=format)
+                np.savetxt(directory + testFileName, numpyArray, delimiter=";",
+                           fmt=format)
                 break
 
     else:
@@ -60,7 +60,8 @@ def exportNumpyToCSV(numpyArray, directory, filename, format):
 #### Rendering of results
 
 ### Rendering of Score and Time
-def showScoreTime(directory, filename, store, resScore, resTime, rangeX, parameter, feat_desc, cl_desc, fig_desc,
+def showScoreTime(directory, filename, store, resScore, resTime, rangeX,
+                  parameter, feat_desc, cl_desc, fig_desc,
                   y_desc1,
                   y_desc2):
     # Determine interpolated functions
@@ -93,8 +94,9 @@ def showScoreTime(directory, filename, store, resScore, resTime, rangeX, paramet
 
     letters = string.lowercase[0:len(rangeX)]
     legend = ""
-    for act_x, act_score, act_time, act_feat_desc, letter, act_cl_desc in zip(rangeX, resScore, resTime, feat_desc,
-                                                                              letters, cl_desc):
+    for act_x, act_score, act_time, act_feat_desc, letter, act_cl_desc in zip(
+            rangeX, resScore, resTime, feat_desc,
+            letters, cl_desc):
         # Add a letter (a,b,c,..) to each DataPoint
         ax1.annotate(letter, xy=(act_x, act_score), xytext=(act_x, act_score))
         ax2.annotate(letter, xy=(act_x, act_time), xytext=(act_x, act_time))
@@ -151,7 +153,8 @@ def calcScorePerClass(np_labels, np_output):
     score = []
 
     for i in pd_label_test.unique():
-        matches = sum(pd_label_test[pd_label_test == i] == pd_output[pd_label_test[pd_label_test == i].index])
+        matches = sum(pd_label_test[pd_label_test == i] == pd_output[
+            pd_label_test[pd_label_test == i].index])
         count = float(len(pd_label_test[pd_label_test == i]))
         score.append(matches / count)
 
@@ -165,7 +168,8 @@ def showResults(directory, filename, db, feat, score):
     plt.bar(range(0, len(score)), score * 100, 1)
     plt.xlabel('ClassLabels')
     plt.ylabel('Precision in %')
-    plt.title('Results of ' + feat + '-Classification\n for ' + db + ' Database')
+    plt.title(
+        'Results of ' + feat + '-Classification\n for ' + db + ' Database')
     plt.axis([0, len(score), 0, 100])
     plt.xticks(range(0, len(score), 5))
 
@@ -184,7 +188,6 @@ def showResults(directory, filename, db, feat, score):
 
     plt.close()
 
-
     # instead of saving - decomment plt.show()
     # plt.show()
 
@@ -195,11 +198,13 @@ def accuracy_score(y_test, y_test_pred):
 
 
 # Function to calculate a report of classifiaction and store it
-def classification_report_df(directory, filename, y_test, y_test_pred, labels, target_names):
+def classification_report_df(directory, filename, y_test, y_test_pred, labels,
+                             target_names):
     # Calculate the metrics
-    precision, recall, f1score, support = metrics.precision_recall_fscore_support(y_test, y_test_pred, beta=1.0,
-                                                                                  labels=labels, pos_label=None,
-                                                                                  average=None)
+    precision, recall, f1score, support = metrics.precision_recall_fscore_support(
+        y_test, y_test_pred, beta=1.0,
+        labels=labels, pos_label=None,
+        average=None)
 
     # turn result into DataFrame
     scores_df = pd.DataFrame(data=[precision, recall, f1score, support])
@@ -221,7 +226,8 @@ def confusion_matrix_df(directory, filename, y_test, y_test_pred, target_names):
     y_pred = pd.Series(y_test_pred, name='Predicted')
 
     # Calculate confusion matrix
-    df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'], margins=True)
+    df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'],
+                               colnames=['Predicted'], margins=True)
 
     # Normalization of confusion matrix
     df_conf_norm = df_confusion / df_confusion.sum(axis=1)
@@ -230,14 +236,14 @@ def confusion_matrix_df(directory, filename, y_test, y_test_pred, target_names):
 
     # Add Row: Actual / Column: Predicted into first cell [0,0]
 
-
     # Store result as CSV
     exportPandasToCSV(df_conf_norm, directory, filename)
 
     return df_conf_norm
 
 
-def plot_confusion_matrix(directory, filename, df_confusion, title='Confusion matrix', cmap=plt.cm.gray_r):
+def plot_confusion_matrix(directory, filename, df_confusion,
+                          title='Confusion matrix', cmap=plt.cm.gray_r):
     plt.matshow(df_confusion, cmap=cmap)  # imshow
     # plt.title(title)
     plt.colorbar()
@@ -278,19 +284,24 @@ def classification_stats(directory, filename, scores_df, acc):
     worst10 = list(worst10.index)
 
     # Ratio of classes with F1-Score==0 of all classes
-    ratio_zero = float(float(len(scores_df[scores_df.F1 == 0])) / float(len(scores_df)))
+    ratio_zero = float(
+        float(len(scores_df[scores_df.F1 == 0])) / float(len(scores_df)))
 
     # Mean of F1-Score of top 10 classes by F1-Score
-    mean_10 = np.mean(scores_df.sort_values(["F1"], ascending=False).head(10).F1)
+    mean_10 = np.mean(
+        scores_df.sort_values(["F1"], ascending=False).head(10).F1)
 
     # Mean of F1-Score of top 20 classes by F1-Score
-    mean_20 = np.mean(scores_df.sort_values(["F1"], ascending=False).head(20).F1)
+    mean_20 = np.mean(
+        scores_df.sort_values(["F1"], ascending=False).head(20).F1)
 
     # Mean of F1-Score of top 30 classes by F1-Score
-    mean_30 = np.mean(scores_df.sort_values(["F1"], ascending=False).head(30).F1)
+    mean_30 = np.mean(
+        scores_df.sort_values(["F1"], ascending=False).head(30).F1)
 
     # Create DataFrame with stats
-    d = {'Statistic': ['Accuracy score on test', 'Top 10 classes by F1-Score', 'Worst 10 classes by F1-Score',
+    d = {'Statistic': ['Accuracy score on test', 'Top 10 classes by F1-Score',
+                       'Worst 10 classes by F1-Score',
                        'Ratio of classes with F1-Score==0 of all classes',
                        'Mean of F1-Score of top 10 classes by F1-Score',
                        'Mean of F1-Score of top 20 classes by F1-Score',

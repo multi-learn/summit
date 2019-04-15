@@ -1,21 +1,20 @@
-from ..Monoview.MonoviewUtils import BaseMonoviewClassifier
-from ..Monoview.Additions.BoostUtils import getInterpretBase
 from ..Monoview.Additions.CGDescUtils import ColumnGenerationClassifierQar
+from ..Monoview.MonoviewUtils import BaseMonoviewClassifier
 
 
 class QarBoost(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, **kwargs):
         super(QarBoost, self).__init__(n_max_iterations=500,
-            random_state=random_state,
-            self_complemented=True,
-            twice_the_same=True,
-            c_bound_choice=True,
-            random_start=False,
-            n_stumps_per_attribute=10,
-            use_r=True,
-            c_bound_sol=False
-            )
+                                       random_state=random_state,
+                                       self_complemented=True,
+                                       twice_the_same=True,
+                                       c_bound_choice=True,
+                                       random_start=False,
+                                       n_stumps_per_attribute=10,
+                                       use_r=True,
+                                       c_bound_sol=False
+                                       )
         self.param_names = []
         self.distribs = []
         self.classed_params = []

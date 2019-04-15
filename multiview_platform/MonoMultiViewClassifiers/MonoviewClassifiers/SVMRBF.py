@@ -1,5 +1,5 @@
 from ..Monoview.Additions.SVCClassifier import SVCClassifier
-from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint, BaseMonoviewClassifier
+from ..Monoview.MonoviewUtils import CustomUniform, BaseMonoviewClassifier
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

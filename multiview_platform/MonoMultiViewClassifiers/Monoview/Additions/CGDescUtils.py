@@ -1,16 +1,18 @@
-import scipy
 import logging
+import math
+import time
+
 import numpy as np
 import numpy.ma as ma
-import math
-from sklearn.utils.validation import check_is_fitted
+import scipy
 from sklearn.base import BaseEstimator, ClassifierMixin
-import time
+from sklearn.utils.validation import check_is_fitted
 
 from .BoostUtils import StumpsClassifiersGenerator, sign, BaseBoost, \
     getInterpretBase, get_accuracy_graph, TreeClassifiersGenerator
-from ..MonoviewUtils import change_label_to_zero, change_label_to_minus
+from ..MonoviewUtils import change_label_to_minus
 from ... import Metrics
+
 
 # Used for QarBoost and CGreed
 
@@ -73,7 +75,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def fit(self, X, y):
 
-
         formatted_X, formatted_y = self.format_X_y(X, y)
 
         self.init_info_containers()
@@ -91,16 +92,16 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         for k in range(min(n - 1,
                            self.n_max_iterations - 1 if self.n_max_iterations is not None else np.inf)):
 
-
             # Print dynamically the step and the error of the current classifier
             self.it = k
 
             print(
-                "Resp. bound : {}, {}; {}/{}, eps :{}".format(self.respected_bound,
-                                                              self.bounds[-1] > self.train_metrics[-1],
-                                                          k + 2,
-                                                          self.n_max_iterations,
-                                                          self.voter_perfs[-1]),
+                "Resp. bound : {}, {}; {}/{}, eps :{}".format(
+                    self.respected_bound,
+                    self.bounds[-1] > self.train_metrics[-1],
+                    k + 2,
+                    self.n_max_iterations,
+                    self.voter_perfs[-1]),
                 end="\r")
             sol, new_voter_index = self.choose_new_voter(y_kernel_matrix,
                                                          formatted_y)
@@ -117,9 +118,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             self.update_example_weights(formatted_y)
 
-
             self.update_info_containers(formatted_y, voter_perf, k)
-
 
         self.nb_opposed_voters = self.check_opposed_voters()
         self.estimators_generator.choose(self.chosen_columns_)
@@ -160,33 +159,50 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             self.step_decisions = np.zeros(classification_matrix.shape)
             self.mincq_step_decisions = np.zeros(classification_matrix.shape)
             self.step_prod = np.zeros(classification_matrix.shape)
-            for weight_index in range(self.weights_.shape[0]-1):
-                margins = np.sum(classification_matrix[:, :weight_index+1]* self.weights_[:weight_index+1], axis=1)
+            for weight_index in range(self.weights_.shape[0] - 1):
+                margins = np.sum(
+                    classification_matrix[:, :weight_index + 1] * self.weights_[
+                                                                  :weight_index + 1],
+                    axis=1)
                 signs_array = np.array([int(x) for x in sign(margins)])
                 signs_array[signs_array == -1] = 0
                 self.step_decisions[:, weight_index] = signs_array
-                self.step_prod[:, weight_index] = np.sum(classification_matrix[:, :weight_index+1]* self.weights_[:weight_index+1], axis=1)
+                self.step_prod[:, weight_index] = np.sum(
+                    classification_matrix[:, :weight_index + 1] * self.weights_[
+                                                                  :weight_index + 1],
+                    axis=1)
                 if self.mincq_tracking:
-                    if weight_index ==0:
-                        self.mincq_step_decisions[:,weight_index] = signs_array
+                    if weight_index == 0:
+                        self.mincq_step_decisions[:, weight_index] = signs_array
                     else:
-                        mincq_margins = np.sum(self.mincq_learners[weight_index-1].majority_vote._weights*classification_matrix[:,:weight_index+1], axis=1)
-                        mincq_signs_array = np.array([int(x) for x in sign(mincq_margins)])
+                        mincq_margins = np.sum(self.mincq_learners[
+                                                   weight_index - 1].majority_vote._weights * classification_matrix[
+                                                                                              :,
+                                                                                              :weight_index + 1],
+                                               axis=1)
+                        mincq_signs_array = np.array(
+                            [int(x) for x in sign(mincq_margins)])
                         mincq_signs_array[mincq_signs_array == -1] = 0
-                        self.mincq_step_decisions[:, weight_index] = mincq_signs_array
+                        self.mincq_step_decisions[:,
+                        weight_index] = mincq_signs_array
                 # self.mincq_step_cbounds = self.mincq_learners[weight_index-1].majority_vote.cbound_value()
 
     def update_info_containers(self, y, voter_perf, k):
         """Is used at each iteration to compute and store all the needed quantities for later analysis"""
         self.example_weights_.append(self.example_weights)
-        self.tau.append(np.sum(np.multiply(self.previous_vote, self.new_voter))/float(self.n_total_examples))
+        self.tau.append(
+            np.sum(np.multiply(self.previous_vote, self.new_voter)) / float(
+                self.n_total_examples))
         # print(np.sum(np.multiply(self.previous_vote, self.new_voter))/float(self.n_total_examples))
         self.previous_vote += self.q * self.new_voter
-        self.norm.append(np.linalg.norm(self.previous_vote)**2)
+        self.norm.append(np.linalg.norm(self.previous_vote) ** 2)
         self.previous_votes.append(self.previous_vote)
         self.previous_margins.append(
-            np.sum(np.multiply(y, self.previous_vote))/float(self.n_total_examples))
-        self.selected_margins.append(np.sum(np.multiply(y, self.new_voter))/float(self.n_total_examples))
+            np.sum(np.multiply(y, self.previous_vote)) / float(
+                self.n_total_examples))
+        self.selected_margins.append(
+            np.sum(np.multiply(y, self.new_voter)) / float(
+                self.n_total_examples))
         train_metric = self.plotted_metric.score(y, np.sign(self.previous_vote))
         if self.use_r:
             bound = self.bounds[-1] * math.sqrt(1 - voter_perf ** 2)
@@ -199,17 +215,20 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         self.train_metrics.append(train_metric)
         self.bounds.append(bound)
-        if self.mincq_tracking: # Used to compute the optimal c-bound distribution on the chose set
+        if self.mincq_tracking:  # Used to compute the optimal c-bound distribution on the chose set
             from ...MonoviewClassifiers.MinCQ import MinCqLearner
-            mincq = MinCqLearner(10e-3, "stumps", n_stumps_per_attribute=1, self_complemented=False)
+            mincq = MinCqLearner(10e-3, "stumps", n_stumps_per_attribute=1,
+                                 self_complemented=False)
             training_set = self.classification_matrix[:, self.chosen_columns_]
             mincq.fit(training_set, y)
             mincq_pred = mincq.predict(training_set)
             self.mincq_learners.append(mincq)
-            self.mincq_train_metrics.append(self.plotted_metric.score(y, change_label_to_minus(mincq_pred)))
+            self.mincq_train_metrics.append(
+                self.plotted_metric.score(y, change_label_to_minus(mincq_pred)))
             self.mincq_weights.append(mincq.majority_vote._weights)
-            self.mincq_c_bounds.append(mincq.majority_vote.cbound_value(training_set, y.reshape((y.shape[0],))))
-
+            self.mincq_c_bounds.append(
+                mincq.majority_vote.cbound_value(training_set,
+                                                 y.reshape((y.shape[0],))))
 
     def compute_voter_weight(self, voter_perf, sol):
         """used to compute the voter's weight according to the specified method (edge or error) """
@@ -259,14 +278,14 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         if self.random_start:
             first_voter_index = self.random_state.choice(
-                np.where(np.sum(y_kernel_matrix, axis=0)>0)[0])
+                np.where(np.sum(y_kernel_matrix, axis=0) > 0)[0])
         else:
             first_voter_index, _ = self._find_best_weighted_margin(
                 y_kernel_matrix)
 
         self.chosen_columns_.append(first_voter_index)
         self.new_voter = np.array(self.classification_matrix[:,
-                         first_voter_index].reshape((m, 1)), copy=True)
+                                  first_voter_index].reshape((m, 1)), copy=True)
 
         self.previous_vote = self.new_voter
         self.norm.append(np.linalg.norm(self.previous_vote) ** 2)
@@ -290,9 +309,9 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.update_example_weights(y)
         self.example_weights_.append(self.example_weights)
 
-
         self.previous_margins.append(
-            np.sum(np.multiply(y, self.previous_vote))/float(self.n_total_examples))
+            np.sum(np.multiply(y, self.previous_vote)) / float(
+                self.n_total_examples))
         self.selected_margins.append(np.sum(np.multiply(y, self.previous_vote)))
         self.tau.append(
             np.sum(np.multiply(self.previous_vote, self.new_voter)) / float(
@@ -313,8 +332,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         if self.mincq_tracking:
             self.mincq_train_metrics.append(train_metric)
 
-
-
     def format_X_y(self, X, y):
         """Formats the data  : X -the examples- and y -the labels- to be used properly by the algorithm """
         if scipy.sparse.issparse(X):
@@ -332,7 +349,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 n_stumps_per_attribute=self.n_stumps,
                 self_complemented=self.self_complemented)
         if self.estimators_generator is "Trees":
-            self.estimators_generator = TreeClassifiersGenerator(n_trees=self.n_stumps, max_depth=self.max_depth,
+            self.estimators_generator = TreeClassifiersGenerator(
+                n_trees=self.n_stumps, max_depth=self.max_depth,
                 self_complemented=self.self_complemented)
         self.estimators_generator.fit(X, y)
         self.classification_matrix = self._binary_classification_matrix(X)
@@ -360,13 +378,12 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.respected_bound = True
         self.selected_margins = []
         self.tau = []
-        self.norm=[]
+        self.norm = []
         self.mincq_train_metrics = []
         self.mincq_c_bounds = []
         self.mincq_weights = []
         self.mincq_learners = []
         self.mincq_step_decisions = []
-
 
     def _compute_epsilon(self, y):
         """Updating the error variable, the old fashioned way uses the whole majority vote to update the error"""
@@ -408,31 +425,37 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         and select the one that has the smallest minimum"""
         m = y_kernel_matrix.shape[0]
         weighted_previous_sum = np.multiply(y,
-                                            self.previous_vote.reshape(m,1))
+                                            self.previous_vote.reshape(m, 1))
         margin_old = np.sum(weighted_previous_sum)
         if self.c_bound_sol:
             weighted_hypothesis = y_kernel_matrix
         else:
-            weighted_hypothesis = y_kernel_matrix * self.example_weights.reshape((m, 1))
+            weighted_hypothesis = y_kernel_matrix * self.example_weights.reshape(
+                (m, 1))
 
-        bad_margins = np.where(np.sum(weighted_hypothesis, axis=0)<=0.0)[0]
+        bad_margins = np.where(np.sum(weighted_hypothesis, axis=0) <= 0.0)[0]
 
         self.B2 = m
-        self.B1s = np.sum(2 * np.multiply(weighted_previous_sum, weighted_hypothesis),
-                          axis=0)
+        self.B1s = np.sum(
+            2 * np.multiply(weighted_previous_sum, weighted_hypothesis),
+            axis=0)
         self.B0 = np.sum(weighted_previous_sum ** 2)
 
         self.A2s = np.sum(weighted_hypothesis, axis=0) ** 2
         self.A1s = np.sum(weighted_hypothesis, axis=0) * margin_old * 2
-        self.A0 = margin_old**2
+        self.A0 = margin_old ** 2
 
         C2s = (self.A1s * self.B2 - self.A2s * self.B1s)
         C1s = 2 * (self.A0 * self.B2 - self.A2s * self.B0)
         C0s = self.A0 * self.B1s - self.A1s * self.B0
 
-        sols = np.zeros(C0s.shape)-3
+        sols = np.zeros(C0s.shape) - 3
         # sols[np.where(C2s == 0)[0]] = C0s[np.where(C2s == 0)[0]] / C1s[np.where(C2s == 0)[0]]
-        sols[np.where(C2s != 0)[0]] = (-C1s[np.where(C2s != 0)[0]] + np.sqrt(C1s[np.where(C2s != 0)[0]] * C1s[np.where(C2s != 0)[0]] - 4 * C2s[np.where(C2s != 0)[0]] * C0s[np.where(C2s != 0)[0]])) / (2 * C2s[np.where(C2s != 0)[0]])
+        sols[np.where(C2s != 0)[0]] = (-C1s[np.where(C2s != 0)[0]] + np.sqrt(
+            C1s[np.where(C2s != 0)[0]] * C1s[np.where(C2s != 0)[0]] - 4 * C2s[
+                np.where(C2s != 0)[0]] * C0s[np.where(C2s != 0)[0]])) / (
+                                                  2 * C2s[
+                                              np.where(C2s != 0)[0]])
 
         masked_c_bounds = self.make_masked_c_bounds(sols, bad_margins)
         if masked_c_bounds.mask.all():
@@ -441,8 +464,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             best_hyp_index = np.argmin(masked_c_bounds)
 
             self.c_bounds.append(masked_c_bounds[best_hyp_index])
-            self.margins.append(math.sqrt(self.A2s[best_hyp_index]/m))
-            self.disagreements.append(0.5*self.B1s[best_hyp_index]/m)
+            self.margins.append(math.sqrt(self.A2s[best_hyp_index] / m))
+            self.disagreements.append(0.5 * self.B1s[best_hyp_index] / m)
             return sols[best_hyp_index], best_hyp_index
 
     def make_masked_c_bounds(self, sols, bad_margins):
@@ -463,19 +486,20 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def compute_c_bounds(self, sols):
         return 1 - (self.A2s * sols ** 2 + self.A1s * sols + self.A0) / ((
-                    self.B2 * sols ** 2 + self.B1s * sols + self.B0) * self.n_total_examples)
-
+                                                                                 self.B2 * sols ** 2 + self.B1s * sols + self.B0) * self.n_total_examples)
 
     def _cbound(self, sol):
         """Computing the objective function"""
         return 1 - (self.A2 * sol ** 2 + self.A1 * sol + self.A0) / ((
-                    self.B2 * sol ** 2 + self.B1 * sol + self.B0) * self.n_total_examples)
+                                                                             self.B2 * sol ** 2 + self.B1 * sol + self.B0) * self.n_total_examples)
 
     def disagreement(self, sol):
-        return (self.B2 * sol ** 2 + self.B1 * sol + self.B0)/self.n_total_examples
+        return (
+                           self.B2 * sol ** 2 + self.B1 * sol + self.B0) / self.n_total_examples
 
     def margin(self, sol):
-        return (self.A2 * sol ** 2 + self.A1 * sol + self.A0)/self.n_total_examples
+        return (
+                           self.A2 * sol ** 2 + self.A1 * sol + self.A0) / self.n_total_examples
 
     def _best_sol(self, sols):
         """Return the best min in the two possible sols"""
@@ -487,10 +511,13 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         return 1.0 / n_examples * np.ones((n_examples,))
 
     def get_step_decision_test_graph(self, directory, y_test):
-        np.savetxt(directory + "y_test_step.csv", self.step_decisions, delimiter=',')
+        np.savetxt(directory + "y_test_step.csv", self.step_decisions,
+                   delimiter=',')
         step_metrics = []
-        for step_index in range(self.step_decisions.shape[1]-1):
-            step_metrics.append(self.plotted_metric.score(y_test, self.step_decisions[:, step_index]))
+        for step_index in range(self.step_decisions.shape[1] - 1):
+            step_metrics.append(self.plotted_metric.score(y_test,
+                                                          self.step_decisions[:,
+                                                          step_index]))
         step_metrics = np.array(step_metrics)
         np.savetxt(directory + "step_test_metrics.csv", step_metrics,
                    delimiter=',')
@@ -502,7 +529,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             step_mincq_test_metrics = []
             for step_index in range(self.step_decisions.shape[1] - 1):
                 step_mincq_test_metrics.append(self.plotted_metric.score(y_test,
-                                                                         self.mincq_step_decisions[:,
+                                                                         self.mincq_step_decisions[
+                                                                         :,
                                                                          step_index]))
             np.savetxt(directory + "mincq_step_test_metrics.csv",
                        step_mincq_test_metrics,
@@ -514,9 +542,9 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
         step_cbounds = []
         for step_index in range(self.step_prod.shape[1]):
-            num = np.sum(y_test*self.step_prod[:, step_index])**2
-            den = np.sum((self.step_prod[:, step_index])**2)
-            step_cbounds.append(1-num/(den*self.step_prod.shape[0]))
+            num = np.sum(y_test * self.step_prod[:, step_index]) ** 2
+            den = np.sum((self.step_prod[:, step_index]) ** 2)
+            step_cbounds.append(1 - num / (den * self.step_prod.shape[0]))
         step_cbounds = np.array(step_cbounds)
         np.savetxt(directory + "step_test_c_bounds.csv", step_cbounds,
                    delimiter=',')
@@ -532,35 +560,47 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         # get_accuracy_graph(self.voter_perfs[:20], self.__class__.__name__,
         #                    directory + 'voter_perfs.png', "Rs")
         get_accuracy_graph(self.weights_, self.__class__.__name__,
-                           directory+'vote_weights.png', "weights", zero_to_one=False)
+                           directory + 'vote_weights.png', "weights",
+                           zero_to_one=False)
         get_accuracy_graph(self.c_bounds, self.__class__.__name__,
                            directory + 'c_bounds.png', "C-Bounds")
         if self.mincq_tracking:
             get_accuracy_graph(self.c_bounds, self.__class__.__name__,
-                               directory + 'c_bounds_comparaison.png', "1-var mins", self.mincq_c_bounds, "MinCQ min", zero_to_one=False)
+                               directory + 'c_bounds_comparaison.png',
+                               "1-var mins", self.mincq_c_bounds, "MinCQ min",
+                               zero_to_one=False)
             get_accuracy_graph(self.train_metrics, self.__class__.__name__,
-                               directory + 'train_metrics_comparaison.png', self.plotted_metric,
+                               directory + 'train_metrics_comparaison.png',
+                               self.plotted_metric,
                                self.mincq_train_metrics, "MinCQ metrics")
         get_accuracy_graph(self.previous_margins, self.__class__.__name__,
-                           directory + 'margins.png', "Margins", zero_to_one=False)
+                           directory + 'margins.png', "Margins",
+                           zero_to_one=False)
         get_accuracy_graph(self.selected_margins, self.__class__.__name__,
-                           directory + 'selected_margins.png', "Selected Margins")
+                           directory + 'selected_margins.png',
+                           "Selected Margins")
         self.tau[0] = 0
         get_accuracy_graph(self.tau, self.__class__.__name__,
-                           directory + 'disagreements.png', "disagreements", zero_to_one=False)
+                           directory + 'disagreements.png', "disagreements",
+                           zero_to_one=False)
         get_accuracy_graph(self.train_metrics[:-1], self.__class__.__name__,
-                           directory + 'c_bounds_train_metrics.png', self.plotted_metric, self.c_bounds, "C-Bound", self.bounds[:-1])
+                           directory + 'c_bounds_train_metrics.png',
+                           self.plotted_metric, self.c_bounds, "C-Bound",
+                           self.bounds[:-1])
         get_accuracy_graph(self.norm, self.__class__.__name__,
                            directory + 'norms.png',
-                           "squared 2-norm",zero_to_one=False)
-        interpretString = getInterpretBase(self, directory, self.__class__.__name__,
+                           "squared 2-norm", zero_to_one=False)
+        interpretString = getInterpretBase(self, directory,
+                                           self.__class__.__name__,
                                            self.weights_, self.break_cause)
         if self.save_train_data:
-            np.savetxt(directory+"x_train.csv", self.X_train, delimiter=',')
-            np.savetxt(directory+"y_train.csv", self.y_train, delimiter=',')
-            np.savetxt(directory + "raw_weights.csv", self.raw_weights, delimiter=',')
+            np.savetxt(directory + "x_train.csv", self.X_train, delimiter=',')
+            np.savetxt(directory + "y_train.csv", self.y_train, delimiter=',')
+            np.savetxt(directory + "raw_weights.csv", self.raw_weights,
+                       delimiter=',')
             np.savetxt(directory + "c_bounds.csv", self.c_bounds, delimiter=',')
-            np.savetxt(directory + "train_metrics.csv", self.train_metrics, delimiter=',')
+            np.savetxt(directory + "train_metrics.csv", self.train_metrics,
+                       delimiter=',')
             np.savetxt(directory + "margins.csv", self.previous_margins,
                        delimiter=',')
             np.savetxt(directory + "disagreements.csv", self.tau,
@@ -570,15 +610,16 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             if self.mincq_tracking:
                 np.savetxt(directory + "mincq_cbounds.csv", self.mincq_c_bounds,
                            delimiter=',')
-                np.savetxt(directory + "mincq_train_metrics.csv", self.mincq_train_metrics,
+                np.savetxt(directory + "mincq_train_metrics.csv",
+                           self.mincq_train_metrics,
                            delimiter=',')
         args_dict = dict(
             (arg_name, str(self.__dict__[arg_name])) for arg_name in
             self.printed_args_name_list)
         interpretString += "\n \n With arguments : \n" + u'\u2022 ' + (
-                    "\n" + u'\u2022 ').join(['%s: \t%s' % (key, value)
-                                             for (key, value) in
-                                             args_dict.items()])
+                "\n" + u'\u2022 ').join(['%s: \t%s' % (key, value)
+                                         for (key, value) in
+                                         args_dict.items()])
         if not self.respected_bound:
             interpretString += "\n\n The bound was not respected"
 

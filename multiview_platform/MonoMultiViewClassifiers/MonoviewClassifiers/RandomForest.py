@@ -16,12 +16,13 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
             max_depth=max_depth,
             criterion=criterion,
             random_state=random_state
-            )
-        self.param_names = ["n_estimators", "max_depth", "criterion", "random_state"]
+        )
+        self.param_names = ["n_estimators", "max_depth", "criterion",
+                            "random_state"]
         self.classed_params = []
         self.distribs = [CustomRandint(low=1, high=300),
                          CustomRandint(low=1, high=300),
-                         ["gini", "entropy"], [random_state] ]
+                         ["gini", "entropy"], [random_state]]
         self.weird_strings = {}
 
     def canProbas(self):

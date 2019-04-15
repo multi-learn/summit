@@ -1,13 +1,12 @@
+import time
+
+import numpy as np
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
-import numpy as np
-import time
-from sklearn.metrics import accuracy_score
 
-from ..Monoview.MonoviewUtils import CustomRandint, BaseMonoviewClassifier
-from ..Monoview.Additions.BoostUtils import get_accuracy_graph
 from .. import Metrics
 from ..Monoview.Additions.BoostUtils import get_accuracy_graph
+from ..Monoview.MonoviewUtils import CustomRandint, BaseMonoviewClassifier
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -23,10 +22,11 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
             n_estimators=n_estimators,
             base_estimator=base_estimator,
             algorithm="SAMME"
-            )
+        )
         self.param_names = ["n_estimators", "base_estimator"]
         self.classed_params = ["base_estimator"]
-        self.distribs = [CustomRandint(low=1, high=500), [DecisionTreeClassifier(max_depth=1)]]
+        self.distribs = [CustomRandint(low=1, high=500),
+                         [DecisionTreeClassifier(max_depth=1)]]
         self.weird_strings = {"base_estimator": "class_name"}
         self.plotted_metric = Metrics.zero_one_loss
         self.plotted_metric_name = "zero_one_loss"
@@ -36,11 +36,16 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         begin = time.time()
         super(Adaboost, self).fit(X, y, sample_weight=sample_weight)
         end = time.time()
-        self.train_time = end-begin
+        self.train_time = end - begin
         self.train_shape = X.shape
-        self.base_predictions = np.array([estim.predict(X) for estim in self.estimators_])
-        self.metrics = np.array([self.plotted_metric.score(pred, y) for pred in self.staged_predict(X)])
-        self.bounds = np.array([np.prod(np.sqrt(1-4*np.square(0.5-self.estimator_errors_[:i+1]))) for i in range(self.estimator_errors_.shape[0])])
+        self.base_predictions = np.array(
+            [estim.predict(X) for estim in self.estimators_])
+        self.metrics = np.array([self.plotted_metric.score(pred, y) for pred in
+                                 self.staged_predict(X)])
+        self.bounds = np.array([np.prod(
+            np.sqrt(1 - 4 * np.square(0.5 - self.estimator_errors_[:i + 1])))
+                                for i in
+                                range(self.estimator_errors_.shape[0])])
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
@@ -52,21 +57,32 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         end = time.time()
         self.pred_time = end - begin
         if X.shape != self.train_shape:
-            self.step_predictions = np.array([step_pred for step_pred in self.staged_predict(X)])
+            self.step_predictions = np.array(
+                [step_pred for step_pred in self.staged_predict(X)])
         return pred
 
     def getInterpret(self, directory, y_test):
         interpretString = ""
         interpretString += self.getFeatureImportance(directory)
         interpretString += "\n\n Estimator error | Estimator weight\n"
-        interpretString += "\n".join([str(error) +" | "+ str(weight/sum(self.estimator_weights_)) for error, weight in zip(self.estimator_errors_, self.estimator_weights_)])
-        step_test_metrics = np.array([self.plotted_metric.score(y_test, step_pred) for step_pred in self.step_predictions])
-        get_accuracy_graph(step_test_metrics, "Adaboost", directory + "test_metrics.png",
+        interpretString += "\n".join(
+            [str(error) + " | " + str(weight / sum(self.estimator_weights_)) for
+             error, weight in
+             zip(self.estimator_errors_, self.estimator_weights_)])
+        step_test_metrics = np.array(
+            [self.plotted_metric.score(y_test, step_pred) for step_pred in
+             self.step_predictions])
+        get_accuracy_graph(step_test_metrics, "Adaboost",
+                           directory + "test_metrics.png",
                            self.plotted_metric_name, set="test")
-        get_accuracy_graph(self.metrics, "Adaboost", directory+"metrics.png", self.plotted_metric_name, bounds=list(self.bounds), bound_name="boosting bound")
-        np.savetxt(directory + "test_metrics.csv", step_test_metrics, delimiter=',')
+        get_accuracy_graph(self.metrics, "Adaboost", directory + "metrics.png",
+                           self.plotted_metric_name, bounds=list(self.bounds),
+                           bound_name="boosting bound")
+        np.savetxt(directory + "test_metrics.csv", step_test_metrics,
+                   delimiter=',')
         np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')
-        np.savetxt(directory + "times.csv", np.array([self.train_time, self.pred_time]), delimiter=',')
+        np.savetxt(directory + "times.csv",
+                   np.array([self.train_time, self.pred_time]), delimiter=',')
         return interpretString
 
 

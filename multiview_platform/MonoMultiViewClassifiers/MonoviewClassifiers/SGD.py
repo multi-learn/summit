@@ -16,7 +16,7 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
             penalty=penalty,
             alpha=alpha,
             random_state=random_state
-            )
+        )
         self.param_names = ["loss", "penalty", "alpha", "random_state"]
         self.classed_params = []
         self.distribs = [['log', 'modified_huber'],
@@ -45,6 +45,7 @@ def paramsToSet(nIter, randomState):
     paramsSet = []
     for _ in range(nIter):
         paramsSet.append({"loss": randomState.choice(['log', 'modified_huber']),
-                          "penalty": randomState.choice(["l1", "l2", "elasticnet"]),
+                          "penalty": randomState.choice(
+                              ["l1", "l2", "elasticnet"]),
                           "alpha": randomState.random_sample()})
     return paramsSet

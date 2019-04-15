@@ -1,22 +1,22 @@
-from ..Monoview.MonoviewUtils import BaseMonoviewClassifier, CustomRandint
-from ..Monoview.Additions.BoostUtils import getInterpretBase
 from ..Monoview.Additions.CGDescUtils import ColumnGenerationClassifierQar
+from ..Monoview.MonoviewUtils import BaseMonoviewClassifier, CustomRandint
 
 
 class CGDesc(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, n_max_iterations=500, n_stumps=1, **kwargs):
+    def __init__(self, random_state=None, n_max_iterations=500, n_stumps=1,
+                 **kwargs):
         super(CGDesc, self).__init__(n_max_iterations=n_max_iterations,
-            random_state=random_state,
-            self_complemented=True,
-            twice_the_same=True,
-            c_bound_choice=True,
-            random_start=False,
-            n_stumps=n_stumps,
-            use_r=True,
-            c_bound_sol=True,
-            estimators_generator="Stumps"
-            )
+                                     random_state=random_state,
+                                     self_complemented=True,
+                                     twice_the_same=True,
+                                     c_bound_choice=True,
+                                     random_start=False,
+                                     n_stumps=n_stumps,
+                                     use_r=True,
+                                     c_bound_sol=True,
+                                     estimators_generator="Stumps"
+                                     )
         self.param_names = ["n_max_iterations", "n_stumps", "random_state"]
         self.distribs = [CustomRandint(low=2, high=500), [n_stumps],
                          [random_state]]
@@ -36,8 +36,8 @@ class CGDesc(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_stumps":args.CGD_stumps,
-    "n_max_iterations":args.CGD_n_iter}
+    kwargsDict = {"n_stumps": args.CGD_stumps,
+                  "n_max_iterations": args.CGD_n_iter}
     return kwargsDict
 
 

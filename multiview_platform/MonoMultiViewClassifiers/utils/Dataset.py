@@ -2,6 +2,7 @@ import logging
 import os
 import select
 import sys
+
 import h5py
 import numpy as np
 from scipy import sparse
@@ -21,12 +22,15 @@ def getV(DATASET, viewIndex, usedIndices=None):
         usedIndices = usedIndices[sortedIndices]
 
         if not DATASET.get("View" + str(viewIndex)).attrs["sparse"]:
-            return DATASET.get("View" + str(viewIndex))[usedIndices, :][np.argsort(sortedIndices), :]
+            return DATASET.get("View" + str(viewIndex))[usedIndices, :][
+                   np.argsort(sortedIndices), :]
         else:
-            sparse_mat = sparse.csr_matrix((DATASET.get("View" + str(viewIndex)).get("data").value,
-                                            DATASET.get("View" + str(viewIndex)).get("indices").value,
-                                            DATASET.get("View" + str(viewIndex)).get("indptr").value),
-                                           shape=DATASET.get("View" + str(viewIndex)).attrs["shape"])[usedIndices, :][
+            sparse_mat = sparse.csr_matrix(
+                (DATASET.get("View" + str(viewIndex)).get("data").value,
+                 DATASET.get("View" + str(viewIndex)).get("indices").value,
+                 DATASET.get("View" + str(viewIndex)).get("indptr").value),
+                shape=DATASET.get("View" + str(viewIndex)).attrs["shape"])[
+                         usedIndices, :][
                          np.argsort(sortedIndices), :]
 
             return sparse_mat
@@ -38,7 +42,6 @@ def getShape(DATASET, viewIndex):
         return DATASET.get("View" + str(viewIndex)).shape
     else:
         return DATASET.get("View" + str(viewIndex)).attrs["shape"]
-
 
 
 def getValue(DATASET):
@@ -60,15 +63,17 @@ def extractSubset(matrix, usedIndices):
         oldindptr = matrix.indptr
         for exampleIndexIndex, exampleIndex in enumerate(usedIndices):
             newIndptr[exampleIndexIndex + 1] = newIndptr[exampleIndexIndex] + (
-                oldindptr[exampleIndex + 1] - oldindptr[exampleIndex])
+                    oldindptr[exampleIndex + 1] - oldindptr[exampleIndex])
         newData = np.ones(newIndptr[-1], dtype=bool)
         newIndices = np.zeros(newIndptr[-1], dtype=int)
         oldIndices = matrix.indices
         for exampleIndexIndex, exampleIndex in enumerate(usedIndices):
-            newIndices[newIndptr[exampleIndexIndex]:newIndptr[exampleIndexIndex + 1]] = oldIndices[
-                                                                                        oldindptr[exampleIndex]:
-                                                                                        oldindptr[exampleIndex + 1]]
-        return sparse.csr_matrix((newData, newIndices, newIndptr), shape=(len(usedIndices), matrix.shape[1]))
+            newIndices[newIndptr[exampleIndexIndex]:newIndptr[
+                exampleIndexIndex + 1]] = oldIndices[
+                                          oldindptr[exampleIndex]:
+                                          oldindptr[exampleIndex + 1]]
+        return sparse.csr_matrix((newData, newIndices, newIndptr),
+                                 shape=(len(usedIndices), matrix.shape[1]))
     else:
         return matrix[usedIndices]
 
@@ -94,13 +99,16 @@ def initMultipleDatasets(pathF, name, nbCores):
     """
     if nbCores > 1:
         if DB.datasetsAlreadyExist(pathF, name, nbCores):
-            logging.debug("Info:\t Enough copies of the dataset are already available")
+            logging.debug(
+                "Info:\t Enough copies of the dataset are already available")
             pass
         else:
-            logging.debug("Start:\t Creating " + str(nbCores) + " temporary datasets for multiprocessing")
-            logging.warning(" WARNING : /!\ This may use a lot of HDD storage space : " +
-                            str(os.path.getsize(pathF + name + ".hdf5") * nbCores / float(
-                                1024) / 1000 / 1000) + " Gbytes /!\ ")
+            logging.debug("Start:\t Creating " + str(
+                nbCores) + " temporary datasets for multiprocessing")
+            logging.warning(
+                " WARNING : /!\ This may use a lot of HDD storage space : " +
+                str(os.path.getsize(pathF + name + ".hdf5") * nbCores / float(
+                    1024) / 1000 / 1000) + " Gbytes /!\ ")
             confirmation = confirm()
             if not confirmation:
                 sys.exit(0)
@@ -125,7 +133,8 @@ def confirm(resp=True, timeout=15):
 
 def input_(timeout=15):
     """used as a UI to stop if too much HDD space will be used"""
-    logging.warning("You have " + str(timeout) + " seconds to stop the dataset copy by typing n")
+    logging.warning("You have " + str(
+        timeout) + " seconds to stop the dataset copy by typing n")
     i, o, e = select.select([sys.stdin], [], [], timeout)
     if i:
         return sys.stdin.readline().strip()

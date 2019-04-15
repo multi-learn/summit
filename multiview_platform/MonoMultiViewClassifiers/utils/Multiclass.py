@@ -1,5 +1,6 @@
-import numpy as np
 import itertools
+
+import numpy as np
 
 
 def genMulticlassLabels(labels, multiclassMethod, splits):
@@ -45,7 +46,7 @@ def genMulticlassLabels(labels, multiclassMethod, splits):
             splits = [[trainIndices for trainIndices, _ in splits],
                       [testIndices for _, testIndices in splits],
                       [[] for _ in splits]]
-            return [labels], [(0,1)], [splits]
+            return [labels], [(0, 1)], [splits]
         else:
             combinations = itertools.combinations(np.arange(nbLabels), 2)
             multiclassLabels = []
@@ -54,15 +55,20 @@ def genMulticlassLabels(labels, multiclassMethod, splits):
             for combination in combinations:
                 labelsIndices.append(combination)
                 oldIndices = [exampleIndex
-                              for exampleIndex, exampleLabel in enumerate(labels)
+                              for exampleIndex, exampleLabel in
+                              enumerate(labels)
                               if exampleLabel in combination]
-                trainIndices = [np.array([oldIndex for oldIndex in oldIndices if oldIndex in iterIndices[0]])
+                trainIndices = [np.array([oldIndex for oldIndex in oldIndices if
+                                          oldIndex in iterIndices[0]])
                                 for iterIndices in splits]
-                testIndices = [np.array([oldIndex for oldIndex in oldIndices if oldIndex in iterindices[1]])
+                testIndices = [np.array([oldIndex for oldIndex in oldIndices if
+                                         oldIndex in iterindices[1]])
                                for iterindices in splits]
-                testIndicesMulticlass = [np.array(iterindices[1]) for iterindices in splits]
-                indicesMulticlass.append([trainIndices, testIndices, testIndicesMulticlass])
-                newLabels = np.zeros(len(labels), dtype=int)-100
+                testIndicesMulticlass = [np.array(iterindices[1]) for
+                                         iterindices in splits]
+                indicesMulticlass.append(
+                    [trainIndices, testIndices, testIndicesMulticlass])
+                newLabels = np.zeros(len(labels), dtype=int) - 100
                 for labelIndex, label in enumerate(labels):
                     if label == combination[0]:
                         newLabels[labelIndex] = 1
@@ -81,7 +87,8 @@ def genMulticlassLabels(labels, multiclassMethod, splits):
 def genMulticlassMonoviewDecision(monoviewResult, classificationIndices):
     learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
     multiclassMonoviewDecisions = monoviewResult.full_labels_pred
-    multiclassMonoviewDecisions[testIndicesMulticlass] = monoviewResult.y_test_multiclass_pred
+    multiclassMonoviewDecisions[
+        testIndicesMulticlass] = monoviewResult.y_test_multiclass_pred
     return multiclassMonoviewDecisions
 
 

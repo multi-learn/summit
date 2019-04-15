@@ -1,11 +1,15 @@
 import logging
+
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_is_fitted
 
-from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint, BaseMonoviewClassifier, change_label_to_minus, change_label_to_zero
-from ..Monoview.Additions.BoostUtils import getInterpretBase, StumpsClassifiersGenerator, BaseBoost
 from ..Metrics import zero_one_loss
+from ..Monoview.Additions.BoostUtils import StumpsClassifiersGenerator, \
+    BaseBoost
+from ..Monoview.MonoviewUtils import CustomRandint, \
+    BaseMonoviewClassifier, change_label_to_minus, change_label_to_zero
+
 
 class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
     """Scikit-Learn compatible AdaBoost classifier. Original code by Pascal Germain, adapted by Jean-Francis Roy.
@@ -24,9 +28,13 @@ class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
         A function to call at each iteration that is supplied learning information. Defaults to None.
 
     """
-    def __init__(self, n_iterations=200, iterations_to_collect_as_hyperparameters=True, classifiers_generator=None, callback_function=None, n_stumps=10, self_complemented=True):
+
+    def __init__(self, n_iterations=200,
+                 iterations_to_collect_as_hyperparameters=True,
+                 classifiers_generator=None, callback_function=None,
+                 n_stumps=10, self_complemented=True):
         self.n_iterations = n_iterations
-        self.n_stumps=n_stumps
+        self.n_stumps = n_stumps
         self.iterations_to_collect_as_hyperparameters = iterations_to_collect_as_hyperparameters
         self.estimators_generator = classifiers_generator
         self.callback_function = callback_function
@@ -50,7 +58,9 @@ class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
         y_neg = change_label_to_minus(y)
 
         if self.estimators_generator is None:
-            self.estimators_generator = StumpsClassifiersGenerator(n_stumps_per_attribute=self.n_stumps, self_complemented=self.self_complemented)
+            self.estimators_generator = StumpsClassifiersGenerator(
+                n_stumps_per_attribute=self.n_stumps,
+                self_complemented=self.self_complemented)
 
         # Step 1: We fit the classifiers generator and get its classification matrix.
         self.estimators_generator.fit(X, y_neg)
@@ -70,7 +80,8 @@ class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
         for t in range(self.n_iterations):
 
             # Step 4: We find the classifier that maximizes the success, weighted by the sample weights.
-            classifier_successes = np.dot(classification_matrix.T, sample_weights * y_neg)
+            classifier_successes = np.dot(classification_matrix.T,
+                                          sample_weights * y_neg)
 
             best_voter_index = np.argmax(classifier_successes)
             success = classifier_successes[best_voter_index]
@@ -88,7 +99,8 @@ class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
             # logging.debug("{} : {}".format(t, str(alpha)))
 
             # Step 6: We update the sample weights.
-            sample_weights *= np.exp(-1 * alpha * y_neg * classification_matrix[:, best_voter_index])
+            sample_weights *= np.exp(
+                -1 * alpha * y_neg * classification_matrix[:, best_voter_index])
 
             normalization_constant = sample_weights.sum()
             sample_weights = sample_weights / normalization_constant
@@ -104,11 +116,13 @@ class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
             self.losses.append(loss)
 
             if self.callback_function is not None:
-                self.callback_function(t, alpha_weights, normalization_constant, self.estimators_generator, self.weights_)
+                self.callback_function(t, alpha_weights, normalization_constant,
+                                       self.estimators_generator, self.weights_)
 
         self.weights_ = alpha_weights / np.sum(alpha_weights)
         self.losses = np.array(self.losses)
-        self.learner_info_ = {'n_nonzero_weights': np.sum(self.weights_ > 1e-12)}
+        self.learner_info_ = {
+            'n_nonzero_weights': np.sum(self.weights_ > 1e-12)}
 
         return self
 
@@ -133,22 +147,26 @@ class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
             self.test_preds = []
             for weight_vector in self.collected_weight_vectors_:
                 preds = np.sum(np.multiply(classification_matrix,
-                                weight_vector), axis=1)
+                                           weight_vector), axis=1)
                 self.test_preds.append(change_label_to_zero(np.sign(preds)))
             self.test_preds = np.array(self.test_preds)
-        margins = np.squeeze(np.asarray(np.dot(classification_matrix, self.weights_)))
-        return change_label_to_zero(np.array([int(x) for x in np.sign(margins)]))
+        margins = np.squeeze(
+            np.asarray(np.dot(classification_matrix, self.weights_)))
+        return change_label_to_zero(
+            np.array([int(x) for x in np.sign(margins)]))
 
 
 class AdaboostGraalpy(AdaBoostGP, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, n_iterations=200, n_stumps=1, **kwargs):
+    def __init__(self, random_state=None, n_iterations=200, n_stumps=1,
+                 **kwargs):
         super(AdaboostGraalpy, self).__init__(
             n_iterations=n_iterations,
             n_stumps=n_stumps
         )
-        self.param_names = ["n_iterations","n_stumps", "random_state"]
-        self.distribs = [CustomRandint(low=1, high=500), [n_stumps], [random_state]]
+        self.param_names = ["n_iterations", "n_stumps", "random_state"]
+        self.distribs = [CustomRandint(low=1, high=500), [n_stumps],
+                         [random_state]]
         self.classed_params = []
         self.weird_strings = {}
         self.n_stumps = n_stumps
@@ -168,8 +186,8 @@ class AdaboostGraalpy(AdaBoostGP, BaseMonoviewClassifier):
         step_metrics = []
         for step_index in range(self.test_preds.shape[0] - 1):
             step_metrics.append(zero_one_loss.score(y_test,
-                                                          self.test_preds[step_index,
-                                                          :]))
+                                                    self.test_preds[step_index,
+                                                    :]))
         step_metrics = np.array(step_metrics)
         np.savetxt(directory + "step_test_metrics.csv", step_metrics,
                    delimiter=',')
@@ -179,7 +197,7 @@ class AdaboostGraalpy(AdaBoostGP, BaseMonoviewClassifier):
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
     kwargsDict = {"n_iterations": args.AdG_n_iter,
-                  "n_stumps": args.AdG_stumps,}
+                  "n_stumps": args.AdG_stumps, }
     return kwargsDict
 
 
@@ -187,5 +205,5 @@ def paramsToSet(nIter, randomState):
     """Used for weighted linear early fusion to generate random search sets"""
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"n_iterations": randomState.randint(1, 500),})
+        paramsSet.append({"n_iterations": randomState.randint(1, 500), })
     return paramsSet

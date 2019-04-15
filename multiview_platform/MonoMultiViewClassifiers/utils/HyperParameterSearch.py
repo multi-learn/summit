@@ -1,12 +1,15 @@
-import numpy as np
-import sys
-import matplotlib.pyplot as plt
 import itertools
+import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 from .. import Metrics
 
 
-def searchBestSettings(dataset, labels, classifierPackage, classifierName, metrics, iLearningIndices, iKFolds, randomState, viewsIndices=None,
+def searchBestSettings(dataset, labels, classifierPackage, classifierName,
+                       metrics, iLearningIndices, iKFolds, randomState,
+                       viewsIndices=None,
                        searchingTool="randomizedSearch", nIter=1, **kwargs):
     """Used to select the right hyperparam optimization function to optimize hyper parameters"""
     if viewsIndices is None:
@@ -14,17 +17,23 @@ def searchBestSettings(dataset, labels, classifierPackage, classifierName, metri
     thismodule = sys.modules[__name__]
     searchingTool = "randomizedSearch"  # Todo find a nice way to configure multiview classifier without hp search
     searchingToolMethod = getattr(thismodule, searchingTool)
-    bestSettings = searchingToolMethod(dataset, labels, classifierPackage, classifierName, metrics, iLearningIndices, iKFolds, randomState,
-                                       viewsIndices=viewsIndices, nIter=nIter, **kwargs)
+    bestSettings = searchingToolMethod(dataset, labels, classifierPackage,
+                                       classifierName, metrics,
+                                       iLearningIndices, iKFolds, randomState,
+                                       viewsIndices=viewsIndices, nIter=nIter,
+                                       **kwargs)
     return bestSettings  # or well set clasifier ?
 
 
-def gridSearch(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1, **kwargs):
+def gridSearch(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1,
+               **kwargs):
     """Used to perfom gridsearch on the classifiers"""
     pass
 
 
-def randomizedSearch(dataset, labels, classifierPackage, classifierName, metrics, learningIndices, KFolds, randomState, viewsIndices=None, nIter=1,
+def randomizedSearch(dataset, labels, classifierPackage, classifierName,
+                     metrics, learningIndices, KFolds, randomState,
+                     viewsIndices=None, nIter=1,
                      nbCores=1, **classificationKWARGS):
     """Used to perform a random search on the classifiers to optimize hyper parameters"""
     if viewsIndices is None:
@@ -32,13 +41,15 @@ def randomizedSearch(dataset, labels, classifierPackage, classifierName, metrics
     metric = metrics[0]
     metricModule = getattr(Metrics, metric[0])
     if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+        metricKWARGS = dict((index, metricConfig) for index, metricConfig in
+                            enumerate(metric[1]))
     else:
         metricKWARGS = {}
-    classifierModule = getattr(classifierPackage, classifierName+"Module")
-    classifierClass = getattr(classifierModule, classifierName+"Class")
+    classifierModule = getattr(classifierPackage, classifierName + "Module")
+    classifierClass = getattr(classifierModule, classifierName + "Class")
     if classifierName != "Mumbo":
-        paramsSets = classifierModule.genParamsSets(classificationKWARGS, randomState, nIter=nIter)
+        paramsSets = classifierModule.genParamsSets(classificationKWARGS,
+                                                    randomState, nIter=nIter)
         if metricModule.getConfig()[-14] == "h":
             baseScore = -1000.0
             isBetter = "higher"
@@ -50,12 +61,17 @@ def randomizedSearch(dataset, labels, classifierPackage, classifierName, metrics
         for paramsSet in paramsSets:
             scores = []
             for trainIndices, testIndices in kFolds:
-                classifier = classifierClass(randomState, NB_CORES=nbCores, **classificationKWARGS)
+                classifier = classifierClass(randomState, NB_CORES=nbCores,
+                                             **classificationKWARGS)
                 classifier.setParams(paramsSet)
-                classifier.fit_hdf5(dataset, labels, trainIndices=learningIndices[trainIndices], viewsIndices=viewsIndices)
-                testLabels = classifier.predict_hdf5(dataset, usedIndices=learningIndices[testIndices],
+                classifier.fit_hdf5(dataset, labels,
+                                    trainIndices=learningIndices[trainIndices],
+                                    viewsIndices=viewsIndices)
+                testLabels = classifier.predict_hdf5(dataset, usedIndices=
+                learningIndices[testIndices],
                                                      viewsIndices=viewsIndices)
-                testScore = metricModule.score(labels[learningIndices[testIndices]], testLabels)
+                testScore = metricModule.score(
+                    labels[learningIndices[testIndices]], testLabels)
                 scores.append(testScore)
             crossValScore = np.mean(np.array(scores))
 
@@ -65,20 +81,28 @@ def randomizedSearch(dataset, labels, classifierPackage, classifierName, metrics
             elif isBetter == "lower" and crossValScore < baseScore:
                 baseScore = crossValScore
                 bestSettings = paramsSet
-        classifier = classifierClass(randomState, NB_CORES=nbCores, **classificationKWARGS)
+        classifier = classifierClass(randomState, NB_CORES=nbCores,
+                                     **classificationKWARGS)
         classifier.setParams(bestSettings)
 
     # TODO : This must be corrected
     else:
-        bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, labels, viewsIndices, classificationKWARGS, learningIndices,
-                                                          randomState, metric=metric, nIter=nIter)
+        bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, labels,
+                                                          viewsIndices,
+                                                          classificationKWARGS,
+                                                          learningIndices,
+                                                          randomState,
+                                                          metric=metric,
+                                                          nIter=nIter)
         classificationKWARGS["classifiersConfigs"] = bestConfigs
-        classifier = classifierClass(randomState, NB_CORES=nbCores, **classificationKWARGS)
+        classifier = classifierClass(randomState, NB_CORES=nbCores,
+                                     **classificationKWARGS)
 
     return classifier
 
 
-def spearMint(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1, **kwargs):
+def spearMint(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1,
+              **kwargs):
     """Used to perform spearmint on the classifiers to optimize hyper parameters,
     longer than randomsearch (can't be parallelized)"""
     pass
@@ -89,7 +113,7 @@ def genHeatMaps(params, scoresArray, outputFileName):
     nbParams = len(params)
     if nbParams > 2:
         combinations = itertools.combinations(range(nbParams), 2)
-    elif nbParams==2:
+    elif nbParams == 2:
         combinations = [(0, 1)]
     else:
         combinations = [()]
@@ -104,7 +128,8 @@ def genHeatMaps(params, scoresArray, outputFileName):
         paramArray1Set = np.sort(np.array(list(set(paramArray1))))
         paramArray2Set = np.sort(np.array(list(set(paramArray2))))
 
-        scoresMatrix = np.zeros((len(paramArray2Set), len(paramArray1Set))) - 0.1
+        scoresMatrix = np.zeros(
+            (len(paramArray2Set), len(paramArray1Set))) - 0.1
         for param1, param2, score in zip(paramArray1, paramArray2, scoresArray):
             param1Index, = np.where(paramArray1Set == param1)
             param2Index, = np.where(paramArray2Set == param2)
@@ -120,7 +145,8 @@ def genHeatMaps(params, scoresArray, outputFileName):
         plt.xticks(np.arange(len(paramArray1Set)), paramArray1Set)
         plt.yticks(np.arange(len(paramArray2Set)), paramArray2Set, rotation=45)
         plt.title('Validation metric')
-        plt.savefig(outputFileName + "heat_map-" + paramName1 + "-" + paramName2 + ".png")
+        plt.savefig(
+            outputFileName + "heat_map-" + paramName1 + "-" + paramName2 + ".png")
         plt.close()
 
 # nohup python ~/dev/git/spearmint/spearmint/main.py . &

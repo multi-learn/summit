@@ -1,13 +1,13 @@
 # Import built-in modules
-import time
-import os
 import errno
 import logging
+import os
+import time
 
+import matplotlib as mpl
 # Import third party modules
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib as mpl
 
 # Import own Modules
 from . import Metrics
@@ -44,7 +44,8 @@ def autolabel(rects, ax, set=1, std=None):
         height = rect.get_height()
         if std is not None:
             ax.text(rect.get_x() + rect.get_width() / 2., text_height,
-                    "%.2f" % height + u'\u00B1' + "%.2f" % std[rectIndex], weight=weight,
+                    "%.2f" % height + u'\u00B1' + "%.2f" % std[rectIndex],
+                    weight=weight,
                     ha='center', va='bottom', size="x-small")
         else:
             ax.text(rect.get_x() + rect.get_width() / 2., text_height,
@@ -109,10 +110,12 @@ def getExampleErrorsBiclass(groud_truth, results):
     exampleErrors = {}
 
     for classifierResult in results:
-        errorOnExamples = np.equal(classifierResult.full_labels_pred, groud_truth).astype(int)
-        unseenExamples = np.where(groud_truth==-100)[0]
-        errorOnExamples[unseenExamples]=-100
-        exampleErrors[classifierResult.get_classifier_name()] = {"errorOnExamples": errorOnExamples}
+        errorOnExamples = np.equal(classifierResult.full_labels_pred,
+                                   groud_truth).astype(int)
+        unseenExamples = np.where(groud_truth == -100)[0]
+        errorOnExamples[unseenExamples] = -100
+        exampleErrors[classifierResult.get_classifier_name()] = {
+            "errorOnExamples": errorOnExamples}
 
     return exampleErrors
 
@@ -139,14 +142,15 @@ def get_fig_size(nb_results, min_size=15, multiplier=1.0, bar_width=0.35):
     bar_width : float
         The width of the bars in the figure. Mainly here to centralize bar_width.
     """
-    size = nb_results*multiplier
+    size = nb_results * multiplier
     if size < min_size:
         size = min_size
     fig_kwargs = {"figsize": (size, size / 3)}
     return fig_kwargs, bar_width
 
 
-def sort_by_test_score(train_scores,test_scores, names, train_STDs=None, test_STDs=None):
+def sort_by_test_score(train_scores, test_scores, names, train_STDs=None,
+                       test_STDs=None):
     r"""Used to sort the results (names and both scores) in descending test score order.
 
     Parameters
@@ -190,7 +194,8 @@ def sort_by_test_score(train_scores,test_scores, names, train_STDs=None, test_ST
     return sorted_names, sorted_train_scores, sorted_test_scores, sorted_train_STDs, sorted_test_STDs
 
 
-def plotMetricScores(trainScores, testScores, names, nbResults, metricName, fileName,
+def plotMetricScores(trainScores, testScores, names, nbResults, metricName,
+                     fileName,
                      tag="", train_STDs=None, test_STDs=None):
     r"""Used to plot and save the score barplot for a specific metric.
 
@@ -221,14 +226,17 @@ def plotMetricScores(trainScores, testScores, names, nbResults, metricName, file
 
     figKW, barWidth = get_fig_size(nbResults)
 
-    names, trainScores, testScores, train_STDs, test_STDs = sort_by_test_score(trainScores, testScores, names,
-                                                                               train_STDs, test_STDs)
+    names, trainScores, testScores, train_STDs, test_STDs = sort_by_test_score(
+        trainScores, testScores, names,
+        train_STDs, test_STDs)
 
     f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-    ax.set_title(metricName + "\n"+ tag +" scores for each classifier")
+    ax.set_title(metricName + "\n" + tag + " scores for each classifier")
 
-    rects = ax.bar(range(nbResults), testScores, barWidth, color="0.1", yerr=test_STDs)
-    rect2 = ax.bar(np.arange(nbResults) + barWidth, trainScores, barWidth, color="0.8", yerr=train_STDs)
+    rects = ax.bar(range(nbResults), testScores, barWidth, color="0.1",
+                   yerr=test_STDs)
+    rect2 = ax.bar(np.arange(nbResults) + barWidth, trainScores, barWidth,
+                   color="0.8", yerr=train_STDs)
     autolabel(rects, ax, set=1, std=test_STDs)
     autolabel(rect2, ax, set=2, std=train_STDs)
 
@@ -241,10 +249,10 @@ def plotMetricScores(trainScores, testScores, names, nbResults, metricName, file
         plt.tight_layout()
     except:
         pass
-    f.savefig(fileName+'.png')
+    f.savefig(fileName + '.png')
     plt.close()
     import pandas as pd
-    if train_STDs is None :
+    if train_STDs is None:
         dataframe = pd.DataFrame(np.transpose(np.concatenate((
             trainScores.reshape((trainScores.shape[0], 1)),
             testScores.reshape((trainScores.shape[0], 1))), axis=1)),
@@ -254,8 +262,9 @@ def plotMetricScores(trainScores, testScores, names, nbResults, metricName, file
             trainScores.reshape((trainScores.shape[0], 1)),
             train_STDs.reshape((trainScores.shape[0], 1)),
             testScores.reshape((trainScores.shape[0], 1)),
-            test_STDs.reshape((trainScores.shape[0], 1))), axis=1)), columns=names)
-    dataframe.to_csv(fileName+".csv")
+            test_STDs.reshape((trainScores.shape[0], 1))), axis=1)),
+            columns=names)
+    dataframe.to_csv(fileName + ".csv")
 
 
 def publishMetricsGraphs(metricsScores, directory, databaseName, labelsNames):
@@ -277,16 +286,23 @@ def publishMetricsGraphs(metricsScores, directory, databaseName, labelsNames):
     -------
     """
     for metricName, metricScores in metricsScores.items():
-        logging.debug("Start:\t Biclass score graph generation for "+metricName)
+        logging.debug(
+            "Start:\t Biclass score graph generation for " + metricName)
 
         nbResults = len(metricScores["testScores"])
 
-        fileName = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-"+"_vs_".join(labelsNames)+ "-" + metricName
+        fileName = directory + time.strftime(
+            "%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + "_vs_".join(
+            labelsNames) + "-" + metricName
 
-        plotMetricScores(np.array(metricScores["trainScores"]), np.array(metricScores["testScores"]),
-                         np.array(metricScores["classifiersNames"]), nbResults, metricName, fileName, tag=" "+" vs ".join(labelsNames))
+        plotMetricScores(np.array(metricScores["trainScores"]),
+                         np.array(metricScores["testScores"]),
+                         np.array(metricScores["classifiersNames"]), nbResults,
+                         metricName, fileName,
+                         tag=" " + " vs ".join(labelsNames))
 
-        logging.debug("Done:\t Biclass score graph generation for " + metricName)
+        logging.debug(
+            "Done:\t Biclass score graph generation for " + metricName)
 
 
 def iterCmap(statsIter):
@@ -304,17 +320,19 @@ def iterCmap(statsIter):
     norm : matplotlib.colors.BoundaryNorm object
         The bounds for the colormap.
     """
-    cmapList = ["red", "0.0"]+[str(float((i+1))/statsIter) for i in range(statsIter)]
+    cmapList = ["red", "0.0"] + [str(float((i + 1)) / statsIter) for i in
+                                 range(statsIter)]
     cmap = mpl.colors.ListedColormap(cmapList)
-    bounds = [-100*statsIter-0.5, -0.5]
+    bounds = [-100 * statsIter - 0.5, -0.5]
     for i in range(statsIter):
-        bounds.append(i+0.5)
-    bounds.append(statsIter+0.5)
+        bounds.append(i + 0.5)
+    bounds.append(statsIter + 0.5)
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
     return cmap, norm
 
 
-def publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nbCopies, fileName, minSize=10,
+def publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nbCopies,
+                  fileName, minSize=10,
                   width_denominator=2.0, height_denominator=20.0, statsIter=1):
     r"""Used to generate a 2D plot of the errors.
 
@@ -350,7 +368,8 @@ def publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nbCopies, f
     figKW = {"figsize": (figWidth, figHeight)}
     fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
     cmap, norm = iterCmap(statsIter)
-    cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm, aspect='auto')
+    cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm,
+                     aspect='auto')
     plt.title('Errors depending on the classifier')
     ticks = np.arange(nbCopies / 2 - 0.5, nbClassifiers * nbCopies, nbCopies)
     labels = classifiersNames
@@ -358,7 +377,7 @@ def publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nbCopies, f
     cbar = fig.colorbar(cax, ticks=[-100 * statsIter / 2, 0, statsIter])
     cbar.ax.set_yticklabels(['Unseen', 'Always Wrong', 'Always Right'])
     fig.tight_layout()
-    fig.savefig(fileName+"error_analysis_2D.png", bbox_inches="tight")
+    fig.savefig(fileName + "error_analysis_2D.png", bbox_inches="tight")
     plt.close()
 
 
@@ -386,7 +405,7 @@ def publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples, fileName):
     plt.bar(x, errorOnExamples)
     plt.ylim([0, nbClassifiers])
     plt.title("Number of classifiers that failed to classify each example")
-    fig.savefig(fileName+"error_analysis_bar.png")
+    fig.savefig(fileName + "error_analysis_bar.png")
     plt.close()
 
 
@@ -430,9 +449,11 @@ def gen_error_data(example_errors, base_file_name, nbCopies=2):
 
     data = np.zeros((nbExamples, nbClassifiers * nbCopies))
     temp_data = np.zeros((nbExamples, nbClassifiers))
-    for classifierIndex, (classifierName, errorOnExamples) in enumerate(example_errors.items()):
+    for classifierIndex, (classifierName, errorOnExamples) in enumerate(
+            example_errors.items()):
         for iterIndex in range(nbCopies):
-            data[:, classifierIndex * nbCopies + iterIndex] = errorOnExamples["errorOnExamples"]
+            data[:, classifierIndex * nbCopies + iterIndex] = errorOnExamples[
+                "errorOnExamples"]
             temp_data[:, classifierIndex] = errorOnExamples["errorOnExamples"]
     errorOnExamples = -1 * np.sum(data, axis=1) / nbCopies + nbClassifiers
 
@@ -443,19 +464,21 @@ def gen_error_data(example_errors, base_file_name, nbCopies=2):
 
 
 def publishExampleErrors(exampleErrors, directory, databaseName, labelsNames):
-
     logging.debug("Start:\t Biclass Label analysis figure generation")
 
-    base_file_name = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + "_vs_".join(
+    base_file_name = directory + time.strftime(
+        "%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + "_vs_".join(
         labelsNames) + "-"
 
-    nbClassifiers, nbExamples, nCopies, classifiersNames, data, errorOnExamples = gen_error_data(exampleErrors,
-                                                                                                 base_file_name)
+    nbClassifiers, nbExamples, nCopies, classifiersNames, data, errorOnExamples = gen_error_data(
+        exampleErrors,
+        base_file_name)
 
+    publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nCopies,
+                  base_file_name)
 
-    publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nCopies, base_file_name)
-
-    publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples, base_file_name)
+    publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples,
+                         base_file_name)
 
     logging.debug("Done:\t Biclass Label analysis figures generation")
 
@@ -524,17 +547,22 @@ def analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics):
         labelsNames = [arguments["LABELS_DICTIONARY"][0],
                        arguments["LABELS_DICTIONARY"][1]]
 
-        publishMetricsGraphs(metricsScores, directory, databaseName, labelsNames)
-        publishExampleErrors(exampleErrors, directory, databaseName, labelsNames)
+        publishMetricsGraphs(metricsScores, directory, databaseName,
+                             labelsNames)
+        publishExampleErrors(exampleErrors, directory, databaseName,
+                             labelsNames)
 
-        biclassResults[iteridex][str(classifierPositive) + str(classifierNegative)] = {"metricsScores": metricsScores,
-                                                                                       "exampleErrors": exampleErrors}
+        biclassResults[iteridex][
+            str(classifierPositive) + str(classifierNegative)] = {
+            "metricsScores": metricsScores,
+            "exampleErrors": exampleErrors}
 
     logging.debug("Done:\t Analzing all biclass resuls")
     return biclassResults
 
 
-def genMetricsScoresMulticlass(results, trueLabels, metrics, argumentsDictionaries):
+def genMetricsScoresMulticlass(results, trueLabels, metrics,
+                               argumentsDictionaries):
     """Used to add all the metrics scores to the multiclass result structure  for each clf and each iteration"""
 
     logging.debug("Start:\t Getting multiclass scores for each metric")
@@ -544,20 +572,24 @@ def genMetricsScoresMulticlass(results, trueLabels, metrics, argumentsDictionari
         for iterIndex, iterResults in enumerate(results):
 
             for argumentsDictionary in argumentsDictionaries:
-                if argumentsDictionary["flag"][0]==iterIndex:
-                    classificationIndices = argumentsDictionary["classificationIndices"]
+                if argumentsDictionary["flag"][0] == iterIndex:
+                    classificationIndices = argumentsDictionary[
+                        "classificationIndices"]
             trainIndices, testIndices, multiclassTestIndices = classificationIndices
 
             for classifierName, resultDictionary in iterResults.items():
                 if not "metricsScores" in resultDictionary:
-                    results[iterIndex][classifierName]["metricsScores"]={}
+                    results[iterIndex][classifierName]["metricsScores"] = {}
                 trainScore = metricModule.score(trueLabels[trainIndices],
-                                                resultDictionary["labels"][trainIndices],
+                                                resultDictionary["labels"][
+                                                    trainIndices],
                                                 multiclass=True)
-                testScore = metricModule.score(trueLabels[multiclassTestIndices],
-                                               resultDictionary["labels"][multiclassTestIndices],
-                                               multiclass=True)
-                results[iterIndex][classifierName]["metricsScores"][metric[0]] = [trainScore, testScore]
+                testScore = metricModule.score(
+                    trueLabels[multiclassTestIndices],
+                    resultDictionary["labels"][multiclassTestIndices],
+                    multiclass=True)
+                results[iterIndex][classifierName]["metricsScores"][
+                    metric[0]] = [trainScore, testScore]
     logging.debug("Done:\t Getting multiclass scores for each metric")
     return results
 
@@ -570,51 +602,69 @@ def getErrorOnLabelsMulticlass(multiclassResults, multiclassLabels):
     for iterIndex, iterResults in enumerate(multiclassResults):
         for classifierName, classifierResults in iterResults.items():
             errorOnExamples = classifierResults["labels"] == multiclassLabels
-            multiclassResults[iterIndex][classifierName]["errorOnExamples"] = errorOnExamples.astype(int)
+            multiclassResults[iterIndex][classifierName][
+                "errorOnExamples"] = errorOnExamples.astype(int)
 
     logging.debug("Done:\t Getting errors on each example for each classifier")
 
     return multiclassResults
 
 
-def publishMulticlassScores(multiclassResults, metrics, statsIter, direcories, databaseName):
+def publishMulticlassScores(multiclassResults, metrics, statsIter, direcories,
+                            databaseName):
     for iterIndex in range(statsIter):
         directory = direcories[iterIndex]
         for metric in metrics:
-            logging.debug("Start:\t Multiclass score graph generation for "+metric[0])
-            classifiersNames = np.array([classifierName for classifierName in multiclassResults[iterIndex].keys()])
-            trainScores = np.array([multiclassResults[iterIndex][classifierName]["metricsScores"][metric[0]][0]
-                                for classifierName in classifiersNames])
-            validationScores = np.array([multiclassResults[iterIndex][classifierName]["metricsScores"][metric[0]][1]
-                                for classifierName in classifiersNames])
-
+            logging.debug(
+                "Start:\t Multiclass score graph generation for " + metric[0])
+            classifiersNames = np.array([classifierName for classifierName in
+                                         multiclassResults[iterIndex].keys()])
+            trainScores = np.array([multiclassResults[iterIndex][
+                                        classifierName]["metricsScores"][
+                                        metric[0]][0]
+                                    for classifierName in classifiersNames])
+            validationScores = np.array([multiclassResults[iterIndex][
+                                             classifierName]["metricsScores"][
+                                             metric[0]][1]
+                                         for classifierName in
+                                         classifiersNames])
 
             nbResults = classifiersNames.shape[0]
-            fileName = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + metric[0] + ".png"
+            fileName = directory + time.strftime(
+                "%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + metric[
+                           0] + ".png"
 
-            plotMetricScores(trainScores, validationScores, classifiersNames, nbResults, metric[0], fileName, tag=" multiclass")
+            plotMetricScores(trainScores, validationScores, classifiersNames,
+                             nbResults, metric[0], fileName, tag=" multiclass")
 
-            logging.debug("Done:\t Multiclass score graph generation for " + metric[0])
+            logging.debug(
+                "Done:\t Multiclass score graph generation for " + metric[0])
 
 
-def publishMulticlassExmapleErrors(multiclassResults, directories, databaseName):
+def publishMulticlassExmapleErrors(multiclassResults, directories,
+                                   databaseName):
     for iterIndex, multiclassResult in enumerate(multiclassResults):
         directory = directories[iterIndex]
         logging.debug("Start:\t Multiclass Label analysis figure generation")
 
-        base_file_name = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + databaseName +"-"
+        base_file_name = directory + time.strftime(
+            "%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-"
 
-        nbClassifiers, nbExamples, nCopies, classifiersNames, data, errorOnExamples = gen_error_data(multiclassResult,
-                                                                                                     base_file_name)
+        nbClassifiers, nbExamples, nCopies, classifiersNames, data, errorOnExamples = gen_error_data(
+            multiclassResult,
+            base_file_name)
 
-        publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nCopies, base_file_name)
+        publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples,
+                      nCopies, base_file_name)
 
-        publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples, base_file_name)
+        publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples,
+                             base_file_name)
 
         logging.debug("Done:\t Multiclass Label analysis figure generation")
 
 
-def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamples, nbLabels, multiclassLabels,
+def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries,
+                      nbExamples, nbLabels, multiclassLabels,
                       metrics, classificationIndices, directories):
     """Used to transform one versus one results in multiclass results and to publish it"""
     multiclassResults = [{} for _ in range(statsIter)]
@@ -626,34 +676,48 @@ def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamp
 
         for benchmarkArgumentDictionary in benchmarkArgumentDictionaries:
             if benchmarkArgumentDictionary["flag"] == flag:
-                trainIndices, testIndices, testMulticlassIndices = benchmarkArgumentDictionary["classificationIndices"]
+                trainIndices, testIndices, testMulticlassIndices = \
+                benchmarkArgumentDictionary["classificationIndices"]
 
         for classifierResult in result:
             classifierName = classifierResult.get_classifier_name()
             if classifierName not in multiclassResults[iterIndex]:
-                multiclassResults[iterIndex][classifierName] = np.zeros((nbExamples, nbLabels),dtype=int)
+                multiclassResults[iterIndex][classifierName] = np.zeros(
+                    (nbExamples, nbLabels), dtype=int)
             for exampleIndex in trainIndices:
                 label = classifierResult.full_labels_pred[exampleIndex]
                 if label == 1:
-                    multiclassResults[iterIndex][classifierName][exampleIndex, classifierPositive] += 1
+                    multiclassResults[iterIndex][classifierName][
+                        exampleIndex, classifierPositive] += 1
                 else:
-                    multiclassResults[iterIndex][classifierName][exampleIndex, classifierNegative] += 1
-            for multiclassIndex, exampleIndex in enumerate(testMulticlassIndices):
+                    multiclassResults[iterIndex][classifierName][
+                        exampleIndex, classifierNegative] += 1
+            for multiclassIndex, exampleIndex in enumerate(
+                    testMulticlassIndices):
                 label = classifierResult.y_test_multiclass_pred[multiclassIndex]
                 if label == 1:
-                    multiclassResults[iterIndex][classifierName][exampleIndex, classifierPositive] += 1
+                    multiclassResults[iterIndex][classifierName][
+                        exampleIndex, classifierPositive] += 1
                 else:
-                    multiclassResults[iterIndex][classifierName][exampleIndex, classifierNegative] += 1
+                    multiclassResults[iterIndex][classifierName][
+                        exampleIndex, classifierNegative] += 1
 
     for iterIndex, multiclassiterResult in enumerate(multiclassResults):
         for key, value in multiclassiterResult.items():
-            multiclassResults[iterIndex][key] = {"labels": np.argmax(value, axis=1)}
+            multiclassResults[iterIndex][key] = {
+                "labels": np.argmax(value, axis=1)}
 
-    multiclassResults = genMetricsScoresMulticlass(multiclassResults, multiclassLabels, metrics, benchmarkArgumentDictionaries)
-    multiclassResults = getErrorOnLabelsMulticlass(multiclassResults, multiclassLabels)
+    multiclassResults = genMetricsScoresMulticlass(multiclassResults,
+                                                   multiclassLabels, metrics,
+                                                   benchmarkArgumentDictionaries)
+    multiclassResults = getErrorOnLabelsMulticlass(multiclassResults,
+                                                   multiclassLabels)
 
-    publishMulticlassScores(multiclassResults, metrics, statsIter, directories, benchmarkArgumentDictionaries[0]["args"].name)
-    publishMulticlassExmapleErrors(multiclassResults, directories, benchmarkArgumentDictionaries[0]["args"].name)
+    publishMulticlassScores(multiclassResults, metrics, statsIter, directories,
+                            benchmarkArgumentDictionaries[0]["args"].name)
+    publishMulticlassExmapleErrors(multiclassResults, directories,
+                                   benchmarkArgumentDictionaries[0][
+                                       "args"].name)
     return multiclassResults
 
 
@@ -661,12 +725,16 @@ def numpy_mean_and_std(scores_array):
     return np.mean(scores_array, axis=1), np.std(scores_array, axis=1)
 
 
-def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, classifiersDict, dataBaseName, statsIter, minSize=10):
+def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary,
+                                    classifiersDict, dataBaseName, statsIter,
+                                    minSize=10):
     for labelsCombination, iterResult in iterResults.items():
-        currentDirectory = directory+ labelsDictionary[int(labelsCombination[0])]+"-vs-"+labelsDictionary[int(labelsCombination[1])]+"/"
-        if not os.path.exists(os.path.dirname(currentDirectory+"a")):
+        currentDirectory = directory + labelsDictionary[
+            int(labelsCombination[0])] + "-vs-" + labelsDictionary[
+                               int(labelsCombination[1])] + "/"
+        if not os.path.exists(os.path.dirname(currentDirectory + "a")):
             try:
-                os.makedirs(os.path.dirname(currentDirectory+"a"))
+                os.makedirs(os.path.dirname(currentDirectory + "a"))
             except OSError as exc:
                 if exc.errno != errno.EEXIST:
                     raise
@@ -676,11 +744,15 @@ def publishIterBiclassMetricsScores(iterResults, directory, labelsDictionary, cl
             testMeans, testSTDs = numpy_mean_and_std(scores["testScores"])
 
             names = np.array([name for name in classifiersDict.keys()])
-            fileName = currentDirectory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + dataBaseName + "-Mean_on_" + str(statsIter) + "_iter-" + metricName + ".png"
+            fileName = currentDirectory + time.strftime(
+                "%Y_%m_%d-%H_%M_%S") + "-" + dataBaseName + "-Mean_on_" + str(
+                statsIter) + "_iter-" + metricName + ".png"
             nbResults = names.shape[0]
 
-            plotMetricScores(trainScores=trainMeans, testScores=testMeans, names=names, nbResults=nbResults,
-                             metricName=metricName, fileName=fileName, tag=" averaged",
+            plotMetricScores(trainScores=trainMeans, testScores=testMeans,
+                             names=names, nbResults=nbResults,
+                             metricName=metricName, fileName=fileName,
+                             tag=" averaged",
                              train_STDs=trainSTDs, test_STDs=testSTDs)
 
 
@@ -690,51 +762,71 @@ def gen_error_dat_glob(combiResults, statsIter, base_file_name):
     data = np.transpose(combiResults["errorOnExamples"])
     errorOnExamples = -1 * np.sum(data, axis=1) + (nbClassifiers * statsIter)
     np.savetxt(base_file_name + "clf_errors.csv", data, delimiter=",")
-    np.savetxt(base_file_name + "example_errors.csv", errorOnExamples, delimiter=",")
+    np.savetxt(base_file_name + "example_errors.csv", errorOnExamples,
+               delimiter=",")
     return nbExamples, nbClassifiers, data, errorOnExamples
 
 
-def publishIterBiclassExampleErrors(iterResults, directory, labelsDictionary, classifiersDict, statsIter, minSize=10):
+def publishIterBiclassExampleErrors(iterResults, directory, labelsDictionary,
+                                    classifiersDict, statsIter, minSize=10):
     for labelsCombination, combiResults in iterResults.items():
-        base_file_name = directory + labelsDictionary[int(labelsCombination[0])]+"-vs-"+\
-                         labelsDictionary[int(labelsCombination[1])]+"/" + time.strftime("%Y_%m_%d-%H_%M_%S") + "-"
-        classifiersNames = [classifierName for classifierName in classifiersDict.values()]
-        logging.debug("Start:\t Global biclass label analysis figure generation")
+        base_file_name = directory + labelsDictionary[
+            int(labelsCombination[0])] + "-vs-" + \
+                         labelsDictionary[
+                             int(labelsCombination[1])] + "/" + time.strftime(
+            "%Y_%m_%d-%H_%M_%S") + "-"
+        classifiersNames = [classifierName for classifierName in
+                            classifiersDict.values()]
+        logging.debug(
+            "Start:\t Global biclass label analysis figure generation")
 
-        nbExamples, nbClassifiers, data, errorOnExamples = gen_error_dat_glob(combiResults, statsIter, base_file_name)
+        nbExamples, nbClassifiers, data, errorOnExamples = gen_error_dat_glob(
+            combiResults, statsIter, base_file_name)
 
-        publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, 1, base_file_name, statsIter=statsIter)
+        publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, 1,
+                      base_file_name, statsIter=statsIter)
 
-        publishErrorsBarPlot(errorOnExamples, nbClassifiers*statsIter, nbExamples, base_file_name)
+        publishErrorsBarPlot(errorOnExamples, nbClassifiers * statsIter,
+                             nbExamples, base_file_name)
 
-        logging.debug("Done:\t Global biclass label analysis figures generation")
+        logging.debug(
+            "Done:\t Global biclass label analysis figures generation")
 
 
-def publishIterMulticlassMetricsScores(iterMulticlassResults, classifiersNames, dataBaseName, directory, statsIter, minSize=10):
+def publishIterMulticlassMetricsScores(iterMulticlassResults, classifiersNames,
+                                       dataBaseName, directory, statsIter,
+                                       minSize=10):
     for metricName, scores in iterMulticlassResults["metricsScores"].items():
-
         trainMeans, trainSTDs = numpy_mean_and_std(scores["trainScores"])
         testMeans, testSTDs = numpy_mean_and_std(scores["testScores"])
 
         nbResults = classifiersNames.shape[0]
 
-        fileName = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-" + dataBaseName + "-Mean_on_" + str(statsIter) + "_iter-" + metricName + ".png"
+        fileName = directory + time.strftime(
+            "%Y_%m_%d-%H_%M_%S") + "-" + dataBaseName + "-Mean_on_" + str(
+            statsIter) + "_iter-" + metricName + ".png"
 
-        plotMetricScores(trainScores=trainMeans, testScores=testMeans, names=classifiersNames, nbResults=nbResults,
-                         metricName=metricName, fileName=fileName, tag=" averaged multiclass",
+        plotMetricScores(trainScores=trainMeans, testScores=testMeans,
+                         names=classifiersNames, nbResults=nbResults,
+                         metricName=metricName, fileName=fileName,
+                         tag=" averaged multiclass",
                          train_STDs=trainSTDs, test_STDs=testSTDs)
 
 
-def publishIterMulticlassExampleErrors(iterMulticlassResults, directory, classifiersNames, statsIter, minSize=10):
-
-    logging.debug("Start:\t Global multiclass label analysis figures generation")
+def publishIterMulticlassExampleErrors(iterMulticlassResults, directory,
+                                       classifiersNames, statsIter, minSize=10):
+    logging.debug(
+        "Start:\t Global multiclass label analysis figures generation")
     base_file_name = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-"
 
-    nbExamples, nbClassifiers, data, errorOnExamples = gen_error_dat_glob(iterMulticlassResults, statsIter, base_file_name)
+    nbExamples, nbClassifiers, data, errorOnExamples = gen_error_dat_glob(
+        iterMulticlassResults, statsIter, base_file_name)
 
-    publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, 1, base_file_name, statsIter=statsIter)
+    publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, 1,
+                  base_file_name, statsIter=statsIter)
 
-    publishErrorsBarPlot(errorOnExamples, nbClassifiers * statsIter, nbExamples, base_file_name)
+    publishErrorsBarPlot(errorOnExamples, nbClassifiers * statsIter, nbExamples,
+                         base_file_name)
 
     logging.debug("Done:\t Global multiclass label analysis figures generation")
 
@@ -742,64 +834,89 @@ def publishIterMulticlassExampleErrors(iterMulticlassResults, directory, classif
 def gen_classifiers_dict(results, metrics):
     classifiersDict = dict((classifierName, classifierIndex)
                            for classifierIndex, classifierName
-                           in enumerate(results[0][list(results[0].keys())[0]]["metricsScores"][metrics[0][0]]["classifiersNames"]))
+                           in enumerate(
+        results[0][list(results[0].keys())[0]]["metricsScores"][metrics[0][0]][
+            "classifiersNames"]))
     return classifiersDict, len(classifiersDict)
 
 
-def add_new_labels_combination(iterBiclassResults, labelsComination, nbClassifiers, nbExamples):
+def add_new_labels_combination(iterBiclassResults, labelsComination,
+                               nbClassifiers, nbExamples):
     if labelsComination not in iterBiclassResults:
         iterBiclassResults[labelsComination] = {}
         iterBiclassResults[labelsComination]["metricsScores"] = {}
 
-        iterBiclassResults[labelsComination]["errorOnExamples"] = np.zeros((nbClassifiers,
-                                                                            nbExamples),
-                                                                           dtype=int)
+        iterBiclassResults[labelsComination]["errorOnExamples"] = np.zeros(
+            (nbClassifiers,
+             nbExamples),
+            dtype=int)
     return iterBiclassResults
 
 
-def add_new_metric(iterBiclassResults, metric, labelsComination, nbClassifiers, statsIter):
+def add_new_metric(iterBiclassResults, metric, labelsComination, nbClassifiers,
+                   statsIter):
     if metric[0] not in iterBiclassResults[labelsComination]["metricsScores"]:
-        iterBiclassResults[labelsComination]["metricsScores"][metric[0]] = {"trainScores":
-                                                                                np.zeros((nbClassifiers, statsIter)),
-                                                                            "testScores":
-                                                                                np.zeros((nbClassifiers, statsIter))}
+        iterBiclassResults[labelsComination]["metricsScores"][metric[0]] = {
+            "trainScores":
+                np.zeros((nbClassifiers, statsIter)),
+            "testScores":
+                np.zeros((nbClassifiers, statsIter))}
     return iterBiclassResults
 
 
-def analyzebiclassIter(biclassResults, metrics, statsIter, directory, labelsDictionary, dataBaseName, nbExamples):
+def analyzebiclassIter(biclassResults, metrics, statsIter, directory,
+                       labelsDictionary, dataBaseName, nbExamples):
     """Used to format the results in order to plot the mean results on the iterations"""
     iterBiclassResults = {}
-    classifiersDict, nbClassifiers = gen_classifiers_dict(biclassResults, metrics)
+    classifiersDict, nbClassifiers = gen_classifiers_dict(biclassResults,
+                                                          metrics)
 
     for iterIndex, biclassResult in enumerate(biclassResults):
         for labelsComination, results in biclassResult.items():
             for metric in metrics:
 
-                iterBiclassResults = add_new_labels_combination(iterBiclassResults, labelsComination, nbClassifiers, nbExamples)
-                iterBiclassResults = add_new_metric(iterBiclassResults, metric, labelsComination, nbClassifiers, statsIter)
+                iterBiclassResults = add_new_labels_combination(
+                    iterBiclassResults, labelsComination, nbClassifiers,
+                    nbExamples)
+                iterBiclassResults = add_new_metric(iterBiclassResults, metric,
+                                                    labelsComination,
+                                                    nbClassifiers, statsIter)
 
                 metric_results = results["metricsScores"][metric[0]]
-                for classifierName, trainScore, testScore in zip(metric_results["classifiersNames"],
-                                                                 metric_results["trainScores"],
-                                                                 metric_results["testScores"],):
+                for classifierName, trainScore, testScore in zip(
+                        metric_results["classifiersNames"],
+                        metric_results["trainScores"],
+                        metric_results["testScores"], ):
+                    iterBiclassResults[labelsComination]["metricsScores"][
+                        metric[0]]["trainScores"][
+                        classifiersDict[classifierName], iterIndex] = trainScore
+                    iterBiclassResults[labelsComination]["metricsScores"][
+                        metric[0]]["testScores"][
+                        classifiersDict[classifierName], iterIndex] = testScore
 
-                    iterBiclassResults[labelsComination]["metricsScores"][metric[0]]["trainScores"][classifiersDict[classifierName], iterIndex] = trainScore
-                    iterBiclassResults[labelsComination]["metricsScores"][metric[0]]["testScores"][classifiersDict[classifierName], iterIndex] = testScore
+            for classifierName, errorOnExample in results[
+                "exampleErrors"].items():
+                iterBiclassResults[labelsComination]["errorOnExamples"][
+                classifiersDict[classifierName], :] += errorOnExample[
+                    "errorOnExamples"]
 
-            for classifierName, errorOnExample in results["exampleErrors"].items():
-                iterBiclassResults[labelsComination]["errorOnExamples"][classifiersDict[classifierName], :] += errorOnExample["errorOnExamples"]
+    publishIterBiclassMetricsScores(iterBiclassResults, directory,
+                                    labelsDictionary, classifiersDict,
+                                    dataBaseName, statsIter)
+    publishIterBiclassExampleErrors(iterBiclassResults, directory,
+                                    labelsDictionary, classifiersDict,
+                                    statsIter)
 
-    publishIterBiclassMetricsScores(iterBiclassResults, directory, labelsDictionary, classifiersDict, dataBaseName, statsIter)
-    publishIterBiclassExampleErrors(iterBiclassResults, directory, labelsDictionary, classifiersDict, statsIter)
 
-
-def analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics, dataBaseName, nbExamples):
+def analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics,
+                          dataBaseName, nbExamples):
     """Used to mean the multiclass results on the iterations executed with different random states"""
 
     logging.debug("Start:\t Getting mean results for multiclass classification")
     iterMulticlassResults = {}
     nbClassifiers = len(multiclassResults[0])
-    iterMulticlassResults["errorOnExamples"] = np.zeros((nbClassifiers,nbExamples),dtype=int)
+    iterMulticlassResults["errorOnExamples"] = np.zeros(
+        (nbClassifiers, nbExamples), dtype=int)
     iterMulticlassResults["metricsScores"] = {}
     classifiersNames = []
     for iterIndex, multiclassResult in enumerate(multiclassResults):
@@ -809,30 +926,46 @@ def analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics, data
             classifierIndex = classifiersNames.index(classifierName)
             for metric in metrics:
                 if metric[0] not in iterMulticlassResults["metricsScores"]:
-                    iterMulticlassResults["metricsScores"][metric[0]] = {"trainScores":
-                                                                             np.zeros((nbClassifiers, statsIter)),
-                                                                         "testScores":
-                                                                             np.zeros((nbClassifiers, statsIter))}
-                iterMulticlassResults["metricsScores"][metric[0]]["trainScores"][classifierIndex, iterIndex] = classifierResults["metricsScores"][metric[0]][0]
-                iterMulticlassResults["metricsScores"][metric[0]]["testScores"][classifierIndex, iterIndex] = classifierResults["metricsScores"][metric[0]][1]
-            iterMulticlassResults["errorOnExamples"][classifierIndex, :] += classifierResults["errorOnExamples"]
+                    iterMulticlassResults["metricsScores"][metric[0]] = {
+                        "trainScores":
+                            np.zeros((nbClassifiers, statsIter)),
+                        "testScores":
+                            np.zeros((nbClassifiers, statsIter))}
+                iterMulticlassResults["metricsScores"][metric[0]][
+                    "trainScores"][classifierIndex, iterIndex] = \
+                classifierResults["metricsScores"][metric[0]][0]
+                iterMulticlassResults["metricsScores"][metric[0]]["testScores"][
+                    classifierIndex, iterIndex] = \
+                classifierResults["metricsScores"][metric[0]][1]
+            iterMulticlassResults["errorOnExamples"][classifierIndex, :] += \
+            classifierResults["errorOnExamples"]
     logging.debug("Start:\t Getting mean results for multiclass classification")
 
     classifiersNames = np.array(classifiersNames)
-    publishIterMulticlassMetricsScores(iterMulticlassResults, classifiersNames, dataBaseName, directory, statsIter)
-    publishIterMulticlassExampleErrors(iterMulticlassResults, directory, classifiersNames, statsIter)
+    publishIterMulticlassMetricsScores(iterMulticlassResults, classifiersNames,
+                                       dataBaseName, directory, statsIter)
+    publishIterMulticlassExampleErrors(iterMulticlassResults, directory,
+                                       classifiersNames, statsIter)
 
 
-def getResults(results, statsIter, nbMulticlass, benchmarkArgumentDictionaries, multiclassLabels, metrics,
-               classificationIndices, directories, directory, labelsDictionary, nbExamples, nbLabels):
+def getResults(results, statsIter, nbMulticlass, benchmarkArgumentDictionaries,
+               multiclassLabels, metrics,
+               classificationIndices, directories, directory, labelsDictionary,
+               nbExamples, nbLabels):
     """Used to analyze the results of the previous benchmarks"""
     dataBaseName = benchmarkArgumentDictionaries[0]["args"].name
-    biclassResults = analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics)
+    biclassResults = analyzeBiclass(results, benchmarkArgumentDictionaries,
+                                    statsIter, metrics)
     if nbMulticlass > 1:
-        multiclassResults = analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries, nbExamples, nbLabels,
-                                              multiclassLabels, metrics, classificationIndices, directories)
+        multiclassResults = analyzeMulticlass(results, statsIter,
+                                              benchmarkArgumentDictionaries,
+                                              nbExamples, nbLabels,
+                                              multiclassLabels, metrics,
+                                              classificationIndices,
+                                              directories)
     if statsIter > 1:
-        analyzebiclassIter(biclassResults, metrics, statsIter, directory, labelsDictionary, dataBaseName, nbExamples)
+        analyzebiclassIter(biclassResults, metrics, statsIter, directory,
+                           labelsDictionary, dataBaseName, nbExamples)
         if nbMulticlass > 1:
-            analyzeIterMulticlass(multiclassResults, directory, statsIter, metrics, dataBaseName, nbExamples)
-
+            analyzeIterMulticlass(multiclassResults, directory, statsIter,
+                                  metrics, dataBaseName, nbExamples)

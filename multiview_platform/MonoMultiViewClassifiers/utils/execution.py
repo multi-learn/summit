@@ -1,290 +1,390 @@
 import argparse
-import numpy as np
+import logging
+import os
 import pickle
 import time
-import os
-import errno
-import logging
+
+import numpy as np
 import sklearn
 
-
 from . import GetMultiviewDb as DB
+
 
 def parseTheArgs(arguments):
     """Used to parse the args entered by the user"""
 
     parser = argparse.ArgumentParser(
-        description='This file is used to benchmark the scores fo multiple classification algorithm on multiview data.',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,)
+        description='This file is used to benchmark the scores fo multiple '
+                    'classification algorithm on multiview data.',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        fromfile_prefix_chars='@')
 
     groupStandard = parser.add_argument_group('Standard arguments')
-    groupStandard.add_argument('-log', action='store_true', help='Use option to activate logging to console')
-    groupStandard.add_argument('--name', metavar='STRING', action='store', help='Name of Database (default: %(default)s)',
+    groupStandard.add_argument('-log', action='store_true',
+                               help='Use option to activate logging to console')
+    groupStandard.add_argument('--name', metavar='STRING', action='store',
+                               help='Name of Database (default: %(default)s)',
                                default='Plausible')
     groupStandard.add_argument('--label', metavar='STRING', action='store',
-                               help='Labeling the results directory (default: %(default)s)',
+                               help='Labeling the results directory (default: '
+                                    '%(default)s)',
                                default='')
     groupStandard.add_argument('--type', metavar='STRING', action='store',
-                               help='Type of database : .hdf5 or .csv (default: %(default)s)',
+                               help='Type of database : .hdf5 or .csv ('
+                                    'default: %(default)s)',
                                default='.hdf5')
-    groupStandard.add_argument('--views', metavar='STRING', action='store', nargs="+",
-                               help='Name of the views selected for learning (default: %(default)s)',
+    groupStandard.add_argument('--views', metavar='STRING', action='store',
+                               nargs="+",
+                               help='Name of the views selected for learning '
+                                    '(default: %(default)s)',
                                default=[''])
-    groupStandard.add_argument('--pathF', metavar='STRING', action='store', help='Path to the hdf5 dataset or database '
-                                                                                 'folder (default: %(default)s)',
+    groupStandard.add_argument('--pathF', metavar='STRING', action='store',
+                               help='Path to the hdf5 dataset or database '
+                                    'folder (default: %(default)s)',
                                default='../Data/')
-    groupStandard.add_argument('--nice', metavar='INT', action='store', type=int,
+    groupStandard.add_argument('--nice', metavar='INT', action='store',
+                               type=int,
                                help='Niceness for the processes', default=0)
-    groupStandard.add_argument('--randomState', metavar='STRING', action='store',
-                               help="The random state seed to use or the path to a pickle file where it is stored",
+    groupStandard.add_argument('--randomState', metavar='STRING',
+                               action='store',
+                               help="The random state seed to use or the path "
+                                    "to a pickle file where it is stored",
                                default=None)
-    groupStandard.add_argument('--nbCores', metavar='INT', action='store', help='Number of cores to use for parallel '
-                                                                                'computing, -1 for all',
+    groupStandard.add_argument('--nbCores', metavar='INT', action='store',
+                               help='Number of cores to use for parallel '
+                                    'computing, -1 for all',
                                type=int, default=2)
     groupStandard.add_argument('--machine', metavar='STRING', action='store',
-                               help='Type of machine on which the script runs', default="PC")
-    groupStandard.add_argument('-full', action='store_true', help='Use option to use full dataset and no labels or view filtering')
+                               help='Type of machine on which the script runs',
+                               default="PC")
+    groupStandard.add_argument('-full', action='store_true',
+                               help='Use option to use full dataset and no '
+                                    'labels or view filtering')
     groupStandard.add_argument('-debug', action='store_true',
                                help='Use option to bebug implemented algorithms')
     groupStandard.add_argument('-add_noise', action='store_true',
                                help='Use option to add noise to the data')
     groupStandard.add_argument('--noise_std', metavar='FLOAT', action='store',
-                               help='The std of the gaussian noise that will be added to the data.',
+                               help='The std of the gaussian noise that will '
+                                    'be added to the data.',
                                type=float, default=0.15)
     groupStandard.add_argument('--res_dir', metavar='STRING', action='store',
                                help='The path to the result directory',
                                default="../Results/")
 
-
     groupClass = parser.add_argument_group('Classification arguments')
-    groupClass.add_argument('--CL_multiclassMethod', metavar='STRING', action='store',
-                            help='Determine which multiclass method to use if the dataset is multiclass',
+    groupClass.add_argument('--CL_multiclassMethod', metavar='STRING',
+                            action='store',
+                            help='Determine which multiclass method to use if '
+                                 'the dataset is multiclass',
                             default="oneVersusOne")
     groupClass.add_argument('--CL_split', metavar='FLOAT', action='store',
-                            help='Determine the split ratio between learning and validation sets', type=float,
+                            help='Determine the split ratio between learning '
+                                 'and validation sets',
+                            type=float,
                             default=0.2)
-    groupClass.add_argument('--CL_nbFolds', metavar='INT', action='store', help='Number of folds in cross validation',
+    groupClass.add_argument('--CL_nbFolds', metavar='INT', action='store',
+                            help='Number of folds in cross validation',
                             type=int, default=5)
-    groupClass.add_argument('--CL_nbClass', metavar='INT', action='store', help='Number of classes, -1 for all', type=int,
+    groupClass.add_argument('--CL_nbClass', metavar='INT', action='store',
+                            help='Number of classes, -1 for all', type=int,
                             default=2)
-    groupClass.add_argument('--CL_classes', metavar='STRING', action='store', nargs="+",
-                            help='Classes used in the dataset (names of the folders) if not filled, random classes will be '
+    groupClass.add_argument('--CL_classes', metavar='STRING', action='store',
+                            nargs="+",
+                            help='Classes used in the dataset (names of the '
+                                 'folders) if not filled, random classes will '
+                                 'be '
                                  'selected', default=["yes", "no"])
-    groupClass.add_argument('--CL_type', metavar='STRING', action='store', nargs="+",
-                            help='Determine whether to use Multiview and/or Monoview, or Benchmark classification',
+    groupClass.add_argument('--CL_type', metavar='STRING', action='store',
+                            nargs="+",
+                            help='Determine whether to use Multiview and/or '
+                                 'Monoview, or Benchmark classification',
                             default=['Monoview', 'Multiview'])
-    groupClass.add_argument('--CL_algos_monoview', metavar='STRING', action='store', nargs="+",
-                            help='Determine which monoview classifier to use if empty, considering all',
+    groupClass.add_argument('--CL_algos_monoview', metavar='STRING',
+                            action='store', nargs="+",
+                            help='Determine which monoview classifier to use '
+                                 'if empty, considering all',
                             default=[''])
-    groupClass.add_argument('--CL_algos_multiview', metavar='STRING', action='store', nargs="+",
-                            help='Determine which multiview classifier to use if empty, considering all',
+    groupClass.add_argument('--CL_algos_multiview', metavar='STRING',
+                            action='store', nargs="+",
+                            help='Determine which multiview classifier to use '
+                                 'if empty, considering all',
                             default=[''])
     groupClass.add_argument('--CL_statsiter', metavar='INT', action='store',
-                            help="Number of iteration for each algorithm to mean preds on different random states. "
-                                 "If using multiple cores, it's highly recommended to use statsiter mod nbCores == 0",
+                            help="Number of iteration for each algorithm to "
+                                 "mean preds on different random states. "
+                                 "If using multiple cores, it's highly "
+                                 "recommended to use statsiter mod nbCores == "
+                                 "0",
                             type=int,
                             default=2)
-    groupClass.add_argument('--CL_metrics', metavar='STRING', action='store', nargs="+",
-                            help='Determine which metrics to use, separate metric and configuration with ":".'
-                                 ' If multiple, separate with space. If no metric is specified, '
+    groupClass.add_argument('--CL_metrics', metavar='STRING', action='store',
+                            nargs="+",
+                            help='Determine which metrics to use, separate '
+                                 'metric and configuration with ":". '
+                                 'If multiple, separate with space. If no '
+                                 'metric is specified, '
                                  'considering all'
                             , default=[''])
-    groupClass.add_argument('--CL_metric_princ', metavar='STRING', action='store',
-                            help='Determine which metric to use for randomSearch and optimization', default="f1_score")
+    groupClass.add_argument('--CL_metric_princ', metavar='STRING',
+                            action='store',
+                            help='Determine which metric to use for '
+                                 'randomSearch and optimization',
+                            default="f1_score")
     groupClass.add_argument('--CL_HPS_iter', metavar='INT', action='store',
-                            help='Determine how many hyper parameters optimization tests to do', type=int, default=2)
+                            help='Determine how many hyper parameters '
+                                 'optimization tests to do',
+                            type=int, default=2)
     groupClass.add_argument('--CL_HPS_type', metavar='STRING', action='store',
-                            help='Determine which hyperparamter search function use', default="randomizedSearch")
+                            help='Determine which hyperparamter search '
+                                 'function use',
+                            default="randomizedSearch")
 
     groupRF = parser.add_argument_group('Random Forest arguments')
-    groupRF.add_argument('--RF_trees', metavar='INT', type=int, action='store', help='Number max trees',
+    groupRF.add_argument('--RF_trees', metavar='INT', type=int, action='store',
+                         help='Number max trees',
                          default=25)
-    groupRF.add_argument('--RF_max_depth', metavar='INT', type=int, action='store',
+    groupRF.add_argument('--RF_max_depth', metavar='INT', type=int,
+                         action='store',
                          help='Max depth for the trees',
                          default=5)
-    groupRF.add_argument('--RF_criterion', metavar='STRING', action='store', help='Criterion for the trees',
+    groupRF.add_argument('--RF_criterion', metavar='STRING', action='store',
+                         help='Criterion for the trees',
                          default="entropy")
 
     groupSVMLinear = parser.add_argument_group('Linear SVM arguments')
-    groupSVMLinear.add_argument('--SVML_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
+    groupSVMLinear.add_argument('--SVML_C', metavar='INT', type=int,
+                                action='store', help='Penalty parameter used',
                                 default=1)
 
     groupSVMRBF = parser.add_argument_group('SVW-RBF arguments')
-    groupSVMRBF.add_argument('--SVMRBF_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
+    groupSVMRBF.add_argument('--SVMRBF_C', metavar='INT', type=int,
+                             action='store', help='Penalty parameter used',
                              default=1)
 
     groupSVMPoly = parser.add_argument_group('Poly SVM arguments')
-    groupSVMPoly.add_argument('--SVMPoly_C', metavar='INT', type=int, action='store', help='Penalty parameter used',
+    groupSVMPoly.add_argument('--SVMPoly_C', metavar='INT', type=int,
+                              action='store', help='Penalty parameter used',
                               default=1)
-    groupSVMPoly.add_argument('--SVMPoly_deg', metavar='INT', type=int, action='store', help='Degree parameter used',
+    groupSVMPoly.add_argument('--SVMPoly_deg', metavar='INT', type=int,
+                              action='store', help='Degree parameter used',
                               default=2)
 
     groupAdaboost = parser.add_argument_group('Adaboost arguments')
-    groupAdaboost.add_argument('--Ada_n_est', metavar='INT', type=int, action='store', help='Number of estimators',
+    groupAdaboost.add_argument('--Ada_n_est', metavar='INT', type=int,
+                               action='store', help='Number of estimators',
                                default=2)
-    groupAdaboost.add_argument('--Ada_b_est', metavar='STRING', action='store', help='Estimators',
+    groupAdaboost.add_argument('--Ada_b_est', metavar='STRING', action='store',
+                               help='Estimators',
                                default='DecisionTreeClassifier')
 
     groupAdaboostPregen = parser.add_argument_group('AdaboostPregen arguments')
     groupAdaboostPregen.add_argument('--AdP_n_est', metavar='INT', type=int,
-                               action='store', help='Number of estimators',
-                               default=100)
-    groupAdaboostPregen.add_argument('--AdP_b_est', metavar='STRING', action='store',
-                               help='Estimators',
-                               default='DecisionTreeClassifier')
-    groupAdaboostPregen.add_argument('--AdP_stumps', metavar='INT', type=int,
-                                     action='store',
-                                     help='Number of stumps inthe pregenerated dataset',
-                                     default=1)
-
-
-
-    groupAdaboostGraalpy = parser.add_argument_group('AdaboostGraalpy arguments')
-    groupAdaboostGraalpy.add_argument('--AdG_n_iter', metavar='INT', type=int,
                                      action='store',
                                      help='Number of estimators',
                                      default=100)
-    groupAdaboostGraalpy.add_argument('--AdG_stumps', metavar='INT', type=int,
+    groupAdaboostPregen.add_argument('--AdP_b_est', metavar='STRING',
                                      action='store',
-                                     help='Number of stumps inthe pregenerated dataset',
+                                     help='Estimators',
+                                     default='DecisionTreeClassifier')
+    groupAdaboostPregen.add_argument('--AdP_stumps', metavar='INT', type=int,
+                                     action='store',
+                                     help='Number of stumps inthe '
+                                          'pregenerated dataset',
                                      default=1)
+
+    groupAdaboostGraalpy = parser.add_argument_group(
+        'AdaboostGraalpy arguments')
+    groupAdaboostGraalpy.add_argument('--AdG_n_iter', metavar='INT', type=int,
+                                      action='store',
+                                      help='Number of estimators',
+                                      default=100)
+    groupAdaboostGraalpy.add_argument('--AdG_stumps', metavar='INT', type=int,
+                                      action='store',
+                                      help='Number of stumps inthe '
+                                           'pregenerated dataset',
+                                      default=1)
 
     groupDT = parser.add_argument_group('Decision Trees arguments')
     groupDT.add_argument('--DT_depth', metavar='INT', type=int, action='store',
-                         help='Determine max depth for Decision Trees', default=3)
-    groupDT.add_argument('--DT_criterion', metavar='STRING', action='store',
-                         help='Determine max depth for Decision Trees', default="entropy")
-    groupDT.add_argument('--DT_splitter', metavar='STRING', action='store',
-                         help='Determine criterion for Decision Trees', default="random")
-
-    groupDTP = parser.add_argument_group('Decision Trees pregen arguments')
-    groupDTP.add_argument('--DTP_depth', metavar='INT', type=int, action='store',
                          help='Determine max depth for Decision Trees',
                          default=3)
-    groupDTP.add_argument('--DTP_criterion', metavar='STRING', action='store',
+    groupDT.add_argument('--DT_criterion', metavar='STRING', action='store',
                          help='Determine max depth for Decision Trees',
                          default="entropy")
-    groupDTP.add_argument('--DTP_splitter', metavar='STRING', action='store',
+    groupDT.add_argument('--DT_splitter', metavar='STRING', action='store',
                          help='Determine criterion for Decision Trees',
                          default="random")
-    groupDTP.add_argument('--DTP_stumps', metavar='INT', type=int, action='store',
-                          help='Determine the number of stumps for Decision Trees pregen',
+
+    groupDTP = parser.add_argument_group('Decision Trees pregen arguments')
+    groupDTP.add_argument('--DTP_depth', metavar='INT', type=int,
+                          action='store',
+                          help='Determine max depth for Decision Trees',
+                          default=3)
+    groupDTP.add_argument('--DTP_criterion', metavar='STRING', action='store',
+                          help='Determine max depth for Decision Trees',
+                          default="entropy")
+    groupDTP.add_argument('--DTP_splitter', metavar='STRING', action='store',
+                          help='Determine criterion for Decision Trees',
+                          default="random")
+    groupDTP.add_argument('--DTP_stumps', metavar='INT', type=int,
+                          action='store',
+                          help='Determine the number of stumps for Decision '
+                               'Trees pregen',
                           default=1)
 
     groupSGD = parser.add_argument_group('SGD arguments')
-    groupSGD.add_argument('--SGD_alpha', metavar='FLOAT', type=float, action='store',
+    groupSGD.add_argument('--SGD_alpha', metavar='FLOAT', type=float,
+                          action='store',
                           help='Determine alpha for SGDClassifier', default=0.1)
     groupSGD.add_argument('--SGD_loss', metavar='STRING', action='store',
-                          help='Determine loss for SGDClassifier', default='log')
+                          help='Determine loss for SGDClassifier',
+                          default='log')
     groupSGD.add_argument('--SGD_penalty', metavar='STRING', action='store',
-                          help='Determine penalty for SGDClassifier', default='l2')
+                          help='Determine penalty for SGDClassifier',
+                          default='l2')
 
     groupKNN = parser.add_argument_group('KNN arguments')
-    groupKNN.add_argument('--KNN_neigh', metavar='INT', type=int, action='store',
-                          help='Determine number of neighbors for KNN', default=1)
+    groupKNN.add_argument('--KNN_neigh', metavar='INT', type=int,
+                          action='store',
+                          help='Determine number of neighbors for KNN',
+                          default=1)
     groupKNN.add_argument('--KNN_weights', metavar='STRING', action='store',
-                          help='Determine number of neighbors for KNN', default="distance")
+                          help='Determine number of neighbors for KNN',
+                          default="distance")
     groupKNN.add_argument('--KNN_algo', metavar='STRING', action='store',
-                          help='Determine number of neighbors for KNN', default="auto")
+                          help='Determine number of neighbors for KNN',
+                          default="auto")
     groupKNN.add_argument('--KNN_p', metavar='INT', type=int, action='store',
-                          help='Determine number of neighbors for KNN', default=1)
+                          help='Determine number of neighbors for KNN',
+                          default=1)
 
     groupSCM = parser.add_argument_group('SCM arguments')
-    groupSCM.add_argument('--SCM_max_rules', metavar='INT', type=int, action='store',
+    groupSCM.add_argument('--SCM_max_rules', metavar='INT', type=int,
+                          action='store',
                           help='Max number of rules for SCM', default=1)
-    groupSCM.add_argument('--SCM_p', metavar='FLOAT', type=float, action='store',
+    groupSCM.add_argument('--SCM_p', metavar='FLOAT', type=float,
+                          action='store',
                           help='Max number of rules for SCM', default=1.0)
     groupSCM.add_argument('--SCM_model_type', metavar='STRING', action='store',
-                          help='Max number of rules for SCM', default="conjunction")
+                          help='Max number of rules for SCM',
+                          default="conjunction")
 
     groupSCMPregen = parser.add_argument_group('SCMPregen arguments')
     groupSCMPregen.add_argument('--SCP_max_rules', metavar='INT', type=int,
-                          action='store',
-                          help='Max number of rules for SCM', default=1)
+                                action='store',
+                                help='Max number of rules for SCM', default=1)
     groupSCMPregen.add_argument('--SCP_p', metavar='FLOAT', type=float,
-                          action='store',
-                          help='Max number of rules for SCM', default=1.0)
-    groupSCMPregen.add_argument('--SCP_model_type', metavar='STRING', action='store',
-                          help='Max number of rules for SCM',
-                          default="conjunction")
+                                action='store',
+                                help='Max number of rules for SCM', default=1.0)
+    groupSCMPregen.add_argument('--SCP_model_type', metavar='STRING',
+                                action='store',
+                                help='Max number of rules for SCM',
+                                default="conjunction")
     groupSCMPregen.add_argument('--SCP_stumps', metavar='INT', type=int,
                                 action='store',
-                                help='Number of stumps per attribute', default=1)
+                                help='Number of stumps per attribute',
+                                default=1)
 
     groupSCMSparsity = parser.add_argument_group('SCMSparsity arguments')
     groupSCMSparsity.add_argument('--SCS_max_rules', metavar='INT', type=int,
-                                action='store',
-                                help='Max number of rules for SCM', default=1)
+                                  action='store',
+                                  help='Max number of rules for SCM', default=1)
     groupSCMSparsity.add_argument('--SCS_stumps', metavar='INT', type=int,
                                   action='store',
                                   help='Number of stumps', default=1)
     groupSCMSparsity.add_argument('--SCS_p', metavar='FLOAT', type=float,
-                                action='store',
-                                help='Max number of rules for SCM', default=1.0)
+                                  action='store',
+                                  help='Max number of rules for SCM',
+                                  default=1.0)
     groupSCMSparsity.add_argument('--SCS_model_type', metavar='STRING',
-                                action='store',
-                                help='Max number of rules for SCM',
-                                default="conjunction")
+                                  action='store',
+                                  help='Max number of rules for SCM',
+                                  default="conjunction")
 
     groupCQBoost = parser.add_argument_group('CQBoost arguments')
-    groupCQBoost.add_argument('--CQB_mu', metavar='FLOAT', type=float, action='store',
-                              help='Set the mu parameter for CQBoost', default=0.001)
-    groupCQBoost.add_argument('--CQB_epsilon', metavar='FLOAT', type=float, action='store',
-                              help='Set the epsilon parameter for CQBoost', default=1e-06)
+    groupCQBoost.add_argument('--CQB_mu', metavar='FLOAT', type=float,
+                              action='store',
+                              help='Set the mu parameter for CQBoost',
+                              default=0.001)
+    groupCQBoost.add_argument('--CQB_epsilon', metavar='FLOAT', type=float,
+                              action='store',
+                              help='Set the epsilon parameter for CQBoost',
+                              default=1e-06)
     groupCQBoost.add_argument('--CQB_stumps', metavar='INT', type=int,
                               action='store',
                               help='Set the number of stumps for CQBoost',
                               default=1)
     groupCQBoost.add_argument('--CQB_n_iter', metavar='INT', type=int,
-                                  action='store',
-                                  help='Set the maximum number of iteration in CQBoost',
-                                  default=None)
-
-
+                              action='store',
+                              help='Set the maximum number of iteration in '
+                                   'CQBoost',
+                              default=None)
 
     groupCQBoostv2 = parser.add_argument_group('CQBoostv2 arguments')
-    groupCQBoostv2.add_argument('--CQB2_mu', metavar='FLOAT', type=float, action='store',
-                              help='Set the mu parameter for CQBoostv2', default=0.002)
-    groupCQBoostv2.add_argument('--CQB2_epsilon', metavar='FLOAT', type=float, action='store',
-                              help='Set the epsilon parameter for CQBoostv2', default=1e-08)
+    groupCQBoostv2.add_argument('--CQB2_mu', metavar='FLOAT', type=float,
+                                action='store',
+                                help='Set the mu parameter for CQBoostv2',
+                                default=0.002)
+    groupCQBoostv2.add_argument('--CQB2_epsilon', metavar='FLOAT', type=float,
+                                action='store',
+                                help='Set the epsilon parameter for CQBoostv2',
+                                default=1e-08)
 
     groupCQBoostv21 = parser.add_argument_group('CQBoostv21 arguments')
-    groupCQBoostv21.add_argument('--CQB21_mu', metavar='FLOAT', type=float, action='store',
-                                help='Set the mu parameter for CQBoostv2', default=0.001)
-    groupCQBoostv21.add_argument('--CQB21_epsilon', metavar='FLOAT', type=float, action='store',
-                                help='Set the epsilon parameter for CQBoostv2', default=1e-08)
+    groupCQBoostv21.add_argument('--CQB21_mu', metavar='FLOAT', type=float,
+                                 action='store',
+                                 help='Set the mu parameter for CQBoostv2',
+                                 default=0.001)
+    groupCQBoostv21.add_argument('--CQB21_epsilon', metavar='FLOAT', type=float,
+                                 action='store',
+                                 help='Set the epsilon parameter for CQBoostv2',
+                                 default=1e-08)
 
     groupQarBoost = parser.add_argument_group('QarBoost arguments')
-    groupQarBoost.add_argument('--QarB_mu', metavar='FLOAT', type=float, action='store',
-                                 help='Set the mu parameter for QarBoost', default=0.001)
-    groupQarBoost.add_argument('--QarB_epsilon', metavar='FLOAT', type=float, action='store',
-                                 help='Set the epsilon parameter for QarBoost', default=1e-08)
+    groupQarBoost.add_argument('--QarB_mu', metavar='FLOAT', type=float,
+                               action='store',
+                               help='Set the mu parameter for QarBoost',
+                               default=0.001)
+    groupQarBoost.add_argument('--QarB_epsilon', metavar='FLOAT', type=float,
+                               action='store',
+                               help='Set the epsilon parameter for QarBoost',
+                               default=1e-08)
 
     groupCGreed = parser.add_argument_group('CGreed arguments')
-    groupCGreed.add_argument('--CGR_stumps', metavar='INT', type=int, action='store',
-                               help='Set the n_stumps_per_attribute parameter for CGreed', default=1)
-    groupCGreed.add_argument('--CGR_n_iter', metavar='INT', type=int, action='store',
-                                 help='Set the n_max_iterations parameter for CGreed', default=100)
+    groupCGreed.add_argument('--CGR_stumps', metavar='INT', type=int,
+                             action='store',
+                             help='Set the n_stumps_per_attribute parameter '
+                                  'for CGreed',
+                             default=1)
+    groupCGreed.add_argument('--CGR_n_iter', metavar='INT', type=int,
+                             action='store',
+                             help='Set the n_max_iterations parameter for '
+                                  'CGreed',
+                             default=100)
 
     groupCGDesc = parser.add_argument_group('CGDesc arguments')
     groupCGDesc.add_argument('--CGD_stumps', metavar='INT', type=int,
                              action='store',
-                             help='Set the n_stumps_per_attribute parameter for CGreed',
+                             help='Set the n_stumps_per_attribute parameter '
+                                  'for CGreed',
                              default=1)
     groupCGDesc.add_argument('--CGD_n_iter', metavar='INT', type=int,
                              action='store',
-                             help='Set the n_max_iterations parameter for CGreed',
+                             help='Set the n_max_iterations parameter for '
+                                  'CGreed',
                              default=100)
 
     groupCGDescTree = parser.add_argument_group('CGDesc arguments')
     groupCGDescTree.add_argument('--CGDT_trees', metavar='INT', type=int,
-                             action='store',
-                             help='Set thenumber of trees for CGreed',
-                             default=100)
+                                 action='store',
+                                 help='Set thenumber of trees for CGreed',
+                                 default=100)
     groupCGDescTree.add_argument('--CGDT_n_iter', metavar='INT', type=int,
-                             action='store',
-                             help='Set the n_max_iterations parameter for CGreed',
-                             default=100)
+                                 action='store',
+                                 help='Set the n_max_iterations parameter for '
+                                      'CGreed',
+                                 default=100)
     groupCGDescTree.add_argument('--CGDT_max_depth', metavar='INT', type=int,
                                  action='store',
                                  help='Set the n_max_iterations parameter for CGreed',
@@ -330,45 +430,50 @@ def parseTheArgs(arguments):
 
     groupSCMPregenTree = parser.add_argument_group('SCMPregenTree arguments')
     groupSCMPregenTree.add_argument('--SCPT_max_rules', metavar='INT', type=int,
-                                action='store',
-                                help='Max number of rules for SCM', default=1)
+                                    action='store',
+                                    help='Max number of rules for SCM',
+                                    default=1)
     groupSCMPregenTree.add_argument('--SCPT_p', metavar='FLOAT', type=float,
-                                action='store',
-                                help='Max number of rules for SCM', default=1.0)
+                                    action='store',
+                                    help='Max number of rules for SCM',
+                                    default=1.0)
     groupSCMPregenTree.add_argument('--SCPT_model_type', metavar='STRING',
-                                action='store',
-                                help='Max number of rules for SCM',
-                                default="conjunction")
+                                    action='store',
+                                    help='Max number of rules for SCM',
+                                    default="conjunction")
     groupSCMPregenTree.add_argument('--SCPT_trees', metavar='INT', type=int,
-                                action='store',
-                                help='Number of stumps per attribute',
-                                default=100)
+                                    action='store',
+                                    help='Number of stumps per attribute',
+                                    default=100)
     groupSCMPregenTree.add_argument('--SCPT_max_depth', metavar='INT', type=int,
                                     action='store',
                                     help='Max_depth of the trees',
                                     default=1)
 
-    groupSCMSparsityTree = parser.add_argument_group('SCMSparsityTree arguments')
-    groupSCMSparsityTree.add_argument('--SCST_max_rules', metavar='INT', type=int,
-                                    action='store',
-                                    help='Max number of rules for SCM',
-                                    default=1)
+    groupSCMSparsityTree = parser.add_argument_group(
+        'SCMSparsityTree arguments')
+    groupSCMSparsityTree.add_argument('--SCST_max_rules', metavar='INT',
+                                      type=int,
+                                      action='store',
+                                      help='Max number of rules for SCM',
+                                      default=1)
     groupSCMSparsityTree.add_argument('--SCST_p', metavar='FLOAT', type=float,
-                                    action='store',
-                                    help='Max number of rules for SCM',
-                                    default=1.0)
+                                      action='store',
+                                      help='Max number of rules for SCM',
+                                      default=1.0)
     groupSCMSparsityTree.add_argument('--SCST_model_type', metavar='STRING',
-                                    action='store',
-                                    help='Max number of rules for SCM',
-                                    default="conjunction")
+                                      action='store',
+                                      help='Max number of rules for SCM',
+                                      default="conjunction")
     groupSCMSparsityTree.add_argument('--SCST_trees', metavar='INT', type=int,
-                                    action='store',
-                                    help='Number of stumps per attribute',
-                                    default=100)
-    groupSCMSparsityTree.add_argument('--SCST_max_depth', metavar='INT', type=int,
-                                    action='store',
-                                    help='Max_depth of the trees',
-                                    default=1)
+                                      action='store',
+                                      help='Number of stumps per attribute',
+                                      default=100)
+    groupSCMSparsityTree.add_argument('--SCST_max_depth', metavar='INT',
+                                      type=int,
+                                      action='store',
+                                      help='Max_depth of the trees',
+                                      default=1)
 
     groupAdaboostPregenTree = parser.add_argument_group(
         'AdaboostPregenTrees arguments')
@@ -394,19 +499,20 @@ def parseTheArgs(arguments):
 
     groupLasso = parser.add_argument_group('Lasso arguments')
     groupLasso.add_argument('--LA_n_iter', metavar='INT', type=int,
-                             action='store',
-                             help='Set the max_iter parameter for Lasso',
-                             default=1)
+                            action='store',
+                            help='Set the max_iter parameter for Lasso',
+                            default=1)
     groupLasso.add_argument('--LA_alpha', metavar='FLOAT', type=float,
-                             action='store',
-                             help='Set the alpha parameter for Lasso',
-                             default=1.0)
+                            action='store',
+                            help='Set the alpha parameter for Lasso',
+                            default=1.0)
 
-    groupGradientBoosting = parser.add_argument_group('Gradient Boosting arguments')
+    groupGradientBoosting = parser.add_argument_group(
+        'Gradient Boosting arguments')
     groupGradientBoosting.add_argument('--GB_n_est', metavar='INT', type=int,
-                             action='store',
-                             help='Set the n_estimators_parameter for Gradient Boosting',
-                             default=100)
+                                       action='store',
+                                       help='Set the n_estimators_parameter for Gradient Boosting',
+                                       default=100)
 
     groupMinCQ = parser.add_argument_group('MinCQ arguments')
     groupMinCQ.add_argument('--MCQ_mu', metavar='FLOAT', type=float,
@@ -414,117 +520,159 @@ def parseTheArgs(arguments):
                             help='Set the mu_parameter for MinCQ',
                             default=0.05)
     groupMinCQ.add_argument('--MCQ_stumps', metavar='INT', type=int,
-                             action='store',
-                             help='Set the n_stumps_per_attribute parameter for MinCQ',
-                             default=1)
+                            action='store',
+                            help='Set the n_stumps_per_attribute parameter for MinCQ',
+                            default=1)
 
     groupMinCQGraalpy = parser.add_argument_group('MinCQGraalpy arguments')
     groupMinCQGraalpy.add_argument('--MCG_mu', metavar='FLOAT', type=float,
-                            action='store',
-                            help='Set the mu_parameter for MinCQGraalpy',
-                            default=0.05)
+                                   action='store',
+                                   help='Set the mu_parameter for MinCQGraalpy',
+                                   default=0.05)
     groupMinCQGraalpy.add_argument('--MCG_stumps', metavar='INT', type=int,
-                            action='store',
-                            help='Set the n_stumps_per_attribute parameter for MinCQGraalpy',
-                            default=1)
-
-
+                                   action='store',
+                                   help='Set the n_stumps_per_attribute parameter for MinCQGraalpy',
+                                   default=1)
 
     groupQarBoostv3 = parser.add_argument_group('QarBoostv3 arguments')
-    groupQarBoostv3.add_argument('--QarB3_mu', metavar='FLOAT', type=float, action='store',
-                                 help='Set the mu parameter for QarBoostv3', default=0.001)
-    groupQarBoostv3.add_argument('--QarB3_epsilon', metavar='FLOAT', type=float, action='store',
-                                 help='Set the epsilon parameter for QarBoostv3', default=1e-08)
+    groupQarBoostv3.add_argument('--QarB3_mu', metavar='FLOAT', type=float,
+                                 action='store',
+                                 help='Set the mu parameter for QarBoostv3',
+                                 default=0.001)
+    groupQarBoostv3.add_argument('--QarB3_epsilon', metavar='FLOAT', type=float,
+                                 action='store',
+                                 help='Set the epsilon parameter for QarBoostv3',
+                                 default=1e-08)
 
     groupQarBoostNC = parser.add_argument_group('QarBoostNC arguments')
-    groupQarBoostNC.add_argument('--QarBNC_mu', metavar='FLOAT', type=float, action='store',
-                                 help='Set the mu parameter for QarBoostNC', default=0.001)
-    groupQarBoostNC.add_argument('--QarBNC_epsilon', metavar='FLOAT', type=float, action='store',
-                                 help='Set the epsilon parameter for QarBoostNC', default=1e-08)
+    groupQarBoostNC.add_argument('--QarBNC_mu', metavar='FLOAT', type=float,
+                                 action='store',
+                                 help='Set the mu parameter for QarBoostNC',
+                                 default=0.001)
+    groupQarBoostNC.add_argument('--QarBNC_epsilon', metavar='FLOAT',
+                                 type=float, action='store',
+                                 help='Set the epsilon parameter for QarBoostNC',
+                                 default=1e-08)
 
     groupQarBoostNC2 = parser.add_argument_group('QarBoostNC2 arguments')
-    groupQarBoostNC2.add_argument('--QarBNC2_mu', metavar='FLOAT', type=float, action='store',
-                                 help='Set the mu parameter for QarBoostNC2', default=0.001)
-    groupQarBoostNC2.add_argument('--QarBNC2_epsilon', metavar='FLOAT', type=float, action='store',
-                                 help='Set the epsilon parameter for QarBoostNC2', default=1e-08)
+    groupQarBoostNC2.add_argument('--QarBNC2_mu', metavar='FLOAT', type=float,
+                                  action='store',
+                                  help='Set the mu parameter for QarBoostNC2',
+                                  default=0.001)
+    groupQarBoostNC2.add_argument('--QarBNC2_epsilon', metavar='FLOAT',
+                                  type=float, action='store',
+                                  help='Set the epsilon parameter for QarBoostNC2',
+                                  default=1e-08)
 
     groupQarBoostNC3 = parser.add_argument_group('QarBoostNC3 arguments')
-    groupQarBoostNC3.add_argument('--QarBNC3_mu', metavar='FLOAT', type=float, action='store',
-                                  help='Set the mu parameter for QarBoostNC3', default=0.001)
-    groupQarBoostNC3.add_argument('--QarBNC3_epsilon', metavar='FLOAT', type=float, action='store',
-                                  help='Set the epsilon parameter for QarBoostNC3', default=1e-08)
+    groupQarBoostNC3.add_argument('--QarBNC3_mu', metavar='FLOAT', type=float,
+                                  action='store',
+                                  help='Set the mu parameter for QarBoostNC3',
+                                  default=0.001)
+    groupQarBoostNC3.add_argument('--QarBNC3_epsilon', metavar='FLOAT',
+                                  type=float, action='store',
+                                  help='Set the epsilon parameter for QarBoostNC3',
+                                  default=1e-08)
 
+#
+# Multiview args
+#
 
     groupMumbo = parser.add_argument_group('Mumbo arguments')
-    groupMumbo.add_argument('--MU_types', metavar='STRING', action='store', nargs="+",
+    groupMumbo.add_argument('--MU_types', metavar='STRING', action='store',
+                            nargs="+",
                             help='Determine which monoview classifier to use with Mumbo',
                             default=[''])
-    groupMumbo.add_argument('--MU_config', metavar='STRING', action='store', nargs='+',
+    groupMumbo.add_argument('--MU_config', metavar='STRING', action='store',
+                            nargs='+',
                             help='Configuration for the monoview classifier in Mumbo separate each classifier with sapce and each argument with:',
                             default=[''])
     groupMumbo.add_argument('--MU_iter', metavar='INT', action='store', nargs=3,
-                            help='Max number of iteration, min number of iteration, convergence threshold', type=float,
+                            help='Max number of iteration, min number of iteration, convergence threshold',
+                            type=float,
                             default=[10, 1, 0.01])
     groupMumbo.add_argument('--MU_combination', action='store_true',
                             help='Try all the monoview classifiers combinations for each view',
                             default=False)
 
-
     groupFusion = parser.add_argument_group('Fusion arguments')
-    groupFusion.add_argument('--FU_types', metavar='STRING', action='store', nargs="+",
+    groupFusion.add_argument('--FU_types', metavar='STRING', action='store',
+                             nargs="+",
                              help='Determine which type of fusion to use',
                              default=[''])
     groupEarlyFusion = parser.add_argument_group('Early Fusion arguments')
-    groupEarlyFusion.add_argument('--FU_early_methods', metavar='STRING', action='store', nargs="+",
+    groupEarlyFusion.add_argument('--FU_early_methods', metavar='STRING',
+                                  action='store', nargs="+",
                                   help='Determine which early fusion method of fusion to use',
                                   default=[''])
-    groupEarlyFusion.add_argument('--FU_E_method_configs', metavar='STRING', action='store', nargs='+',
+    groupEarlyFusion.add_argument('--FU_E_method_configs', metavar='STRING',
+                                  action='store', nargs='+',
                                   help='Configuration for the early fusion methods separate '
                                        'method by space and values by :',
                                   default=[''])
-    groupEarlyFusion.add_argument('--FU_E_cl_config', metavar='STRING', action='store', nargs='+',
+    groupEarlyFusion.add_argument('--FU_E_cl_config', metavar='STRING',
+                                  action='store', nargs='+',
                                   help='Configuration for the monoview classifiers used separate classifier by space '
                                        'and configs must be of form argument1_name:value,argument2_name:value',
                                   default=[''])
-    groupEarlyFusion.add_argument('--FU_E_cl_names', metavar='STRING', action='store', nargs='+',
-                                  help='Name of the classifiers used for each early fusion method', default=[''])
+    groupEarlyFusion.add_argument('--FU_E_cl_names', metavar='STRING',
+                                  action='store', nargs='+',
+                                  help='Name of the classifiers used for each early fusion method',
+                                  default=[''])
 
     groupLateFusion = parser.add_argument_group('Late Fusion arguments')
-    groupLateFusion.add_argument('--FU_late_methods', metavar='STRING', action='store', nargs="+",
+    groupLateFusion.add_argument('--FU_late_methods', metavar='STRING',
+                                 action='store', nargs="+",
                                  help='Determine which late fusion method of fusion to use',
                                  default=[''])
-    groupLateFusion.add_argument('--FU_L_method_config', metavar='STRING', action='store', nargs='+',
-                                 help='Configuration for the fusion method', default=[''])
-    groupLateFusion.add_argument('--FU_L_cl_config', metavar='STRING', action='store', nargs='+',
-                                 help='Configuration for the monoview classifiers used', default=[''])
-    groupLateFusion.add_argument('--FU_L_cl_names', metavar='STRING', action='store', nargs="+",
-                                 help='Names of the classifier used for late fusion', default=[''])
-    groupLateFusion.add_argument('--FU_L_select_monoview', metavar='STRING', action='store',
+    groupLateFusion.add_argument('--FU_L_method_config', metavar='STRING',
+                                 action='store', nargs='+',
+                                 help='Configuration for the fusion method',
+                                 default=[''])
+    groupLateFusion.add_argument('--FU_L_cl_config', metavar='STRING',
+                                 action='store', nargs='+',
+                                 help='Configuration for the monoview classifiers used',
+                                 default=[''])
+    groupLateFusion.add_argument('--FU_L_cl_names', metavar='STRING',
+                                 action='store', nargs="+",
+                                 help='Names of the classifier used for late fusion',
+                                 default=[''])
+    groupLateFusion.add_argument('--FU_L_select_monoview', metavar='STRING',
+                                 action='store',
                                  help='Determine which method to use to select the monoview classifiers',
                                  default="intersect")
 
     groupFatLateFusion = parser.add_argument_group('Fat Late Fusion arguments')
-    groupFatLateFusion.add_argument('--FLF_weights', metavar='FLOAT', action='store', nargs="+",
-                                 help='Determine the weights of each monoview decision for FLF', type=float,
-                                 default=[])
-
-    groupFatSCMLateFusion = parser.add_argument_group('Fat SCM Late Fusion arguments')
-    groupFatSCMLateFusion.add_argument('--FSCMLF_p', metavar='FLOAT', action='store',
-                                    help='Determine the p argument of the SCM', type=float,
-                                    default=0.5)
-    groupFatSCMLateFusion.add_argument('--FSCMLF_max_attributes', metavar='INT', action='store',
-                                    help='Determine the maximum number of aibutes used by the SCM', type=int,
-                                    default=4)
-    groupFatSCMLateFusion.add_argument('--FSCMLF_model', metavar='STRING', action='store',
-                                    help='Determine the model type of the SCM',
-                                    default="conjunction")
-
-    groupDisagreeFusion = parser.add_argument_group('Disagreement based fusion arguments')
-    groupDisagreeFusion.add_argument('--DGF_weights', metavar='FLOAT', action='store', nargs="+",
-                                    help='Determine the weights of each monoview decision for DFG', type=float,
+    groupFatLateFusion.add_argument('--FLF_weights', metavar='FLOAT',
+                                    action='store', nargs="+",
+                                    help='Determine the weights of each monoview decision for FLF',
+                                    type=float,
                                     default=[])
 
+    groupFatSCMLateFusion = parser.add_argument_group(
+        'Fat SCM Late Fusion arguments')
+    groupFatSCMLateFusion.add_argument('--FSCMLF_p', metavar='FLOAT',
+                                       action='store',
+                                       help='Determine the p argument of the SCM',
+                                       type=float,
+                                       default=0.5)
+    groupFatSCMLateFusion.add_argument('--FSCMLF_max_attributes', metavar='INT',
+                                       action='store',
+                                       help='Determine the maximum number of aibutes used by the SCM',
+                                       type=int,
+                                       default=4)
+    groupFatSCMLateFusion.add_argument('--FSCMLF_model', metavar='STRING',
+                                       action='store',
+                                       help='Determine the model type of the SCM',
+                                       default="conjunction")
 
+    groupDisagreeFusion = parser.add_argument_group(
+        'Disagreement based fusion arguments')
+    groupDisagreeFusion.add_argument('--DGF_weights', metavar='FLOAT',
+                                     action='store', nargs="+",
+                                     help='Determine the weights of each monoview decision for DFG',
+                                     type=float,
+                                     default=[])
 
     args = parser.parse_args(arguments)
     return args
@@ -585,7 +733,9 @@ def initStatsIterRandomStates(statsIter, randomState):
         Multiple random states, one for each sattistical iteration of the same benchmark.
     """
     if statsIter > 1:
-        statsIterRandomStates = [np.random.RandomState(randomState.randint(5000)) for _ in range(statsIter)]
+        statsIterRandomStates = [
+            np.random.RandomState(randomState.randint(5000)) for _ in
+            range(statsIter)]
     else:
         statsIterRandomStates = [randomState]
     return statsIterRandomStates
@@ -637,17 +787,21 @@ def initLogFile(name, views, CL_type, log, debug, label, result_directory):
         Reference to the main results directory for the benchmark.
     """
     if debug:
-        resultDirectory = result_directory + name + "/debug_started_" + time.strftime("%Y_%m_%d-%H_%M_%S") + "_" + label + "/"
+        resultDirectory = result_directory + name + "/debug_started_" + time.strftime(
+            "%Y_%m_%d-%H_%M_%S") + "_" + label + "/"
     else:
-        resultDirectory = result_directory + name + "/started_" + time.strftime("%Y_%m_%d-%H_%M") + "_" + label + "/"
-    logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(CL_type) + "-" + "_".join(
+        resultDirectory = result_directory + name + "/started_" + time.strftime(
+            "%Y_%m_%d-%H_%M") + "_" + label + "/"
+    logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(
+        CL_type) + "-" + "_".join(
         views) + "-" + name + "-LOG"
     if os.path.exists(os.path.dirname(resultDirectory)):
         raise NameError("The result dir already exists, wait 1 min and retry")
     os.makedirs(os.path.dirname(resultDirectory + logFileName))
     logFile = resultDirectory + logFileName
     logFile += ".log"
-    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', filename=logFile, level=logging.DEBUG,
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
+                        filename=logFile, level=logging.DEBUG,
                         filemode='w')
     if log:
         logging.getLogger().addHandler(logging.StreamHandler())
@@ -709,9 +863,12 @@ def genKFolds(statsIter, nbFolds, statsIterRandomStates):
     if statsIter > 1:
         foldsList = []
         for randomState in statsIterRandomStates:
-            foldsList.append(sklearn.model_selection.StratifiedKFold(n_splits=nbFolds, random_state=randomState))
+            foldsList.append(
+                sklearn.model_selection.StratifiedKFold(n_splits=nbFolds,
+                                                        random_state=randomState))
     else:
-        foldsList = [sklearn.model_selection.StratifiedKFold(n_splits=nbFolds, random_state=statsIterRandomStates)]
+        foldsList = [sklearn.model_selection.StratifiedKFold(n_splits=nbFolds,
+                                                             random_state=statsIterRandomStates)]
     return foldsList
 
 
@@ -738,8 +895,10 @@ def initViews(DATASET, argViews):
     if argViews != [""]:
         allowedViews = argViews
         allViews = [str(DATASET.get("View" + str(viewIndex)).attrs["name"])
-                    if type(DATASET.get("View" + str(viewIndex)).attrs["name"])!=bytes
-                    else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
+                    if type(
+            DATASET.get("View" + str(viewIndex)).attrs["name"]) != bytes
+                    else DATASET.get("View" + str(viewIndex)).attrs[
+            "name"].decode("utf-8")
                     for viewIndex in range(NB_VIEW)]
         views = []
         viewsIndices = []
@@ -752,9 +911,11 @@ def initViews(DATASET, argViews):
                 viewsIndices.append(viewIndex)
     else:
         views = [str(DATASET.get("View" + str(viewIndex)).attrs["name"])
-                if type(DATASET.get("View" + str(viewIndex)).attrs["name"])!=bytes
-                else DATASET.get("View" + str(viewIndex)).attrs["name"].decode("utf-8")
-                for viewIndex in range(NB_VIEW)]
+                 if type(
+            DATASET.get("View" + str(viewIndex)).attrs["name"]) != bytes
+                 else DATASET.get("View" + str(viewIndex)).attrs["name"].decode(
+            "utf-8")
+                 for viewIndex in range(NB_VIEW)]
         viewsIndices = range(NB_VIEW)
         allViews = views
     return views, viewsIndices, allViews
@@ -784,8 +945,11 @@ def genDirecortiesNames(directory, statsIter):
     return directories
 
 
-def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, labelsCombinations, indicesMulticlass,
-                            hyperParamSearch, args, kFolds, statsIterRandomStates, metrics, argumentDictionaries,
+def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels,
+                            labelsCombinations, indicesMulticlass,
+                            hyperParamSearch, args, kFolds,
+                            statsIterRandomStates, metrics,
+                            argumentDictionaries,
                             benchmark, nbViews, views, viewsIndices):
     r"""Used to generate a dictionary for each benchmark.
 
@@ -836,25 +1000,28 @@ def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels, lab
     benchmarkArgumentDictionaries = []
     for combinationIndex, labelsCombination in enumerate(labelsCombinations):
         for iterIndex, iterRandomState in enumerate(statsIterRandomStates):
-            benchmarkArgumentDictionary = {"LABELS_DICTIONARY": {0:labelsDictionary[labelsCombination[0]],
-                                                                 1:labelsDictionary[labelsCombination[1]]},
-                                           "directory": directories[iterIndex]+
-                                                        labelsDictionary[labelsCombination[0]]+
-                                                        "-vs-"+
-                                                        labelsDictionary[labelsCombination[1]]+"/",
-                                           "classificationIndices": [indicesMulticlass[combinationIndex][0][iterIndex],
-                                                                     indicesMulticlass[combinationIndex][1][iterIndex],
-                                                                     indicesMulticlass[combinationIndex][2][iterIndex]],
-                                           "args": args,
-                                           "labels": multiclassLabels[combinationIndex],
-                                           "kFolds": kFolds[iterIndex],
-                                           "randomState": iterRandomState,
-                                           "hyperParamSearch": hyperParamSearch,
-                                           "metrics": metrics,
-                                           "argumentDictionaries": argumentDictionaries,
-                                           "benchmark": benchmark,
-                                           "views": views,
-                                           "viewsIndices": viewsIndices,
-                                           "flag": [iterIndex, labelsCombination]}
+            benchmarkArgumentDictionary = {
+                "LABELS_DICTIONARY": {0: labelsDictionary[labelsCombination[0]],
+                                      1: labelsDictionary[
+                                          labelsCombination[1]]},
+                "directory": directories[iterIndex] +
+                             labelsDictionary[labelsCombination[0]] +
+                             "-vs-" +
+                             labelsDictionary[labelsCombination[1]] + "/",
+                "classificationIndices": [
+                    indicesMulticlass[combinationIndex][0][iterIndex],
+                    indicesMulticlass[combinationIndex][1][iterIndex],
+                    indicesMulticlass[combinationIndex][2][iterIndex]],
+                "args": args,
+                "labels": multiclassLabels[combinationIndex],
+                "kFolds": kFolds[iterIndex],
+                "randomState": iterRandomState,
+                "hyperParamSearch": hyperParamSearch,
+                "metrics": metrics,
+                "argumentDictionaries": argumentDictionaries,
+                "benchmark": benchmark,
+                "views": views,
+                "viewsIndices": viewsIndices,
+                "flag": [iterIndex, labelsCombination]}
             benchmarkArgumentDictionaries.append(benchmarkArgumentDictionary)
     return benchmarkArgumentDictionaries

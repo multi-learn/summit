@@ -1,6 +1,7 @@
 import unittest
 
-from ....MonoMultiViewClassifiers.MultiviewClassifiers.Fusion import FusionModule
+from ....MonoMultiViewClassifiers.MultiviewClassifiers.Fusion import \
+    FusionModule
 
 
 class Test_genName(unittest.TestCase):
@@ -11,4 +12,3 @@ class Test_genName(unittest.TestCase):
                        "classifiersNames": ["cheese", "is", "no", "disease"]}
         res = FusionModule.genName(self.config)
         self.assertEqual(res, "Late-chic")
-

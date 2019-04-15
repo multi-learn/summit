@@ -2,6 +2,6 @@ Read me
 =======
 
 .. toctree::
-   :maxdepth: 1
+:maxdepth: 1
 
-   ../../README.md
+       ../../README.md

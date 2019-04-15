@@ -1,13 +1,15 @@
-from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint, BaseMonoviewClassifier
-from ..Monoview.Additions.CQBoostUtils import ColumnGenerationClassifier
-from ..Monoview.Additions.BoostUtils import getInterpretBase
-
 import numpy as np
-import os
+
+from ..Monoview.Additions.BoostUtils import getInterpretBase
+from ..Monoview.Additions.CQBoostUtils import ColumnGenerationClassifier
+from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint, \
+    BaseMonoviewClassifier
+
 
 class CQBoostTree(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1, max_depth=2, n_max_iterations=100, **kwargs):
+    def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1,
+                 max_depth=2, n_max_iterations=100, **kwargs):
         super(CQBoostTree, self).__init__(
             random_state=random_state,
             mu=mu,
@@ -15,9 +17,12 @@ class CQBoostTree(ColumnGenerationClassifier, BaseMonoviewClassifier):
             estimators_generator="Trees",
             n_max_iterations=n_max_iterations
         )
-        self.param_names = ["mu", "epsilon", "n_stumps", "random_state", "max_depth", "n_max_iterations"]
+        self.param_names = ["mu", "epsilon", "n_stumps", "random_state",
+                            "max_depth", "n_max_iterations"]
         self.distribs = [CustomUniform(loc=0.5, state=1.0, multiplier="e-"),
-                         CustomRandint(low=1, high=15, multiplier="e-"), [n_stumps], [random_state], [max_depth], [n_max_iterations]]
+                         CustomRandint(low=1, high=15, multiplier="e-"),
+                         [n_stumps], [random_state], [max_depth],
+                         [n_max_iterations]]
         self.classed_params = []
         self.weird_strings = {}
         self.n_stumps = n_stumps
@@ -32,7 +37,8 @@ class CQBoostTree(ColumnGenerationClassifier, BaseMonoviewClassifier):
         return True
 
     def getInterpret(self, directory, y_test):
-        np.savetxt(directory + "train_metrics.csv", self.train_metrics, delimiter=',')
+        np.savetxt(directory + "train_metrics.csv", self.train_metrics,
+                   delimiter=',')
         np.savetxt(directory + "c_bounds.csv", self.c_bounds,
                    delimiter=',')
         np.savetxt(directory + "y_test_step.csv", self.step_decisions,
@@ -45,16 +51,17 @@ class CQBoostTree(ColumnGenerationClassifier, BaseMonoviewClassifier):
         step_metrics = np.array(step_metrics)
         np.savetxt(directory + "step_test_metrics.csv", step_metrics,
                    delimiter=',')
-        return getInterpretBase(self, directory, "CQBoost", self.weights_, y_test)
+        return getInterpretBase(self, directory, "CQBoost", self.weights_,
+                                y_test)
 
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
     kwargsDict = {"mu": args.CQBT_mu,
                   "epsilon": args.CQBT_epsilon,
-                  "n_stumps":args.CQBT_trees,
-                  "max_depth":args.CQBT_max_depth,
-                  "n_max_iterations":args.CQBT_n_iter}
+                  "n_stumps": args.CQBT_trees,
+                  "max_depth": args.CQBT_max_depth,
+                  "n_max_iterations": args.CQBT_n_iter}
     return kwargsDict
 
 
@@ -62,6 +69,6 @@ def paramsToSet(nIter, randomState):
     """Used for weighted linear early fusion to generate random search sets"""
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"mu": 10**-randomState.uniform(0.5, 1.5),
-                          "epsilon": 10**-randomState.randint(1, 15)})
+        paramsSet.append({"mu": 10 ** -randomState.uniform(0.5, 1.5),
+                          "epsilon": 10 ** -randomState.randint(1, 15)})
     return paramsSet

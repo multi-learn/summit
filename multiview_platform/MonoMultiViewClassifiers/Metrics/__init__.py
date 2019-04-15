@@ -24,6 +24,7 @@ Define a getConfig function
 """
 
 import os
+
 for module in os.listdir(os.path.dirname(os.path.realpath(__file__))):
     if module in ['__init__.py'] or module[-3:] != '.py':
         continue

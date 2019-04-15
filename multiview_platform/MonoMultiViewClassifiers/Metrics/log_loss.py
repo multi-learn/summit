@@ -28,7 +28,8 @@ def get_scorer(**kwargs):
         eps = kwargs["1"]
     except:
         eps = 1e-15
-    return make_scorer(metric, greater_is_better=False, sample_weight=sample_weight, eps=eps)
+    return make_scorer(metric, greater_is_better=False,
+                       sample_weight=sample_weight, eps=eps)
 
 
 def getConfig(**kwargs):
@@ -40,6 +41,7 @@ def getConfig(**kwargs):
         eps = kwargs["1"]
     except:
         eps = 1e-15
-    configString = "Log loss using " + str(sample_weight) + " as sample_weights, " + str(
+    configString = "Log loss using " + str(
+        sample_weight) + " as sample_weights, " + str(
         eps) + " as eps (lower is better)"
     return configString

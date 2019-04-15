@@ -28,5 +28,6 @@ def getConfig(**kwargs):
         classes = kwargs["0"]
     except:
         classes = None
-    configString = "Hamming loss using " + str(classes) + " as classes (lower is better)"
+    configString = "Hamming loss using " + str(
+        classes) + " as classes (lower is better)"
     return configString

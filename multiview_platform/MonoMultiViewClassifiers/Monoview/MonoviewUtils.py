@@ -1,9 +1,10 @@
-from sklearn.model_selection import RandomizedSearchCV
-from scipy.stats import uniform, randint
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter
 import pickle
+
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.ticker import FuncFormatter
+from scipy.stats import uniform, randint
+from sklearn.model_selection import RandomizedSearchCV
 
 from .. import Metrics
 from ..utils import HyperParameterSearch
@@ -11,27 +12,41 @@ from ..utils import HyperParameterSearch
 # Author-Info
 __author__ = "Nikolas Huelsmann, Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
+
+
 # __date__ = 2016 - 03 - 25
 
 
-def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierModule, CL_type, KFolds = 4, nbCores = 1,
-    metric = ["accuracy_score", None], nIter = 30, classifier_KWARGS=None):
-    estimator = getattr(classifierModule, CL_type)(randomState, **classifier_KWARGS)
+def randomizedSearch(X_train, y_train, randomState, outputFileName,
+                     classifierModule, CL_type, KFolds=4, nbCores=1,
+                     metric=["accuracy_score", None], nIter=30,
+                     classifier_KWARGS=None):
+    estimator = getattr(classifierModule, CL_type)(randomState,
+                                                   **classifier_KWARGS)
     params_dict = estimator.genDistribs()
     if params_dict:
         metricModule = getattr(Metrics, metric[0])
         if metric[1] is not None:
-            metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
+            metricKWARGS = dict((index, metricConfig) for index, metricConfig in
+                                enumerate(metric[1]))
         else:
             metricKWARGS = {}
         scorer = metricModule.get_scorer(**metricKWARGS)
         nb_possible_combinations = compute_possible_combinations(params_dict)
-        min_list = np.array([min(nb_possible_combination, nIter) for nb_possible_combination in nb_possible_combinations])
-        randomSearch = RandomizedSearchCV(estimator, n_iter=int(np.sum(min_list)), param_distributions=params_dict, refit=True,
-                                          n_jobs=nbCores, scoring=scorer, cv=KFolds, random_state=randomState)
+        min_list = np.array(
+            [min(nb_possible_combination, nIter) for nb_possible_combination in
+             nb_possible_combinations])
+        randomSearch = RandomizedSearchCV(estimator,
+                                          n_iter=int(np.sum(min_list)),
+                                          param_distributions=params_dict,
+                                          refit=True,
+                                          n_jobs=nbCores, scoring=scorer,
+                                          cv=KFolds, random_state=randomState)
         detector = randomSearch.fit(X_train, y_train)
 
-        bestParams = dict((key, value) for key, value in estimator.genBestParams(detector).items() if key is not "random_state")
+        bestParams = dict((key, value) for key, value in
+                          estimator.genBestParams(detector).items() if
+                          key is not "random_state")
 
         scoresArray = detector.cv_results_['mean_test_score']
         params = estimator.genParamsFromDetector(detector)
@@ -44,19 +59,21 @@ def randomizedSearch(X_train, y_train, randomState, outputFileName, classifierMo
     testFoldsPreds = genTestFoldsPreds(X_train, y_train, KFolds, best_estimator)
     return bestParams, testFoldsPreds
 
+
 def change_label_to_minus(y):
     minus_y = np.copy(y)
-    minus_y[np.where(y==0)]=-1
+    minus_y[np.where(y == 0)] = -1
     return minus_y
+
 
 def change_label_to_zero(y):
     zeroed_y = np.copy(y)
-    zeroed_y[np.where(y==-1)]=0
+    zeroed_y[np.where(y == -1)] = 0
     return zeroed_y
 
 
 def compute_possible_combinations(params_dict):
-    n_possibs = np.ones(len(params_dict))*np.inf
+    n_possibs = np.ones(len(params_dict)) * np.inf
     for value_index, value in enumerate(params_dict.values()):
         if type(value) == list:
             n_possibs[value_index] = len(value)
@@ -69,13 +86,14 @@ def genTestFoldsPreds(X_train, y_train, KFolds, estimator):
     testFoldsPreds = []
     trainIndex = np.arange(len(y_train))
     folds = KFolds.split(trainIndex, y_train)
-    foldLengths = np.zeros(KFolds.n_splits,dtype=int)
+    foldLengths = np.zeros(KFolds.n_splits, dtype=int)
     for foldIndex, (trainIndices, testIndices) in enumerate(folds):
         foldLengths[foldIndex] = len(testIndices)
         estimator.fit(X_train[trainIndices], y_train[trainIndices])
         testFoldsPreds.append(estimator.predict(X_train[trainIndices]))
     minFoldLength = foldLengths.min()
-    testFoldsPreds = np.array([testFoldPreds[:minFoldLength] for testFoldPreds in testFoldsPreds])
+    testFoldsPreds = np.array(
+        [testFoldPreds[:minFoldLength] for testFoldPreds in testFoldsPreds])
     return testFoldsPreds
 
 
@@ -83,6 +101,7 @@ class CustomRandint:
     """Used as a distribution returning a integer between low and high-1.
     It can be used with a multiplier agrument to be able to perform more complex generation
     for example 10 e -(randint)"""
+
     def __init__(self, low=0, high=0, multiplier=""):
         self.randint = randint(low, high)
         self.multiplier = multiplier
@@ -95,13 +114,14 @@ class CustomRandint:
             return randinteger
 
     def get_nb_possibilities(self):
-        return self.randint.b-self.randint.a
+        return self.randint.b - self.randint.a
 
 
 class CustomUniform:
     """Used as a distribution returning a float between loc and loc + scale..
         It can be used with a multiplier agrument to be able to perform more complex generation
         for example 10 e -(float)"""
+
     def __init__(self, loc=0, state=1, multiplier=""):
         self.uniform = uniform(loc, state)
         self.multiplier = multiplier
@@ -117,34 +137,43 @@ class CustomUniform:
 class BaseMonoviewClassifier(object):
 
     def genBestParams(self, detector):
-        return dict((param_name, detector.best_params_[param_name]) for param_name in self.param_names)
+        return dict(
+            (param_name, detector.best_params_[param_name]) for param_name in
+            self.param_names)
 
     def genParamsFromDetector(self, detector):
         if self.classed_params:
-            classed_dict = dict((classed_param, get_names(detector.cv_results_["param_"+classed_param]))
+            classed_dict = dict((classed_param, get_names(
+                detector.cv_results_["param_" + classed_param]))
                                 for classed_param in self.classed_params)
         if self.param_names:
-            return [(param_name, np.array(detector.cv_results_["param_"+param_name]))
-                        if param_name not in self.classed_params else (param_name, classed_dict[param_name])
-                        for param_name in self.param_names]
+            return [(param_name,
+                     np.array(detector.cv_results_["param_" + param_name]))
+                    if param_name not in self.classed_params else (
+            param_name, classed_dict[param_name])
+                    for param_name in self.param_names]
         else:
             return [()]
 
     def genDistribs(self):
-        return dict((param_name, distrib) for param_name, distrib in zip(self.param_names, self.distribs))
+        return dict((param_name, distrib) for param_name, distrib in
+                    zip(self.param_names, self.distribs))
 
     def getConfig(self):
         if self.param_names:
-            return "\n\t\t- "+self.__class__.__name__+ "with "+ ", ".join([ param_name+" : " + self.to_str(param_name) for param_name in self.param_names])
+            return "\n\t\t- " + self.__class__.__name__ + "with " + ", ".join(
+                [param_name + " : " + self.to_str(param_name) for param_name in
+                 self.param_names])
         else:
-            return "\n\t\t- "+self.__class__.__name__+ "with no config."
+            return "\n\t\t- " + self.__class__.__name__ + "with no config."
 
     def to_str(self, param_name):
         if param_name in self.weird_strings:
             if self.weird_strings[param_name] == "class_name":
                 return self.get_params()[param_name].__class__.__name__
             else:
-                return self.weird_strings[param_name](self.get_params()[param_name])
+                return self.weird_strings[param_name](
+                    self.get_params()[param_name])
         else:
             return str(self.get_params()[param_name])
 
@@ -152,7 +181,8 @@ class BaseMonoviewClassifier(object):
         """Used to generate a graph and a pickle dictionary representing feature importances"""
         featureImportances = self.feature_importances_
         sortedArgs = np.argsort(-featureImportances)
-        featureImportancesSorted = featureImportances[sortedArgs][:nb_considered_feats]
+        featureImportancesSorted = featureImportances[sortedArgs][
+                                   :nb_considered_feats]
         featureIndicesSorted = sortedArgs[:nb_considered_feats]
         fig, ax = plt.subplots()
         x = np.arange(len(featureIndicesSorted))
@@ -163,15 +193,18 @@ class BaseMonoviewClassifier(object):
         fig.savefig(directory + "feature_importances.png")
         plt.close()
         featuresImportancesDict = dict((featureIndex, featureImportance)
-                                       for featureIndex, featureImportance in enumerate(featureImportances)
+                                       for featureIndex, featureImportance in
+                                       enumerate(featureImportances)
                                        if featureImportance != 0)
         with open(directory + 'feature_importances.pickle', 'wb') as handle:
             pickle.dump(featuresImportancesDict, handle)
         interpretString = "Feature importances : \n"
-        for featureIndex, featureImportance in zip(featureIndicesSorted, featureImportancesSorted):
+        for featureIndex, featureImportance in zip(featureIndicesSorted,
+                                                   featureImportancesSorted):
             if featureImportance > 0:
                 interpretString += "- Feature index : " + str(featureIndex) + \
-                                   ", feature importance : " + str(featureImportance) + "\n"
+                                   ", feature importance : " + str(
+                    featureImportance) + "\n"
         return interpretString
 
     def get_name_for_fusion(self):
@@ -181,13 +214,15 @@ class BaseMonoviewClassifier(object):
 def get_names(classed_list):
     return np.array([object_.__class__.__name__ for object_ in classed_list])
 
+
 def percent(x, pos):
     """Used to print percentage of importance on the y axis"""
     return '%1.1f %%' % (x * 100)
 
 
 class MonoviewResult(object):
-    def __init__(self, view_index, classifier_name, view_name, metrics_scores, full_labels_pred,
+    def __init__(self, view_index, classifier_name, view_name, metrics_scores,
+                 full_labels_pred,
                  classifier_config, y_test_multiclass_pred, test_folds_preds):
         self.view_index = view_index
         self.classifier_name = classifier_name
@@ -199,9 +234,7 @@ class MonoviewResult(object):
         self.test_folds_preds = test_folds_preds
 
     def get_classifier_name(self):
-        return self.classifier_name+"-"+self.view_name
-
-
+        return self.classifier_name + "-" + self.view_name
 
 # def isUseful(labelSupports, index, CLASS_LABELS, labelDict):
 #     if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:
@@ -444,27 +477,26 @@ class MonoviewResult(object):
 #     return description, KNN_detector
 
 
+# def calcClassifRandomForest(X_train, X_test, y_test, y_train, num_estimators):
+#    from sklearn.grid_search import ParameterGrid
+#    param_rf = { 'classifier__n_estimators': num_estimators}
+#    forest = RandomForestClassifier()
+#
+#    bestgrid=0;
+#    for g in ParameterGrid(grid):
+#        forest.set_params(**g)
+#        forest.fit(X_train,y_train)
+#        score = forest.score(X_test, y_test)
+#
+#        if score > best_score:
+#            best_score = score
+#            best_grid = g
+#
+#    rf_detector = RandomForestClassifier()
+#    rf_detector.set_params(**best_grid)
+#    rf_detector.fit(X_train,y_train)
 
-    # def calcClassifRandomForest(X_train, X_test, y_test, y_train, num_estimators):
-    #    from sklearn.grid_search import ParameterGrid
-    #    param_rf = { 'classifier__n_estimators': num_estimators}
-    #    forest = RandomForestClassifier()
-    #
-    #    bestgrid=0;
-    #    for g in ParameterGrid(grid):
-    #        forest.set_params(**g)
-    #        forest.fit(X_train,y_train)
-    #        score = forest.score(X_test, y_test)
-    #
-    #        if score > best_score:
-    #            best_score = score
-    #            best_grid = g
-    #
-    #    rf_detector = RandomForestClassifier()
-    #    rf_detector.set_params(**best_grid)
-    #    rf_detector.fit(X_train,y_train)
+#    #desc_estimators = best_grid
+#    description = "Classif_" + "RF" + "-" + "CV_" +  "NO" + "-" + "Trees_" + str(best_grid)
 
-    #    #desc_estimators = best_grid
-    #    description = "Classif_" + "RF" + "-" + "CV_" +  "NO" + "-" + "Trees_" + str(best_grid)
-
-    #    return (description, rf_detector)
+#    return (description, rf_detector)

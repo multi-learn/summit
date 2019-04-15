@@ -1,7 +1,5 @@
 import unittest
-import os
 
-from ...MonoMultiViewClassifiers.Metrics import accuracy_score
 
 # Tester que chaque metrique a bien les bonnes fonctions qui renvoient bien les bons types d'outputs avec les bons types d'inputs
 # Faire de meme pour les differents classifeurs monovues et les differents classifeurs multivues

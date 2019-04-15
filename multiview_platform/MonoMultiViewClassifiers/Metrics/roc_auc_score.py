@@ -1,5 +1,5 @@
-from sklearn.metrics import roc_auc_score as metric
 from sklearn.metrics import make_scorer
+from sklearn.metrics import roc_auc_score as metric
 from sklearn.preprocessing import MultiLabelBinarizer
 
 # Author-Info
@@ -37,7 +37,8 @@ def get_scorer(**kwargs):
         average = kwargs["1"]
     except:
         average = "micro"
-    return make_scorer(metric, greater_is_better=True, sample_weight=sample_weight, average=average)
+    return make_scorer(metric, greater_is_better=True,
+                       sample_weight=sample_weight, average=average)
 
 
 def getConfig(**kwargs):

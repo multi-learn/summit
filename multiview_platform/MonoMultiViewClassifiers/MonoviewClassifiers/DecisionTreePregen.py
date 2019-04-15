@@ -1,29 +1,34 @@
-from sklearn.tree import DecisionTreeClassifier
 import time
-import numpy as np
 
-from ..Monoview.MonoviewUtils import CustomRandint, BaseMonoviewClassifier, change_label_to_minus, change_label_to_zero
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier
+
 from ..Monoview.Additions.PregenUtils import PregenClassifier
+from ..Monoview.MonoviewUtils import CustomRandint, BaseMonoviewClassifier, \
+    change_label_to_zero
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-class DecisionTreePregen(DecisionTreeClassifier, BaseMonoviewClassifier, PregenClassifier):
+class DecisionTreePregen(DecisionTreeClassifier, BaseMonoviewClassifier,
+                         PregenClassifier):
 
     def __init__(self, random_state=None, max_depth=None,
-                 criterion='gini', splitter='best', n_stumps=1, self_complemented=True, **kwargs):
+                 criterion='gini', splitter='best', n_stumps=1,
+                 self_complemented=True, **kwargs):
         super(DecisionTreePregen, self).__init__(
             max_depth=max_depth,
             criterion=criterion,
             splitter=splitter,
             random_state=random_state
-            )
+        )
         self.estimators_generator = "Stumps"
         self.n_stumps = n_stumps
         self.self_complemented = self_complemented
-        self.param_names = ["max_depth", "criterion", "splitter",'random_state',
+        self.param_names = ["max_depth", "criterion", "splitter",
+                            'random_state',
                             'n_stumps']
         self.classed_params = []
         self.distribs = [CustomRandint(low=1, high=300),
@@ -47,7 +52,8 @@ class DecisionTreePregen(DecisionTreeClassifier, BaseMonoviewClassifier, PregenC
     def predict(self, X, check_input=True):
         begin = time.time()
         pregen_X, _ = self.pregen_voters(X)
-        pred = super(DecisionTreePregen, self).predict(pregen_X, check_input=check_input)
+        pred = super(DecisionTreePregen, self).predict(pregen_X,
+                                                       check_input=check_input)
         end = time.time()
         self.pred_time = end - begin
         return change_label_to_zero(pred)
@@ -69,7 +75,7 @@ def formatCmdArgs(args):
     kwargsDict = {"max_depth": args.DTP_depth,
                   "criterion": args.DTP_criterion,
                   "splitter": args.DTP_splitter,
-                  "n_stumps":args.DTP_stumps}
+                  "n_stumps": args.DTP_stumps}
     return kwargsDict
 
 
@@ -80,5 +86,3 @@ def paramsToSet(nIter, randomState):
                           "criterion": randomState.choice(["gini", "entropy"]),
                           "splitter": randomState.choice(["best", "random"])})
     return paramsSet
-
-

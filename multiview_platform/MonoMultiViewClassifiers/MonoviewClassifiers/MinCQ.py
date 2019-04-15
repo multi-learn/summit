@@ -1,10 +1,8 @@
-from ..Monoview.MonoviewUtils import CustomUniform, CustomRandint, BaseMonoviewClassifier
-from ..Monoview.Additions.BoostUtils import getInterpretBase
-from ..Monoview.Additions.CGDescUtils import ColumnGenerationClassifierQar
+from ..Monoview.MonoviewUtils import CustomUniform, BaseMonoviewClassifier
 
 #### Algorithm code ####
 
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 """ MinCq learning algorithm
 
 Related papers:
@@ -16,11 +14,13 @@ http://graal.ift.ulaval.ca/majorityvote/
 __author__ = 'Jean-Francis Roy'
 
 import logging
-import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.metrics.pairwise import rbf_kernel, linear_kernel, polynomial_kernel
+from sklearn.metrics.pairwise import rbf_kernel, linear_kernel, \
+    polynomial_kernel
 # from qp import QP
 from ..Monoview.Additions.BoostUtils import ConvexProgram as QP
+
+
 # from majority_vote import MajorityVote
 # from voter import StumpsVotersGenerator, KernelVotersGenerator
 
@@ -54,8 +54,10 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
         Kernel coefficient for 'rbf' and 'poly'.
         If gamma is 0.0 then 1/n_features will be used instead.
     """
-    def __init__(self, mu, voters_type, n_stumps_per_attribute=10, kernel='rbf', degree=3, gamma=0.0, self_complemented=True):
-        assert mu > 0 and mu <= 1, "MinCqLearner: mu parameter must be in (0, 1]"
+
+    def __init__(self, mu, voters_type, n_stumps_per_attribute=10, kernel='rbf',
+                 degree=3, gamma=0.0, self_complemented=True):
+        assert 0 < mu <= 1, "MinCqLearner: mu parameter must be in (0, 1]"
         self.mu = mu
         self.voters_type = voters_type
         self.n_stumps_per_attribute = n_stumps_per_attribute
@@ -83,17 +85,19 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
             A priori generated voters
         """
         # Preparation of the majority vote, using a voter generator that depends on class attributes
-        if (np.unique(y)!= [-1,1]).any():
+        if (np.unique(y) != [-1, 1]).any():
             y_reworked = np.copy(y)
-            y_reworked[np.where(y_reworked==0)] = -1
+            y_reworked[np.where(y_reworked == 0)] = -1
         else:
             y_reworked = y
 
-        assert self.voters_type in ['stumps', 'kernel', 'manual'], "MinCqLearner: voters_type must be 'stumps', 'kernel' or 'manual'"
+        assert self.voters_type in ['stumps', 'kernel',
+                                    'manual'], "MinCqLearner: voters_type must be 'stumps', 'kernel' or 'manual'"
 
         if self.voters_type == 'manual':
             if voters is None:
-                logging.error("Manually set voters is True, but no voters have been set.")
+                logging.error(
+                    "Manually set voters is True, but no voters have been set.")
                 return self
 
         else:
@@ -101,10 +105,12 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
 
             if self.voters_type == 'stumps':
                 assert self.n_stumps_per_attribute >= 1, 'MinCqLearner: n_stumps_per_attribute must be positive'
-                voters_generator = StumpsVotersGenerator(self.n_stumps_per_attribute)
+                voters_generator = StumpsVotersGenerator(
+                    self.n_stumps_per_attribute)
 
             elif self.voters_type == 'kernel':
-                assert self.kernel in ['linear', 'poly', 'rbf'], "MinCqLearner: kernel must be 'linear', 'poly' or 'rbf'"
+                assert self.kernel in ['linear', 'poly',
+                                       'rbf'], "MinCqLearner: kernel must be 'linear', 'poly' or 'rbf'"
 
                 gamma = self.gamma
                 if gamma == 0.0:
@@ -113,11 +119,15 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
                 if self.kernel == 'linear':
                     voters_generator = KernelVotersGenerator(linear_kernel)
                 elif self.kernel == 'poly':
-                    voters_generator = KernelVotersGenerator(polynomial_kernel, degree=self.degree, gamma=gamma)
+                    voters_generator = KernelVotersGenerator(polynomial_kernel,
+                                                             degree=self.degree,
+                                                             gamma=gamma)
                 elif self.kernel == 'rbf':
-                    voters_generator = KernelVotersGenerator(rbf_kernel, gamma=gamma)
+                    voters_generator = KernelVotersGenerator(rbf_kernel,
+                                                             gamma=gamma)
 
-            voters = voters_generator.generate(X, y_reworked, self_complemented=self.self_complemented)
+            voters = voters_generator.generate(X, y_reworked,
+                                               self_complemented=self.self_complemented)
 
         if self.log:
             logging.info("MinCq training started...")
@@ -140,12 +150,17 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
 
             # Conversion of the weights of the n first voters to weights on the implicit 2n voters.
             # See Section 7.1 of [2] for an explanation.
-            self.majority_vote.weights = np.array([2 * q - 1.0 / n_base_voters for q in solver_weights])
+            self.majority_vote.weights = np.array(
+                [2 * q - 1.0 / n_base_voters for q in solver_weights])
             if self.log:
-                logging.info("First moment of the margin on the training set: {:.4f}".format(np.mean(y_reworked * self.majority_vote.margin(X))))
+                logging.info(
+                    "First moment of the margin on the training set: {:.4f}".format(
+                        np.mean(y_reworked * self.majority_vote.margin(X))))
 
         except Exception as e:
-            logging.error("{}: Error while solving the quadratic program: {}.".format(str(self), str(e)))
+            logging.error(
+                "{}: Error while solving the quadratic program: {}.".format(
+                    str(self), str(e)))
             self.majority_vote = None
         self.cbound_train = self.majority_vote.cbound_value(X, y_reworked)
 
@@ -167,13 +182,15 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
         if self.log:
             logging.info("Predicting...")
         if self.majority_vote is None:
-            logging.error("{}: Error while predicting: MinCq has not been fit or fitting has failed. Will output invalid labels".format(str(self)))
+            logging.error(
+                "{}: Error while predicting: MinCq has not been fit or fitting has failed. Will output invalid labels".format(
+                    str(self)))
             return np.zeros((len(X),))
         if save_data:
             self.x_test = X
 
         vote = self.majority_vote.vote(X)
-        vote[np.where(vote==-1)] = 0
+        vote[np.where(vote == -1)] = 0
         return vote
 
     def predict_proba(self, X):
@@ -221,12 +238,15 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
         classification_matrix = self.majority_vote.classification_matrix(X)
 
         # Objective function.
-        self.qp.quadratic_func = 2.0 / n_examples * classification_matrix.T.dot(classification_matrix)
-        self.qp.linear_func = np.matrix(np.matrix(-1.0 * np.mean(self.qp.quadratic_func / 2.0, axis=1))).T
+        self.qp.quadratic_func = 2.0 / n_examples * classification_matrix.T.dot(
+            classification_matrix)
+        self.qp.linear_func = np.matrix(
+            np.matrix(-1.0 * np.mean(self.qp.quadratic_func / 2.0, axis=1))).T
 
         # First moment of the margin fixed to mu.
         a_matrix = 2.0 / n_examples * y.T.dot(classification_matrix)
-        self.qp.add_equality_constraints(a_matrix, self.mu + 1.0/2 * np.mean(a_matrix))
+        self.qp.add_equality_constraints(a_matrix,
+                                         self.mu + 1.0 / 2 * np.mean(a_matrix))
 
         # Lower and upper bounds on the variables
         self.qp.add_lower_bound(0.0)
@@ -244,11 +264,12 @@ class MajorityVote(object):
     weights : ndarray, optional (default: uniform distribution)
         The weights associated to each voter.
     """
+
     def __init__(self, voters, weights=None):
         self._voters = np.array(voters)
 
         if weights is not None:
-            assert(len(voters) == len(weights))
+            assert (len(voters) == len(weights))
             self._weights = np.array(weights)
         else:
             self._weights = np.array([1.0 / len(voters)] * len(voters))
@@ -283,7 +304,8 @@ class MajorityVote(object):
             The margin of the majority vote for each sample.
         """
         classification_matrix = self.classification_matrix(X)
-        return np.squeeze(np.asarray(np.dot(classification_matrix, self.weights)))
+        return np.squeeze(
+            np.asarray(np.dot(classification_matrix, self.weights)))
 
     def classification_matrix(self, X):
         """ Returns the classification matrix of the majority vote.
@@ -327,15 +349,20 @@ class MajorityVote(object):
         y : ndarray, shape=(n_samples, )
             Input labels, where each label is either -1 or 1.
         """
-        assert np.all(np.in1d(y, [-1, 1])), 'cbound_value: labels should be either -1 or 1'
+        assert np.all(np.in1d(y, [-1,
+                                  1])), 'cbound_value: labels should be either -1 or 1'
 
         classification_matrix = self.classification_matrix(X)
-        first_moment = float(1.0/len(y) * classification_matrix.dot(self.weights).dot(y))
-        second_moment = float(1.0/len(y) *self.weights.T.dot(classification_matrix.T.dot(classification_matrix)).dot(self.weights))
+        first_moment = float(
+            1.0 / len(y) * classification_matrix.dot(self.weights).dot(y))
+        second_moment = float(1.0 / len(y) * self.weights.T.dot(
+            classification_matrix.T.dot(classification_matrix)).dot(
+            self.weights))
 
         return 1 - (first_moment ** 2 / second_moment)
 
-#-*- coding:utf-8 -*-
+
+# -*- coding:utf-8 -*-
 __author__ = "Jean-Francis Roy"
 
 import numpy as np
@@ -344,6 +371,7 @@ import numpy as np
 class Voter(object):
     """ Base class for a voter (function X -> [-1, 1]), where X is an array of samples
     """
+
     def __init__(self):
         pass
 
@@ -384,7 +412,7 @@ class BinaryKernelVoter(Voter):
     """
 
     def __init__(self, x, y, kernel_function, **kwargs):
-        assert(y in {-1, 1})
+        assert (y in {-1, 1})
         super(BinaryKernelVoter, self).__init__()
         self._x = x
         self._y = y
@@ -393,7 +421,8 @@ class BinaryKernelVoter(Voter):
 
     def vote(self, X):
         base_point_array = np.array([self._x])
-        votes = self._y * self._kernel_function(base_point_array, X, **self._kernel_kwargs)
+        votes = self._y * self._kernel_function(base_point_array, X,
+                                                **self._kernel_kwargs)
         votes = np.squeeze(np.asarray(votes))
 
         return votes
@@ -414,6 +443,7 @@ class DecisionStumpVoter(Voter):
     direction : int (-1 or 1)
         Used to reverse classification decision
     """
+
     def __init__(self, attribute_index, threshold, direction=1):
         super(DecisionStumpVoter, self).__init__()
         self.attribute_index = attribute_index
@@ -421,8 +451,9 @@ class DecisionStumpVoter(Voter):
         self.direction = direction
 
     def vote(self, points):
-        return [((point[self.attribute_index] > self.threshold) * 2 - 1) * self.direction for point in points]
-
+        return [((point[
+                      self.attribute_index] > self.threshold) * 2 - 1) * self.direction
+                for point in points]
 
 
 class VotersGenerator(object):
@@ -459,6 +490,7 @@ class StumpsVotersGenerator(VotersGenerator):
     n_stumps_per_attribute : int, (default=10)
         Determines how many decision stumps will be created for each attribute.
     """
+
     def __init__(self, n_stumps_per_attribute=10):
         self._n_stumps_per_attribute = n_stumps_per_attribute
 
@@ -472,7 +504,8 @@ class StumpsVotersGenerator(VotersGenerator):
                 maxi = x[i]
         return mini, maxi
 
-    def generate(self, X, y=None, self_complemented=False, only_complements=False):
+    def generate(self, X, y=None, self_complemented=False,
+                 only_complements=False):
         voters = []
         if len(X) != 0:
             for i in range(len(X[0])):
@@ -485,10 +518,14 @@ class StumpsVotersGenerator(VotersGenerator):
                     for x in range(self._n_stumps_per_attribute):
 
                         if not only_complements:
-                            voters.append(DecisionStumpVoter(i, t[0] + inter * (x + 1), 1))
+                            voters.append(
+                                DecisionStumpVoter(i, t[0] + inter * (x + 1),
+                                                   1))
 
                         if self_complemented or only_complements:
-                            voters.append(DecisionStumpVoter(i, t[0] + inter * (x + 1), -1))
+                            voters.append(
+                                DecisionStumpVoter(i, t[0] + inter * (x + 1),
+                                                   -1))
 
         return np.array(voters)
 
@@ -510,7 +547,8 @@ class KernelVotersGenerator(VotersGenerator):
         self._kernel_function = kernel_function
         self._kernel_kwargs = kwargs
 
-    def generate(self, X, y=None, self_complemented=False, only_complements=False):
+    def generate(self, X, y=None, self_complemented=False,
+                 only_complements=False):
         if y is None:
             y = np.array([1] * len(X))
 
@@ -518,25 +556,31 @@ class KernelVotersGenerator(VotersGenerator):
 
         for point, label in zip(X, y):
             if not only_complements:
-                voters.append(BinaryKernelVoter(point, label, self._kernel_function, **self._kernel_kwargs))
+                voters.append(
+                    BinaryKernelVoter(point, label, self._kernel_function,
+                                      **self._kernel_kwargs))
 
             if self_complemented or only_complements:
-                voters.append(BinaryKernelVoter(point, -1 * label, self._kernel_function, **self._kernel_kwargs))
+                voters.append(
+                    BinaryKernelVoter(point, -1 * label, self._kernel_function,
+                                      **self._kernel_kwargs))
 
         return np.array(voters)
 
+
 class MinCQ(MinCqLearner, BaseMonoviewClassifier):
 
-    def __init__(self, random_state=None, mu=0.01, self_complemented=True , n_stumps_per_attribute=10, **kwargs):
+    def __init__(self, random_state=None, mu=0.01, self_complemented=True,
+                 n_stumps_per_attribute=10, **kwargs):
         super(MinCQ, self).__init__(mu=mu,
-            voters_type='stumps',
-            n_stumps_per_attribute =n_stumps_per_attribute,
-            self_complemented=self_complemented
-        )
+                                    voters_type='stumps',
+                                    n_stumps_per_attribute=n_stumps_per_attribute,
+                                    self_complemented=self_complemented
+                                    )
         self.param_names = ["mu", "n_stumps_per_attribute", "random_state"]
         self.distribs = [CustomUniform(loc=0.5, state=2.0, multiplier="e-"),
                          [n_stumps_per_attribute], [random_state]]
-        self.random_state=random_state
+        self.random_state = random_state
         self.classed_params = []
         self.weird_strings = {}
         if "nbCores" not in kwargs:
@@ -559,10 +603,11 @@ class MinCQ(MinCqLearner, BaseMonoviewClassifier):
                 "n_stumps_per_attribute": self.n_stumps_per_attribute}
 
     def getInterpret(self, directory, y_test):
-        interpret_string = "Train C_bound value : "+str(self.cbound_train)
+        interpret_string = "Train C_bound value : " + str(self.cbound_train)
         y_rework = np.copy(y_test)
-        y_rework[np.where(y_rework==0)] = -1
-        interpret_string += "\n Test c_bound value : "+str(self.majority_vote.cbound_value(self.x_test, y_rework))
+        y_rework[np.where(y_rework == 0)] = -1
+        interpret_string += "\n Test c_bound value : " + str(
+            self.majority_vote.cbound_value(self.x_test, y_rework))
         return interpret_string
 
     def get_name_for_fusion(self):
@@ -571,8 +616,8 @@ class MinCQ(MinCqLearner, BaseMonoviewClassifier):
 
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
-    kwargsDict = {"mu":args.MCQ_mu,
-                  "n_stumps_per_attribute":args.MCQ_stumps}
+    kwargsDict = {"mu": args.MCQ_mu,
+                  "n_stumps_per_attribute": args.MCQ_stumps}
     return kwargsDict
 
 

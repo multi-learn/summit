@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
 from Cython.Build import cythonize
+from setuptools import setup, find_packages
 
 import multiview_platform
 
@@ -88,5 +88,6 @@ setup(
 
     # Il y a encore une chiée de paramètres possibles, mais avec ça vous
     # couvrez 90% des besoins
-    ext_modules=cythonize("multiview_platform/MonoMultiViewClassifiers/Monoview/Additions/_custom_criterion.pyx"),
+    ext_modules=cythonize(
+        "multiview_platform/MonoMultiViewClassifiers/Monoview/Additions/_custom_criterion.pyx"),
 )

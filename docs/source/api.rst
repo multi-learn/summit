@@ -2,9 +2,9 @@ Multiview Platform
 ==================
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Contents:
+:maxdepth: 1
+       :caption: Contents:
 
-   execution
-   monomultidoc
-   analyzeresult
+       execution
+       monomultidoc
+       analyzeresult
