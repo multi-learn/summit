@@ -86,6 +86,8 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
         if (np.unique(y)!= [-1,1]).any():
             y_reworked = np.copy(y)
             y_reworked[np.where(y_reworked==0)] = -1
+        else:
+            y_reworked = y
 
         assert self.voters_type in ['stumps', 'kernel', 'manual'], "MinCqLearner: voters_type must be 'stumps', 'kernel' or 'manual'"
 

@@ -390,7 +390,7 @@ def parseTheArgs(arguments):
                                          type=int,
                                          action='store',
                                          help='Number of stumps inthe pregenerated dataset',
-                                         default=2)
+                                         default=3)
 
     groupLasso = parser.add_argument_group('Lasso arguments')
     groupLasso.add_argument('--LA_n_iter', metavar='INT', type=int,
