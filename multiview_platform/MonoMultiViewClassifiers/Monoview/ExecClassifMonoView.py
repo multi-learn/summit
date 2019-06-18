@@ -77,7 +77,8 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
     logging.debug("Done:\t Determine Train/Test split")
 
     logging.debug("Start:\t Generate classifier args")
-    classifierModule = getattr(MonoviewClassifiers, CL_type)
+    classifierModuleName = CL_type.split("_")[0]
+    classifierModule = getattr(MonoviewClassifiers, classifierModuleName)
     clKWARGS, testFoldsPreds = getHPs(classifierModule, hyperParamSearch,
                                       nIter, CL_type, X_train, y_train,
                                       randomState, outputFileName,
@@ -85,7 +86,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
     logging.debug("Done:\t Generate classifier args")
 
     logging.debug("Start:\t Training")
-    classifier = getattr(classifierModule, CL_type)(randomState, **clKWARGS)
+    classifier = getattr(classifierModule, classifierModuleName)(randomState, **clKWARGS)
 
     classifier.fit(X_train, y_train)  # NB_CORES=nbCores,
     logging.debug("Done:\t Training")
