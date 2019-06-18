@@ -188,102 +188,102 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds,
     # return CL_type, classificationKWARGS, metricsScores, fullLabels, testLabelsMulticlass
 
 
-# if __name__ == "__main__":
-#
-#     import argparse
-#
-#     parser = argparse.ArgumentParser(
-#         description='This methods is used to execute a multiclass classification with one single view. ',
-#         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-#
-#     groupStandard = parser.add_argument_group('Standard arguments')
-#     groupStandard.add_argument('-log', action='store_true',
-#                                help='Use option to activate Logging to Console')
-#     groupStandard.add_argument('--type', metavar='STRING', action='store',
-#                                help='Type of Dataset', default=".hdf5")
-#     groupStandard.add_argument('--name', metavar='STRING', action='store',
-#                                help='Name of Database (default: %(default)s)',
-#                                default='DB')
-#     groupStandard.add_argument('--view', metavar='STRING', action='store',
-#                                help='Name of Feature for Classification (default: %(default)s)',
-#                                default='View0')
-#     groupStandard.add_argument('--pathF', metavar='STRING', action='store',
-#                                help='Path to the views (default: %(default)s)',
-#                                default='Results-FeatExtr/')
-#     groupStandard.add_argument('--directory', metavar='STRING', action='store',
-#                                help='Path to the views (default: %(default)s)',
-#                                default='Results-FeatExtr/')
-#     groupStandard.add_argument('--LABELS_DICTIONARY', metavar='STRING',
-#                                action='store', nargs='+',
-#                                help='Name of classLabels CSV-file  (default: %(default)s)',
-#                                default='classLabels.csv')
-#     groupStandard.add_argument('--classificationIndices', metavar='STRING',
-#                                action='store',
-#                                help='Name of classLabels-Description CSV-file  (default: %(default)s)',
-#                                default='classLabels-Description.csv')
-#     groupStandard.add_argument('--nbCores', metavar='INT', action='store',
-#                                help='Number of cores, -1 for all', type=int,
-#                                default=1)
-#     groupStandard.add_argument('--randomState', metavar='INT', action='store',
-#                                help='Seed for the random state or pickable randomstate file',
-#                                default=42)
-#     groupStandard.add_argument('--hyperParamSearch', metavar='STRING',
-#                                action='store',
-#                                help='The type of method used tosearch the best set of hyper parameters',
-#                                default='randomizedSearch')
-#     groupStandard.add_argument('--metrics', metavar='STRING', action='store',
-#                                nargs="+",
-#                                help='Metrics used in the experimentation, the first will be the one used in CV',
-#                                default=[''])
-#     groupStandard.add_argument('--nIter', metavar='INT', action='store',
-#                                help='Number of itetarion in hyper parameter search',
-#                                type=int,
-#                                default=10)
-#
-#     args = parser.parse_args()
-#
-#     directory = args.directory
-#     name = args.name
-#     LABELS_DICTIONARY = args.LABELS_DICTIONARY
-#     classificationIndices = args.classificationIndices
-#     KFolds = args.KFolds
-#     nbCores = args.nbCores
-#     databaseType = None
-#     path = args.pathF
-#     randomState = args.randomState
-#     hyperParamSearch = args.hyperParamSearch
-#     metrics = args.metrics
-#     nIter = args.nIter
-#     kwargs = args.kwargs
-#
-#     # Extract the data using MPI ?
-#     DATASET = None
-#     labels = None  # (get from CSV ?)
-#
-#     logfilename = "gen a good logfilename"
-#
-#     logfile = directory + logfilename
-#     if os.path.isfile(logfile + ".log"):
-#         for i in range(1, 20):
-#             testFileName = logfilename + "-" + str(i) + ".log"
-#             if not os.path.isfile(directory + testFileName):
-#                 logfile = directory + testFileName
-#                 break
-#     else:
-#         logfile += ".log"
-#
-#     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
-#                         filename=logfile, level=logging.DEBUG,
-#                         filemode='w')
-#
-#     if args.log:
-#         logging.getLogger().addHandler(logging.StreamHandler())
-#
-#     res = ExecMultiview(directory, DATASET, name, classificationIndices, KFolds,
-#                         nbCores, databaseType, path,
-#                         LABELS_DICTIONARY, randomState, labels,
-#                         hyperParamSearch=hyperParamSearch, metrics=metrics,
-#                         nIter=nIter, **kwargs)
+if __name__ == "__main__":
+
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description='This methods is used to execute a multiclass classification with one single view. ',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    groupStandard = parser.add_argument_group('Standard arguments')
+    groupStandard.add_argument('-log', action='store_true',
+                               help='Use option to activate Logging to Console')
+    groupStandard.add_argument('--type', metavar='STRING', action='store',
+                               help='Type of Dataset', default=".hdf5")
+    groupStandard.add_argument('--name', metavar='STRING', action='store',
+                               help='Name of Database (default: %(default)s)',
+                               default='DB')
+    groupStandard.add_argument('--view', metavar='STRING', action='store',
+                               help='Name of Feature for Classification (default: %(default)s)',
+                               default='View0')
+    groupStandard.add_argument('--pathF', metavar='STRING', action='store',
+                               help='Path to the views (default: %(default)s)',
+                               default='Results-FeatExtr/')
+    groupStandard.add_argument('--directory', metavar='STRING', action='store',
+                               help='Path to the views (default: %(default)s)',
+                               default='Results-FeatExtr/')
+    groupStandard.add_argument('--LABELS_DICTIONARY', metavar='STRING',
+                               action='store', nargs='+',
+                               help='Name of classLabels CSV-file  (default: %(default)s)',
+                               default='classLabels.csv')
+    groupStandard.add_argument('--classificationIndices', metavar='STRING',
+                               action='store',
+                               help='Name of classLabels-Description CSV-file  (default: %(default)s)',
+                               default='classLabels-Description.csv')
+    groupStandard.add_argument('--nbCores', metavar='INT', action='store',
+                               help='Number of cores, -1 for all', type=int,
+                               default=1)
+    groupStandard.add_argument('--randomState', metavar='INT', action='store',
+                               help='Seed for the random state or pickable randomstate file',
+                               default=42)
+    groupStandard.add_argument('--hyperParamSearch', metavar='STRING',
+                               action='store',
+                               help='The type of method used tosearch the best set of hyper parameters',
+                               default='randomizedSearch')
+    groupStandard.add_argument('--metrics', metavar='STRING', action='store',
+                               nargs="+",
+                               help='Metrics used in the experimentation, the first will be the one used in CV',
+                               default=[''])
+    groupStandard.add_argument('--nIter', metavar='INT', action='store',
+                               help='Number of itetarion in hyper parameter search',
+                               type=int,
+                               default=10)
+
+    args = parser.parse_args()
+
+    directory = args.directory
+    name = args.name
+    LABELS_DICTIONARY = args.LABELS_DICTIONARY
+    classificationIndices = args.classificationIndices
+    KFolds = args.KFolds
+    nbCores = args.nbCores
+    databaseType = None
+    path = args.pathF
+    randomState = args.randomState
+    hyperParamSearch = args.hyperParamSearch
+    metrics = args.metrics
+    nIter = args.nIter
+    kwargs = args.kwargs
+
+    # Extract the data using MPI ?
+    DATASET = None
+    labels = None  # (get from CSV ?)
+
+    logfilename = "gen a good logfilename"
+
+    logfile = directory + logfilename
+    if os.path.isfile(logfile + ".log"):
+        for i in range(1, 20):
+            testFileName = logfilename + "-" + str(i) + ".log"
+            if not os.path.isfile(directory + testFileName):
+                logfile = directory + testFileName
+                break
+    else:
+        logfile += ".log"
+
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
+                        filename=logfile, level=logging.DEBUG,
+                        filemode='w')
+
+    if args.log:
+        logging.getLogger().addHandler(logging.StreamHandler())
+
+    res = ExecMultiview(directory, DATASET, name, classificationIndices, KFolds,
+                        nbCores, databaseType, path,
+                        LABELS_DICTIONARY, randomState, labels,
+                        hyperParamSearch=hyperParamSearch, metrics=metrics,
+                        nIter=nIter, **kwargs)
 
     # Pickle the res
     # Go put your token

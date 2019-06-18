@@ -4,9 +4,9 @@
 
 import errno
 import logging  # To create Log-Files
+# Import built-in modules
 import os  # to geth path of the running script
 import time  # for time calculations
-import itertools
 
 import h5py
 # Import 3rd party modules
@@ -44,7 +44,7 @@ def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices,
 
 def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
                  KFolds, nbCores, databaseType, path,
-                 random_state, hyperParamSearch="randomizedSearch",
+                 randomState, hyperParamSearch="randomizedSearch",
                  metrics=[["accuracy_score", None]], nIter=30, **args):
     logging.debug("Start:\t Loading data")
     kwargs, \
@@ -54,7 +54,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
     X, \
     learningRate, \
     labelsString, \
-    output_file_name = initConstants(args, X, classificationIndices, labelsNames,
+    outputFileName = initConstants(args, X, classificationIndices, labelsNames,
                                    name, directory)
 
     logging.debug("Done:\t Loading data")
@@ -77,31 +77,11 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
     logging.debug("Done:\t Determine Train/Test split")
 
     logging.debug("Start:\t Generate classifier args")
-    classifier_module = getattr(MonoviewClassifiers, CL_type)
-    cl_kwargs, test_folds_preds, multiple_kwargs_combs = getHPs(classifier_module, hyperParamSearch,
-                                                                nIter, CL_type, X_train, y_train,
-                                                                random_state, output_file_name,
-                                                                KFolds, nbCores, metrics, kwargs)
-    full_labels_pred = np.zeros(Y.shape, dtype=int) - 100
-    data_shape = X.shape
-    view_index = args["viewIndex"]
-    if multiple_kwargs_combs:
-        for classifier_KWARGS in cl_kwargs:
-            specific_output_file_name = gen_specific_output_file_name(classifier_KWARGS, output_file_name)
-            learn_n_pred(classifier_module, CL_type, X_train, X_test, y_train, y_test,
-                         classifier_KWARGS, feat, specific_output_file_name, X_test_multiclass,
-                          test_folds_preds, random_state, full_labels_pred, classificationIndices, name, KFolds, nbCores, hyperParamSearch, metrics, nIter, labelsNames, data_shape, view_index)
-    else:
-        return learn_n_pred(classifier_module, CL_type, X_train, X_test, y_train, y_test,
-                     cl_kwargs, feat, output_file_name, X_test_multiclass,
-                     test_folds_preds, random_state, full_labels_pred, classificationIndices, name, KFolds, nbCores, hyperParamSearch, metrics, nIter, labelsNames, data_shape, view_index)
-
-
-def learn_n_pred(classifierModule, CL_type, X_train, X_test, y_train, y_test,
-                 clKWARGS, feat, outputFileName, X_test_multiclass,
-                 testFoldsPreds, randomState, full_labels_pred, classificationIndices, name, KFolds, nbCores, hyperParamSearch, metrics, nIter, labelsNames, data_shape, view_index):
-
-    t_start = time.time()
+    classifierModule = getattr(MonoviewClassifiers, CL_type)
+    clKWARGS, testFoldsPreds = getHPs(classifierModule, hyperParamSearch,
+                                      nIter, CL_type, X_train, y_train,
+                                      randomState, outputFileName,
+                                      KFolds, nbCores, metrics, kwargs)
     logging.debug("Done:\t Generate classifier args")
 
     logging.debug("Start:\t Training")
@@ -113,6 +93,7 @@ def learn_n_pred(classifierModule, CL_type, X_train, X_test, y_train, y_test,
     logging.debug("Start:\t Predicting")
     y_train_pred = classifier.predict(X_train)
     y_test_pred = classifier.predict(X_test)
+    full_labels_pred = np.zeros(Y.shape, dtype=int) - 100
     for trainIndex, index in enumerate(classificationIndices[0]):
         full_labels_pred[index] = y_train_pred[trainIndex]
     for testIndex, index in enumerate(classificationIndices[1]):
@@ -132,7 +113,7 @@ def learn_n_pred(classifierModule, CL_type, X_train, X_test, y_train, y_test,
     imagesAnalysis, \
     metricsScores = execute(name, classificationIndices, KFolds, nbCores,
                             hyperParamSearch, metrics, nIter, feat, CL_type,
-                            clKWARGS, labelsNames, data_shape,
+                            clKWARGS, labelsNames, X.shape,
                             y_train, y_train_pred, y_test, y_test_pred, t_end,
                             randomState, classifier, outputFileName)
     # cl_desc = [value for key, value in sorted(clKWARGS.items())]
@@ -143,9 +124,10 @@ def learn_n_pred(classifierModule, CL_type, X_train, X_test, y_train, y_test,
                 y_train, imagesAnalysis, y_test)
     logging.info("Done:\t Saving Results")
 
+    viewIndex = args["viewIndex"]
     if testFoldsPreds is None:
         testFoldsPreds = y_train_pred
-    return MonoviewUtils.MonoviewResult(view_index, CL_type, feat, metricsScores,
+    return MonoviewUtils.MonoviewResult(viewIndex, CL_type, feat, metricsScores,
                                         full_labels_pred, clKWARGS,
                                         y_test_multiclass_pred, testFoldsPreds)
     # return viewIndex, [CL_type, feat, metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
@@ -211,32 +193,12 @@ def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train,
                                                       nIter=nIter,
                                                       classifier_KWARGS=kwargs[
                                                           CL_type + "KWARGS"])
-        multiple_kwargs_comb = False
         logging.debug("Done:\t " + hyperParamSearch + " best settings")
     else:
         clKWARGS = kwargs[CL_type + "KWARGS"]
-        print(clKWARGS)
-        multiple_args = [len(val)>1 for val in clKWARGS.values()]
-        print(multiple_args)
-        if True in multiple_args:
-            clKWARGS = gen_multiple_kwargs_combinations(clKWARGS)
-            multiple_kwargs_comb = True
-        else:
-            clKWARGS = dict((key, value[0]) for key, value in clKWARGS.items())
-            multiple_kwargs_comb = False
         testFoldsPreds = None
-    return clKWARGS, testFoldsPreds, multiple_kwargs_comb
+    return clKWARGS, testFoldsPreds
 
-
-def gen_multiple_kwargs_combinations(clKWARGS):
-    values_cartesian_prod = [ _ for _ in itertools.product(*clKWARGS.values())]
-    keys = clKWARGS.keys()
-    kwargs_combination = [dict((key, value) for key, value in zip(keys, values)) for values in values_cartesian_prod]
-    return kwargs_combination
-
-
-def gen_specific_output_file_name(classifier_KWARGS, output_file_name):
-    return output_file_name+"_".join(map(str,list(classifier_KWARGS.values())))
 
 def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
                 y_train, imagesAnalysis, y_test):
@@ -267,131 +229,131 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
                 outputFileName + imageName + '.png')
 
 
-# if __name__ == '__main__':
-#     """The goal of this part of the module is to be able to execute a monoview experimentation
-#      on a node of a cluster independently.
-#      So one need to fill in all the ExecMonoview function arguments with the parse arg function
-#      It could be a good idea to use pickle to store all the 'simple' args in order to reload them easily"""
-#     import argparse
-#     import pickle
-#
-#     from ..utils import Dataset
-#
-#     parser = argparse.ArgumentParser(
-#         description='This methods is used to execute a multiclass classification with one single view. ',
-#         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-#
-#     groupStandard = parser.add_argument_group('Standard arguments')
-#     groupStandard.add_argument('-log', action='store_true',
-#                                help='Use option to activate Logging to Console')
-#     groupStandard.add_argument('--name', metavar='STRING', action='store',
-#                                help='Name of Database', default='Plausible')
-#     groupStandard.add_argument('--cl_name', metavar='STRING', action='store',
-#                                help='THe name of the monoview classifier to use',
-#                                default='DecisionTree')
-#     groupStandard.add_argument('--view', metavar='STRING', action='store',
-#                                help='Name of the view used', default='View0')
-#     groupStandard.add_argument('--pathF', metavar='STRING', action='store',
-#                                help='Path to the database hdf5 file',
-#                                default='../../../Data/Plausible')
-#     groupStandard.add_argument('--directory', metavar='STRING', action='store',
-#                                help='Path of the output directory', default='')
-#     groupStandard.add_argument('--labelsNames', metavar='STRING',
-#                                action='store', nargs='+',
-#                                help='Name of the labels used for classification',
-#                                default=['Yes', 'No'])
-#     groupStandard.add_argument('--classificationIndices', metavar='STRING',
-#                                action='store',
-#                                help='Path to the classificationIndices pickle file',
-#                                default='')
-#     groupStandard.add_argument('--KFolds', metavar='STRING', action='store',
-#                                help='Path to the kFolds pickle file',
-#                                default='')
-#     groupStandard.add_argument('--nbCores', metavar='INT', action='store',
-#                                help='Number of cores, -1 for all',
-#                                type=int, default=1)
-#     groupStandard.add_argument('--randomState', metavar='INT', action='store',
-#                                help='Seed for the random state or pickable randomstate file',
-#                                default=42)
-#     groupStandard.add_argument('--hyperParamSearch', metavar='STRING',
-#                                action='store',
-#                                help='The type of method used to search the best set of hyper parameters',
-#                                default='randomizedSearch')
-#     groupStandard.add_argument('--metrics', metavar='STRING', action='store',
-#                                help='Path to the pickle file describing the metricsused to analyze the performance',
-#                                default='')
-#     groupStandard.add_argument('--kwargs', metavar='STRING', action='store',
-#                                help='Path to the pickle file containing the key-words arguments used for classification',
-#                                default='')
-#     groupStandard.add_argument('--nIter', metavar='INT', action='store',
-#                                help='Number of itetarion in hyper parameter search',
-#                                type=int,
-#                                default=10)
-#
-#     args = parser.parse_args()
-#
-#     directory = args.directory
-#     name = args.name
-#     classifierName = args.cl_name
-#     labelsNames = args.labelsNames
-#     viewName = args.view
-#     with open(args.classificationIndices, 'rb') as handle:
-#         classificationIndices = pickle.load(handle)
-#     with open(args.KFolds, 'rb') as handle:
-#         KFolds = pickle.load(handle)
-#     nbCores = args.nbCores
-#     path = args.pathF
-#     with open(args.randomState, 'rb') as handle:
-#         randomState = pickle.load(handle)
-#     hyperParamSearch = args.hyperParamSearch
-#     with open(args.metrics, 'rb') as handle:
-#         metrics = pickle.load(handle)
-#     nIter = args.nIter
-#     with open(args.kwargs, 'rb') as handle:
-#         kwargs = pickle.load(handle)
-#
-#     databaseType = None
-#
-#     # Extract the data using MPI
-#     X, Y = Dataset.getMonoviewShared(path, name, viewName)
-#
-#     # Init log
-#     logFileName = time.strftime(
-#         "%Y_%m_%d-%H_%M_%S") + "-" + name + "-" + viewName + "-" + classifierName + '-LOG'
-#     if not os.path.exists(os.path.dirname(directory + logFileName)):
-#         try:
-#             os.makedirs(os.path.dirname(directory + logFileName))
-#         except OSError as exc:
-#             if exc.errno != errno.EEXIST:
-#                 raise
-#     logFile = directory + logFileName
-#     if os.path.isfile(logFile + ".log"):
-#         for i in range(1, 20):
-#             testFileName = logFileName + "-" + str(i) + ".log"
-#             if not (os.path.isfile(directory + testFileName)):
-#                 logFile = directory + testFileName
-#                 break
-#     else:
-#         logFile += ".log"
-#     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
-#                         filename=logFile, level=logging.DEBUG,
-#                         filemode='w')
-#     if args.log:
-#         logging.getLogger().addHandler(logging.StreamHandler())
-#
-#     # Computing on multiple cores
-#     res = ExecMonoview(directory, X, Y, name, labelsNames,
-#                        classificationIndices, KFolds, nbCores, databaseType,
-#                        path,
-#                        randomState, hyperParamSearch=hyperParamSearch,
-#                        metrics=metrics, nIter=nIter, **kwargs)
-#
-#     with open(directory + "res.pickle", "wb") as handle:
-#         pickle.dump(res, handle)
-#
-#     # Pickle the res in a file to be reused.
-#     # Go put a token in the token files without breaking everything.
-#
-#     # Need to write a function to be  able to know the timeu sed
-#     # for a monoview experimentation approximately and the ressource it uses to write automatically the file in the shell
-#     # it will have to be a not-too close approx as the taskswont be long and Ram-o-phage
+if __name__ == '__main__':
+    """The goal of this part of the module is to be able to execute a monoview experimentation
+     on a node of a cluster independently.
+     So one need to fill in all the ExecMonoview function arguments with the parse arg function
+     It could be a good idea to use pickle to store all the 'simple' args in order to reload them easily"""
+    import argparse
+    import pickle
+
+    from ..utils import Dataset
+
+    parser = argparse.ArgumentParser(
+        description='This methods is used to execute a multiclass classification with one single view. ',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    groupStandard = parser.add_argument_group('Standard arguments')
+    groupStandard.add_argument('-log', action='store_true',
+                               help='Use option to activate Logging to Console')
+    groupStandard.add_argument('--name', metavar='STRING', action='store',
+                               help='Name of Database', default='Plausible')
+    groupStandard.add_argument('--cl_name', metavar='STRING', action='store',
+                               help='THe name of the monoview classifier to use',
+                               default='DecisionTree')
+    groupStandard.add_argument('--view', metavar='STRING', action='store',
+                               help='Name of the view used', default='View0')
+    groupStandard.add_argument('--pathF', metavar='STRING', action='store',
+                               help='Path to the database hdf5 file',
+                               default='../../../Data/Plausible')
+    groupStandard.add_argument('--directory', metavar='STRING', action='store',
+                               help='Path of the output directory', default='')
+    groupStandard.add_argument('--labelsNames', metavar='STRING',
+                               action='store', nargs='+',
+                               help='Name of the labels used for classification',
+                               default=['Yes', 'No'])
+    groupStandard.add_argument('--classificationIndices', metavar='STRING',
+                               action='store',
+                               help='Path to the classificationIndices pickle file',
+                               default='')
+    groupStandard.add_argument('--KFolds', metavar='STRING', action='store',
+                               help='Path to the kFolds pickle file',
+                               default='')
+    groupStandard.add_argument('--nbCores', metavar='INT', action='store',
+                               help='Number of cores, -1 for all',
+                               type=int, default=1)
+    groupStandard.add_argument('--randomState', metavar='INT', action='store',
+                               help='Seed for the random state or pickable randomstate file',
+                               default=42)
+    groupStandard.add_argument('--hyperParamSearch', metavar='STRING',
+                               action='store',
+                               help='The type of method used to search the best set of hyper parameters',
+                               default='randomizedSearch')
+    groupStandard.add_argument('--metrics', metavar='STRING', action='store',
+                               help='Path to the pickle file describing the metricsused to analyze the performance',
+                               default='')
+    groupStandard.add_argument('--kwargs', metavar='STRING', action='store',
+                               help='Path to the pickle file containing the key-words arguments used for classification',
+                               default='')
+    groupStandard.add_argument('--nIter', metavar='INT', action='store',
+                               help='Number of itetarion in hyper parameter search',
+                               type=int,
+                               default=10)
+
+    args = parser.parse_args()
+
+    directory = args.directory
+    name = args.name
+    classifierName = args.cl_name
+    labelsNames = args.labelsNames
+    viewName = args.view
+    with open(args.classificationIndices, 'rb') as handle:
+        classificationIndices = pickle.load(handle)
+    with open(args.KFolds, 'rb') as handle:
+        KFolds = pickle.load(handle)
+    nbCores = args.nbCores
+    path = args.pathF
+    with open(args.randomState, 'rb') as handle:
+        randomState = pickle.load(handle)
+    hyperParamSearch = args.hyperParamSearch
+    with open(args.metrics, 'rb') as handle:
+        metrics = pickle.load(handle)
+    nIter = args.nIter
+    with open(args.kwargs, 'rb') as handle:
+        kwargs = pickle.load(handle)
+
+    databaseType = None
+
+    # Extract the data using MPI
+    X, Y = Dataset.getMonoviewShared(path, name, viewName)
+
+    # Init log
+    logFileName = time.strftime(
+        "%Y_%m_%d-%H_%M_%S") + "-" + name + "-" + viewName + "-" + classifierName + '-LOG'
+    if not os.path.exists(os.path.dirname(directory + logFileName)):
+        try:
+            os.makedirs(os.path.dirname(directory + logFileName))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+    logFile = directory + logFileName
+    if os.path.isfile(logFile + ".log"):
+        for i in range(1, 20):
+            testFileName = logFileName + "-" + str(i) + ".log"
+            if not (os.path.isfile(directory + testFileName)):
+                logFile = directory + testFileName
+                break
+    else:
+        logFile += ".log"
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
+                        filename=logFile, level=logging.DEBUG,
+                        filemode='w')
+    if args.log:
+        logging.getLogger().addHandler(logging.StreamHandler())
+
+    # Computing on multiple cores
+    res = ExecMonoview(directory, X, Y, name, labelsNames,
+                       classificationIndices, KFolds, nbCores, databaseType,
+                       path,
+                       randomState, hyperParamSearch=hyperParamSearch,
+                       metrics=metrics, nIter=nIter, **kwargs)
+
+    with open(directory + "res.pickle", "wb") as handle:
+        pickle.dump(res, handle)
+
+    # Pickle the res in a file to be reused.
+    # Go put a token in the token files without breaking everything.
+
+    # Need to write a function to be  able to know the timeu sed
+    # for a monoview experimentation approximately and the ressource it uses to write automatically the file in the shell
+    # it will have to be a not-too close approx as the taskswont be long and Ram-o-phage

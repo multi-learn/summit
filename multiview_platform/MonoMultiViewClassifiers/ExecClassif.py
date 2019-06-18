@@ -277,7 +277,7 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None,
                      kFolds=None, randomState=None, hyperParamSearch=None,
                      metrics=None, argumentDictionaries=None,
                      benchmark=None, views=None, viewsIndices=None, flag=None,
-                     labels=None, dataset_name=None,
+                     labels=None,
                      ExecMonoview_multicore=ExecMonoview_multicore,
                      ExecMultiview_multicore=ExecMultiview_multicore,
                      initMultiviewArguments=initMultiviewArguments):
@@ -290,7 +290,7 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None,
 
     logging.debug("Start:\t Monoview benchmark")
     resultsMonoview += [
-        ExecMonoview_multicore(directory, dataset_name, labelsNames,
+        ExecMonoview_multicore(directory, args.name, labelsNames,
                                classificationIndices, kFolds,
                                coreIndex, args.type, args.pathF, randomState,
                                labels,
@@ -311,7 +311,7 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None,
 
     logging.debug("Start:\t Multiview benchmark")
     resultsMultiview = [
-        ExecMultiview_multicore(directory, coreIndex, dataset_name,
+        ExecMultiview_multicore(directory, coreIndex, args.name,
                                 classificationIndices, kFolds, args.type,
                                 args.pathF, LABELS_DICTIONARY, randomState,
                                 labels, hyperParamSearch=hyperParamSearch,
@@ -330,7 +330,7 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None,
                                hyperParamSearch=None, metrics=None,
                                argumentDictionaries=None,
                                benchmark=None, views=None, viewsIndices=None,
-                               flag=None, labels=None, dataset_name=None,
+                               flag=None, labels=None,
                                ExecMonoview_multicore=ExecMonoview_multicore,
                                ExecMultiview_multicore=ExecMultiview_multicore,
                                initMultiviewArguments=initMultiviewArguments):
@@ -346,7 +346,7 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None,
     nbMulticoreToDo = int(math.ceil(float(nbExperiments) / nbCores))
     for stepIndex in range(nbMulticoreToDo):
         resultsMonoview += (Parallel(n_jobs=nbCores)(
-            delayed(ExecMonoview_multicore)(directory, dataset_name, labelsNames,
+            delayed(ExecMonoview_multicore)(directory, args.name, labelsNames,
                                             classificationIndices, kFolds,
                                             coreIndex, args.type, args.pathF,
                                             randomState, labels,
@@ -374,7 +374,7 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None,
     nbMulticoreToDo = int(math.ceil(float(nbExperiments) / nbCores))
     for stepIndex in range(nbMulticoreToDo):
         resultsMultiview += Parallel(n_jobs=nbCores)(
-            delayed(ExecMultiview_multicore)(directory, coreIndex, dataset_name,
+            delayed(ExecMultiview_multicore)(directory, coreIndex, args.name,
                                              classificationIndices, kFolds,
                                              args.type, args.pathF,
                                              LABELS_DICTIONARY, randomState,
@@ -399,7 +399,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None,
                              hyperParamSearch=None, metrics=None,
                              argumentDictionaries=None,
                              benchmark=None, views=None, viewsIndices=None,
-                             flag=None, labels=None, dataset_name=None,
+                             flag=None, labels=None,
                              ExecMonoview_multicore=ExecMonoview_multicore,
                              ExecMultiview_multicore=ExecMultiview_multicore,
                              initMultiviewArguments=initMultiviewArguments):
@@ -411,7 +411,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None,
         X = DATASET.get("View" + str(arguments["viewIndex"]))
         Y = labels
         resultsMonoview += [
-            ExecMonoview(directory, X, Y, dataset_name, labelsNames,
+            ExecMonoview(directory, X, Y, args.name, labelsNames,
                          classificationIndices, kFolds,
                          1, args.type, args.pathF, randomState,
                          hyperParamSearch=hyperParamSearch, metrics=metrics,
@@ -432,7 +432,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None,
     resultsMultiview = []
     for arguments in argumentDictionaries["Multiview"]:
         resultsMultiview += [
-            ExecMultiview(directory, DATASET, dataset_name, classificationIndices,
+            ExecMultiview(directory, DATASET, args.name, classificationIndices,
                           kFolds, 1, args.type,
                           args.pathF, LABELS_DICTIONARY, randomState, labels,
                           hyperParamSearch=hyperParamSearch,
@@ -442,7 +442,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None,
     return [flag, resultsMonoview + resultsMultiview]
 
 
-def execBenchmark(dataset_name, nbCores, statsIter, nbMulticlass,
+def execBenchmark(nbCores, statsIter, nbMulticlass,
                   benchmarkArgumentsDictionaries, classificationIndices,
                   directories,
                   directory, multiClassLabels, metrics, labelsDictionary,
@@ -516,7 +516,7 @@ def execBenchmark(dataset_name, nbCores, statsIter, nbMulticlass,
         logging.debug("Start:\t Deleting " + str(
             nbCores) + " temporary datasets for multiprocessing")
         args = benchmarkArgumentsDictionaries[0]["args"]
-        datasetFiles = delete(args.pathF, dataset_name, nbCores)
+        datasetFiles = delete(args.pathF, args.name, nbCores)
         logging.debug("Start:\t Deleting datasets for multiprocessing")
     # Do everything with flagging
     nbExamples = len(classificationIndices[0][0]) + len(
@@ -547,16 +547,16 @@ def execClassif(arguments):
     monoviewAlgos = args.CL_algos_monoview
     multiviewAlgos = args.CL_algos_multiview
 
-    directory = execution.init_result_directory(args.name, args.views, args.CL_type,
-                                                args.log, args.debug, args.label,
-                                                args.res_dir)
+    directory = execution.initLogFile(args.name, args.views, args.CL_type,
+                                      args.log, args.debug, args.label,
+                                      args.res_dir)
     randomState = execution.initRandomState(args.randomState, directory)
     statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,
                                                                 randomState)
 
     getDatabase = execution.getDatabaseFunction(args.name, args.type)
 
-    DATASET, LABELS_DICTIONARY, dataset_name = getDatabase(args.views,
+    DATASET, LABELS_DICTIONARY, datasetname = getDatabase(args.views,
                                                           args.pathF, args.name,
                                                           args.CL_nbClass,
                                                           args.CL_classes,
@@ -564,6 +564,7 @@ def execClassif(arguments):
                                                           args.full,
                                                           args.add_noise,
                                                           args.noise_std)
+    args.name = datasetname
 
     splits = execution.genSplits(DATASET.get("Labels").value, args.CL_split,
                                  statsIterRandomStates)
@@ -574,7 +575,7 @@ def execClassif(arguments):
     kFolds = execution.genKFolds(statsIter, args.CL_nbFolds,
                                  statsIterRandomStates)
 
-    datasetFiles = Dataset.initMultipleDatasets(args.pathF, dataset_name, nbCores)
+    datasetFiles = Dataset.initMultipleDatasets(args.pathF, args.name, nbCores)
 
     # if not views:
     #     raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
@@ -607,7 +608,7 @@ def execClassif(arguments):
     argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary,
                                             NB_CLASS, initKWARGS)
     directories = execution.genDirecortiesNames(directory, statsIter)
-    benchmarkArgumentDictionaries = execution.genArgumentDictionaries(dataset_name,
+    benchmarkArgumentDictionaries = execution.genArgumentDictionaries(
         LABELS_DICTIONARY, directories, multiclassLabels,
         labelsCombinations, indicesMulticlass,
         hyperParamSearch, args, kFolds,
@@ -616,7 +617,7 @@ def execClassif(arguments):
         views, viewsIndices)
     nbMulticlass = len(labelsCombinations)
 
-    execBenchmark(dataset_name, nbCores, statsIter, nbMulticlass,
+    execBenchmark(nbCores, statsIter, nbMulticlass,
                   benchmarkArgumentDictionaries, splits, directories,
                   directory, multiclassLabels, metrics, LABELS_DICTIONARY,
                   NB_CLASS, DATASET)

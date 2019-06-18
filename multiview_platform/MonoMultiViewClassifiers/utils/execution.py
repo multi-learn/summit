@@ -365,17 +365,15 @@ def parseTheArgs(arguments):
 
     groupCGDesc = parser.add_argument_group('CGDesc arguments')
     groupCGDesc.add_argument('--CGD_stumps', metavar='INT', type=int,
-                             nargs='+',
                              action='store',
                              help='Set the n_stumps_per_attribute parameter '
                                   'for CGreed',
-                             default=[1])
+                             default=1)
     groupCGDesc.add_argument('--CGD_n_iter', metavar='INT', type=int,
-                             nargs='+',
                              action='store',
                              help='Set the n_max_iterations parameter for '
                                   'CGreed',
-                             default=[100])
+                             default=100)
 
     groupCGDescTree = parser.add_argument_group('CGDesc arguments')
     groupCGDescTree.add_argument('--CGDT_trees', metavar='INT', type=int,
@@ -686,7 +684,8 @@ def initRandomState(randomStateArg, directory):
     If no random state is specified, it will generate a 'random' seed.
     If the `randomSateArg` is a string containing only numbers, it will be converted in an int to generate a seed.
     If the `randomSateArg` is a string with letters, it must be a path to a pickled random state file that will be loaded.
-    The function will also pickle the new random state in a file to be able to retrieve it later.
+    The function will also pickle the new random state in a file tobe able to retrieve it later.
+    Tested
 
 
     Parameters
@@ -764,7 +763,7 @@ def getDatabaseFunction(name, type):
     return getDatabase
 
 
-def init_result_directory(name, views, CL_type, log, debug, label, result_directory):
+def initLogFile(name, views, CL_type, log, debug, label, result_directory):
     r"""Used to init the directory where the preds will be stored and the log file.
 
     First this function will check if the result directory already exists (only one per minute is allowed).
@@ -789,10 +788,10 @@ def init_result_directory(name, views, CL_type, log, debug, label, result_direct
     """
     if debug:
         resultDirectory = result_directory + name + "/debug_started_" + time.strftime(
-            "%y_%m_%d-%H_%M_%S") + "_" + label + "/"
+            "%Y_%m_%d-%H_%M_%S") + "_" + label + "/"
     else:
         resultDirectory = result_directory + name + "/started_" + time.strftime(
-            "%y_%m_%d-%H_%M") + "_" + label + "/"
+            "%Y_%m_%d-%H_%M") + "_" + label + "/"
     logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(
         CL_type) + "-" + "_".join(
         views) + "-" + name + "-LOG"
@@ -946,7 +945,7 @@ def genDirecortiesNames(directory, statsIter):
     return directories
 
 
-def genArgumentDictionaries(dataset_name, labelsDictionary, directories, multiclassLabels,
+def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels,
                             labelsCombinations, indicesMulticlass,
                             hyperParamSearch, args, kFolds,
                             statsIterRandomStates, metrics,
@@ -1014,7 +1013,6 @@ def genArgumentDictionaries(dataset_name, labelsDictionary, directories, multicl
                     indicesMulticlass[combinationIndex][1][iterIndex],
                     indicesMulticlass[combinationIndex][2][iterIndex]],
                 "args": args,
-                "dataset_name":dataset_name,
                 "labels": multiclassLabels[combinationIndex],
                 "kFolds": kFolds[iterIndex],
                 "randomState": iterRandomState,
