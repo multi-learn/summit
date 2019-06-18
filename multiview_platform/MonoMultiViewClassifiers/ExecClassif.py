@@ -156,13 +156,26 @@ def initMonoviewExps(benchmark, viewsDictionary, nbClass, kwargsInit):
         argumentDictionaries["Monoview"] = []
         for viewName, viewIndex in viewsDictionary.items():
             for classifier in benchmark["Monoview"]:
-                arguments = {
-                    "args": {classifier + "KWARGS": kwargsInit[
-                        classifier + "KWARGSInit"], "feat": viewName,
-                             "CL_type": classifier, "nbClass": nbClass},
-                    "viewIndex": viewIndex}
-                argumentDictionaries["Monoview"].append(arguments)
+                if multiple_args(classifier, kwargsInit):
+                    argumentDictionaries["Monoview"] += gen_multiple_args_dictionnaries(nbClass, kwargsInit)
+                else:
+                    arguments = {
+                        "args": {classifier + "KWARGS": kwargsInit[
+                            classifier + "KWARGSInit"], "feat": viewName,
+                                 "CL_type": classifier, "nbClass": nbClass},
+                        "viewIndex": viewIndex}
+                    argumentDictionaries["Monoview"].append(arguments)
     return argumentDictionaries
+
+def multiple_args(classifier, kwargsInit):
+    listed_args = [type(value) == list and  len(value)>1 for key, value in kwargsInit[classifier + "KWARGSInit"].items()]
+    if True in listed_args:
+        return True
+    else: 
+        return False
+
+
+def gen_multiple_args_dictionnaries(nbClass, kwargsInit):
 
 
 def initMonoviewKWARGS(args, classifiersNames):
@@ -600,6 +613,7 @@ def execClassif(arguments):
             metrics[metricIndex] = [metric[0], None]
 
     benchmark = initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args)
+    print(benchmark, "\n")
 
     initKWARGS = initKWARGSFunc(args, benchmark)
 
@@ -607,6 +621,7 @@ def execClassif(arguments):
 
     argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary,
                                             NB_CLASS, initKWARGS)
+    print(argumentDictionaries, "\n")
     directories = execution.genDirecortiesNames(directory, statsIter)
     benchmarkArgumentDictionaries = execution.genArgumentDictionaries(
         LABELS_DICTIONARY, directories, multiclassLabels,
@@ -615,6 +630,7 @@ def execClassif(arguments):
         statsIterRandomStates, metrics,
         argumentDictionaries, benchmark, nbViews,
         views, viewsIndices)
+    print(benchmarkArgumentDictionaries, "\n")
     nbMulticlass = len(labelsCombinations)
 
     execBenchmark(nbCores, statsIter, nbMulticlass,
