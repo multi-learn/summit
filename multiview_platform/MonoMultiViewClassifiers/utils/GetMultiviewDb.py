@@ -131,7 +131,7 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
         datasetFile.close()
         datasetFile = h5py.File(pathF + "Plausible.hdf5", "r")
         LABELS_DICTIONARY = {0: "No", 1: "Yes"}
-        return datasetFile, LABELS_DICTIONARY
+        return datasetFile, LABELS_DICTIONARY, "Plausible"
     elif NB_CLASS >= 3:
         firstBound = int(datasetLength / 3)
         rest = datasetLength - 2 * int(datasetLength / 3)
@@ -181,6 +181,7 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
         datasetFile.close()
         datasetFile = h5py.File(pathF + "Plausible.hdf5", "r")
         LABELS_DICTIONARY = {0: "No", 1: "Yes", 2: "Maybe"}
+
         return datasetFile, LABELS_DICTIONARY, "Plausible"
 
 
