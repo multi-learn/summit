@@ -54,6 +54,22 @@ In order to see all the arguments of this script, their description and default 
 cd multiview-machine-learning-omis/multiview_platform
 python Exec.py -h
 ```
+The arguments can be passed through a file using `python Exec.py @<path_to_doc>`
+The file must be formatted with one newline instead of each space : 
+Command line arguments `-debug --CL_type Monoview --CL_algos_monoview Adaboost SVM` will be formatted 
+```
+-debug
+--CL_type
+Monoview
+--CL_algos_monoview
+Adaboost
+SVM
+```
+
+Moreover, for Monoview algorithms (Multiview is still WIP), it is possible to pass multiple arguments instead of just one. 
+Thus, executing `python Exec.py --RF_trees 10 100 --RF_max_depth 3 4 --RF_criterion entropy` will result in the generation of several classifiers called
+`RandomForest_10_3_entropy`, with 10 trees and a max depth of 3, `RandomForest_10_4_entropy`, with 10 tress and a max depth of 4,  `RandomForest_100_3_entropy`, `RandomForest_100_4_entropy` to test all the passed arguments combinations. 
+ 
 
 
 ### Understanding `Results/` architecture
