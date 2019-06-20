@@ -13,7 +13,7 @@ class CGDesc(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
                                      c_bound_choice=True,
                                      random_start=False,
                                      n_stumps=n_stumps,
-                                     use_r=True,
+                                     use_r=False,
                                      c_bound_sol=True,
                                      estimators_generator="Stumps"
                                      )

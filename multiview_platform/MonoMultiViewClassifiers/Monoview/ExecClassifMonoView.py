@@ -56,7 +56,6 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
     labelsString, \
     outputFileName = initConstants(args, X, classificationIndices, labelsNames,
                                    name, directory)
-
     logging.debug("Done:\t Loading data")
 
     logging.debug(

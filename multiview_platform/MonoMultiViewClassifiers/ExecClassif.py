@@ -161,8 +161,8 @@ def initMonoviewExps(benchmark, viewsDictionary, nbClass, kwargsInit):
                     argumentDictionaries["Monoview"] += gen_multiple_args_dictionnaries(nbClass, kwargsInit, classifier, viewName, viewIndex)
                 else:
                     arguments = {
-                        "args": {classifier + "KWARGS": kwargsInit[
-                            classifier + "KWARGSInit"], "feat": viewName,
+                        "args": {classifier + "KWARGS": dict((key, value[0]) for key, value in kwargsInit[
+                            classifier + "KWARGSInit"].items()), "feat": viewName,
                                  "CL_type": classifier, "nbClass": nbClass},
                         "viewIndex": viewIndex}
                     argumentDictionaries["Monoview"].append(arguments)
@@ -637,15 +637,10 @@ def execClassif(arguments):
             metrics[metricIndex] = [metric[0], None]
 
     benchmark = initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args)
-    print(benchmark, "\n")
-
     initKWARGS = initKWARGSFunc(args, benchmark)
-
     dataBaseTime = time.time() - start
-
     argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary,
                                             NB_CLASS, initKWARGS)
-    print(argumentDictionaries, "\n")
     directories = execution.genDirecortiesNames(directory, statsIter)
     benchmarkArgumentDictionaries = execution.genArgumentDictionaries(
         LABELS_DICTIONARY, directories, multiclassLabels,
@@ -654,7 +649,6 @@ def execClassif(arguments):
         statsIterRandomStates, metrics,
         argumentDictionaries, benchmark, nbViews,
         views, viewsIndices)
-    print(benchmarkArgumentDictionaries, "\n")
     nbMulticlass = len(labelsCombinations)
 
     execBenchmark(nbCores, statsIter, nbMulticlass,

@@ -390,7 +390,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         ones_matrix = np.zeros(y.shape)
         ones_matrix[np.multiply(y, self.new_voter.reshape(
             y.shape)) < 0] = 1  # can np.divide if needed
-        epsilon = np.average(ones_matrix, weights=self.example_weights, axis=0)
+        epsilon = np.average(np.multiply(y, self.new_voter.reshape(
+            y.shape)), axis=0)
         return epsilon
 
     def _compute_r(self, y):

@@ -89,7 +89,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
     kwargsDict = {'n_estimators': args.Ada_n_est,
-                  'base_estimator': DecisionTreeClassifier(max_depth=1)}
+                  'base_estimator': [DecisionTreeClassifier(max_depth=1)]}
     return kwargsDict
 
 
