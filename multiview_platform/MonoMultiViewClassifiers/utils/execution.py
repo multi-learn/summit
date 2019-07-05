@@ -377,6 +377,18 @@ def parseTheArgs(arguments):
                                   'CGreed',
                              default=[100])
 
+    groupCBBoost= parser.add_argument_group('CBBoost arguments')
+    groupCBBoost.add_argument('--CBB_stumps', nargs="+", metavar='INT', type=int,
+                             action='store',
+                             help='Set the n_stumps_per_attribute parameter '
+                                  'for CBBoost',
+                             default=[1])
+    groupCBBoost.add_argument('--CBB_n_iter', metavar='INT', type=int,
+                             action='store', nargs="+",
+                             help='Set the n_max_iterations parameter for '
+                                  'CBBoost',
+                             default=[100])
+
     groupCGDescTree = parser.add_argument_group('CGDesc arguments')
     groupCGDescTree.add_argument('--CGDT_trees', metavar='INT', type=int,
                                  action='store', nargs="+",
@@ -836,6 +848,7 @@ def genSplits(labels, splitRatio, statsIterRandomStates):
                                                                   random_state=randomState,
                                                                   test_size=splitRatio)
         folds = foldsObj.split(indices, labels)
+        print(indices)
         for fold in folds:
             train_fold, test_fold = fold
         trainIndices = indices[train_fold]

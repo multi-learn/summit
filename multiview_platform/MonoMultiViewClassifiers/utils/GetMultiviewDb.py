@@ -82,7 +82,7 @@ def makeMeNoisy(viewData, randomState, percentage=15):
 def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
                        randomState=None, full=True, add_noise=False,
                        noise_std=0.15, nbView=3,
-                       nbClass=2, datasetLength=34, randomStateInt=None):
+                       nbClass=2, datasetLength=1000, randomStateInt=None):
     """Used to generate a plausible dataset to test the algorithms"""
     randomStateInt = 42
     randomState = np.random.RandomState(randomStateInt)
