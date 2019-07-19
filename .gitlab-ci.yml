@@ -4,7 +4,7 @@ tests:
     tags:
         - docker
     script:
-        - pip install -e . --no-deps
+        - pip3 install -e . --no-deps
         - pytest-3
 
 # generate the documentation
