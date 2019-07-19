@@ -1,0 +1,38 @@
+FROM ubuntu:18.04
+MAINTAINER Dominique Benielli
+WORKDIR /
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends apt-utils \
+        cmake \
+        gcc \
+        g++ \
+        make \
+        python3-dev \
+        python3-setuptools \
+        python3-pytest \
+        python3-pytest-cov \
+        python3-nose \
+        python3-pip \
+        python3-sphinx \
+        python3-numpydoc \
+        python3-matplotlib \
+        python3-sphinx-gallery \
+        python3-pil \
+        libhdf5-dev \
+        git \
+        && \
+    apt-get clean
+RUN apt-get install -y --no-install-recommends locales && \
+    apt-get clean && \
+    locale-gen en_US.UTF-8 && \
+    update-locale en_US.UTF-8 && \
+    echo "export LC_ALL=$(locale -a | grep en_US)" >> /root/.bashrc && \
+    echo "export LANG=$(locale -a | grep en_US)" >>  /root/.bashrc
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
+
+
+
+
