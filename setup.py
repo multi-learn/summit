@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from Cython.Build import cythonize
+# from Cython.Build import cythonize
 from setuptools import setup, find_packages
 
 import multiview_platform
@@ -14,7 +14,7 @@ setup(
 
     # la version du code
     version=multiview_platform.__version__,
-
+    python_requires = '>=3.5',
     # Liste les packages à insérer dans la distribution
     # plutôt que de le faire à la main, on utilise la foncton
     # find_packages() de setuptools qui va cherche tous les packages
@@ -52,7 +52,8 @@ setup(
 
     # Une url qui pointe vers la page officielle de votre lib
     url='http://github.com/babau1/multiview-machine-learning-omis/',
-
+    install_requires=['numpy>=1.8', 'scipy>=0.16','scikit-learn==0.19',
+                      'h5py', 'joblib', 'pyscm'],
     # Il est d'usage de mettre quelques metadata à propos de sa lib
     # Pour que les robots puissent facilement la classer.
     # La liste des marqueurs autorisées est longue:
@@ -88,6 +89,6 @@ setup(
 
     # Il y a encore une chiée de paramètres possibles, mais avec ça vous
     # couvrez 90% des besoins
-    ext_modules=cythonize(
-        "multiview_platform/MonoMultiViewClassifiers/Monoview/Additions/_custom_criterion.pyx"),
+    # ext_modules=cythonize(
+    #     "multiview_platform/MonoMultiViewClassifiers/Monoview/Additions/_custom_criterion.pyx"),
 )
