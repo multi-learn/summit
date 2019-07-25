@@ -11,10 +11,11 @@ class QarBoost(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
                                        twice_the_same=True,
                                        c_bound_choice=True,
                                        random_start=False,
-                                       n_stumps_per_attribute=10,
+                                       n_stumps=10,
                                        use_r=True,
                                        c_bound_sol=False
                                        )
+        # n_stumps_per_attribute=10,
         self.param_names = []
         self.distribs = []
         self.classed_params = []
