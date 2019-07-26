@@ -9,11 +9,11 @@ __status__ = "Prototype"  # Production, Development, Prototype
 def score(y_true, y_pred, multiclass=False, **kwargs):
     try:
         sample_weight = kwargs["0"]
-    except:
+    except Exception:
         sample_weight = None
     try:
         eps = kwargs["1"]
-    except:
+    except Exception:
         eps = 1e-15
     score = metric(y_true, y_pred, sample_weight=sample_weight, eps=eps)
     return score
@@ -22,11 +22,11 @@ def score(y_true, y_pred, multiclass=False, **kwargs):
 def get_scorer(**kwargs):
     try:
         sample_weight = kwargs["0"]
-    except:
+    except Exception:
         sample_weight = None
     try:
         eps = kwargs["1"]
-    except:
+    except Exception:
         eps = 1e-15
     return make_scorer(metric, greater_is_better=False,
                        sample_weight=sample_weight, eps=eps)
@@ -35,13 +35,13 @@ def get_scorer(**kwargs):
 def getConfig(**kwargs):
     try:
         sample_weight = kwargs["0"]
-    except:
+    except Exception:
         sample_weight = None
     try:
         eps = kwargs["1"]
-    except:
+    except Exception:
         eps = 1e-15
-    configString = "Log loss using " + str(
+    config_string = "Log loss using " + str(
         sample_weight) + " as sample_weights, " + str(
         eps) + " as eps (lower is better)"
-    return configString
+    return config_string

@@ -15,8 +15,8 @@ class Test_disagreement(unittest.TestCase):
         cls.randomState = np.random.RandomState(42)
         cls.allClassifiersNames = ["SCM", "SVM", "DT"]
         cls.directory = ""
-        cls.viewsIndices = [0, 1]
-        cls.resultsMonoview = [[0, ["SCM", "", "", "", "", "",
+        cls.viewsIndices =  np.array([0, 1])
+        cls.resultsMonoview =  np.array([[0, ["SCM", "", "", "", "", "",
                                     np.array([cls.randomState.randint(0, 2, 6),
                                               cls.randomState.randint(0, 2, 6),
                                               cls.randomState.randint(0, 2, 6)])
@@ -46,19 +46,19 @@ class Test_disagreement(unittest.TestCase):
                                               cls.randomState.randint(0, 2, 6),
                                               cls.randomState.randint(0, 2, 6)])
                                     ]]
-                               ]
-        cls.classificationIndices = []
+                               ])
+        cls.classificationIndices = np.array([])
 
     def test_simple(cls):
         bestCombi, disagreement = diversity_utils.couple_div_measure(
             cls.allClassifiersNames, cls.viewsIndices, cls.resultsMonoview,
-            DisagreeFusionModule.disagree, "")
+            DisagreeFusionModule.disagree)
         cls.assertAlmostEqual(disagreement, 0.666666666667)
         cls.assertEqual(len(bestCombi), 2)
 
     def test_viewsIndices(cls):
-        cls.viewsIndices = [0, 6]
-        cls.resultsMonoview = [[0, ["SCM", "", "", "", "", "",
+        cls.viewsIndices = np.array([0, 6])
+        cls.resultsMonoview =np.array( [[0, ["SCM", "", "", "", "", "",
                                     np.array([cls.randomState.randint(0, 2, 6),
                                               cls.randomState.randint(0, 2, 6),
                                               cls.randomState.randint(0, 2, 6)])
@@ -88,17 +88,16 @@ class Test_disagreement(unittest.TestCase):
                                               cls.randomState.randint(0, 2, 6),
                                               cls.randomState.randint(0, 2, 6)])
                                     ]]
-                               ]
+                               ])
         bestCombi, disagreement = diversity_utils.couple_div_measure(
             cls.allClassifiersNames, cls.viewsIndices,
-            cls.resultsMonoview, DisagreeFusionModule.disagree,
-            "")
+            cls.resultsMonoview, DisagreeFusionModule.disagree)
         cls.assertAlmostEqual(disagreement, 0.611111111111)
         cls.assertEqual(len(bestCombi), 2)
 
     def test_multipleViews(cls):
-        cls.viewsIndices = [0, 6, 18]
-        cls.resultsMonoview = [[0, ["SCM", "", "", "", "", "",
+        cls.viewsIndices = np.array([0, 6, 18])
+        cls.resultsMonoview = np.array([[0, ["SCM", "", "", "", "", "",
                                     np.array([cls.randomState.randint(0, 2, 6),
                                               cls.randomState.randint(0, 2, 6),
                                               cls.randomState.randint(0, 2, 6)])
@@ -146,11 +145,10 @@ class Test_disagreement(unittest.TestCase):
                                                cls.randomState.randint(0, 2,
                                                                        6)])
                                      ]]
-                               ]
+                               ])
         bestCombi, disagreement = diversity_utils.couple_div_measure(
             cls.allClassifiersNames, cls.viewsIndices,
-            cls.resultsMonoview, DisagreeFusionModule.disagree,
-            "")
+            cls.resultsMonoview, DisagreeFusionModule.disagree)
         cls.assertAlmostEqual(disagreement, 0.592592592593)
         cls.assertEqual(len(bestCombi), 3)
 

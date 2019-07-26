@@ -16,5 +16,5 @@ def get_scorer(**kwargs):
 
 
 def getConfig(**kwargs):
-    configString = "Matthews correlation coefficient (higher is better)"
-    return configString
+    config_string = "Matthews correlation coefficient (higher is better)"
+    return config_string

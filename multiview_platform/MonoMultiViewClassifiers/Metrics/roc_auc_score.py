@@ -10,11 +10,11 @@ __status__ = "Prototype"  # Production, Development, Prototype
 def score(y_true, y_pred, multiclass=False, **kwargs):
     try:
         sample_weight = kwargs["0"]
-    except:
+    except Exception :
         sample_weight = None
     try:
         average = kwargs["1"]
-    except:
+    except Exception:
         if multiclass:
             average = "micro"
         else:
@@ -48,7 +48,7 @@ def getConfig(**kwargs):
         sample_weight = None
     try:
         average = kwargs["3"]
-    except:
+    except Exception:
         average = "micro"
     configString = "ROC_AUC score using " + str(
         sample_weight) + " as sample_weights, " + average + " as average (higher is better)"

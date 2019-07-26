@@ -71,5 +71,5 @@ def getConfig(**kwargs):
            The string describing the metric's configuration.
     """
 
-    configString = "This is a framework"
-    return configString
+    config_tring = "This is a framework"
+    return config_tring

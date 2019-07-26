@@ -9,7 +9,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 def score(y_true, y_pred, multiclass=False, **kwargs):
     try:
         classes = kwargs["0"]
-    except:
+    except Exception:
         classes = None
     score = metric(y_true, y_pred)
     return score
@@ -18,7 +18,7 @@ def score(y_true, y_pred, multiclass=False, **kwargs):
 def get_scorer(**kwargs):
     try:
         classes = kwargs["0"]
-    except:
+    except Exception:
         classes = None
     return make_scorer(metric, greater_is_better=False, classes=classes)
 
@@ -26,8 +26,8 @@ def get_scorer(**kwargs):
 def getConfig(**kwargs):
     try:
         classes = kwargs["0"]
-    except:
+    except Exception:
         classes = None
-    configString = "Hamming loss using " + str(
+    config_string = "Hamming loss using " + str(
         classes) + " as classes (lower is better)"
-    return configString
+    return config_string

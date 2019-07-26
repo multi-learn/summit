@@ -9,19 +9,19 @@ __status__ = "Prototype"  # Production, Development, Prototype
 def score(y_true, y_pred, multiclass=False, **kwargs):
     try:
         sample_weight = kwargs["0"]
-    except:
+    except Exception:
         sample_weight = None
     try:
         labels = kwargs["1"]
-    except:
+    except Exception:
         labels = None
     try:
         pos_label = kwargs["2"]
-    except:
+    except Exception:
         pos_label = 1
     try:
         average = kwargs["3"]
-    except:
+    except Exception:
         if multiclass:
             average = "micro"
         else:
@@ -34,19 +34,19 @@ def score(y_true, y_pred, multiclass=False, **kwargs):
 def get_scorer(**kwargs):
     try:
         sample_weight = kwargs["0"]
-    except:
+    except Exception:
         sample_weight = None
     try:
         labels = kwargs["1"]
-    except:
+    except Exception:
         labels = None
     try:
         pos_label = kwargs["2"]
-    except:
+    except Exception:
         pos_label = 1
     try:
         average = kwargs["3"]
-    except:
+    except Exception:
         average = "binary"
     return make_scorer(metric, greater_is_better=True,
                        sample_weight=sample_weight, labels=labels,
@@ -57,19 +57,19 @@ def get_scorer(**kwargs):
 def getConfig(**kwargs):
     try:
         sample_weight = kwargs["0"]
-    except:
+    except Exception:
         sample_weight = None
     try:
         labels = kwargs["1"]
-    except:
+    except Exception:
         labels = None
     try:
         pos_label = kwargs["2"]
-    except:
+    except Exception:
         pos_label = 1
     try:
         average = kwargs["3"]
-    except:
+    except Exception:
         average = "binary"
     configString = "Recall score using " + str(
         sample_weight) + " as sample_weights, " + str(
