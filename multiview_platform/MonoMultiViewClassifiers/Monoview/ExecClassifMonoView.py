@@ -222,11 +222,11 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
                     testFileName = outputFileName + imageName + "-" + str(
                         i) + ".png"
                     if not os.path.isfile(testFileName):
-                        imagesAnalysis[imageName].savefig(testFileName)
+                        imagesAnalysis[imageName].savefig(testFileName, transparent=True)
                         break
 
             imagesAnalysis[imageName].savefig(
-                outputFileName + imageName + '.png')
+                outputFileName + imageName + '.png', transparent=True)
 
 
 if __name__ == '__main__':

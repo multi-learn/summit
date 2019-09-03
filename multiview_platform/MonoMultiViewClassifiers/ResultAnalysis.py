@@ -249,7 +249,7 @@ def plotMetricScores(trainScores, testScores, names, nbResults, metricName,
         plt.tight_layout()
     except:
         pass
-    f.savefig(fileName + '.png')
+    f.savefig(fileName + '.png', transparent=True)
     plt.close()
     import pandas as pd
     if train_STDs is None:
@@ -377,7 +377,7 @@ def publish2Dplot(data, classifiersNames, nbClassifiers, nbExamples, nbCopies,
     cbar = fig.colorbar(cax, ticks=[-100 * statsIter / 2, 0, statsIter])
     cbar.ax.set_yticklabels(['Unseen', 'Always Wrong', 'Always Right'])
     fig.tight_layout()
-    fig.savefig(fileName + "error_analysis_2D.png", bbox_inches="tight")
+    fig.savefig(fileName + "error_analysis_2D.png", bbox_inches="tight", transparent=True)
     plt.close()
 
 
@@ -405,7 +405,7 @@ def publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples, fileName):
     plt.bar(x, errorOnExamples)
     plt.ylim([0, nbClassifiers])
     plt.title("Number of classifiers that failed to classify each example")
-    fig.savefig(fileName + "error_analysis_bar.png")
+    fig.savefig(fileName + "error_analysis_bar.png", transparent=True)
     plt.close()
 
 

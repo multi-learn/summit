@@ -851,7 +851,7 @@ def get_accuracy_graph(plotted_data, classifier_name, file_name,
         # plt.tight_layout()
     else:
         ax.legend((scat,), (name,))
-    f.savefig(file_name)
+    f.savefig(file_name, transparent=True)
     plt.close()
 
 

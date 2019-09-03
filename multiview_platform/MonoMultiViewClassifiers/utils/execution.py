@@ -848,7 +848,6 @@ def genSplits(labels, splitRatio, statsIterRandomStates):
                                                                   random_state=randomState,
                                                                   test_size=splitRatio)
         folds = foldsObj.split(indices, labels)
-        print(indices)
         for fold in folds:
             train_fold, test_fold = fold
         trainIndices = indices[train_fold]
@@ -907,6 +906,7 @@ def initViews(DATASET, argViews):
         Names of all the available views in the dataset.
     """
     NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
+    print(NB_VIEW)
     if argViews != [""]:
         allowedViews = argViews
         allViews = [str(DATASET.get("View" + str(viewIndex)).attrs["name"])

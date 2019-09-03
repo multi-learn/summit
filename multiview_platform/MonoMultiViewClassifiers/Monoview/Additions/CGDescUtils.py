@@ -22,7 +22,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                  c_bound_choice=True, random_start=True,
                  n_stumps=1, use_r=True, c_bound_sol=True,
                  plotted_metric=Metrics.zero_one_loss, save_train_data=True,
-                 test_graph=True, mincq_tracking=True):
+                 test_graph=True, mincq_tracking=False):
         super(ColumnGenerationClassifierQar, self).__init__()
         r"""
 
@@ -104,15 +104,15 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             # Print dynamically the step and the error of the current classifier
             self.it = k
 
-            print(
-                "Resp. bound : {}, {}; {}/{}, eps :{}, ".format(
-                    self.respected_bound,
-                    self.bounds[-1] > self.train_metrics[-1],
-                    k + 2,
-                    self.n_max_iterations,
-                    self.voter_perfs[-1],
-                ),
-                end="\r")
+            # print(
+            #     "Resp. bound : {}, {}; {}/{}, eps :{}, ".format(
+            #         self.respected_bound,
+            #         self.bounds[-1] > self.train_metrics[-1],
+            #         k + 2,
+            #         self.n_max_iterations,
+            #         self.voter_perfs[-1],
+            #     ),
+            #     end="\r")
             sol, new_voter_index = self.choose_new_voter(y_kernel_matrix,
                                                              formatted_y)
             if type(sol) == str:
@@ -132,8 +132,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             self.raw_weights = self.weights_
             self.y_train = formatted_y
 
-        print(self.classification_matrix)
-        print(self.weights_, self.break_cause)
+        # print(self.classification_matrix)
+        # print(self.weights_, self.break_cause)
         self.weights_ = np.array(self.weights_)
         self.weights_ /= np.sum(self.weights_)
 
@@ -451,10 +451,25 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.A2s = np.sum(weighted_hypothesis, axis=0) ** 2
         self.A1s = np.sum(weighted_hypothesis, axis=0) * margin_old * 2
         self.A0 = margin_old ** 2
+        import matplotlib.pyplot as plt
+        # plt.plot(self.A2s * 0.5 * self.B1s / m**3)
+        # plt.plot(np.array([margin_old/m for _ in range(len(self.A2s))]))
+        # plt.savefig("try.png")
+
+        # print("C2 < 0 :", np.where(np.array([margin_old/m for _ in range(len(self.A2s))]) < np.sqrt(self.A2s) * 0.5 * self.B1s / m**2)[0])
+        # print("C1 < 0 :", np.where(np.array([margin_old ** 2 / m for _ in range(
+        #     len(self.A2s))]) < self.A2s * self.B0 / m ** 2)[0])
+        # print("Double root:", np.where((0.5 * self.B1s / m)**2 * m > self.B0)[0])
+
 
         C2s = (self.A1s * self.B2 - self.A2s * self.B1s)
+        # print("Wrong C2 :" , np.where(C2s < 0)[0].shape, bad_margins.shape)
         C1s = 2 * (self.A0 * self.B2 - self.A2s * self.B0)
+        # print("Wrong C2 :", np.where(C1s < 0)[0].shape, bad_margins.shape)
         C0s = self.A0 * self.B1s - self.A1s * self.B0
+
+        # print(np.where(C2s==0))
+        # print(self.chosen_columns_)
 
         sols = np.zeros(C0s.shape) - 3
         # sols[np.where(C2s == 0)[0]] = C0s[np.where(C2s == 0)[0]] / C1s[np.where(C2s == 0)[0]]
@@ -469,7 +484,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             return "No more pertinent voters", 0
         else:
             best_hyp_index = np.argmin(masked_c_bounds)
-
             self.c_bounds.append(masked_c_bounds[best_hyp_index])
             self.margins.append(math.sqrt(self.A2s[best_hyp_index] / m))
             self.disagreements.append(0.5 * self.B1s[best_hyp_index] / m)

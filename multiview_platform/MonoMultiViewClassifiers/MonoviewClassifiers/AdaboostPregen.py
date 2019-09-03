@@ -55,6 +55,7 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
         self.metrics = np.array(
             [self.plotted_metric.score(change_label_to_zero(pred), y) for pred
              in self.staged_predict(pregen_X)])
+
         self.bounds = np.array([np.prod(
             np.sqrt(1 - 4 * np.square(0.5 - self.estimator_errors_[:i + 1])))
                                 for i in

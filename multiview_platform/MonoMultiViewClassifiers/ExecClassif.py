@@ -9,6 +9,7 @@ import matplotlib
 import itertools
 import numpy as np
 from joblib import Parallel, delayed
+from sklearn.tree import DecisionTreeClassifier
 
 matplotlib.use(
     'Agg')  # Anti-Grain Geometry C++ library to make a raster (pixel) image of the figure
@@ -183,15 +184,23 @@ def gen_multiple_kwargs_combinations(clKWARGS):
     keys = clKWARGS.keys()
     kwargs_combination = [dict((key, value) for key, value in zip(keys, values))
                           for values in values_cartesian_prod]
-    return kwargs_combination
+
+    reduce_dict = {DecisionTreeClassifier: "DT", }
+    reduced_listed_values = [
+        [_ if type(_) not in reduce_dict else reduce_dict[type(_)] for _ in
+         list_] for list_ in listed_values]
+    reduced_values_cartesian_prod = [_ for _ in itertools.product(*reduced_listed_values)]
+    reduced_kwargs_combination = [dict((key, value) for key, value in zip(keys, values))
+                          for values in reduced_values_cartesian_prod]
+    return kwargs_combination, reduced_kwargs_combination
 
 
 def gen_multiple_args_dictionnaries(nbClass, kwargsInit,
                                     classifier, viewName, viewIndex):
-    multiple_kwargs_list = gen_multiple_kwargs_combinations(kwargsInit[classifier + "KWARGSInit"])
+    multiple_kwargs_list, reduced_multiple_kwargs_list = gen_multiple_kwargs_combinations(kwargsInit[classifier + "KWARGSInit"])
     multiple_kwargs_dict = dict(
-        (classifier+"_"+"_".join(map(str,list(dictionary.values()))), dictionary)
-        for dictionary in multiple_kwargs_list)
+        (classifier+"_"+"_".join(map(str,list(reduced_dictionary.values()))), dictionary)
+        for reduced_dictionary, dictionary in zip(reduced_multiple_kwargs_list, multiple_kwargs_list ))
     args_dictionnaries = [{
                         "args": {classifier_name + "KWARGS": arguments,
                                  "feat": viewName,

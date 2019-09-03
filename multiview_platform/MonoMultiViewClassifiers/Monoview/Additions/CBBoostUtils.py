@@ -17,11 +17,11 @@ from ... import Metrics
 # Used for CBBoost
 
 class CBBoostClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, n_max_iterations=None, estimators_generator=None,
-                 random_state=42, self_complemented=True, twice_the_same=False,
-                 random_start=True, n_stumps=1, c_bound_sol=True,
-                 plotted_metric=Metrics.zero_one_loss, save_train_data=True,
-                 test_graph=True, mincq_tracking=True):
+    def __init__(self, n_max_iterations=100, estimators_generator="Stumps",
+                 random_state=42, self_complemented=True, twice_the_same=True,
+                 random_start=False, n_stumps=1, c_bound_sol=True,
+                 plotted_metric=Metrics.zero_one_loss, save_train_data=False,
+                 test_graph=True, mincq_tracking=False):
         super(CBBoostClassifier, self).__init__()
         r"""
 
@@ -239,16 +239,6 @@ class CBBoostClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         self.chosen_columns_.append(new_voter_index)
         self.new_voter = self.classification_matrix[:, new_voter_index].reshape(
             (self.n_total_examples, 1))
-
-    # def choose_new_voter(self, y_kernel_matrix, formatted_y):
-    #     """Used to choose the voter according to the specified criterion (margin or C-Bound"""
-    #     if self.c_bound_choice:
-    #         sol, new_voter_index = self._find_new_voter(y_kernel_matrix,
-    #                                                     formatted_y)
-    #     else:
-    #         new_voter_index, sol = self._find_best_weighted_margin(
-    #             y_kernel_matrix)
-    #     return sol, new_voter_index
 
     def init_boosting(self, m, y, y_kernel_matrix):
         """THis initialization corressponds to the first round of boosting with equal weights for each examples and the voter chosen by it's margin."""

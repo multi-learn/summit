@@ -333,25 +333,26 @@ def filterViews(datasetFile, temp_dataset, views, usedIndices):
         for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
             copyhdf5Dataset(datasetFile, temp_dataset, "View" + str(viewIndex),
                             "View" + str(viewIndex), usedIndices)
-    for askedViewName in views:
-        for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
-            viewName = datasetFile.get("View" + str(viewIndex)).attrs["name"]
-            if type(viewName) == bytes:
-                viewName = viewName.decode("utf-8")
-            if viewName == askedViewName:
-                copyhdf5Dataset(datasetFile, temp_dataset,
-                                "View" + str(viewIndex),
-                                "View" + str(newViewIndex), usedIndices)
-                newViewName = \
-                temp_dataset.get("View" + str(newViewIndex)).attrs["name"]
-                if type(newViewName) == bytes:
-                    temp_dataset.get("View" + str(newViewIndex)).attrs[
-                        "name"] = newViewName.decode("utf-8")
+    else:
+        for askedViewName in views:
+            for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
+                viewName = datasetFile.get("View" + str(viewIndex)).attrs["name"]
+                if type(viewName) == bytes:
+                    viewName = viewName.decode("utf-8")
+                if viewName == askedViewName:
+                    copyhdf5Dataset(datasetFile, temp_dataset,
+                                    "View" + str(viewIndex),
+                                    "View" + str(newViewIndex), usedIndices)
+                    newViewName = \
+                    temp_dataset.get("View" + str(newViewIndex)).attrs["name"]
+                    if type(newViewName) == bytes:
+                        temp_dataset.get("View" + str(newViewIndex)).attrs[
+                            "name"] = newViewName.decode("utf-8")
 
-                newViewIndex += 1
-            else:
-                pass
-    temp_dataset.get("Metadata").attrs["nbView"] = len(views)
+                    newViewIndex += 1
+                else:
+                    pass
+        temp_dataset.get("Metadata").attrs["nbView"] = len(views)
 
 
 def copyhdf5Dataset(sourceDataFile, destinationDataFile, sourceDatasetName,
@@ -447,6 +448,14 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
                                view_limits[:, 0], noised_data)
         noised_data = np.where(noised_data > view_limits[:, 1],
                                view_limits[:, 1], noised_data)
+        # import matplotlib.pyplot as plt
+        # plt.imshow(noised_data[1,:].reshape((28,28)))
+        # plt.savefig("plif.png")
+        # lower_contrast = view_dset.value[1,:].reshape((28,28))/10
+        # print(np.max(lower_contrast))
+        # plt.imshow(lower_contrast.astype(int))
+        # plt.savefig("plif2.png")
+        # quit()
         noisy_dataset[view_name][...] = noised_data
         # final_shape = noised_data.shape
     return noisy_dataset, dataset_name + "_noised"
