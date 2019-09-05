@@ -12,7 +12,7 @@ Related papers:
 http://graal.ift.ulaval.ca/majorityvote/
 """
 __author__ = 'Jean-Francis Roy'
-
+import time
 import logging
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.metrics.pairwise import rbf_kernel, linear_kernel, \
@@ -142,7 +142,7 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
         if self.log:
             logging.info("Preparing QP...")
         self._prepare_qp(X, y_reworked)
-
+        beg = time.time()
         try:
             if self.log:
                 logging.info("Solving QP...")
@@ -163,7 +163,8 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
                     str(self), str(e)))
             self.majority_vote = None
         self.cbound_train = self.majority_vote.cbound_value(X, y_reworked)
-
+        end=time.time()
+        self.train_time=end-beg
         return self
 
     def predict(self, X, save_data=True):
@@ -608,6 +609,7 @@ class MinCQ(MinCqLearner, BaseMonoviewClassifier):
         y_rework[np.where(y_rework == 0)] = -1
         interpret_string += "\n Test c_bound value : " + str(
             self.majority_vote.cbound_value(self.x_test, y_rework))
+        np.savetxt(directory+"times.csv", np.array([self.train_time, 0]))
         return interpret_string
 
     def get_name_for_fusion(self):

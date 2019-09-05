@@ -937,6 +937,9 @@ def getInterpretBase(classifier, directory, classifier_name, weights,
     np.savetxt(directory + "times.csv",
                np.array([classifier.train_time, classifier.predict_time]),
                delimiter=',')
+    np.savetxt(directory + "times_iter.csv",
+               np.array([classifier.train_time, len(weights_sort)]),
+               delimiter=',')
     np.savetxt(directory + "sparsity.csv", np.array([len(weights_sort)]),
                delimiter=',')
     get_accuracy_graph(classifier.train_metrics, classifier_name,

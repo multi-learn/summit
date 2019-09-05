@@ -22,9 +22,9 @@ def parseTheArgs(arguments):
     groupStandard = parser.add_argument_group('Standard arguments')
     groupStandard.add_argument('-log', action='store_true',
                                help='Use option to activate logging to console')
-    groupStandard.add_argument('--name', metavar='STRING', action='store',
+    groupStandard.add_argument('--name', metavar='STRING', nargs='+', action='store',
                                help='Name of Database (default: %(default)s)',
-                               default='Plausible')
+                               default=['Plausible'])
     groupStandard.add_argument('--label', metavar='STRING', action='store',
                                help='Labeling the results directory (default: '
                                     '%(default)s)',
@@ -375,7 +375,7 @@ def parseTheArgs(arguments):
                              action='store', nargs="+",
                              help='Set the n_max_iterations parameter for '
                                   'CGreed',
-                             default=[100])
+                             default=[10])
 
     groupCBBoost= parser.add_argument_group('CBBoost arguments')
     groupCBBoost.add_argument('--CBB_stumps', nargs="+", metavar='INT', type=int,
@@ -959,6 +959,16 @@ def genDirecortiesNames(directory, statsIter):
         directories = [directory]
     return directories
 
+
+def find_dataset_names(path, type, names):
+    """This function goal is to browse the dataset directory and extarcts all the needed dataset names."""
+    available_file_names = [file_name.strip().split(".")[0] for file_name in os.listdir(path) if file_name.endswith(type)]
+    if names == ["all"]:
+        return available_file_names
+    elif len(names)>1:
+        return [used_name for used_name in available_file_names if used_name in names]
+    else:
+        return names
 
 def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels,
                             labelsCombinations, indicesMulticlass,

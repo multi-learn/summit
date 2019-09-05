@@ -106,6 +106,8 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
         np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')
         np.savetxt(directory + "times.csv",
                    np.array([self.train_time, self.pred_time]), delimiter=',')
+        np.savetxt(directory + "times_iter.csv",
+                   np.array([self.train_time, len(self.estimator_weights_)]), delimiter=',')
         return interpretString
 
     # def pregen_voters(self, X, y=None):
