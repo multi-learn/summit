@@ -598,7 +598,7 @@ def execClassif(arguments):
 
         directory = execution.initLogFile(name, args.views, args.CL_type,
                                           args.log, args.debug, args.label,
-                                          args.res_dir)
+                                          args.res_dir, args.add_noise, args.noise_std)
         randomState = execution.initRandomState(args.randomState, directory)
         statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,
                                                                     randomState)

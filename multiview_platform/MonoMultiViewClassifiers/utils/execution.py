@@ -777,7 +777,7 @@ def getDatabaseFunction(name, type):
     return getDatabase
 
 
-def initLogFile(name, views, CL_type, log, debug, label, result_directory):
+def initLogFile(name, views, CL_type, log, debug, label, result_directory, add_noise, noise_std):
     r"""Used to init the directory where the preds will be stored and the log file.
 
     First this function will check if the result directory already exists (only one per minute is allowed).
@@ -800,11 +800,15 @@ def initLogFile(name, views, CL_type, log, debug, label, result_directory):
     resultsDirectory : string
         Reference to the main results directory for the benchmark.
     """
+    if add_noise:
+        noise_string = "_n_"+str(int(noise_std*100))
+    else:
+        noise_string = ""
     if debug:
-        resultDirectory = result_directory + name + "/debug_started_" + time.strftime(
+        resultDirectory = result_directory + name + noise_string +"/debug_started_" + time.strftime(
             "%Y_%m_%d-%H_%M_%S") + "_" + label + "/"
     else:
-        resultDirectory = result_directory + name + "/started_" + time.strftime(
+        resultDirectory = result_directory + name + noise_string+ "/started_" + time.strftime(
             "%Y_%m_%d-%H_%M") + "_" + label + "/"
     logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(
         CL_type) + "-" + "_".join(
