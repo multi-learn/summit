@@ -667,7 +667,9 @@ def execClassif(arguments):
                 views, viewsIndices)
             nbMulticlass = len(labelsCombinations)
 
-            execBenchmark(nbCores, statsIter, nbMulticlass,
+            results = execBenchmark(nbCores, statsIter, nbMulticlass,
                           benchmarkArgumentDictionaries, splits, directories,
                           directory, multiclassLabels, metrics, LABELS_DICTIONARY,
                           NB_CLASS, DATASET)
+            print(results)
+            quit()
