@@ -64,10 +64,10 @@ def parseTheArgs(arguments):
                                help='Use option to bebug implemented algorithms')
     groupStandard.add_argument('-add_noise', action='store_true',
                                help='Use option to add noise to the data')
-    groupStandard.add_argument('--noise_std', metavar='FLOAT', action='store',
+    groupStandard.add_argument('--noise_std', metavar='FLOAT', nargs="+", action='store',
                                help='The std of the gaussian noise that will '
                                     'be added to the data.',
-                               type=float, default=0.15)
+                               type=float, default=[0.0])
     groupStandard.add_argument('--res_dir', metavar='STRING', action='store',
                                help='The path to the result directory',
                                default="../Results/")
@@ -800,10 +800,7 @@ def initLogFile(name, views, CL_type, log, debug, label, result_directory, add_n
     resultsDirectory : string
         Reference to the main results directory for the benchmark.
     """
-    if add_noise:
-        noise_string = "_n_"+str(int(noise_std*100))
-    else:
-        noise_string = ""
+    noise_string = "/n_"+str(int(noise_std*100))
     if debug:
         resultDirectory = result_directory + name + noise_string +"/debug_started_" + time.strftime(
             "%Y_%m_%d-%H_%M_%S") + "_" + label + "/"

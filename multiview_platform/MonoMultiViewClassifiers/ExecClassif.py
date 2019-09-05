@@ -573,7 +573,7 @@ def execBenchmark(nbCores, statsIter, nbMulticlass,
                multiclassGroundTruth, metrics, classificationIndices,
                directories, directory, labelsDictionary, nbExamples, nbLabels)
     logging.debug("Done:\t Analyzing predictions")
-
+    DATASET.close()
     return results
 
 
@@ -594,76 +594,80 @@ def execClassif(arguments):
     multiviewAlgos = args.CL_algos_multiview
     dataset_list = execution.find_dataset_names(args.pathF, args.type, args.name)
 
+    if not args.add_noise:
+        args.noise_std=[0.0]
+
     for name in dataset_list:
+        for noise_std in args.noise_std:
 
-        directory = execution.initLogFile(name, args.views, args.CL_type,
-                                          args.log, args.debug, args.label,
-                                          args.res_dir, args.add_noise, args.noise_std)
-        randomState = execution.initRandomState(args.randomState, directory)
-        statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,
-                                                                    randomState)
+            directory = execution.initLogFile(name, args.views, args.CL_type,
+                                              args.log, args.debug, args.label,
+                                              args.res_dir, args.add_noise, noise_std)
+            randomState = execution.initRandomState(args.randomState, directory)
+            statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,
+                                                                        randomState)
 
-        getDatabase = execution.getDatabaseFunction(name, args.type)
+            getDatabase = execution.getDatabaseFunction(name, args.type)
 
-        DATASET, LABELS_DICTIONARY, datasetname = getDatabase(args.views,
-                                                              args.pathF, name,
-                                                              args.CL_nbClass,
-                                                              args.CL_classes,
-                                                              randomState,
-                                                              args.full,
-                                                              args.add_noise,
-                                                              args.noise_std)
-        args.name = datasetname
+            DATASET, LABELS_DICTIONARY, datasetname = getDatabase(args.views,
+                                                                  args.pathF, name,
+                                                                  args.CL_nbClass,
+                                                                  args.CL_classes,
+                                                                  randomState,
+                                                                  args.full,
+                                                                  args.add_noise,
+                                                                  noise_std)
+            args.name = datasetname
 
-        splits = execution.genSplits(DATASET.get("Labels").value, args.CL_split,
-                                     statsIterRandomStates)
+            splits = execution.genSplits(DATASET.get("Labels").value, args.CL_split,
+                                         statsIterRandomStates)
 
-        multiclassLabels, labelsCombinations, indicesMulticlass = Multiclass.genMulticlassLabels(
-            DATASET.get("Labels").value, multiclassMethod, splits)
+            multiclassLabels, labelsCombinations, indicesMulticlass = Multiclass.genMulticlassLabels(
+                DATASET.get("Labels").value, multiclassMethod, splits)
 
-        kFolds = execution.genKFolds(statsIter, args.CL_nbFolds,
-                                     statsIterRandomStates)
+            kFolds = execution.genKFolds(statsIter, args.CL_nbFolds,
+                                         statsIterRandomStates)
 
-        datasetFiles = Dataset.initMultipleDatasets(args.pathF, args.name, nbCores)
+            datasetFiles = Dataset.initMultipleDatasets(args.pathF, args.name, nbCores)
 
-        # if not views:
-        #     raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
+            # if not views:
+            #     raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
 
-        views, viewsIndices, allViews = execution.initViews(DATASET, args.views)
-        viewsDictionary = genViewsDictionnary(DATASET, views)
-        nbViews = len(views)
-        NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+            views, viewsIndices, allViews = execution.initViews(DATASET, args.views)
+            viewsDictionary = genViewsDictionnary(DATASET, views)
+            nbViews = len(views)
+            NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
-        metrics = [metric.split(":") for metric in args.CL_metrics]
-        if metrics == [[""]]:
-            metricsNames = [name for _, name, isPackage
-                            in pkgutil.iter_modules(
-                    ['./MonoMultiViewClassifiers/Metrics']) if
-                            not isPackage and name not in ["framework", "log_loss",
-                                                           "matthews_corrcoef",
-                                                           "roc_auc_score"]]
-            metrics = [[metricName] for metricName in metricsNames]
-            metrics = arangeMetrics(metrics, args.CL_metric_princ)
-        for metricIndex, metric in enumerate(metrics):
-            if len(metric) == 1:
-                metrics[metricIndex] = [metric[0], None]
+            metrics = [metric.split(":") for metric in args.CL_metrics]
+            if metrics == [[""]]:
+                metricsNames = [name for _, name, isPackage
+                                in pkgutil.iter_modules(
+                        ['./MonoMultiViewClassifiers/Metrics']) if
+                                not isPackage and name not in ["framework", "log_loss",
+                                                               "matthews_corrcoef",
+                                                               "roc_auc_score"]]
+                metrics = [[metricName] for metricName in metricsNames]
+                metrics = arangeMetrics(metrics, args.CL_metric_princ)
+            for metricIndex, metric in enumerate(metrics):
+                if len(metric) == 1:
+                    metrics[metricIndex] = [metric[0], None]
 
-        benchmark = initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args)
-        initKWARGS = initKWARGSFunc(args, benchmark)
-        dataBaseTime = time.time() - start
-        argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary,
-                                                NB_CLASS, initKWARGS)
-        directories = execution.genDirecortiesNames(directory, statsIter)
-        benchmarkArgumentDictionaries = execution.genArgumentDictionaries(
-            LABELS_DICTIONARY, directories, multiclassLabels,
-            labelsCombinations, indicesMulticlass,
-            hyperParamSearch, args, kFolds,
-            statsIterRandomStates, metrics,
-            argumentDictionaries, benchmark, nbViews,
-            views, viewsIndices)
-        nbMulticlass = len(labelsCombinations)
+            benchmark = initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args)
+            initKWARGS = initKWARGSFunc(args, benchmark)
+            dataBaseTime = time.time() - start
+            argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary,
+                                                    NB_CLASS, initKWARGS)
+            directories = execution.genDirecortiesNames(directory, statsIter)
+            benchmarkArgumentDictionaries = execution.genArgumentDictionaries(
+                LABELS_DICTIONARY, directories, multiclassLabels,
+                labelsCombinations, indicesMulticlass,
+                hyperParamSearch, args, kFolds,
+                statsIterRandomStates, metrics,
+                argumentDictionaries, benchmark, nbViews,
+                views, viewsIndices)
+            nbMulticlass = len(labelsCombinations)
 
-        execBenchmark(nbCores, statsIter, nbMulticlass,
-                      benchmarkArgumentDictionaries, splits, directories,
-                      directory, multiclassLabels, metrics, LABELS_DICTIONARY,
-                      NB_CLASS, DATASET)
+            execBenchmark(nbCores, statsIter, nbMulticlass,
+                          benchmarkArgumentDictionaries, splits, directories,
+                          directory, multiclassLabels, metrics, LABELS_DICTIONARY,
+                          NB_CLASS, DATASET)
