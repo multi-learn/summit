@@ -433,11 +433,9 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
     dataset_file.copy("Labels", noisy_dataset)
     for view_index in range(dataset_file.get("Metadata").attrs["nbView"]):
         dataset_file.copy("View" + str(view_index), noisy_dataset)
-    # dataset_file.close()
     for view_index in range(noisy_dataset.get("Metadata").attrs["nbView"]):
         view_name = "View" + str(view_index)
         view_dset = noisy_dataset.get(view_name)
-        # orig_shape = view_dset.value.shape
         view_limits = dataset_file[
             "Metadata/View" + str(view_index) + "_limits"].value
         view_ranges = view_limits[:, 1] - view_limits[:, 0]
@@ -448,16 +446,11 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
                                view_limits[:, 0], noised_data)
         noised_data = np.where(noised_data > view_limits[:, 1],
                                view_limits[:, 1], noised_data)
-        # import matplotlib.pyplot as plt
-        # plt.imshow(noised_data[1,:].reshape((28,28)))
-        # plt.savefig("plif.png")
-        # lower_contrast = view_dset.value[1,:].reshape((28,28))/10
-        # print(np.max(lower_contrast))
-        # plt.imshow(lower_contrast.astype(int))
-        # plt.savefig("plif2.png")
-        # quit()
         noisy_dataset[view_name][...] = noised_data
-        # final_shape = noised_data.shape
+    original_dataset_filename = dataset_file.filename
+    dataset_file.close()
+    if "_temp_" in original_dataset_filename:
+        os.remove(original_dataset_filename)
     return noisy_dataset, dataset_name + "_noised"
 
 

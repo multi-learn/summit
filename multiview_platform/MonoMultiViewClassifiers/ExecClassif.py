@@ -21,7 +21,7 @@ from .Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from .Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 from .utils import GetMultiviewDb as DB
 from .ResultAnalysis import \
-    getResults  # resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes,
+    getResults, plot_results_noise  # resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes,
 from .utils import execution, Dataset, Multiclass
 
 # Author-Info
@@ -569,12 +569,15 @@ def execBenchmark(nbCores, statsIter, nbMulticlass,
         classificationIndices[0][1])
     multiclassGroundTruth = DATASET.get("Labels").value
     logging.debug("Start:\t Analyzing predictions")
-    getResults(results, statsIter, nbMulticlass, benchmarkArgumentsDictionaries,
+    results_mean_stds =getResults(results, statsIter, nbMulticlass, benchmarkArgumentsDictionaries,
                multiclassGroundTruth, metrics, classificationIndices,
                directories, directory, labelsDictionary, nbExamples, nbLabels)
     logging.debug("Done:\t Analyzing predictions")
+    filename = DATASET.filename
     DATASET.close()
-    return results
+    if "_temp_" in filename:
+        os.remove(filename)
+    return results_mean_stds
 
 
 def execClassif(arguments):
@@ -598,6 +601,7 @@ def execClassif(arguments):
         args.noise_std=[0.0]
 
     for name in dataset_list:
+        noise_results = []
         for noise_std in args.noise_std:
 
             directory = execution.initLogFile(name, args.views, args.CL_type,
@@ -667,9 +671,9 @@ def execClassif(arguments):
                 views, viewsIndices)
             nbMulticlass = len(labelsCombinations)
 
-            results = execBenchmark(nbCores, statsIter, nbMulticlass,
-                          benchmarkArgumentDictionaries, splits, directories,
-                          directory, multiclassLabels, metrics, LABELS_DICTIONARY,
-                          NB_CLASS, DATASET)
-            print(results)
-            quit()
+            results_mean_stds = execBenchmark(nbCores, statsIter, nbMulticlass,
+                                              benchmarkArgumentDictionaries, splits, directories,
+                                              directory, multiclassLabels, metrics, LABELS_DICTIONARY,
+                                              NB_CLASS, DATASET)
+            noise_results.append([noise_std, results_mean_stds])
+            plot_results_noise(directory, noise_results, metrics[0][0], name)

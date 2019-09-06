@@ -135,7 +135,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         # print(self.classification_matrix)
         # print(self.weights_, self.break_cause)
         self.weights_ = np.array(self.weights_)
-        self.weights_ /= np.sum(self.weights_)
+        if np.sum(self.weights_) != 1:
+            self.weights_ /= np.sum(self.weights_)
 
         formatted_y[formatted_y == -1] = 0
         formatted_y = formatted_y.reshape((m,))
