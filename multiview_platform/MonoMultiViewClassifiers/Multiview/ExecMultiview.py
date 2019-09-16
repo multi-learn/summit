@@ -69,11 +69,11 @@ def saveResults(LABELS_DICTIONARY, stringAnalysis, views, classifierModule,
                     testFileName = outputFileName + imageName + "-" + str(
                         i) + ".png"
                     if not os.path.isfile(testFileName):
-                        imagesAnalysis[imageName].savefig(testFileName)
+                        imagesAnalysis[imageName].savefig(testFileName, transparent=True)
                         break
 
             imagesAnalysis[imageName].savefig(
-                outputFileName + imageName + '.png')
+                outputFileName + imageName + '.png', transparent=True)
 
 
 def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds,

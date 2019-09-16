@@ -14,16 +14,15 @@ from ..MonoviewUtils import change_label_to_minus
 from ... import Metrics
 
 
-# Used for QarBoost and CGreed
+# Used for CBBoost
 
-class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, n_max_iterations=None, estimators_generator=None,
-                 random_state=42, self_complemented=True, twice_the_same=False,
-                 c_bound_choice=True, random_start=True,
-                 n_stumps=1, use_r=True, c_bound_sol=True,
-                 plotted_metric=Metrics.zero_one_loss, save_train_data=True,
+class CBBoostClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
+    def __init__(self, n_max_iterations=100, estimators_generator="Stumps",
+                 random_state=42, self_complemented=True, twice_the_same=True,
+                 random_start=False, n_stumps=1, c_bound_sol=True,
+                 plotted_metric=Metrics.zero_one_loss, save_train_data=False,
                  test_graph=True, mincq_tracking=False):
-        super(ColumnGenerationClassifierQar, self).__init__()
+        super(CBBoostClassifier, self).__init__()
         r"""
 
             Parameters
@@ -59,41 +58,32 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.estimators_generator = estimators_generator
         self.self_complemented = self_complemented
         self.twice_the_same = twice_the_same
-        self.c_bound_choice = c_bound_choice
         self.random_start = random_start
         self.plotted_metric = plotted_metric
         self.n_stumps = n_stumps
-        self.use_r = use_r
         self.c_bound_sol = c_bound_sol
         self.save_train_data = save_train_data
         self.test_graph = test_graph
         self.printed_args_name_list = ["n_max_iterations", "self_complemented",
                                        "twice_the_same",
-                                       "c_bound_choice", "random_start",
-                                       "n_stumps", "use_r", "c_bound_sol"]
+                                       "random_start",
+                                       "n_stumps",]
         self.mincq_tracking = mincq_tracking
 
     def fit(self, X, y):
-        ones = []
-        tows = []
-        threes = []
-        fours = []
-        fives = []
-        sixes = []
-        sevens = []
-        eights = []
-
 
         formatted_X, formatted_y = self.format_X_y(X, y)
 
         self.init_info_containers()
 
+        # Initialize the weak classifiers ensemble
         m, n, y_kernel_matrix = self.init_hypotheses(formatted_X, formatted_y)
 
         start = time.time()
         self.n_total_hypotheses_ = n
         self.n_total_examples = m
 
+        # Initialize the majority vote
         self.init_boosting(m, formatted_y, y_kernel_matrix)
 
         self.break_cause = " the maximum number of iterations was attained."
@@ -103,40 +93,36 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
             # Print dynamically the step and the error of the current classifier
             self.it = k
+            print(
+                "Resp. bound : {}/{}".format(
+                    k + 2,
+                    self.n_max_iterations),
+                end="\r")
 
-            # print(
-            #     "Resp. bound : {}, {}; {}/{}, eps :{}, ".format(
-            #         self.respected_bound,
-            #         self.bounds[-1] > self.train_metrics[-1],
-            #         k + 2,
-            #         self.n_max_iterations,
-            #         self.voter_perfs[-1],
-            #     ),
-            #     end="\r")
-            sol, new_voter_index = self.choose_new_voter(y_kernel_matrix,
-                                                             formatted_y)
-            if type(sol) == str:
-                self.break_cause = sol  #
+            # Find the best (weight, voter) couple.
+            self.q, new_voter_index = self._find_new_voter(y_kernel_matrix,
+                                                        formatted_y)
+
+            if type(self.q) == str:
+                self.break_cause = new_voter_index  #
                 break
+
             self.append_new_voter(new_voter_index)
+            self.weights_.append(self.q)
+
             voter_perf = self.compute_voter_perf(formatted_y)
-            self.compute_voter_weight(voter_perf, sol)
-            self.update_example_weights(formatted_y)
+
             self.update_info_containers(formatted_y, voter_perf, k)
 
-        self.nb_opposed_voters = self.check_opposed_voters()
         self.estimators_generator.choose(self.chosen_columns_)
 
+        self.nb_opposed_voters = self.check_opposed_voters()
         if self.save_train_data:
             self.X_train = self.classification_matrix[:, self.chosen_columns_]
             self.raw_weights = self.weights_
             self.y_train = formatted_y
 
-        # print(self.classification_matrix)
-        # print(self.weights_, self.break_cause)
-        self.weights_ = np.array(self.weights_)
-        if np.sum(self.weights_) != 1:
-            self.weights_ /= np.sum(self.weights_)
+        self.weights_ = np.array(self.weights_)/np.sum(np.array(self.weights_))
 
         formatted_y[formatted_y == -1] = 0
         formatted_y = formatted_y.reshape((m,))
@@ -151,13 +137,18 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         if scipy.sparse.issparse(X):
             logging.warning('Converting sparse matrix to dense matrix.')
             X = np.array(X.todense())
+
         classification_matrix = self._binary_classification_matrix(X)
         margins = np.sum(classification_matrix * self.weights_, axis=1)
         signs_array = np.array([int(x) for x in sign(margins)])
         signs_array[signs_array == -1] = 0
+
         end = time.time()
         self.predict_time = end - start
+
+        # Predict for each step of the boosting process
         self.step_predict(classification_matrix)
+
         return signs_array
 
     def step_predict(self, classification_matrix):
@@ -196,7 +187,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def update_info_containers(self, y, voter_perf, k):
         """Is used at each iteration to compute and store all the needed quantities for later analysis"""
-        self.example_weights_.append(self.example_weights)
         self.tau.append(
             np.sum(np.multiply(self.previous_vote, self.new_voter)) / float(
                 self.n_total_examples))
@@ -211,18 +201,10 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             np.sum(np.multiply(y, self.new_voter)) / float(
                 self.n_total_examples))
         train_metric = self.plotted_metric.score(y, np.sign(self.previous_vote))
-        if self.use_r:
-            bound = self.bounds[-1] * math.sqrt(1 - voter_perf ** 2)
-        else:
-            bound = np.prod(
-                np.sqrt(1 - 4 * np.square(0.5 - np.array(self.voter_perfs))))
-
-        if train_metric > bound:
-            self.respected_bound = False
-
         self.train_metrics.append(train_metric)
-        self.bounds.append(bound)
-        if self.mincq_tracking:  # Used to compute the optimal c-bound distribution on the chose set
+
+        # Used to compute the optimal c-bound distribution on the chose set
+        if self.mincq_tracking:
             from ...MonoviewClassifiers.MinCQ import MinCqLearner
             mincq = MinCqLearner(10e-3, "stumps", n_stumps_per_attribute=1,
                                  self_complemented=False)
@@ -237,51 +219,29 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 mincq.majority_vote.cbound_value(training_set,
                                                  y.reshape((y.shape[0],))))
 
-    def compute_voter_weight(self, voter_perf, sol):
-        """used to compute the voter's weight according to the specified method (edge or error) """
-        if self.c_bound_sol:
-            self.q = sol
-        else:
-            if self.use_r:
-                self.q = 0.5 * math.log((1 + voter_perf) / (1 - voter_perf))
-            else:
-                self.q = math.log((1 - voter_perf) / voter_perf)
-        self.weights_.append(self.q)
-        # self.weights_ = [weight/(1.0*sum(self.weights_)) for weight in self.weights_]
-
     def compute_voter_perf(self, formatted_y):
         """Used to computer the performance (error or edge) of the selected voter"""
-        if self.use_r:
-            r = self._compute_r(formatted_y)
-            self.voter_perfs.append(r)
-            return r
-        else:
-            epsilon = self._compute_epsilon(formatted_y)
-            self.voter_perfs.append(epsilon)
-            return epsilon
+        epsilon = self._compute_epsilon(formatted_y)
+        self.voter_perfs.append(epsilon)
+        return epsilon
+
+    def _compute_epsilon(self, y):
+        """Updating the error variable, the old fashioned way uses the whole majority vote to update the error"""
+        ones_matrix = np.zeros(y.shape)
+        ones_matrix[np.multiply(y, self.new_voter.reshape(
+            y.shape)) < 0] = 1  # can np.divide if needed
+        epsilon = np.average(np.multiply(y, self.new_voter.reshape(
+            y.shape)), axis=0)
+        return epsilon
 
     def append_new_voter(self, new_voter_index):
         """Used to append the voter to the majority vote"""
         self.chosen_columns_.append(new_voter_index)
-        # print((self.classification_matrix[:, new_voter_index] == self.chosen_one).all())
         self.new_voter = self.classification_matrix[:, new_voter_index].reshape(
             (self.n_total_examples, 1))
 
-    def choose_new_voter(self, y_kernel_matrix, formatted_y):
-        """Used to choose the voter according to the specified criterion (margin or C-Bound"""
-        if self.c_bound_choice:
-            sol, new_voter_index = self._find_new_voter(y_kernel_matrix,
-                                                        formatted_y)
-        else:
-            new_voter_index, sol = self._find_best_weighted_margin(
-                y_kernel_matrix)
-        return sol, new_voter_index
-
     def init_boosting(self, m, y, y_kernel_matrix):
         """THis initialization corressponds to the first round of boosting with equal weights for each examples and the voter chosen by it's margin."""
-        self.example_weights = self._initialize_alphas(m).reshape((m, 1))
-
-        self.example_weights_.append(self.example_weights)
 
         if self.random_start:
             first_voter_index = self.random_state.choice(
@@ -297,24 +257,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.previous_vote = self.new_voter
         self.norm.append(np.linalg.norm(self.previous_vote) ** 2)
 
-        if self.use_r:
-            r = self._compute_r(y)
-            self.voter_perfs.append(r)
-        else:
-            epsilon = self._compute_epsilon(y)
-            self.voter_perfs.append(epsilon)
-        if self.c_bound_sol:
-            self.q = 1
-        else:
-            if self.use_r:
-                self.q = 0.5 * math.log((1 + r) / (1 - r))
-            else:
-                self.q = math.log((1 - epsilon) / epsilon)
+        self.q = 1
         self.weights_.append(self.q)
-
-        # Update the distribution on the examples.
-        self.update_example_weights(y)
-        self.example_weights_.append(self.example_weights)
 
         self.previous_margins.append(
             np.sum(np.multiply(y, self.previous_vote)) / float(
@@ -325,17 +269,8 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                 self.n_total_examples))
 
         train_metric = self.plotted_metric.score(y, np.sign(self.previous_vote))
-        if self.use_r:
-            bound = math.sqrt(1 - r ** 2)
-        else:
-            bound = np.prod(np.sqrt(1 - 4 * np.square(0.5 - np.array(epsilon))))
-
-        if train_metric > bound:
-            self.respected_bound = False
-
         self.train_metrics.append(train_metric)
 
-        self.bounds.append(bound)
         if self.mincq_tracking:
             self.mincq_train_metrics.append(train_metric)
 
@@ -392,38 +327,12 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         self.mincq_learners = []
         self.mincq_step_decisions = []
 
-    def _compute_epsilon(self, y):
-        """Updating the error variable, the old fashioned way uses the whole majority vote to update the error"""
-        ones_matrix = np.zeros(y.shape)
-        ones_matrix[np.multiply(y, self.new_voter.reshape(
-            y.shape)) < 0] = 1  # can np.divide if needed
-        epsilon = np.average(np.multiply(y, self.new_voter.reshape(
-            y.shape)), axis=0)
-        return epsilon
-
-    def _compute_r(self, y):
-        ones_matrix = np.ones(y.shape)
-
-        ones_matrix[np.multiply(y, self.new_voter.reshape(
-            y.shape)) < 0] = -1  # can np.divide if needed
-        r = np.average(ones_matrix, weights=self.example_weights, axis=0)
-        return r
-
-    def update_example_weights(self, y):
-        """Old fashioned exaple weights update uses the whole majority vote, the other way uses only the last voter."""
-        new_weights = self.example_weights.reshape(
-            (self.n_total_examples, 1)) * np.exp(
-            -self.q * np.multiply(y, self.new_voter))
-        self.example_weights = new_weights / np.sum(new_weights)
 
     def _find_best_weighted_margin(self, y_kernel_matrix, upper_bound=1.0,
                                    lower_bound=0.0):
         """Finds the new voter by choosing the one that has the best weighted margin between 0.5 and 0.55
         to avoid too god voters that will get all the votes weights"""
-        weighted_kernel_matrix = np.multiply(y_kernel_matrix,
-                                             self.example_weights.reshape(
-                                                 (self.n_total_examples, 1)))
-        pseudo_h_values = ma.array(np.sum(weighted_kernel_matrix, axis=0),
+        pseudo_h_values = ma.array(np.sum(y_kernel_matrix, axis=0),
                                    fill_value=-np.inf)
         pseudo_h_values[self.chosen_columns_] = ma.masked
         return np.argmax(pseudo_h_values), [0]
@@ -432,48 +341,27 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         """Here, we solve the two_voters_mincq_problem for each potential new voter,
         and select the one that has the smallest minimum"""
         m = y_kernel_matrix.shape[0]
-        weighted_previous_sum = np.multiply(y,
+        previous_sum = np.multiply(y,
                                             self.previous_vote.reshape(m, 1))
-        margin_old = np.sum(weighted_previous_sum)
-        if self.c_bound_sol:
-            weighted_hypothesis = y_kernel_matrix
-        else:
-            weighted_hypothesis = y_kernel_matrix * self.example_weights.reshape(
-                (m, 1))
+        margin_old = np.sum(previous_sum)
 
-        bad_margins = np.where(np.sum(weighted_hypothesis, axis=0) <= 0.0)[0]
+        bad_margins = np.where(np.sum(y_kernel_matrix, axis=0) <= 0.0)[0]
 
         self.B2 = m
         self.B1s = np.sum(
-            2 * np.multiply(weighted_previous_sum, weighted_hypothesis),
+            2 * np.multiply(previous_sum, y_kernel_matrix),
             axis=0)
-        self.B0 = np.sum(weighted_previous_sum ** 2)
+        self.B0 = np.sum(previous_sum ** 2)
 
-        self.A2s = np.sum(weighted_hypothesis, axis=0) ** 2
-        self.A1s = np.sum(weighted_hypothesis, axis=0) * margin_old * 2
+        self.A2s = np.sum(y_kernel_matrix, axis=0) ** 2
+        self.A1s = np.sum(y_kernel_matrix, axis=0) * margin_old * 2
         self.A0 = margin_old ** 2
-        import matplotlib.pyplot as plt
-        # plt.plot(self.A2s * 0.5 * self.B1s / m**3)
-        # plt.plot(np.array([margin_old/m for _ in range(len(self.A2s))]))
-        # plt.savefig("try.png")
-
-        # print("C2 < 0 :", np.where(np.array([margin_old/m for _ in range(len(self.A2s))]) < np.sqrt(self.A2s) * 0.5 * self.B1s / m**2)[0])
-        # print("C1 < 0 :", np.where(np.array([margin_old ** 2 / m for _ in range(
-        #     len(self.A2s))]) < self.A2s * self.B0 / m ** 2)[0])
-        # print("Double root:", np.where((0.5 * self.B1s / m)**2 * m > self.B0)[0])
-
 
         C2s = (self.A1s * self.B2 - self.A2s * self.B1s)
-        # print("Wrong C2 :" , np.where(C2s < 0)[0].shape, bad_margins.shape)
         C1s = 2 * (self.A0 * self.B2 - self.A2s * self.B0)
-        # print("Wrong C2 :", np.where(C1s < 0)[0].shape, bad_margins.shape)
         C0s = self.A0 * self.B1s - self.A1s * self.B0
 
-        # print(np.where(C2s==0))
-        # print(self.chosen_columns_)
-
         sols = np.zeros(C0s.shape) - 3
-        # sols[np.where(C2s == 0)[0]] = C0s[np.where(C2s == 0)[0]] / C1s[np.where(C2s == 0)[0]]
         sols[np.where(C2s != 0)[0]] = (-C1s[np.where(C2s != 0)[0]] + np.sqrt(
             C1s[np.where(C2s != 0)[0]] * C1s[np.where(C2s != 0)[0]] - 4 * C2s[
                 np.where(C2s != 0)[0]] * C0s[np.where(C2s != 0)[0]])) / (
@@ -485,6 +373,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
             return "No more pertinent voters", 0
         else:
             best_hyp_index = np.argmin(masked_c_bounds)
+
             self.c_bounds.append(masked_c_bounds[best_hyp_index])
             self.margins.append(math.sqrt(self.A2s[best_hyp_index] / m))
             self.disagreements.append(0.5 * self.B1s[best_hyp_index] / m)
@@ -528,10 +417,6 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
         values = np.array([self._cbound(sol) for sol in sols])
         return sols[np.argmin(values)]
 
-    def _initialize_alphas(self, n_examples):
-        """Initialize the examples wieghts"""
-        return 1.0 / n_examples * np.ones((n_examples,))
-
     def get_step_decision_test_graph(self, directory, y_test):
         np.savetxt(directory + "y_test_step.csv", self.step_decisions,
                    delimiter=',')
@@ -574,7 +459,7 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                            directory + 'step_test_c_bounds.png',
                            "C_bound", set="test")
 
-    def getInterpretQar(self, directory, y_test=None):
+    def getInterpretCBBoost(self, directory, y_test=None):
         self.directory = directory
         """Used to interpret the functionning of the algorithm"""
         if self.step_decisions is not None:

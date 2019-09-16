@@ -9,6 +9,7 @@ import matplotlib
 import itertools
 import numpy as np
 from joblib import Parallel, delayed
+from sklearn.tree import DecisionTreeClassifier
 
 matplotlib.use(
     'Agg')  # Anti-Grain Geometry C++ library to make a raster (pixel) image of the figure
@@ -20,7 +21,7 @@ from .Multiview.ExecMultiview import ExecMultiview, ExecMultiview_multicore
 from .Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 from .utils import GetMultiviewDb as DB
 from .ResultAnalysis import \
-    getResults  # resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes,
+    getResults, plot_results_noise  # resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes,
 from .utils import execution, Dataset, Multiclass
 
 # Author-Info
@@ -161,8 +162,8 @@ def initMonoviewExps(benchmark, viewsDictionary, nbClass, kwargsInit):
                     argumentDictionaries["Monoview"] += gen_multiple_args_dictionnaries(nbClass, kwargsInit, classifier, viewName, viewIndex)
                 else:
                     arguments = {
-                        "args": {classifier + "KWARGS": kwargsInit[
-                            classifier + "KWARGSInit"], "feat": viewName,
+                        "args": {classifier + "KWARGS": dict((key, value[0]) for key, value in kwargsInit[
+                            classifier + "KWARGSInit"].items()), "feat": viewName,
                                  "CL_type": classifier, "nbClass": nbClass},
                         "viewIndex": viewIndex}
                     argumentDictionaries["Monoview"].append(arguments)
@@ -183,15 +184,23 @@ def gen_multiple_kwargs_combinations(clKWARGS):
     keys = clKWARGS.keys()
     kwargs_combination = [dict((key, value) for key, value in zip(keys, values))
                           for values in values_cartesian_prod]
-    return kwargs_combination
+
+    reduce_dict = {DecisionTreeClassifier: "DT", }
+    reduced_listed_values = [
+        [_ if type(_) not in reduce_dict else reduce_dict[type(_)] for _ in
+         list_] for list_ in listed_values]
+    reduced_values_cartesian_prod = [_ for _ in itertools.product(*reduced_listed_values)]
+    reduced_kwargs_combination = [dict((key, value) for key, value in zip(keys, values))
+                          for values in reduced_values_cartesian_prod]
+    return kwargs_combination, reduced_kwargs_combination
 
 
 def gen_multiple_args_dictionnaries(nbClass, kwargsInit,
                                     classifier, viewName, viewIndex):
-    multiple_kwargs_list = gen_multiple_kwargs_combinations(kwargsInit[classifier + "KWARGSInit"])
+    multiple_kwargs_list, reduced_multiple_kwargs_list = gen_multiple_kwargs_combinations(kwargsInit[classifier + "KWARGSInit"])
     multiple_kwargs_dict = dict(
-        (classifier+"_"+"_".join(map(str,list(dictionary.values()))), dictionary)
-        for dictionary in multiple_kwargs_list)
+        (classifier+"_"+"_".join(map(str,list(reduced_dictionary.values()))), dictionary)
+        for reduced_dictionary, dictionary in zip(reduced_multiple_kwargs_list, multiple_kwargs_list ))
     args_dictionnaries = [{
                         "args": {classifier_name + "KWARGS": arguments,
                                  "feat": viewName,
@@ -560,12 +569,15 @@ def execBenchmark(nbCores, statsIter, nbMulticlass,
         classificationIndices[0][1])
     multiclassGroundTruth = DATASET.get("Labels").value
     logging.debug("Start:\t Analyzing predictions")
-    getResults(results, statsIter, nbMulticlass, benchmarkArgumentsDictionaries,
+    results_mean_stds =getResults(results, statsIter, nbMulticlass, benchmarkArgumentsDictionaries,
                multiclassGroundTruth, metrics, classificationIndices,
                directories, directory, labelsDictionary, nbExamples, nbLabels)
     logging.debug("Done:\t Analyzing predictions")
-
-    return results
+    filename = DATASET.filename
+    DATASET.close()
+    if "_temp_" in filename:
+        os.remove(filename)
+    return results_mean_stds
 
 
 def execClassif(arguments):
@@ -583,285 +595,85 @@ def execClassif(arguments):
     CL_type = args.CL_type
     monoviewAlgos = args.CL_algos_monoview
     multiviewAlgos = args.CL_algos_multiview
+    dataset_list = execution.find_dataset_names(args.pathF, args.type, args.name)
 
-    directory = execution.initLogFile(args.name, args.views, args.CL_type,
-                                      args.log, args.debug, args.label,
-                                      args.res_dir)
-    randomState = execution.initRandomState(args.randomState, directory)
-    statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,
-                                                                randomState)
+    if not args.add_noise:
+        args.noise_std=[0.0]
 
-    getDatabase = execution.getDatabaseFunction(args.name, args.type)
+    for name in dataset_list:
+        noise_results = []
+        for noise_std in args.noise_std:
 
-    DATASET, LABELS_DICTIONARY, datasetname = getDatabase(args.views,
-                                                          args.pathF, args.name,
-                                                          args.CL_nbClass,
-                                                          args.CL_classes,
-                                                          randomState,
-                                                          args.full,
-                                                          args.add_noise,
-                                                          args.noise_std)
-    args.name = datasetname
+            directory = execution.initLogFile(name, args.views, args.CL_type,
+                                              args.log, args.debug, args.label,
+                                              args.res_dir, args.add_noise, noise_std)
+            randomState = execution.initRandomState(args.randomState, directory)
+            statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,
+                                                                        randomState)
 
-    splits = execution.genSplits(DATASET.get("Labels").value, args.CL_split,
-                                 statsIterRandomStates)
+            getDatabase = execution.getDatabaseFunction(name, args.type)
 
-    multiclassLabels, labelsCombinations, indicesMulticlass = Multiclass.genMulticlassLabels(
-        DATASET.get("Labels").value, multiclassMethod, splits)
+            DATASET, LABELS_DICTIONARY, datasetname = getDatabase(args.views,
+                                                                  args.pathF, name,
+                                                                  args.CL_nbClass,
+                                                                  args.CL_classes,
+                                                                  randomState,
+                                                                  args.full,
+                                                                  args.add_noise,
+                                                                  noise_std)
+            args.name = datasetname
 
-    kFolds = execution.genKFolds(statsIter, args.CL_nbFolds,
-                                 statsIterRandomStates)
+            splits = execution.genSplits(DATASET.get("Labels").value, args.CL_split,
+                                         statsIterRandomStates)
 
-    datasetFiles = Dataset.initMultipleDatasets(args.pathF, args.name, nbCores)
+            multiclassLabels, labelsCombinations, indicesMulticlass = Multiclass.genMulticlassLabels(
+                DATASET.get("Labels").value, multiclassMethod, splits)
 
-    # if not views:
-    #     raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
+            kFolds = execution.genKFolds(statsIter, args.CL_nbFolds,
+                                         statsIterRandomStates)
 
-    views, viewsIndices, allViews = execution.initViews(DATASET, args.views)
-    viewsDictionary = genViewsDictionnary(DATASET, views)
-    nbViews = len(views)
-    NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
+            datasetFiles = Dataset.initMultipleDatasets(args.pathF, args.name, nbCores)
 
-    metrics = [metric.split(":") for metric in args.CL_metrics]
-    if metrics == [[""]]:
-        metricsNames = [name for _, name, isPackage
-                        in pkgutil.iter_modules(
-                ['./MonoMultiViewClassifiers/Metrics']) if
-                        not isPackage and name not in ["framework", "log_loss",
-                                                       "matthews_corrcoef",
-                                                       "roc_auc_score"]]
-        metrics = [[metricName] for metricName in metricsNames]
-        metrics = arangeMetrics(metrics, args.CL_metric_princ)
-    for metricIndex, metric in enumerate(metrics):
-        if len(metric) == 1:
-            metrics[metricIndex] = [metric[0], None]
+            # if not views:
+            #     raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
 
-    benchmark = initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args)
-    print(benchmark, "\n")
+            views, viewsIndices, allViews = execution.initViews(DATASET, args.views)
+            viewsDictionary = genViewsDictionnary(DATASET, views)
+            nbViews = len(views)
+            NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
-    initKWARGS = initKWARGSFunc(args, benchmark)
+            metrics = [metric.split(":") for metric in args.CL_metrics]
+            if metrics == [[""]]:
+                metricsNames = [name for _, name, isPackage
+                                in pkgutil.iter_modules(
+                        ['./MonoMultiViewClassifiers/Metrics']) if
+                                not isPackage and name not in ["framework", "log_loss",
+                                                               "matthews_corrcoef",
+                                                               "roc_auc_score"]]
+                metrics = [[metricName] for metricName in metricsNames]
+                metrics = arangeMetrics(metrics, args.CL_metric_princ)
+            for metricIndex, metric in enumerate(metrics):
+                if len(metric) == 1:
+                    metrics[metricIndex] = [metric[0], None]
 
-    dataBaseTime = time.time() - start
+            benchmark = initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args)
+            initKWARGS = initKWARGSFunc(args, benchmark)
+            dataBaseTime = time.time() - start
+            argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary,
+                                                    NB_CLASS, initKWARGS)
+            directories = execution.genDirecortiesNames(directory, statsIter)
+            benchmarkArgumentDictionaries = execution.genArgumentDictionaries(
+                LABELS_DICTIONARY, directories, multiclassLabels,
+                labelsCombinations, indicesMulticlass,
+                hyperParamSearch, args, kFolds,
+                statsIterRandomStates, metrics,
+                argumentDictionaries, benchmark, nbViews,
+                views, viewsIndices)
+            nbMulticlass = len(labelsCombinations)
 
-    argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary,
-                                            NB_CLASS, initKWARGS)
-    print(argumentDictionaries, "\n")
-    directories = execution.genDirecortiesNames(directory, statsIter)
-    benchmarkArgumentDictionaries = execution.genArgumentDictionaries(
-        LABELS_DICTIONARY, directories, multiclassLabels,
-        labelsCombinations, indicesMulticlass,
-        hyperParamSearch, args, kFolds,
-        statsIterRandomStates, metrics,
-        argumentDictionaries, benchmark, nbViews,
-        views, viewsIndices)
-    print(benchmarkArgumentDictionaries, "\n")
-    nbMulticlass = len(labelsCombinations)
-
-    execBenchmark(nbCores, statsIter, nbMulticlass,
-                  benchmarkArgumentDictionaries, splits, directories,
-                  directory, multiclassLabels, metrics, LABELS_DICTIONARY,
-                  NB_CLASS, DATASET)
-
-    #
-# def classifyOneIter_multicore(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory, args, classificationIndices,
-#                               kFolds,
-#                               randomState, hyperParamSearch, metrics, coreIndex, viewsIndices, dataBaseTime, start,
-#                               benchmark,
-#                               views):
-#     """Used to execute mono and multiview classification and result analysis for one random state
-#      using multicore classification"""
-#     resultsMonoview = []
-#     labelsNames = LABELS_DICTIONARY.values()
-#     np.savetxt(directory + "train_indices.csv", classificationIndices[0], delimiter=",")
-#
-#     resultsMonoview += [ExecMonoview_multicore(directory, args.name, labelsNames, classificationIndices, kFolds,
-#                                                coreIndex, args.type, args.pathF, randomState,
-#                                                hyperParamSearch=hyperParamSearch,
-#                                                metrics=metrics, nIter=args.CL_HPS_iter,
-#                                                **arguments)
-#                         for arguments in argumentDictionaries["Monoview"]]
-#     monoviewTime = time.time() - dataBaseTime - start
-#
-#     argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries,
-#                                                   randomState, directory, resultsMonoview, classificationIndices)
-#
-#     resultsMultiview = []
-#     resultsMultiview += [
-#         ExecMultiview_multicore(directory, coreIndex, args.name, classificationIndices, kFolds, args.type,
-#                                 args.pathF, LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
-#                                 metrics=metrics, nIter=args.CL_HPS_iter, **arguments)
-#         for arguments in argumentDictionaries["Multiview"]]
-#     multiviewTime = time.time() - monoviewTime - dataBaseTime - start
-#
-#     labels = np.array(
-#         [resultMonoview[1][3] for resultMonoview in resultsMonoview] + [resultMultiview[3] for resultMultiview in
-#                                                                         resultsMultiview]).transpose()
-#     DATASET = h5py.File(args.pathF + args.name + str(0) + ".hdf5", "r")
-#     trueLabels = DATASET.get("Labels").value
-#     times = [dataBaseTime, monoviewTime, multiviewTime]
-#     results = (resultsMonoview, resultsMultiview)
-#     labelAnalysis = analyzeLabels(labels, trueLabels, results, directory)
-#     logging.debug("Start:\t Analyze Iteration Results")
-#     resultAnalysis(benchmark, results, args.name, times, metrics, directory)
-#     logging.debug("Done:\t Analyze Iteration Results")
-#     globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
-#     totalTime = time.time() - start
-#     logging.info("Extraction time : " + str(int(dataBaseTime)) +
-#                  "s, Monoview time : " + str(int(monoviewTime)) +
-#                  "s, Multiview Time : " + str(int(multiviewTime)) +
-#                  "s, Iteration Analysis Time : " + str(int(globalAnalysisTime)) +
-#                  "s, Iteration Duration : " + str(int(totalTime)) + "s")
-#     return results, labelAnalysis
-#
-#
-# def classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directory, args, classificationIndices, kFolds,
-#                     randomState, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
-#                     benchmark, views):
-#     """Used to execute mono and multiview classification and result analysis for one random state
-#          classification"""
-#     #TODO : Clarify this one
-#
-#
-#     argumentDictionaries = initMultiviewArguments(args, benchmark, views, viewsIndices, argumentDictionaries,
-#                                                   randomState, directory, resultsMonoview, classificationIndices)
-#
-#     resultsMultiview = []
-#     if nbCores > 1:
-#         nbExperiments = len(argumentDictionaries["Multiview"])
-#         for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
-#             resultsMultiview += Parallel(n_jobs=nbCores)(
-#                 delayed(ExecMultiview_multicore)(directory, coreIndex, args.name, classificationIndices, kFolds,
-#                                                  args.type,
-#                                                  args.pathF,
-#                                                  LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
-#                                                  metrics=metrics, nIter=args.CL_HPS_iter,
-#                                                  **argumentDictionaries["Multiview"][stepIndex * nbCores + coreIndex])
-#                 for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores)))
-#     else:
-#         resultsMultiview = [
-#             ExecMultiview(directory, DATASET, args.name, classificationIndices, kFolds, 1, args.type, args.pathF,
-#                           LABELS_DICTIONARY, randomState, hyperParamSearch=hyperParamSearch,
-#                           metrics=metrics, nIter=args.CL_HPS_iter, **arguments) for arguments in
-#             argumentDictionaries["Multiview"]]
-#     multiviewTime = time.time() - monoviewTime - dataBaseTime - start
-#     if nbCores > 1:
-#         logging.debug("Start:\t Deleting " + str(nbCores) + " temporary datasets for multiprocessing")
-#         datasetFiles = DB.deleteHDF5(args.pathF, args.name, nbCores)
-#         logging.debug("Start:\t Deleting datasets for multiprocessing")
-#     labels = np.array(
-#         [resultMonoview[1][3] for resultMonoview in resultsMonoview] + [resultMultiview[3] for resultMultiview in
-#                                                                         resultsMultiview]).transpose()
-#     trueLabels = DATASET.get("Labels").value
-#     times = [dataBaseTime, monoviewTime, multiviewTime]
-#     results = (resultsMonoview, resultsMultiview)
-#     labelAnalysis = analyzeLabels(labels, trueLabels, results, directory)
-#     logging.debug("Start:\t Analyze Iteration Results")
-#     resultAnalysis(benchmark, results, args.name, times, metrics, directory)
-#     logging.debug("Done:\t Analyze Iteration Results")
-#     globalAnalysisTime = time.time() - monoviewTime - dataBaseTime - start - multiviewTime
-#     totalTime = time.time() - start
-#     logging.info("Extraction time : " + str(int(dataBaseTime)) +
-#                  "s, Monoview time : " + str(int(monoviewTime)) +
-#                  "s, Multiview Time : " + str(int(multiviewTime)) +
-#                  "s, Iteration Analysis Time : " + str(int(globalAnalysisTime)) +
-#                  "s, Iteration Duration : " + str(int(totalTime)) + "s")
-#     return results, labelAnalysis
-#
-#
-#
-#
-#
-#
-#
-# if statsIter > 1:
-#     logging.debug("Start:\t Benchmark classification")
-#     for statIterIndex in range(statsIter):
-#         if not os.path.exists(os.path.dirname(directories[statIterIndex] + "train_labels.csv")):
-#             try:
-#                 os.makedirs(os.path.dirname(directories[statIterIndex] + "train_labels.csv"))
-#             except OSError as exc:
-#                 if exc.errno != errno.EEXIST:
-#                     raise
-#         trainIndices, testIndices = classificationIndices[statIterIndex]
-#         trainLabels = DATASET.get("Labels").value[trainIndices]
-#         np.savetxt(directories[statIterIndex] + "train_labels.csv", trainLabels, delimiter=",")
-#     if nbCores > 1:
-#         iterResults = []
-#         nbExperiments = statsIter*len(multiclassLabels)
-#         for stepIndex in range(int(math.ceil(float(nbExperiments) / nbCores))):
-#             iterResults += (Parallel(n_jobs=nbCores)(
-#                 delayed(classifyOneIter_multicore)(LABELS_DICTIONARY, argumentDictionaries, 1,
-#                                                    directories[coreIndex + stepIndex * nbCores], args,
-#                                                    classificationIndices[coreIndex + stepIndex * nbCores],
-#                                                    kFolds[coreIndex + stepIndex * nbCores],
-#                                                    statsIterRandomStates[coreIndex + stepIndex * nbCores],
-#                                                    hyperParamSearch, metrics, coreIndex, viewsIndices, dataBaseTime,
-#                                                    start, benchmark,
-#                                                    views)
-#                 for coreIndex in range(min(nbCores, nbExperiments - stepIndex * nbCores))))
-#         logging.debug("Start:\t Deleting " + str(nbCores) + " temporary datasets for multiprocessing")
-#         datasetFiles = DB.deleteHDF5(args.pathF, args.name, nbCores)
-#         logging.debug("Start:\t Deleting datasets for multiprocessing")
-#     else:
-#         iterResults = []
-#         for iterIndex in range(statsIter):
-#             if not os.path.exists(os.path.dirname(directories[iterIndex] + "train_labels.csv")):
-#                 try:
-#                     os.makedirs(os.path.dirname(directories[iterIndex] + "train_labels.csv"))
-#                 except OSError as exc:
-#                     if exc.errno != errno.EEXIST:
-#                         raise
-#             trainIndices, testIndices = classificationIndices[iterIndex]
-#             trainLabels = DATASET.get("Labels").value[trainIndices]
-#             np.savetxt(directories[iterIndex] + "train_labels.csv", trainLabels, delimiter=",")
-#             iterResults.append(
-#                 classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories[iterIndex], args,
-#                                 classificationIndices[iterIndex], kFolds[iterIndex], statsIterRandomStates[iterIndex],
-#                                 hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start, benchmark,
-#                                 views))
-#     logging.debug("Done:\t Benchmark classification")
-#     logging.debug("Start:\t Global Results Analysis")
-#     classifiersIterResults = []
-#     iterLabelAnalysis = []
-#     for result in iterResults:
-#         classifiersIterResults.append(result[0])
-#         iterLabelAnalysis.append(result[1])
-#
-#     mono,multi = classifiersIterResults[0]
-#     classifiersNames = genNamesFromRes(mono, multi)
-#     analyzeIterLabels(iterLabelAnalysis, directory, classifiersNames)
-#     analyzeIterResults(classifiersIterResults, args.name, metrics, directory)
-#     logging.debug("Done:\t Global Results Analysis")
-#     totalDur = time.time() - start
-#     m, s = divmod(totalDur, 60)
-#     h, m = divmod(m, 60)
-#     d, h = divmod(h, 24)
-#     # print "%d_%02d_%02d" % (h, m, s)
-#     logging.info("Info:\t Total duration : " + str(d) + " days, " + str(h) + " hours, " + str(m) + " mins, " + str(
-#         int(s)) + "secs.")
-#
-# else:
-#     logging.debug("Start:\t Benchmark classification")
-#     if not os.path.exists(os.path.dirname(directories + "train_labels.csv")):
-#         try:
-#             os.makedirs(os.path.dirname(directories + "train_labels.csv"))
-#         except OSError as exc:
-#             if exc.errno != errno.EEXIST:
-#                 raise
-#     trainIndices, testIndices = classificationIndices
-#     trainLabels = DATASET.get("Labels").value[trainIndices]
-#     np.savetxt(directories + "train_labels.csv", trainLabels, delimiter=",")
-#     res, labelAnalysis = classifyOneIter(LABELS_DICTIONARY, argumentDictionaries, nbCores, directories, args, classificationIndices,
-#                                          kFolds,
-#                                          statsIterRandomStates, hyperParamSearch, metrics, DATASET, viewsIndices, dataBaseTime, start,
-#                                          benchmark, views)
-#     logging.debug("Done:\t Benchmark classification")
-#     totalDur = time.time()-start
-#     m, s = divmod(totalDur, 60)
-#     h, m = divmod(m, 60)
-#     d, h = divmod(h, 24)
-#     # print "%d_%02d_%02d" % (h, m, s)
-#     logging.info("Info:\t Total duration : "+str(d)+ " days, "+str(h)+" hours, "+str(m)+" mins, "+str(int(s))+"secs.")
-#
-# if statsIter > 1:
-#     pass
+            results_mean_stds = execBenchmark(nbCores, statsIter, nbMulticlass,
+                                              benchmarkArgumentDictionaries, splits, directories,
+                                              directory, multiclassLabels, metrics, LABELS_DICTIONARY,
+                                              NB_CLASS, DATASET)
+            noise_results.append([noise_std, results_mean_stds])
+            plot_results_noise(directory, noise_results, metrics[0][0], name)

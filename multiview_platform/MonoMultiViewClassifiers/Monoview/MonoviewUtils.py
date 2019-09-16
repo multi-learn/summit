@@ -190,7 +190,7 @@ class BaseMonoviewClassifier(object):
         ax.yaxis.set_major_formatter(formatter)
         plt.bar(x, featureImportancesSorted)
         plt.title("Importance depending on feature")
-        fig.savefig(directory + "feature_importances.png")
+        fig.savefig(directory + "feature_importances.png", transparent=True)
         plt.close()
         featuresImportancesDict = dict((featureIndex, featureImportance)
                                        for featureIndex, featureImportance in

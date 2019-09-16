@@ -7,7 +7,7 @@ Related papers:
 
 """
 from __future__ import print_function, division, absolute_import
-
+import time
 from operator import xor
 
 import numpy as np
@@ -97,6 +97,8 @@ class MinCqClassifier(VotingClassifier):
                                enumerate(self.estimators_generator.estimators_)]
             super().fit(X, y)
 
+        beg = time.time()
+
         # Preparation and resolution of the quadratic program
         # logger.info("Preparing and solving QP...")
         self.weights = self._solve(X, y)
@@ -112,6 +114,8 @@ class MinCqClassifier(VotingClassifier):
                                 np.sum(np.average(
                                     self._binary_classification_matrix(X),
                                     axis=1, weights=self.weights) ** 2))
+        end = time.time()
+        self.train_time = end-beg
         return self
 
     def _binary_classification_matrix(self, X):

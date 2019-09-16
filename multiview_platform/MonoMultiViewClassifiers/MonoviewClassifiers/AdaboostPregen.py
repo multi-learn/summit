@@ -55,6 +55,7 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
         self.metrics = np.array(
             [self.plotted_metric.score(change_label_to_zero(pred), y) for pred
              in self.staged_predict(pregen_X)])
+
         self.bounds = np.array([np.prod(
             np.sqrt(1 - 4 * np.square(0.5 - self.estimator_errors_[:i + 1])))
                                 for i in
@@ -105,6 +106,8 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
         np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')
         np.savetxt(directory + "times.csv",
                    np.array([self.train_time, self.pred_time]), delimiter=',')
+        np.savetxt(directory + "times_iter.csv",
+                   np.array([self.train_time, len(self.estimator_weights_)]), delimiter=',')
         return interpretString
 
     # def pregen_voters(self, X, y=None):
@@ -123,7 +126,7 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
     kwargsDict = {'n_estimators': args.AdP_n_est,
-                  'base_estimator': DecisionTreeClassifier(max_depth=1),
+                  'base_estimator': [DecisionTreeClassifier(max_depth=1)],
                   'n_stumps': args.AdP_stumps}
     return kwargsDict
 

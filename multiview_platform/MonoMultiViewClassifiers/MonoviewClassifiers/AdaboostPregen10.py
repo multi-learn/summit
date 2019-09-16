@@ -24,7 +24,7 @@ class AdaboostPregen10(AdaboostPregen):
 def formatCmdArgs(args):
     """Used to format kwargs for the parsed args"""
     kwargsDict = {'n_estimators': args.AdP_n_est,
-                  'base_estimator': DecisionTreeClassifier(max_depth=1),
+                  'base_estimator': [DecisionTreeClassifier(max_depth=1)],
                   }
     return kwargsDict
 

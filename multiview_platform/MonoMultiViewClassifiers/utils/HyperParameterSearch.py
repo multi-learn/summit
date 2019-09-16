@@ -146,7 +146,7 @@ def genHeatMaps(params, scoresArray, outputFileName):
         plt.yticks(np.arange(len(paramArray2Set)), paramArray2Set, rotation=45)
         plt.title('Validation metric')
         plt.savefig(
-            outputFileName + "heat_map-" + paramName1 + "-" + paramName2 + ".png")
+            outputFileName + "heat_map-" + paramName1 + "-" + paramName2 + ".png", transparent=True)
         plt.close()
 
 # nohup python ~/dev/git/spearmint/spearmint/main.py . &

@@ -135,11 +135,11 @@ def showScoreTime(directory, filename, store, resScore, resTime, rangeX,
             for i in range(1, 20):
                 testFileName = filename + "-" + str(i) + ".png"
                 if not os.path.isfile(directory + testFileName):
-                    plt.savefig(directory + testFileName)
+                    plt.savefig(directory + testFileName, transparent=True)
                     break
 
         else:
-            plt.savefig(file)
+            plt.savefig(file, transparent=True)
     else:
         plt.show()
 
@@ -180,11 +180,11 @@ def showResults(directory, filename, db, feat, score):
         for i in range(1, 20):
             testFileName = filename + "-" + str(i) + ".png"
             if not os.path.isfile(directory + testFileName):
-                plt.savefig(directory + testFileName)
+                plt.savefig(directory + testFileName, transparent=True)
                 break
 
     else:
-        plt.savefig(file)
+        plt.savefig(file, transparent=True)
 
     plt.close()
 
@@ -262,11 +262,11 @@ def plot_confusion_matrix(directory, filename, df_confusion,
         for i in range(1, 20):
             testFileName = filename + "-" + str(i) + ".png"
             if not os.path.isfile(directory + testFileName):
-                plt.savefig(directory + testFileName)
+                plt.savefig(directory + testFileName, transparent=True)
                 break
 
     else:
-        plt.savefig(file)
+        plt.savefig(file, transparent=True)
 
     plt.close()
 

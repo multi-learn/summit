@@ -82,7 +82,7 @@ def makeMeNoisy(viewData, randomState, percentage=15):
 def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
                        randomState=None, full=True, add_noise=False,
                        noise_std=0.15, nbView=3,
-                       nbClass=2, datasetLength=34, randomStateInt=None):
+                       nbClass=2, datasetLength=1000, randomStateInt=None):
     """Used to generate a plausible dataset to test the algorithms"""
     randomStateInt = 42
     randomState = np.random.RandomState(randomStateInt)
@@ -333,25 +333,26 @@ def filterViews(datasetFile, temp_dataset, views, usedIndices):
         for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
             copyhdf5Dataset(datasetFile, temp_dataset, "View" + str(viewIndex),
                             "View" + str(viewIndex), usedIndices)
-    for askedViewName in views:
-        for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
-            viewName = datasetFile.get("View" + str(viewIndex)).attrs["name"]
-            if type(viewName) == bytes:
-                viewName = viewName.decode("utf-8")
-            if viewName == askedViewName:
-                copyhdf5Dataset(datasetFile, temp_dataset,
-                                "View" + str(viewIndex),
-                                "View" + str(newViewIndex), usedIndices)
-                newViewName = \
-                temp_dataset.get("View" + str(newViewIndex)).attrs["name"]
-                if type(newViewName) == bytes:
-                    temp_dataset.get("View" + str(newViewIndex)).attrs[
-                        "name"] = newViewName.decode("utf-8")
+    else:
+        for askedViewName in views:
+            for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
+                viewName = datasetFile.get("View" + str(viewIndex)).attrs["name"]
+                if type(viewName) == bytes:
+                    viewName = viewName.decode("utf-8")
+                if viewName == askedViewName:
+                    copyhdf5Dataset(datasetFile, temp_dataset,
+                                    "View" + str(viewIndex),
+                                    "View" + str(newViewIndex), usedIndices)
+                    newViewName = \
+                    temp_dataset.get("View" + str(newViewIndex)).attrs["name"]
+                    if type(newViewName) == bytes:
+                        temp_dataset.get("View" + str(newViewIndex)).attrs[
+                            "name"] = newViewName.decode("utf-8")
 
-                newViewIndex += 1
-            else:
-                pass
-    temp_dataset.get("Metadata").attrs["nbView"] = len(views)
+                    newViewIndex += 1
+                else:
+                    pass
+        temp_dataset.get("Metadata").attrs["nbView"] = len(views)
 
 
 def copyhdf5Dataset(sourceDataFile, destinationDataFile, sourceDatasetName,
@@ -432,11 +433,9 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
     dataset_file.copy("Labels", noisy_dataset)
     for view_index in range(dataset_file.get("Metadata").attrs["nbView"]):
         dataset_file.copy("View" + str(view_index), noisy_dataset)
-    # dataset_file.close()
     for view_index in range(noisy_dataset.get("Metadata").attrs["nbView"]):
         view_name = "View" + str(view_index)
         view_dset = noisy_dataset.get(view_name)
-        # orig_shape = view_dset.value.shape
         view_limits = dataset_file[
             "Metadata/View" + str(view_index) + "_limits"].value
         view_ranges = view_limits[:, 1] - view_limits[:, 0]
@@ -448,7 +447,10 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
         noised_data = np.where(noised_data > view_limits[:, 1],
                                view_limits[:, 1], noised_data)
         noisy_dataset[view_name][...] = noised_data
-        # final_shape = noised_data.shape
+    original_dataset_filename = dataset_file.filename
+    dataset_file.close()
+    if "_temp_" in original_dataset_filename:
+        os.remove(original_dataset_filename)
     return noisy_dataset, dataset_name + "_noised"
 
 
