@@ -6,150 +6,50 @@ from multiview_platform.MonoMultiViewClassifiers.Multiview.Additions import \
     diversity_utils
 from ....MonoMultiViewClassifiers.MultiviewClassifiers.DisagreeFusion import \
     DisagreeFusionModule
-
+from multiview_platform.MonoMultiViewClassifiers.Multiview.MultiviewUtils import MultiviewResult
 
 class Test_disagreement(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         cls.randomState = np.random.RandomState(42)
-        cls.allClassifiersNames = ["SCM", "SVM", "DT"]
-        cls.directory = ""
+        cls.allClassifiersNames = [["SCM", "SVM", "DT"], ["SCM", "SVM", "DT"]]
         cls.viewsIndices =  np.array([0, 1])
-        cls.resultsMonoview =  np.array([[0, ["SCM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [0, ["SVM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [0, ["DT", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [1, ["SCM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [1, ["SVM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [1, ["DT", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]]
-                               ])
+        cls.classifiersDecisions = np.zeros((cls.viewsIndices.shape[0], len(cls.allClassifiersNames), 3, 6),
+                                            dtype=int)
+        for classifer_index, classifier in enumerate(cls.allClassifiersNames):
+            for view_index, view in enumerate(cls.viewsIndices):
+                cls.classifiersDecisions[view_index, classifer_index] = np.array([
+                    cls.randomState.randint(0, 2, 6),
+                    cls.randomState.randint(0, 2, 6),
+                    cls.randomState.randint(0, 2, 6)])
+        cls.folds_ground_truth = np.array([np.array([1,1,1,0,0,0]) for _ in range(3)])
         cls.classificationIndices = np.array([])
 
     def test_simple(cls):
         bestCombi, disagreement = diversity_utils.couple_div_measure(
-            cls.allClassifiersNames, cls.viewsIndices, cls.resultsMonoview,
-            DisagreeFusionModule.disagree)
+            cls.allClassifiersNames, cls.classifiersDecisions, DisagreeFusionModule.disagree, cls.folds_ground_truth)
         cls.assertAlmostEqual(disagreement, 0.666666666667)
-        cls.assertEqual(len(bestCombi), 2)
-
-    def test_viewsIndices(cls):
-        cls.viewsIndices = np.array([0, 6])
-        cls.resultsMonoview =np.array( [[0, ["SCM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [0, ["SVM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [0, ["DT", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [6, ["SCM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [6, ["SVM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [6, ["DT", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]]
-                               ])
-        bestCombi, disagreement = diversity_utils.couple_div_measure(
-            cls.allClassifiersNames, cls.viewsIndices,
-            cls.resultsMonoview, DisagreeFusionModule.disagree)
-        cls.assertAlmostEqual(disagreement, 0.611111111111)
         cls.assertEqual(len(bestCombi), 2)
 
     def test_multipleViews(cls):
         cls.viewsIndices = np.array([0, 6, 18])
-        cls.resultsMonoview = np.array([[0, ["SCM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [0, ["SVM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [0, ["DT", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [6, ["SCM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [6, ["SVM", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [6, ["DT", "", "", "", "", "",
-                                    np.array([cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6),
-                                              cls.randomState.randint(0, 2, 6)])
-                                    ]],
-                               [18, ["SCM", "", "", "", "", "",
-                                     np.array([cls.randomState.randint(0, 2, 6),
-                                               cls.randomState.randint(0, 2, 6),
-                                               cls.randomState.randint(0, 2,
-                                                                       6)])
-                                     ]],
-                               [18, ["SVM", "", "", "", "", "",
-                                     np.array([cls.randomState.randint(0, 2, 6),
-                                               cls.randomState.randint(0, 2, 6),
-                                               cls.randomState.randint(0, 2,
-                                                                       6)])
-                                     ]],
-                               [18, ["DT", "", "", "", "", "",
-                                     np.array([cls.randomState.randint(0, 2, 6),
-                                               cls.randomState.randint(0, 2, 6),
-                                               cls.randomState.randint(0, 2,
-                                                                       6)])
-                                     ]]
-                               ])
+        cls.allClassifiersNames = [["SCM", "SVM", "DT"], ["SCM", "SVM", "DT"], ["SCM", "SVM", "DT"]]
+        cls.classifiersDecisions = np.zeros(
+            (cls.viewsIndices.shape[0], len(cls.allClassifiersNames), 3, 6),
+            dtype=int)
+        for classifer_index, classifier in enumerate(cls.allClassifiersNames):
+            for view_index, view in enumerate(cls.viewsIndices):
+                cls.classifiersDecisions[
+                    view_index, classifer_index] = np.array([
+                    cls.randomState.randint(0, 2, 6),
+                    cls.randomState.randint(0, 2, 6),
+                    cls.randomState.randint(0, 2, 6)])
+
         bestCombi, disagreement = diversity_utils.couple_div_measure(
-            cls.allClassifiersNames, cls.viewsIndices,
-            cls.resultsMonoview, DisagreeFusionModule.disagree)
-        cls.assertAlmostEqual(disagreement, 0.592592592593)
+            cls.allClassifiersNames, cls.classifiersDecisions,
+            DisagreeFusionModule.disagree, cls.folds_ground_truth)
+        cls.assertAlmostEqual(disagreement, 0.55555555555555)
         cls.assertEqual(len(bestCombi), 3)
 
 

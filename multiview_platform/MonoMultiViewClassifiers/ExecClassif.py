@@ -558,12 +558,7 @@ def execBenchmark(nbCores, statsIter, nbMulticlass,
         for arguments in benchmarkArgumentsDictionaries:
             results += [execOneBenchmarkMonoCore(DATASET=DATASET, **arguments)]
     logging.debug("Done:\t Executing all the needed biclass benchmarks")
-    if nbCores > 1:
-        logging.debug("Start:\t Deleting " + str(
-            nbCores) + " temporary datasets for multiprocessing")
-        args = benchmarkArgumentsDictionaries[0]["args"]
-        datasetFiles = delete(args.pathF, args.name, nbCores)
-        logging.debug("Start:\t Deleting datasets for multiprocessing")
+
     # Do everything with flagging
     nbExamples = len(classificationIndices[0][0]) + len(
         classificationIndices[0][1])
@@ -573,10 +568,7 @@ def execBenchmark(nbCores, statsIter, nbMulticlass,
                multiclassGroundTruth, metrics, classificationIndices,
                directories, directory, labelsDictionary, nbExamples, nbLabels)
     logging.debug("Done:\t Analyzing predictions")
-    filename = DATASET.filename
-    DATASET.close()
-    if "_temp_" in filename:
-        os.remove(filename)
+    delete(benchmarkArgumentsDictionaries, nbCores, DATASET)
     return results_mean_stds
 
 

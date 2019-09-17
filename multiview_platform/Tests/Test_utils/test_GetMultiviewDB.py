@@ -363,7 +363,7 @@ class Test_getClassicDBhdf5(unittest.TestCase):
             cls.dataset.attrs["name"] = "test_view_" + str(i)
 
     def test_simple(cls):
-        dataset_file, labels_dictionary = GetMultiviewDb.getClassicDBhdf5(
+        dataset_file, labels_dictionary, dataset_name = GetMultiviewDb.getClassicDBhdf5(
             cls.views, cls.pathF, cls.nameDB,
             cls.NB_CLASS, cls.askedLabelsNames,
             cls.random_state)
@@ -381,10 +381,11 @@ class Test_getClassicDBhdf5(unittest.TestCase):
         askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
                             "test_label_3"]
         NB_CLASS = 4
-        dataset_file, labels_dictionary = GetMultiviewDb.getClassicDBhdf5(
+        dataset_file, labels_dictionary, dataset_name = GetMultiviewDb.getClassicDBhdf5(
             cls.views, cls.pathF, cls.nameDB,
             NB_CLASS, askedLabelsNames,
             cls.random_state)
+        cls.assertEqual(dataset_name, 'test_dataset_temp_view_label_select')
         cls.assertEqual(dataset_file.get("View1").attrs["name"], "test_view_3")
         cls.assertEqual(labels_dictionary,
                         {0: "test_label_0", 1: "test_label_1",
@@ -397,7 +398,7 @@ class Test_getClassicDBhdf5(unittest.TestCase):
 
     def test_all_views_asked(cls):
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
-        dataset_file, labels_dictionary = GetMultiviewDb.getClassicDBhdf5(views,
+        dataset_file, labels_dictionary, dataset_name = GetMultiviewDb.getClassicDBhdf5(views,
                                                                           cls.pathF,
                                                                           cls.nameDB,
                                                                           cls.NB_CLASS,
@@ -422,7 +423,7 @@ class Test_getClassicDBhdf5(unittest.TestCase):
                             "test_label_3"]
         NB_CLASS = 4
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
-        dataset_file, labels_dictionary = GetMultiviewDb.getClassicDBhdf5(views,
+        dataset_file, labels_dictionary, dataset_name = GetMultiviewDb.getClassicDBhdf5(views,
                                                                           cls.pathF,
                                                                           cls.nameDB,
                                                                           NB_CLASS,
@@ -480,7 +481,7 @@ class Test_getClassicDBcsv(unittest.TestCase):
             cls.datas.append(data)
 
     def test_simple(cls):
-        dataset_file, labels_dictionary = GetMultiviewDb.getClassicDBcsv(
+        dataset_file, labels_dictionary, dataset_name = GetMultiviewDb.getClassicDBcsv(
             cls.views, cls.pathF, cls.nameDB,
             cls.NB_CLASS, cls.askedLabelsNames,
             cls.random_state, delimiter=",")
@@ -496,7 +497,7 @@ class Test_getClassicDBcsv(unittest.TestCase):
 
     def test_all_views_asked(cls):
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
-        dataset_file, labels_dictionary = GetMultiviewDb.getClassicDBcsv(views,
+        dataset_file, labels_dictionary, dataset_name = GetMultiviewDb.getClassicDBcsv(views,
                                                                          cls.pathF,
                                                                          cls.nameDB,
                                                                          cls.NB_CLASS,
@@ -508,6 +509,7 @@ class Test_getClassicDBcsv(unittest.TestCase):
         cls.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 3)
         cls.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 4)
         cls.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 2)
+        cls.assertEqual(dataset_name,'test_dataset_temp_view_label_select')
         for viewIndex in range(4):
             np.testing.assert_array_equal(
                 dataset_file.get("View" + str(viewIndex)).value,
@@ -520,7 +522,7 @@ class Test_getClassicDBcsv(unittest.TestCase):
         askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
                             "test_label_3"]
         NB_CLASS = 4
-        dataset_file, labels_dictionary = GetMultiviewDb.getClassicDBcsv(
+        dataset_file, labels_dictionary, dataset_name = GetMultiviewDb.getClassicDBcsv(
             cls.views, cls.pathF, cls.nameDB,
             NB_CLASS, askedLabelsNames,
             cls.random_state, delimiter=",")
@@ -539,7 +541,7 @@ class Test_getClassicDBcsv(unittest.TestCase):
                             "test_label_3"]
         NB_CLASS = 4
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
-        dataset_file, labels_dictionary = GetMultiviewDb.getClassicDBcsv(views,
+        dataset_file, labels_dictionary, dataset_name = GetMultiviewDb.getClassicDBcsv(views,
                                                                          cls.pathF,
                                                                          cls.nameDB,
                                                                          NB_CLASS,

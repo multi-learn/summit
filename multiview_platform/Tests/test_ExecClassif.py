@@ -77,7 +77,7 @@ class Test_execBenchmark(unittest.TestCase):
                                         execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
                                         getResults=fakegetResults,
                                         delete=fakeDelete)
-        cls.assertEqual(res, [[4]])
+        cls.assertEqual(res, 3)
 
     def test_multiclass_no_iter(cls):
         cls.argumentDictionaries = [{"a": 10, "args": FakeArg()},
@@ -90,7 +90,7 @@ class Test_execBenchmark(unittest.TestCase):
                                         execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
                                         getResults=fakegetResults,
                                         delete=fakeDelete)
-        cls.assertEqual(res, [[0, 10], [1, 4]])
+        cls.assertEqual(res, 3)
 
     def test_multiclass_and_iter(cls):
         cls.argumentDictionaries = [{"a": 10, "args": FakeArg()},
@@ -105,7 +105,7 @@ class Test_execBenchmark(unittest.TestCase):
                                         execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
                                         getResults=fakegetResults,
                                         delete=fakeDelete)
-        cls.assertEqual(res, [[0, 10], [1, 4], [0, 55], [1, 24]])
+        cls.assertEqual(res, 3)
 
     def test_no_iter_biclass_multicore(cls):
         res = ExecClassif.execBenchmark(2, 1, 1, cls.argumentDictionaries,
@@ -116,10 +116,11 @@ class Test_execBenchmark(unittest.TestCase):
                                         execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
                                         getResults=fakegetResults,
                                         delete=fakeDelete)
-        cls.assertEqual(res, [[2, 4]])
+        cls.assertEqual(res, 3)
 
     @classmethod
     def tearDownClass(cls):
+        cls.Dataset.close()
         os.remove("multiview_platform/Tests/tmp_tests/test_file.hdf5")
         os.rmdir("multiview_platform/Tests/tmp_tests")
 
@@ -168,7 +169,7 @@ class Test_execOneBenchmark(unittest.TestCase):
         os.mkdir("multiview_platform/Tests/tmp_tests")
 
     def test_simple(cls):
-        flag, resMono, resMulti = ExecClassif.execOneBenchmark(coreIndex=10,
+        flag, results = ExecClassif.execOneBenchmark(coreIndex=10,
                                                                LABELS_DICTIONARY={
                                                                    0: "a",
                                                                    1: "b"},
@@ -201,10 +202,9 @@ class Test_execOneBenchmark(unittest.TestCase):
                                                                initMultiviewArguments=fakeInitMulti)
 
         cls.assertEqual(flag, None)
-        cls.assertEqual(resMono,
-                        [["Mono", {"try": 0}], ["Mono", {"try2": 100}]])
-        cls.assertEqual(resMulti,
-                        [["Multi", {"try3": 5}], ["Multi", {"try4": 10}]])
+        cls.assertEqual(results ,
+                        [['Mono', {'try': 0}], ['Mono', {'try2': 100}],
+                         ['Multi', {'try3': 5}], ['Multi', {'try4': 10}]])
 
     @classmethod
     def tearDownClass(cls):
@@ -225,7 +225,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
         os.mkdir("multiview_platform/Tests/tmp_tests")
 
     def test_simple(cls):
-        flag, resMono, resMulti = ExecClassif.execOneBenchmark_multicore(
+        flag, results = ExecClassif.execOneBenchmark_multicore(
             nbCores=2,
             LABELS_DICTIONARY={0: "a", 1: "b"},
             directory="multiview_platform/Tests/tmp_tests/",
@@ -246,10 +246,9 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
             initMultiviewArguments=fakeInitMulti)
 
         cls.assertEqual(flag, None)
-        cls.assertEqual(resMono,
-                        [["Mono", {"try": 0}], ["Mono", {"try2": 100}]])
-        cls.assertEqual(resMulti,
-                        [["Multi", {"try3": 5}], ["Multi", {"try4": 10}]])
+        cls.assertEqual(results ,
+                        [['Mono', {'try': 0}], ['Mono', {'try2': 100}],
+                         ['Multi', {'try3': 5}], ['Multi', {'try4': 10}]])
 
     @classmethod
     def tearDownClass(cls):
