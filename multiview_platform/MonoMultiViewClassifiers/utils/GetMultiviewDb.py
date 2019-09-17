@@ -1,5 +1,6 @@
 import errno
 import os
+import logging
 
 import h5py
 import numpy as np
@@ -58,10 +59,20 @@ def datasetsAlreadyExist(pathF, name, nbCores):
     return allDatasetExist
 
 
-def deleteHDF5(pathF, name, nbCores):
+def deleteHDF5(benchmarkArgumentsDictionaries, nbCores, DATASET):
     """Used to delete temporary copies at the end of the benchmark"""
-    for coreIndex in range(nbCores):
-        os.remove(pathF + name + str(coreIndex) + ".hdf5")
+    if nbCores > 1:
+        logging.debug("Start:\t Deleting " + str(
+            nbCores) + " temporary datasets for multiprocessing")
+        args = benchmarkArgumentsDictionaries[0]["args"]
+        logging.debug("Start:\t Deleting datasets for multiprocessing")
+
+        for coreIndex in range(nbCores):
+            os.remove(args.pathF + args.name + str(coreIndex) + ".hdf5")
+    filename = DATASET.filename
+    DATASET.close()
+    if "_temp_" in filename:
+        os.remove(filename)
 
 
 def makeMeNoisy(viewData, randomState, percentage=15):
@@ -484,11 +495,11 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
     metaDataGrp.attrs["nbClass"] = len(labelsNames)
     metaDataGrp.attrs["datasetLength"] = len(labels)
     datasetFile.close()
-    datasetFile, labelsDictionary = getClassicDBhdf5(views, pathF, nameDB,
+    datasetFile, labelsDictionary, dataset_name = getClassicDBhdf5(views, pathF, nameDB,
                                                      NB_CLASS, askedLabelsNames,
                                                      randomState, full)
 
-    return datasetFile, labelsDictionary
+    return datasetFile, labelsDictionary, dataset_name
 
 # def getLabelSupports(CLASS_LABELS):
 #     """Used to get the number of example for each label"""
