@@ -53,7 +53,7 @@ setup(
     # Une url qui pointe vers la page officielle de votre lib
     url='http://github.com/babau1/multiview-machine-learning-omis/',
     install_requires=['numpy>=1.8', 'scipy>=0.16','scikit-learn==0.19',
-                      'h5py', 'joblib', 'pyscm'],
+                      'h5py', 'joblib', 'pyscm', 'pandas'],
     # Il est d'usage de mettre quelques metadata à propos de sa lib
     # Pour que les robots puissent facilement la classer.
     # La liste des marqueurs autorisées est longue:
