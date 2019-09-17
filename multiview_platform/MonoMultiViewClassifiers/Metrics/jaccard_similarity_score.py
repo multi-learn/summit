@@ -1,6 +1,9 @@
 from sklearn.metrics import jaccard_similarity_score as metric
 from sklearn.metrics import make_scorer
+import warnings
 
+warnings.warn("the jaccard_similarity_score module  is deprecated", DeprecationWarning,
+              stacklevel=2)
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype

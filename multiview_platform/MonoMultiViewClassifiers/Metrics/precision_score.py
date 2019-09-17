@@ -1,10 +1,11 @@
 from sklearn.metrics import make_scorer
 from sklearn.metrics import precision_score as metric
-
+import warnings
+warnings.warn("the precision_score module  is deprecated", DeprecationWarning,
+              stacklevel=2)
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
-
 
 def score(y_true, y_pred, multiclass=False, **kwargs):
     try:
@@ -59,20 +60,20 @@ def getConfig(**kwargs):
         sample_weight = kwargs["0"]
     except:
         sample_weight = None
-    try:
-        labels = kwargs["1"]
-    except Exception:
-        labels = None
-    try:
-        pos_label = kwargs["2"]
-    except Exception:
-        pos_label = 1
-    try:
-        average = kwargs["3"]
-    except:
-        average = "binary"
-    config_string = "Precision score using " + str(
-        sample_weight) + " as sample_weights, " + str(
-        labels) + " as labels, " + str(pos_label) \
-                   + " as pos_label, " + average + " as average (higher is better)"
+        try:
+            labels = kwargs["1"]
+        except Exception:
+            labels = None
+        try:
+            pos_label = kwargs["2"]
+        except Exception:
+            pos_label = 1
+        try:
+            average = kwargs["3"]
+        except:
+            average = "binary"
+        config_string = "Precision score using " + str(
+            sample_weight) + " as sample_weights, " + str(
+            labels) + " as labels, " + str(pos_label) \
+                       + " as pos_label, " + average + " as average (higher is better)"
     return config_string

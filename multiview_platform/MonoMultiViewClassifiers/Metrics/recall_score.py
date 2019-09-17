@@ -1,6 +1,9 @@
 from sklearn.metrics import make_scorer
 from sklearn.metrics import recall_score as metric
+import warnings
 
+warnings.warn("the recall_score module  is deprecated", DeprecationWarning,
+              stacklevel=2)
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype

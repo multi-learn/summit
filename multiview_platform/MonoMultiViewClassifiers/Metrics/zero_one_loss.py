@@ -1,5 +1,9 @@
 from sklearn.metrics import make_scorer
 from sklearn.metrics import zero_one_loss as metric
+import warnings
+
+warnings.warn("the zero_one_loss module  is deprecated", DeprecationWarning,
+              stacklevel=2)
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

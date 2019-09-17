@@ -1,7 +1,10 @@
 from sklearn.metrics import make_scorer
 from sklearn.metrics import roc_auc_score as metric
 from sklearn.preprocessing import MultiLabelBinarizer
+import warnings
 
+warnings.warn("the roc_auc_score module  is deprecated", DeprecationWarning,
+              stacklevel=2)
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
