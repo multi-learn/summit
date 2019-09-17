@@ -21,7 +21,7 @@ And the following python modules :
 * [h5py](https://www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to spare RAM
 * [pickle](https://docs.python.org/3/library/pickle.html) - Used to store some results
 * ([graphviz](https://pypi.python.org/pypi/graphviz) - Used for decision tree interpretation)
-
+* [pandas]
 
 They are all tested in  `multiview-machine-mearning-omis/multiview_platform/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `Exec` script
 
