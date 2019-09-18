@@ -588,7 +588,6 @@ def execClassif(arguments):
     monoviewAlgos = args.CL_algos_monoview
     multiviewAlgos = args.CL_algos_multiview
     dataset_list = execution.find_dataset_names(args.pathF, args.type, args.name)
-
     if not args.add_noise:
         args.noise_std=[0.0]
 
