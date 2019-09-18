@@ -664,8 +664,10 @@ def execClassif(arguments):
             nbMulticlass = len(labelsCombinations)
 
             results_mean_stds = execBenchmark(nbCores, statsIter, nbMulticlass,
-                                              benchmarkArgumentDictionaries, splits, directories,
-                                              directory, multiclassLabels, metrics, LABELS_DICTIONARY,
-                                              NB_CLASS, DATASET)
+                                                  benchmarkArgumentDictionaries, splits, directories,
+                                                  directory, multiclassLabels, metrics, LABELS_DICTIONARY,
+                                                  NB_CLASS, DATASET)
             noise_results.append([noise_std, results_mean_stds])
             plot_results_noise(directory, noise_results, metrics[0][0], name)
+
+

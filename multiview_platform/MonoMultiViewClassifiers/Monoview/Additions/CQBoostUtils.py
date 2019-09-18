@@ -17,7 +17,7 @@ from ... import Metrics
 
 class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
     def __init__(self, mu=0.01, epsilon=1e-06, n_max_iterations=100,
-                 estimators_generator=None, dual_constraint_rhs=0,
+                 estimators_generator="Stumps", dual_constraint_rhs=0,
                  save_iteration_as_hyperparameter_each=None, random_state=None):
         super(ColumnGenerationClassifier, self).__init__()
         self.epsilon = epsilon
@@ -78,6 +78,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
             h_values = ma.array(
                 np.squeeze(np.array((alpha).T.dot(y_kernel_matrix).T)),
                 fill_value=-np.inf)
+
             h_values[self.chosen_columns_] = ma.masked
             worst_h_index = ma.argmax(h_values)
 

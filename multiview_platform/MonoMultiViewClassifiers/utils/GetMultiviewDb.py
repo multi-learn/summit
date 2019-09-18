@@ -75,7 +75,7 @@ def deleteHDF5(benchmarkArgumentsDictionaries, nbCores, DATASET):
         os.remove(filename)
 
 
-def makeMeNoisy(viewData, randomState, percentage=15):
+def makeMeNoisy(viewData, randomState, percentage=5):
     """used to introduce some noise in the generated data"""
     viewData = viewData.astype(bool)
     nbNoisyCoord = int(
@@ -93,11 +93,9 @@ def makeMeNoisy(viewData, randomState, percentage=15):
 def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
                        randomState=None, full=True, add_noise=False,
                        noise_std=0.15, nbView=3,
-                       nbClass=2, datasetLength=1000, randomStateInt=None):
+                   nbClass=2, datasetLength=100, randomStateInt=42, nbFeatures = 5):
     """Used to generate a plausible dataset to test the algorithms"""
-    randomStateInt = 42
-    randomState = np.random.RandomState(randomStateInt)
-    nbFeatures = 10
+
     if not os.path.exists(os.path.dirname(pathF + "Plausible.hdf5")):
         try:
             os.makedirs(os.path.dirname(pathF + "Plausible.hdf5"))
@@ -383,7 +381,7 @@ def copyhdf5Dataset(sourceDataFile, destinationDataFile, sourceDatasetName,
 
 
 def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
-                     randomState, full=False, add_noise=False, noise_std=0.15):
+                     randomState, full=False, add_noise=False, noise_std=0.15,):
     """Used to load a hdf5 database"""
     if full:
         datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
@@ -422,7 +420,9 @@ def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
         labelsDictionary = dict(
             (labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
             enumerate(datasetFile.get("Labels").attrs["names"]))
-
+        datasetFile.close()
+        datasetFile = h5py.File(pathF + nameDB + "_temp_view_label_select.hdf5",
+                                "r")
     if add_noise:
         datasetFile, dataset_name = add_gaussian_noise(datasetFile, randomState,
                                                        pathF, dataset_name,
@@ -460,6 +460,8 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
         noisy_dataset[view_name][...] = noised_data
     original_dataset_filename = dataset_file.filename
     dataset_file.close()
+    noisy_dataset.close()
+    noisy_dataset = h5py.File(path_f + dataset_name + "_noised.hdf5", "r")
     if "_temp_" in original_dataset_filename:
         os.remove(original_dataset_filename)
     return noisy_dataset, dataset_name + "_noised"

@@ -133,7 +133,6 @@ class MinCqLearner(BaseEstimator, ClassifierMixin):
             logging.info("MinCq training started...")
             logging.info("Training dataset shape: {}".format(str(np.shape(X))))
             logging.info("Number of voters: {}".format(len(voters)))
-
         self.majority_vote = MajorityVote(voters)
         n_base_voters = len(self.majority_vote.weights)
 
