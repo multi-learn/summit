@@ -3,7 +3,10 @@
 In order to do that, on needs to add a file with the following functions
 which are mandatory for the metric to work with the platform.
 """
+import warnings
 
+warnings.warn("the framework module  is deprecated", DeprecationWarning,
+              stacklevel=2)
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
