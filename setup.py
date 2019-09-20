@@ -90,5 +90,5 @@ setup(
     # Il y a encore une chiée de paramètres possibles, mais avec ça vous
     # couvrez 90% des besoins
     # ext_modules=cythonize(
-    #     "multiview_platform/MonoMultiViewClassifiers/Monoview/Additions/_custom_criterion.pyx"),
+    #     "multiview_platform/mono_multi_view_classifiers/monoview/additions/_custom_criterion.pyx"),
 )
