@@ -1,6 +1,6 @@
-from ...multiview.Additions import diversity_utils
+from ...multiview.additions import diversity_utils
 from ..difficulty_fusion.difficulty_fusion import difficulty
-from ..double_fault_fusion.DoubleFaultFusionModule import doubleFault
+from ..double_fault_fusion.double_fault_fusion import doubleFault
 
 
 def genName(config):

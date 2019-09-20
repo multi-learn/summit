@@ -1,1 +1,1 @@
-from . import DisagreeFusionModule,analyzeResults
+from . import disagree_fusion,analyze_results

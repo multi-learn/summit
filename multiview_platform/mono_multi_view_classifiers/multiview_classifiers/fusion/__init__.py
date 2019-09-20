@@ -1,3 +1,3 @@
-from . import FusionModule, analyzeResults, Methods
+from . import fusion, analyze_results, Methods
 
-__all__ = ["FusionModule.py", "Methods"]
+__all__ = ["fusion.py", "Methods"]

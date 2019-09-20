@@ -1,5 +1,5 @@
 import os, sys, inspect
-from MonoviewClassifiers.Adaboost import Adaboost
+from multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost import Adaboost
 
 
 
@@ -10,8 +10,8 @@ class ConfigurationMaker():
 
     def __init__(self):
     classifier_dict = {"0": [Adaboost,
-                             multiview_platform.MonoMultiViewClassifiers.MonoviewClassifiers.Adaboost]}
-       for key, val in  classifier_dict.items():
+                             multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost]}
+        for key, val in  classifier_dict.items():
 
            __import__(val[1], locals(), globals(), [], 1)
            sig = inspect.signature(val[1]+"."+val[0]+".__init__")

@@ -2,34 +2,37 @@ import unittest
 
 import numpy as np
 
-from multiview_platform.mono_multi_view_classifiers.multiview.Additions import \
+from multiview_platform.mono_multi_view_classifiers.multiview.additions import \
     diversity_utils
-from ....mono_multi_view_classifiers.multiview_classifiers.disagree_fusion import \
-    DisagreeFusionModule
-from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import MultiviewResult
+from ....mono_multi_view_classifiers.multiview_classifiers.double_fault_fusion import \
+    double_fault_fusion
 
-class Test_disagreement(unittest.TestCase):
+
+class Test_doubleFaultRatio(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         cls.randomState = np.random.RandomState(42)
         cls.allClassifiersNames = [["SCM", "SVM", "DT"], ["SCM", "SVM", "DT"]]
-        cls.viewsIndices =  np.array([0, 1])
-        cls.classifiersDecisions = np.zeros((cls.viewsIndices.shape[0], len(cls.allClassifiersNames), 3, 6),
-                                            dtype=int)
+        cls.directory = ""
+        cls.viewsIndices = np.array([0, 1])
+        cls.classifiersDecisions = np.zeros(
+            (cls.viewsIndices.shape[0], len(cls.allClassifiersNames), 3, 6),
+            dtype=int)
         for classifer_index, classifier in enumerate(cls.allClassifiersNames):
             for view_index, view in enumerate(cls.viewsIndices):
-                cls.classifiersDecisions[view_index, classifer_index] = np.array([
+                cls.classifiersDecisions[
+                    view_index, classifer_index] = np.array([
                     cls.randomState.randint(0, 2, 6),
                     cls.randomState.randint(0, 2, 6),
                     cls.randomState.randint(0, 2, 6)])
         cls.folds_ground_truth = np.array([np.array([1,1,1,0,0,0]) for _ in range(3)])
-        cls.classificationIndices = np.array([])
 
     def test_simple(cls):
         bestCombi, disagreement = diversity_utils.couple_div_measure(
-            cls.allClassifiersNames, cls.classifiersDecisions, DisagreeFusionModule.disagree, cls.folds_ground_truth)
-        cls.assertAlmostEqual(disagreement, 0.666666666667)
+            cls.allClassifiersNames,cls.classifiersDecisions,
+            double_fault_fusion.doubleFault, cls.folds_ground_truth)
+        cls.assertAlmostEqual(disagreement, 0.3888888888888)
         cls.assertEqual(len(bestCombi), 2)
 
     def test_multipleViews(cls):
@@ -45,25 +48,23 @@ class Test_disagreement(unittest.TestCase):
                     cls.randomState.randint(0, 2, 6),
                     cls.randomState.randint(0, 2, 6),
                     cls.randomState.randint(0, 2, 6)])
-
         bestCombi, disagreement = diversity_utils.couple_div_measure(
             cls.allClassifiersNames, cls.classifiersDecisions,
-            DisagreeFusionModule.disagree, cls.folds_ground_truth)
-        cls.assertAlmostEqual(disagreement, 0.55555555555555)
+            double_fault_fusion.doubleFault, cls.folds_ground_truth)
+        cls.assertAlmostEqual(disagreement, 0.3333333333)
         cls.assertEqual(len(bestCombi), 3)
 
 
-class Test_disagree(unittest.TestCase):
+class Test_doubleFault(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.monoviewDecision1 = np.array([0, 0, 1, 1])
-        cls.monoviewDecision2 = np.array([0, 1, 0, 1])
-        cls.ground_truth = None
+        cls.monoviewDecision1 = np.array([0, 0, 1, 1, 0, 0, 1, 1])
+        cls.monoviewDecision2 = np.array([0, 1, 0, 1, 0, 1, 0, 1])
+        cls.ground_truth = np.array([0, 0, 0, 0, 1, 1, 1, 1])
 
     def test_simple(cls):
-        disagreement = DisagreeFusionModule.disagree(cls.monoviewDecision1,
-                                                     cls.monoviewDecision2,
-                                                     cls.ground_truth)
-        np.testing.assert_array_equal(disagreement,
-                                      np.array([False, True, True, False]))
+        disagreement = double_fault_fusion.doubleFault(
+            cls.monoviewDecision1, cls.monoviewDecision2, cls.ground_truth)
+        np.testing.assert_array_equal(disagreement, np.array(
+            [False, False, False, True, True, False, False, False]))

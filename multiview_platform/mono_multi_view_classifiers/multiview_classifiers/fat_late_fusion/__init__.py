@@ -1,1 +1,1 @@
-from . import FatLateFusionModule, analyzeResults
+from . import fat_late_fusion, analyze_results

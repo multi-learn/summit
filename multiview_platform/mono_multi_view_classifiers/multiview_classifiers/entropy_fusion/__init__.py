@@ -1,1 +1,1 @@
-from . import analyzeResults, EntropyFusionModule
+from . import analyze_results, entropy_fusion

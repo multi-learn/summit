@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 
 from ....mono_multi_view_classifiers.multiview_classifiers.entropy_fusion import \
-    EntropyFusionModule
+    entropy_fusion
 
 
 class Test_entropy(unittest.TestCase):
@@ -28,8 +28,8 @@ class Test_entropy(unittest.TestCase):
         cls.foldsLen = ""
 
     def test_simple(cls):
-        entropy_score = EntropyFusionModule.entropy(cls.classifiersDecisions,
-                                                    cls.combination,
-                                                    cls.foldsGroudTruth,
-                                                    cls.foldsLen)
+        entropy_score = entropy_fusion.entropy(cls.classifiersDecisions,
+                                               cls.combination,
+                                               cls.foldsGroudTruth,
+                                               cls.foldsLen)
         cls.assertEqual(entropy_score, 0.15, 'Wrong values for entropy measure')

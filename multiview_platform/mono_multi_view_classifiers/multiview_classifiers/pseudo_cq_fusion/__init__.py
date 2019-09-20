@@ -1,1 +1,1 @@
-from . import analyzeResults, PseudoCQFusionModule
+from . import analyze_results, pseudo_cq_fusion

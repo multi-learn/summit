@@ -13,7 +13,7 @@ import h5py
 import numpy as np  # for reading CSV-files and Series
 
 from . import monoview_utils
-from .analyzeResult import execute
+from .analyze_result import execute
 # Import own modules
 from .. import monoview_classifiers
 from ..utils.dataset import getValue, extractSubset

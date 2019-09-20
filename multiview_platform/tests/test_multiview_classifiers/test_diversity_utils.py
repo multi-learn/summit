@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from multiview_platform.mono_multi_view_classifiers.multiview.Additions import \
+from multiview_platform.mono_multi_view_classifiers.multiview.additions import \
     diversity_utils
 
 
