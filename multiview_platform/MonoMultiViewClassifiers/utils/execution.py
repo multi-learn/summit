@@ -966,8 +966,11 @@ def genDirecortiesNames(directory, statsIter):
 
 
 def find_dataset_names(path, type, names):
-    """This function goal is to browse the dataset directory and extarcts all the needed dataset names."""
-    available_file_names = [file_name.strip().split(".")[0] for file_name in os.listdir(path) if file_name.endswith(type)]
+    """This function goal is to browse the dataset directory and extarcts all
+     the needed dataset names."""
+    available_file_names = [file_name.strip().split(".")[0]
+                            for file_name in os.listdir(path)
+                            if file_name.endswith(type)]
     if names == ["all"]:
         return available_file_names
     elif len(names)>1:

@@ -579,62 +579,64 @@ def execClassif(arguments):
     args = configuration.get_the_args(args.path_config)
 
     os.nice(args["Base"]["nice"])
-    nbCores = args.nbCores
+    nbCores = args["Base"]["nbcores"]
     if nbCores == 1:
         os.environ['OPENBLAS_NUM_THREADS'] = '1'
-    statsIter = args.CL_statsiter
-    hyperParamSearch = args.CL_HPS_type
-    multiclassMethod = args.CL_multiclassMethod
-    CL_type = args.CL_type
-    monoviewAlgos = args.CL_algos_monoview
-    multiviewAlgos = args.CL_algos_multiview
-    dataset_list = execution.find_dataset_names(args.pathF, args.type, args.name)
-    if not args.add_noise:
-        args.noise_std=[0.0]
+    statsIter = args["Classification"]["statsiter"]
+    hyperParamSearch = args["Classification"]["hps_type"]
+    multiclassMethod = args["Classification"]["multiclassmethod"]
+    CL_type = args["Classification"]["type"]
+    monoviewAlgos = args["Classification"]["algos_monoview"]
+    multiviewAlgos = args["Classification"]["algos_multiview"]
+    dataset_list = execution.find_dataset_names(args["Base"]["pathf"],
+                                                args["Base"]["type"],
+                                                args["Base"]["name"])
+    if not args["Base"]["add_noise"]:
+        args["Base"]["noise_std"]=[0.0]
 
-    for name in dataset_list:
+    for dataset_name in dataset_list:
         noise_results = []
-        for noise_std in args.noise_std:
+        for noise_std in args["Base"]["noise_std"]:
 
-            directory = execution.initLogFile(name, args.views, args.CL_type,
-                                              args.log, args.debug, args.label,
-                                              args.res_dir, args.add_noise, noise_std)
-            randomState = execution.initRandomState(args.randomState, directory)
+            directory = execution.initLogFile(dataset_name, args["Base"]["views"], args["Classification"]["type"],
+                                              args["Base"]["log"], args["Base"]["debug"], args["Base"]["label"],
+                                              args["Base"]["res_dir"], args["Base"]["add_noise"], noise_std)
+            randomState = execution.initRandomState(args["Base"]["randomstate"], directory)
             statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,
                                                                         randomState)
 
-            getDatabase = execution.getDatabaseFunction(name, args.type)
+            getDatabase = execution.getDatabaseFunction(dataset_name, args["Base"]["type"])
 
-            DATASET, LABELS_DICTIONARY, datasetname = getDatabase(args.views,
-                                                                  args.pathF, name,
-                                                                  args.CL_nbClass,
-                                                                  args.CL_classes,
+            DATASET, LABELS_DICTIONARY, datasetname = getDatabase(args["Base"]["views"],
+                                                                  args["Base"]["pathf"], dataset_name,
+                                                                  args["Classification"]["nbclass"],
+                                                                  args["Classification"]["classes"],
                                                                   randomState,
-                                                                  args.full,
-                                                                  args.add_noise,
+                                                                  args["Base"]["full"],
+                                                                  args["Base"]["add_noise"],
                                                                   noise_std)
-            args.name = datasetname
+            args["Base"]["name"] = datasetname
 
-            splits = execution.genSplits(DATASET.get("Labels").value, args.CL_split,
+            splits = execution.genSplits(DATASET.get("Labels").value, args["Classification"]["split"],
                                          statsIterRandomStates)
 
             multiclassLabels, labelsCombinations, indicesMulticlass = Multiclass.genMulticlassLabels(
                 DATASET.get("Labels").value, multiclassMethod, splits)
 
-            kFolds = execution.genKFolds(statsIter, args.CL_nbFolds,
+            kFolds = execution.genKFolds(statsIter, args["Classification"]["nbfolds"],
                                          statsIterRandomStates)
 
-            datasetFiles = Dataset.initMultipleDatasets(args.pathF, args.name, nbCores)
+            datasetFiles = Dataset.initMultipleDatasets(args["Base"]["pathf"], args["Base"]["name"], nbCores)
 
             # if not views:
-            #     raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
+            #     raise ValueError("Empty views list, modify selected views to match dataset " + args["Base"]["views)
 
-            views, viewsIndices, allViews = execution.initViews(DATASET, args.views)
+            views, viewsIndices, allViews = execution.initViews(DATASET, args["Base"]["views"])
             viewsDictionary = genViewsDictionnary(DATASET, views)
             nbViews = len(views)
             NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
-            metrics = [metric.split(":") for metric in args.CL_metrics]
+            metrics = [metric.split(":") for metric in args["Classification"]["metrics"]]
             if metrics == [[""]]:
                 metricsNames = [name for _, name, isPackage
                                 in pkgutil.iter_modules(
@@ -643,7 +645,7 @@ def execClassif(arguments):
                                                                "matthews_corrcoef",
                                                                "roc_auc_score"]]
                 metrics = [[metricName] for metricName in metricsNames]
-                metrics = arangeMetrics(metrics, args.CL_metric_princ)
+                metrics = arangeMetrics(metrics, args["Classification"]["metric_princ"])
             for metricIndex, metric in enumerate(metrics):
                 if len(metric) == 1:
                     metrics[metricIndex] = [metric[0], None]
@@ -668,6 +670,6 @@ def execClassif(arguments):
                                                   directory, multiclassLabels, metrics, LABELS_DICTIONARY,
                                                   NB_CLASS, DATASET)
             noise_results.append([noise_std, results_mean_stds])
-            plot_results_noise(directory, noise_results, metrics[0][0], name)
+            plot_results_noise(directory, noise_results, metrics[0][0], dataset_name)
 
 
