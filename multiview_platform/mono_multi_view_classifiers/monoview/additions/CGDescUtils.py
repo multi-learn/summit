@@ -17,7 +17,7 @@ from ... import metrics
 # Used for QarBoost and CGreed
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, n_max_iterations=None, estimators_generator=None,
+    def __init__(self, n_max_iterations=None, estimators_generator="Stumps",
                  random_state=42, self_complemented=True, twice_the_same=False,
                  c_bound_choice=True, random_start=True,
                  n_stumps=1, use_r=True, c_bound_sol=True,

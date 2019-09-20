@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import FuncFormatter
 from scipy.stats import uniform, randint
+from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.model_selection import RandomizedSearchCV
 
 from .. import metrics
@@ -134,7 +135,7 @@ class CustomUniform:
             return unif
 
 
-class BaseMonoviewClassifier(object):
+class BaseMonoviewClassifier(BaseEstimator, ClassifierMixin):
 
     def genBestParams(self, detector):
         return dict(

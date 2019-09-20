@@ -85,7 +85,7 @@ def parseTheArgs(arguments):
                             default=0.2)
     groupClass.add_argument('--CL_nbFolds', metavar='INT', action='store',
                             help='Number of folds in cross validation',
-                            type=int, default=5)
+                            type=int, default=2)
     groupClass.add_argument('--CL_nbClass', metavar='INT', action='store',
                             help='Number of classes, -1 for all', type=int,
                             default=2)
