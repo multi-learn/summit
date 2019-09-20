@@ -578,7 +578,7 @@ def execClassif(arguments):
     args = execution.parseTheArgs(arguments)
     args = configuration.get_the_args(args.path_config)
 
-    os.nice(args.nice)
+    os.nice(args["Base"]["nice"])
     nbCores = args.nbCores
     if nbCores == 1:
         os.environ['OPENBLAS_NUM_THREADS'] = '1'
