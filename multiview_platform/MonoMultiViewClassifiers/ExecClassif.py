@@ -22,7 +22,7 @@ from .Monoview.ExecClassifMonoView import ExecMonoview, ExecMonoview_multicore
 from .utils import GetMultiviewDb as DB
 from .ResultAnalysis import \
     getResults, plot_results_noise  # resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes,
-from .utils import execution, Dataset, Multiclass
+from .utils import execution, Dataset, Multiclass, configuration
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -576,6 +576,7 @@ def execClassif(arguments):
     """Main function to execute the benchmark"""
     start = time.time()
     args = execution.parseTheArgs(arguments)
+    args = configuration.get_the_args(args.path_config)
 
     os.nice(args.nice)
     nbCores = args.nbCores
