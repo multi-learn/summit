@@ -1,0 +1,93 @@
+Classification on Plausible database for ViewNumber0 with Adaboost.
+
+f1_score on train : 0.888888888888889
+f1_score on test : 0.5
+
+Database configuration : 
+	- Database name : Plausible
+	- View name : ViewNumber0	 View shape : (34, 10)
+	- Learning Rate : 0.7941176470588235
+	- Labels used : No, Yes
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- Adaboostwith n_estimators : 36, base_estimator : DecisionTreeClassifier
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.888888888888889
+		- Score on test : 0.5
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.8888888888888888
+		- Score on test : 0.7142857142857143
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.888888888888889
+		- Score on test : 0.5
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.1111111111111111
+		- Score on test : 0.2857142857142857
+	For Jaccard_similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.8888888888888888
+		- Score on test : 0.7142857142857143
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.9230769230769231
+		- Score on test : 1.0
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binaryas average (higher is better)  : 
+		- Score on train : 0.8571428571428571
+		- Score on test : 0.3333333333333333
+	For Zero_one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.11111111111111116
+		- Score on test : 0.2857142857142857
+
+
+ Classification took 0:00:05
+
+ Classifier Interpretation : 
+Feature importances : 
+- Feature index : 4, feature importance : 0.27658467471101356
+- Feature index : 8, feature importance : 0.19573951165821046
+- Feature index : 6, feature importance : 0.18280731014638574
+- Feature index : 5, feature importance : 0.16903462489495508
+- Feature index : 9, feature importance : 0.14798281912021868
+- Feature index : 1, feature importance : 0.027851059469216524
+
+
+ Estimator error | Estimator weight
+0.14814814814814817 | 0.19200155659818333
+0.38586956521739135 | 0.051008835793725844
+0.3936806680792721 | 0.047404005435788536
+0.37228903278857023 | 0.05734244574929592
+0.398272474209923 | 0.04529669094594151
+0.4118750833258546 | 0.03910053641510028
+0.4250797626697292 | 0.033144143615527484
+0.4283316881714667 | 0.03168498826471951
+0.43731652573211927 | 0.02766745835615383
+0.44309561858440544 | 0.025093236538203483
+0.43079080779356566 | 0.030583418971653616
+0.4598352346382873 | 0.01767287917602858
+0.4403809987263011 | 0.026301530454305708
+0.44683031587002653 | 0.023433355212912888
+0.4504914402320589 | 0.021808761265694858
+0.44948714351124863 | 0.022254165345780143
+0.4510907159641257 | 0.02154306884423793
+0.45544866387004146 | 0.01961278848073342
+0.4579218975766406 | 0.01851867364299663
+0.457682022079224 | 0.01862474927377489
+0.4589126743991415 | 0.018080631875525676
+0.46192784192550773 | 0.016748436070227
+0.46368051891303597 | 0.01597461997086425
+0.46341663977769615 | 0.016091098190955406
+0.4644191927879085 | 0.015648611335983997
+0.46679482207116896 | 0.014600603425010093
+0.4665083844499344 | 0.014726929101138075
+0.46861092604470134 | 0.013799880333150077
+0.46781076921909037 | 0.014152624288467577
+0.46770812250454086 | 0.014197880671655722
+0.46966713295776846 | 0.013334366998891612
+0.4713388374510811 | 0.012597821908079565
+0.47014423017452733 | 0.013124130368078453
+0.4718265124910249 | 0.012383008695365834
+0.4722283267600983 | 0.012206033622317026
+0.4721602079158782 | 0.012236034763531318

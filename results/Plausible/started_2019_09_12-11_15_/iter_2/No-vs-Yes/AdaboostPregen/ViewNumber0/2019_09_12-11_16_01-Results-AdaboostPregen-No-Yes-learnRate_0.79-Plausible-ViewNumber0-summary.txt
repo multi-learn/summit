@@ -1,0 +1,63 @@
+Classification on Plausible database for ViewNumber0 with AdaboostPregen.
+
+f1_score on train : 0.888888888888889
+f1_score on test : 0.8
+
+Database configuration : 
+	- Database name : Plausible
+	- View name : ViewNumber0	 View shape : (34, 10)
+	- Learning Rate : 0.7941176470588235
+	- Labels used : No, Yes
+	- Number of cross validation folds : 5
+
+Classifier configuration : 
+	- AdaboostPregenwith n_estimators : 7, base_estimator : DecisionTreeClassifier, n_stumps : 1, random_state : <mtrand.RandomState object at 0x7fc164e80a68>
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.888888888888889
+		- Score on test : 0.8
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.8888888888888888
+		- Score on test : 0.8571428571428571
+	For F-beta score using None as sample_weights, None as labels, 1 as pos_label, binary as average, 1.0 as beta (higher is better) : 
+		- Score on train : 0.888888888888889
+		- Score on test : 0.8
+	For Hamming loss using None as classes (lower is better) : 
+		- Score on train : 0.1111111111111111
+		- Score on test : 0.14285714285714285
+	For Jaccard_similarity score using None as sample_weights (higher is better) : 
+		- Score on train : 0.8888888888888888
+		- Score on test : 0.8571428571428571
+	For Precision score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.9230769230769231
+		- Score on test : 1.0
+	For Recall score using None as sample_weights, None as labels, 1 as pos_label, binaryas average (higher is better)  : 
+		- Score on train : 0.8571428571428571
+		- Score on test : 0.6666666666666666
+	For Zero_one loss using None as sample_weights (lower is better) : 
+		- Score on train : 0.11111111111111116
+		- Score on test : 0.1428571428571429
+
+
+ Classification took 0:00:13
+
+ Classifier Interpretation : 
+Feature importances : 
+- Feature index : 4, feature importance : 0.4126419371335908
+- Feature index : 18, feature importance : 0.28273692167778064
+- Feature index : 16, feature importance : 0.12323805240541051
+- Feature index : 15, feature importance : 0.09734980605803975
+- Feature index : 19, feature importance : 0.08403328272517843
+
+
+ Estimator error | Estimator weight
+0.14814814814814817 | 0.4126419371335908
+0.38586956521739135 | 0.10962611546375052
+0.3936806680792721 | 0.10187876065948587
+0.37228903278857023 | 0.12323805240541051
+0.398272474209923 | 0.09734980605803975
+0.4118750833258546 | 0.08403328272517843
+0.4250797626697292 | 0.07123204555454422
