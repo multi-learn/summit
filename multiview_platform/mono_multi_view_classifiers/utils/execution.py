@@ -20,6 +20,10 @@ def parseTheArgs(arguments):
         fromfile_prefix_chars='@')
 
     groupStandard = parser.add_argument_group('Standard arguments')
+    groupStandard.add_argument('--path_config', metavar='STRING', action='store',
+                               help='Path to the hdf5 dataset or database '
+                                    'folder (default: %(default)s)',
+                               default='../config_files/config.ini')
     groupStandard.add_argument('-log', action='store_true',
                                help='Use option to activate logging to console')
     groupStandard.add_argument('--name', metavar='STRING', nargs='+', action='store',
@@ -907,8 +911,7 @@ def initViews(DATASET, argViews):
         Names of all the available views in the dataset.
     """
     NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
-    print(NB_VIEW)
-    if argViews != [""]:
+    if argViews != ["all"]:
         allowedViews = argViews
         allViews = [str(DATASET.get("View" + str(viewIndex)).attrs["name"])
                     if type(
@@ -962,8 +965,11 @@ def genDirecortiesNames(directory, statsIter):
 
 
 def find_dataset_names(path, type, names):
-    """This function goal is to browse the dataset directory and extarcts all the needed dataset names."""
-    available_file_names = [file_name.strip().split(".")[0] for file_name in os.listdir(path) if file_name.endswith(type)]
+    """This function goal is to browse the dataset directory and extarcts all
+     the needed dataset names."""
+    available_file_names = [file_name.strip().split(".")[0]
+                            for file_name in os.listdir(path)
+                            if file_name.endswith(type)]
     if names == ["all"]:
         return available_file_names
     elif len(names)>1:

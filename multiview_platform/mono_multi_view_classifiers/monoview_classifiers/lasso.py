@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.linear_model import Lasso
+from sklearn.linear_model import Lasso as LassoSK
 
 from ..monoview.monoview_utils import CustomRandint, CustomUniform, \
     BaseMonoviewClassifier
@@ -9,7 +9,7 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-class Lasso(Lasso, BaseMonoviewClassifier):
+class Lasso(LassoSK, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, alpha=1.0,
                  max_iter=10, warm_start=False, **kwargs):

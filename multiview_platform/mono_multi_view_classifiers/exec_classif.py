@@ -22,7 +22,7 @@ from .monoview.exec_classif_mono_view import ExecMonoview, ExecMonoview_multicor
 from .utils import get_multiview_db as DB
 from .result_analysis import \
     getResults, plot_results_noise  # resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes,
-from .utils import execution, dataset, multiclass
+from .utils import execution, dataset, multiclass, configuration
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -59,7 +59,7 @@ def initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args):
             ['./mono_multi_view_classifiers/multiview_classifiers/']) if isPackage]
 
     if "monoview" in CL_type:
-        if monoviewAlgos == ['']:
+        if monoviewAlgos == ['all']:
             benchmark["monoview"] = [name for _, name, isPackage in
                                      pkgutil.iter_modules([
                                                               "./mono_multi_view_classifiers/monoview_classifiers"])
@@ -70,7 +70,7 @@ def initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args):
 
     if "multiview" in CL_type:
         benchmark["multiview"] = {}
-        if multiviewAlgos == [""]:
+        if multiviewAlgos == ["all"]:
             algosMutliview = allMultiviewPackages
         else:
             algosMutliview = multiviewAlgos
@@ -238,9 +238,9 @@ def initMonoviewKWARGS(args, classifiersNames):
                 classifiersName + " is not implemented in monoview_classifiers, "
                                   "please specify the name of the file in monoview_classifiers")
         monoviewKWARGS[
-            classifiersName + "KWARGSInit"] = classifierModule.formatCmdArgs(
-            args)
+            classifiersName + "KWARGSInit"] = args[classifiersName]
     logging.debug("Done:\t Initializing monoview classifiers arguments")
+
     return monoviewKWARGS
 
 
@@ -336,13 +336,13 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None,
 
     logging.debug("Start:\t monoview benchmark")
     resultsMonoview += [
-        ExecMonoview_multicore(directory, args.name, labelsNames,
+        ExecMonoview_multicore(directory, args["Base"]["name"], labelsNames,
                                classificationIndices, kFolds,
-                               coreIndex, args.type, args.pathF, randomState,
+                               coreIndex, args["Base"]["type"], args["Base"]["pathf"], randomState,
                                labels,
                                hyperParamSearch=hyperParamSearch,
                                metrics=metrics,
-                               nIter=args.CL_HPS_iter, **argument)
+                               nIter=args["Classification"]["hps_iter"], **argument)
         for argument in argumentDictionaries["monoview"]]
     logging.debug("Done:\t monoview benchmark")
 
@@ -357,11 +357,11 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None,
 
     logging.debug("Start:\t multiview benchmark")
     resultsMultiview = [
-        ExecMultiview_multicore(directory, coreIndex, args.name,
-                                classificationIndices, kFolds, args.type,
-                                args.pathF, LABELS_DICTIONARY, randomState,
+        ExecMultiview_multicore(directory, coreIndex, args["Base"]["name"],
+                                classificationIndices, kFolds, args["Base"]["type"],
+                                args["Base"]["pathf"], LABELS_DICTIONARY, randomState,
                                 labels, hyperParamSearch=hyperParamSearch,
-                                metrics=metrics, nIter=args.CL_HPS_iter,
+                                metrics=metrics, nIter=args["Classification"]["hps_iter"],
                                 **arguments)
         for arguments in argumentDictionaries["multiview"]]
     logging.debug("Done:\t multiview benchmark")
@@ -392,13 +392,13 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None,
     nbMulticoreToDo = int(math.ceil(float(nbExperiments) / nbCores))
     for stepIndex in range(nbMulticoreToDo):
         resultsMonoview += (Parallel(n_jobs=nbCores)(
-            delayed(ExecMonoview_multicore)(directory, args.name, labelsNames,
+            delayed(ExecMonoview_multicore)(directory, args["Base"]["name"], labelsNames,
                                             classificationIndices, kFolds,
-                                            coreIndex, args.type, args.pathF,
+                                            coreIndex, args["Base"]["type"], args["Base"]["pathf"],
                                             randomState, labels,
                                             hyperParamSearch=hyperParamSearch,
                                             metrics=metrics,
-                                            nIter=args.CL_HPS_iter,
+                                            nIter=args["Classification"]["hps_iter"],
                                             **argumentDictionaries["monoview"][
                                                 coreIndex + stepIndex * nbCores])
             for coreIndex in
@@ -420,14 +420,14 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None,
     nbMulticoreToDo = int(math.ceil(float(nbExperiments) / nbCores))
     for stepIndex in range(nbMulticoreToDo):
         resultsMultiview += Parallel(n_jobs=nbCores)(
-            delayed(ExecMultiview_multicore)(directory, coreIndex, args.name,
+            delayed(ExecMultiview_multicore)(directory, coreIndex, args["Base"]["name"],
                                              classificationIndices, kFolds,
-                                             args.type, args.pathF,
+                                             args["Base"]["type"], args["Base"]["pathf"],
                                              LABELS_DICTIONARY, randomState,
                                              labels,
                                              hyperParamSearch=hyperParamSearch,
                                              metrics=metrics,
-                                             nIter=args.CL_HPS_iter,
+                                             nIter=args["Classification"]["hps_iter"],
                                              **
                                              argumentDictionaries["multiview"][
                                                  stepIndex * nbCores + coreIndex])
@@ -457,11 +457,11 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None,
         X = DATASET.get("View" + str(arguments["viewIndex"]))
         Y = labels
         resultsMonoview += [
-            ExecMonoview(directory, X, Y, args.name, labelsNames,
+            ExecMonoview(directory, X, Y, args["Base"]["name"], labelsNames,
                          classificationIndices, kFolds,
-                         1, args.type, args.pathF, randomState,
+                         1, args["Base"]["type"], args["Base"]["pathf"], randomState,
                          hyperParamSearch=hyperParamSearch, metrics=metrics,
-                         nIter=args.CL_HPS_iter, **arguments)]
+                         nIter=args["Classification"]["hps_iter"], **arguments)]
     logging.debug("Done:\t monoview benchmark")
 
     logging.debug("Start:\t multiview arguments initialization")
@@ -478,11 +478,11 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None,
     resultsMultiview = []
     for arguments in argumentDictionaries["multiview"]:
         resultsMultiview += [
-            ExecMultiview(directory, DATASET, args.name, classificationIndices,
-                          kFolds, 1, args.type,
-                          args.pathF, LABELS_DICTIONARY, randomState, labels,
+            ExecMultiview(directory, DATASET, args["Base"]["name"], classificationIndices,
+                          kFolds, 1, args["Base"]["type"],
+                          args["Base"]["pathf"], LABELS_DICTIONARY, randomState, labels,
                           hyperParamSearch=hyperParamSearch,
-                          metrics=metrics, nIter=args.CL_HPS_iter, **arguments)]
+                          metrics=metrics, nIter=args["Classification"]["hps_iter"], **arguments)]
     logging.debug("Done:\t multiview benchmark")
 
     return [flag, resultsMonoview + resultsMultiview]
@@ -576,65 +576,69 @@ def execClassif(arguments):
     """Main function to execute the benchmark"""
     start = time.time()
     args = execution.parseTheArgs(arguments)
+    args = configuration.get_the_args(args.path_config)
 
-    os.nice(args.nice)
-    nbCores = args.nbCores
+    os.nice(args["Base"]["nice"])
+    nbCores = args["Base"]["nbcores"]
     if nbCores == 1:
         os.environ['OPENBLAS_NUM_THREADS'] = '1'
-    statsIter = args.CL_statsiter
-    hyperParamSearch = args.CL_HPS_type
-    multiclassMethod = args.CL_multiclassMethod
-    CL_type = args.CL_type
-    monoviewAlgos = args.CL_algos_monoview
-    multiviewAlgos = args.CL_algos_multiview
-    dataset_list = execution.find_dataset_names(args.pathF, args.type, args.name)
-    if not args.add_noise:
-        args.noise_std=[0.0]
+    statsIter = args["Classification"]["statsiter"]
+    hyperParamSearch = args["Classification"]["hps_type"]
+    multiclassMethod = args["Classification"]["multiclassmethod"]
+    CL_type = args["Classification"]["type"]
+    monoviewAlgos = args["Classification"]["algos_monoview"]
+    multiviewAlgos = args["Classification"]["algos_multiview"]
+    dataset_list = execution.find_dataset_names(args["Base"]["pathf"],
+                                                args["Base"]["type"],
+                                                args["Base"]["name"])
+    if not args["Base"]["add_noise"]:
+        args["Base"]["noise_std"]=[0.0]
 
-    for name in dataset_list:
+    for dataset_name in dataset_list:
         noise_results = []
-        for noise_std in args.noise_std:
+        for noise_std in args["Base"]["noise_std"]:
 
-            directory = execution.initLogFile(name, args.views, args.CL_type,
-                                              args.log, args.debug, args.label,
-                                              args.res_dir, args.add_noise, noise_std)
-            randomState = execution.initRandomState(args.randomState, directory)
+            directory = execution.initLogFile(dataset_name, args["Base"]["views"], args["Classification"]["type"],
+                                              args["Base"]["log"], args["Base"]["debug"], args["Base"]["label"],
+                                              args["Base"]["res_dir"], args["Base"]["add_noise"], noise_std)
+            randomState = execution.initRandomState(args["Base"]["randomstate"], directory)
             statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,
                                                                         randomState)
 
-            getDatabase = execution.getDatabaseFunction(name, args.type)
+            getDatabase = execution.getDatabaseFunction(dataset_name, args["Base"]["type"])
 
-            DATASET, LABELS_DICTIONARY, datasetname = getDatabase(args.views,
-                                                                  args.pathF, name,
-                                                                  args.CL_nbClass,
-                                                                  args.CL_classes,
+            DATASET, LABELS_DICTIONARY, datasetname = getDatabase(args["Base"]["views"],
+                                                                  args["Base"]["pathf"], dataset_name,
+                                                                  args["Classification"]["nbclass"],
+                                                                  args["Classification"]["classes"],
                                                                   randomState,
-                                                                  args.full,
-                                                                  args.add_noise,
+                                                                  args["Base"]["full"],
+                                                                  args["Base"]["add_noise"],
                                                                   noise_std)
-            args.name = datasetname
+            args["Base"]["name"] = datasetname
 
-            splits = execution.genSplits(DATASET.get("Labels").value, args.CL_split,
+            splits = execution.genSplits(DATASET.get("Labels").value, args["Classification"]["split"],
                                          statsIterRandomStates)
 
             multiclassLabels, labelsCombinations, indicesMulticlass = multiclass.genMulticlassLabels(
                 DATASET.get("Labels").value, multiclassMethod, splits)
 
-            kFolds = execution.genKFolds(statsIter, args.CL_nbFolds,
+            kFolds = execution.genKFolds(statsIter, args["Classification"]["nbfolds"],
                                          statsIterRandomStates)
 
-            datasetFiles = dataset.initMultipleDatasets(args.pathF, args.name, nbCores)
+            datasetFiles = dataset.initMultipleDatasets(args["Base"]["pathf"], args["Base"]["name"], nbCores)
 
             # if not views:
-            #     raise ValueError("Empty views list, modify selected views to match dataset " + args.views)
+            #     raise ValueError("Empty views list, modify selected views to match dataset " + args["Base"]["views)
 
-            views, viewsIndices, allViews = execution.initViews(DATASET, args.views)
+            views, viewsIndices, allViews = execution.initViews(DATASET, args["Base"]["views"])
             viewsDictionary = genViewsDictionnary(DATASET, views)
+            print(viewsDictionary)
             nbViews = len(views)
             NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
-            metrics = [metric.split(":") for metric in args.CL_metrics]
-            if metrics == [[""]]:
+            metrics = [metric.split(":") for metric in args["Classification"]["metrics"]]
+            if metrics == [["all"]]:
                 metricsNames = [name for _, name, isPackage
                                 in pkgutil.iter_modules(
                         ['./mono_multi_view_classifiers/metrics']) if
@@ -642,7 +646,7 @@ def execClassif(arguments):
                                                                "matthews_corrcoef",
                                                                "roc_auc_score"]]
                 metrics = [[metricName] for metricName in metricsNames]
-                metrics = arangeMetrics(metrics, args.CL_metric_princ)
+                metrics = arangeMetrics(metrics, args["Classification"]["metric_princ"])
             for metricIndex, metric in enumerate(metrics):
                 if len(metric) == 1:
                     metrics[metricIndex] = [metric[0], None]
@@ -661,12 +665,11 @@ def execClassif(arguments):
                 argumentDictionaries, benchmark, nbViews,
                 views, viewsIndices)
             nbMulticlass = len(labelsCombinations)
-
             results_mean_stds = execBenchmark(nbCores, statsIter, nbMulticlass,
                                                   benchmarkArgumentDictionaries, splits, directories,
                                                   directory, multiclassLabels, metrics, LABELS_DICTIONARY,
                                                   NB_CLASS, DATASET)
             noise_results.append([noise_std, results_mean_stds])
-            plot_results_noise(directory, noise_results, metrics[0][0], name)
+            plot_results_noise(directory, noise_results, metrics[0][0], dataset_name)
 
 

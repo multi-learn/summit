@@ -30,6 +30,12 @@ def genName(config):
 
 def getBenchmark(benchmark, args=None):
     """Used to generate the list of fusion classifiers for the benchmark"""
+
+    ##### PLaceholder
+    # To aviod problems with the new args, as Multiview will be reworked
+    args = None
+    ###########
+
     fusionModulesNames = [name for _, name, isPackage
                           in pkgutil.iter_modules(['./mono_multi_view_classifiers/multiview_classifiers/fusion/Methods']) if not isPackage]
     fusionMethods = dict((fusionModulesName, [name for _, name, isPackage in

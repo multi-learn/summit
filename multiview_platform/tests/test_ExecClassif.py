@@ -66,7 +66,10 @@ class Test_execBenchmark(unittest.TestCase):
             "multiview_platform/tests/tmp_tests/test_file.hdf5", "w")
         cls.labels = cls.Dataset.create_dataset("Labels",
                                                 data=np.array([0, 1, 2]))
-        cls.argumentDictionaries = [{"a": 4, "args": FakeArg()}]
+        cls.argumentDictionaries = [{"a": 4, "args": {}}]
+        cls.args = {
+            "Base":{"name": "chicken_is_heaven", "type": "type", "pathf": "pathF"},
+            "Classification":{"hps_iter": 1}}
 
     def test_simple(cls):
         res = exec_classif.execBenchmark(1, 2, 3, cls.argumentDictionaries,
@@ -80,8 +83,8 @@ class Test_execBenchmark(unittest.TestCase):
         cls.assertEqual(res, 3)
 
     def test_multiclass_no_iter(cls):
-        cls.argumentDictionaries = [{"a": 10, "args": FakeArg()},
-                                    {"a": 4, "args": FakeArg()}]
+        cls.argumentDictionaries = [{"a": 10, "args": cls.args},
+                                    {"a": 4, "args": cls.args}]
         res = exec_classif.execBenchmark(2, 1, 2, cls.argumentDictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
@@ -93,10 +96,10 @@ class Test_execBenchmark(unittest.TestCase):
         cls.assertEqual(res, 3)
 
     def test_multiclass_and_iter(cls):
-        cls.argumentDictionaries = [{"a": 10, "args": FakeArg()},
-                                    {"a": 4, "args": FakeArg()},
-                                    {"a": 55, "args": FakeArg()},
-                                    {"a": 24, "args": FakeArg()}]
+        cls.argumentDictionaries = [{"a": 10, "args": cls.args},
+                                    {"a": 4, "args": cls.args},
+                                    {"a": 55, "args": cls.args},
+                                    {"a": 24, "args": cls.args}]
         res = exec_classif.execBenchmark(2, 2, 2, cls.argumentDictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
@@ -121,8 +124,10 @@ class Test_execBenchmark(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.Dataset.close()
-        os.remove("multiview_platform/tests/tmp_tests/test_file.hdf5")
-        os.rmdir("multiview_platform/tests/tmp_tests")
+        path = "multiview_platform/Tests/tmp_tests/"
+        for file_name in os.listdir(path):
+            os.remove(os.path.join(path, file_name))
+        os.rmdir(path)
 
 
 def fakeExecMono(directory, name, labelsNames, classificationIndices, kFolds,
@@ -145,14 +150,6 @@ def fakeInitMulti(args, benchmark, views, viewsIndices, argumentDictionaries,
             "multiview": [{"try3": 5}, {"try4": 10}]}
 
 
-class FakeArg(object):
-    def __init__(self):
-        self.name = "chicken_is_heaven"
-        self.type = "type"
-        self.pathF = "pathF"
-        self.CL_HPS_iter = 1
-
-
 class FakeKfold():
     def __init__(self):
         self.n_splits = 2
@@ -165,8 +162,13 @@ class FakeKfold():
 class Test_execOneBenchmark(unittest.TestCase):
 
     @classmethod
-    def setUpClass(cls):
-        os.mkdir("multiview_platform/tests/tmp_tests")
+
+    def setUp(cls):
+        os.mkdir("multiview_platform/Tests/tmp_tests")
+        cls.args = {
+            "Base": {"name": "chicken_is_heaven", "type": "type",
+                     "pathf": "pathF"},
+            "Classification": {"hps_iter": 1}}
 
     def test_simple(cls):
         flag, results = exec_classif.execOneBenchmark(coreIndex=10,
@@ -177,13 +179,13 @@ class Test_execOneBenchmark(unittest.TestCase):
                                                       classificationIndices=(
                                                                [1, 2, 3, 4],
                                                                [0, 5, 6, 7, 8]),
-                                                      args=FakeArg(),
-                                                      kFolds=FakeKfold(),
-                                                      randomState="try",
-                                                      hyperParamSearch="try",
-                                                      metrics="try",
-                                                      argumentDictionaries={
-                                                                   "monoview": [
+                                                               args=cls.args,
+                                                               kFolds=FakeKfold(),
+                                                               randomState="try",
+                                                               hyperParamSearch="try",
+                                                               metrics="try",
+                                                               argumentDictionaries={
+                                                                   "Monoview": [
                                                                        {
                                                                            "try": 0},
                                                                        {
@@ -207,22 +209,28 @@ class Test_execOneBenchmark(unittest.TestCase):
                          ['Multi', {'try3': 5}], ['Multi', {'try4': 10}]])
 
     @classmethod
-    def tearDownClass(cls):
-        os.remove("multiview_platform/tests/tmp_tests/train_indices.csv")
-        os.remove("multiview_platform/tests/tmp_tests/train_labels.csv")
-        os.remove(
-            "multiview_platform/tests/tmp_tests/folds/test_labels_fold_0.csv")
-        os.remove(
-            "multiview_platform/tests/tmp_tests/folds/test_labels_fold_1.csv")
-        os.rmdir("multiview_platform/tests/tmp_tests/folds")
-        os.rmdir("multiview_platform/tests/tmp_tests")
+    def tearDown(cls):
+        path = "multiview_platform/Tests/tmp_tests/"
+        for file_name in os.listdir(path):
+            dir_path = os.path.join(path, file_name)
+            if os.path.isdir(dir_path):
+                for file_name in os.listdir(dir_path):
+                    os.remove(os.path.join(dir_path, file_name))
+                os.rmdir(dir_path)
+            else:
+                os.remove(os.path.join(path, file_name))
+        os.rmdir(path)
 
 
 class Test_execOneBenchmark_multicore(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        os.mkdir("multiview_platform/tests/tmp_tests")
+        os.mkdir("multiview_platform/Tests/tmp_tests")
+        cls.args = {
+            "Base": {"name": "chicken_is_heaven", "type": "type",
+                     "pathf": "pathF"},
+            "Classification": {"hps_iter": 1}}
 
     def test_simple(cls):
         flag, results = exec_classif.execOneBenchmark_multicore(
@@ -230,7 +238,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
             LABELS_DICTIONARY={0: "a", 1: "b"},
             directory="multiview_platform/tests/tmp_tests/",
             classificationIndices=([1, 2, 3, 4], [0, 10, 20, 30, 40]),
-            args=FakeArg(),
+            args=cls.args,
             kFolds=FakeKfold(),
             randomState="try",
             hyperParamSearch="try",
@@ -251,15 +259,18 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
                          ['Multi', {'try3': 5}], ['Multi', {'try4': 10}]])
 
     @classmethod
-    def tearDownClass(cls):
-        os.remove("multiview_platform/tests/tmp_tests/train_indices.csv")
-        os.remove("multiview_platform/tests/tmp_tests/train_labels.csv")
-        os.remove(
-            "multiview_platform/tests/tmp_tests/folds/test_labels_fold_0.csv")
-        os.remove(
-            "multiview_platform/tests/tmp_tests/folds/test_labels_fold_1.csv")
-        os.rmdir("multiview_platform/tests/tmp_tests/folds")
-        os.rmdir("multiview_platform/tests/tmp_tests")
+    def tearDown(cls):
+        path = "multiview_platform/Tests/tmp_tests/"
+        for file_name in os.listdir(path):
+            dir_path = os.path.join(path, file_name)
+            if os.path.isdir(dir_path):
+                for file_name in os.listdir(dir_path):
+                    os.remove(os.path.join(dir_path, file_name))
+                os.rmdir(dir_path)
+            else:
+                os.remove(os.path.join(path, file_name))
+        os.rmdir(path)
+
 
 #
 # class Test_analyzeMulticlass(unittest.TestCase):
