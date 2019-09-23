@@ -311,11 +311,11 @@ class CQBoostv21(CqBoostClassifierv21, BaseMonoviewClassifier):
         return "CQ21"
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"mu": args.CQB2_mu,
-                  "epsilon": args.CQB2_epsilon}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"mu": args.CQB2_mu,
+#                   "epsilon": args.CQB2_epsilon}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

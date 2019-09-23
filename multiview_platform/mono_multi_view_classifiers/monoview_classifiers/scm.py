@@ -67,12 +67,12 @@ class SCM(scm, BaseMonoviewClassifier):
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"model_type": args.SCM_model_type,
-                  "p": args.SCM_p,
-                  "max_rules": args.SCM_max_rules}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"model_type": args.SCM_model_type,
+#                   "p": args.SCM_p,
+#                   "max_rules": args.SCM_max_rules}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

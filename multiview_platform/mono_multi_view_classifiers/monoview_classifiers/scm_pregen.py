@@ -86,13 +86,13 @@ class SCMPregen(scm, BaseMonoviewClassifier, PregenClassifier):
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"model_type": args.SCP_model_type,
-                  "p": args.SCP_p,
-                  "max_rules": args.SCP_max_rules,
-                  "n_stumps": args.SCP_stumps}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"model_type": args.SCP_model_type,
+#                   "p": args.SCP_p,
+#                   "max_rules": args.SCP_max_rules,
+#                   "n_stumps": args.SCP_stumps}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

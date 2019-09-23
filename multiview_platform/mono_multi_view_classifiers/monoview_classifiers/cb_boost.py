@@ -33,11 +33,11 @@ class CBBoost(CBBoostClassifier, BaseMonoviewClassifier):
         return "CBB"
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_stumps": args.CBB_stumps,
-                  "n_max_iterations": args.CBB_n_iter}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"n_stumps": args.CBB_stumps,
+#                   "n_max_iterations": args.CBB_n_iter}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

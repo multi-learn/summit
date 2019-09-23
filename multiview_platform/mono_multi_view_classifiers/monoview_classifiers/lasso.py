@@ -46,11 +46,11 @@ class Lasso(LassoSK, BaseMonoviewClassifier):
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"alpha": args.LA_alpha,
-                  "max_iter": args.LA_n_iter}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"alpha": args.LA_alpha,
+#                   "max_iter": args.LA_n_iter}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

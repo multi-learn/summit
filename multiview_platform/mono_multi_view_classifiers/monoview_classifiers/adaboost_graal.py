@@ -194,11 +194,11 @@ class AdaboostGraalpy(AdaBoostGP, BaseMonoviewClassifier):
         return ""
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_iterations": args.AdG_n_iter,
-                  "n_stumps": args.AdG_stumps, }
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"n_iterations": args.AdG_n_iter,
+#                   "n_stumps": args.AdG_stumps, }
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

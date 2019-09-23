@@ -53,11 +53,11 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
         return "MCG"
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"mu": args.MCG_mu,
-                  "n_stumps_per_attribute": args.MCG_stumps}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"mu": args.MCG_mu,
+#                   "n_stumps_per_attribute": args.MCG_stumps}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

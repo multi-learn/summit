@@ -35,10 +35,10 @@ class QarBoostv3(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         return "QBv3"
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

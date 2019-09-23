@@ -53,13 +53,13 @@ class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
                                 y_test)
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"mu": args.CQB_mu,
-                  "epsilon": args.CQB_epsilon,
-                  "n_stumps": args.CQB_stumps,
-                  "n_max_iterations": args.CQB_n_iter}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"mu": args.CQB_mu,
+#                   "epsilon": args.CQB_epsilon,
+#                   "n_stumps": args.CQB_stumps,
+#                   "n_max_iterations": args.CQB_n_iter}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

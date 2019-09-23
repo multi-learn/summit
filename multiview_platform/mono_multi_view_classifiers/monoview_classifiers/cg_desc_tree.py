@@ -36,12 +36,12 @@ class CGDescTree(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         return "CGDT"
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_stumps": args.CGDT_trees,
-                  "n_max_iterations": args.CGDT_n_iter,
-                  "max_depth": args.CGDT_max_depth}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"n_stumps": args.CGDT_trees,
+#                   "n_max_iterations": args.CGDT_n_iter,
+#                   "max_depth": args.CGDT_max_depth}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

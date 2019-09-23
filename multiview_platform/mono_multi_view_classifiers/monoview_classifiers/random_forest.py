@@ -35,12 +35,12 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_estimators": args.RF_trees,
-                  "max_depth": args.RF_max_depth,
-                  "criterion": args.RF_criterion}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"n_estimators": args.RF_trees,
+#                   "max_depth": args.RF_max_depth,
+#                   "criterion": args.RF_criterion}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

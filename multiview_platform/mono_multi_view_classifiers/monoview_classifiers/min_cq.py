@@ -614,12 +614,12 @@ class MinCQ(MinCqLearner, BaseMonoviewClassifier):
     def get_name_for_fusion(self):
         return "MCQ"
 
-
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"mu": args.MCQ_mu,
-                  "n_stumps_per_attribute": args.MCQ_stumps}
-    return kwargsDict
+#
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"mu": args.MCQ_mu,
+#                   "n_stumps_per_attribute": args.MCQ_stumps}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

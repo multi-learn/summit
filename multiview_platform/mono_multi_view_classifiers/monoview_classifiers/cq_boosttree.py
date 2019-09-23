@@ -55,14 +55,14 @@ class CQBoostTree(ColumnGenerationClassifier, BaseMonoviewClassifier):
                                 y_test)
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"mu": args.CQBT_mu,
-                  "epsilon": args.CQBT_epsilon,
-                  "n_stumps": args.CQBT_trees,
-                  "max_depth": args.CQBT_max_depth,
-                  "n_max_iterations": args.CQBT_n_iter}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"mu": args.CQBT_mu,
+#                   "epsilon": args.CQBT_epsilon,
+#                   "n_stumps": args.CQBT_trees,
+#                   "max_depth": args.CQBT_max_depth,
+#                   "n_max_iterations": args.CQBT_n_iter}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

@@ -35,11 +35,11 @@ class CGreed(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         return "CGr"
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_stumps": args.CGR_stumps,
-                  "n_max_iterations": args.CGR_n_iter}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"n_stumps": args.CGR_stumps,
+#                   "n_max_iterations": args.CGR_n_iter}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

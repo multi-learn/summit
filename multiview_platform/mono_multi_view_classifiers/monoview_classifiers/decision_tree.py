@@ -35,12 +35,12 @@ class DecisionTree(DecisionTreeClassifier, BaseMonoviewClassifier):
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"max_depth": args.DT_depth,
-                  "criterion": args.DT_criterion,
-                  "splitter": args.DT_splitter}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"max_depth": args.DT_depth,
+#                   "criterion": args.DT_criterion,
+#                   "splitter": args.DT_splitter}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

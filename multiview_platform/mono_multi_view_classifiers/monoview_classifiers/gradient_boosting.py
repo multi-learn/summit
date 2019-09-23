@@ -90,10 +90,10 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_estimators": args.GB_n_est, }
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"n_estimators": args.GB_n_est, }
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

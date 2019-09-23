@@ -59,12 +59,12 @@ class MinCQGraalpyTree(RegularizedBinaryMinCqClassifier,
         return "MCG"
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"mu": args.MCGT_mu,
-                  "n_stumps_per_attribute": args.MCGT_trees,
-                  "max_depth": args.MCGT_max_depth}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"mu": args.MCGT_mu,
+#                   "n_stumps_per_attribute": args.MCGT_trees,
+#                   "max_depth": args.MCGT_max_depth}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

@@ -21,10 +21,10 @@ class SVMPoly(SVCClassifier, BaseMonoviewClassifier):
                          CustomRandint(low=2, high=30), [random_state]]
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"C": args.SVMPoly_C, "degree": args.SVMPoly_deg}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"C": args.SVMPoly_C, "degree": args.SVMPoly_deg}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

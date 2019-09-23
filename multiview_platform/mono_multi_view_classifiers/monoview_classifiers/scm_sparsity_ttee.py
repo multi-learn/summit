@@ -102,14 +102,14 @@ class SCMSparsityTree(BaseMonoviewClassifier, PregenClassifier):
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"model_type": args.SCST_model_type,
-                  "p": args.SCST_p,
-                  "max_rules": args.SCST_max_rules,
-                  "n_stumps": args.SCST_trees,
-                  "max_depth": args.SCST_max_depth}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"model_type": args.SCST_model_type,
+#                   "p": args.SCST_p,
+#                   "max_rules": args.SCST_max_rules,
+#                   "n_stumps": args.SCST_trees,
+#                   "max_depth": args.SCST_max_depth}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

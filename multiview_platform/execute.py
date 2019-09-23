@@ -2,12 +2,12 @@
 
 
 def Exec():
-    import Versions
-    Versions.testVersions()
+    import versions
+    versions.testVersions()
     import sys
 
-    from MonoMultiViewClassifiers import ExecClassif
-    ExecClassif.execClassif(sys.argv[1:])
+    from mono_multi_view_classifiers import exec_classif
+    exec_classif.execClassif(sys.argv[1:])
 
 
 if __name__ == "__main__":

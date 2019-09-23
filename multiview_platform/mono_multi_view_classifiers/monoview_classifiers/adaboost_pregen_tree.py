@@ -105,13 +105,13 @@ class AdaboostPregenTree(AdaBoostClassifier, BaseMonoviewClassifier,
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {'n_estimators': args.AdPT_n_est,
-                  'base_estimator': [DecisionTreeClassifier(max_depth=1)],
-                  'n_stumps': args.AdPT_trees,
-                  "max_depth": args.AdPT_max_depth}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {'n_estimators': args.AdPT_n_est,
+#                   'base_estimator': [DecisionTreeClassifier(max_depth=1)],
+#                   'n_stumps': args.AdPT_trees,
+#                   "max_depth": args.AdPT_max_depth}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, random_state):

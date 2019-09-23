@@ -33,12 +33,12 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"loss": args.SGD_loss,
-                  "penalty": args.SGD_penalty,
-                  "alpha": args.SGD_alpha}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"loss": args.SGD_loss,
+#                   "penalty": args.SGD_penalty,
+#                   "alpha": args.SGD_alpha}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

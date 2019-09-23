@@ -89,14 +89,14 @@ class SCMPregenTree(scm, BaseMonoviewClassifier, PregenClassifier):
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"model_type": args.SCPT_model_type,
-                  "p": args.SCPT_p,
-                  "max_rules": args.SCPT_max_rules,
-                  "n_stumps": args.SCPT_trees,
-                  "max_depth": args.SCPT_max_depth}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"model_type": args.SCPT_model_type,
+#                   "p": args.SCPT_p,
+#                   "max_rules": args.SCPT_max_rules,
+#                   "n_stumps": args.SCPT_trees,
+#                   "max_depth": args.SCPT_max_depth}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

@@ -70,13 +70,13 @@ class DecisionTreePregen(DecisionTreeClassifier, BaseMonoviewClassifier,
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"max_depth": args.DTP_depth,
-                  "criterion": args.DTP_criterion,
-                  "splitter": args.DTP_splitter,
-                  "n_stumps": args.DTP_stumps}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"max_depth": args.DTP_depth,
+#                   "criterion": args.DTP_criterion,
+#                   "splitter": args.DTP_splitter,
+#                   "n_stumps": args.DTP_stumps}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

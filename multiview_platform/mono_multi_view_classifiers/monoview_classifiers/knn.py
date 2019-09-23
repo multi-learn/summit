@@ -35,13 +35,13 @@ class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
         return interpretString
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_neighbors": args.KNN_neigh,
-                  "weights": args.KNN_weights,
-                  "algorithm": args.KNN_algo,
-                  "p": args.KNN_p}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"n_neighbors": args.KNN_neigh,
+#                   "weights": args.KNN_weights,
+#                   "algorithm": args.KNN_algo,
+#                   "p": args.KNN_p}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

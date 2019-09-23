@@ -102,14 +102,14 @@ class SCMSparsity(BaseMonoviewClassifier, PregenClassifier):
         np.savetxt(directory + "train_metrics.csv", self.train_metrics)
         return interpretString
 
-
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"model_type": args.SCS_model_type,
-                  "p": args.SCS_p,
-                  "max_rules": args.SCS_max_rules,
-                  "n_stumps": args.SCS_stumps}
-    return kwargsDict
+#
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"model_type": args.SCS_model_type,
+#                   "p": args.SCS_p,
+#                   "max_rules": args.SCS_max_rules,
+#                   "n_stumps": args.SCS_stumps}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

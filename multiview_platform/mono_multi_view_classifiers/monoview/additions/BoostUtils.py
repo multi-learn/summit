@@ -65,8 +65,6 @@ class DecisionStumpClassifier(BaseEstimator, ClassifierMixin):
 
         """
         check_is_fitted(self, 'classes_')
-        import pdb;
-        pdb.set_trace()
         return self.le_.inverse_transform(
             np.argmax(self.predict_proba(X), axis=1))
 

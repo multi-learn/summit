@@ -35,11 +35,11 @@ class CGDesc(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         return "CGD"
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"n_stumps": args.CGD_stumps,
-                  "n_max_iterations": args.CGD_n_iter}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"n_stumps": args.CGD_stumps,
+#                   "n_max_iterations": args.CGD_n_iter}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):

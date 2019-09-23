@@ -18,10 +18,10 @@ class SVMRBF(SVCClassifier, BaseMonoviewClassifier):
         self.distribs = [CustomUniform(loc=0, state=1), [random_state]]
 
 
-def formatCmdArgs(args):
-    """Used to format kwargs for the parsed args"""
-    kwargsDict = {"C": args.SVMRBF_C}
-    return kwargsDict
+# def formatCmdArgs(args):
+#     """Used to format kwargs for the parsed args"""
+#     kwargsDict = {"C": args.SVMRBF_C}
+#     return kwargsDict
 
 
 def paramsToSet(nIter, randomState):
