@@ -1,7 +1,0 @@
-2019-09-12 11:15:36,540 DEBUG: Start:	 Creating 2 temporary datasets for multiprocessing
-2019-09-12 11:15:36,540 WARNING:  WARNING : /!\ This may use a lot of HDD storage space : 1.82578125e-05 Gbytes /!\ 
-2019-09-12 11:15:36,541 WARNING: You have 15 seconds to stop the dataset copy by typing n
-2019-09-12 11:15:51,552 DEBUG: Start:	 Creating datasets for multiprocessing
-2019-09-12 11:15:51,556 DEBUG: Start:	 Initializing Monoview classifiers arguments
-2019-09-12 11:15:51,557 DEBUG: Done:	 Initializing Monoview classifiers arguments
-2019-09-12 11:15:51,570 DEBUG: Start:	 Executing all the needed biclass benchmarks
