@@ -3,7 +3,7 @@ import unittest
 
 import numpy as np
 
-from ...MonoMultiViewClassifiers.utils import configuration
+from multiview_platform.MonoMultiViewClassifiers.utils import configuration
 
 class Test_get_the_args(unittest.TestCase):
 
