@@ -3,10 +3,10 @@ TODO
 .idea/**
 ipynb/.ipynb_checkpoints/**
 docs/source/monomulti/.ipynb_checkpoints/**
-Results/**
+results/**
 Data/**
 multiview_platform/MonoMultiviewClassifiers/Results/*
-multiview_platform/Tests/temp_tests/**
+multiview_platform/tests/temp_tests/**
 multiview-machine-learning-omis.iml
 multiview_platform.egg-inf*
 build*
