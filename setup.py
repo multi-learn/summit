@@ -7,7 +7,8 @@ import multiview_platform
 
 # Ceci n'est qu'un appel de fonction. Mais il est trèèèèèèèèèèès long
 # et il comporte beaucoup de paramètres
-setup(
+def setup_package():
+    setup(
 
     # le nom de votre bibliothèque, tel qu'il apparaitre sur pypi
     name='multiview_platform',
@@ -92,3 +93,6 @@ setup(
     # ext_modules=cythonize(
     #     "multiview_platform/mono_multi_view_classifiers/monoview/additions/_custom_criterion.pyx"),
 )
+
+if __name__ == "__main__":
+    setup_package()
