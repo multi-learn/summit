@@ -124,7 +124,7 @@ class Test_execBenchmark(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.Dataset.close()
-        path = "multiview_platform/Tests/tmp_tests/"
+        path = "multiview_platform/tests/tmp_tests/"
         for file_name in os.listdir(path):
             os.remove(os.path.join(path, file_name))
         os.rmdir(path)
@@ -164,7 +164,7 @@ class Test_execOneBenchmark(unittest.TestCase):
     @classmethod
 
     def setUp(cls):
-        os.mkdir("multiview_platform/Tests/tmp_tests")
+        os.mkdir("multiview_platform/tests/tmp_tests")
         cls.args = {
             "Base": {"name": "chicken_is_heaven", "type": "type",
                      "pathf": "pathF"},
@@ -210,7 +210,7 @@ class Test_execOneBenchmark(unittest.TestCase):
 
     @classmethod
     def tearDown(cls):
-        path = "multiview_platform/Tests/tmp_tests/"
+        path = "multiview_platform/tests/tmp_tests/"
         for file_name in os.listdir(path):
             dir_path = os.path.join(path, file_name)
             if os.path.isdir(dir_path):
@@ -226,7 +226,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        os.mkdir("multiview_platform/Tests/tmp_tests")
+        os.mkdir("multiview_platform/tests/tmp_tests")
         cls.args = {
             "Base": {"name": "chicken_is_heaven", "type": "type",
                      "pathf": "pathF"},
@@ -260,7 +260,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
 
     @classmethod
     def tearDown(cls):
-        path = "multiview_platform/Tests/tmp_tests/"
+        path = "multiview_platform/tests/tmp_tests/"
         for file_name in os.listdir(path):
             dir_path = os.path.join(path, file_name)
             if os.path.isdir(dir_path):

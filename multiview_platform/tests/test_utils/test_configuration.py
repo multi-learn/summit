@@ -8,15 +8,15 @@ from multiview_platform.mono_multi_view_classifiers.utils import configuration
 class Test_get_the_args(unittest.TestCase):
 
     def setUp(self):
-        self.path_to_config_file = "multiview_platform/Tests/tmp_tests/config_temp.ini"
-        os.mkdir("multiview_platform/Tests/tmp_tests")
+        self.path_to_config_file = "multiview_platform/tests/tmp_tests/config_temp.ini"
+        os.mkdir("multiview_platform/tests/tmp_tests")
         config_file = open(self.path_to_config_file, "w")
         config_file.write("[Base]\nfirst_arg = int ; 10\nsecond_arg = list_float ; 12.5 1e-06\n[Classification]\nthird_arg = bool ; yes")
         config_file.close()
 
     def tearDown(self):
-        os.remove("multiview_platform/Tests/tmp_tests/config_temp.ini")
-        os.rmdir("multiview_platform/Tests/tmp_tests")
+        os.remove("multiview_platform/tests/tmp_tests/config_temp.ini")
+        os.rmdir("multiview_platform/tests/tmp_tests")
 
     def test_file_loading(self):
         config_dict = configuration.get_the_args(self.path_to_config_file)
