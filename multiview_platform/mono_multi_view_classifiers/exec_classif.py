@@ -343,7 +343,7 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None,
                                hyperParamSearch=hyperParamSearch,
                                metrics=metrics,
                                nIter=args["Classification"]["hps_iter"], **argument)
-        for argument in argumentDictionaries["monoview"]]
+        for argument in argumentDictionaries["Monoview"]]
     logging.debug("Done:\t monoview benchmark")
 
     logging.debug("Start:\t multiview arguments initialization")
