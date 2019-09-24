@@ -2,11 +2,11 @@ Mono and mutliview classification
 =================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    :caption: Contents:
 
    monomulti/metrics
-   monomulti/monoview_classifier
+   monomulti/monoview_classifier/classifiers
    monomulti/multiview_classifier
    monomulti/exec_classif
    monomulti/multiview_classifiers/diversity_fusion

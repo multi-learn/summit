@@ -412,7 +412,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
 #                                    help='Name of the views selected for learning (default: %(default)s)',
 #                                    default=[''])
 #         groupStandard.add_argument('--pathF', metavar='STRING', action='store', help='Path to the views (default: %(default)s)',
-#                                    default='/home/bbauvin/Documents/Data/Data_multi_omics/')
+#                                    default='/home/bbauvin/Documents/data/Data_multi_omics/')
 #         groupStandard.add_argument('--nice', metavar='INT', action='store', type=int,
 #                                    help='Niceness for the process', default=0)
 #         groupStandard.add_argument('--randomState', metavar='STRING', action='store',

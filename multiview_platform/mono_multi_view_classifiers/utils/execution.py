@@ -45,7 +45,7 @@ def parseTheArgs(arguments):
 #     groupStandard.add_argument('--pathF', metavar='STRING', action='store',
 #                                help='Path to the hdf5 dataset or database '
 #                                     'folder (default: %(default)s)',
-#                                default='../Data/')
+#                                default='../data/')
 #     groupStandard.add_argument('--nice', metavar='INT', action='store',
 #                                type=int,
 #                                help='Niceness for the processes', default=0)

@@ -273,7 +273,7 @@ class MonoviewResult(object):
 #     return trainingExamplesIndices
 
 
-##### Generating Test and Train Data
+##### Generating Test and Train data
 # def calcTrainTestOwn(X,y,split):
 #
 #     classLabels = pd.Series(y)
@@ -383,7 +383,7 @@ class MonoviewResult(object):
 # This means the oob method is n_observations/3 times faster to train then the leave-one-out method.
 #
 
-# X_test: Test Data
+# X_test: Test data
 # y_test: Test Labels
 # num_estimators: number of trees
 # def MonoviewClassifRandomForest(X_train, y_train, nbFolds=4, nbCores=1, **kwargs):

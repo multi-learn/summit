@@ -255,7 +255,7 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
 #                                help='Name of the view used', default='View0')
 #     groupStandard.add_argument('--pathF', metavar='STRING', action='store',
 #                                help='Path to the database hdf5 file',
-#                                default='../../../Data/Plausible')
+#                                default='../../../data/Plausible')
 #     groupStandard.add_argument('--directory', metavar='STRING', action='store',
 #                                help='Path of the output directory', default='')
 #     groupStandard.add_argument('--labelsNames', metavar='STRING',

@@ -14,7 +14,7 @@ import pandas as pd  # for Series and DataFrames
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, \
     HPacker  # to generate the Annotations in plot
 from pylab import rcParams  # to change size of plot
-from scipy.interpolate import interp1d  # to Interpolate Data
+from scipy.interpolate import interp1d  # to Interpolate data
 from sklearn import metrics  # For stastics on classification
 
 # Import own modules
@@ -122,8 +122,8 @@ def showScoreTime(directory, filename, store, resScore, resTime, rangeX,
     ax1.add_artist(anchored_box)
     fig.subplots_adjust(top=0.7)
 
-    ax1.legend(['Score Data', 'Score Interpolated'], loc='upper left')
-    ax2.legend(['Time Data', 'Time Interpolated'], loc='lower right')
+    ax1.legend(['Score data', 'Score Interpolated'], loc='upper left')
+    ax2.legend(['Time data', 'Time Interpolated'], loc='lower right')
 
     plt.title(fig_desc, fontsize=18)
 

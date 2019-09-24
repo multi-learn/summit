@@ -1,6 +1,6 @@
 Welcome to the exection documentation
 =====================================
 
-.. automodule:: multiview_platform.Exec
+.. automodule:: multiview_platform.execute
    :members:
 

@@ -1,7 +1,7 @@
 """This is the execution module, used to execute the code"""
 
 
-def Exec():
+def exec():
     import versions
     versions.testVersions()
     import sys
@@ -11,4 +11,4 @@ def Exec():
 
 
 if __name__ == "__main__":
-    Exec()
+    exec()

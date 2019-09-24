@@ -18,11 +18,12 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
 
-
+sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('../../multiview_platform'))
+sys.path.insert(0, os.path.abspath('../..'))
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -37,17 +38,18 @@ add_module_names = False
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
-              'sphinx.ext.doctest',
-              'sphinx.ext.intersphinx',
-              'sphinx.ext.todo',
-              'nbsphinx',
-              'sphinx.ext.coverage',
-              'sphinx.ext.mathjax',
-              'sphinx.ext.ifconfig',
-              'sphinx.ext.viewcode',
-              'sphinx.ext.githubpages',
-              'sphinx.ext.napoleon',
-              'm2r',]
+#              'sphinx.ext.doctest',
+#              'sphinx.ext.intersphinx',
+#              'sphinx.ext.todo',
+#              'nbsphinx',
+             'sphinx.ext.coverage',
+             'sphinx.ext.imgmath',
+#              'sphinx.ext.mathjax',
+#              'sphinx.ext.ifconfig',
+#              'sphinx.ext.viewcode',
+#              'sphinx.ext.githubpages',
+               'sphinx.ext.napoleon',
+               'm2r',]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -55,12 +57,12 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-source_suffix = {'.rst': 'restructuredtext', '.md': 'markdown'}
+# source_suffix = {'.rst': 'restructuredtext', '.md': 'markdown'}
 # source_suffix = '.rst'
-# source_suffix = ['.rst', '.md']
+source_suffix = ['.rst', '.md']
 
 # source_parsers = {
-#    '.md': CommonMarkParser,
+#  '.md': CommonMarkParser,
 # }
 
 # The master toctree document.
@@ -103,7 +105,8 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+# html_theme = 'sphinx_rtd_theme'
+html_theme = 'classic'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

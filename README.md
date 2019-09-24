@@ -1,5 +1,5 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
-[![Build Status](https://travis-ci.com/babau1/multiview-machine-learning-omis.svg?token=pjoowx3poApRRtwqHTpd&branch=master)](https://travis-ci.com/babau1/multiview-machine-learning-omis)
+[![Build Status](https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/badges/develop/build.svg)](https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/badges/develop/build.svg)
 # Mono- and Multi-view classification benchmark
 
 This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- & multi-view algorithms capacity to classify it correctly.
@@ -21,30 +21,36 @@ And the following python modules :
 * [h5py](https://www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to spare RAM
 * [pickle](https://docs.python.org/3/library/pickle.html) - Used to store some results
 * ([graphviz](https://pypi.python.org/pypi/graphviz) - Used for decision tree interpretation)
-* [pandas]
+* [pandas](https://pandas.pydata.org/) - 
 
-They are all tested in  `multiview-machine-mearning-omis/multiview_platform/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `Exec` script
+They are all tested in  `multiview-machine-mearning-omis/multiview_platform/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `execute` script
 
 ### Installing
 
-No installation is needed, just the prerequisites.
+cd in the project directory
+and install the project
+
+```
+cd multiview-machine-learning-omis
+pip install -e .
+```
 
 ### Running on simulated data
 
 In order to run it you'll need to try on **simulated** data with the command
 ```
 cd multiview-machine-learning-omis/multiview_platform
-python Exec.py -log
+python execute.py -log
 ```
-Results will be stored in `multiview-machine-learning-omis/multiview_platform/MonoMultiViewClassifiers/Results/`
+Results will be stored in `multiview-machine-learning-omis/multiview_platform/mono_multi_view_classifiers/results/`
 
 If you want to run a multiclass (one versus one) benchmark on simulated data, use : 
 ```
 cd multiview-machine-learning-omis/multiview_platform
-python Exec.py -log --CL_nbClass 3
+python execute.py -log --CL_nbClass 3
 ```
 
-If no path is specified, simulated hdf5 datasets are stored in `multiview-machine-learning-omis/Data`
+If no path is specified, simulated hdf5 datasets are stored in `multiview-machine-learning-omis/data`
 
 
 ### Discovering the arguments
@@ -52,7 +58,7 @@ If no path is specified, simulated hdf5 datasets are stored in `multiview-machin
 In order to see all the arguments of this script, their description and default values run :
 ```
 cd multiview-machine-learning-omis/multiview_platform
-python Exec.py -h
+python execute.py -h
 ```
 The arguments can be passed through a file using `python Exec.py @<path_to_doc>`
 The file must be formatted with one newline instead of each space : 
@@ -67,14 +73,14 @@ SVM
 ```
 
 Moreover, for Monoview algorithms (Multiview is still WIP), it is possible to pass multiple arguments instead of just one. 
-Thus, executing `python Exec.py --RF_trees 10 100 --RF_max_depth 3 4 --RF_criterion entropy` will result in the generation of several classifiers called
+Thus, executing `python execute.py --RF_trees 10 100 --RF_max_depth 3 4 --RF_criterion entropy` will result in the generation of several classifiers called
 `RandomForest_10_3_entropy`, with 10 trees and a max depth of 3, `RandomForest_10_4_entropy`, with 10 tress and a max depth of 4,  `RandomForest_100_3_entropy`, `RandomForest_100_4_entropy` to test all the passed arguments combinations. 
  
 
 
-### Understanding `Results/` architecture
+### Understanding `results/` architecture
 
-Results are stored in `multiview-machine-learning-omis/multiview_platform/MonoMultiViewClassifiers/Results/`
+Results are stored in `multiview-machine-learning-omis/multiview_platform/mono_multi_view_classifiers/results/`
 A directory will be created with the name of the database used to run the script.
 For each time the script is run, a new directory named after the running date and time will be created.
 In that directory:
@@ -82,7 +88,7 @@ In that directory:
 * If it is run with one iteration, the iteration results will be stored in the current directory
 
 The results for each iteration are graphs plotting the classifiers scores and the classifiers config and results are stored in a directory of their own.
-To explore the results run the `Exec` script and go in `multiview-machine-learning-omis/multiview_platform/MonoMultiViewClassifiers/Results/Plausible/`
+To explore the results run the `execute` script and go in `multiview-machine-learning-omis/multiview_platform/mono_multi_view_classifiers/results/plausible/`
 
 ### Dataset compatibility
 
@@ -118,7 +124,7 @@ One group for the additional data called `Metadata` containing at least 3 attrib
 In order to run the script on your dataset you need to use : 
 ```
 cd multiview-machine-learning-omis/multiview_platform
-python Exec.py -log --name <your_dataset_name> --type <.cvs_or_.hdf5> --pathF <path_to_your_dataset>
+python execute.py -log --name <your_dataset_name> --type <.cvs_or_.hdf5> --pathF <path_to_your_dataset>
 ```
 This will run a full benchmark on your dataset using all available views and labels.
  

@@ -610,25 +610,25 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 # def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES, randomState):
 #     datasetFile = h5py.File(path + "MultiOmic.hdf5", "w")
 #
-#     logging.debug("Start:\t Getting Methylation Data")
+#     logging.debug("Start:\t Getting Methylation data")
 #     methylData = np.genfromtxt(path + "matching_methyl.csv", delimiter=',')
 #     methylDset = datasetFile.create_dataset("View0", methylData.shape)
 #     methylDset[...] = methylData
 #     methylDset.attrs["name"] = "Methyl"
 #     methylDset.attrs["sparse"] = False
 #     methylDset.attrs["binary"] = False
-#     logging.debug("Done:\t Getting Methylation Data")
+#     logging.debug("Done:\t Getting Methylation data")
 #
-#     logging.debug("Start:\t Getting MiRNA Data")
+#     logging.debug("Start:\t Getting MiRNA data")
 #     mirnaData = np.genfromtxt(path + "matching_mirna.csv", delimiter=',')
 #     mirnaDset = datasetFile.create_dataset("View1", mirnaData.shape)
 #     mirnaDset[...] = mirnaData
 #     mirnaDset.attrs["name"] = "MiRNA_"
 #     mirnaDset.attrs["sparse"] = False
 #     mirnaDset.attrs["binary"] = False
-#     logging.debug("Done:\t Getting MiRNA Data")
+#     logging.debug("Done:\t Getting MiRNA data")
 #
-#     logging.debug("Start:\t Getting RNASeq Data")
+#     logging.debug("Start:\t Getting RNASeq data")
 #     rnaseqData = np.genfromtxt(path + "matching_rnaseq.csv", delimiter=',')
 #     uselessRows = []
 #     for rowIndex, row in enumerate(np.transpose(rnaseqData)):
@@ -640,16 +640,16 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     rnaseqDset.attrs["name"] = "RNASeq_"
 #     rnaseqDset.attrs["sparse"] = False
 #     rnaseqDset.attrs["binary"] = False
-#     logging.debug("Done:\t Getting RNASeq Data")
+#     logging.debug("Done:\t Getting RNASeq data")
 #
-#     logging.debug("Start:\t Getting Clinical Data")
+#     logging.debug("Start:\t Getting Clinical data")
 #     clinical = np.genfromtxt(path + "clinicalMatrix.csv", delimiter=',')
 #     clinicalDset = datasetFile.create_dataset("View3", clinical.shape)
 #     clinicalDset[...] = clinical
 #     clinicalDset.attrs["name"] = "Clinic"
 #     clinicalDset.attrs["sparse"] = False
 #     clinicalDset.attrs["binary"] = False
-#     logging.debug("Done:\t Getting Clinical Data")
+#     logging.debug("Done:\t Getting Clinical data")
 #
 #     labelFile = open(path + 'brca_labels_triple-negatif.csv')
 #     labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
@@ -849,11 +849,11 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 # def getKMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 #     datasetFile = h5py.File(path + "KMultiOmic.hdf5", "w")
 #
-#     # logging.debug("Start:\t Getting Methylation Data")
+#     # logging.debug("Start:\t Getting Methylation data")
 #     methylData = np.genfromtxt(path + "matching_methyl.csv", delimiter=',')
-#     logging.debug("Done:\t Getting Methylation Data")
+#     logging.debug("Done:\t Getting Methylation data")
 #
-#     logging.debug("Start:\t Getting Sorted Methyl Data")
+#     logging.debug("Start:\t Getting Sorted Methyl data")
 #     Methyl = methylData
 #     sortedMethylGeneIndices = np.zeros(methylData.shape, dtype=int)
 #     MethylRanking = np.zeros(methylData.shape, dtype=int)
@@ -864,9 +864,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #         sortedMethylGeneIndices[exampleIndex] = sortedMethylIndicesArray
 #         for geneIndex in range(Methyl.shape[1]):
 #             MethylRanking[exampleIndex, sortedMethylIndicesArray[geneIndex]] = geneIndex
-#     logging.debug("Done:\t Getting Sorted Methyl Data")
+#     logging.debug("Done:\t Getting Sorted Methyl data")
 #
-#     logging.debug("Start:\t Getting Binarized Methyl Data")
+#     logging.debug("Start:\t Getting Binarized Methyl data")
 #     k = findClosestPowerOfTwo(9) - 1
 #     try:
 #         factorizedLeftBaseMatrix = np.genfromtxt(
@@ -884,9 +884,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     bMethylDset.attrs["name"] = "BMethyl" + str(k)
 #     bMethylDset.attrs["sparse"] = False
 #     bMethylDset.attrs["binary"] = True
-#     logging.debug("Done:\t Getting Binarized Methyl Data")
+#     logging.debug("Done:\t Getting Binarized Methyl data")
 #
-#     logging.debug("Start:\t Getting Binned Methyl Data")
+#     logging.debug("Start:\t Getting Binned Methyl data")
 #     lenBins = 3298
 #     nbBins = 9
 #     overlapping = 463
@@ -906,9 +906,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     binnedMethyl.attrs["name"] = "bMethyl" + str(nbBins)
 #     binnedMethyl.attrs["sparse"] = False
 #     binnedMethyl.attrs["binary"] = True
-#     logging.debug("Done:\t Getting Binned Methyl Data")
+#     logging.debug("Done:\t Getting Binned Methyl data")
 #
-#     logging.debug("Start:\t Getting Binarized Methyl Data")
+#     logging.debug("Start:\t Getting Binarized Methyl data")
 #     k = findClosestPowerOfTwo(17) - 1
 #     try:
 #         factorizedLeftBaseMatrix = np.genfromtxt(
@@ -926,9 +926,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     bMethylDset.attrs["name"] = "BMethyl" + str(k)
 #     bMethylDset.attrs["sparse"] = False
 #     bMethylDset.attrs["binary"] = True
-#     logging.debug("Done:\t Getting Binarized Methyl Data")
+#     logging.debug("Done:\t Getting Binarized Methyl data")
 #
-#     logging.debug("Start:\t Getting Binned Methyl Data")
+#     logging.debug("Start:\t Getting Binned Methyl data")
 #     lenBins = 2038
 #     nbBins = 16
 #     overlapping = 442
@@ -948,7 +948,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     binnedMethyl.attrs["name"] = "bMethyl" + str(nbBins)
 #     binnedMethyl.attrs["sparse"] = False
 #     binnedMethyl.attrs["binary"] = True
-#     logging.debug("Done:\t Getting Binned Methyl Data")
+#     logging.debug("Done:\t Getting Binned Methyl data")
 #
 #     labelFile = open(path + 'brca_labels_triple-negatif.csv')
 #     labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
@@ -977,16 +977,16 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 # def getModifiedMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES):
 #     datasetFile = h5py.File(path + "ModifiedMultiOmic.hdf5", "w")
 #
-#     logging.debug("Start:\t Getting Methylation Data")
+#     logging.debug("Start:\t Getting Methylation data")
 #     methylData = np.genfromtxt(path + "matching_methyl.csv", delimiter=',')
 #     methylDset = datasetFile.create_dataset("View0", methylData.shape)
 #     methylDset[...] = methylData
 #     methylDset.attrs["name"] = "Methyl_"
 #     methylDset.attrs["sparse"] = False
 #     methylDset.attrs["binary"] = False
-#     logging.debug("Done:\t Getting Methylation Data")
+#     logging.debug("Done:\t Getting Methylation data")
 #
-#     logging.debug("Start:\t Getting Sorted Methyl Data")
+#     logging.debug("Start:\t Getting Sorted Methyl data")
 #     Methyl = datasetFile["View0"][...]
 #     sortedMethylGeneIndices = np.zeros(datasetFile.get("View0").shape, dtype=int)
 #     MethylRanking = np.zeros(datasetFile.get("View0").shape, dtype=int)
@@ -1001,9 +1001,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     mMethylDset.attrs["name"] = "SMethyl"
 #     mMethylDset.attrs["sparse"] = False
 #     mMethylDset.attrs["binary"] = False
-#     logging.debug("Done:\t Getting Sorted Methyl Data")
+#     logging.debug("Done:\t Getting Sorted Methyl data")
 #
-#     logging.debug("Start:\t Getting Binarized Methyl Data")
+#     logging.debug("Start:\t Getting Binarized Methyl data")
 #     k = findClosestPowerOfTwo(58) - 1
 #     try:
 #         factorizedLeftBaseMatrix = np.genfromtxt(
@@ -1021,9 +1021,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     bMethylDset.attrs["name"] = "BMethyl"
 #     bMethylDset.attrs["sparse"] = False
 #     bMethylDset.attrs["binary"] = True
-#     logging.debug("Done:\t Getting Binarized Methyl Data")
+#     logging.debug("Done:\t Getting Binarized Methyl data")
 #
-#     logging.debug("Start:\t Getting Binned Methyl Data")
+#     logging.debug("Start:\t Getting Binned Methyl data")
 #     lenBins = 2095
 #     nbBins = 58
 #     overlapping = 1676
@@ -1043,18 +1043,18 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     binnedMethyl.attrs["name"] = "bMethyl"
 #     binnedMethyl.attrs["sparse"] = False
 #     binnedMethyl.attrs["binary"] = True
-#     logging.debug("Done:\t Getting Binned Methyl Data")
+#     logging.debug("Done:\t Getting Binned Methyl data")
 #
-#     logging.debug("Start:\t Getting MiRNA Data")
+#     logging.debug("Start:\t Getting MiRNA data")
 #     mirnaData = np.genfromtxt(path + "matching_mirna.csv", delimiter=',')
 #     mirnaDset = datasetFile.create_dataset("View1", mirnaData.shape)
 #     mirnaDset[...] = mirnaData
 #     mirnaDset.attrs["name"] = "MiRNA__"
 #     mirnaDset.attrs["sparse"] = False
 #     mirnaDset.attrs["binary"] = False
-#     logging.debug("Done:\t Getting MiRNA Data")
+#     logging.debug("Done:\t Getting MiRNA data")
 #
-#     logging.debug("Start:\t Getting Sorted MiRNA Data")
+#     logging.debug("Start:\t Getting Sorted MiRNA data")
 #     MiRNA = datasetFile["View1"][...]
 #     sortedMiRNAGeneIndices = np.zeros(datasetFile.get("View1").shape, dtype=int)
 #     MiRNARanking = np.zeros(datasetFile.get("View1").shape, dtype=int)
@@ -1069,9 +1069,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     mmirnaDset.attrs["name"] = "SMiRNA_"
 #     mmirnaDset.attrs["sparse"] = False
 #     mmirnaDset.attrs["binary"] = False
-#     logging.debug("Done:\t Getting Sorted MiRNA Data")
+#     logging.debug("Done:\t Getting Sorted MiRNA data")
 #
-#     logging.debug("Start:\t Getting Binarized MiRNA Data")
+#     logging.debug("Start:\t Getting Binarized MiRNA data")
 #     k = findClosestPowerOfTwo(517) - 1
 #     try:
 #         factorizedLeftBaseMatrix = np.genfromtxt(
@@ -1089,9 +1089,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     bmirnaDset.attrs["name"] = "BMiRNA_"
 #     bmirnaDset.attrs["sparse"] = False
 #     bmirnaDset.attrs["binary"] = True
-#     logging.debug("Done:\t Getting Binarized MiRNA Data")
+#     logging.debug("Done:\t Getting Binarized MiRNA data")
 #
-#     logging.debug("Start:\t Getting Binned MiRNA Data")
+#     logging.debug("Start:\t Getting Binned MiRNA data")
 #     lenBins = 14
 #     nbBins = 517
 #     overlapping = 12
@@ -1111,9 +1111,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     binnedMiRNA.attrs["name"] = "bMiRNA_"
 #     binnedMiRNA.attrs["sparse"] = False
 #     binnedMiRNA.attrs["binary"] = True
-#     logging.debug("Done:\t Getting Binned MiRNA Data")
+#     logging.debug("Done:\t Getting Binned MiRNA data")
 #
-#     logging.debug("Start:\t Getting RNASeq Data")
+#     logging.debug("Start:\t Getting RNASeq data")
 #     rnaseqData = np.genfromtxt(path + "matching_rnaseq.csv", delimiter=',')
 #     uselessRows = []
 #     for rowIndex, row in enumerate(np.transpose(rnaseqData)):
@@ -1125,9 +1125,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     rnaseqDset.attrs["name"] = "RNASeq_"
 #     rnaseqDset.attrs["sparse"] = False
 #     rnaseqDset.attrs["binary"] = False
-#     logging.debug("Done:\t Getting RNASeq Data")
+#     logging.debug("Done:\t Getting RNASeq data")
 #
-#     logging.debug("Start:\t Getting Sorted RNASeq Data")
+#     logging.debug("Start:\t Getting Sorted RNASeq data")
 #     RNASeq = datasetFile["View2"][...]
 #     sortedRNASeqGeneIndices = np.zeros(datasetFile.get("View2").shape, dtype=int)
 #     RNASeqRanking = np.zeros(datasetFile.get("View2").shape, dtype=int)
@@ -1142,9 +1142,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     mrnaseqDset.attrs["name"] = "SRNASeq"
 #     mrnaseqDset.attrs["sparse"] = False
 #     mrnaseqDset.attrs["binary"] = False
-#     logging.debug("Done:\t Getting Sorted RNASeq Data")
+#     logging.debug("Done:\t Getting Sorted RNASeq data")
 #
-#     logging.debug("Start:\t Getting Binarized RNASeq Data")
+#     logging.debug("Start:\t Getting Binarized RNASeq data")
 #     k = findClosestPowerOfTwo(100) - 1
 #     try:
 #         factorizedLeftBaseMatrix = np.genfromtxt(
@@ -1163,9 +1163,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     brnaseqDset.attrs["name"] = "BRNASeq"
 #     brnaseqDset.attrs["sparse"] = False
 #     brnaseqDset.attrs["binary"] = True
-#     logging.debug("Done:\t Getting Binarized RNASeq Data")
+#     logging.debug("Done:\t Getting Binarized RNASeq data")
 #
-#     logging.debug("Start:\t Getting Binned RNASeq Data")
+#     logging.debug("Start:\t Getting Binned RNASeq data")
 #     lenBins = 986
 #     nbBins = 142
 #     overlapping = 493
@@ -1185,18 +1185,18 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     binnedRNASeq.attrs["name"] = "bRNASeq"
 #     binnedRNASeq.attrs["sparse"] = False
 #     binnedRNASeq.attrs["binary"] = True
-#     logging.debug("Done:\t Getting Binned RNASeq Data")
+#     logging.debug("Done:\t Getting Binned RNASeq data")
 #
-#     logging.debug("Start:\t Getting Clinical Data")
+#     logging.debug("Start:\t Getting Clinical data")
 #     clinical = np.genfromtxt(path + "clinicalMatrix.csv", delimiter=',')
 #     clinicalDset = datasetFile.create_dataset("View3", clinical.shape)
 #     clinicalDset[...] = clinical
 #     clinicalDset.attrs["name"] = "Clinic_"
 #     clinicalDset.attrs["sparse"] = False
 #     clinicalDset.attrs["binary"] = False
-#     logging.debug("Done:\t Getting Clinical Data")
+#     logging.debug("Done:\t Getting Clinical data")
 #
-#     logging.debug("Start:\t Getting Binarized Clinical Data")
+#     logging.debug("Start:\t Getting Binarized Clinical data")
 #     binarized_clinical = np.zeros((347, 1951), dtype=np.uint8)
 #     nb_already_done = 0
 #     for feqtureIndex, feature in enumerate(np.transpose(clinical)):
@@ -1210,9 +1210,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     bClinicalDset.attrs["name"] = "bClinic"
 #     bClinicalDset.attrs["sparse"] = False
 #     bClinicalDset.attrs["binary"] = True
-#     logging.debug("Done:\t Getting Binarized Clinical Data")
+#     logging.debug("Done:\t Getting Binarized Clinical data")
 #
-#     # logging.debug("Start:\t Getting Adjacence RNASeq Data")
+#     # logging.debug("Start:\t Getting Adjacence RNASeq data")
 #     # sparseAdjRNASeq = getAdjacenceMatrix(RNASeqRanking, sortedRNASeqGeneIndices, k=findClosestPowerOfTwo(10)-1)
 #     # sparseAdjRNASeqGrp = datasetFile.create_group("View6")
 #     # dataDset = sparseAdjRNASeqGrp.create_dataset("data", sparseAdjRNASeq.data.shape, data=sparseAdjRNASeq.data)
@@ -1223,7 +1223,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     # sparseAdjRNASeqGrp.attrs["name"]="ARNASeq"
 #     # sparseAdjRNASeqGrp.attrs["sparse"]=True
 #     # sparseAdjRNASeqGrp.attrs["shape"]=sparseAdjRNASeq.shape
-#     # logging.debug("Done:\t Getting Adjacence RNASeq Data")
+#     # logging.debug("Done:\t Getting Adjacence RNASeq data")
 #
 #     labelFile = open(path + 'brca_labels_triple-negatif.csv')
 #     labels = np.array([int(line.strip().split(',')[1]) for line in labelFile])
