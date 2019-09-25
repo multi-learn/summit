@@ -15,7 +15,7 @@ The main advantage of the platform is that it allows to add and remove a classif
    :caption: Contents:
 
    readme_link
-   api
+   multiview_platform
 
 .. examples
 

@@ -17,7 +17,16 @@ doc:
     script:
         - export LC_ALL=$(locale -a | grep en_US)
         - export LANG=$(locale -a | grep en_US)
-        - python3 setup.py build_sphinx
+        - pip3 install -e . --no-deps
+        - sphinx-apidoc -o docs/source multiview_platform
+        - cd docs/source
+        - sphinx-build -b html . ../build
+        - cd ../..
+        - cp -r ./docs/build public
+    artifacts:
+         paths:           
+           - public
+
 
 # TODO: Replace the task doc by the following task pages when making the
 # project public
