@@ -13,7 +13,7 @@ doc:
     tags:
         - docker
     only:
-        - master
+        - develop
     script:
         - export LC_ALL=$(locale -a | grep en_US)
         - export LANG=$(locale -a | grep en_US)
