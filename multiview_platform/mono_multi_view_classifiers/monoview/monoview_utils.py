@@ -17,50 +17,6 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 # __date__ = 2016 - 03 - 25
 
-
-def randomizedSearch(X_train, y_train, randomState, outputFileName,
-                     classifierModule, CL_type, KFolds=4, nbCores=1,
-                     metric=["accuracy_score", None], nIter=30,
-                     classifier_KWARGS=None):
-    estimator = getattr(classifierModule, CL_type)(randomState,
-                                                   **classifier_KWARGS)
-    params_dict = estimator.genDistribs()
-    if params_dict:
-        metricModule = getattr(metrics, metric[0])
-        if metric[1] is not None:
-            metricKWARGS = dict((index, metricConfig) for index, metricConfig in
-                                enumerate(metric[1]))
-        else:
-            metricKWARGS = {}
-        scorer = metricModule.get_scorer(**metricKWARGS)
-        nb_possible_combinations = compute_possible_combinations(params_dict)
-        min_list = np.array(
-            [min(nb_possible_combination, nIter) for nb_possible_combination in
-             nb_possible_combinations])
-        randomSearch = RandomizedSearchCV(estimator,
-                                          n_iter=int(np.sum(min_list)),
-                                          param_distributions=params_dict,
-                                          refit=True,
-                                          n_jobs=nbCores, scoring=scorer,
-                                          cv=KFolds, random_state=randomState)
-        detector = randomSearch.fit(X_train, y_train)
-
-        bestParams = dict((key, value) for key, value in
-                          estimator.genBestParams(detector).items() if
-                          key is not "random_state")
-
-        scoresArray = detector.cv_results_['mean_test_score']
-        params = estimator.genParamsFromDetector(detector)
-
-        hyper_parameter_search.genHeatMaps(params, scoresArray, outputFileName)
-        best_estimator = detector.best_estimator_
-    else:
-        best_estimator = estimator
-        bestParams = {}
-    testFoldsPreds = genTestFoldsPreds(X_train, y_train, KFolds, best_estimator)
-    return bestParams, testFoldsPreds
-
-
 def change_label_to_minus(y):
     minus_y = np.copy(y)
     minus_y[np.where(y == 0)] = -1

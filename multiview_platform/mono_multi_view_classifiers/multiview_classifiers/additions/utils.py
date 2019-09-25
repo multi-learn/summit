@@ -12,6 +12,10 @@ from sklearn.utils.validation import check_is_fitted
 from ... import metrics
 
 
+def get_names(classed_list):
+    return np.array([object_.__class__.__name__ for object_ in classed_list])
+
+
 class BaseMultiviewClassifier(BaseEstimator, ClassifierMixin):
 
     def __init__(self, random_state):

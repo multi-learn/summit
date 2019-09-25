@@ -17,6 +17,7 @@ from .analyze_result import execute
 # Import own modules
 from .. import monoview_classifiers
 from ..utils.dataset import getValue, extractSubset
+from ..utils import hyper_parameter_search
 
 # Author-Info
 __author__ = "Nikolas Huelsmann, Baptiste BAUVIN"
@@ -182,16 +183,16 @@ def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train,
         logging.debug(
             "Start:\t " + hyperParamSearch + " best settings with " + str(
                 nIter) + " iterations for " + CL_type)
-        classifierHPSearch = getattr(monoview_utils, hyperParamSearch)
-        clKWARGS, testFoldsPreds = classifierHPSearch(X_train, y_train,
+        classifierHPSearch = getattr(hyper_parameter_search, hyperParamSearch)
+        clKWARGS, testFoldsPreds = classifierHPSearch(X_train, y_train, "monoview",
                                                       randomState,
                                                       outputFileName,
                                                       classifierModule, CL_type,
-                                                      KFolds=KFolds,
-                                                      nbCores=nbCores,
+                                                      folds=KFolds,
+                                                      nb_cores=nbCores,
                                                       metric=metrics[0],
-                                                      nIter=nIter,
-                                                      classifier_KWARGS=kwargs[
+                                                      n_iter=nIter,
+                                                      classifier_kwargs=kwargs[
                                                           CL_type + "KWARGS"])
         logging.debug("Done:\t " + hyperParamSearch + " best settings")
     else:

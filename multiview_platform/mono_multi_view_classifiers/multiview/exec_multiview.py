@@ -113,11 +113,10 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds,
     logging.debug("Done:\t Getting train/test split")
 
     logging.debug("Start:\t Getting classifiers modules")
-    classifierPackage = getattr(multiview_classifiers,
-                                CL_type)  # Permet d'appeler un module avec une string
-    classifierModule = getattr(classifierPackage, CL_type + "Module")
+    # classifierPackage = getattr(multiview_classifiers,
+    #                             CL_type)  # Permet d'appeler un module avec une string
+    classifierModule = getattr(multiview_classifiers, CL_type)
     classifierClass = getattr(classifierModule, CL_type + "Class")
-    analysisModule = getattr(classifierPackage, "analyzeResults")
     logging.debug("Done:\t Getting classifiers modules")
 
     logging.debug("Start:\t Optimizing hyperparameters")

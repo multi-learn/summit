@@ -30,3 +30,4 @@ class Test_genTestFoldsPreds(unittest.TestCase):
         cls.assertEqual(testFoldsPreds.shape, (3, 10))
         np.testing.assert_array_equal(testFoldsPreds[0], np.array(
             [1, 1, -1, -1, 1, 1, -1, 1, -1, 1]))
+
