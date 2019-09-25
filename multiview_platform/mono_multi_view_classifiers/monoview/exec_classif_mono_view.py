@@ -77,16 +77,17 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
     logging.debug("Done:\t Determine Train/Test split")
 
     logging.debug("Start:\t Generate classifier args")
-    classifierModuleName = CL_type.split("_")[0]
-    classifierModule = getattr(monoview_classifiers, classifierModuleName)
+    classifierModule = getattr(monoview_classifiers, CL_type)
+    classifier_class_name = classifierModule.classifier_class_name
     clKWARGS, testFoldsPreds = getHPs(classifierModule, hyperParamSearch,
-                                      nIter, CL_type, X_train, y_train,
+                                      nIter, CL_type, classifier_class_name,
+                                      X_train, y_train,
                                       randomState, outputFileName,
                                       KFolds, nbCores, metrics, kwargs)
     logging.debug("Done:\t Generate classifier args")
 
     logging.debug("Start:\t Training")
-    classifier = getattr(classifierModule, classifierModuleName)(randomState, **clKWARGS)
+    classifier = getattr(classifierModule, classifier_class_name)(randomState, **clKWARGS)
 
     classifier.fit(X_train, y_train)  # NB_CORES=nbCores,
     logging.debug("Done:\t Training")
@@ -176,27 +177,29 @@ def initTrainTest(X, Y, classificationIndices):
     return X_train, y_train, X_test, y_test, X_test_multiclass
 
 
-def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train,
+def getHPs(classifierModule, hyperParamSearch, nIter, classifier_module_name,
+           classifier_class_name, X_train, y_train,
            randomState,
            outputFileName, KFolds, nbCores, metrics, kwargs):
     if hyperParamSearch != "None":
         logging.debug(
             "Start:\t " + hyperParamSearch + " best settings with " + str(
-                nIter) + " iterations for " + CL_type)
+                nIter) + " iterations for " + classifier_module_name)
         classifierHPSearch = getattr(hyper_parameter_search, hyperParamSearch)
         clKWARGS, testFoldsPreds = classifierHPSearch(X_train, y_train, "monoview",
                                                       randomState,
                                                       outputFileName,
-                                                      classifierModule, CL_type,
+                                                      classifierModule,
+                                                      classifier_class_name,
                                                       folds=KFolds,
                                                       nb_cores=nbCores,
                                                       metric=metrics[0],
                                                       n_iter=nIter,
                                                       classifier_kwargs=kwargs[
-                                                          CL_type + "KWARGS"])
+                                                          classifier_module_name + "KWARGS"])
         logging.debug("Done:\t " + hyperParamSearch + " best settings")
     else:
-        clKWARGS = kwargs[CL_type + "KWARGS"]
+        clKWARGS = kwargs[classifier_module_name + "KWARGS"]
         testFoldsPreds = None
     return clKWARGS, testFoldsPreds
 

@@ -6,6 +6,8 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
+classifier_class_name = "SVMRBF"
+
 class SVMRBF(SVCClassifier, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, C=1.0, **kwargs):

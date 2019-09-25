@@ -5,23 +5,28 @@ from ..monoview.additions.CQBoostUtils import ColumnGenerationClassifier
 from ..monoview.monoview_utils import CustomUniform, CustomRandint, \
     BaseMonoviewClassifier
 
+classifier_class_name = "CQBoost"
 
 class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, mu=0.01, epsilon=1e-06, n_stumps=1,
-                 n_max_iterations=None, **kwargs):
+                 n_max_iterations=None, estimators_generator="Stumps",
+                 max_depth=1, **kwargs):
         super(CQBoost, self).__init__(
             random_state=random_state,
             mu=mu,
             epsilon=epsilon,
-            estimators_generator="Stumps",
-            n_max_iterations=n_max_iterations
+            estimators_generator=estimators_generator,
+            n_max_iterations=n_max_iterations,
+            max_depth=max_depth
         )
         self.param_names = ["mu", "epsilon", "n_stumps", "random_state",
-                            "n_max_iterations"]
+                            "n_max_iterations", "estimators_generator",
+                            "max_depth"]
         self.distribs = [CustomUniform(loc=0.5, state=1.0, multiplier="e-"),
                          CustomRandint(low=1, high=15, multiplier="e-"),
-                         [n_stumps], [random_state], [n_max_iterations]]
+                         [n_stumps], [random_state], [n_max_iterations],
+                         ["Stumps", "Trees"], CustomRandint(low=1, high=5)]
         self.classed_params = []
         self.weird_strings = {}
         self.n_stumps = n_stumps

@@ -10,6 +10,7 @@ from ..monoview.additions.BoostUtils import StumpsClassifiersGenerator, \
 from ..monoview.monoview_utils import CustomRandint, \
     BaseMonoviewClassifier, change_label_to_minus, change_label_to_zero
 
+classifier_class_name = "AdaboostGraalpy"
 
 class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
     """Scikit-Learn compatible AdaBoost classifier. Original code by Pascal Germain, adapted by Jean-Francis Roy.

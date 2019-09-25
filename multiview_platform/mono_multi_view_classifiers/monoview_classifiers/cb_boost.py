@@ -2,6 +2,8 @@ from ..monoview.additions.CBBoostUtils import CBBoostClassifier
 from ..monoview.monoview_utils import BaseMonoviewClassifier, CustomRandint
 
 
+classifier_class_name = "CBBoost"
+
 class CBBoost(CBBoostClassifier, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, n_max_iterations=500, n_stumps=1,

@@ -59,7 +59,7 @@ class CustomRandint:
     It can be used with a multiplier agrument to be able to perform more complex generation
     for example 10 e -(randint)"""
 
-    def __init__(self, low=0, high=0, multiplier=""):
+    def __init__(self,low=0, high=0, multiplier=""):
         self.randint = randint(low, high)
         self.multiplier = multiplier
 

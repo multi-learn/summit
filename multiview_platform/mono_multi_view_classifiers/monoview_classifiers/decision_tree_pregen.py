@@ -11,6 +11,7 @@ from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier, \
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
+classifier_class_name = "DecisionTreePregen"
 
 class DecisionTreePregen(DecisionTreeClassifier, BaseMonoviewClassifier,
                          PregenClassifier):

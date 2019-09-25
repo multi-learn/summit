@@ -7,6 +7,8 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
+classifier_class_name = "KNN"
+
 class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, n_neighbors=5,

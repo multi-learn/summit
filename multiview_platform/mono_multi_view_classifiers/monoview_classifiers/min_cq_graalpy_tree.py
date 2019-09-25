@@ -4,6 +4,7 @@ from ..monoview.additions.BoostUtils import TreeClassifiersGenerator
 from ..monoview.additions.MinCQUtils import RegularizedBinaryMinCqClassifier
 from ..monoview.monoview_utils import BaseMonoviewClassifier, CustomUniform
 
+classifier_class_name = "MinCQGraalpyTree"
 
 class MinCQGraalpyTree(RegularizedBinaryMinCqClassifier,
                        BaseMonoviewClassifier):

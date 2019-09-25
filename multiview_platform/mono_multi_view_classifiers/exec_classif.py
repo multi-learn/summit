@@ -69,34 +69,38 @@ def initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args):
             benchmark["monoview"] = monoviewAlgos
 
     if "multiview" in CL_type:
-        benchmark["multiview"] = {}
-        if multiviewAlgos == ["all"]:
-            algosMutliview = allMultiviewPackages
-        else:
-            algosMutliview = multiviewAlgos
-        for multiviewPackageName in allMultiviewPackages:
-            if multiviewPackageName in algosMutliview:
-                multiviewPackage = getattr(multiview_classifiers,
-                                           multiviewPackageName)
-                multiviewModule = getattr(multiviewPackage,
-                                          multiviewPackageName + "Module")
-                benchmark = multiviewModule.getBenchmark(benchmark, args=args)
+        benchmark["multiview"] = [name for _, name, isPackage in
+                                 pkgutil.iter_modules([
+                                     "./mono_multi_view_classifiers/multiview_classifiers"])
+                                 if not isPackage]
+        # benchmark["multiview"] = {}
+        # if multiviewAlgos == ["all"]:
+        #     algosMutliview = allMultiviewPackages
+        # else:
+        #     algosMutliview = multiviewAlgos
+        # for multiviewPackageName in allMultiviewPackages:
+        #     if multiviewPackageName in algosMutliview:
+        #         multiviewPackage = getattr(multiview_classifiers,
+        #                                    multiviewPackageName)
+        #         multiviewModule = getattr(multiviewPackage,
+        #                                   multiviewPackageName + "Module")
+        #         benchmark = multiviewModule.getBenchmark(benchmark, args=args)
 
-    if CL_type == ["Benchmark"]:
-        allMonoviewAlgos = [name for _, name, isPackage in
-                            pkgutil.iter_modules([
-                                                     './mono_multi_view_classifiers/monoview_classifiers'])
-                            if (not isPackage) and name not in ["framework"]]
-        benchmark["monoview"] = allMonoviewAlgos
-        benchmark["multiview"] = dict(
-            (multiviewPackageName, "_") for multiviewPackageName in
-            allMultiviewPackages)
-        for multiviewPackageName in allMultiviewPackages:
-            multiviewPackage = getattr(multiview_classifiers,
-                                       multiviewPackageName)
-            multiviewModule = getattr(multiviewPackage,
-                                      multiviewPackageName + "Module")
-            benchmark = multiviewModule.getBenchmark(benchmark, args=args)
+    # if CL_type == ["Benchmark"]:
+    #     allMonoviewAlgos = [name for _, name, isPackage in
+    #                         pkgutil.iter_modules([
+    #                                                  './mono_multi_view_classifiers/monoview_classifiers'])
+    #                         if (not isPackage) and name not in ["framework"]]
+    #     benchmark["monoview"] = allMonoviewAlgos
+    #     benchmark["multiview"] = dict(
+    #         (multiviewPackageName, "_") for multiviewPackageName in
+    #         allMultiviewPackages)
+    #     for multiviewPackageName in allMultiviewPackages:
+    #         multiviewPackage = getattr(multiview_classifiers,
+    #                                    multiviewPackageName)
+    #         multiviewModule = getattr(multiviewPackage,
+    #                                   multiviewPackageName + "Module")
+    #         benchmark = multiviewModule.getBenchmark(benchmark, args=args)
 
     return benchmark
 
@@ -649,8 +653,6 @@ def execClassif(arguments):
                     metrics[metricIndex] = [metric[0], None]
 
             benchmark = initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args)
-            print(benchmark)
-            import pdb;pdb.set_trace()
             initKWARGS = initKWARGSFunc(args, benchmark)
             dataBaseTime = time.time() - start
             argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary,
