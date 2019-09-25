@@ -628,12 +628,9 @@ def execClassif(arguments):
 
             datasetFiles = dataset.initMultipleDatasets(args["Base"]["pathf"], args["Base"]["name"], nbCores)
 
-            # if not views:
-            #     raise ValueError("Empty views list, modify selected views to match dataset " + args["Base"]["views)
 
             views, viewsIndices, allViews = execution.initViews(DATASET, args["Base"]["views"])
             viewsDictionary = genViewsDictionnary(DATASET, views)
-            print(viewsDictionary)
             nbViews = len(views)
             NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
@@ -652,6 +649,8 @@ def execClassif(arguments):
                     metrics[metricIndex] = [metric[0], None]
 
             benchmark = initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args)
+            print(benchmark)
+            import pdb;pdb.set_trace()
             initKWARGS = initKWARGSFunc(args, benchmark)
             dataBaseTime = time.time() - start
             argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary,
