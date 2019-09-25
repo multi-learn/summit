@@ -15,10 +15,8 @@ RUN apt-get update && \
         python3-pytest-cov \
         python3-nose \
         python3-pip \
-        python3-sphinx \
         python3-numpydoc \
         python3-matplotlib \
-        python3-sphinx-gallery \
         python3-pil \
         libhdf5-dev \
         git \
