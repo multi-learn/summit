@@ -44,10 +44,6 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
             [estim.predict(X) for estim in self.estimators_])
         self.metrics = np.array([self.plotted_metric.score(pred, y) for pred in
                                  self.staged_predict(X)])
-        self.bounds = np.array([np.prod(
-            np.sqrt(1 - 4 * np.square(0.5 - self.estimator_errors_[:i + 1])))
-                                for i in
-                                range(self.estimator_errors_.shape[0])])
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
@@ -77,9 +73,6 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         get_accuracy_graph(step_test_metrics, "Adaboost",
                            directory + "test_metrics.png",
                            self.plotted_metric_name, set="test")
-        get_accuracy_graph(self.metrics, "Adaboost", directory + "metrics.png",
-                           self.plotted_metric_name, bounds=list(self.bounds),
-                           bound_name="boosting bound")
         np.savetxt(directory + "test_metrics.csv", step_test_metrics,
                    delimiter=',')
         np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')

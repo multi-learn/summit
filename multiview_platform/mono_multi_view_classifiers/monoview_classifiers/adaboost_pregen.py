@@ -103,10 +103,10 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
         get_accuracy_graph(step_test_metrics, "AdaboostPregen",
                            directory + "test_metrics.png",
                            self.plotted_metric_name, set="test")
-        get_accuracy_graph(self.metrics, "AdaboostPregen",
-                           directory + "metrics.png", self.plotted_metric_name,
-                           bounds=list(self.bounds),
-                           bound_name="boosting bound")
+        # get_accuracy_graph(self.metrics, "AdaboostPregen",
+        #                    directory + "metrics.png", self.plotted_metric_name,
+        #                    bounds=list(self.bounds),
+        #                    bound_name="boosting bound")
         np.savetxt(directory + "test_metrics.csv", step_test_metrics,
                    delimiter=',')
         np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')

@@ -116,11 +116,14 @@ class BaseMonoviewClassifier(BaseEstimator, ClassifierMixin):
         return dict((param_name, distrib) for param_name, distrib in
                     zip(self.param_names, self.distribs))
 
-    def getConfig(self):
-        if self.param_names:
-            return "\n\t\t- " + self.__class__.__name__ + "with " + ", ".join(
+    def params_to_string(self):
+        return ", ".join(
                 [param_name + " : " + self.to_str(param_name) for param_name in
                  self.param_names])
+
+    def getConfig(self):
+        if self.param_names:
+            return "\n\t\t- " + self.__class__.__name__ + "with " + self.params_to_string()
         else:
             return "\n\t\t- " + self.__class__.__name__ + "with no config."
 

@@ -17,7 +17,7 @@ class Test_initConstants(unittest.TestCase):
         cls.datasetFile = h5py.File(
             "multiview_platform/tests/temp_tests/test.hdf5", "w")
         cls.random_state = np.random.RandomState(42)
-        cls.args = {"CL_type": "test_clf"}
+        cls.args = {"classifier_name": "test_clf"}
         cls.X_value = cls.random_state.randint(0, 500, (10, 20))
         cls.X = cls.datasetFile.create_dataset("View0", data=cls.X_value)
         cls.X.attrs["name"] = "test_dataset"
@@ -99,7 +99,7 @@ class Test_getHPs(unittest.TestCase):
         cls.classifierModule = decision_tree
         cls.hyperParamSearch = "randomized_search"
         cls.n_iter = 2
-        cls.classifier_name = "DecisionTree"
+        cls.classifier_name = "decision_tree"
         cls.random_state = np.random.RandomState(42)
         cls.X = cls.random_state.randint(0,10,size=(10,5))
         cls.y = cls.random_state.randint(0,2,size=10)
@@ -107,9 +107,10 @@ class Test_getHPs(unittest.TestCase):
         cls.cv = StratifiedKFold(n_splits=2, random_state=cls.random_state)
         cls.nb_cores = 1
         cls.metrics = [["accuracy_score", None]]
-        cls.kwargs = {"DecisionTreeKWARGS" : {"max_depth": 1,
+        cls.kwargs = {"decision_tree" : {"max_depth": 1,
                       "criterion": "gini",
                       "splitter": "best"}}
+        cls.classifier_class_name = "DecisionTree"
 
     @classmethod
     def tearDownClass(cls):
@@ -123,6 +124,7 @@ class Test_getHPs(unittest.TestCase):
                                                                        self.hyperParamSearch,
                                                                        self.n_iter,
                                                                        self.classifier_name,
+                                                                       self.classifier_class_name,
                                                                        self.X,
                                                                        self.y,
                                                                        self.random_state,

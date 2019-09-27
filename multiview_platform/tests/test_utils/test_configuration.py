@@ -1,6 +1,6 @@
 import os
 import unittest
-
+import yaml
 import numpy as np
 
 from multiview_platform.mono_multi_view_classifiers.utils import configuration
@@ -8,14 +8,14 @@ from multiview_platform.mono_multi_view_classifiers.utils import configuration
 class Test_get_the_args(unittest.TestCase):
 
     def setUp(self):
-        self.path_to_config_file = "multiview_platform/tests/tmp_tests/config_temp.ini"
+        self.path_to_config_file = "multiview_platform/tests/tmp_tests/config_temp.yml"
         os.mkdir("multiview_platform/tests/tmp_tests")
-        config_file = open(self.path_to_config_file, "w")
-        config_file.write("[Base]\nfirst_arg = int ; 10\nsecond_arg = list_float ; 12.5 1e-06\n[Classification]\nthird_arg = bool ; yes")
-        config_file.close()
+        data = {"Base":{"first_arg": 10, "second_arg":[12.5, 1e-06]}, "Classification":{"third_arg":True}}
+        with open(self.path_to_config_file, "w") as config_file:
+            yaml.dump(data, config_file)
 
     def tearDown(self):
-        os.remove("multiview_platform/tests/tmp_tests/config_temp.ini")
+        os.remove("multiview_platform/tests/tmp_tests/config_temp.yml")
         os.rmdir("multiview_platform/tests/tmp_tests")
 
     def test_file_loading(self):

@@ -8,6 +8,7 @@ import h5py
 import numpy as np
 
 from .multiview_utils import MultiviewResult
+from . import analyze_results
 from .. import multiview_classifiers
 from ..utils import hyper_parameter_search
 from ..utils.dataset import getShape
@@ -20,28 +21,28 @@ __status__ = "Prototype"  # Production, Development, Prototype
 def initConstants(kwargs, classificationIndices, metrics, name, nbCores, KFolds,
                   DATASET):
     """Used to init the constants"""
-    views = kwargs["views"]
-    viewsIndices = kwargs["viewsIndices"]
+    views = kwargs["view_names"]
+    viewsIndices = kwargs["view_indices"]
     if not metrics:
         metrics = [["f1_score", None]]
-    CL_type = kwargs["CL_type"]
-    classificationKWARGS = kwargs[CL_type + "KWARGS"]
+    classifier_name = kwargs["classifier_name"]
+    classifier_config = kwargs[classifier_name]
     learningRate = len(classificationIndices[0]) / float(
         (len(classificationIndices[0]) + len(classificationIndices[1])))
     t_start = time.time()
     logging.info("Info\t: Classification - Database : " + str(
         name) + " ; Views : " + ", ".join(views) +
-                 " ; Algorithm : " + CL_type + " ; Cores : " + str(
+                 " ; Algorithm : " + classifier_name + " ; Cores : " + str(
         nbCores) + ", Train ratio : " + str(learningRate) +
                  ", CV on " + str(KFolds.n_splits) + " folds")
 
     for viewIndex, viewName in zip(viewsIndices, views):
         logging.info("Info:\t Shape of " + str(viewName) + " :" + str(
             getShape(DATASET, viewIndex)))
-    return CL_type, t_start, viewsIndices, classificationKWARGS, views, learningRate
+    return classifier_name, t_start, viewsIndices, classifier_config, views, learningRate
 
 
-def saveResults(LABELS_DICTIONARY, stringAnalysis, views, classifierModule,
+def saveResults(classifier, LABELS_DICTIONARY, stringAnalysis, views, classifierModule,
                 classificationKWARGS, directory, learningRate, name,
                 imagesAnalysis):
     labelsSet = set(LABELS_DICTIONARY.values())
@@ -49,7 +50,7 @@ def saveResults(LABELS_DICTIONARY, stringAnalysis, views, classifierModule,
     viewsString = "-".join(views)
     labelsString = "-".join(labelsSet)
     timestr = time.strftime("%Y_%m_%d-%H_%M_%S")
-    CL_type_string = classifierModule.genName(classificationKWARGS)
+    CL_type_string = classifier.short_name
     outputFileName = directory + "/" + CL_type_string + "/" + timestr + "-results-" + CL_type_string + "-" + viewsString + '-' + labelsString + \
                      '-learnRate_{0:.2f}'.format(learningRate) + '-' + name
     if not os.path.exists(os.path.dirname(outputFileName)):
@@ -99,7 +100,7 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds,
     CL_type, \
     t_start, \
     viewsIndices, \
-    classificationKWARGS, \
+    classifier_config, \
     views, \
     learningRate = initConstants(kwargs, classificationIndices, metrics, name,
                                  nbCores, KFolds, DATASET)
@@ -115,37 +116,41 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds,
     logging.debug("Start:\t Getting classifiers modules")
     # classifierPackage = getattr(multiview_classifiers,
     #                             CL_type)  # Permet d'appeler un module avec une string
-    classifierModule = getattr(multiview_classifiers, CL_type)
-    classifierClass = getattr(classifierModule, CL_type + "Class")
+    classifier_module = getattr(multiview_classifiers, CL_type)
+    classifier_name = classifier_module.classifier_class_name
+    # classifierClass = getattr(classifierModule, CL_type + "Class")
     logging.debug("Done:\t Getting classifiers modules")
 
     logging.debug("Start:\t Optimizing hyperparameters")
     if hyperParamSearch != "None":
-        classifier = hyper_parameter_search.searchBestSettings(DATASET, labels,
-                                                               classifierPackage,
-                                                               CL_type, metrics,
+        classifier_config = hyper_parameter_search.searchBestSettings(DATASET, labels,
+                                                               classifier_module,
+                                                               classifier_name,
+                                                                    metrics[0],
                                                                learningIndices,
                                                                KFolds,
                                                                randomState,
+                                                               directory,
+                                                               nb_cores=nbCores,
                                                                viewsIndices=viewsIndices,
                                                                searchingTool=hyperParamSearch,
-                                                               nIter=nIter,
-                                                               **classificationKWARGS)
-    else:
-        classifier = classifierClass(randomState, NB_CORES=nbCores,
-                                     **classificationKWARGS)
+                                                               n_iter=nIter,
+                                                               classifier_config=classifier_config)
+
+    classifier = getattr(classifier_module, classifier_name)(randomState,
+                                                             **classifier_config)
     logging.debug("Done:\t Optimizing hyperparameters")
 
     logging.debug("Start:\t Fitting classifier")
-    classifier.fit_hdf5(DATASET, labels, trainIndices=learningIndices,
-                        viewsIndices=viewsIndices, metric=metrics[0])
+    classifier.fit(DATASET, labels, train_indices=learningIndices,
+                        view_indices=viewsIndices)
     logging.debug("Done:\t Fitting classifier")
 
     logging.debug("Start:\t Predicting")
-    trainLabels = classifier.predict_hdf5(DATASET, usedIndices=learningIndices,
-                                          viewsIndices=viewsIndices)
-    testLabels = classifier.predict_hdf5(DATASET, usedIndices=validationIndices,
-                                         viewsIndices=viewsIndices)
+    trainLabels = classifier.predict(DATASET, predict_indices=learningIndices,
+                                     view_indices=viewsIndices)
+    testLabels = classifier.predict(DATASET, predict_indices=validationIndices,
+                                    view_indices=viewsIndices)
     fullLabels = np.zeros(labels.shape, dtype=int) - 100
     for trainIndex, index in enumerate(learningIndices):
         fullLabels[index] = trainLabels[trainIndex]
@@ -166,23 +171,23 @@ def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds,
 
     logging.info("Start:\t Result Analysis for " + CL_type)
     times = (extractionTime, classificationTime)
-    stringAnalysis, imagesAnalysis, metricsScores = analysisModule.execute(
+    stringAnalysis, imagesAnalysis, metricsScores = analyze_results.execute(
         classifier, trainLabels,
         testLabels, DATASET,
-        classificationKWARGS, classificationIndices,
+        classifier_config, classificationIndices,
         LABELS_DICTIONARY, views, nbCores, times,
         name, KFolds,
         hyperParamSearch, nIter, metrics,
-        viewsIndices, randomState, labels, classifierModule)
+        viewsIndices, randomState, labels, classifier_module)
     logging.info("Done:\t Result Analysis for " + CL_type)
 
     logging.debug("Start:\t Saving preds")
-    saveResults(LABELS_DICTIONARY, stringAnalysis, views, classifierModule,
-                classificationKWARGS, directory,
+    saveResults(classifier, LABELS_DICTIONARY, stringAnalysis, views, classifier_module,
+                classifier_config, directory,
                 learningRate, name, imagesAnalysis)
     logging.debug("Start:\t Saving preds")
 
-    return MultiviewResult(CL_type, classificationKWARGS, metricsScores,
+    return MultiviewResult(CL_type, classifier_config, metricsScores,
                            fullLabels, testLabelsMulticlass)
     # return CL_type, classificationKWARGS, metricsScores, fullLabels, testLabelsMulticlass
 

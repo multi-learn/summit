@@ -126,7 +126,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
                 y_train, imagesAnalysis, y_test)
     logging.info("Done:\t Saving results")
 
-    viewIndex = args["viewIndex"]
+    viewIndex = args["view_index"]
     if testFoldsPreds is None:
         testFoldsPreds = y_train_pred
     return monoview_utils.MonoviewResult(viewIndex, CL_type, feat, metricsScores,
@@ -145,7 +145,7 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
         feat = X.attrs["name"].decode("utf-8")
     else:
         feat = X.attrs["name"]
-    CL_type = kwargs["CL_type"]
+    CL_type = kwargs["classifier_name"]
     X = getValue(X)
     learningRate = float(len(classificationIndices[0])) / (
                 len(classificationIndices[0]) + len(classificationIndices[1]))
@@ -196,7 +196,7 @@ def getHPs(classifierModule, hyperParamSearch, nIter, classifier_module_name,
                                                       metric=metrics[0],
                                                       n_iter=nIter,
                                                       classifier_kwargs=kwargs[
-                                                          classifier_module_name + "KWARGS"])
+                                                          classifier_module_name])
         logging.debug("Done:\t " + hyperParamSearch + " best settings")
     else:
         clKWARGS = kwargs[classifier_module_name + "KWARGS"]

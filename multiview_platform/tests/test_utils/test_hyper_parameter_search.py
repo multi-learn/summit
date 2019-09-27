@@ -50,6 +50,6 @@ class Test_randomized_search(unittest.TestCase):
 
     def test_simple(self):
         best_params, test_folds_preds = hyper_parameter_search.randomized_search(
-            self.dataset_file, self.labels, "multiview", self.random_state, "multiview_platform/tests/tmp_tests/",
+            self.dataset_file, self.labels.value, "multiview", self.random_state, "multiview_platform/tests/tmp_tests/",
             weighted_linear_early_fusion, "WeightedLinearEarlyFusion", self.k_folds,
         1, ["accuracy_score", None], 2, {}, learning_indices=self.learning_indices)

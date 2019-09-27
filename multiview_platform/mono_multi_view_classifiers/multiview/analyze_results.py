@@ -63,8 +63,7 @@ def execute(classifier, trainLabels,
             name, KFolds,
             hyperParamSearch, nIter, metric_list,
             viewsIndices, randomState, labels, classifierModule):
-    classifierNameString = classifierModule.genName(classificationKWARGS)
-    CLASS_LABELS = labels
+    classifier_name = classifier.short_name
     learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
 
     metricModule = getattr(metrics, metric_list[0][0])
@@ -73,15 +72,13 @@ def execute(classifier, trainLabels,
                             enumerate(metric_list[0][1]))
     else:
         metricKWARGS = {}
-    scoreOnTrain = metricModule.score(CLASS_LABELS[learningIndices],
-                                      CLASS_LABELS[learningIndices],
+    scoreOnTrain = metricModule.score(labels[learningIndices],
+                                      labels[learningIndices],
                                       **metricKWARGS)
-    scoreOnTest = metricModule.score(CLASS_LABELS[validationIndices],
+    scoreOnTest = metricModule.score(labels[validationIndices],
                                      testLabels, **metricKWARGS)
 
-    classifierConfiguration = classifier.getConfigString(classificationKWARGS)
-
-    stringAnalysis = "\t\tResult for multiview classification with " + classifierNameString + \
+    stringAnalysis = "\t\tResult for multiview classification with " + classifier_name + \
                      "\n\n" + metric_list[0][0] + " :\n\t-On Train : " + str(
         scoreOnTrain) + "\n\t-On Test : " + str(
         scoreOnTest) + \
@@ -90,12 +87,11 @@ def execute(classifier, trainLabels,
                          LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(
         views) + "\n\t-" + str(
         KFolds.n_splits) + \
-                     " folds\n\nClassification configuration : \n\t-Algorithm used : " + classifierNameString + " with : " + classifierConfiguration
+                     " folds\n\nClassification configuration : \n\t-Algorithm used : " + classifier_name + " with : " + classifier.getConfig()
 
     metricsScores = getMetricsScores(metric_list, trainLabels, testLabels,
                                      validationIndices, learningIndices, labels)
     stringAnalysis += printMetricScore(metricsScores, metric_list)
-    stringAnalysis += "\n\n Interpretation : \n\n" + classifier.getSpecificAnalysis(
-        classificationKWARGS)
+    stringAnalysis += "\n\n Interpretation : \n\n" + classifier.get_interpretation()
     imagesAnalysis = {}
     return stringAnalysis, imagesAnalysis, metricsScores

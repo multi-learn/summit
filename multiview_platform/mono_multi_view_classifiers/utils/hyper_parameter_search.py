@@ -10,21 +10,25 @@ from sklearn.model_selection import RandomizedSearchCV
 from .. import metrics
 
 
-def searchBestSettings(dataset, labels, classifierPackage, classifierName,
-                       metrics, iLearningIndices, iKFolds, randomState,
-                       viewsIndices=None,
-                       searchingTool="randomizedSearch", nIter=1, **kwargs):
-    """Used to select the right hyperparam optimization function to optimize hyper parameters"""
+def searchBestSettings(dataset, labels, classifier_module, classifier_name,
+                       metrics, learning_indices, iKFolds, random_state,
+                       directory, viewsIndices=None, nb_cores=1,
+                       searchingTool="randomized_search", n_iter=1,
+                       classifier_config=None):
+    """Used to select the right hyper-parameter optimization function
+    to optimize hyper parameters"""
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
+    output_file_name = directory
     thismodule = sys.modules[__name__]
-    searchingTool = "randomizedSearch"  # Todo find a nice way to configure multiview classifier without hp search
-    searchingToolMethod = getattr(thismodule, searchingTool)
-    bestSettings = searchingToolMethod(dataset, labels, classifierPackage,
-                                       classifierName, metrics,
-                                       iLearningIndices, iKFolds, randomState,
-                                       viewsIndices=viewsIndices, nIter=nIter,
-                                       **kwargs)
+    if searchingTool is not "None":
+        searchingToolMethod = getattr(thismodule, searchingTool)
+        bestSettings, test_folds_preds = searchingToolMethod(dataset, labels, "multiview", random_state, output_file_name,
+                                           classifier_module, classifier_name, iKFolds,
+                                           nb_cores, metrics, n_iter, classifier_config,
+                                           learning_indices=learning_indices, view_indices=viewsIndices,)
+    else:
+        bestSettings = classifier_config
     return bestSettings  # or well set clasifier ?
 
 
@@ -67,7 +71,6 @@ def get_test_folds_preds(X, y, cv, estimator, framework, available_indices=None)
     if framework == "monoview":
         folds = cv.split(np.arange(len(y)), y)
     if framework == "multiview":
-        y = y.value
         folds = cv.split(available_indices, y[available_indices])
     fold_lengths = np.zeros(cv.n_splits, dtype=int)
     for fold_idx, (train_indices, test_indices) in enumerate(folds):
@@ -88,7 +91,7 @@ def get_test_folds_preds(X, y, cv, estimator, framework, available_indices=None)
 
 def randomized_search(X, y, framework, random_state, output_file_name, classifier_module,
                          classifier_name, folds=4, nb_cores=1, metric=["accuracy_score", None], n_iter=30,
-                         classifier_kwargs =None, learning_indices=None):
+                         classifier_kwargs =None, learning_indices=None, view_indices=None):
     estimator = getattr(classifier_module, classifier_name)(random_state,
                                                            **classifier_kwargs)
     params_dict = estimator.genDistribs()
@@ -111,6 +114,7 @@ def randomized_search(X, y, framework, random_state, output_file_name, classifie
                                                              n_jobs=nb_cores, scoring=scorer,
                                                              cv=folds, random_state=random_state,
                                                              learning_indices=learning_indices,
+                                                             view_indices=view_indices,
                                                              framework = framework)
         detector = randomSearch.fit(X, y)
 
@@ -138,7 +142,7 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
 
     def __init__(self, estimator, param_distributions, n_iter=10,
                  refit=True, n_jobs=1, scoring=None, cv=None,
-                 random_state=None, learning_indices=None, framework="monoview"):
+                 random_state=None, learning_indices=None, view_indices=None, framework="monoview"):
         super(MultiviewCompatibleRandomizedSearchCV, self).__init__(estimator,
                                                                     n_iter=n_iter,
                                                                     param_distributions=param_distributions,
@@ -147,12 +151,13 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
                                                                     cv=cv, random_state=random_state)
         self.framework = framework
         self.available_indices = learning_indices
+        self.view_indices = view_indices
 
     def fit(self, X, y=None, groups=None, **fit_params):
         if self.framework == "monoview":
             return super(MultiviewCompatibleRandomizedSearchCV, self).fit(X, y=y, groups=groups, **fit_params)
         elif self.framework == "multiview":
-            return self.fit_multiview(X, y=y.value, groups=groups,**fit_params)
+            return self.fit_multiview(X, y=y, groups=groups,**fit_params)
 
     def fit_multiview(self, X, y=None, groups=None, **fit_params):
         n_splits = self.cv.get_n_splits(self.available_indices, y[self.available_indices])
@@ -168,10 +173,12 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
                 current_estimator = clone(base_estimator)
                 current_estimator.set_params(**candidate_param)
                 current_estimator.fit(X, y,
-                                      train_indices=self.available_indices[train_indices])
+                                      train_indices=self.available_indices[train_indices],
+                                      view_indices=self.view_indices)
                 test_prediction = current_estimator.predict(
                     X,
-                    self.available_indices[test_indices])
+                    self.available_indices[test_indices],
+                    view_indices=self.view_indices)
                 test_score = self.scoring._score_func(y[self.available_indices[test_indices]],
                                                       test_prediction)
                 test_scores[fold_idx] = test_score
@@ -187,7 +194,6 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
             self.best_estimator_ = clone(base_estimator).set_params(**self.best_params_)
         self.n_splits_ = n_splits
         return self
-
 
     def get_test_folds_preds(self, X, y, estimator):
         test_folds_prediction = []
@@ -214,13 +220,13 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
 
 
 def randomizedSearch(dataset, labels, classifierPackage, classifierName,
-                     metrics, learningIndices, KFolds, randomState,
+                     metrics_list, learningIndices, KFolds, randomState,
                      viewsIndices=None, nIter=1,
                      nbCores=1, **classificationKWARGS):
     """Used to perform a random search on the classifiers to optimize hyper parameters"""
     if viewsIndices is None:
         viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
-    metric = metrics[0]
+    metric = metrics_list[0]
     metricModule = getattr(metrics, metric[0])
     if metric[1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in
