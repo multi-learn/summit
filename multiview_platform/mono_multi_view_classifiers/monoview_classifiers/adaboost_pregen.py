@@ -15,11 +15,14 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
+classifier_class_name = "AdaboostPregen"
+
 class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
                      PregenClassifier):
 
     def __init__(self, random_state=None, n_estimators=50,
-                 base_estimator=None, n_stumps=1, self_complemeted=True,
+                 base_estimator=None, n_stumps=1, estimators_generator="Stumps",
+                 max_depth=1, self_complemeted=True,
                  **kwargs):
         super(AdaboostPregen, self).__init__(
             random_state=random_state,
@@ -28,16 +31,19 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
             algorithm="SAMME"
         )
         self.param_names = ["n_estimators", "base_estimator", "n_stumps",
+                            "estimators_generator", "max_depth",
                             "random_state"]
         self.classed_params = ["base_estimator"]
         self.distribs = [CustomRandint(low=1, high=500),
                          [DecisionTreeClassifier(max_depth=1)], [n_stumps],
+                         ["Stumps", "Tree"], CustomRandint(low=1, high=5),
                          [random_state]]
         self.weird_strings = {"base_estimator": "class_name"}
         self.plotted_metric = metrics.zero_one_loss
         self.plotted_metric_name = "zero_one_loss"
         self.step_predictions = None
-        self.estimators_generator = "Stumps"
+        self.estimators_generator = estimators_generator
+        self.max_depth = max_depth
         self.n_stumps = n_stumps
         self.self_complemented = self_complemeted
 
@@ -97,10 +103,10 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
         get_accuracy_graph(step_test_metrics, "AdaboostPregen",
                            directory + "test_metrics.png",
                            self.plotted_metric_name, set="test")
-        get_accuracy_graph(self.metrics, "AdaboostPregen",
-                           directory + "metrics.png", self.plotted_metric_name,
-                           bounds=list(self.bounds),
-                           bound_name="boosting bound")
+        # get_accuracy_graph(self.metrics, "AdaboostPregen",
+        #                    directory + "metrics.png", self.plotted_metric_name,
+        #                    bounds=list(self.bounds),
+        #                    bound_name="boosting bound")
         np.savetxt(directory + "test_metrics.csv", step_test_metrics,
                    delimiter=',')
         np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')

@@ -1,0 +1,140 @@
+# The base configuration of the benchmark
+Base :
+  log: true
+  name: ["Plausible"]
+  label: "_"
+  type: ".hdf5"
+  views: ["all"]
+  pathf: "../Data/"
+  nice: 0
+  random_state: 42
+  nb_cores: 1
+  full: False
+  debug: True
+  add_noise: False
+  noise_std: 0.0
+  res_dir: "../Results/"
+
+# All the classification-realted configuration options
+Classification:
+  multiclass_method: "oneVersusOne"
+  split: 0.8
+  nb_folds: 2
+  nb_class: 2
+  classes: ["yes", "no"]
+  type: ["multiview", "monoview"]
+  algos_monoview: ["all"]
+  algos_multiview: ["all"]
+  stats_iter: 2
+  metrics: ["accuracy_score", "f1_score"]
+  metric_princ: "f1_score"
+  hps_type: "randomized_search"
+  hps_iter: 2
+
+
+#####################################
+# The Monoview Classifier arguments #
+#####################################
+
+random_forest:
+  n_estimators: [25]
+  max_depth: [3]
+  criterion: ["entropy"]
+
+svm_linear:
+  C: [1]
+
+svm_rbf:
+  C: [1]
+
+svm_poly:
+  C: [1]
+  degree: [2]
+
+adaboost:
+  n_estimators: [50]
+  base_estimator: ["DecisionTreeClassifier"]
+
+adaboost_pregen:
+  n_estimators: [50]
+  base_estimator: ["DecisionTreeClassifier"]
+  n_stumps: [1]
+
+adaboost_graalpy:
+  n_iterations: [50]
+  n_stumps: [1]
+
+decision_tree:
+  max_depth: [10]
+  criterion: ["gini"]
+  splitter: ["best"]
+
+decision_tree_pregen:
+  max_depth: [10]
+  criterion: ["gini"]
+  splitter: ["best"]
+  n_stumps: [1]
+
+sgd:
+  loss: ["hinge"]
+  penalty: [l2]
+  alpha: [0.0001]
+
+knn:
+  n_neighbors: [5]
+  weights: ["uniform"]
+  algorithm: ["auto"]
+
+scm:
+  model_type: ["conjunction"]
+  max_rules: [10]
+  p: [0.1]
+
+scm_pregen:
+  model_type: ["conjunction"]
+  max_rules: [10]
+  p: [0.1]
+  n_stumps: [1]
+
+cq_boost:
+  mu: [0.01]
+  epsilon: [1e-06]
+  n_max_iterations: [5]
+  n_stumps: [1]
+
+cg_desc:
+  n_max_iterations: [10]
+  n_stumps: [1]
+
+cb_boost:
+  n_max_iterations: [10]
+  n_stumps: [1]
+
+min_cq_graalpy:
+  mu: [0.01]
+  n_stumps_per_attribute: [1]
+
+min_cq_graalpy_tree:
+  mu: [0.01]
+  n_stumps_per_attribute: [1]
+  max_depth: [2]
+
+lasso:
+  alpha: [1]
+  max_iter: [2]
+
+gradient_boosting:
+  n_estimators: [2]
+
+min_cq:
+  mu: [0.01]
+  n_stumps_per_attribute: [1]
+
+
+######################################
+# The Multiview Classifier arguments #
+######################################
+
+weighted_linear_early_fusion:
+  view_weights: [None]
+  monoview_classifier: ["decision_tree"]

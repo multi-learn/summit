@@ -41,6 +41,8 @@ __status__ = "Prototype"  # Production, Development, Prototype
 #     #     return {"Binary_attributes": self.clf.model_.rules}
 
 
+classifier_class_name = "SCM"
+
 class SCM(scm, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, model_type="conjunction",

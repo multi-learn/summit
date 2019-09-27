@@ -590,7 +590,7 @@ def analyzeBiclass(results, benchmarkArgumentDictionaries, statsIter, metrics):
 
         directory = arguments["directory"]
 
-        databaseName = arguments["args"].name
+        databaseName = arguments["args"]["Base"]["name"]
         labelsNames = [arguments["LABELS_DICTIONARY"][0],
                        arguments["LABELS_DICTIONARY"][1]]
 
@@ -764,7 +764,7 @@ def analyzeMulticlass(results, statsIter, benchmarkArgumentDictionaries,
                                                    multiclassLabels)
 
     results = publishMulticlassScores(multiclassResults, metrics, statsIter, directories,
-                            benchmarkArgumentDictionaries[0]["args"].name)
+                            benchmarkArgumentDictionaries[0]["args"]["Base"]["name"])
     publishMulticlassExmapleErrors(multiclassResults, directories,
                                    benchmarkArgumentDictionaries[0][
                                        "args"].name)
@@ -1011,7 +1011,7 @@ def getResults(results, statsIter, nbMulticlass, benchmarkArgumentDictionaries,
                classificationIndices, directories, directory, labelsDictionary,
                nbExamples, nbLabels):
     """Used to analyze the results of the previous benchmarks"""
-    dataBaseName = benchmarkArgumentDictionaries[0]["args"].name
+    dataBaseName = benchmarkArgumentDictionaries[0]["args"]["Base"]["name"]
     results_means_std, biclassResults = analyzeBiclass(results, benchmarkArgumentDictionaries,
                                     statsIter, metrics)
 

@@ -6,6 +6,7 @@ from ..monoview.monoview_utils import CustomUniform, BaseMonoviewClassifier
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
+classifier_class_name = "SGD"
 
 class SGD(SGDClassifier, BaseMonoviewClassifier):
 

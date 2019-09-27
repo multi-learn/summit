@@ -32,14 +32,8 @@ def getTotalMetricScores(metric, trainLabels, testLabels, validationIndices,
                             enumerate(metric[1]))
     else:
         metricKWARGS = {}
-    try:
-        trainScore = metricModule.score(labels[learningIndices], trainLabels,
+    trainScore = metricModule.score(labels[learningIndices], trainLabels,
                                         **metricKWARGS)
-    except:
-        print(labels[learningIndices])
-        print(trainLabels)
-        import pdb;
-        pdb.set_trace()
     testScore = metricModule.score(labels[validationIndices], testLabels,
                                    **metricKWARGS)
     return [trainScore, testScore]

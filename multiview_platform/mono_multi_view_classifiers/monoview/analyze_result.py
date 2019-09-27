@@ -48,24 +48,24 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
     return metricScoreString, [metricScoreTrain, metricScoreTest]
 
 
-def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics, nIter,
+def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics_list, nIter,
             feat, CL_type, clKWARGS, classLabelsNames,
             shape, y_train, y_train_pred, y_test, y_test_pred, time,
             randomState, classifier, directory):
     metricsScores = {}
-    metricModule = getattr(metrics, metrics[0][0])
+    metricModule = getattr(metrics, metrics_list[0][0])
     trainScore = metricModule.score(y_train, y_train_pred)
     testScore = metricModule.score(y_test, y_test_pred)
     stringAnalysis = "Classification on " + name + " database for " + feat + " with " + CL_type + ".\n\n"
-    stringAnalysis += metrics[0][0] + " on train : " + str(trainScore) + "\n" + \
-                      metrics[0][0] + " on test : " + str(
+    stringAnalysis += metrics_list[0][0] + " on train : " + str(trainScore) + "\n" + \
+                      metrics_list[0][0] + " on test : " + str(
         testScore) + "\n\n"
     stringAnalysis += getDBConfigString(name, feat, learningRate, shape,
                                         classLabelsNames, KFolds)
     classifierConfigString, classifierIntepretString = getClassifierConfigString(
         gridSearch, nbCores, nIter, clKWARGS, classifier, directory, y_test)
     stringAnalysis += classifierConfigString
-    for metric in metrics:
+    for metric in metrics_list:
         metricString, metricScore = getMetricScore(metric, y_train,
                                                    y_train_pred, y_test,
                                                    y_test_pred)

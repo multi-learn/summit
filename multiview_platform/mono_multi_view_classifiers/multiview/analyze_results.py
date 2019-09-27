@@ -5,9 +5,9 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def printMetricScore(metricScores, metrics):
+def printMetricScore(metricScores, metric_list):
     metricScoreString = "\n\n"
-    for metric in metrics:
+    for metric in metric_list:
         metricModule = getattr(metrics, metric[0])
         if metric[1] is not None:
             metricKWARGS = dict((index, metricConfig) for index, metricConfig in
@@ -61,28 +61,25 @@ def execute(classifier, trainLabels,
             classificationKWARGS, classificationIndices,
             LABELS_DICTIONARY, views, nbCores, times,
             name, KFolds,
-            hyperParamSearch, nIter, metrics,
+            hyperParamSearch, nIter, metric_list,
             viewsIndices, randomState, labels, classifierModule):
-    classifierNameString = classifierModule.genName(classificationKWARGS)
-    CLASS_LABELS = labels
+    classifier_name = classifier.short_name
     learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
 
-    metricModule = getattr(metrics, metrics[0][0])
-    if metrics[0][1] is not None:
+    metricModule = getattr(metrics, metric_list[0][0])
+    if metric_list[0][1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in
-                            enumerate(metrics[0][1]))
+                            enumerate(metric_list[0][1]))
     else:
         metricKWARGS = {}
-    scoreOnTrain = metricModule.score(CLASS_LABELS[learningIndices],
-                                      CLASS_LABELS[learningIndices],
+    scoreOnTrain = metricModule.score(labels[learningIndices],
+                                      labels[learningIndices],
                                       **metricKWARGS)
-    scoreOnTest = metricModule.score(CLASS_LABELS[validationIndices],
+    scoreOnTest = metricModule.score(labels[validationIndices],
                                      testLabels, **metricKWARGS)
 
-    classifierConfiguration = classifier.getConfigString(classificationKWARGS)
-
-    stringAnalysis = "\t\tResult for multiview classification with " + classifierNameString + \
-                     "\n\n" + metrics[0][0] + " :\n\t-On Train : " + str(
+    stringAnalysis = "\t\tResult for multiview classification with " + classifier_name + \
+                     "\n\n" + metric_list[0][0] + " :\n\t-On Train : " + str(
         scoreOnTrain) + "\n\t-On Test : " + str(
         scoreOnTest) + \
                      "\n\nDataset info :\n\t-Database name : " + name + "\n\t-Labels : " + \
@@ -90,12 +87,11 @@ def execute(classifier, trainLabels,
                          LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(
         views) + "\n\t-" + str(
         KFolds.n_splits) + \
-                     " folds\n\nClassification configuration : \n\t-Algorithm used : " + classifierNameString + " with : " + classifierConfiguration
+                     " folds\n\nClassification configuration : \n\t-Algorithm used : " + classifier_name + " with : " + classifier.getConfig()
 
-    metricsScores = getMetricsScores(metrics, trainLabels, testLabels,
+    metricsScores = getMetricsScores(metric_list, trainLabels, testLabels,
                                      validationIndices, learningIndices, labels)
-    stringAnalysis += printMetricScore(metricsScores, metrics)
-    stringAnalysis += "\n\n Interpretation : \n\n" + classifier.getSpecificAnalysis(
-        classificationKWARGS)
+    stringAnalysis += printMetricScore(metricsScores, metric_list)
+    stringAnalysis += "\n\n Interpretation : \n\n" + classifier.get_interpretation()
     imagesAnalysis = {}
     return stringAnalysis, imagesAnalysis, metricsScores

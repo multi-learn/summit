@@ -9,6 +9,8 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
+classifier_class_name = "Lasso"
+
 class Lasso(LassoSK, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, alpha=1.0,

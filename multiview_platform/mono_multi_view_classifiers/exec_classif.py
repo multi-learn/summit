@@ -69,35 +69,10 @@ def initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args):
             benchmark["monoview"] = monoviewAlgos
 
     if "multiview" in CL_type:
-        benchmark["multiview"] = {}
-        if multiviewAlgos == ["all"]:
-            algosMutliview = allMultiviewPackages
-        else:
-            algosMutliview = multiviewAlgos
-        for multiviewPackageName in allMultiviewPackages:
-            if multiviewPackageName in algosMutliview:
-                multiviewPackage = getattr(multiview_classifiers,
-                                           multiviewPackageName)
-                multiviewModule = getattr(multiviewPackage,
-                                          multiviewPackageName + "Module")
-                benchmark = multiviewModule.getBenchmark(benchmark, args=args)
-
-    if CL_type == ["Benchmark"]:
-        allMonoviewAlgos = [name for _, name, isPackage in
-                            pkgutil.iter_modules([
-                                                     './mono_multi_view_classifiers/monoview_classifiers'])
-                            if (not isPackage) and name not in ["framework"]]
-        benchmark["monoview"] = allMonoviewAlgos
-        benchmark["multiview"] = dict(
-            (multiviewPackageName, "_") for multiviewPackageName in
-            allMultiviewPackages)
-        for multiviewPackageName in allMultiviewPackages:
-            multiviewPackage = getattr(multiview_classifiers,
-                                       multiviewPackageName)
-            multiviewModule = getattr(multiviewPackage,
-                                      multiviewPackageName + "Module")
-            benchmark = multiviewModule.getBenchmark(benchmark, args=args)
-
+        benchmark["multiview"] = [name for _, name, isPackage in
+                                 pkgutil.iter_modules([
+                                     "./mono_multi_view_classifiers/multiview_classifiers"])
+                                 if not isPackage]
     return benchmark
 
 
@@ -129,7 +104,42 @@ def genViewsDictionnary(DATASET, views):
     return viewsDictionary
 
 
-def initMonoviewExps(benchmark, viewsDictionary, nbClass, kwargsInit):
+def init_argument_dictionaries(benchmark, views_dictionary,
+                                                    nb_class, init_kwargs):
+    argument_dictionaries = {"monoview": [], "multiview": []}
+    if benchmark["monoview"]:
+        argument_dictionaries["monoview"] = init_monoview_exps(
+                                                   benchmark["monoview"],
+                                                   views_dictionary,
+                                                   nb_class,
+                                                   init_kwargs["monoview"])
+    if benchmark["multiview"]:
+        argument_dictionaries["multiview"] = init_multiview_exps(benchmark["multiview"],
+                                                   views_dictionary,
+                                                   nb_class,
+                                                   init_kwargs["multiview"])
+    return argument_dictionaries
+
+
+def init_multiview_exps(classifier_names, views_dictionary, nb_class, kwargs_init):
+    multiview_arguments = []
+    for classifier_name in classifier_names:
+        if multiple_args(classifier_name, kwargs_init):
+            multiview_arguments += gen_multiple_args_dictionnaries(nb_class,
+                                                                  kwargs_init,
+                                                                  classifier_name,
+                                                                  views_dictionary=views_dictionary,
+                                                                  framework="multiview")
+        else:
+            multiview_arguments += [gen_single_multiview_arg_dictionary(classifier_name,
+                                                                        kwargs_init,
+                                                                        nb_class,
+                                                                        views_dictionary=views_dictionary)]
+    return multiview_arguments
+
+
+def init_monoview_exps(classifier_names,
+                       views_dictionary, nb_class, kwargs_init):
     r"""Used to add each monoview exeperience args to the list of monoview experiences args.
 
     First this function will check if the benchmark need mono- or/and multiview algorithms and adds to the right
@@ -139,13 +149,13 @@ def initMonoviewExps(benchmark, viewsDictionary, nbClass, kwargsInit):
 
     Parameters
     ----------
-    benchmark : dictionary
+    classifier_names : dictionary
         All types of monoview and multiview experiments that have to be benchmarked
-    argumentDictionaries : dictionary
+    argument_dictionaries : dictionary
         Maps monoview and multiview experiments arguments.
     viewDictionary : dictionary
         Maps the view names to their index in the HDF5 dataset
-    nbClass : integer
+    nb_class : integer
         Number of different labels in the classification
 
     Returns
@@ -153,29 +163,55 @@ def initMonoviewExps(benchmark, viewsDictionary, nbClass, kwargsInit):
     benchmark : Dictionary of dictionaries
         Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.
     """
-    argumentDictionaries = {"monoview": [], "multiview": []}
-    if benchmark["monoview"]:
-        argumentDictionaries["monoview"] = []
-        for viewName, viewIndex in viewsDictionary.items():
-            for classifier in benchmark["monoview"]:
-                if multiple_args(classifier, kwargsInit):
-                    argumentDictionaries["monoview"] += gen_multiple_args_dictionnaries(nbClass, kwargsInit, classifier, viewName, viewIndex)
-                else:
-                    arguments = {
-                        "args": {classifier + "KWARGS": dict((key, value[0]) for key, value in kwargsInit[
-                            classifier + "KWARGSInit"].items()), "feat": viewName,
-                                 "CL_type": classifier, "nbClass": nbClass},
-                        "viewIndex": viewIndex}
-                    argumentDictionaries["monoview"].append(arguments)
-    return argumentDictionaries
+    monoview_arguments = []
+    for view_name, view_index in views_dictionary.items():
+        for classifier in classifier_names:
+            if multiple_args(classifier, kwargs_init):
+                monoview_arguments += gen_multiple_args_dictionnaries(nb_class,
+                                                                      kwargs_init,
+                                                                      classifier,
+                                                                      view_name,
+                                                                      view_index)
+            else:
+                arguments = gen_single_monoview_arg_dictionary(classifier,
+                                                               kwargs_init,
+                                                               nb_class,
+                                                               view_index,
+                                                               view_name)
+                monoview_arguments.append(arguments)
+    return monoview_arguments
+
+
+def gen_single_monoview_arg_dictionary(classifier_name, arguments, nb_class,
+                                       view_index, view_name):
+    return {classifier_name: dict((key, value[0]) for key, value in arguments[
+                                                 classifier_name].items()),
+            "view_name": view_name,
+            "view_index": view_index,
+            "classifier_name": classifier_name,
+            "nb_class": nb_class}
+
+
+def gen_single_multiview_arg_dictionary(classifier_name,arguments,nb_class,
+                                        views_dictionary=None):
+    return {"classifier_name": classifier_name,
+            "view_names": list(views_dictionary.keys()),
+            'view_indices': list(views_dictionary.values()),
+            "nb_class": nb_class,
+            "labels_names": None,
+            classifier_name: dict((key, value[0]) for key, value in arguments[
+                                                 classifier_name].items())
+            }
+
 
 def multiple_args(classifier, kwargsInit):
-    listed_args = [type(value) == list and  len(value)>1 for key, value in
-                   kwargsInit[classifier + "KWARGSInit"].items()]
+    listed_args = [type(value) == list and len(value)>1 for key, value in
+                   kwargsInit[classifier].items()]
     if True in listed_args:
         return True
     else: 
         return False
+
 
 def gen_multiple_kwargs_combinations(clKWARGS):
     values = list(clKWARGS.values())
@@ -195,23 +231,29 @@ def gen_multiple_kwargs_combinations(clKWARGS):
     return kwargs_combination, reduced_kwargs_combination
 
 
-def gen_multiple_args_dictionnaries(nbClass, kwargsInit,
-                                    classifier, viewName, viewIndex):
-    multiple_kwargs_list, reduced_multiple_kwargs_list = gen_multiple_kwargs_combinations(kwargsInit[classifier + "KWARGSInit"])
+def gen_multiple_args_dictionnaries(nb_class, kwargsInit, classifier,
+                                    view_name=None, view_index=None, views_indices=None,
+                                    framework="monoview"):
+    multiple_kwargs_list, reduced_multiple_kwargs_list = gen_multiple_kwargs_combinations(kwargsInit[classifier])
     multiple_kwargs_dict = dict(
         (classifier+"_"+"_".join(map(str,list(reduced_dictionary.values()))), dictionary)
         for reduced_dictionary, dictionary in zip(reduced_multiple_kwargs_list, multiple_kwargs_list ))
-    args_dictionnaries = [{
-                        "args": {classifier_name + "KWARGS": arguments,
-                                 "feat": viewName,
-                                 "CL_type": classifier_name,
-                                 "nbClass": nbClass},
-                        "viewIndex": viewIndex}
-        for classifier_name, arguments in multiple_kwargs_dict.items()]
+    args_dictionnaries = [gen_single_monoview_arg_dictionary(classifier_name,
+                                                              arguments,
+                                                              nb_class,
+                                                              view_index=view_index,
+                                                              view_name=view_name)
+                           if framework=="monoview" else
+                           gen_single_multiview_arg_dictionary(classifier_name,
+                                                            arguments,
+                                                            nb_class,
+                                                            views_indices=views_indices)
+                           for classifier_name, arguments
+                           in multiple_kwargs_dict.items()]
     return args_dictionnaries
 
 
-def initMonoviewKWARGS(args, classifiersNames):
+def init_monoview_kwargs(args, classifiersNames):
     r"""Used to init kwargs thanks to a function in each monoview classifier package.
 
     Parameters
@@ -232,21 +274,39 @@ def initMonoviewKWARGS(args, classifiersNames):
     monoviewKWARGS = {}
     for classifiersName in classifiersNames:
         try:
-            classifierModule = getattr(monoview_classifiers, classifiersName)
+            getattr(monoview_classifiers, classifiersName)
         except AttributeError:
             raise AttributeError(
                 classifiersName + " is not implemented in monoview_classifiers, "
                                   "please specify the name of the file in monoview_classifiers")
         monoviewKWARGS[
-            classifiersName + "KWARGSInit"] = args[classifiersName]
+            classifiersName] = args[classifiersName]
     logging.debug("Done:\t Initializing monoview classifiers arguments")
 
     return monoviewKWARGS
 
 
 def initKWARGSFunc(args, benchmark):
-    monoviewKWARGS = initMonoviewKWARGS(args, benchmark["monoview"])
-    return monoviewKWARGS
+    monoview_kwargs = init_monoview_kwargs(args, benchmark["monoview"])
+    multiview_kwargs = init_multiview_kwargs(args, benchmark["multiview"])
+    kwargs = {"monoview":monoview_kwargs, "multiview":multiview_kwargs}
+    return kwargs
+
+
+def init_multiview_kwargs(args, classifiers_names):
+    logging.debug("Start:\t Initializing multiview classifiers arguments")
+    multiview_kwargs = {}
+    for classifiers_name in classifiers_names:
+        try:
+            getattr(multiview_classifiers, classifiers_name)
+        except AttributeError:
+            raise AttributeError(
+                classifiers_name + " is not implemented in mutliview_classifiers, "
+                                  "please specify the name of the coressponding .py "
+                                   "file in mutliview_classifiers")
+        multiview_kwargs[classifiers_name] = args[classifiers_name]
+    logging.debug("Done:\t Initializing multiview classifiers arguments")
+    return multiview_kwargs
 
 
 def initMultiviewArguments(args, benchmark, views, viewsIndices,
@@ -257,9 +317,8 @@ def initMultiviewArguments(args, benchmark, views, viewsIndices,
     multiviewArguments = []
     if "multiview" in benchmark:
         for multiviewAlgoName in benchmark["multiview"]:
-            multiviewPackage = getattr(multiview_classifiers, multiviewAlgoName)
-            mutliviewModule = getattr(multiviewPackage,
-                                      multiviewAlgoName + "Module")
+            mutliviewModule = getattr(multiview_classifiers,
+                                      multiviewAlgoName)
 
             multiviewArguments += mutliviewModule.getArgs(args, benchmark,
                                                           views, viewsIndices,
@@ -347,12 +406,12 @@ def execOneBenchmark(coreIndex=-1, LABELS_DICTIONARY=None, directory=None,
     logging.debug("Done:\t monoview benchmark")
 
     logging.debug("Start:\t multiview arguments initialization")
-    argumentDictionaries = initMultiviewArguments(args, benchmark, views,
-                                                  viewsIndices,
-                                                  argumentDictionaries,
-                                                  randomState, directory,
-                                                  resultsMonoview,
-                                                  classificationIndices)
+    # argumentDictionaries = initMultiviewArguments(args, benchmark, views,
+    #                                               viewsIndices,
+    #                                               argumentDictionaries,
+    #                                               randomState, directory,
+    #                                               resultsMonoview,
+    #                                               classificationIndices)
     logging.debug("Done:\t multiview arguments initialization")
 
     logging.debug("Start:\t multiview benchmark")
@@ -406,12 +465,12 @@ def execOneBenchmark_multicore(nbCores=-1, LABELS_DICTIONARY=None,
     logging.debug("Done:\t monoview benchmark")
 
     logging.debug("Start:\t multiview arguments initialization")
-    argumentDictionaries = initMultiviewArguments(args, benchmark, views,
-                                                  viewsIndices,
-                                                  argumentDictionaries,
-                                                  randomState, directory,
-                                                  resultsMonoview,
-                                                  classificationIndices)
+    # argumentDictionaries = initMultiviewArguments(args, benchmark, views,
+    #                                               viewsIndices,
+    #                                               argumentDictionaries,
+    #                                               randomState, directory,
+    #                                               resultsMonoview,
+    #                                               classificationIndices)
     logging.debug("Done:\t multiview arguments initialization")
 
     logging.debug("Start:\t multiview benchmark")
@@ -454,7 +513,7 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None,
                                                  LABELS_DICTIONARY, kFolds)
     logging.debug("Start:\t monoview benchmark")
     for arguments in argumentDictionaries["monoview"]:
-        X = DATASET.get("View" + str(arguments["viewIndex"]))
+        X = DATASET.get("View" + str(arguments["view_index"]))
         Y = labels
         resultsMonoview += [
             ExecMonoview(directory, X, Y, args["Base"]["name"], labelsNames,
@@ -466,12 +525,12 @@ def execOneBenchmarkMonoCore(DATASET=None, LABELS_DICTIONARY=None,
 
     logging.debug("Start:\t multiview arguments initialization")
 
-    argumentDictionaries = initMultiviewArguments(args, benchmark, views,
-                                                  viewsIndices,
-                                                  argumentDictionaries,
-                                                  randomState, directory,
-                                                  resultsMonoview,
-                                                  classificationIndices)
+    # argumentDictionaries = initMultiviewArguments(args, benchmark, views,
+    #                                               viewsIndices,
+    #                                               argumentDictionaries,
+    #                                               randomState, directory,
+    #                                               resultsMonoview,
+    #                                               classificationIndices)
     logging.debug("Done:\t multiview arguments initialization")
 
     logging.debug("Start:\t multiview benchmark")
@@ -564,9 +623,16 @@ def execBenchmark(nbCores, statsIter, nbMulticlass,
         classificationIndices[0][1])
     multiclassGroundTruth = DATASET.get("Labels").value
     logging.debug("Start:\t Analyzing predictions")
-    results_mean_stds =getResults(results, statsIter, nbMulticlass, benchmarkArgumentsDictionaries,
-               multiclassGroundTruth, metrics, classificationIndices,
-               directories, directory, labelsDictionary, nbExamples, nbLabels)
+    results_mean_stds = getResults(results, statsIter, nbMulticlass,
+                                   benchmarkArgumentsDictionaries,
+                                   multiclassGroundTruth,
+                                   metrics,
+                                   classificationIndices,
+                                   directories,
+                                   directory,
+                                   labelsDictionary,
+                                   nbExamples,
+                                   nbLabels)
     logging.debug("Done:\t Analyzing predictions")
     delete(benchmarkArgumentsDictionaries, nbCores, DATASET)
     return results_mean_stds
@@ -577,14 +643,13 @@ def execClassif(arguments):
     start = time.time()
     args = execution.parseTheArgs(arguments)
     args = configuration.get_the_args(args.path_config)
-
     os.nice(args["Base"]["nice"])
-    nbCores = args["Base"]["nbcores"]
+    nbCores = args["Base"]["nb_cores"]
     if nbCores == 1:
         os.environ['OPENBLAS_NUM_THREADS'] = '1'
-    statsIter = args["Classification"]["statsiter"]
+    statsIter = args["Classification"]["stats_iter"]
     hyperParamSearch = args["Classification"]["hps_type"]
-    multiclassMethod = args["Classification"]["multiclassmethod"]
+    multiclassMethod = args["Classification"]["multiclass_method"]
     CL_type = args["Classification"]["type"]
     monoviewAlgos = args["Classification"]["algos_monoview"]
     multiviewAlgos = args["Classification"]["algos_multiview"]
@@ -601,7 +666,7 @@ def execClassif(arguments):
             directory = execution.initLogFile(dataset_name, args["Base"]["views"], args["Classification"]["type"],
                                               args["Base"]["log"], args["Base"]["debug"], args["Base"]["label"],
                                               args["Base"]["res_dir"], args["Base"]["add_noise"], noise_std)
-            randomState = execution.initRandomState(args["Base"]["randomstate"], directory)
+            randomState = execution.initRandomState(args["Base"]["random_state"], directory)
             statsIterRandomStates = execution.initStatsIterRandomStates(statsIter,
                                                                         randomState)
 
@@ -609,7 +674,7 @@ def execClassif(arguments):
 
             DATASET, LABELS_DICTIONARY, datasetname = getDatabase(args["Base"]["views"],
                                                                   args["Base"]["pathf"], dataset_name,
-                                                                  args["Classification"]["nbclass"],
+                                                                  args["Classification"]["nb_class"],
                                                                   args["Classification"]["classes"],
                                                                   randomState,
                                                                   args["Base"]["full"],
@@ -623,17 +688,14 @@ def execClassif(arguments):
             multiclassLabels, labelsCombinations, indicesMulticlass = multiclass.genMulticlassLabels(
                 DATASET.get("Labels").value, multiclassMethod, splits)
 
-            kFolds = execution.genKFolds(statsIter, args["Classification"]["nbfolds"],
+            kFolds = execution.genKFolds(statsIter, args["Classification"]["nb_folds"],
                                          statsIterRandomStates)
 
             datasetFiles = dataset.initMultipleDatasets(args["Base"]["pathf"], args["Base"]["name"], nbCores)
 
-            # if not views:
-            #     raise ValueError("Empty views list, modify selected views to match dataset " + args["Base"]["views)
 
             views, viewsIndices, allViews = execution.initViews(DATASET, args["Base"]["views"])
             viewsDictionary = genViewsDictionnary(DATASET, views)
-            print(viewsDictionary)
             nbViews = len(views)
             NB_CLASS = DATASET.get("Metadata").attrs["nbClass"]
 
@@ -654,8 +716,10 @@ def execClassif(arguments):
             benchmark = initBenchmark(CL_type, monoviewAlgos, multiviewAlgos, args)
             initKWARGS = initKWARGSFunc(args, benchmark)
             dataBaseTime = time.time() - start
-            argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary,
+            argumentDictionaries = init_argument_dictionaries(benchmark, viewsDictionary,
                                                     NB_CLASS, initKWARGS)
+            # argumentDictionaries = initMonoviewExps(benchmark, viewsDictionary,
+            #                                         NB_CLASS, initKWARGS)
             directories = execution.genDirecortiesNames(directory, statsIter)
             benchmarkArgumentDictionaries = execution.genArgumentDictionaries(
                 LABELS_DICTIONARY, directories, multiclassLabels,

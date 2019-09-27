@@ -7,6 +7,8 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
+classifier_class_name = "RandomForest"
+
 class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, n_estimators=10,
