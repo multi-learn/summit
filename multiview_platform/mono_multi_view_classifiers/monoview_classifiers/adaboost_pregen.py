@@ -116,19 +116,6 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
                    np.array([self.train_time, len(self.estimator_weights_)]), delimiter=',')
         return interpretString
 
-    # def pregen_voters(self, X, y=None):
-    #     if y is not None:
-    #         neg_y = change_label_to_minus(y)
-    #         if self.estimators_generator is None:
-    #             self.estimators_generator = StumpsClassifiersGenerator(
-    #                 n_stumps_per_attribute=self.n_stumps,
-    #                 self_complemented=self.self_complemented)
-    #         self.estimators_generator.fit(X, neg_y)
-    #     else:
-    #         neg_y=None
-    #     classification_matrix = self._binary_classification_matrix(X)
-
-
 # def formatCmdArgs(args):
 #     """Used to format kwargs for the parsed args"""
 #     kwargsDict = {'n_estimators': args.AdP_n_est,
