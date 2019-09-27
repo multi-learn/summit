@@ -2,7 +2,7 @@ import numpy as np
 import pkgutil
 
 from ..utils.dataset import getV
-from ..multiview.multiview_utils import BaseMultiviewClassifier, get_train_views_indices
+from ..multiview.multiview_utils import BaseMultiviewClassifier, get_train_views_indices, ConfigGenerator
 from .. import monoview_classifiers
 
 classifier_class_name = "WeightedLinearEarlyFusion"
@@ -24,18 +24,26 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier):
             self.monoview_classifier = monoview_classifier_class(random_state=random_state,
                                                                  **monoview_classifier_config)
         else:
-            self.monoview_classifier = monoview_classifier
+            self.monoview_classifier = monoview_classifier(monoview_classifier_config)
             self.short_name = "early fusion "+self.monoview_classifier.__class__.__name__
-        self.param_names = ["monoview_classifier","random_state"]
+
+        self.param_names = ["monoview_classifier","random_state", "monoview_classifier_config"]
         classifier_classes = []
         for name in dir(monoview_classifiers):
             if not name.startswith("__"):
                 module = getattr(monoview_classifiers, name)
-                classifier_class = getattr(module, module.classifier_class_name)()
+                classifier_class = getattr(module, module.classifier_class_name)
                 classifier_classes.append(classifier_class)
-        self.distribs = [classifier_classes, [self.random_state]]
+        self.distribs = [classifier_classes, [self.random_state], ConfigGenerator()]
         self.classed_params = ["monoview_classifier"]
         self.weird_strings={"monoview_classifier":["class_name", "config"]}
+
+    def set_params(self, monoview_classifier=None, monoview_classifier_config=None, **params):
+        monoview_classifier_name = monoview_classifier.__module__
+        self.monoview_classifier = monoview_classifier()
+        self.set_monoview_classifier_config(monoview_classifier_name,
+                                       monoview_classifier_config)
+
 
     def fit(self, X, y, train_indices=None, view_indices=None):
         train_indices, X = self.transform_data_to_monoview(X, train_indices, view_indices)
@@ -69,6 +77,12 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier):
              in zip(self.view_weights, enumerate(self.view_indices))]
             , axis=1)
         return monoview_data
+
+    def set_monoview_classifier_config(self, monoview_classifier_name, monoview_classifier_config):
+        if monoview_classifier_name in monoview_classifier_config:
+            self.monoview_classifier.set_params(monoview_classifier_config[monoview_classifier_name])
+        else:
+            self.monoview_classifier.set_params(monoview_classifier_config)
 
 
 

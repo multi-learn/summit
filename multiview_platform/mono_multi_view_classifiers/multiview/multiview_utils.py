@@ -2,6 +2,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 import numpy as np
 
 from .. import multiview_classifiers
+from .. import monoview_classifiers
 
 
 
@@ -92,3 +93,29 @@ def get_train_views_indices(dataset, train_indices, view_indices,):
     if train_indices is None:
         train_indices = range(dataset["Metadata"].attrs["datasetLength"])
     return train_indices, view_indices
+
+
+class ConfigGenerator():
+
+    def __init__(self):
+        self.distribs = {}
+        for name in dir(monoview_classifiers):
+            if not name.startswith("__"):
+                module = getattr(monoview_classifiers, name)
+                classifier_class = getattr(module,
+                                           module.classifier_class_name)()
+                self.distribs[name] = dict((param_name, param_distrib)
+                                      for param_name, param_distrib in
+                                      zip(classifier_class().param_names,
+                                          classifier_class().distribs))
+
+    def rvs(self, random_state=None):
+        config_sample = {}
+        for classifier_name, classifier_config in self.distribs.items():
+            for param_name, param_distrib in classifier_config.items():
+                if hasattr(param_distrib, "rvs"):
+                    config_sample[classifier_name][param_name]=param_distrib.rvs(random_state=random_state)
+                else:
+                    config_sample[classifier_name][
+                        param_name] = param_distrib[random_state.randint(len(param_distrib))]
+        return config_sample
