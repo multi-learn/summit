@@ -241,7 +241,11 @@ class Test_execOneBenchmark(unittest.TestCase):
                                                                        {
                                                                            "try": 0},
                                                                        {
-                                                                           "try2": 100}]},
+                                                                           "try2": 100}],
+                                                                   "multiview":[{
+                                                                           "try3": 5},
+                                                                       {
+                                                                           "try4": 10}]},
                                                       benchmark="try",
                                                       views="try",
                                                       viewsIndices="try",
@@ -295,7 +299,16 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
             randomState="try",
             hyperParamSearch="try",
             metrics="try",
-            argumentDictionaries={"monoview": [{"try": 0}, {"try2": 100}]},
+            argumentDictionaries={
+                                                                   "monoview": [
+                                                                       {
+                                                                           "try": 0},
+                                                                       {
+                                                                           "try2": 100}],
+                                                                   "multiview":[{
+                                                                           "try3": 5},
+                                                                       {
+                                                                           "try4": 10}]},
             benchmark="try",
             views="try",
             viewsIndices="try",

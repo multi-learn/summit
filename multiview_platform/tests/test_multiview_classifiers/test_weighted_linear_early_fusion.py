@@ -31,7 +31,7 @@ class Test_WeightedLinearEarlyFusion(unittest.TestCase):
         cls.monoview_classifier_name = "decision_tree"
         cls.monoview_classifier_config = {"max_depth":1, "criterion": "gini", "splitter": "best"}
         cls.classifier = weighted_linear_early_fusion.WeightedLinearEarlyFusion(
-            cls.view_weights,
+            random_state=cls.random_state, view_weights=cls.view_weights,
             monoview_classifier=cls.monoview_classifier_name,
             monoview_classifier_config=cls.monoview_classifier_config)
 
