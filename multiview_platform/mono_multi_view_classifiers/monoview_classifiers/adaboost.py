@@ -16,6 +16,10 @@ classifier_class_name = "Adaboost"
 
 
 class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
+    """
+    This class implement a Classifier with adaboost algorithm.
+
+    """
 
     def __init__(self, random_state=None, n_estimators=50,
                  base_estimator=None, **kwargs):
