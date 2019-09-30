@@ -5,7 +5,7 @@ Base :
   label: "_"
   type: ".hdf5"
   views: ["all"]
-  pathf: "../Data/"
+  pathf: "../data/"
   nice: 0
   random_state: 42
   nb_cores: 1
@@ -13,7 +13,7 @@ Base :
   debug: True
   add_noise: False
   noise_std: 0.0
-  res_dir: "../Results/"
+  res_dir: "../results/"
 
 # All the classification-realted configuration options
 Classification:
