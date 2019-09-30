@@ -11,7 +11,7 @@ from .multiview_utils import MultiviewResult
 from . import analyze_results
 from .. import multiview_classifiers
 from ..utils import hyper_parameter_search
-from ..utils.dataset import getShape
+from ..utils.dataset import get_shape
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -38,7 +38,7 @@ def initConstants(kwargs, classificationIndices, metrics, name, nbCores, KFolds,
 
     for viewIndex, viewName in zip(viewsIndices, views):
         logging.info("Info:\t Shape of " + str(viewName) + " :" + str(
-            getShape(DATASET, viewIndex)))
+            get_shape(DATASET, viewIndex)))
     return classifier_name, t_start, viewsIndices, classifier_config, views, learningRate
 
 

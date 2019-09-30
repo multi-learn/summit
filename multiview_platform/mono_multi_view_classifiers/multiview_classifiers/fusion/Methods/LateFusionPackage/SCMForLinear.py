@@ -9,7 +9,7 @@ import itertools
 
 from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
 from ..... import monoview_classifiers
-from .....utils.dataset import getV
+from .....utils.dataset import get_v
 
 
 class DecisionStumpSCMNew(BaseEstimator, ClassifierMixin):
@@ -119,7 +119,7 @@ class SCMForLinear(LateFusionClassifier):
         if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         for index, viewIndex in enumerate(viewsIndices):
-            self.monoviewClassifiers[index].fit(getV(DATASET, viewIndex, trainIndices),
+            self.monoviewClassifiers[index].fit(get_v(DATASET, viewIndex, trainIndices),
                                        labels[trainIndices])
         self.SCMForLinearFusionFit(DATASET, labels, usedIndices=trainIndices, viewsIndices=viewsIndices)
 
@@ -133,7 +133,7 @@ class SCMForLinear(LateFusionClassifier):
         # accus = []
         for index, viewIndex in enumerate(viewsIndices):
             monoviewDecision = self.monoviewClassifiers[index].predict(
-                getV(DATASET, viewIndex, usedIndices))
+                get_v(DATASET, viewIndex, usedIndices))
             # accus.append(accuracy_score(DATASET.get("Labels").value[usedIndices], monoviewDecision))
             monoviewDecisions[:, index] = monoviewDecision
         features = self.generateInteractions(monoviewDecisions)
@@ -150,7 +150,7 @@ class SCMForLinear(LateFusionClassifier):
         monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
-                getV(DATASET, viewIndex, usedIndices))
+                get_v(DATASET, viewIndex, usedIndices))
         features = self.generateInteractions(monoViewDecisions)
         features = np.array([np.array([feat for feat in feature]) for feature in features])
         self.SCMClassifier.fit(features, labels[usedIndices].astype(int))

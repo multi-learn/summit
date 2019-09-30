@@ -4,7 +4,7 @@ from sklearn.svm import SVC
 import pkgutil
 
 from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
-from .....utils.dataset import getV
+from .....utils.dataset import get_v
 from ..... import monoview_classifiers
 
 
@@ -63,7 +63,7 @@ class SVMForLinear(LateFusionClassifier):
         if trainIndices is None:
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         for index, viewIndex in enumerate(viewsIndices):
-            self.monoviewClassifiers[index].fit(getV(DATASET, viewIndex, trainIndices),
+            self.monoviewClassifiers[index].fit(get_v(DATASET, viewIndex, trainIndices),
                                        labels[trainIndices])
         self.SVMForLinearFusionFit(DATASET, labels, usedIndices=trainIndices, viewsIndices=viewsIndices)
 
@@ -79,7 +79,7 @@ class SVMForLinear(LateFusionClassifier):
         monoviewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
             monoviewDecisions[:, index] = self.monoviewClassifiers[index].predict(
-                getV(DATASET, viewIndex, usedIndices))
+                get_v(DATASET, viewIndex, usedIndices))
         predictedLabels = self.SVMClassifier.predict(monoviewDecisions)
         return predictedLabels
 
@@ -91,7 +91,7 @@ class SVMForLinear(LateFusionClassifier):
         monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
-                getV(DATASET, viewIndex, usedIndices))
+                get_v(DATASET, viewIndex, usedIndices))
 
         self.SVMClassifier.fit(monoViewDecisions, labels[usedIndices])
 

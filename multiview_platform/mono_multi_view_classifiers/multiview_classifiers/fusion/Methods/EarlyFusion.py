@@ -2,7 +2,7 @@
 # -*- encoding: utf-8
 
 import numpy as np
-from ....utils.dataset import getV
+from ....utils.dataset import get_v
 from .... import monoview_classifiers
 
 class EarlyFusionClassifier(object):
@@ -38,5 +38,5 @@ class EarlyFusionClassifier(object):
             weights = np.array([1 / nbView for i in range(nbView)])
         if sum(weights) != 1:
             weights = weights / sum(weights)
-        self.monoviewData = np.concatenate([getV(DATASET, viewIndex, usedIndices)
+        self.monoviewData = np.concatenate([get_v(DATASET, viewIndex, usedIndices)
                                             for index, viewIndex in enumerate(viewsIndices)], axis=1)

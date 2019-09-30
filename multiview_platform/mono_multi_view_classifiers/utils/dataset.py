@@ -10,86 +10,86 @@ from scipy import sparse
 from . import get_multiview_db as DB
 
 
-def getV(DATASET, viewIndex, usedIndices=None):
+def get_view(dataset, view_index, used_indices=None):
     """Used to extract a view as a numpy array or a sparse mat from the HDF5 dataset"""
-    if usedIndices is None:
-        usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
-    if type(usedIndices) is int:
-        return DATASET.get("View" + str(viewIndex))[usedIndices, :]
+    if used_indices is None:
+        used_indices = range(dataset.get("Metadata").attrs["datasetLength"])
+    if type(used_indices) is int:
+        return dataset.get("View" + str(view_index))[used_indices, :]
     else:
-        usedIndices = np.array(usedIndices)
-        sortedIndices = np.argsort(usedIndices)
-        usedIndices = usedIndices[sortedIndices]
+        used_indices = np.array(used_indices)
+        sorted_indices = np.argsort(used_indices)
+        used_indices = used_indices[sorted_indices]
 
-        if not DATASET.get("View" + str(viewIndex)).attrs["sparse"]:
-            return DATASET.get("View" + str(viewIndex))[usedIndices, :][
-                   np.argsort(sortedIndices), :]
+        if not dataset.get("View" + str(view_index)).attrs["sparse"]:
+            return dataset.get("View" + str(view_index))[used_indices, :][
+                   np.argsort(sorted_indices), :]
         else:
             sparse_mat = sparse.csr_matrix(
-                (DATASET.get("View" + str(viewIndex)).get("data").value,
-                 DATASET.get("View" + str(viewIndex)).get("indices").value,
-                 DATASET.get("View" + str(viewIndex)).get("indptr").value),
-                shape=DATASET.get("View" + str(viewIndex)).attrs["shape"])[
-                         usedIndices, :][
-                         np.argsort(sortedIndices), :]
+                (dataset.get("View" + str(view_index)).get("data").value,
+                 dataset.get("View" + str(view_index)).get("indices").value,
+                 dataset.get("View" + str(view_index)).get("indptr").value),
+                shape=dataset.get("View" + str(view_index)).attrs["shape"])[
+                         used_indices, :][
+                         np.argsort(sorted_indices), :]
 
             return sparse_mat
 
 
-def getShape(DATASET, viewIndex):
+def get_shape(dataset, view_index):
     """Used to get the dataset shape even if it's sparse"""
-    if not DATASET.get("View" + str(viewIndex)).attrs["sparse"]:
-        return DATASET.get("View" + str(viewIndex)).shape
+    if not dataset.get("View" + str(view_index)).attrs["sparse"]:
+        return dataset.get("View" + str(view_index)).shape
     else:
-        return DATASET.get("View" + str(viewIndex)).attrs["shape"]
+        return dataset.get("View" + str(view_index)).attrs["shape"]
 
 
-def getValue(DATASET):
+def get_value(dataset):
     """Used to get the value of a view in the HDF5 dataset even if it sparse"""
-    if not DATASET.attrs["sparse"]:
-        return DATASET.value
+    if not dataset.attrs["sparse"]:
+        return dataset.value
     else:
-        sparse_mat = sparse.csr_matrix((DATASET.get("data").value,
-                                        DATASET.get("indices").value,
-                                        DATASET.get("indptr").value),
-                                       shape=DATASET.attrs["shape"])
+        sparse_mat = sparse.csr_matrix((dataset.get("data").value,
+                                        dataset.get("indices").value,
+                                        dataset.get("indptr").value),
+                                       shape=dataset.attrs["shape"])
         return sparse_mat
 
 
-def extractSubset(matrix, usedIndices):
+def extract_subset(matrix, used_indices):
     """Used to extract a subset of a matrix even if it's sparse"""
     if sparse.issparse(matrix):
-        newIndptr = np.zeros(len(usedIndices) + 1, dtype=int)
+        new_indptr = np.zeros(len(used_indices) + 1, dtype=int)
         oldindptr = matrix.indptr
-        for exampleIndexIndex, exampleIndex in enumerate(usedIndices):
-            newIndptr[exampleIndexIndex + 1] = newIndptr[exampleIndexIndex] + (
+        for exampleIndexIndex, exampleIndex in enumerate(used_indices):
+            new_indptr[exampleIndexIndex + 1] = new_indptr[exampleIndexIndex] + (
                     oldindptr[exampleIndex + 1] - oldindptr[exampleIndex])
-        newData = np.ones(newIndptr[-1], dtype=bool)
-        newIndices = np.zeros(newIndptr[-1], dtype=int)
-        oldIndices = matrix.indices
-        for exampleIndexIndex, exampleIndex in enumerate(usedIndices):
-            newIndices[newIndptr[exampleIndexIndex]:newIndptr[
-                exampleIndexIndex + 1]] = oldIndices[
+        new_data = np.ones(new_indptr[-1], dtype=bool)
+        new_indices = np.zeros(new_indptr[-1], dtype=int)
+        old_indices = matrix.indices
+        for exampleIndexIndex, exampleIndex in enumerate(used_indices):
+            new_indices[new_indptr[exampleIndexIndex]:new_indptr[
+                exampleIndexIndex + 1]] = old_indices[
                                           oldindptr[exampleIndex]:
                                           oldindptr[exampleIndex + 1]]
-        return sparse.csr_matrix((newData, newIndices, newIndptr),
-                                 shape=(len(usedIndices), matrix.shape[1]))
+        return sparse.csr_matrix((new_data, new_indices, new_indptr),
+                                 shape=(len(used_indices), matrix.shape[1]))
     else:
-        return matrix[usedIndices]
+        return matrix[used_indices]
 
 
-def initMultipleDatasets(pathF, name, nbCores):
+def init_multiple_datasets(path_f, name, nb_cores):
     r"""Used to create copies of the dataset if multicore computation is used.
 
     This is a temporary solution to fix the sharing memory issue with HDF5 datasets.
 
     Parameters
     ----------
-    pathF : string
+    path_f : string
         Path to the original dataset directory
     name : string
         Name of the dataset
-    nbCores : int
+    nb_cores : int
         The number of threads that the benchmark can use
 
     Returns
@@ -97,25 +97,25 @@ def initMultipleDatasets(pathF, name, nbCores):
     datasetFiles : None
         Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.
     """
-    if nbCores > 1:
-        if DB.datasetsAlreadyExist(pathF, name, nbCores):
+    if nb_cores > 1:
+        if DB.datasetsAlreadyExist(path_f, name, nb_cores):
             logging.debug(
                 "Info:\t Enough copies of the dataset are already available")
             pass
         else:
             logging.debug("Start:\t Creating " + str(
-                nbCores) + " temporary datasets for multiprocessing")
+                nb_cores) + " temporary datasets for multiprocessing")
             logging.warning(
                 " WARNING : /!\ This may use a lot of HDD storage space : " +
-                str(os.path.getsize(pathF + name + ".hdf5") * nbCores / float(
+                str(os.path.getsize(path_f + name + ".hdf5") * nb_cores / float(
                     1024) / 1000 / 1000) + " Gbytes /!\ ")
             confirmation = confirm()
             if not confirmation:
                 sys.exit(0)
             else:
-                datasetFiles = DB.copyHDF5(pathF, name, nbCores)
+                dataset_files = DB.copyHDF5(path_f, name, nb_cores)
                 logging.debug("Start:\t Creating datasets for multiprocessing")
-                return datasetFiles
+                return dataset_files
 
 
 def confirm(resp=True, timeout=15):
@@ -141,10 +141,9 @@ def input_(timeout=15):
     else:
         return "y"
 
-
-def getMonoviewShared(path, name, viewName, labelsNames, classificationIndices):
+def get_monoview_shared(path, name, view_name, labels_names, classification_indices):
     """ATM is not used with shared memory, but soon :)"""
-    HDF5_dataset_file = h5py.File(path + name + ".hdf5", "w")
-    X = HDF5_dataset_file.get(viewName).value
-    Y = HDF5_dataset_file.get("Labels").value
-    return X, Y
+    hdf5_dataset_file = h5py.File(path + name + ".hdf5", "w")
+    X = hdf5_dataset_file.get(view_name).value
+    y = hdf5_dataset_file.get("Labels").value
+    return X, y

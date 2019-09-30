@@ -16,7 +16,7 @@ from . import monoview_utils
 from .analyze_result import execute
 # Import own modules
 from .. import monoview_classifiers
-from ..utils.dataset import getValue, extractSubset
+from ..utils.dataset import get_value, extract_subset
 from ..utils import hyper_parameter_search
 
 # Author-Info
@@ -146,7 +146,7 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
     else:
         feat = X.attrs["name"]
     CL_type = kwargs["classifier_name"]
-    X = getValue(X)
+    X = get_value(X)
     learningRate = float(len(classificationIndices[0])) / (
                 len(classificationIndices[0]) + len(classificationIndices[1]))
     labelsString = "-".join(labelsNames)
@@ -166,10 +166,10 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
 
 def initTrainTest(X, Y, classificationIndices):
     trainIndices, testIndices, testIndicesMulticlass = classificationIndices
-    X_train = extractSubset(X, trainIndices)
-    X_test = extractSubset(X, testIndices)
+    X_train = extract_subset(X, trainIndices)
+    X_test = extract_subset(X, testIndices)
     if np.array(testIndicesMulticlass).size != 0:
-        X_test_multiclass = extractSubset(X, testIndicesMulticlass)
+        X_test_multiclass = extract_subset(X, testIndicesMulticlass)
     else:
         X_test_multiclass = []
     y_train = Y[trainIndices]
@@ -319,7 +319,7 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
 #     databaseType = None
 #
 #     # Extract the data using MPI
-#     X, Y = dataset.getMonoviewShared(path, name, viewName)
+#     X, Y = dataset.get_monoview_shared(path, name, viewName)
 #
 #     # Init log
 #     logFileName = time.strftime(

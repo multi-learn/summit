@@ -4,7 +4,7 @@ import pkgutil
 
 from ..... import monoview_classifiers
 from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
-from .....utils.dataset import getV
+from .....utils.dataset import get_v
 
 
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
@@ -76,7 +76,7 @@ class WeightedLinear(LateFusionClassifier):
         viewScores = []#np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
         for index, viewIndex in enumerate(viewsIndices):
             viewScores.append(np.array(self.monoviewClassifiers[index].predict_proba(
-                getV(DATASET, viewIndex, usedIndices))) * self.weights[index])
+                get_v(DATASET, viewIndex, usedIndices))) * self.weights[index])
         viewScores = np.array(viewScores)
         predictedLabels = np.argmax(np.sum(viewScores, axis=0), axis=1)
 

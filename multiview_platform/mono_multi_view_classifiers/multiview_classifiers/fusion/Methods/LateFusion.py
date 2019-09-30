@@ -9,7 +9,7 @@ import math
 
 from .... import monoview_classifiers
 from .... import metrics
-from ....utils.dataset import getV
+from ....utils.dataset import get_v
 
 
 # def canProbasClassifier(classifierConfig):
@@ -142,7 +142,7 @@ class LateFusionClassifier(object):
             trainIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         self.monoviewClassifiers = Parallel(n_jobs=self.nbCores)(
                 delayed(fitMonoviewClassifier)(self.monoviewClassifiers[index],
-                                               getV(DATASET, viewIndex, trainIndices),
+                                               get_v(DATASET, viewIndex, trainIndices),
                                                labels[trainIndices],
                                                self.needProbas, self.randomState)
                 for index, viewIndex in enumerate(viewsIndices))

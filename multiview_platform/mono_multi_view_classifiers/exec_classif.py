@@ -691,7 +691,7 @@ def execClassif(arguments):
             kFolds = execution.genKFolds(statsIter, args["Classification"]["nb_folds"],
                                          statsIterRandomStates)
 
-            datasetFiles = dataset.initMultipleDatasets(args["Base"]["pathf"], args["Base"]["name"], nbCores)
+            datasetFiles = dataset.init_multiple_datasets(args["Base"]["pathf"], args["Base"]["name"], nbCores)
 
 
             views, viewsIndices, allViews = execution.initViews(DATASET, args["Base"]["views"])
