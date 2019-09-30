@@ -17,7 +17,7 @@ from ... import metrics
 
 class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
     def __init__(self, mu=0.01, epsilon=1e-06, n_max_iterations=100,
-                 estimators_generator="Stumps", dual_constraint_rhs=0,
+                 estimators_generator="Stumps", dual_constraint_rhs=0, max_depth=1,
                  save_iteration_as_hyperparameter_each=None, random_state=None):
         super(ColumnGenerationClassifier, self).__init__()
         self.epsilon = epsilon
@@ -25,6 +25,7 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
         self.estimators_generator = estimators_generator
         self.dual_constraint_rhs = dual_constraint_rhs
         self.mu = mu
+        self.max_depth=max_depth
         self.train_time = 0
         self.plotted_metric = metrics.zero_one_loss
         self.random_state = random_state
@@ -79,15 +80,18 @@ class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):
                 np.squeeze(np.array((alpha).T.dot(y_kernel_matrix).T)),
                 fill_value=-np.inf)
 
-            h_values[self.chosen_columns_] = ma.masked
+            if self.chosen_columns_:
+                h_values[self.chosen_columns_] = ma.masked
+
             worst_h_index = ma.argmax(h_values)
 
             # Check for optimal solution. We ensure at least one complete iteration is done as the initialization
             # values might provide a degenerate initial solution.
-            if h_values[
-                worst_h_index] <= self.dual_constraint_rhs + self.epsilon and len(
-                    self.chosen_columns_) > 0:
-                break
+            if self.chosen_columns_:
+                if h_values[
+                    worst_h_index] <= self.dual_constraint_rhs + self.epsilon and len(
+                        self.chosen_columns_) > 0:
+                    break
 
             # Append the weak hypothesis.
             self.chosen_columns_.append(worst_h_index)

@@ -19,19 +19,71 @@ class Test_initKWARGS(unittest.TestCase):
     def test_initKWARGSFunc_no_monoview(self):
         benchmark = {"monoview": {}, "multiview": {}}
         args = exec_classif.initKWARGSFunc({}, benchmark)
-        self.assertEqual(args, {})
+        self.assertEqual(args, {"monoview": {}, "multiview": {}})
 
 
-class Test_initMonoviewArguments(unittest.TestCase):
+class Test_init_argument_dictionaries(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.benchmark = {"monoview": ["fake_monoview_classifier"], "multiview": {}}
+        cls.views_dictionnary = {'test_view_0': 0, 'test_view': 1}
+        cls.nb_class = 2
+        cls.monoview_classifier_name = "fake_monoview_classifier"
+        cls.monoview_classifier_arg_name = "fake_arg"
+        cls.monoview_classifier_arg_value = ["fake_value_1"]
+        cls.multiview_classifier_name = "fake_multiview_classifier"
+        cls.multiview_classifier_arg_name = "fake_arg_mv"
+        cls.multiview_classifier_arg_value = ["fake_value_2"]
+        cls.init_kwargs = {
+            'monoview':{
+                cls.monoview_classifier_name:
+                    {cls.monoview_classifier_arg_name:cls.monoview_classifier_arg_value}
+            },
+            "multiview":{
+                cls.multiview_classifier_name:{
+                    cls.multiview_classifier_arg_name:cls.multiview_classifier_arg_value}
+            }
+        }
 
-    def test_initMonoviewArguments_no_monoview(self):
-        benchmark = {"monoview": {}, "multiview": {}}
-        arguments = exec_classif.initMonoviewExps(benchmark, {}, 0, {})
-        self.assertEqual(arguments, {'monoview': [], 'multiview': []})
+    def test_init_argument_dictionaries_monoview(self):
+        arguments = exec_classif.init_argument_dictionaries(self.benchmark,
+                                                            self.views_dictionnary,
+                                                            self.nb_class,
+                                                            self.init_kwargs)
+        expected_output = [{
+                self.monoview_classifier_name: {
+                    self.monoview_classifier_arg_name:self.monoview_classifier_arg_value[0]},
+                "view_name": "test_view_0",
+                "classifier_name": self.monoview_classifier_name,
+                "nb_class": self.nb_class,
+                "view_index": 0},
+                {self.monoview_classifier_name: {
+                    self.monoview_classifier_arg_name: self.monoview_classifier_arg_value[0]},
+                "view_name": "test_view",
+                "classifier_name": self.monoview_classifier_name,
+                "nb_class": self.nb_class,
+                "view_index": 1},
+                           ]
+        self.assertEqual(arguments["monoview"], expected_output)
 
-    def test_initMonoviewArguments_empty(self):
-        benchmark = {"monoview": {}, "multiview": {}}
-        arguments = exec_classif.initMonoviewExps(benchmark, {}, 0, {})
+    def test_init_argument_dictionaries_multiview(self):
+        self.benchmark["multiview"] = ["fake_multiview_classifier"]
+        self.benchmark["monoview"] = {}
+        arguments = exec_classif.init_argument_dictionaries(self.benchmark,
+                                                            self.views_dictionnary,
+                                                            self.nb_class,
+                                                            self.init_kwargs)
+        expected_output = [{
+                "classifier_name": self.multiview_classifier_name,
+                "view_indices": [0,1],
+                "view_names": ["test_view_0", "test_view"],
+                "nb_class": self.nb_class,
+                "labels_names":None,
+                self.multiview_classifier_name: {
+                    self.multiview_classifier_arg_name:
+                        self.multiview_classifier_arg_value[0]},
+        },]
+        self.assertEqual(arguments["multiview"][0], expected_output[0])
 
 
 def fakeBenchmarkExec(coreIndex=-1, a=7, args=1):
@@ -189,7 +241,11 @@ class Test_execOneBenchmark(unittest.TestCase):
                                                                        {
                                                                            "try": 0},
                                                                        {
-                                                                           "try2": 100}]},
+                                                                           "try2": 100}],
+                                                                   "multiview":[{
+                                                                           "try3": 5},
+                                                                       {
+                                                                           "try4": 10}]},
                                                       benchmark="try",
                                                       views="try",
                                                       viewsIndices="try",
@@ -243,7 +299,16 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
             randomState="try",
             hyperParamSearch="try",
             metrics="try",
-            argumentDictionaries={"monoview": [{"try": 0}, {"try2": 100}]},
+            argumentDictionaries={
+                                                                   "monoview": [
+                                                                       {
+                                                                           "try": 0},
+                                                                       {
+                                                                           "try2": 100}],
+                                                                   "multiview":[{
+                                                                           "try3": 5},
+                                                                       {
+                                                                           "try4": 10}]},
             benchmark="try",
             views="try",
             viewsIndices="try",

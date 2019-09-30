@@ -3,8 +3,10 @@ import unittest
 
 import h5py
 import numpy as np
+from sklearn.model_selection import StratifiedKFold
 
 from ...mono_multi_view_classifiers.monoview import exec_classif_mono_view
+from ...mono_multi_view_classifiers.monoview_classifiers import decision_tree
 
 
 class Test_initConstants(unittest.TestCase):
@@ -15,7 +17,7 @@ class Test_initConstants(unittest.TestCase):
         cls.datasetFile = h5py.File(
             "multiview_platform/tests/temp_tests/test.hdf5", "w")
         cls.random_state = np.random.RandomState(42)
-        cls.args = {"CL_type": "test_clf"}
+        cls.args = {"classifier_name": "test_clf"}
         cls.X_value = cls.random_state.randint(0, 500, (10, 20))
         cls.X = cls.datasetFile.create_dataset("View0", data=cls.X_value)
         cls.X.attrs["name"] = "test_dataset"
@@ -87,6 +89,50 @@ class Test_initTrainTest(unittest.TestCase):
              np.array([270, 189, 445, 174, 445])]))
         np.testing.assert_array_equal(y_train, np.array([0, 0, 1, 0, 0]))
         np.testing.assert_array_equal(y_test, np.array([1, 1, 0, 0, 0]))
+
+
+class Test_getHPs(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        os.mkdir("multiview_platform/tests/tmp_tests")
+        cls.classifierModule = decision_tree
+        cls.hyperParamSearch = "randomized_search"
+        cls.n_iter = 2
+        cls.classifier_name = "decision_tree"
+        cls.random_state = np.random.RandomState(42)
+        cls.X = cls.random_state.randint(0,10,size=(10,5))
+        cls.y = cls.random_state.randint(0,2,size=10)
+        cls.output_file_name = "multiview_platform/tests/tmp_tests/"
+        cls.cv = StratifiedKFold(n_splits=2, random_state=cls.random_state)
+        cls.nb_cores = 1
+        cls.metrics = [["accuracy_score", None]]
+        cls.kwargs = {"decision_tree" : {"max_depth": 1,
+                      "criterion": "gini",
+                      "splitter": "best"}}
+        cls.classifier_class_name = "DecisionTree"
+
+    @classmethod
+    def tearDownClass(cls):
+        for file_name in os.listdir("multiview_platform/tests/tmp_tests"):
+            os.remove(
+                os.path.join("multiview_platform/tests/tmp_tests", file_name))
+        os.rmdir("multiview_platform/tests/tmp_tests")
+
+    def test_simple(self):
+        kwargs, test_folds_predictions = exec_classif_mono_view.getHPs(self.classifierModule,
+                                                                       self.hyperParamSearch,
+                                                                       self.n_iter,
+                                                                       self.classifier_name,
+                                                                       self.classifier_class_name,
+                                                                       self.X,
+                                                                       self.y,
+                                                                       self.random_state,
+                                                                       self.output_file_name,
+                                                                       self.cv,
+                                                                       self.nb_cores,
+                                                                       self.metrics,
+                                                                       self.kwargs)
 
 # class Test_getKWARGS(unittest.TestCase):
 #

@@ -23,7 +23,7 @@ def parseTheArgs(arguments):
     groupStandard.add_argument('--path_config', metavar='STRING', action='store',
                                help='Path to the hdf5 dataset or database '
                                     'folder (default: %(default)s)',
-                               default='../config_files/config.ini')
+                               default='../config_files/config.yml')
 #     groupStandard.add_argument('-log', action='store_true',
 #                                help='Use option to activate logging to console')
 #     groupStandard.add_argument('--name', metavar='STRING', nargs='+', action='store',

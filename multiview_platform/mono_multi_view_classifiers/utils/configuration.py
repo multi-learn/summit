@@ -1,19 +1,24 @@
 import configparser
 import builtins
 from distutils.util import strtobool as tobool
+import yaml
 
 
-def get_the_args(path_to_config_file="../config_files/config.ini"):
+def get_the_args(path_to_config_file="../config_files/config.yml"):
     """This is the main function for extracting the args for a '.ini' file"""
-    config_parser = configparser.ConfigParser(comment_prefixes=('#'))
-    config_parser.read(path_to_config_file)
-    config_dict = {}
-    for section in config_parser:
-        config_dict[section] = {}
-        for key in config_parser[section]:
-            value = format_raw_arg(config_parser[section][key])
-            config_dict[section][key] = value
-    return config_dict
+    with open(path_to_config_file, 'r') as stream:
+        yaml_config = yaml.safe_load(stream)
+    return yaml_config
+
+    # config_parser = configparser.ConfigParser(comment_prefixes=('#'))
+    # config_parser.read(path_to_config_file)
+    # config_dict = {}
+    # for section in config_parser:
+    #     config_dict[section] = {}
+    #     for key in config_parser[section]:
+    #         value = format_raw_arg(config_parser[section][key])
+    #         config_dict[section][key] = value
+    # return config_dict
 
 
 def format_raw_arg(raw_arg):

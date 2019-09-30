@@ -13,6 +13,8 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
+classifier_class_name = "GradientBoosting"
+
 class CustomDecisionTree(DecisionTreeClassifier):
     def predict(self, X, check_input=True):
         y_pred = super(CustomDecisionTree, self).predict(X,

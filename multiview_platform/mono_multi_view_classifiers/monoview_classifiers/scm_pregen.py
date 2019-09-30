@@ -11,12 +11,13 @@ from ..monoview.monoview_utils import CustomRandint, CustomUniform, \
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
+classifier_class_name = "SCMPregen"
 
-class SCMPregen(scm, BaseMonoviewClassifier, PregenClassifier):
+class SCMPregen(BaseMonoviewClassifier, PregenClassifier, scm):
 
     def __init__(self, random_state=None, model_type="conjunction",
                  max_rules=10, p=0.1, n_stumps=10, self_complemented=True,
-                 **kwargs):
+                 estimators_generator="Stumps", max_depth=1, **kwargs):
         super(SCMPregen, self).__init__(
             random_state=random_state,
             model_type=model_type,
@@ -24,16 +25,25 @@ class SCMPregen(scm, BaseMonoviewClassifier, PregenClassifier):
             p=p
         )
         self.param_names = ["model_type", "max_rules", "p", "n_stumps",
-                            "random_state"]
+                            "random_state", "estimators_generator", "max_depth"]
         self.distribs = [["conjunction", "disjunction"],
                          CustomRandint(low=1, high=15),
                          CustomUniform(loc=0, state=1), [n_stumps],
-                         [random_state]]
+                         [random_state], ["Stumps", "Tree"],
+                         CustomRandint(low=1, high=5)]
         self.classed_params = []
         self.weird_strings = {}
         self.self_complemented = self_complemented
         self.n_stumps = n_stumps
-        self.estimators_generator = "Stumps"
+        self.estimators_generator = estimators_generator
+        self.max_depth=1
+
+    def get_params(self, deep=True):
+        params = super(SCMPregen, self).get_params(deep)
+        params["estimators_generator"] = self.estimators_generator
+        params["max_depth"] = self.max_depth
+        params["n_stumps"] = self.n_stumps
+        return params
 
     def fit(self, X, y, tiebreaker=None, iteration_callback=None, **fit_params):
         pregen_X, _ = self.pregen_voters(X, y)
@@ -71,11 +81,6 @@ class SCMPregen(scm, BaseMonoviewClassifier, PregenClassifier):
         place_holder = np.genfromtxt(file_name, delimiter=',')
         os.remove(file_name)
         return self.classes_[self.model_.predict(place_holder)]
-
-    def get_params(self, deep=True):
-        return {"p": self.p, "model_type": self.model_type,
-                "max_rules": self.max_rules,
-                "random_state": self.random_state, "n_stumps": self.n_stumps}
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""

@@ -17,7 +17,7 @@ from ... import metrics
 # Used for QarBoost and CGreed
 
 class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
-    def __init__(self, n_max_iterations=None, estimators_generator="Stumps",
+    def __init__(self, n_max_iterations=None, estimators_generator="Stumps", max_depth=1,
                  random_state=42, self_complemented=True, twice_the_same=False,
                  c_bound_choice=True, random_start=True,
                  n_stumps=1, use_r=True, c_bound_sol=True,
@@ -72,17 +72,9 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
                                        "c_bound_choice", "random_start",
                                        "n_stumps", "use_r", "c_bound_sol"]
         self.mincq_tracking = mincq_tracking
+        self.max_depth = max_depth
 
     def fit(self, X, y):
-        ones = []
-        tows = []
-        threes = []
-        fours = []
-        fives = []
-        sixes = []
-        sevens = []
-        eights = []
-
 
         formatted_X, formatted_y = self.format_X_y(X, y)
 
@@ -351,11 +343,11 @@ class ColumnGenerationClassifierQar(BaseEstimator, ClassifierMixin, BaseBoost):
 
     def init_hypotheses(self, X, y):
         """Inintialization for the hyptotheses used to build the boosted vote"""
-        if self.estimators_generator is "Stumps":
+        if self.estimators_generator == "Stumps":
             self.estimators_generator = StumpsClassifiersGenerator(
                 n_stumps_per_attribute=self.n_stumps,
                 self_complemented=self.self_complemented)
-        if self.estimators_generator is "Trees":
+        if self.estimators_generator == "Trees":
             self.estimators_generator = TreeClassifiersGenerator(
                 n_trees=self.n_stumps, max_depth=self.max_depth,
                 self_complemented=self.self_complemented)

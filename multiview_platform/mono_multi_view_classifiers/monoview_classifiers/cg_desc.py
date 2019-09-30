@@ -2,25 +2,31 @@ from ..monoview.additions.CGDescUtils import ColumnGenerationClassifierQar
 from ..monoview.monoview_utils import BaseMonoviewClassifier, CustomRandint
 
 
+classifier_class_name = "CGDesc"
+
 class CGDesc(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, n_max_iterations=500, n_stumps=1,
+                 estimators_generator="Stumps", twice_the_same=True, max_depth=1,
                  **kwargs):
         super(CGDesc, self).__init__(n_max_iterations=n_max_iterations,
                                      random_state=random_state,
                                      self_complemented=True,
-                                     twice_the_same=True,
+                                     twice_the_same=twice_the_same,
                                      c_bound_choice=True,
                                      random_start=False,
                                      n_stumps=n_stumps,
                                      use_r=False,
                                      c_bound_sol=True,
-                                     estimators_generator="Stumps",
+                                     estimators_generator=estimators_generator,
+                                     max_depth=max_depth,
                                      mincq_tracking=False,
                                      )
-        self.param_names = ["n_max_iterations", "n_stumps", "random_state"]
+        self.param_names = ["n_max_iterations", "n_stumps",
+                            "estimators_generator", "max_depth", "random_state", "twice_the_same"]
         self.distribs = [CustomRandint(low=2, high=500), [n_stumps],
-                         [random_state]]
+                         ["Stumps", "Trees"], CustomRandint(low=1, high=5),
+                         [random_state], [True, False]]
         self.classed_params = []
         self.weird_strings = {}
 

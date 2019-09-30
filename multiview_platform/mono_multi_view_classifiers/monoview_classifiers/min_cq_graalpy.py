@@ -5,6 +5,8 @@ from ..monoview.additions.MinCQUtils import RegularizedBinaryMinCqClassifier
 from ..monoview.monoview_utils import BaseMonoviewClassifier, CustomUniform
 
 
+classifier_class_name = "MinCQGraalpy"
+
 class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, mu=0.01, self_complemented=True,

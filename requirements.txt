@@ -13,3 +13,4 @@ six==1.12.0
 pandas==0.23.3
 m2r==0.2.1
 docutils==0.12
+yaml==3.12

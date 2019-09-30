@@ -17,6 +17,7 @@ from .analyze_result import execute
 # Import own modules
 from .. import monoview_classifiers
 from ..utils.dataset import getValue, extractSubset
+from ..utils import hyper_parameter_search
 
 # Author-Info
 __author__ = "Nikolas Huelsmann, Baptiste BAUVIN"
@@ -76,16 +77,17 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
     logging.debug("Done:\t Determine Train/Test split")
 
     logging.debug("Start:\t Generate classifier args")
-    classifierModuleName = CL_type.split("_")[0]
-    classifierModule = getattr(monoview_classifiers, classifierModuleName)
+    classifierModule = getattr(monoview_classifiers, CL_type)
+    classifier_class_name = classifierModule.classifier_class_name
     clKWARGS, testFoldsPreds = getHPs(classifierModule, hyperParamSearch,
-                                      nIter, CL_type, X_train, y_train,
+                                      nIter, CL_type, classifier_class_name,
+                                      X_train, y_train,
                                       randomState, outputFileName,
                                       KFolds, nbCores, metrics, kwargs)
     logging.debug("Done:\t Generate classifier args")
 
     logging.debug("Start:\t Training")
-    classifier = getattr(classifierModule, classifierModuleName)(randomState, **clKWARGS)
+    classifier = getattr(classifierModule, classifier_class_name)(randomState, **clKWARGS)
 
     classifier.fit(X_train, y_train)  # NB_CORES=nbCores,
     logging.debug("Done:\t Training")
@@ -124,7 +126,7 @@ def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
                 y_train, imagesAnalysis, y_test)
     logging.info("Done:\t Saving results")
 
-    viewIndex = args["viewIndex"]
+    viewIndex = args["view_index"]
     if testFoldsPreds is None:
         testFoldsPreds = y_train_pred
     return monoview_utils.MonoviewResult(viewIndex, CL_type, feat, metricsScores,
@@ -143,7 +145,7 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
         feat = X.attrs["name"].decode("utf-8")
     else:
         feat = X.attrs["name"]
-    CL_type = kwargs["CL_type"]
+    CL_type = kwargs["classifier_name"]
     X = getValue(X)
     learningRate = float(len(classificationIndices[0])) / (
                 len(classificationIndices[0]) + len(classificationIndices[1]))
@@ -175,27 +177,29 @@ def initTrainTest(X, Y, classificationIndices):
     return X_train, y_train, X_test, y_test, X_test_multiclass
 
 
-def getHPs(classifierModule, hyperParamSearch, nIter, CL_type, X_train, y_train,
+def getHPs(classifierModule, hyperParamSearch, nIter, classifier_module_name,
+           classifier_class_name, X_train, y_train,
            randomState,
            outputFileName, KFolds, nbCores, metrics, kwargs):
     if hyperParamSearch != "None":
         logging.debug(
             "Start:\t " + hyperParamSearch + " best settings with " + str(
-                nIter) + " iterations for " + CL_type)
-        classifierHPSearch = getattr(monoview_utils, hyperParamSearch)
-        clKWARGS, testFoldsPreds = classifierHPSearch(X_train, y_train,
+                nIter) + " iterations for " + classifier_module_name)
+        classifierHPSearch = getattr(hyper_parameter_search, hyperParamSearch)
+        clKWARGS, testFoldsPreds = classifierHPSearch(X_train, y_train, "monoview",
                                                       randomState,
                                                       outputFileName,
-                                                      classifierModule, CL_type,
-                                                      KFolds=KFolds,
-                                                      nbCores=nbCores,
+                                                      classifierModule,
+                                                      classifier_class_name,
+                                                      folds=KFolds,
+                                                      nb_cores=nbCores,
                                                       metric=metrics[0],
-                                                      nIter=nIter,
-                                                      classifier_KWARGS=kwargs[
-                                                          CL_type + "KWARGS"])
+                                                      n_iter=nIter,
+                                                      classifier_kwargs=kwargs[
+                                                          classifier_module_name])
         logging.debug("Done:\t " + hyperParamSearch + " best settings")
     else:
-        clKWARGS = kwargs[CL_type + "KWARGS"]
+        clKWARGS = kwargs[classifier_module_name + "KWARGS"]
         testFoldsPreds = None
     return clKWARGS, testFoldsPreds
 

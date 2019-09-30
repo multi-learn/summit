@@ -21,6 +21,8 @@ from sklearn.metrics.pairwise import rbf_kernel, linear_kernel, \
 from ..monoview.additions.BoostUtils import ConvexProgram as QP
 
 
+classifier_class_name = "MinCQ"
+
 # from majority_vote import MajorityVote
 # from voter import StumpsVotersGenerator, KernelVotersGenerator
 
