@@ -3,10 +3,10 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def testVersions():
+def test_versions():
     """Used to test if all prerequisites are installed"""
-    isUpToDate = True
-    toInstall = []
+    is_up_to_date = True
+    to_install = []
 
     try:
         import sys
@@ -16,81 +16,81 @@ def testVersions():
     try:
         import cvxopt
     except ImportError:
-        isUpToDate = False
-        toInstall.append("cvxopt")
+        is_up_to_date = False
+        to_install.append("cvxopt")
 
     try:
         import pyscm
     except ImportError:
-        isUpToDate = False
-        toInstall.append("pyscm")
+        is_up_to_date = False
+        to_install.append("pyscm")
 
     try:
         import numpy
     except ImportError:
-        isUpToDate = False
-        toInstall.append("numpy")
+        is_up_to_date = False
+        to_install.append("numpy")
 
     try:
         import scipy
     except ImportError:
-        isUpToDate = False
-        toInstall.append("scipy")
+        is_up_to_date = False
+        to_install.append("scipy")
 
     try:
         import matplotlib
     except ImportError:
-        isUpToDate = False
-        toInstall.append("matplotlib")
+        is_up_to_date = False
+        to_install.append("matplotlib")
 
     try:
         import sklearn
     except ImportError:
-        isUpToDate = False
-        toInstall.append("sklearn")
+        is_up_to_date = False
+        to_install.append("sklearn")
 
     try:
         import logging
     except ImportError:
-        isUpToDate = False
-        toInstall.append("logging")
+        is_up_to_date = False
+        to_install.append("logging")
 
     try:
         import joblib
     except ImportError:
-        isUpToDate = False
-        toInstall.append("joblib")
+        is_up_to_date = False
+        to_install.append("joblib")
 
     try:
         import argparse
     except ImportError:
-        isUpToDate = False
-        toInstall.append("argparse")
+        is_up_to_date = False
+        to_install.append("argparse")
 
     try:
         import h5py  #
     except ImportError:
-        isUpToDate = False
-        toInstall.append("h5py")
+        is_up_to_date = False
+        to_install.append("h5py")
 
     # try:
     #     import graphviz  #
     # except ImportError:
-    #     isUpToDate = False
-    #     toInstall.append("graphviz")
+    #     is_up_to_date = False
+    #     to_install.append("graphviz")
 
     try:
         import pickle  #
     except ImportError:
-        isUpToDate = False
-        toInstall.append("pickle")
+        is_up_to_date = False
+        to_install.append("pickle")
 
-    if not isUpToDate:
+    if not is_up_to_date:
         print(
             "You can't run at the moment, please install the following modules : \n" + "\n".join(
-                toInstall))
+                to_install))
         quit()
 
 
 if __name__ == "__main__":
-    testVersions()
+    test_versions()

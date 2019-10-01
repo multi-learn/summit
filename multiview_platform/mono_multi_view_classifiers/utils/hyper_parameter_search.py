@@ -32,8 +32,8 @@ def searchBestSettings(dataset, labels, classifier_module, classifier_name,
     return bestSettings  # or well set clasifier ?
 
 
-def gridSearch(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1,
-               **kwargs):
+def grid_search(dataset, classifier_name, views_indices=None, k_folds=None, n_iter=1,
+                **kwargs):
     """Used to perfom gridsearch on the classifiers"""
     pass
 
@@ -82,9 +82,9 @@ def get_test_folds_preds(X, y, cv, estimator, framework, available_indices=None)
             estimator.fit(X, y, available_indices[train_indices])
             test_folds_prediction.append(
                 estimator.predict(X, available_indices[test_indices]))
-    minFoldLength = fold_lengths.min()
+    min_fold_length = fold_lengths.min()
     test_folds_prediction = np.array(
-        [test_fold_prediction[:minFoldLength] for test_fold_prediction in
+        [test_fold_prediction[:min_fold_length] for test_fold_prediction in
          test_folds_prediction])
     return test_folds_prediction
 
@@ -93,21 +93,21 @@ def randomized_search(X, y, framework, random_state, output_file_name, classifie
                          classifier_name, folds=4, nb_cores=1, metric=["accuracy_score", None], n_iter=30,
                          classifier_kwargs =None, learning_indices=None, view_indices=None):
     estimator = getattr(classifier_module, classifier_name)(random_state,
-                                                           **classifier_kwargs)
+                                                            **classifier_kwargs)
     params_dict = estimator.genDistribs()
     if params_dict:
-        metricModule = getattr(metrics, metric[0])
+        metric_module = getattr(metrics, metric[0])
         if metric[1] is not None:
-            metricKWARGS = dict((index, metricConfig) for index, metricConfig in
+            metric_kargs = dict((index, metricConfig) for index, metricConfig in
                                 enumerate(metric[1]))
         else:
-            metricKWARGS = {}
-        scorer = metricModule.get_scorer(**metricKWARGS)
+            metric_kargs = {}
+        scorer = metric_module.get_scorer(**metric_kargs)
         nb_possible_combinations = compute_possible_combinations(params_dict)
         min_list = np.array(
             [min(nb_possible_combination, n_iter) for nb_possible_combination in
              nb_possible_combinations])
-        randomSearch = MultiviewCompatibleRandomizedSearchCV(estimator,
+        random_search = MultiviewCompatibleRandomizedSearchCV(estimator,
                                                              n_iter=int(np.sum(min_list)),
                                                              param_distributions=params_dict,
                                                              refit=True,
@@ -115,24 +115,24 @@ def randomized_search(X, y, framework, random_state, output_file_name, classifie
                                                              cv=folds, random_state=random_state,
                                                              learning_indices=learning_indices,
                                                              view_indices=view_indices,
-                                                             framework = framework)
-        detector = randomSearch.fit(X, y)
+                                                             framework=framework)
+        detector = random_search.fit(X, y)
 
-        bestParams = dict((key, value) for key, value in
+        best_params = dict((key, value) for key, value in
                           estimator.genBestParams(detector).items() if
                           key is not "random_state")
 
-        scoresArray = detector.cv_results_['mean_test_score']
+        scores_array = detector.cv_results_['mean_test_score']
         params = estimator.genParamsFromDetector(detector)
 
-        genHeatMaps(params, scoresArray, output_file_name)
+        gen_heat_maps(params, scores_array, output_file_name)
         best_estimator = detector.best_estimator_
     else:
         best_estimator = estimator
-        bestParams = {}
-    testFoldsPreds = get_test_folds_preds(X, y, folds, best_estimator,
+        best_params = {}
+    test_folds_preds = get_test_folds_preds(X, y, folds, best_estimator,
                                           framework, learning_indices)
-    return bestParams, testFoldsPreds
+    return best_params, test_folds_preds
 
 
 from sklearn.base import clone
@@ -210,131 +210,128 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
             if self.framework =="multiview":
                 estimator.fit(X, y, self.available_indices[train_indices])
                 test_folds_prediction.append(estimator.predict(X, self.available_indices[test_indices]))
-        minFoldLength = fold_lengths.min()
+        min_fold_length = fold_lengths.min()
         test_folds_prediction = np.array(
-            [test_fold_prediction[:minFoldLength] for test_fold_prediction in test_folds_prediction])
+            [test_fold_prediction[:min_fold_length] for test_fold_prediction in test_folds_prediction])
         return test_folds_prediction
 
 
-
-
-
-def randomizedSearch(dataset, labels, classifierPackage, classifierName,
-                     metrics_list, learningIndices, KFolds, randomState,
-                     viewsIndices=None, nIter=1,
-                     nbCores=1, **classificationKWARGS):
+def randomizedSearch(dataset, labels, classifier_package, classifier_name,
+                     metrics_list, learning_indices, k_folds, random_state,
+                     views_indices=None, n_iter=1,
+                     nb_cores=1, **classification_kargs):
     """Used to perform a random search on the classifiers to optimize hyper parameters"""
-    if viewsIndices is None:
-        viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
+    if views_indices is None:
+        views_indices = range(dataset.get("Metadata").attrs["nbView"])
     metric = metrics_list[0]
-    metricModule = getattr(metrics, metric[0])
+    metric_module = getattr(metrics, metric[0])
     if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in
+        metric_kargs = dict((index, metricConfig) for index, metricConfig in
                             enumerate(metric[1]))
     else:
-        metricKWARGS = {}
-    classifierModule = getattr(classifierPackage, classifierName + "Module")
-    classifierClass = getattr(classifierModule, classifierName + "Class")
-    if classifierName != "Mumbo":
-        paramsSets = classifierModule.genParamsSets(classificationKWARGS,
-                                                    randomState, nIter=nIter)
-        if metricModule.getConfig()[-14] == "h":
-            baseScore = -1000.0
-            isBetter = "higher"
+        metric_kargs = {}
+    classifier_module = getattr(classifier_package, classifier_name + "Module")
+    classifier_class = getattr(classifier_module, classifier_name + "Class")
+    if classifier_name != "Mumbo":
+        params_sets = classifier_module.gen_params_sets(classification_kargs,
+                                                    random_state, n_iter=n_iter)
+        if metric_module.getConfig()[-14] == "h":
+            base_score = -1000.0
+            is_better = "higher"
         else:
-            baseScore = 1000.0
-            isBetter = "lower"
-        bestSettings = None
-        kFolds = KFolds.split(learningIndices, labels[learningIndices])
-        for paramsSet in paramsSets:
+            base_score = 1000.0
+            is_better = "lower"
+        best_settings = None
+        kk_folds = k_folds.split(learning_indices, labels[learning_indices])
+        for params_set in params_sets:
             scores = []
-            for trainIndices, testIndices in kFolds:
-                classifier = classifierClass(randomState, NB_CORES=nbCores,
-                                             **classificationKWARGS)
-                classifier.setParams(paramsSet)
+            for trainIndices, testIndices in kk_folds:
+                classifier = classifier_class(random_state, nb_scors=nb_cores,
+                                             **classification_kargs)
+                classifier.setParams(params_set)
                 classifier.fit_hdf5(dataset, labels,
-                                    trainIndices=learningIndices[trainIndices],
-                                    viewsIndices=viewsIndices)
-                testLabels = classifier.predict_hdf5(dataset, usedIndices=
-                learningIndices[testIndices],
-                                                     viewsIndices=viewsIndices)
-                testScore = metricModule.score(
-                    labels[learningIndices[testIndices]], testLabels)
-                scores.append(testScore)
-            crossValScore = np.mean(np.array(scores))
+                                    trainIndices=learning_indices[trainIndices],
+                                    viewsIndices=views_indices)
+                test_labels = classifier.predict_hdf5(dataset,
+                                                      used_indices=learning_indices[testIndices],
+                                                      views_indices=views_indices)
+                test_score = metric_module.score(
+                    labels[learning_indices[testIndices]], test_labels)
+                scores.append(test_score)
+            cross_val_score = np.mean(np.array(scores))
 
-            if isBetter == "higher" and crossValScore > baseScore:
-                baseScore = crossValScore
-                bestSettings = paramsSet
-            elif isBetter == "lower" and crossValScore < baseScore:
-                baseScore = crossValScore
-                bestSettings = paramsSet
-        classifier = classifierClass(randomState, NB_CORES=nbCores,
-                                     **classificationKWARGS)
-        classifier.setParams(bestSettings)
+            if is_better == "higher" and cross_val_score > base_score:
+                base_score = cross_val_score
+                best_settings = params_set
+            elif is_better == "lower" and cross_val_score < base_score:
+                base_score = cross_val_score
+                best_settings = params_set
+        classifier = classifier_class(random_state, nb_cores=nb_cores,
+                                     **classification_kargs)
+        classifier.setParams(best_settings)
 
     # TODO : This must be corrected
     else:
-        bestConfigs, _ = classifierModule.gridSearch_hdf5(dataset, labels,
-                                                          viewsIndices,
-                                                          classificationKWARGS,
-                                                          learningIndices,
-                                                          randomState,
-                                                          metric=metric,
-                                                          nIter=nIter)
-        classificationKWARGS["classifiersConfigs"] = bestConfigs
-        classifier = classifierClass(randomState, NB_CORES=nbCores,
-                                     **classificationKWARGS)
+        best_configs, _ = classifier_module.grid_search_hdf5(dataset, labels,
+                                                             views_indices,
+                                                             classification_kargs,
+                                                             learning_indices,
+                                                             random_state,
+                                                             metric=metric,
+                                                             nI_iter=n_iter)
+        classification_kargs["classifiersConfigs"] = best_configs
+        classifier = classifier_class(random_state, nb_cores=nb_cores,
+                                      **classification_kargs)
 
     return classifier
 
 
-def spearMint(dataset, classifierName, viewsIndices=None, kFolds=None, nIter=1,
-              **kwargs):
+def spear_mint(dataset, classifier_name, views_indices=None, k_folds=None, n_iter=1,
+               **kwargs):
     """Used to perform spearmint on the classifiers to optimize hyper parameters,
     longer than randomsearch (can't be parallelized)"""
     pass
 
 
-def genHeatMaps(params, scoresArray, outputFileName):
+def gen_heat_maps(params, scores_array, output_file_name):
     """Used to generate a heat map for each doublet of hyperparms optimized on the previous function"""
-    nbParams = len(params)
-    if nbParams > 2:
-        combinations = itertools.combinations(range(nbParams), 2)
-    elif nbParams == 2:
+    nb_params = len(params)
+    if nb_params > 2:
+        combinations = itertools.combinations(range(nb_params), 2)
+    elif nb_params == 2:
         combinations = [(0, 1)]
     else:
         combinations = [()]
     for combination in combinations:
         if combination:
-            paramName1, paramArray1 = params[combination[0]]
-            paramName2, paramArray2 = params[combination[1]]
+            param_name1, param_array1 = params[combination[0]]
+            param_name2, param_array2 = params[combination[1]]
         else:
-            paramName1, paramArray1 = params[0]
-            paramName2, paramArray2 = ("Control", np.array([0]))
+            param_name1, param_array1 = params[0]
+            param_name2, param_array2 = ("Control", np.array([0]))
 
-        paramArray1Set = np.sort(np.array(list(set(paramArray1))))
-        paramArray2Set = np.sort(np.array(list(set(paramArray2))))
+        param_array1_set = np.sort(np.array(list(set(param_array1))))
+        param_array2_set = np.sort(np.array(list(set(param_array2))))
 
-        scoresMatrix = np.zeros(
-            (len(paramArray2Set), len(paramArray1Set))) - 0.1
-        for param1, param2, score in zip(paramArray1, paramArray2, scoresArray):
-            param1Index, = np.where(paramArray1Set == param1)
-            param2Index, = np.where(paramArray2Set == param2)
-            scoresMatrix[int(param2Index), int(param1Index)] = score
+        scores_matrix = np.zeros(
+            (len(param_array2_set), len(param_array1_set))) - 0.1
+        for param1, param2, score in zip(param_array1, param_array2, scores_array):
+            param1_index, = np.where(param_array1_set == param1)
+            param2_index, = np.where(param_array2_set == param2)
+            scores_matrix[int(param2_index), int(param1_index)] = score
 
         plt.figure(figsize=(8, 6))
         plt.subplots_adjust(left=.2, right=0.95, bottom=0.15, top=0.95)
-        plt.imshow(scoresMatrix, interpolation='nearest', cmap=plt.cm.hot,
+        plt.imshow(scores_matrix, interpolation='nearest', cmap=plt.cm.hot,
                    )
-        plt.xlabel(paramName1)
-        plt.ylabel(paramName2)
+        plt.xlabel(param_name1)
+        plt.ylabel(param_name2)
         plt.colorbar()
-        plt.xticks(np.arange(len(paramArray1Set)), paramArray1Set)
-        plt.yticks(np.arange(len(paramArray2Set)), paramArray2Set, rotation=45)
+        plt.xticks(np.arange(len(param_array1_set)), param_array1_set)
+        plt.yticks(np.arange(len(param_array2_set)), param_array2_set, rotation=45)
         plt.title('Validation metric')
         plt.savefig(
-            outputFileName + "heat_map-" + paramName1 + "-" + paramName2 + ".png", transparent=True)
+            output_file_name + "heat_map-" + param_name1 + "-" + param_name2 + ".png", transparent=True)
         plt.close()
 
 # nohup python ~/dev/git/spearmint/spearmint/main.py . &

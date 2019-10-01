@@ -5,46 +5,46 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def printMetricScore(metricScores, metrics):
-    metricScoreString = "\n\n"
+def print_metric_score(metric_scores, metrics):
+    metric_score_string = "\n\n"
     for metric in metrics:
-        metricModule = getattr(metrics, metric[0])
+        metric_module = getattr(metrics, metric[0])
         if metric[1] is not None:
-            metricKWARGS = dict((index, metricConfig) for index, metricConfig in
-                                enumerate(metric[1]))
+            metric_kwargs = dict((index, metricConfig) for index, metricConfig in
+                                 enumerate(metric[1]))
         else:
-            metricKWARGS = {}
-        metricScoreString += "\tFor " + metricModule.getConfig(
-            **metricKWARGS) + " : "
-        metricScoreString += "\n\t\t- Score on train : " + str(
-            metricScores[metric[0]][0])
-        metricScoreString += "\n\t\t- Score on test : " + str(
-            metricScores[metric[0]][1])
-        metricScoreString += "\n\n"
-    return metricScoreString
+            metric_kwargs = {}
+        metric_score_string += "\tFor " + metric_module.getConfig(
+            **metric_kwargs) + " : "
+        metric_score_string += "\n\t\t- Score on train : " + str(
+            metric_scores[metric[0]][0])
+        metric_score_string += "\n\t\t- Score on test : " + str(
+            metric_scores[metric[0]][1])
+        metric_score_string += "\n\n"
+    return metric_score_string
 
 
-def getTotalMetricScores(metric, trainLabels, testLabels, validationIndices,
-                         learningIndices, labels):
-    metricModule = getattr(metrics, metric[0])
+def get_total_metric_scores(metric, train_labels, test_labels, validation_indices,
+                            learning_indices, labels):
+    metric_module = getattr(metrics, metric[0])
     if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in
-                            enumerate(metric[1]))
+        metric_kwargs = dict((index, metricConfig) for index, metricConfig in
+                             enumerate(metric[1]))
     else:
-        metricKWARGS = {}
-    trainScore = metricModule.score(labels[learningIndices], trainLabels,
-                                        **metricKWARGS)
-    testScore = metricModule.score(labels[validationIndices], testLabels,
-                                   **metricKWARGS)
-    return [trainScore, testScore]
+        metric_kwargs = {}
+    train_score = metric_module.score(labels[learning_indices], train_labels,
+                                      **metric_kwargs)
+    test_score = metric_module.score(labels[validation_indices], test_labels,
+                                     **metric_kwargs)
+    return [train_score, test_score]
 
 
-def getMetricsScores(metrics, trainLabels, testLabels,
-                     validationIndices, learningIndices, labels):
-    metricsScores = {}
-    for metric in metrics:
-        metricsScores[metric[0]] = getTotalMetricScores(metric, trainLabels,
-                                                        testLabels,
-                                                        validationIndices,
-                                                        learningIndices, labels)
-    return metricsScores
+def get_metrics_scores(metrics_var, train_labels, test_labels,
+                       validation_indices, learning_indices, labels):
+    metrics_scores = {}
+    for metric in metrics_var:
+        metrics_scores[metric[0]] = get_total_metric_scores(metric, train_labels,
+                                                            test_labels,
+                                                            validation_indices,
+                                                            learning_indices, labels)
+    return metrics_scores

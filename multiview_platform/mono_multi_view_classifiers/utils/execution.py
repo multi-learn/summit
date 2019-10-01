@@ -10,7 +10,7 @@ import sklearn
 from . import get_multiview_db as DB
 
 
-def parseTheArgs(arguments):
+def parse_the_args(arguments):
     """Used to parse the args entered by the user"""
 
     parser = argparse.ArgumentParser(
@@ -603,7 +603,8 @@ def parseTheArgs(arguments):
 #                             default=[''])
 #     groupMumbo.add_argument('--MU_config', metavar='STRING', action='store',
 #                             nargs='+',
-#                             help='Configuration for the monoview classifier in Mumbo separate each classifier with sapce and each argument with:',
+#                             help='Configuration for the monoview classifier in Mumbo'
+#                                  ' separate each classifier with sapce and each argument with:',
 #                             default=[''])
 #     groupMumbo.add_argument('--MU_iter', metavar='INT', action='store', nargs=3,
 #                             help='Max number of iteration, min number of iteration, convergence threshold',
@@ -630,8 +631,10 @@ def parseTheArgs(arguments):
 #                                   default=[''])
 #     groupEarlyFusion.add_argument('--FU_E_cl_config', metavar='STRING',
 #                                   action='store', nargs='+',
-#                                   help='Configuration for the monoview classifiers used separate classifier by space '
-#                                        'and configs must be of form argument1_name:value,argument2_name:value',
+#                                   help='Configuration for the monoview classifiers '
+#                                        ' used separate classifier by space '
+#                                        'and configs must be of form argument1_name:value,'
+#                                        'argument2_name:value',
 #                                   default=[''])
 #     groupEarlyFusion.add_argument('--FU_E_cl_names', metavar='STRING',
 #                                   action='store', nargs='+',
@@ -696,77 +699,79 @@ def parseTheArgs(arguments):
     return args
 
 
-def initRandomState(randomStateArg, directory):
+def init_random_state(random_state_arg, directory):
     r"""
     Used to init a random state.
     If no random state is specified, it will generate a 'random' seed.
-    If the `randomSateArg` is a string containing only numbers, it will be converted in an int to generate a seed.
-    If the `randomSateArg` is a string with letters, it must be a path to a pickled random state file that will be loaded.
+    If the `randomSateArg` is a string containing only numbers, it will be converted in
+     an int to generate a seed.
+    If the `randomSateArg` is a string with letters, it must be a path to a pickled random
+    state file that will be loaded.
     The function will also pickle the new random state in a file tobe able to retrieve it later.
     Tested
 
 
     Parameters
     ----------
-    randomStateArg : None or string
+    random_state_arg : None or string
         See function description.
     directory : string
         Path to the results directory.
 
     Returns
     -------
-    randomState : numpy.random.RandomState object
+    random_state : numpy.random.RandomState object
         This random state will be used all along the benchmark .
     """
-    if randomStateArg is None:
-        randomState = np.random.RandomState(randomStateArg)
+    if random_state_arg is None:
+        random_state = np.random.RandomState(random_state_arg)
     else:
         try:
-            seed = int(randomStateArg)
-            randomState = np.random.RandomState(seed)
+            seed = int(random_state_arg)
+            random_state = np.random.RandomState(seed)
         except ValueError:
-            fileName = randomStateArg
-            with open(fileName, 'rb') as handle:
-                randomState = pickle.load(handle)
+            file_name = random_state_arg
+            with open(file_name, 'rb') as handle:
+                random_state = pickle.load(handle)
     with open(directory + "randomState.pickle", "wb") as handle:
-        pickle.dump(randomState, handle)
-    return randomState
+        pickle.dump(random_state, handle)
+    return random_state
 
 
-def initStatsIterRandomStates(statsIter, randomState):
+def init_stats_iter_random_states(stats_iter, random_state):
     r"""
     Used to initialize multiple random states if needed because of multiple statistical iteration of the same benchmark
 
     Parameters
     ----------
-    statsIter : int
+    stats_iter : int
         Number of statistical iterations of the same benchmark done (with a different random state).
-    randomState : numpy.random.RandomState object
+    random_state : numpy.random.RandomState object
         The random state of the whole experimentation, that will be used to generate the ones for each
         statistical iteration.
 
     Returns
     -------
-    statsIterRandomStates : list of numpy.random.RandomState objects
+    stats_iter_random_states : list of numpy.random.RandomState objects
         Multiple random states, one for each sattistical iteration of the same benchmark.
     """
-    if statsIter > 1:
-        statsIterRandomStates = [
-            np.random.RandomState(randomState.randint(5000)) for _ in
-            range(statsIter)]
+    if stats_iter > 1:
+        stats_iter_random_states = [
+            np.random.RandomState(random_state.randint(5000)) for _ in
+            range(stats_iter)]
     else:
-        statsIterRandomStates = [randomState]
-    return statsIterRandomStates
+        stats_iter_random_states = [random_state]
+    return stats_iter_random_states
 
 
-def getDatabaseFunction(name, type):
+def get_database_function(name, type_var):
     r"""Used to get the right database extraction function according to the type of database and it's name
 
     Parameters
     ----------
     name : string
         Name of the database.
-    type : string
+    type_var : string
         type of dataset hdf5 or csv
 
     Returns
@@ -775,13 +780,13 @@ def getDatabaseFunction(name, type):
         The function that will be used to extract the database
     """
     if name not in ["Fake", "Plausible"]:
-        getDatabase = getattr(DB, "getClassicDB" + type[1:])
+        get_database = getattr(DB, "getClassicDB" + type_var[1:])
     else:
-        getDatabase = getattr(DB, "get" + name + "DB" + type[1:])
-    return getDatabase
+        get_database = getattr(DB, "get" + name + "DB" + type_var[1:])
+    return get_database
 
 
-def initLogFile(name, views, CL_type, log, debug, label, result_directory, add_noise, noise_std):
+def init_log_file(name, views, cl_type, log, debug, label, result_directory, add_noise, noise_std):
     r"""Used to init the directory where the preds will be stored and the log file.
 
     First this function will check if the result directory already exists (only one per minute is allowed).
@@ -794,50 +799,61 @@ def initLogFile(name, views, CL_type, log, debug, label, result_directory, add_n
         Name of the database.
     views : list of strings
         List of the view names that will be used in the benchmark.
-    CL_type : list of strings
+    cl_type : list of strings
         Type of benchmark that will be made .
     log : bool
         Whether to show the log file in console or hide it.
+    debug : bool
+        for debug option
+    label : str  for label
+
+    result_directory : str name of the result directory
+
+    add_noise : bool for add noise
+
+    noise_std : level of std noise
 
     Returns
     -------
-    resultsDirectory : string
+    results_directory : string
         Reference to the main results directory for the benchmark.
     """
     noise_string = "/n_"+str(int(noise_std*100))
     if debug:
-        resultDirectory = result_directory + name + noise_string +"/debug_started_" + time.strftime(
-            "%Y_%m_%d-%H_%M_%S") + "_" + label + "/"
+        result_directory = result_directory + name + noise_string + \
+                           "/debug_started_" + \
+                           time.strftime(
+                               "%Y_%m_%d-%H_%M_%S") + "_" + label + "/"
     else:
-        resultDirectory = result_directory + name + noise_string+ "/started_" + time.strftime(
+        result_directory = result_directory + name + noise_string+ "/started_" + time.strftime(
             "%Y_%m_%d-%H_%M") + "_" + label + "/"
-    logFileName = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(
-        CL_type) + "-" + "_".join(
+    log_file_name = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(
+        cl_type) + "-" + "_".join(
         views) + "-" + name + "-LOG"
-    if os.path.exists(os.path.dirname(resultDirectory)):
+    if os.path.exists(os.path.dirname(result_directory)):
         raise NameError("The result dir already exists, wait 1 min and retry")
-    os.makedirs(os.path.dirname(resultDirectory + logFileName))
-    logFile = resultDirectory + logFileName
-    logFile += ".log"
+    os.makedirs(os.path.dirname(result_directory + log_file_name))
+    log_file = result_directory + log_file_name
+    log_file += ".log"
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
-                        filename=logFile, level=logging.DEBUG,
+                        filename=log_file, level=logging.DEBUG,
                         filemode='w')
     if log:
         logging.getLogger().addHandler(logging.StreamHandler())
 
-    return resultDirectory
+    return result_directory
 
 
-def genSplits(labels, splitRatio, statsIterRandomStates):
-    r"""Used to gen the train/test splits using one or multiple random states.
+def gen_splits(labels, split_ratio, stats_iter_random_states):
+    r"""Used to _gen the train/test splits using one or multiple random states.
 
     Parameters
     ----------
     labels : numpy.ndarray
         Name of the database.
-    splitRatio : float
+    split_ratio : float
         The ratio of examples between train and test set.
-    statsIterRandomStates : list of numpy.random.RandomState
+    stats_iter_random_states : list of numpy.random.RandomState
         The random states for each statistical iteration.
 
     Returns
@@ -848,99 +864,100 @@ def genSplits(labels, splitRatio, statsIterRandomStates):
     """
     indices = np.arange(len(labels))
     splits = []
-    for randomState in statsIterRandomStates:
-        foldsObj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1,
-                                                                  random_state=randomState,
-                                                                  test_size=splitRatio)
-        folds = foldsObj.split(indices, labels)
+    for random_state in stats_iter_random_states:
+        folds_obj = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1,
+                                                                   random_state=random_state,
+                                                                   test_size=split_ratio)
+        folds = folds_obj.split(indices, labels)
         for fold in folds:
             train_fold, test_fold = fold
-        trainIndices = indices[train_fold]
-        testIndices = indices[test_fold]
-        splits.append([trainIndices, testIndices])
+        train_indices = indices[train_fold]
+        test_indices = indices[test_fold]
+        splits.append([train_indices, test_indices])
 
     return splits
 
 
-def genKFolds(statsIter, nbFolds, statsIterRandomStates):
+def gen_k_folds(stats_iter, nb_folds, stats_iter_random_states):
     r"""Used to generate folds indices for cross validation for each statistical iteration.
 
     Parameters
     ----------
-    statsIter : integer
+    stats_iter : integer
         Number of statistical iterations of the benchmark.
-    nbFolds : integer
+    nb_folds : integer
         The number of cross-validation folds for the benchmark.
-    statsIterRandomStates : list of numpy.random.RandomState
+    stats_iter_random_states : list of numpy.random.RandomState
         The random states for each statistical iteration.
 
     Returns
     -------
-    foldsList : list of list of sklearn.model_selection.StratifiedKFold
+    folds_list : list of list of sklearn.model_selection.StratifiedKFold
         For each statistical iteration a Kfold stratified (keeping the ratio between classes in each fold).
     """
-    if statsIter > 1:
-        foldsList = []
-        for randomState in statsIterRandomStates:
-            foldsList.append(
-                sklearn.model_selection.StratifiedKFold(n_splits=nbFolds,
-                                                        random_state=randomState))
+    if stats_iter > 1:
+        folds_list = []
+        for random_state in stats_iter_random_states:
+            folds_list.append(
+                sklearn.model_selection.StratifiedKFold(n_splits=nb_folds,
+                                                        random_state=random_state))
     else:
-        foldsList = [sklearn.model_selection.StratifiedKFold(n_splits=nbFolds,
-                                                             random_state=statsIterRandomStates)]
-    return foldsList
+        folds_list = [sklearn.model_selection.StratifiedKFold(n_splits=nb_folds,
+                                                             random_state=stats_iter_random_states)]
+    return folds_list
 
 
-def initViews(DATASET, argViews):
-    r"""Used to return the views names that will be used by the benchmark, their indices and all the views names.
+def init_views(dataset, arg_views):
+    r"""Used to return the views names that will be used by the
+    benchmark, their indices and all the views names.
 
     Parameters
     ----------
-    DATASET : HDF5 dataset file
+    datset : HDF5 dataset file
         The full dataset that wil be used by the benchmark.
-    argViews : list of strings
+    arg_views : list of strings
         The views that will be used by the benchmark (arg).
 
     Returns
     -------
     views : list of strings
         Names of the views that will be used by the benchmark.
-    viewIndices : list of ints
+    view_indices : list of ints
         The list of the indices of the view that will be used in the benchmark (according to the dataset).
-    allViews : list of strings
+    all_views : list of strings
         Names of all the available views in the dataset.
     """
-    NB_VIEW = DATASET.get("Metadata").attrs["nbView"]
-    if argViews != ["all"]:
-        allowedViews = argViews
-        allViews = [str(DATASET.get("View" + str(viewIndex)).attrs["name"])
+    nb_view = dataset.get("Metadata").attrs["nbView"]
+    if arg_views != ["all"]:
+        allowed_views = arg_views
+        all_views = [str(dataset.get("View" + str(view_index)).attrs["name"])
                     if type(
-            DATASET.get("View" + str(viewIndex)).attrs["name"]) != bytes
-                    else DATASET.get("View" + str(viewIndex)).attrs[
+            dataset.get("View" + str(view_index)).attrs["name"]) != bytes
+                    else dataset.get("View" + str(view_index)).attrs[
             "name"].decode("utf-8")
-                    for viewIndex in range(NB_VIEW)]
+                    for view_index in range(nb_view)]
         views = []
-        viewsIndices = []
-        for viewIndex in range(NB_VIEW):
-            viewName = DATASET.get("View" + str(viewIndex)).attrs["name"]
-            if type(viewName) == bytes:
-                viewName = viewName.decode("utf-8")
-            if viewName in allowedViews:
-                views.append(viewName)
-                viewsIndices.append(viewIndex)
+        views_indices = []
+        for view_index in range(nb_view):
+            view_name = dataset.get("View" + str(view_index)).attrs["name"]
+            if type(view_name) == bytes:
+                view_name = view_name.decode("utf-8")
+            if view_name in allowed_views:
+                views.append(view_name)
+                views_indices.append(view_index)
     else:
-        views = [str(DATASET.get("View" + str(viewIndex)).attrs["name"])
+        views = [str(dataset.get("View" + str(viewIndex)).attrs["name"])
                  if type(
-            DATASET.get("View" + str(viewIndex)).attrs["name"]) != bytes
-                 else DATASET.get("View" + str(viewIndex)).attrs["name"].decode(
+            dataset.get("View" + str(viewIndex)).attrs["name"]) != bytes
+                 else dataset.get("View" + str(viewIndex)).attrs["name"].decode(
             "utf-8")
-                 for viewIndex in range(NB_VIEW)]
-        viewsIndices = range(NB_VIEW)
-        allViews = views
-    return views, viewsIndices, allViews
+                 for viewIndex in range(nb_view)]
+        views_indices = range(nb_view)
+        all_views = views
+    return views, views_indices, all_views
 
 
-def genDirecortiesNames(directory, statsIter):
+def gen_direcorties_names(directory, statsIter):
     r"""Used to generate the different directories of each iteration if needed.
 
     Parameters
@@ -977,12 +994,13 @@ def find_dataset_names(path, type, names):
     else:
         return names
 
-def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels,
-                            labelsCombinations, indicesMulticlass,
-                            hyperParamSearch, args, kFolds,
-                            statsIterRandomStates, metrics,
-                            argumentDictionaries,
-                            benchmark, nbViews, views, viewsIndices):
+
+def gen_argument_dictionaries(labels_dictionary, directories, multiclass_labels,
+                              labels_combinations, indices_multiclass,
+                              hyper_param_search, args, k_folds,
+                              stats_iter_random_states, metrics,
+                              argument_dictionaries,
+                              benchmark, nb_views, views, views_indices):
     r"""Used to generate a dictionary for each benchmark.
 
     One for each label combination (if multiclass), for each statistical iteration, generates an dictionary with
@@ -990,37 +1008,37 @@ def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels,
 
     Parameters
     ----------
-    labelsDictionary : dictionary
+    labels_dictionary : dictionary
         Dictionary mapping labels indices to labels names.
     directories : list of strings
         List of the paths to the result directories for each statistical iteration.
-    multiclassLabels : list of lists of numpy.ndarray
+    multiclass_labels : list of lists of numpy.ndarray
         For each label couple, for each statistical iteration a triplet of numpy.ndarrays is stored with the
         indices for the biclass training set, the ones for the biclass testing set and the ones for the
         multiclass testing set.
-    labelsCombinations : list of lists of numpy.ndarray
+    labels_combinations : list of lists of numpy.ndarray
         Each original couple of different labels.
-    indicesMulticlass : list of lists of numpy.ndarray
+    indices_multiclass : list of lists of numpy.ndarray
         For each combination, contains a biclass labels numpy.ndarray with the 0/1 labels of combination.
-    hyperParamSearch : string
+    hyper_param_search : string
         Type of hyper parameter optimization method
     args : parsed args objects
         All the args passed by the user.
-    kFolds : list of list of sklearn.model_selection.StratifiedKFold
+    k_folds : list of list of sklearn.model_selection.StratifiedKFold
         For each statistical iteration a Kfold stratified (keeping the ratio between classes in each fold).
-    statsIterRandomStates : list of numpy.random.RandomState objects
+    stats_iter_random_states : list of numpy.random.RandomState objects
         Multiple random states, one for each sattistical iteration of the same benchmark.
     metrics : list of lists
         metrics that will be used to evaluate the algorithms performance.
-    argumentDictionaries : dictionary
+    argument_dictionaries : dictionary
         Dictionary resuming all the specific arguments for the benchmark, oe dictionary for each classifier.
     benchmark : dictionary
         Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.
-    nbViews : int
+    nb_views : int
         THe number of views used by the benchmark.
     views : list of strings
         List of the names of the used views.
-    viewsIndices : list of ints
+    views_indices : list of ints
         List of indices (according to the dataset) of the used views.
 
     Returns
@@ -1029,31 +1047,31 @@ def genArgumentDictionaries(labelsDictionary, directories, multiclassLabels,
         All the needed arguments for the benchmarks.
 
     """
-    benchmarkArgumentDictionaries = []
-    for combinationIndex, labelsCombination in enumerate(labelsCombinations):
-        for iterIndex, iterRandomState in enumerate(statsIterRandomStates):
-            benchmarkArgumentDictionary = {
-                "LABELS_DICTIONARY": {0: labelsDictionary[labelsCombination[0]],
-                                      1: labelsDictionary[
-                                          labelsCombination[1]]},
-                "directory": directories[iterIndex] +
-                             labelsDictionary[labelsCombination[0]] +
+    benchmark_argument_dictionaries = []
+    for combination_index, labels_combination in enumerate(labels_combinations):
+        for iter_index, iterRandomState in enumerate(stats_iter_random_states):
+            benchmark_argument_dictionary = {
+                "LABELS_DICTIONARY": {0: labels_dictionary[labels_combination[0]],
+                                      1: labels_dictionary[
+                                          labels_combination[1]]},
+                "directory": directories[iter_index] +
+                             labels_dictionary[labels_combination[0]] +
                              "-vs-" +
-                             labelsDictionary[labelsCombination[1]] + "/",
+                             labels_dictionary[labels_combination[1]] + "/",
                 "classificationIndices": [
-                    indicesMulticlass[combinationIndex][0][iterIndex],
-                    indicesMulticlass[combinationIndex][1][iterIndex],
-                    indicesMulticlass[combinationIndex][2][iterIndex]],
+                    indices_multiclass[combination_index][0][iter_index],
+                    indices_multiclass[combination_index][1][iter_index],
+                    indices_multiclass[combination_index][2][iter_index]],
                 "args": args,
-                "labels": multiclassLabels[combinationIndex],
-                "kFolds": kFolds[iterIndex],
+                "labels": multiclass_labels[combination_index],
+                "kFolds": k_folds[iter_index],
                 "randomState": iterRandomState,
-                "hyperParamSearch": hyperParamSearch,
+                "hyperParamSearch": hyper_param_search,
                 "metrics": metrics,
-                "argumentDictionaries": argumentDictionaries,
+                "argumentDictionaries": argument_dictionaries,
                 "benchmark": benchmark,
                 "views": views,
-                "viewsIndices": viewsIndices,
-                "flag": [iterIndex, labelsCombination]}
-            benchmarkArgumentDictionaries.append(benchmarkArgumentDictionary)
-    return benchmarkArgumentDictionaries
+                "viewsIndices": views_indices,
+                "flag": [iter_index, labels_combination]}
+            benchmark_argument_dictionaries.append(benchmark_argument_dictionary)
+    return benchmark_argument_dictionaries

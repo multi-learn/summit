@@ -98,7 +98,7 @@ def autolabel(rects, ax, set=1, std=None):
                     ha='center', va='bottom', size="small")
 
 
-def getMetricsScoresBiclass(metrics, results):
+def get_metrics_scores_biclass(metrics, results):
     r"""Used to extract metrics scores in case of biclass classification
 
     Parameters
@@ -117,22 +117,22 @@ def getMetricsScoresBiclass(metrics, results):
         -`metricScores[metric_name]["trainScores"]` is a list of all the available classifiers scores on the train set,
         -`metricScores[metric_name]["testScores"]` is a list of all the available classifiers scores on the test set.
     """
-    metricsScores = {}
+    metrics_scores = {}
 
     for metric in metrics:
-        classifiersNames = []
-        trainScores = []
-        testScores = []
+        classifiers_names = []
+        train_scores = []
+        test_scores = []
 
         for classifierResult in results:
-            trainScores.append(classifierResult.metrics_scores[metric[0]][0])
-            testScores.append(classifierResult.metrics_scores[metric[0]][1])
-            classifiersNames.append(classifierResult.get_classifier_name())
+            train_scores.append(classifierResult.metrics_scores[metric[0]][0])
+            test_scores.append(classifierResult.metrics_scores[metric[0]][1])
+            classifiers_names.append(classifierResult.get_classifier_name())
 
-        metricsScores[metric[0]] = {"classifiersNames": classifiersNames,
-                                    "trainScores": trainScores,
-                                    "testScores": testScores}
-    return metricsScores
+        metrics_scores[metric[0]] = {"classifiersNames": classifiers_names,
+                                    "trainScores": train_scores,
+                                    "testScores": test_scores}
+    return metrics_scores
 
 
 def getExampleErrorsBiclass(groud_truth, results):

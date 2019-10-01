@@ -27,7 +27,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 # __date__ = 2016 - 03 - 25
 
 
-def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices,
+def exec_monoview_multicore(directory, name, labelsNames, classificationIndices,
                            KFolds, datasetFileIndex, databaseType,
                            path, randomState, labels,
                            hyperParamSearch="randomizedSearch",
@@ -43,7 +43,7 @@ def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices,
                         metrics=metrics, nIter=nIter, **args)
 
 
-def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
+def exec_monoview(directory, X, Y, name, labelsNames, classificationIndices,
                  KFolds, nbCores, databaseType, path,
                  randomState, hyperParamSearch="randomizedSearch",
                  metrics=[["accuracy_score", None]], nIter=30, **args):
@@ -164,7 +164,7 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
     return kwargs, t_start, feat, CL_type, X, learningRate, labelsString, outputFileName
 
 
-def initTrainTest(X, Y, classificationIndices):
+def init_train_test(X, Y, classificationIndices):
     trainIndices, testIndices, testIndicesMulticlass = classificationIndices
     X_train = extract_subset(X, trainIndices)
     X_test = extract_subset(X, testIndices)
