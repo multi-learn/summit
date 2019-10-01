@@ -458,34 +458,6 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
                 os.remove(os.path.join(path, file_name))
         os.rmdir(path)
 
-class Test_multiview_multiple_args(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.classifier_name = "a"
-        cls.kwarg_init = {"a":
-                              {"b":{
-                                  "c":{
-                                      "d":{
-                                          "e":1,
-                                          "f":[1]
-                                      }
-                                  }
-                              }}}
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
-    def test_simple(self):
-        is_multiple = exec_classif.multiview_multiple_args(self.classifier_name,
-                                                           self.kwarg_init)
-        self.assertEqual(is_multiple, False)
-        self.kwarg_init["a"]["b"]["c"]["d"]["g"] = [1,2]
-        is_multiple = exec_classif.multiview_multiple_args(self.classifier_name,
-                                                           self.kwarg_init)
-        self.assertEqual(is_multiple, True)
-
 
 class Test_set_element(unittest.TestCase):
 

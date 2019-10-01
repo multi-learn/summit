@@ -206,6 +206,7 @@ def gen_single_multiview_arg_dictionary(classifier_name,arguments,nb_class,
 
 
 def extract_dict(classifier_config):
+    """Reverse function of get_path_dict"""
     extracted_dict = {}
     for key, value in classifier_config.items():
         if isinstance(value, list):
@@ -214,37 +215,9 @@ def extract_dict(classifier_config):
             extracted_dict = set_element(extracted_dict, key, value)
     return extracted_dict
 
-# def simplify_dict(dictionary):
-    #
-    # simplified_dict = dict((key, value[0]) if isinstance(value, list)
-    #                        else (key, value) if not isinstance(value, dict)
-    #                        else (key, {}) for key, value in dictionary.items()
-    #                        )
-    # dictionaries = {"":dict((key, value) for key, value in dictionary.items()
-    #                         if isinstance(value, dict))}
-    # while np.array([parent_dictionary for parent_dictionary in dictionaries.values()]).any():
-    #     new_dicts ={}
-    #     for path, parent_dictionary in dictionaries.items():
-    #         if parent_dictionary:
-    #             for name, dictionary in parent_dictionary.items():
-    #                 path = ".".join([path, name])
-    #                 new_dicts[path] = {}
-    #                 for key, value in dictionary.items():
-    #                     if isinstance(value, dict):
-    #                         simplified_dict = set_element(simplified_dict,
-    #                                                       path, key, {})
-    #                         new_dicts[path][key] = value
-    #                     elif isinstance(value, list):
-    #                         simplified_dict = set_element(simplified_dict, path,
-    #                                                       key, value[0])
-    #                     else:
-    #                         simplified_dict = set_element(simplified_dict, path,
-    #                                                       key, value)
-    #     dictionaries = new_dicts
-    # return simplified_dict
-
 
 def set_element(dictionary, path, value):
+    """Set value in dictionary at the location indicated by path"""
     existing_keys = path.split(".")[:-1]
     dict_state = dictionary
     for existing_key in existing_keys:
@@ -257,29 +230,8 @@ def set_element(dictionary, path, value):
     return dictionary
 
 
-def multiview_multiple_args(classifier_name, kwargs_init):
-    args = [value for value in kwargs_init[classifier_name].values() if
-            isinstance(value, dict)]
-    arg_values = [value for value in kwargs_init[classifier_name].values() if not isinstance(value, dict)]
-    while args:
-        args_to_add = []
-        for arg_index, arg in enumerate(args):
-            for key, value in arg.items():
-                if isinstance(value, dict):
-                    args_to_add.append(value)
-                else:
-                    arg_values.append(value)
-            args.pop(arg_index)
-        args = args_to_add
-    listed_args = [type(value) == list and len(value) > 1 for value in
-                   arg_values]
-    if True in listed_args:
-        return True
-    else:
-        return False
-
-
 def multiple_args(classifier_configuration):
+    """Checks if multiple values were provided for at least one arg"""
     listed_args = [type(value) == list and len(value)>1 for key, value in
                    classifier_configuration.items()]
     if True in listed_args:
@@ -289,6 +241,10 @@ def multiple_args(classifier_configuration):
 
 
 def get_path_dict(multiview_classifier_args):
+    """This function is used to generate a dictionary with each key being
+    the path to the value.
+    If given {"key1":{"key1_1":value1}, "key2":value2}, it will return
+    {"key1.key1_1":value1, "key2":value2}"""
     path_dict = dict((key, value) for key, value in multiview_classifier_args.items())
     paths = is_dict_in(path_dict)
     while paths:
