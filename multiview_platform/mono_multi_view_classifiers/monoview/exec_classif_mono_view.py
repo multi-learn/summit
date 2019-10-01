@@ -16,7 +16,7 @@ from . import monoview_utils
 from .analyze_result import execute
 # Import own modules
 from .. import monoview_classifiers
-from ..utils.dataset import getValue, extractSubset
+from ..utils.dataset import get_value, extract_subset
 from ..utils import hyper_parameter_search
 
 # Author-Info
@@ -27,7 +27,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 # __date__ = 2016 - 03 - 25
 
 
-def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices,
+def exec_monoview_multicore(directory, name, labelsNames, classificationIndices,
                            KFolds, datasetFileIndex, databaseType,
                            path, randomState, labels,
                            hyperParamSearch="randomizedSearch",
@@ -43,7 +43,7 @@ def ExecMonoview_multicore(directory, name, labelsNames, classificationIndices,
                         metrics=metrics, nIter=nIter, **args)
 
 
-def ExecMonoview(directory, X, Y, name, labelsNames, classificationIndices,
+def exec_monoview(directory, X, Y, name, labelsNames, classificationIndices,
                  KFolds, nbCores, databaseType, path,
                  randomState, hyperParamSearch="randomizedSearch",
                  metrics=[["accuracy_score", None]], nIter=30, **args):
@@ -146,7 +146,7 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
     else:
         feat = X.attrs["name"]
     CL_type = kwargs["classifier_name"]
-    X = getValue(X)
+    X = get_value(X)
     learningRate = float(len(classificationIndices[0])) / (
                 len(classificationIndices[0]) + len(classificationIndices[1]))
     labelsString = "-".join(labelsNames)
@@ -164,12 +164,12 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
     return kwargs, t_start, feat, CL_type, X, learningRate, labelsString, outputFileName
 
 
-def initTrainTest(X, Y, classificationIndices):
+def init_train_test(X, Y, classificationIndices):
     trainIndices, testIndices, testIndicesMulticlass = classificationIndices
-    X_train = extractSubset(X, trainIndices)
-    X_test = extractSubset(X, testIndices)
+    X_train = extract_subset(X, trainIndices)
+    X_test = extract_subset(X, testIndices)
     if np.array(testIndicesMulticlass).size != 0:
-        X_test_multiclass = extractSubset(X, testIndicesMulticlass)
+        X_test_multiclass = extract_subset(X, testIndicesMulticlass)
     else:
         X_test_multiclass = []
     y_train = Y[trainIndices]
@@ -319,7 +319,7 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
 #     databaseType = None
 #
 #     # Extract the data using MPI
-#     X, Y = dataset.getMonoviewShared(path, name, viewName)
+#     X, Y = dataset.get_monoview_shared(path, name, viewName)
 #
 #     # Init log
 #     logFileName = time.strftime(

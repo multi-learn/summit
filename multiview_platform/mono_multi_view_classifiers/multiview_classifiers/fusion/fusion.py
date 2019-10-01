@@ -11,7 +11,7 @@ except ValueError:
     import pdb;pdb.set_trace()
 
 from ... import monoview_classifiers
-from ...utils.dataset import getV
+from ...utils.dataset import get_v
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -111,7 +111,7 @@ def makeMonoviewData_hdf5(DATASET, weights=None, usedIndices=None, viewsIndices=
         weights = np.array([1 / NB_VIEW for i in range(NB_VIEW)])
     if sum(weights) != 1:
         weights = weights / sum(weights)
-    monoviewData = np.concatenate([weights[index] * getV(DATASET, viewIndex, usedIndices)
+    monoviewData = np.concatenate([weights[index] * get_v(DATASET, viewIndex, usedIndices)
                                    for index, viewIndex in enumerate(viewsIndices)], axis=1)
     return monoviewData
 
@@ -140,7 +140,7 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 #         classifierModule = getattr(monoview_classifiers, classifierName)
 #         classifierMethod = getattr(classifierModule, "hyperParamSearch")
 #         if fusionTypeName == "LateFusion":
-#             bestSettings.append(classifierMethod(getV(DATASET, viewsIndices[classifierIndex], learningIndices),
+#             bestSettings.append(classifierMethod(get_v(DATASET, viewsIndices[classifierIndex], learningIndices),
 #                                                  DATASET.get("Labels")[learningIndices], metric=metric,
 #                                                  nIter=nIter))
 #         else:

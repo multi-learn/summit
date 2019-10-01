@@ -12,7 +12,7 @@ from ..mono_multi_view_classifiers import exec_classif
 class Test_initBenchmark(unittest.TestCase):
 
     def test_benchmark_wanted(self):
-        # benchmark_output = ExecClassif.initBenchmark(self.args)
+        # benchmark_output = ExecClassif.init_benchmark(self.args)
         self.assertEqual(1, 1)
 
 
@@ -244,7 +244,7 @@ class Test_execBenchmark(unittest.TestCase):
             "Classification":{"hps_iter": 1}}
 
     def test_simple(cls):
-        res = exec_classif.execBenchmark(1, 2, 3, cls.argumentDictionaries,
+        res = exec_classif.exec_benchmark(1, 2, 3, cls.argumentDictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
                                          execOneBenchmark=fakeBenchmarkExec,
@@ -257,7 +257,7 @@ class Test_execBenchmark(unittest.TestCase):
     def test_multiclass_no_iter(cls):
         cls.argumentDictionaries = [{"a": 10, "args": cls.args},
                                     {"a": 4, "args": cls.args}]
-        res = exec_classif.execBenchmark(2, 1, 2, cls.argumentDictionaries,
+        res = exec_classif.exec_benchmark(2, 1, 2, cls.argumentDictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
                                          execOneBenchmark=fakeBenchmarkExec,
@@ -272,7 +272,7 @@ class Test_execBenchmark(unittest.TestCase):
                                     {"a": 4, "args": cls.args},
                                     {"a": 55, "args": cls.args},
                                     {"a": 24, "args": cls.args}]
-        res = exec_classif.execBenchmark(2, 2, 2, cls.argumentDictionaries,
+        res = exec_classif.exec_benchmark(2, 2, 2, cls.argumentDictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
                                          execOneBenchmark=fakeBenchmarkExec,
@@ -283,7 +283,7 @@ class Test_execBenchmark(unittest.TestCase):
         cls.assertEqual(res, 3)
 
     def test_no_iter_biclass_multicore(cls):
-        res = exec_classif.execBenchmark(2, 1, 1, cls.argumentDictionaries,
+        res = exec_classif.exec_benchmark(2, 1, 1, cls.argumentDictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
                                          execOneBenchmark=fakeBenchmarkExec,
@@ -377,7 +377,7 @@ class Test_execOneBenchmark(unittest.TestCase):
                                                                     1, 2, 1, 1,
                                                                     2, 1, 21]),
                                                       ExecMonoview_multicore=fakeExecMono,
-                                                      ExecMultiview_multicore=fakeExecMulti,
+                                                      exec_multiview_multicore=fakeExecMulti,
                                                       initMultiviewArguments=fakeInitMulti)
 
         cls.assertEqual(flag, None)
@@ -437,7 +437,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
             flag=None,
             labels=np.array([0, 1, 2, 3, 4, 2, 2, 12, 1, 2, 1, 1, 2, 1, 21]),
             ExecMonoview_multicore=fakeExecMono,
-            ExecMultiview_multicore=fakeExecMulti,
+            exec_multiview_multicore=fakeExecMulti,
             initMultiviewArguments=fakeInitMulti)
 
         cls.assertEqual(flag, None)

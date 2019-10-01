@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 import pkgutil
 
-from .....utils.dataset import getV
+from .....utils.dataset import get_v
 from ..... import monoview_classifiers
 from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
 
@@ -78,7 +78,7 @@ class BayesianInference(LateFusionClassifier):
         viewScores = []#np.zeros((nbView, len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]))
         for index, viewIndex in enumerate(viewsIndices):
             viewScores.append(np.power(
-                self.monoviewClassifiers[index].predict_proba(getV(DATASET, viewIndex, usedIndices)),
+                self.monoviewClassifiers[index].predict_proba(get_v(DATASET, viewIndex, usedIndices)),
                 self.weights[index]))
         viewScores = np.array(viewScores)
         predictedLabels = np.argmax(np.prod(viewScores, axis=0), axis=1)

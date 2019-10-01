@@ -11,7 +11,7 @@ from .multiview_utils import MultiviewResult
 from . import analyze_results
 from .. import multiview_classifiers
 from ..utils import hyper_parameter_search
-from ..utils.dataset import getShape
+from ..utils.dataset import get_shape
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -38,7 +38,7 @@ def initConstants(kwargs, classificationIndices, metrics, name, nbCores, KFolds,
 
     for viewIndex, viewName in zip(viewsIndices, views):
         logging.info("Info:\t Shape of " + str(viewName) + " :" + str(
-            getShape(DATASET, viewIndex)))
+            get_shape(DATASET, viewIndex)))
     return classifier_name, t_start, viewsIndices, classifier_config, views, learningRate
 
 
@@ -77,7 +77,7 @@ def saveResults(classifier, LABELS_DICTIONARY, stringAnalysis, views, classifier
                 outputFileName + imageName + '.png', transparent=True)
 
 
-def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds,
+def exec_multiview_multicore(directory, coreIndex, name, learningRate, nbFolds,
                             databaseType, path, LABELS_DICTIONARY,
                             randomState, labels,
                             hyperParamSearch=False, nbCores=1, metrics=None,
@@ -91,7 +91,7 @@ def ExecMultiview_multicore(directory, coreIndex, name, learningRate, nbFolds,
                          nIter=nIter, **arguments)
 
 
-def ExecMultiview(directory, DATASET, name, classificationIndices, KFolds,
+def exec_multiview(directory, DATASET, name, classificationIndices, KFolds,
                   nbCores, databaseType, path,
                   LABELS_DICTIONARY, randomState, labels,
                   hyperParamSearch=False, metrics=None, nIter=30, **kwargs):

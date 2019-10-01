@@ -2,7 +2,7 @@ import numpy as np
 # from sklearn.metrics import accuracy_score
 # import pkgutil
 
-from .....utils.dataset import getV
+from .....utils.dataset import get_v
 from ..LateFusion import LateFusionClassifier, getClassifiers, getConfig
 from ..... import monoview_classifiers
 
@@ -78,7 +78,7 @@ class MajorityVoting(LateFusionClassifier):
         monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(
-                getV(DATASET, viewIndex, usedIndices))
+                get_v(DATASET, viewIndex, usedIndices))
         for exampleIndex in range(datasetLength):
             for viewIndex, featureClassification in enumerate(monoViewDecisions[exampleIndex, :]):
                 votes[exampleIndex, featureClassification] += self.weights[viewIndex]

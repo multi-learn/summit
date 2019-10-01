@@ -250,186 +250,186 @@ class DatasetError(Exception):
         Exception.__init__(self, *args, **kwargs)
 
 
-def getClasses(labels):
-    labelsSet = set(list(labels))
-    nbLabels = len(labelsSet)
-    if nbLabels >= 2:
-        return labelsSet
+def get_classes(labels):
+    labels_set = set(list(labels))
+    nb_labels = len(labels_set)
+    if nb_labels >= 2:
+        return labels_set
     else:
         raise DatasetError("Dataset must have at least two different labels")
 
 
-def allAskedLabelsAreAvailable(askedLabelsNamesSet, availableLabelsNames):
-    for askedLabelName in askedLabelsNamesSet:
-        if askedLabelName in availableLabelsNames:
+def all_asked_labels_are_available(asked_labels_names_set, available_labels_names):
+    for askedLabelName in asked_labels_names_set:
+        if askedLabelName in available_labels_names:
             pass
         else:
             return False
     return True
 
 
-def fillLabelNames(NB_CLASS, askedLabelsNames, randomState,
-                   availableLabelsNames):
-    if len(askedLabelsNames) < NB_CLASS:
-        nbLabelsToAdd = NB_CLASS - len(askedLabelsNames)
-        labelsNamesToChoose = [availableLabelName for availableLabelName in
-                               availableLabelsNames
-                               if availableLabelName not in askedLabelsNames]
-        addedLabelsNames = randomState.choice(labelsNamesToChoose,
-                                              nbLabelsToAdd, replace=False)
-        askedLabelsNames = list(askedLabelsNames) + list(addedLabelsNames)
-        askedLabelsNamesSet = set(askedLabelsNames)
+def fill_label_names(nb_class, asked_labels_names, random_state,
+                   available_labels_names):
+    if len(asked_labels_names) < nb_class:
+        nb_labels_to_add = nb_class - len(asked_labels_names)
+        labels_names_to_choose = [available_label_name for available_label_name in
+                               available_labels_names
+                               if available_label_name not in asked_labels_names]
+        added_labels_names = random_state.choice(labels_names_to_choose,
+                                              nb_labels_to_add, replace=False)
+        asked_labels_names = list(asked_labels_names) + list(added_labels_names)
+        asked_labels_names_set = set(asked_labels_names)
 
-    elif len(askedLabelsNames) > NB_CLASS:
-        askedLabelsNames = list(
-            randomState.choice(askedLabelsNames, NB_CLASS, replace=False))
-        askedLabelsNamesSet = set(askedLabelsNames)
+    elif len(asked_labels_names) > nb_class:
+        asked_labels_names = list(
+            random_state.choice(asked_labels_names, nb_class, replace=False))
+        asked_labels_names_set = set(asked_labels_names)
 
     else:
-        askedLabelsNamesSet = set(askedLabelsNames)
+        asked_labels_names_set = set(asked_labels_names)
 
-    return askedLabelsNames, askedLabelsNamesSet
-
-
-def getAllLabels(fullLabels, availableLabelsNames):
-    newLabels = fullLabels
-    newLabelsNames = availableLabelsNames
-    usedIndices = np.arange(len(fullLabels))
-    return newLabels, newLabelsNames, usedIndices
+    return asked_labels_names, asked_labels_names_set
 
 
-def selectAskedLabels(askedLabelsNamesSet, availableLabelsNames,
-                      askedLabelsNames, fullLabels):
-    if allAskedLabelsAreAvailable(askedLabelsNamesSet, availableLabelsNames):
-        usedLabels = [availableLabelsNames.index(askedLabelName) for
-                      askedLabelName in askedLabelsNames]
-        usedIndices = np.array(
-            [labelIndex for labelIndex, label in enumerate(fullLabels) if
-             label in usedLabels])
-        newLabels = np.array([usedLabels.index(label) for label in fullLabels if
-                              label in usedLabels])
-        newLabelsNames = [availableLabelsNames[usedLabel] for usedLabel in
-                          usedLabels]
-        return newLabels, newLabelsNames, usedIndices
+def get_all_labels(full_labels, available_labels_names):
+    new_labels = full_labels
+    new_labels_names = available_labels_names
+    used_indices = np.arange(len(full_labels))
+    return new_labels, new_labels_names, used_indices
+
+
+def select_asked_labels(asked_labels_names_set, available_labels_names,
+                        asked_labels_names, full_labels):
+    if all_asked_labels_are_available(asked_labels_names_set, available_labels_names):
+        used_labels = [available_labels_names.index(asked_label_name) for
+                      asked_label_name in asked_labels_names]
+        used_indices = np.array(
+            [labelIndex for labelIndex, label in enumerate(full_labels) if
+             label in used_labels])
+        new_labels = np.array([used_labels.index(label) for label in full_labels if
+                              label in used_labels])
+        new_labels_names = [available_labels_names[usedLabel] for usedLabel in
+                          used_labels]
+        return new_labels, new_labels_names, used_indices
     else:
         raise DatasetError("Asked labels are not all available in the dataset")
 
 
-def filterLabels(labelsSet, askedLabelsNamesSet, fullLabels,
-                 availableLabelsNames, askedLabelsNames):
-    if len(labelsSet) > 2:
-        if askedLabelsNames == availableLabelsNames:
-            newLabels, newLabelsNames, usedIndices = getAllLabels(fullLabels,
-                                                                  availableLabelsNames)
-        elif len(askedLabelsNamesSet) <= len(labelsSet):
-            newLabels, newLabelsNames, usedIndices = selectAskedLabels(
-                askedLabelsNamesSet, availableLabelsNames,
-                askedLabelsNames, fullLabels)
+def filter_labels(labels_set, asked_labels_names_set, full_labels,
+                  available_labels_names, asked_labels_names):
+    if len(labels_set) > 2:
+        if asked_labels_names == available_labels_names:
+            new_labels, new_labels_names, used_indices = \
+                get_all_labels(full_labels, available_labels_names)
+        elif len(asked_labels_names_set) <= len(labels_set):
+            new_labels, new_labels_names, used_indices = select_asked_labels(
+                asked_labels_names_set, available_labels_names,
+                asked_labels_names, full_labels)
         else:
             raise DatasetError(
                 "Asked more labels than available in the dataset. Available labels are : " +
-                ", ".join(availableLabelsNames))
+                ", ".join(available_labels_names))
 
     else:
-        newLabels, newLabelsNames, usedIndices = getAllLabels(fullLabels,
-                                                              availableLabelsNames)
-    return newLabels, newLabelsNames, usedIndices
+        new_labels, new_labels_names, used_indices = get_all_labels(full_labels,
+                                                                    available_labels_names)
+    return new_labels, new_labels_names, used_indices
 
 
-def filterViews(datasetFile, temp_dataset, views, usedIndices):
-    newViewIndex = 0
+def filter_views(dataset_file, temp_dataset, views, used_indices):
+    new_view_index = 0
     if views == [""]:
-        for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
-            copyhdf5Dataset(datasetFile, temp_dataset, "View" + str(viewIndex),
-                            "View" + str(viewIndex), usedIndices)
+        for view_index in range(dataset_file.get("Metadata").attrs["nbView"]):
+            copyhdf5_dataset(dataset_file, temp_dataset, "View" + str(view_index),
+                            "View" + str(view_index), used_indices)
     else:
-        for askedViewName in views:
-            for viewIndex in range(datasetFile.get("Metadata").attrs["nbView"]):
-                viewName = datasetFile.get("View" + str(viewIndex)).attrs["name"]
-                if type(viewName) == bytes:
-                    viewName = viewName.decode("utf-8")
-                if viewName == askedViewName:
-                    copyhdf5Dataset(datasetFile, temp_dataset,
-                                    "View" + str(viewIndex),
-                                    "View" + str(newViewIndex), usedIndices)
-                    newViewName = \
-                    temp_dataset.get("View" + str(newViewIndex)).attrs["name"]
-                    if type(newViewName) == bytes:
-                        temp_dataset.get("View" + str(newViewIndex)).attrs[
-                            "name"] = newViewName.decode("utf-8")
+        for asked_view_name in views:
+            for view_index in range(dataset_file.get("Metadata").attrs["nbView"]):
+                view_name = dataset_file.get("View" + str(view_index)).attrs["name"]
+                if type(view_name) == bytes:
+                    view_name = view_name.decode("utf-8")
+                if view_name == asked_view_name:
+                    copyhdf5_dataset(dataset_file, temp_dataset,
+                                    "View" + str(view_index),
+                                    "View" + str(new_view_index), used_indices)
+                    new_view_name = \
+                    temp_dataset.get("View" + str(new_view_index)).attrs["name"]
+                    if type(new_view_name) == bytes:
+                        temp_dataset.get("View" + str(new_view_index)).attrs[
+                            "name"] = new_view_name.decode("utf-8")
 
-                    newViewIndex += 1
+                    new_view_index += 1
                 else:
                     pass
         temp_dataset.get("Metadata").attrs["nbView"] = len(views)
 
 
-def copyhdf5Dataset(sourceDataFile, destinationDataFile, sourceDatasetName,
-                    destinationDatasetName, usedIndices):
+def copyhdf5_dataset(source_data_file, destination_data_file, source_dataset_name,
+                     destination_dataset_name, used_indices):
     """Used to copy a view in a new dataset file using only the examples of usedIndices, and copying the args"""
-    newDset = destinationDataFile.create_dataset(destinationDatasetName,
-                                                 data=sourceDataFile.get(
-                                                     sourceDatasetName).value[
-                                                      usedIndices, :])
-    if "sparse" in sourceDataFile.get(sourceDatasetName).attrs.keys() and \
-            sourceDataFile.get(sourceDatasetName).attrs["sparse"]:
+    new_d_set = destination_data_file.create_dataset(destination_dataset_name,
+                                                 data=source_data_file.get(
+                                                      source_dataset_name).value[
+                                                      used_indices, :])
+    if "sparse" in source_data_file.get(source_dataset_name).attrs.keys() and \
+            source_data_file.get(source_dataset_name).attrs["sparse"]:
         # TODO : Support sparse
         pass
     else:
-        for key, value in sourceDataFile.get(sourceDatasetName).attrs.items():
-            newDset.attrs[key] = value
+        for key, value in source_data_file.get(source_dataset_name).attrs.items():
+            new_d_set.attrs[key] = value
 
 
-def getClassicDBhdf5(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
-                     randomState, full=False, add_noise=False, noise_std=0.15,):
+def get_classicDBhdf5(views, path_f, name_DB, nb_class, asked_labels_names,
+                     random_state, full=False, add_noise=False, noise_std=0.15,):
     """Used to load a hdf5 database"""
     if full:
-        datasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
-        dataset_name = nameDB
-        labelsDictionary = dict(
-            (labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
-            enumerate(datasetFile.get("Labels").attrs["names"]))
+        dataset_file = h5py.File(path_f + name_DB + ".hdf5", "r")
+        dataset_name = name_DB
+        labels_dictionary = dict(
+            (label_index, label_name.decode("utf-8")) for label_index, label_name in
+            enumerate(dataset_file.get("Labels").attrs["names"]))
     else:
-        askedLabelsNames = [askedLabelName.encode("utf8") for askedLabelName in
-                            askedLabelsNames]
-        baseDatasetFile = h5py.File(pathF + nameDB + ".hdf5", "r")
-        fullLabels = baseDatasetFile.get("Labels").value
-        datasetFile = h5py.File(pathF + nameDB + "_temp_view_label_select.hdf5",
+        asked_labels_names = [asked_label_name.encode("utf8") for asked_label_name in
+                            asked_labels_names]
+        base_dataset_file = h5py.File(path_f + name_DB + ".hdf5", "r")
+        full_labels = base_dataset_file.get("Labels").value
+        dataset_file = h5py.File(path_f + name_DB + "_temp_view_label_select.hdf5",
                                 "w")
-        dataset_name = nameDB + "_temp_view_label_select"
-        baseDatasetFile.copy("Metadata", datasetFile)
-        labelsSet = getClasses(fullLabels)
-        availableLabelsNames = list(
-            baseDatasetFile.get("Labels").attrs["names"])
-        askedLabelsNames, askedLabelsNamesSet = fillLabelNames(NB_CLASS,
-                                                               askedLabelsNames,
-                                                               randomState,
-                                                               availableLabelsNames)
+        dataset_name = name_DB + "_temp_view_label_select"
+        base_dataset_file.copy("Metadata", dataset_file)
+        labels_set = get_classes(full_labels)
+        available_labels_names = list(
+            base_dataset_file.get("Labels").attrs["names"])
+        asked_labels_names, asked_labels_names_set = fill_label_names(nb_class,
+                                                               asked_labels_names,
+                                                               random_state,
+                                                               available_labels_names)
 
-        newLabels, newLabelsNames, usedIndices = filterLabels(labelsSet,
-                                                              askedLabelsNamesSet,
-                                                              fullLabels,
-                                                              availableLabelsNames,
-                                                              askedLabelsNames)
-        datasetFile.get("Metadata").attrs["datasetLength"] = len(usedIndices)
-        datasetFile.get("Metadata").attrs["nbClass"] = NB_CLASS
-        datasetFile.create_dataset("Labels", data=newLabels)
-        datasetFile.get("Labels").attrs["names"] = newLabelsNames
-        filterViews(baseDatasetFile, datasetFile, views, usedIndices)
+        new_labels, new_labels_names, used_indices = filter_labels(labels_set,
+                                                              asked_labels_names_set,
+                                                              full_labels,
+                                                              available_labels_names,
+                                                              asked_labels_names)
+        dataset_file.get("Metadata").attrs["datasetLength"] = len(used_indices)
+        dataset_file.get("Metadata").attrs["nbClass"] = nb_class
+        dataset_file.create_dataset("Labels", data=new_labels)
+        dataset_file.get("Labels").attrs["names"] = new_labels_names
+        filter_views(base_dataset_file, dataset_file, views, used_indices)
 
-        labelsDictionary = dict(
+        labels_dictionary = dict(
             (labelIndex, labelName.decode("utf-8")) for labelIndex, labelName in
-            enumerate(datasetFile.get("Labels").attrs["names"]))
-        datasetFile.close()
-        datasetFile = h5py.File(pathF + nameDB + "_temp_view_label_select.hdf5",
+            enumerate(dataset_file.get("Labels").attrs["names"]))
+        dataset_file.close()
+        dataset_file = h5py.File(path_f + name_DB + "_temp_view_label_select.hdf5",
                                 "r")
     if add_noise:
-        datasetFile, dataset_name = add_gaussian_noise(datasetFile, randomState,
-                                                       pathF, dataset_name,
-                                                       noise_std)
+        dataset_file, dataset_name = add_gaussian_noise(dataset_file, random_state,
+                                                        path_f, dataset_name,
+                                                        noise_std)
     else:
         pass
-    return datasetFile, labelsDictionary, dataset_name
+    return dataset_file, labels_dictionary, dataset_name
 
 
 def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,

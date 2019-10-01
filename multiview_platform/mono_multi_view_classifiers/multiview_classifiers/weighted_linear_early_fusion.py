@@ -1,8 +1,9 @@
 import numpy as np
 import inspect
 
-from ..utils.dataset import getV
+from ..utils.dataset import get_v
 from ..multiview.multiview_utils import BaseMultiviewClassifier, get_train_views_indices, ConfigGenerator
+
 from .. import monoview_classifiers
 
 classifier_class_name = "WeightedLinearEarlyFusion"
@@ -79,7 +80,7 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier):
     def hdf5_to_monoview(self, dataset, exmaples):
         """Here, we concatenate the views for the asked examples """
         monoview_data = np.concatenate(
-            [getV(dataset, view_idx, exmaples)
+            [get_v(dataset, view_idx, exmaples)
              for view_weight, (index, view_idx)
              in zip(self.view_weights, enumerate(self.view_indices))]
             , axis=1)
