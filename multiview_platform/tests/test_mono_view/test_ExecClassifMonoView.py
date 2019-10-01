@@ -77,7 +77,7 @@ class Test_initTrainTest(unittest.TestCase):
                                      np.array([1, 3, 5, 7, 9])]
 
     def test_simple(cls):
-        X_train, y_train, X_test, y_test, X_test_multiclass = exec_classif_mono_view.initTrainTest(
+        X_train, y_train, X_test, y_test, X_test_multiclass = exec_classif_mono_view.init_train_test(
             cls.X, cls.Y, cls.classificationIndices)
         np.testing.assert_array_equal(X_train, np.array(
             [np.array([102, 435, 348, 270, 106]),

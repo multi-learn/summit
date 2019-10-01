@@ -4,7 +4,7 @@ import os
 
 import numpy as np
 
-from ...utils.multiclass import isBiclass, genMulticlassMonoviewDecision
+from ...utils.multiclass import is_biclass, gen_multiclass_monoview_decision
 
 
 def getClassifiersDecisions(allClassifersNames, viewsIndices, resultsMonoview):

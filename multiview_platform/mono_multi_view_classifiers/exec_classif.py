@@ -458,7 +458,7 @@ def exec_one_benchmark(core_index=-1, labels_dictionary=None, directory=None,
                                classification_indices, k_folds,
                                core_index, args["Base"]["type"], args["Base"]["pathf"], random_state,
                                labels,
-                               hyperParamSearch=hyper_param_search,
+                               hyper_param_search=hyper_param_search,
                                metrics=metrics,
                                nIter=args["Classification"]["hps_iter"], **argument)
         for argument in argument_dictionaries["Monoview"]]

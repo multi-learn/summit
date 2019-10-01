@@ -30,22 +30,22 @@ __status__ = "Prototype"  # Production, Development, Prototype
 def exec_monoview_multicore(directory, name, labelsNames, classificationIndices,
                            KFolds, datasetFileIndex, databaseType,
                            path, randomState, labels,
-                           hyperParamSearch="randomizedSearch",
+                           hyper_param_search="randomized_search",
                            metrics=[["accuracy_score", None]], nIter=30,
                            **args):
     DATASET = h5py.File(path + name + str(datasetFileIndex) + ".hdf5", "r")
     neededViewIndex = args["viewIndex"]
     X = DATASET.get("View" + str(neededViewIndex))
     Y = labels
-    return ExecMonoview(directory, X, Y, name, labelsNames,
+    return exec_monoview(directory, X, Y, name, labelsNames,
                         classificationIndices, KFolds, 1, databaseType, path,
-                        randomState, hyperParamSearch=hyperParamSearch,
+                        randomState, hyper_param_search=hyper_param_search,
                         metrics=metrics, nIter=nIter, **args)
 
 
 def exec_monoview(directory, X, Y, name, labelsNames, classificationIndices,
                  KFolds, nbCores, databaseType, path,
-                 randomState, hyperParamSearch="randomizedSearch",
+                 randomState, hyper_param_search="randomized_search",
                  metrics=[["accuracy_score", None]], nIter=30, **args):
     logging.debug("Start:\t Loading data")
     kwargs, \
@@ -67,7 +67,7 @@ def exec_monoview(directory, X, Y, name, labelsNames, classificationIndices,
         + str(nbCores) + ", algorithm : " + CL_type)
 
     logging.debug("Start:\t Determine Train/Test split")
-    X_train, y_train, X_test, y_test, X_test_multiclass = initTrainTest(X, Y,
+    X_train, y_train, X_test, y_test, X_test_multiclass = init_train_test(X, Y,
                                                                         classificationIndices)
 
     logging.debug("Info:\t Shape X_train:" + str(
@@ -79,7 +79,7 @@ def exec_monoview(directory, X, Y, name, labelsNames, classificationIndices,
     logging.debug("Start:\t Generate classifier args")
     classifierModule = getattr(monoview_classifiers, CL_type)
     classifier_class_name = classifierModule.classifier_class_name
-    clKWARGS, testFoldsPreds = getHPs(classifierModule, hyperParamSearch,
+    clKWARGS, testFoldsPreds = getHPs(classifierModule, hyper_parameter_search,
                                       nIter, CL_type, classifier_class_name,
                                       X_train, y_train,
                                       randomState, outputFileName,
@@ -114,7 +114,7 @@ def exec_monoview(directory, X, Y, name, labelsNames, classificationIndices,
     stringAnalysis, \
     imagesAnalysis, \
     metricsScores = execute(name, classificationIndices, KFolds, nbCores,
-                            hyperParamSearch, metrics, nIter, feat, CL_type,
+                            hyper_parameter_search, metrics, nIter, feat, CL_type,
                             clKWARGS, labelsNames, X.shape,
                             y_train, y_train_pred, y_test, y_test_pred, t_end,
                             randomState, classifier, outputFileName)

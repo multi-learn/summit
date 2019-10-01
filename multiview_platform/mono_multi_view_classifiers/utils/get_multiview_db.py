@@ -90,7 +90,7 @@ def makeMeNoisy(viewData, randomState, percentage=5):
     return noisyViewData
 
 
-def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
+def get_plausible_db_hdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
                        randomState=None, full=True, add_noise=False,
                        noise_std=0.15, nbView=3,
                    nbClass=2, datasetLength=100, randomStateInt=42, nbFeatures = 10):
@@ -380,7 +380,7 @@ def copyhdf5_dataset(source_data_file, destination_data_file, source_dataset_nam
             new_d_set.attrs[key] = value
 
 
-def get_classicDBhdf5(views, path_f, name_DB, nb_class, asked_labels_names,
+def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
                      random_state, full=False, add_noise=False, noise_std=0.15,):
     """Used to load a hdf5 database"""
     if full:
@@ -467,7 +467,7 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
     return noisy_dataset, dataset_name + "_noised"
 
 
-def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
+def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
                     randomState, full=False, add_noise=False, noise_std=0.15,
                     delimiter=","):
     # TODO : Update this one
@@ -497,7 +497,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
     metaDataGrp.attrs["nbClass"] = len(labelsNames)
     metaDataGrp.attrs["datasetLength"] = len(labels)
     datasetFile.close()
-    datasetFile, labelsDictionary, dataset_name = getClassicDBhdf5(views, pathF, nameDB,
+    datasetFile, labelsDictionary, dataset_name = get_classic_db_hdf5(views, pathF, nameDB,
                                                      NB_CLASS, askedLabelsNames,
                                                      randomState, full)
 

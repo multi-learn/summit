@@ -80,21 +80,21 @@ def saveResults(classifier, LABELS_DICTIONARY, stringAnalysis, views, classifier
 def exec_multiview_multicore(directory, coreIndex, name, learningRate, nbFolds,
                             databaseType, path, LABELS_DICTIONARY,
                             randomState, labels,
-                            hyperParamSearch=False, nbCores=1, metrics=None,
+                            hyper_param_search=False, nbCores=1, metrics=None,
                             nIter=30, **arguments):
     """Used to load an HDF5 dataset for each parallel job and execute multiview classification"""
     DATASET = h5py.File(path + name + str(coreIndex) + ".hdf5", "r")
-    return ExecMultiview(directory, DATASET, name, learningRate, nbFolds, 1,
+    return exec_multiview(directory, DATASET, name, learningRate, nbFolds, 1,
                          databaseType, path, LABELS_DICTIONARY,
                          randomState, labels,
-                         hyperParamSearch=hyperParamSearch, metrics=metrics,
+                          hyper_param_search=hyper_param_search, metrics=metrics,
                          nIter=nIter, **arguments)
 
 
 def exec_multiview(directory, DATASET, name, classificationIndices, KFolds,
-                  nbCores, databaseType, path,
-                  LABELS_DICTIONARY, randomState, labels,
-                  hyperParamSearch=False, metrics=None, nIter=30, **kwargs):
+                   nbCores, databaseType, path,
+                   LABELS_DICTIONARY, randomState, labels,
+                   hyper_param_search=False, metrics=None, nIter=30, **kwargs):
     """Used to execute multiview classification and result analysis"""
     logging.debug("Start:\t Initialize constants")
     CL_type, \
@@ -122,20 +122,20 @@ def exec_multiview(directory, DATASET, name, classificationIndices, KFolds,
     logging.debug("Done:\t Getting classifiers modules")
 
     logging.debug("Start:\t Optimizing hyperparameters")
-    if hyperParamSearch != "None":
+    if hyper_param_search != "None":
         classifier_config = hyper_parameter_search.searchBestSettings(DATASET, labels,
-                                                               classifier_module,
-                                                               classifier_name,
-                                                                    metrics[0],
-                                                               learningIndices,
-                                                               KFolds,
-                                                               randomState,
-                                                               directory,
-                                                               nb_cores=nbCores,
-                                                               viewsIndices=viewsIndices,
-                                                               searchingTool=hyperParamSearch,
-                                                               n_iter=nIter,
-                                                               classifier_config=classifier_config)
+                                                                      classifier_module,
+                                                                      classifier_name,
+                                                                      metrics[0],
+                                                                      learningIndices,
+                                                                      KFolds,
+                                                                      randomState,
+                                                                      directory,
+                                                                      nb_cores=nbCores,
+                                                                      viewsIndices=viewsIndices,
+                                                                      searchingTool=hyper_param_search,
+                                                                      n_iter=nIter,
+                                                                      classifier_config=classifier_config)
 
     classifier = getattr(classifier_module, classifier_name)(randomState,
                                                              **classifier_config)
@@ -177,7 +177,7 @@ def exec_multiview(directory, DATASET, name, classificationIndices, KFolds,
         classifier_config, classificationIndices,
         LABELS_DICTIONARY, views, nbCores, times,
         name, KFolds,
-        hyperParamSearch, nIter, metrics,
+        hyper_param_search, nIter, metrics,
         viewsIndices, randomState, labels, classifier_module)
     logging.info("Done:\t Result Analysis for " + CL_type)
 
@@ -283,7 +283,7 @@ if __name__ == "__main__":
     if args.log:
         logging.getLogger().addHandler(logging.StreamHandler())
 
-    res = ExecMultiview(directory, DATASET, name, classificationIndices, KFolds,
+    res = exec_multiview(directory, DATASET, name, classificationIndices, KFolds,
                         nbCores, databaseType, path,
                         LABELS_DICTIONARY, randomState, labels,
                         hyperParamSearch=hyperParamSearch, metrics=metrics,

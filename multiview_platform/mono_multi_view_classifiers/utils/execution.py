@@ -108,10 +108,10 @@ def get_database_function(name, type_var):
     getDatabase : function
         The function that will be used to extract the database
     """
-    if name not in ["Fake", "Plausible"]:
-        get_database = getattr(DB, "getClassicDB" + type_var[1:])
+    if name not in ["fake", "plausible"]:
+        get_database = getattr(DB, "get_classic_db_" + type_var[1:])
     else:
-        get_database = getattr(DB, "get" + name + "DB" + type_var[1:])
+        get_database = getattr(DB, "get_" + name + "_db_" + type_var[1:])
     return get_database
 
 

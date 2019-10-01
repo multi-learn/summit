@@ -21,7 +21,7 @@ class Test_genMulticlassLabels(unittest.TestCase):
              cls.testIndices[1]]]
 
     def test_one_versus_one(cls):
-        multiclassLabels, labelsIndices, oldIndicesMulticlass = multiclass.genMulticlassLabels(
+        multiclassLabels, labelsIndices, oldIndicesMulticlass = multiclass.gen_multiclass_labels(
             cls.labels, "oneVersusOne", cls.classificationIndices)
         cls.assertEqual(len(multiclassLabels), 10)
         cls.assertEqual(labelsIndices,

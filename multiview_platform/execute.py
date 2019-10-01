@@ -1,6 +1,5 @@
 """This is the execution module, used to execute the code"""
 
-
 def exec():
     import multiview_platform.versions as versions
     versions.test_versions()

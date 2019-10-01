@@ -20,7 +20,7 @@ class Test_initKWARGS(unittest.TestCase):
 
     def test_initKWARGSFunc_no_monoview(self):
         benchmark = {"monoview": {}, "multiview": {}}
-        args = exec_classif.initKWARGSFunc({}, benchmark)
+        args = exec_classif.init_kwargs_func({}, benchmark)
         self.assertEqual(args, {"monoview": {}, "multiview": {}})
 
 
@@ -205,15 +205,15 @@ class Test_init_argument_dictionaries(unittest.TestCase):
         self.assertEqual(arguments["multiview"][0], expected_output[0])
 
 
-def fakeBenchmarkExec(coreIndex=-1, a=7, args=1):
-    return [coreIndex, a]
+def fakeBenchmarkExec(core_index=-1, a=7, args=1):
+    return [core_index, a]
 
 
-def fakeBenchmarkExec_mutlicore(nbCores=-1, a=6, args=1):
-    return [nbCores, a]
+def fakeBenchmarkExec_mutlicore(nb_cores=-1, a=6, args=1):
+    return [nb_cores, a]
 
 
-def fakeBenchmarkExec_monocore(DATASET=1, a=4, args=1):
+def fakeBenchmarkExec_monocore(dataset_var=1, a=4, args=1):
     return [a]
 
 
@@ -247,10 +247,10 @@ class Test_execBenchmark(unittest.TestCase):
         res = exec_classif.exec_benchmark(1, 2, 3, cls.argumentDictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
-                                         execOneBenchmark=fakeBenchmarkExec,
-                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                         execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
-                                         getResults=fakegetResults,
+                                         exec_one_benchmark=fakeBenchmarkExec,
+                                         exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                         exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
+                                         get_results=fakegetResults,
                                          delete=fakeDelete)
         cls.assertEqual(res, 3)
 
@@ -260,10 +260,10 @@ class Test_execBenchmark(unittest.TestCase):
         res = exec_classif.exec_benchmark(2, 1, 2, cls.argumentDictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
-                                         execOneBenchmark=fakeBenchmarkExec,
-                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                         execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
-                                         getResults=fakegetResults,
+                                          exec_one_benchmark=fakeBenchmarkExec,
+                                          exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
+                                          get_results=fakegetResults,
                                          delete=fakeDelete)
         cls.assertEqual(res, 3)
 
@@ -275,10 +275,10 @@ class Test_execBenchmark(unittest.TestCase):
         res = exec_classif.exec_benchmark(2, 2, 2, cls.argumentDictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
-                                         execOneBenchmark=fakeBenchmarkExec,
-                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                         execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
-                                         getResults=fakegetResults,
+                                          exec_one_benchmark=fakeBenchmarkExec,
+                                          exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
+                                          get_results=fakegetResults,
                                          delete=fakeDelete)
         cls.assertEqual(res, 3)
 
@@ -286,10 +286,10 @@ class Test_execBenchmark(unittest.TestCase):
         res = exec_classif.exec_benchmark(2, 1, 1, cls.argumentDictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
-                                         execOneBenchmark=fakeBenchmarkExec,
-                                         execOneBenchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                         execOneBenchmarkMonoCore=fakeBenchmarkExec_monocore,
-                                         getResults=fakegetResults,
+                                          exec_one_benchmark=fakeBenchmarkExec,
+                                          exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
+                                          get_results=fakegetResults,
                                          delete=fakeDelete)
         cls.assertEqual(res, 3)
 
@@ -304,13 +304,13 @@ class Test_execBenchmark(unittest.TestCase):
 
 def fakeExecMono(directory, name, labelsNames, classificationIndices, kFolds,
                  coreIndex, type, pathF, randomState, labels,
-                 hyperParamSearch="try", metrics="try", nIter=1, **arguments):
+                 hyper_param_search="try", metrics="try", nIter=1, **arguments):
     return ["Mono", arguments]
 
 
 def fakeExecMulti(directory, coreIndex, name, classificationIndices, kFolds,
                   type, pathF, LABELS_DICTIONARY,
-                  randomState, labels, hyperParamSearch="", metrics=None,
+                  randomState, labels, hyper_param_search="", metrics=None,
                   nIter=1, **arguments):
     return ["Multi", arguments]
 
@@ -344,20 +344,20 @@ class Test_execOneBenchmark(unittest.TestCase):
             "Classification": {"hps_iter": 1}}
 
     def test_simple(cls):
-        flag, results = exec_classif.execOneBenchmark(coreIndex=10,
-                                                      LABELS_DICTIONARY={
+        flag, results = exec_classif.exec_one_benchmark(core_index=10,
+                                                        labels_dictionary={
                                                                    0: "a",
                                                                    1: "b"},
                                                       directory="multiview_platform/tests/tmp_tests/",
-                                                      classificationIndices=(
+                                                        classification_indices=(
                                                                [1, 2, 3, 4],
                                                                [0, 5, 6, 7, 8]),
                                                                args=cls.args,
-                                                               kFolds=FakeKfold(),
-                                                               randomState="try",
-                                                               hyperParamSearch="try",
+                                                        k_folds=FakeKfold(),
+                                                        random_state="try",
+                                                        hyper_param_search="try",
                                                                metrics="try",
-                                                               argumentDictionaries={
+                                                        argument_dictionaries={
                                                                    "Monoview": [
                                                                        {
                                                                            "try": 0},
@@ -369,16 +369,16 @@ class Test_execOneBenchmark(unittest.TestCase):
                                                                            "try4": 10}]},
                                                       benchmark="try",
                                                       views="try",
-                                                      viewsIndices="try",
+                                                        views_indices="try",
                                                       flag=None,
                                                       labels=np.array(
                                                                    [0, 1, 2, 1,
                                                                     2, 2, 2, 12,
                                                                     1, 2, 1, 1,
                                                                     2, 1, 21]),
-                                                      ExecMonoview_multicore=fakeExecMono,
+                                                        exec_monoview_multicore=fakeExecMono,
                                                       exec_multiview_multicore=fakeExecMulti,
-                                                      initMultiviewArguments=fakeInitMulti)
+                                                        init_multiview_arguments=fakeInitMulti)
 
         cls.assertEqual(flag, None)
         cls.assertEqual(results ,
@@ -411,17 +411,17 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
             "Classification": {"hps_iter": 1}}
 
     def test_simple(cls):
-        flag, results = exec_classif.execOneBenchmark_multicore(
-            nbCores=2,
-            LABELS_DICTIONARY={0: "a", 1: "b"},
+        flag, results = exec_classif.exec_one_benchmark_multicore(
+            nb_cores=2,
+            labels_dictionary={0: "a", 1: "b"},
             directory="multiview_platform/tests/tmp_tests/",
-            classificationIndices=([1, 2, 3, 4], [0, 10, 20, 30, 40]),
+            classification_indices=([1, 2, 3, 4], [0, 10, 20, 30, 40]),
             args=cls.args,
-            kFolds=FakeKfold(),
-            randomState="try",
-            hyperParamSearch="try",
+            k_folds=FakeKfold(),
+            random_state="try",
+            hyper_param_search="try",
             metrics="try",
-            argumentDictionaries={
+            argument_dictionaries={
                                                                    "monoview": [
                                                                        {
                                                                            "try": 0},
@@ -436,9 +436,9 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
             viewsIndices="try",
             flag=None,
             labels=np.array([0, 1, 2, 3, 4, 2, 2, 12, 1, 2, 1, 1, 2, 1, 21]),
-            ExecMonoview_multicore=fakeExecMono,
+            exec_monoview_multicore=fakeExecMono,
             exec_multiview_multicore=fakeExecMulti,
-            initMultiviewArguments=fakeInitMulti)
+            init_multiview_arguments=fakeInitMulti)
 
         cls.assertEqual(flag, None)
         cls.assertEqual(results ,
