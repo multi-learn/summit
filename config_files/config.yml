@@ -22,7 +22,7 @@ Classification:
   nb_folds: 2
   nb_class: 2
   classes: ["yes", "no"]
-  type: ["multiview", "monoview"]
+  type: ["multiview",]
   algos_monoview: ["all"]
   algos_multiview: ["all"]
   stats_iter: 2

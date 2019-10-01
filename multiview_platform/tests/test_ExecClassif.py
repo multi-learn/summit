@@ -88,6 +88,122 @@ class Test_init_argument_dictionaries(unittest.TestCase):
         },]
         self.assertEqual(arguments["multiview"][0], expected_output[0])
 
+    def test_init_argument_dictionaries_multiview_multiple(self):
+        self.multiview_classifier_arg_value = ["fake_value_2", "fake_arg_value_3"]
+        self.init_kwargs = {
+            'monoview': {
+                self.monoview_classifier_name:
+                    {
+                        self.monoview_classifier_arg_name: self.monoview_classifier_arg_value}
+            },
+            "multiview": {
+                self.multiview_classifier_name: {
+                    self.multiview_classifier_arg_name: self.multiview_classifier_arg_value}
+            }
+        }
+        self.benchmark["multiview"] = ["fake_multiview_classifier"]
+        self.benchmark["monoview"] = {}
+        arguments = exec_classif.init_argument_dictionaries(self.benchmark,
+                                                            self.views_dictionnary,
+                                                            self.nb_class,
+                                                            self.init_kwargs)
+        expected_output = [{
+                "classifier_name": self.multiview_classifier_name+"_fake_value_2",
+                "view_indices": [0,1],
+                "view_names": ["test_view_0", "test_view"],
+                "nb_class": self.nb_class,
+                "labels_names":None,
+                self.multiview_classifier_name + "_fake_value_2": {
+                    self.multiview_classifier_arg_name:
+                        self.multiview_classifier_arg_value[0]},
+        },
+            {
+                "classifier_name": self.multiview_classifier_name+"_fake_arg_value_3",
+                "view_indices": [0, 1],
+                "view_names": ["test_view_0", "test_view"],
+                "nb_class": self.nb_class,
+                "labels_names": None,
+                self.multiview_classifier_name+"_fake_arg_value_3": {
+                    self.multiview_classifier_arg_name:
+                        self.multiview_classifier_arg_value[1]},
+            }
+        ]
+        self.assertEqual(arguments["multiview"][0], expected_output[0])
+
+
+    def test_init_argument_dictionaries_multiview_complex(self):
+        self.multiview_classifier_arg_value = {"fake_value_2":"plif", "plaf":"plouf"}
+        self.init_kwargs = {
+            'monoview': {
+                self.monoview_classifier_name:
+                    {
+                        self.monoview_classifier_arg_name: self.monoview_classifier_arg_value}
+            },
+            "multiview": {
+                self.multiview_classifier_name: {
+                    self.multiview_classifier_arg_name: self.multiview_classifier_arg_value}
+            }
+        }
+        self.benchmark["multiview"] = ["fake_multiview_classifier"]
+        self.benchmark["monoview"] = {}
+        arguments = exec_classif.init_argument_dictionaries(self.benchmark,
+                                                            self.views_dictionnary,
+                                                            self.nb_class,
+                                                            self.init_kwargs)
+        expected_output = [{
+                "classifier_name": self.multiview_classifier_name,
+                "view_indices": [0,1],
+                "view_names": ["test_view_0", "test_view"],
+                "nb_class": self.nb_class,
+                "labels_names":None,
+                self.multiview_classifier_name: {
+                    self.multiview_classifier_arg_name:
+                        self.multiview_classifier_arg_value},
+        }]
+        self.assertEqual(arguments["multiview"][0], expected_output[0])
+
+    def test_init_argument_dictionaries_multiview_multiple_complex(self):
+        self.multiview_classifier_arg_value = {"fake_value_2":["plif", "pluf"], "plaf":"plouf"}
+        self.init_kwargs = {
+            'monoview': {
+                self.monoview_classifier_name:
+                    {
+                        self.monoview_classifier_arg_name: self.monoview_classifier_arg_value}
+            },
+            "multiview": {
+                self.multiview_classifier_name: {
+                    self.multiview_classifier_arg_name: self.multiview_classifier_arg_value}
+            }
+        }
+        self.benchmark["multiview"] = ["fake_multiview_classifier"]
+        self.benchmark["monoview"] = {}
+        arguments = exec_classif.init_argument_dictionaries(self.benchmark,
+                                                            self.views_dictionnary,
+                                                            self.nb_class,
+                                                            self.init_kwargs)
+        expected_output = [{
+                "classifier_name": self.multiview_classifier_name+"_plif_plouf",
+                "view_indices": [0,1],
+                "view_names": ["test_view_0", "test_view"],
+                "nb_class": self.nb_class,
+                "labels_names":None,
+                self.multiview_classifier_name + "_plif_plouf": {
+                    self.multiview_classifier_arg_name:
+                        {"fake_value_2": "plif", "plaf": "plouf"}},
+        },
+            {
+                "classifier_name": self.multiview_classifier_name+"_pluf_plouf",
+                "view_indices": [0, 1],
+                "view_names": ["test_view_0", "test_view"],
+                "nb_class": self.nb_class,
+                "labels_names": None,
+                self.multiview_classifier_name+"_pluf_plouf": {
+                    self.multiview_classifier_arg_name:
+                        {"fake_value_2":"pluf", "plaf":"plouf"}},
+            }
+        ]
+        self.assertEqual(arguments["multiview"][0], expected_output[0])
+
 
 def fakeBenchmarkExec(coreIndex=-1, a=7, args=1):
     return [coreIndex, a]
@@ -341,6 +457,83 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
             else:
                 os.remove(os.path.join(path, file_name))
         os.rmdir(path)
+
+class Test_multiview_multiple_args(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.classifier_name = "a"
+        cls.kwarg_init = {"a":
+                              {"b":{
+                                  "c":{
+                                      "d":{
+                                          "e":1,
+                                          "f":[1]
+                                      }
+                                  }
+                              }}}
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def test_simple(self):
+        is_multiple = exec_classif.multiview_multiple_args(self.classifier_name,
+                                                           self.kwarg_init)
+        self.assertEqual(is_multiple, False)
+        self.kwarg_init["a"]["b"]["c"]["d"]["g"] = [1,2]
+        is_multiple = exec_classif.multiview_multiple_args(self.classifier_name,
+                                                           self.kwarg_init)
+        self.assertEqual(is_multiple, True)
+
+
+class Test_set_element(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.dictionary = {"a":
+                              {"b":{
+                                  "c":{
+                                      "d":{
+                                          "e":1,
+                                          "f":[1]
+                                      }
+                                  }
+                              }}}
+        cls.elements = {"a.b.c.d.e":1, "a.b.c.d.f":[1]}
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def test_simple(self):
+        simplified_dict = {}
+        for path, value in self.elements.items():
+            simplified_dict = exec_classif.set_element(simplified_dict, path, value)
+        self.assertEqual(simplified_dict, self.dictionary)
+
+
+class Test_get_path_dict(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.dictionary = {"a":
+                              {"b":{
+                                  "c":{
+                                      "d":{
+                                          "e":1,
+                                          "f":[1]
+                                      }
+                                  }
+                              }}}
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def test_simple(self):
+        path_dict = exec_classif.get_path_dict(self.dictionary)
+        self.assertEqual(path_dict, {"a.b.c.d.e":1, "a.b.c.d.f":[1]})
 
 
 #

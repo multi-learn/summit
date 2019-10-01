@@ -124,15 +124,17 @@ def init_argument_dictionaries(benchmark, views_dictionary,
 def init_multiview_exps(classifier_names, views_dictionary, nb_class, kwargs_init):
     multiview_arguments = []
     for classifier_name in classifier_names:
-        if multiple_args(classifier_name, kwargs_init):
-            multiview_arguments += gen_multiple_args_dictionnaries(nb_class,
+        if multiple_args(get_path_dict(kwargs_init[classifier_name])):
+            multiview_arguments += gen_multiple_args_dictionnaries(
+                                                                  nb_class,
                                                                   kwargs_init,
                                                                   classifier_name,
                                                                   views_dictionary=views_dictionary,
                                                                   framework="multiview")
         else:
+            arguments = get_path_dict(kwargs_init[classifier_name])
             multiview_arguments += [gen_single_multiview_arg_dictionary(classifier_name,
-                                                                        kwargs_init,
+                                                                        arguments,
                                                                         nb_class,
                                                                         views_dictionary=views_dictionary)]
     return multiview_arguments
@@ -166,7 +168,7 @@ def init_monoview_exps(classifier_names,
     monoview_arguments = []
     for view_name, view_index in views_dictionary.items():
         for classifier in classifier_names:
-            if multiple_args(classifier, kwargs_init):
+            if multiple_args(kwargs_init[classifier]):
                 monoview_arguments += gen_multiple_args_dictionnaries(nb_class,
                                                                       kwargs_init,
                                                                       classifier,
@@ -199,18 +201,111 @@ def gen_single_multiview_arg_dictionary(classifier_name,arguments,nb_class,
             'view_indices': list(views_dictionary.values()),
             "nb_class": nb_class,
             "labels_names": None,
-            classifier_name: dict((key, value[0]) for key, value in arguments[
-                                                 classifier_name].items() if isinstance(value, list))
+            classifier_name: extract_dict(arguments)
             }
 
 
-def multiple_args(classifier, kwargsInit):
+def extract_dict(classifier_config):
+    extracted_dict = {}
+    for key, value in classifier_config.items():
+        if isinstance(value, list):
+            extracted_dict = set_element(extracted_dict, key, value[0])
+        else:
+            extracted_dict = set_element(extracted_dict, key, value)
+    return extracted_dict
+
+# def simplify_dict(dictionary):
+    #
+    # simplified_dict = dict((key, value[0]) if isinstance(value, list)
+    #                        else (key, value) if not isinstance(value, dict)
+    #                        else (key, {}) for key, value in dictionary.items()
+    #                        )
+    # dictionaries = {"":dict((key, value) for key, value in dictionary.items()
+    #                         if isinstance(value, dict))}
+    # while np.array([parent_dictionary for parent_dictionary in dictionaries.values()]).any():
+    #     new_dicts ={}
+    #     for path, parent_dictionary in dictionaries.items():
+    #         if parent_dictionary:
+    #             for name, dictionary in parent_dictionary.items():
+    #                 path = ".".join([path, name])
+    #                 new_dicts[path] = {}
+    #                 for key, value in dictionary.items():
+    #                     if isinstance(value, dict):
+    #                         simplified_dict = set_element(simplified_dict,
+    #                                                       path, key, {})
+    #                         new_dicts[path][key] = value
+    #                     elif isinstance(value, list):
+    #                         simplified_dict = set_element(simplified_dict, path,
+    #                                                       key, value[0])
+    #                     else:
+    #                         simplified_dict = set_element(simplified_dict, path,
+    #                                                       key, value)
+    #     dictionaries = new_dicts
+    # return simplified_dict
+
+
+def set_element(dictionary, path, value):
+    existing_keys = path.split(".")[:-1]
+    dict_state = dictionary
+    for existing_key in existing_keys:
+        if existing_key in dict_state:
+            dict_state = dict_state[existing_key]
+        else:
+            dict_state[existing_key] = {}
+            dict_state = dict_state[existing_key]
+    dict_state[path.split(".")[-1]] = value
+    return dictionary
+
+
+def multiview_multiple_args(classifier_name, kwargs_init):
+    args = [value for value in kwargs_init[classifier_name].values() if
+            isinstance(value, dict)]
+    arg_values = [value for value in kwargs_init[classifier_name].values() if not isinstance(value, dict)]
+    while args:
+        args_to_add = []
+        for arg_index, arg in enumerate(args):
+            for key, value in arg.items():
+                if isinstance(value, dict):
+                    args_to_add.append(value)
+                else:
+                    arg_values.append(value)
+            args.pop(arg_index)
+        args = args_to_add
+    listed_args = [type(value) == list and len(value) > 1 for value in
+                   arg_values]
+    if True in listed_args:
+        return True
+    else:
+        return False
+
+
+def multiple_args(classifier_configuration):
     listed_args = [type(value) == list and len(value)>1 for key, value in
-                   kwargsInit[classifier].items()]
+                   classifier_configuration.items()]
     if True in listed_args:
         return True
     else: 
         return False
+
+
+def get_path_dict(multiview_classifier_args):
+    path_dict = dict((key, value) for key, value in multiview_classifier_args.items())
+    paths = is_dict_in(path_dict)
+    while paths:
+        for path in paths:
+            for key, value in path_dict[path].items():
+                path_dict[".".join([path, key])] = value
+            path_dict.pop(path)
+        paths = is_dict_in(path_dict)
+    return path_dict
+
+
+def is_dict_in(dictionary):
+    paths = []
+    for key, value in dictionary.items():
+        if isinstance(value, dict):
+            paths.append(key)
+    return paths
 
 
 def gen_multiple_kwargs_combinations(clKWARGS):
@@ -232,9 +327,14 @@ def gen_multiple_kwargs_combinations(clKWARGS):
 
 
 def gen_multiple_args_dictionnaries(nb_class, kwargsInit, classifier,
-                                    view_name=None, view_index=None, views_indices=None,
+                                    view_name=None, view_index=None,
+                                    views_dictionary=None,
                                     framework="monoview"):
-    multiple_kwargs_list, reduced_multiple_kwargs_list = gen_multiple_kwargs_combinations(kwargsInit[classifier])
+    if framework=="multiview":
+        classifier_config = get_path_dict(kwargsInit[classifier])
+    else:
+        classifier_config = kwargsInit[classifier]
+    multiple_kwargs_list, reduced_multiple_kwargs_list = gen_multiple_kwargs_combinations(classifier_config)
     multiple_kwargs_dict = dict(
         (classifier+"_"+"_".join(map(str,list(reduced_dictionary.values()))), dictionary)
         for reduced_dictionary, dictionary in zip(reduced_multiple_kwargs_list, multiple_kwargs_list ))
@@ -247,7 +347,7 @@ def gen_multiple_args_dictionnaries(nb_class, kwargsInit, classifier,
                            gen_single_multiview_arg_dictionary(classifier_name,
                                                             arguments,
                                                             nb_class,
-                                                            views_indices=views_indices)
+                                                               views_dictionary=views_dictionary)
                            for classifier_name, arguments
                            in multiple_kwargs_dict.items()]
     return args_dictionnaries

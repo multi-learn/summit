@@ -17,15 +17,15 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier):
         self.view_weights = view_weights
         self.monoview_classifier_name = monoview_classifier_name
         self.short_name = "early fusion " + monoview_classifier_name
+        if monoview_classifier_name in monoview_classifier_config:
+            self.monoview_classifier_config = monoview_classifier_config[monoview_classifier_name]
         self.monoview_classifier_config = monoview_classifier_config
-
         monoview_classifier_module = getattr(monoview_classifiers,
                                               self.monoview_classifier_name)
         monoview_classifier_class = getattr(monoview_classifier_module,
                                              monoview_classifier_module.classifier_class_name)
         self.monoview_classifier = monoview_classifier_class(random_state=random_state,
                                                              **self.monoview_classifier_config)
-
         self.param_names = ["monoview_classifier_name", "monoview_classifier_config"]
         classifier_names = []
         for module_name in dir(monoview_classifiers):
