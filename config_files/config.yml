@@ -137,4 +137,9 @@ min_cq:
 
 weighted_linear_early_fusion:
   view_weights: [None]
-  monoview_classifier: ["decision_tree"]
+  monoview_classifier_name: ["decision_tree"]
+  monoview_classifier_config:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]

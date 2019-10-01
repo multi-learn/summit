@@ -3,11 +3,14 @@ import unittest
 import yaml
 import numpy as np
 
+from ..utils import rm_tmp
+
 from multiview_platform.mono_multi_view_classifiers.utils import configuration
 
 class Test_get_the_args(unittest.TestCase):
 
     def setUp(self):
+        rm_tmp()
         self.path_to_config_file = "multiview_platform/tests/tmp_tests/config_temp.yml"
         os.mkdir("multiview_platform/tests/tmp_tests")
         data = {"Base":{"first_arg": 10, "second_arg":[12.5, 1e-06]}, "Classification":{"third_arg":True}}

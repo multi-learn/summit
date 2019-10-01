@@ -97,21 +97,20 @@ def get_train_views_indices(dataset, train_indices, view_indices,):
 
 class ConfigGenerator():
 
-    def __init__(self):
+    def __init__(self, classifier_names):
         self.distribs = {}
-        for name in dir(monoview_classifiers):
-            if not name.startswith("__"):
-                module = getattr(monoview_classifiers, name)
-                classifier_class = getattr(module,
-                                           module.classifier_class_name)()
-                self.distribs[name] = dict((param_name, param_distrib)
-                                      for param_name, param_distrib in
-                                      zip(classifier_class().param_names,
-                                          classifier_class().distribs))
+        for classifier_name in classifier_names:
+            classifier_module = getattr(monoview_classifiers, classifier_name)
+            classifier_class = getattr(classifier_module, classifier_module.classifier_class_name)
+            self.distribs[classifier_name] = dict((param_name, param_distrib)
+                                  for param_name, param_distrib in
+                                  zip(classifier_class().param_names,
+                                      classifier_class().distribs))
 
     def rvs(self, random_state=None):
         config_sample = {}
         for classifier_name, classifier_config in self.distribs.items():
+            config_sample[classifier_name] = {}
             for param_name, param_distrib in classifier_config.items():
                 if hasattr(param_distrib, "rvs"):
                     config_sample[classifier_name][param_name]=param_distrib.rvs(random_state=random_state)

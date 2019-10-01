@@ -200,7 +200,7 @@ def gen_single_multiview_arg_dictionary(classifier_name,arguments,nb_class,
             "nb_class": nb_class,
             "labels_names": None,
             classifier_name: dict((key, value[0]) for key, value in arguments[
-                                                 classifier_name].items())
+                                                 classifier_name].items() if isinstance(value, list))
             }
 
 

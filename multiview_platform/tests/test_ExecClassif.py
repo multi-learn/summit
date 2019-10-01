@@ -4,6 +4,8 @@ import unittest
 import h5py
 import numpy as np
 
+from .utils import rm_tmp
+
 from ..mono_multi_view_classifiers import exec_classif
 
 
@@ -25,6 +27,7 @@ class Test_initKWARGS(unittest.TestCase):
 class Test_init_argument_dictionaries(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         cls.benchmark = {"monoview": ["fake_monoview_classifier"], "multiview": {}}
         cls.views_dictionnary = {'test_view_0': 0, 'test_view': 1}
         cls.nb_class = 2
@@ -113,6 +116,7 @@ class Test_execBenchmark(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir("multiview_platform/tests/tmp_tests")
         cls.Dataset = h5py.File(
             "multiview_platform/tests/tmp_tests/test_file.hdf5", "w")
@@ -216,6 +220,7 @@ class Test_execOneBenchmark(unittest.TestCase):
     @classmethod
 
     def setUp(cls):
+        rm_tmp()
         os.mkdir("multiview_platform/tests/tmp_tests")
         cls.args = {
             "Base": {"name": "chicken_is_heaven", "type": "type",
@@ -282,6 +287,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir("multiview_platform/tests/tmp_tests")
         cls.args = {
             "Base": {"name": "chicken_is_heaven", "type": "type",

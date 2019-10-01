@@ -10,6 +10,8 @@ from scipy import sparse
 from . import get_multiview_db as DB
 
 
+
+
 def getV(DATASET, viewIndex, usedIndices=None):
     """Used to extract a view as a numpy array or a sparse mat from the HDF5 dataset"""
     if usedIndices is None:

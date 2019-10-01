@@ -2,6 +2,7 @@ import unittest
 
 import numpy as np
 
+from ..utils import rm_tmp
 from multiview_platform.mono_multi_view_classifiers.multiview.additions import \
     diversity_utils
 
@@ -14,6 +15,7 @@ class Test_global_div_measure(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         cls.randomState = np.random.RandomState(42)
         cls.allClassifiersNames = [["SCM", "SVM", "DT"], ["SCM", "SVM", "DT"]]
         cls.viewsIndices = np.array([0, 1])

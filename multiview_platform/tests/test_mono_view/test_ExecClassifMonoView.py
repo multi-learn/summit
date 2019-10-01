@@ -5,6 +5,8 @@ import h5py
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
+from ..utils import rm_tmp
+
 from ...mono_multi_view_classifiers.monoview import exec_classif_mono_view
 from ...mono_multi_view_classifiers.monoview_classifiers import decision_tree
 
@@ -13,6 +15,7 @@ class Test_initConstants(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir("multiview_platform/tests/temp_tests")
         cls.datasetFile = h5py.File(
             "multiview_platform/tests/temp_tests/test.hdf5", "w")
@@ -65,6 +68,7 @@ class Test_initTrainTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         cls.random_state = np.random.RandomState(42)
         cls.X = cls.random_state.randint(0, 500, (10, 5))
         cls.Y = cls.random_state.randint(0, 2, 10)
@@ -95,6 +99,7 @@ class Test_getHPs(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir("multiview_platform/tests/tmp_tests")
         cls.classifierModule = decision_tree
         cls.hyperParamSearch = "randomized_search"
