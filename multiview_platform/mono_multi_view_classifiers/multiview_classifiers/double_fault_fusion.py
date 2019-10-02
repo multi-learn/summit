@@ -1,12 +1,12 @@
 import numpy as np
 
 from multiview_platform.mono_multi_view_classifiers.multiview_classifiers.additions.diversity_utils import \
-    CoupleDiversityFusion
+    CoupleDiversityFusionClassifier
 
 classifier_class_name = "DoubleFaultFusion"
 
 
-class DoubleFaultFusion(CoupleDiversityFusion):
+class DoubleFaultFusion(CoupleDiversityFusionClassifier):
 
     def diversity_measure(self, first_classifier_decision,
                           second_classifier_decision, y):

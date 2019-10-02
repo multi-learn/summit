@@ -1,12 +1,12 @@
 import numpy as np
 
-from multiview_platform.mono_multi_view_classifiers.multiview_classifiers.additions.diversity_utils import GlobalDiversityFusion
+from multiview_platform.mono_multi_view_classifiers.multiview_classifiers.additions.diversity_utils import GlobalDiversityFusionClassifier
 
 
 classifier_class_name = "DifficultyFusion"
 
 
-class DifficultyFusion(GlobalDiversityFusion):
+class DifficultyFusion(GlobalDiversityFusionClassifier):
 
     def diversity_measure(self, classifiers_decisions, combination, y):
         _, nb_view, nb_examples = classifiers_decisions.shape

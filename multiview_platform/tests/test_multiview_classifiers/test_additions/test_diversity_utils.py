@@ -18,7 +18,7 @@ class FakeDataset():
     def get_nb_class(self, example_indices):
         return np.unique(self.labels[example_indices])
 
-class FakeDivCoupleClf(diversity_utils.CoupleDiversityFusion):
+class FakeDivCoupleClf(diversity_utils.CoupleDiversityFusionClassifier):
 
     def __init__(self, rs, classifier_names=None,
                  classifiers_config=None, monoview_estimators=None):
@@ -32,7 +32,7 @@ class FakeDivCoupleClf(diversity_utils.CoupleDiversityFusion):
         return self.rs.randint(0,100)
 
 
-class FakeDivGlobalClf(diversity_utils.GlobalDiversityFusion):
+class FakeDivGlobalClf(diversity_utils.GlobalDiversityFusionClassifier):
 
     def __init__(self, rs, classifier_names=None,
                  classifiers_config=None, monoview_estimators=None):
