@@ -236,13 +236,13 @@ def gen_k_folds(stats_iter, nb_folds, stats_iter_random_states):
     return folds_list
 
 
-def init_views(dataset, arg_views):
+def init_views(dataset_var, arg_views):
     r"""Used to return the views names that will be used by the
     benchmark, their indices and all the views names.
 
     Parameters
     ----------
-    datset : HDF5 dataset file
+    dataset_var : HDF5 dataset file
         The full dataset that wil be used by the benchmark.
     arg_views : list of strings
         The views that will be used by the benchmark (arg).
@@ -256,29 +256,29 @@ def init_views(dataset, arg_views):
     all_views : list of strings
         Names of all the available views in the dataset.
     """
-    nb_view = dataset.get("Metadata").attrs["nbView"]
+    nb_view = dataset_var.get("Metadata").attrs["nbView"]
     if arg_views != ["all"]:
         allowed_views = arg_views
-        all_views = [str(dataset.get("View" + str(view_index)).attrs["name"])
+        all_views = [str(dataset_var.get("View" + str(view_index)).attrs["name"])
                     if type(
-            dataset.get("View" + str(view_index)).attrs["name"]) != bytes
-                    else dataset.get("View" + str(view_index)).attrs[
+            dataset_var.get("View" + str(view_index)).attrs["name"]) != bytes
+                    else dataset_var.get("View" + str(view_index)).attrs[
             "name"].decode("utf-8")
                     for view_index in range(nb_view)]
         views = []
         views_indices = []
         for view_index in range(nb_view):
-            view_name = dataset.get("View" + str(view_index)).attrs["name"]
+            view_name = dataset_var.get("View" + str(view_index)).attrs["name"]
             if type(view_name) == bytes:
                 view_name = view_name.decode("utf-8")
             if view_name in allowed_views:
                 views.append(view_name)
                 views_indices.append(view_index)
     else:
-        views = [str(dataset.get("View" + str(viewIndex)).attrs["name"])
+        views = [str(dataset_var.get("View" + str(viewIndex)).attrs["name"])
                  if type(
-            dataset.get("View" + str(viewIndex)).attrs["name"]) != bytes
-                 else dataset.get("View" + str(viewIndex)).attrs["name"].decode(
+            dataset_var.get("View" + str(viewIndex)).attrs["name"]) != bytes
+                 else dataset_var.get("View" + str(viewIndex)).attrs["name"].decode(
             "utf-8")
                  for viewIndex in range(nb_view)]
         views_indices = range(nb_view)
@@ -286,7 +286,7 @@ def init_views(dataset, arg_views):
     return views, views_indices, all_views
 
 
-def gen_direcorties_names(directory, statsIter):
+def gen_direcorties_names(directory, stats_iter):
     r"""Used to generate the different directories of each iteration if needed.
 
     Parameters
@@ -301,9 +301,9 @@ def gen_direcorties_names(directory, statsIter):
     directories : list of strings
         Paths to each statistical iterations result directory.
     """
-    if statsIter > 1:
+    if stats_iter > 1:
         directories = []
-        for i in range(statsIter):
+        for i in range(stats_iter):
             directories.append(directory + "iter_" + str(i + 1) + "/")
     else:
         directories = [directory]
