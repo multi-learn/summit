@@ -143,3 +143,36 @@ weighted_linear_early_fusion:
       max_depth: [1]
       criterion: ["gini"]
       splitter: ["best"]
+
+entropy_fusion:
+  classifier_names: ["decison_tree"]
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]
+
+disagree_fusion:
+  classifier_names: ["decison_tree"]
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]
+
+
+double_fault_fusion:
+  classifier_names: ["decison_tree"]
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]
+
+difficulty_fusion:
+  classifier_names: ["decison_tree"]
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]

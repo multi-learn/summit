@@ -10,6 +10,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_is_fitted
 
 from ... import metrics
+from ... import monoview_classifiers
 
 
 def get_names(classed_list):
@@ -72,3 +73,6 @@ def get_train_views_indices(dataset, train_indices, view_indices,):
     if train_indices is None:
         train_indices = range(dataset["Metadata"].attrs["datasetLength"])
     return train_indices, view_indices
+
+
+

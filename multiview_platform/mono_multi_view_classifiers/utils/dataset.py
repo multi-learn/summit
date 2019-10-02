@@ -10,6 +10,44 @@ from scipy import sparse
 from . import get_multiview_db as DB
 
 
+class Dataset():
+
+    def __init__(self, dataset):
+        self.dataset = dataset
+
+    def init_example_indces(self, example_indices=None):
+        if example_indices is None:
+            return range(self.dataset.get("Metadata").attrs["datasetLength"])
+        else:
+            return example_indices
+
+    def get_v(self, view_index, example_indices=None):
+        example_indices = self.init_example_indces(example_indices)
+        if type(example_indices) is int:
+            return self.dataset.get("View" + str(view_index))[example_indices, :]
+        else:
+            example_indices = np.array(example_indices)
+            sorted_indices = np.argsort(example_indices)
+            example_indices = example_indices[sorted_indices]
+
+            if not self.dataset.get("View" + str(view_index)).attrs["sparse"]:
+                return self.dataset.get("View" + str(view_index))[example_indices, :][
+                       np.argsort(sorted_indices), :]
+            else:
+                sparse_mat = sparse.csr_matrix(
+                    (self.dataset.get("View" + str(view_index)).get("data").value,
+                     self.dataset.get("View" + str(view_index)).get("indices").value,
+                     self.dataset.get("View" + str(view_index)).get("indptr").value),
+                    shape=self.dataset.get("View" + str(view_index)).attrs["shape"])[
+                             example_indices, :][
+                             np.argsort(sorted_indices), :]
+
+                return sparse_mat
+
+    def get_nb_class(self, example_indices=None):
+        example_indices = self.init_example_indces(example_indices)
+        return len(np.unique(self.dataset.get("Labels").value[example_indices]))
+
 
 def get_v(dataset, view_index, used_indices=None):
     """Used to extract a view as a numpy array or a sparse mat from the HDF5 dataset"""

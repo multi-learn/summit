@@ -2,7 +2,7 @@
 #
 # import numpy as np
 #
-# from ....mono_multi_view_classifiers.multiview_classifiers.entropy_fusion import EntropyFusionModule
+# from ....mono_multi_view_classifiers.multiview_classifiers.entropy_fusion_old import EntropyFusionModule
 #
 # class Test_entropy(unittest.TestCase):
 #

@@ -1,6 +1,7 @@
-from ...multiview.additions import diversity_utils
-from ..difficulty_fusion.difficulty_fusion import difficulty
-from ..double_fault_fusion.double_fault_fusion import doubleFault
+from multiview_platform.mono_multi_view_classifiers.multiview_classifiers.additions import \
+    diversity_utils
+from multiview_platform.mono_multi_view_classifiers.multiview_classifiers.difficulty_fusion_old import difficulty
+from multiview_platform.mono_multi_view_classifiers.multiview_classifiers.double_fault_fusion_old import doubleFault
 
 
 def genName(config):
@@ -34,6 +35,6 @@ class PseudoCQFusionClass(diversity_utils.DiversityFusionClass):
         diversity_utils.DiversityFusionClass.__init__(self, randomState, NB_CORES=1, **kwargs)
 
     def getSpecificAnalysis(self, classificationKWARGS):
-        stringAnalysis = "Classifiers used for each view : "+ ', '.join(self.classifiersNames)+\
-                         ', with a pseudo CQ of '+str(self.div_measure)
+        stringAnalysis = "Classifiers used for each view : " + ', '.join(self.classifiers_names) +\
+                         ', with a pseudo CQ of ' + str(self.div_measure)
         return stringAnalysis

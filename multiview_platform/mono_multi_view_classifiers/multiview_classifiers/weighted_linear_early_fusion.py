@@ -2,7 +2,8 @@ import numpy as np
 import inspect
 
 from ..utils.dataset import get_v
-from ..multiview.multiview_utils import BaseMultiviewClassifier, get_train_views_indices, ConfigGenerator
+from ..multiview.multiview_utils import BaseMultiviewClassifier, get_examples_views_indices, ConfigGenerator, get_available_monoview_classifiers
+
 
 from .. import monoview_classifiers
 
@@ -28,11 +29,8 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier):
         self.monoview_classifier = monoview_classifier_class(random_state=random_state,
                                                              **self.monoview_classifier_config)
         self.param_names = ["monoview_classifier_name", "monoview_classifier_config"]
-        classifier_names = []
-        for module_name in dir(monoview_classifiers):
-            if not module_name.startswith("__"):
-                classifier_names.append(module_name)
-        self.distribs = [classifier_names, ConfigGenerator(classifier_names)]
+        self.distribs = [get_available_monoview_classifiers(),
+                         ConfigGenerator(get_available_monoview_classifiers())]
         self.classed_params = []
         self.weird_strings={}
 
@@ -56,6 +54,7 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier):
     def fit(self, X, y, train_indices=None, view_indices=None):
         train_indices, X = self.transform_data_to_monoview(X, train_indices, view_indices)
         self.monoview_classifier.fit(X, y[train_indices])
+        return self
 
     def predict(self, X, predict_indices=None, view_indices=None):
         _, X = self.transform_data_to_monoview(X, predict_indices, view_indices)
@@ -65,7 +64,7 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier):
     def transform_data_to_monoview(self, dataset, example_indices, view_indices):
         """Here, we extract the data from the HDF5 dataset file and store all
         the concatenated views in one variable"""
-        example_indices, self.view_indices = get_train_views_indices(dataset,
+        example_indices, self.view_indices = get_examples_views_indices(dataset,
                                                                         example_indices,
                                                                         view_indices)
         if self.view_weights is None or self.view_weights=="None":

@@ -84,15 +84,13 @@ class BaseMultiviewClassifier(BaseEstimator, ClassifierMixin):
         return "No detailed interpretation function"
 
 
-
-
-def get_train_views_indices(dataset, train_indices, view_indices,):
+def get_examples_views_indices(dataset, examples_indices, view_indices, ):
     """This function  is used to get all the examples indices and view indices if needed"""
     if view_indices is None:
         view_indices = np.arange(dataset["Metadata"].attrs["nbView"])
-    if train_indices is None:
-        train_indices = range(dataset["Metadata"].attrs["datasetLength"])
-    return train_indices, view_indices
+    if examples_indices is None:
+        examples_indices = range(dataset["Metadata"].attrs["datasetLength"])
+    return examples_indices, view_indices
 
 
 class ConfigGenerator():
@@ -100,8 +98,7 @@ class ConfigGenerator():
     def __init__(self, classifier_names):
         self.distribs = {}
         for classifier_name in classifier_names:
-            classifier_module = getattr(monoview_classifiers, classifier_name)
-            classifier_class = getattr(classifier_module, classifier_module.classifier_class_name)
+            classifier_class = get_monoview_classifier(classifier_name)
             self.distribs[classifier_name] = dict((param_name, param_distrib)
                                   for param_name, param_distrib in
                                   zip(classifier_class().param_names,
@@ -118,3 +115,15 @@ class ConfigGenerator():
                     config_sample[classifier_name][
                         param_name] = param_distrib[random_state.randint(len(param_distrib))]
         return config_sample
+
+
+def get_available_monoview_classifiers():
+    classifiers_names = [module_name
+                         for module_name in dir(monoview_classifiers)
+                         if not module_name.startswith("__")]
+    return classifiers_names
+
+def get_monoview_classifier(classifier_name):
+    classifier_module = getattr(monoview_classifiers, classifier_name)
+    classifier_class = getattr(classifier_module, classifier_module.classifier_class_name)
+    return classifier_class
