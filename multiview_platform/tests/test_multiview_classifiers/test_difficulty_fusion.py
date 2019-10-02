@@ -20,4 +20,4 @@ class Test_difficulty_fusion(unittest.TestCase):
             cls.classifiers_decisions,
             cls.combination,
             cls.y)
-        cls.assertAlmostEqual(difficulty_measure, 0.22453703703703706)
+        cls.assertAlmostEqual(difficulty_measure, 0.1875)

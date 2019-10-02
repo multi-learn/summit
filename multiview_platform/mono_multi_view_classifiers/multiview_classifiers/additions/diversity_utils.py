@@ -49,7 +49,7 @@ class DiversityFusion(BaseMultiviewClassifier):
                     estimator.fit(X.get_v(view_idx, train_indices), y[train_indices])
                     self.estimator_pool[classifier_idx].append(estimator)
         else:
-            pass #Todo
+            pass #TODO
         self.monoview_estimators = self.choose_combination(X, y, train_indices, views_indices)
         return self
 
