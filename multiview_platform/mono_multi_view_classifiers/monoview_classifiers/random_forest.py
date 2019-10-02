@@ -45,10 +45,10 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
 #     return kwargsDict
 
 
-def paramsToSet(nIter, randomState):
+def paramsToSet(nIter, random_state):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"n_estimators": randomState.randint(1, 300),
-                          "max_depth": randomState.randint(1, 300),
-                          "criterion": randomState.choice(["gini", "entropy"])})
+        paramsSet.append({"n_estimators": random_state.randint(1, 300),
+                          "max_depth": random_state.randint(1, 300),
+                          "criterion": random_state.choice(["gini", "entropy"])})
     return paramsSet

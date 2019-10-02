@@ -47,13 +47,13 @@ class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
 #     return kwargsDict
 
 
-def paramsToSet(nIter, randomState):
+def paramsToSet(nIter, random_state):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"n_neighbors": randomState.randint(1, 20),
-                          "weights": randomState.choice(
+        paramsSet.append({"n_neighbors": random_state.randint(1, 20),
+                          "weights": random_state.choice(
                               ["uniform", "distance"]),
-                          "algorithm": randomState.choice(
+                          "algorithm": random_state.choice(
                               ["auto", "ball_tree", "kd_tree", "brute"]),
-                          "p": randomState.choice([1, 2])})
+                          "p": random_state.choice([1, 2])})
     return paramsSet

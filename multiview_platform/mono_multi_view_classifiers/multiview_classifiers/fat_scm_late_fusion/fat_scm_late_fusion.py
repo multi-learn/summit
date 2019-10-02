@@ -16,19 +16,19 @@ def getBenchmark(benchmark, args=None):
 
 
 
-def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview, classificationIndices):
+def getArgs(args, benchmark, views, views_indices, random_state, directory, resultsMonoview, classificationIndices):
     argumentsList = []
     multiclass_preds = [monoviewResult.y_test_multiclass_pred for monoviewResult in resultsMonoview]
     if isBiclass(multiclass_preds):
         monoviewDecisions = np.array([monoviewResult.full_labels_pred for monoviewResult in resultsMonoview])
     else:
-        monoviewDecisions = np.array([genMulticlassMonoviewDecision(monoviewResult, classificationIndices) for monoviewResult in resultsMonoview])
+        monoviewDecisions = np.array([genMulticlassMonoviewDecision(monoviewResult, classification_indices) for monoviewResult in resultsMonoview])
     monoviewDecisions = np.transpose(monoviewDecisions)
     #monoviewDecisions = np.transpose(np.array([monoviewResult[1][3] for monoviewResult in resultsMonoview]))
     arguments = {"CL_type": "fat_scm_late_fusion",
                  "views": ["all"],
                  "NB_VIEW": len(resultsMonoview),
-                 "viewsIndices": range(len(resultsMonoview)),
+                 "views_indices": range(len(resultsMonoview)),
                  "NB_CLASS": len(args.CL_classes),
                  "LABELS_NAMES": args.CL_classes,
                  "FatSCMLateFusionKWARGS": {
@@ -42,13 +42,13 @@ def getArgs(args, benchmark, views, viewsIndices, randomState, directory, result
     return argumentsList
 
 
-def genParamsSets(classificationKWARGS, randomState, nIter=1):
+def genParamsSets(classificationKWARGS, random_state, nIter=1):
     """Used to generate parameters sets for the random hyper parameters optimization function"""
     paramsSets = []
     for _ in range(nIter):
-        max_attributes = randomState.randint(1, 20)
-        p = randomState.random_sample()
-        model = randomState.choice(["conjunction", "disjunction"])
+        max_attributes = random_state.randint(1, 20)
+        p = random_state.random_sample()
+        model = random_state.choice(["conjunction", "disjunction"])
         paramsSets.append([p, max_attributes, model])
 
     return paramsSets
@@ -56,7 +56,7 @@ def genParamsSets(classificationKWARGS, randomState, nIter=1):
 
 class FatSCMLateFusionClass:
 
-    def __init__(self, randomState, NB_CORES=1, **kwargs):
+    def __init__(self, random_state, NB_CORES=1, **kwargs):
         if kwargs["p"]:
             self.p = kwargs["p"]
         else:
@@ -70,20 +70,20 @@ class FatSCMLateFusionClass:
         else:
             self.model = "conjunction"
         self.monoviewDecisions = kwargs["monoviewDecisions"]
-        self.randomState = randomState
+        self.random_state = random_state
 
     def setParams(self, paramsSet):
         self.p = paramsSet[0]
         self.max_attributes = paramsSet[1]
         self.model = paramsSet[2]
 
-    def fit_hdf5(self, DATASET, labels, trainIndices=None, viewsIndices=None, metric=["f1_score", None]):
+    def fit_hdf5(self, DATASET, labels, trainIndices=None, views_indices=None, metric=["f1_score", None]):
         features = self.monoviewDecisions[trainIndices]
         self.SCMClassifier = DecisionStumpSCMNew(p=self.p, max_rules=self.max_attributes, model_type=self.model,
-                                                 random_state=self.randomState)
+                                                 random_state=self.random_state)
         self.SCMClassifier.fit(features, labels[trainIndices].astype(int))
 
-    def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
+    def predict_hdf5(self, DATASET, usedIndices=None, views_indices=None):
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         predictedLabels = self.SCMClassifier.predict(self.monoviewDecisions[usedIndices])

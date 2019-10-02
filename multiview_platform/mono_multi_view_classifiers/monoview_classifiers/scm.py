@@ -77,11 +77,11 @@ class SCM(scm, BaseMonoviewClassifier):
 #     return kwargsDict
 
 
-def paramsToSet(nIter, randomState):
+def paramsToSet(nIter, random_state):
     paramsSet = []
     for _ in range(nIter):
         paramsSet.append(
-            {"model_type": randomState.choice(["conjunction", "disjunction"]),
-             "max_rules": randomState.randint(1, 15),
-             "p": randomState.random_sample()})
+            {"model_type": random_state.choice(["conjunction", "disjunction"]),
+             "max_rules": random_state.randint(1, 15),
+             "p": random_state.random_sample()})
     return paramsSet

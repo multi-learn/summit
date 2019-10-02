@@ -22,20 +22,31 @@ class Test_initStatsIterRandomStates(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.randomState = np.random.RandomState(42)
+        cls.random_state = np.random.RandomState(42)
         cls.statsIter = 1
 
     def test_one_statiter(cls):
+<<<<<<< HEAD
+        cls.state = cls.random_state.get_state()[1]
+        statsIterRandomStates = execution.initStatsIterRandomStates(
+            cls.statsIter, cls.random_state)
+=======
         cls.state = cls.randomState.get_state()[1]
         statsIterRandomStates = execution.init_stats_iter_random_states(
             cls.statsIter, cls.randomState)
+>>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4
         np.testing.assert_array_equal(statsIterRandomStates[0].get_state()[1],
                                       cls.state)
 
     def test_multiple_iter(cls):
         cls.statsIter = 3
+<<<<<<< HEAD
+        statsIterRandomStates = execution.initStatsIterRandomStates(
+            cls.statsIter, cls.random_state)
+=======
         statsIterRandomStates = execution.init_stats_iter_random_states(
             cls.statsIter, cls.randomState)
+>>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4
         cls.assertAlmostEqual(len(statsIterRandomStates), 3)
         cls.assertNotEqual(statsIterRandomStates[0].randint(5000),
                            statsIterRandomStates[1].randint(5000))
@@ -85,6 +96,21 @@ class Test_initRandomState(unittest.TestCase):
 
     def test_random_state_42(self):
         randomState_42 = np.random.RandomState(42)
+<<<<<<< HEAD
+        random_state = execution.initRandomState("42",
+                                                "multiview_platform/tests/temp_tests/")
+        os.remove("multiview_platform/tests/temp_tests/random_state.pickle")
+        np.testing.assert_array_equal(random_state.beta(1, 100, 100),
+                                      randomState_42.beta(1, 100, 100))
+
+    def test_random_state_pickle(self):
+        randomState_to_pickle = execution.initRandomState(None,
+                                                          "multiview_platform/tests/temp_tests/")
+        pickled_randomState = execution.initRandomState(
+            "multiview_platform/tests/temp_tests/random_state.pickle",
+            "multiview_platform/tests/temp_tests/")
+        os.remove("multiview_platform/tests/temp_tests/random_state.pickle")
+=======
         randomState = execution.init_random_state("42",
                                                 "multiview_platform/tests/tmp_tests/")
         os.remove("multiview_platform/tests/tmp_tests/randomState.pickle")
@@ -98,6 +124,7 @@ class Test_initRandomState(unittest.TestCase):
             "multiview_platform/tests/tmp_tests/randomState.pickle",
             "multiview_platform/tests/tmp_tests/")
         os.remove("multiview_platform/tests/tmp_tests/randomState.pickle")
+>>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4
         np.testing.assert_array_equal(randomState_to_pickle.beta(1, 100, 100),
                                       pickled_randomState.beta(1, 100, 100))
 

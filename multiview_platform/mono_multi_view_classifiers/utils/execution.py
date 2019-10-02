@@ -62,7 +62,7 @@ def init_random_state(random_state_arg, directory):
             file_name = random_state_arg
             with open(file_name, 'rb') as handle:
                 random_state = pickle.load(handle)
-    with open(directory + "randomState.pickle", "wb") as handle:
+    with open(directory + "random_state.pickle", "wb") as handle:
         pickle.dump(random_state, handle)
     return random_state
 
@@ -236,13 +236,13 @@ def gen_k_folds(stats_iter, nb_folds, stats_iter_random_states):
     return folds_list
 
 
-def init_views(dataset, arg_views):
+def init_views(dataset_var, arg_views):
     r"""Used to return the views names that will be used by the
     benchmark, their indices and all the views names.
 
     Parameters
     ----------
-    datset : HDF5 dataset file
+    dataset_var : HDF5 dataset file
         The full dataset that wil be used by the benchmark.
     arg_views : list of strings
         The views that will be used by the benchmark (arg).
@@ -256,29 +256,29 @@ def init_views(dataset, arg_views):
     all_views : list of strings
         Names of all the available views in the dataset.
     """
-    nb_view = dataset.get("Metadata").attrs["nbView"]
+    nb_view = dataset_var.get("Metadata").attrs["nbView"]
     if arg_views != ["all"]:
         allowed_views = arg_views
-        all_views = [str(dataset.get("View" + str(view_index)).attrs["name"])
+        all_views = [str(dataset_var.get("View" + str(view_index)).attrs["name"])
                     if type(
-            dataset.get("View" + str(view_index)).attrs["name"]) != bytes
-                    else dataset.get("View" + str(view_index)).attrs[
+            dataset_var.get("View" + str(view_index)).attrs["name"]) != bytes
+                    else dataset_var.get("View" + str(view_index)).attrs[
             "name"].decode("utf-8")
                     for view_index in range(nb_view)]
         views = []
         views_indices = []
         for view_index in range(nb_view):
-            view_name = dataset.get("View" + str(view_index)).attrs["name"]
+            view_name = dataset_var.get("View" + str(view_index)).attrs["name"]
             if type(view_name) == bytes:
                 view_name = view_name.decode("utf-8")
             if view_name in allowed_views:
                 views.append(view_name)
                 views_indices.append(view_index)
     else:
-        views = [str(dataset.get("View" + str(viewIndex)).attrs["name"])
+        views = [str(dataset_var.get("View" + str(viewIndex)).attrs["name"])
                  if type(
-            dataset.get("View" + str(viewIndex)).attrs["name"]) != bytes
-                 else dataset.get("View" + str(viewIndex)).attrs["name"].decode(
+            dataset_var.get("View" + str(viewIndex)).attrs["name"]) != bytes
+                 else dataset_var.get("View" + str(viewIndex)).attrs["name"].decode(
             "utf-8")
                  for viewIndex in range(nb_view)]
         views_indices = range(nb_view)
@@ -286,7 +286,7 @@ def init_views(dataset, arg_views):
     return views, views_indices, all_views
 
 
-def gen_direcorties_names(directory, statsIter):
+def gen_direcorties_names(directory, stats_iter):
     r"""Used to generate the different directories of each iteration if needed.
 
     Parameters
@@ -301,9 +301,9 @@ def gen_direcorties_names(directory, statsIter):
     directories : list of strings
         Paths to each statistical iterations result directory.
     """
-    if statsIter > 1:
+    if stats_iter > 1:
         directories = []
-        for i in range(statsIter):
+        for i in range(stats_iter):
             directories.append(directory + "iter_" + str(i + 1) + "/")
     else:
         directories = [directory]
@@ -311,8 +311,12 @@ def gen_direcorties_names(directory, statsIter):
 
 
 def find_dataset_names(path, type, names):
-    """This function goal is to browse the dataset directory and extarcts all
+    """This function goal is to browse the dataset directory and extrats all
      the needed dataset names."""
+    config_path = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(config_path, "../..")
+    path = os.path.join(config_path, path)
+
     available_file_names = [file_name.strip().split(".")[0]
                             for file_name in os.listdir(path)
                             if file_name.endswith(type)]
@@ -380,27 +384,27 @@ def gen_argument_dictionaries(labels_dictionary, directories, multiclass_labels,
     for combination_index, labels_combination in enumerate(labels_combinations):
         for iter_index, iterRandomState in enumerate(stats_iter_random_states):
             benchmark_argument_dictionary = {
-                "LABELS_DICTIONARY": {0: labels_dictionary[labels_combination[0]],
+                "labels_dictionary": {0: labels_dictionary[labels_combination[0]],
                                       1: labels_dictionary[
                                           labels_combination[1]]},
                 "directory": directories[iter_index] +
                              labels_dictionary[labels_combination[0]] +
                              "-vs-" +
                              labels_dictionary[labels_combination[1]] + "/",
-                "classificationIndices": [
+                "classification_indices": [
                     indices_multiclass[combination_index][0][iter_index],
                     indices_multiclass[combination_index][1][iter_index],
                     indices_multiclass[combination_index][2][iter_index]],
                 "args": args,
                 "labels": multiclass_labels[combination_index],
-                "kFolds": k_folds[iter_index],
-                "randomState": iterRandomState,
-                "hyperParamSearch": hyper_param_search,
+                "k_folds": k_folds[iter_index],
+                "random_state": iterRandomState,
+                "hyper_param_search": hyper_param_search,
                 "metrics": metrics,
-                "argumentDictionaries": argument_dictionaries,
+                "argument_dictionaries": argument_dictionaries,
                 "benchmark": benchmark,
                 "views": views,
-                "viewsIndices": views_indices,
+                "views_indices": views_indices,
                 "flag": [iter_index, labels_combination]}
             benchmark_argument_dictionaries.append(benchmark_argument_dictionary)
     return benchmark_argument_dictionaries

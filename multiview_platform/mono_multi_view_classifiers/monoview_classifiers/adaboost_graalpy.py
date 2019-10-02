@@ -202,9 +202,9 @@ class AdaboostGraalpy(AdaBoostGP, BaseMonoviewClassifier):
 #     return kwargsDict
 
 
-def paramsToSet(nIter, randomState):
+def paramsToSet(nIter, random_state):
     """Used for weighted linear early fusion to generate random search sets"""
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"n_iterations": randomState.randint(1, 500), })
+        paramsSet.append({"n_iterations": random_state.randint(1, 500), })
     return paramsSet

@@ -24,7 +24,7 @@ class Test_initKWARGS(unittest.TestCase):
         self.assertEqual(args, {"monoview": {}, "multiview": {}})
 
 
-class Test_init_argument_dictionaries(unittest.TestCase):
+class Test_InitArgumentDictionaries(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         rm_tmp()
@@ -217,10 +217,10 @@ def fakeBenchmarkExec_monocore(dataset_var=1, a=4, args=1):
     return [a]
 
 
-def fakegetResults(results, statsIter, nbMulticlass,
-                   benchmarkArgumentsDictionaries, multiClassLabels, metrics,
-                   classificationIndices, directories, directory,
-                   labelsDictionary, nbExamples, nbLabels):
+def fakegetResults(results, stats_iter, nb_multiclass,
+                   benchmark_arguments_dictionaries, multi_class_labels, metrics,
+                   classification_indices, directories, directory,
+                   labels_dictionary, nb_examples, nb_labels):
     return 3
 
 
@@ -238,13 +238,13 @@ class Test_execBenchmark(unittest.TestCase):
             "multiview_platform/tests/tmp_tests/test_file.hdf5", "w")
         cls.labels = cls.Dataset.create_dataset("Labels",
                                                 data=np.array([0, 1, 2]))
-        cls.argumentDictionaries = [{"a": 4, "args": {}}]
+        cls.argument_dictionaries = [{"a": 4, "args": {}}]
         cls.args = {
             "Base":{"name": "chicken_is_heaven", "type": "type", "pathf": "pathF"},
             "Classification":{"hps_iter": 1}}
 
     def test_simple(cls):
-        res = exec_classif.exec_benchmark(1, 2, 3, cls.argumentDictionaries,
+        res = exec_classif.exec_benchmark(1, 2, 3, cls.argument_dictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
                                          exec_one_benchmark=fakeBenchmarkExec,
@@ -255,41 +255,41 @@ class Test_execBenchmark(unittest.TestCase):
         cls.assertEqual(res, 3)
 
     def test_multiclass_no_iter(cls):
-        cls.argumentDictionaries = [{"a": 10, "args": cls.args},
+        cls.argument_dictionaries = [{"a": 10, "args": cls.args},
                                     {"a": 4, "args": cls.args}]
-        res = exec_classif.exec_benchmark(2, 1, 2, cls.argumentDictionaries,
+        res = exec_classif.exec_benchmark(2, 1, 2, cls.argument_dictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
-                                          exec_one_benchmark=fakeBenchmarkExec,
-                                          exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
-                                          get_results=fakegetResults,
+                                         exec_one_benchmark=fakeBenchmarkExec,
+                                         exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                         exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
+                                         get_results=fakegetResults,
                                          delete=fakeDelete)
         cls.assertEqual(res, 3)
 
     def test_multiclass_and_iter(cls):
-        cls.argumentDictionaries = [{"a": 10, "args": cls.args},
+        cls.argument_dictionaries = [{"a": 10, "args": cls.args},
                                     {"a": 4, "args": cls.args},
                                     {"a": 55, "args": cls.args},
                                     {"a": 24, "args": cls.args}]
-        res = exec_classif.exec_benchmark(2, 2, 2, cls.argumentDictionaries,
+        res = exec_classif.exec_benchmark(2, 2, 2, cls.argument_dictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
-                                          exec_one_benchmark=fakeBenchmarkExec,
-                                          exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
-                                          get_results=fakegetResults,
+                                         exec_one_benchmark=fakeBenchmarkExec,
+                                         exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                         exec_one_benchmark_monoCore=fakeBenchmarkExec_monocore,
+                                         get_results=fakegetResults,
                                          delete=fakeDelete)
         cls.assertEqual(res, 3)
 
     def test_no_iter_biclass_multicore(cls):
-        res = exec_classif.exec_benchmark(2, 1, 1, cls.argumentDictionaries,
+        res = exec_classif.exec_benchmark(2, 1, 1, cls.argument_dictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
-                                          exec_one_benchmark=fakeBenchmarkExec,
-                                          exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
-                                          get_results=fakegetResults,
+                                         exec_one_benchmark=fakeBenchmarkExec,
+                                         exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                         exec_oneBenchmark_mono_core=fakeBenchmarkExec_monocore,
+                                         get_results=fakegetResults,
                                          delete=fakeDelete)
         cls.assertEqual(res, 3)
 
@@ -302,22 +302,22 @@ class Test_execBenchmark(unittest.TestCase):
         os.rmdir(path)
 
 
-def fakeExecMono(directory, name, labelsNames, classificationIndices, kFolds,
-                 coreIndex, type, pathF, randomState, labels,
+def fakeExecMono(directory, name, labels_names, classification_indices, k_folds,
+                 coreIndex, type, pathF, random_state, labels,
                  hyper_param_search="try", metrics="try", nIter=1, **arguments):
     return ["Mono", arguments]
 
 
-def fakeExecMulti(directory, coreIndex, name, classificationIndices, kFolds,
-                  type, pathF, LABELS_DICTIONARY,
-                  randomState, labels, hyper_param_search="", metrics=None,
+def fakeExecMulti(directory, coreIndex, name, classification_indices, k_folds,
+                  type, pathF, labels_dictionary,
+                  random_state, labels, hyper_param_search="", metrics=None,
                   nIter=1, **arguments):
     return ["Multi", arguments]
 
 
-def fakeInitMulti(args, benchmark, views, viewsIndices, argumentDictionaries,
-                  randomState, directory, resultsMonoview,
-                  classificationIndices):
+def fakeInitMulti(args, benchmark, views, views_indices, argument_dictionaries,
+                  random_state, directory, resultsMonoview,
+                  classification_indices):
     return {"monoview": [{"try": 0}, {"try2": 100}],
             "multiview": [{"try3": 5}, {"try4": 10}]}
 
@@ -345,19 +345,19 @@ class Test_execOneBenchmark(unittest.TestCase):
 
     def test_simple(cls):
         flag, results = exec_classif.exec_one_benchmark(core_index=10,
-                                                        labels_dictionary={
+                                                      labels_dictionary={
                                                                    0: "a",
                                                                    1: "b"},
                                                       directory="multiview_platform/tests/tmp_tests/",
-                                                        classification_indices=(
+                                                      classification_indices=(
                                                                [1, 2, 3, 4],
                                                                [0, 5, 6, 7, 8]),
                                                                args=cls.args,
-                                                        k_folds=FakeKfold(),
-                                                        random_state="try",
-                                                        hyper_param_search="try",
+                                                               k_folds=FakeKfold(),
+                                                               random_state="try",
+                                                               hyper_param_search="try",
                                                                metrics="try",
-                                                        argument_dictionaries={
+                                                               argument_dictionaries={
                                                                    "Monoview": [
                                                                        {
                                                                            "try": 0},
@@ -369,16 +369,16 @@ class Test_execOneBenchmark(unittest.TestCase):
                                                                            "try4": 10}]},
                                                       benchmark="try",
                                                       views="try",
-                                                        views_indices="try",
+                                                      views_indices="try",
                                                       flag=None,
                                                       labels=np.array(
                                                                    [0, 1, 2, 1,
                                                                     2, 2, 2, 12,
                                                                     1, 2, 1, 1,
                                                                     2, 1, 21]),
-                                                        exec_monoview_multicore=fakeExecMono,
+                                                      exec_monoview_multicore=fakeExecMono,
                                                       exec_multiview_multicore=fakeExecMulti,
-                                                        init_multiview_arguments=fakeInitMulti)
+                                                      init_multiview_arguments=fakeInitMulti)
 
         cls.assertEqual(flag, None)
         cls.assertEqual(results ,
@@ -412,7 +412,8 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
 
     def test_simple(cls):
         flag, results = exec_classif.exec_one_benchmark_multicore(
-            nb_cores=2,
+            nbCores=2,
+
             labels_dictionary={0: "a", 1: "b"},
             directory="multiview_platform/tests/tmp_tests/",
             classification_indices=([1, 2, 3, 4], [0, 10, 20, 30, 40]),
@@ -433,7 +434,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
                                                                            "try4": 10}]},
             benchmark="try",
             views="try",
-            viewsIndices="try",
+            views_indices="try",
             flag=None,
             labels=np.array([0, 1, 2, 3, 4, 2, 2, 12, 1, 2, 1, 1, 2, 1, 21]),
             exec_monoview_multicore=fakeExecMono,
@@ -521,7 +522,7 @@ class Test_get_path_dict(unittest.TestCase):
 #         cls.preds2 = [np.array([0 in range(5)]) for i in range(6)] + \
 #                     [np.array([1, 0, 1, 1, 1]), np.array([1,0,0,1,1]),
 #                      np.array([1,0,0,0,1]), np.array([1,1,0,1,1]), np.array([1,1,0,0,1]), np.array([1,1,1,0,1])]
-#         cls.classifiersNames = ["chicken_is_heaven", "chicken_is_heaven", "chicken_is_heaven", "chicken_is_heaven",
+#         cls.classifiers_names = ["chicken_is_heaven", "chicken_is_heaven", "chicken_is_heaven", "chicken_is_heaven",
 #                                 "chicken_is_heaven", "chicken_is_heaven", "chicken_is_heaven", "chicken_is_heaven",
 #                                 "chicken_is_heaven", "chicken_is_heaven", "chicken_is_heaven", "chicken_is_heaven",]
 #         cls.classifiersNames2 = ["cheese_is_no_disease", "cheese_is_no_disease", "cheese_is_no_disease",
@@ -529,10 +530,10 @@ class Test_get_path_dict(unittest.TestCase):
 #                                 "cheese_is_no_disease", "cheese_is_no_disease", "cheese_is_no_disease",
 #                                 "cheese_is_no_disease", "cheese_is_no_disease", "cheese_is_no_disease"]
 #         cls.results = [[flag, [["", [name, "", "", pred]], ["", [name1, "", "", pred1]]], ["", ""]]
-#                        for flag, name, pred, name1, pred1 in zip(cls.flags, cls.classifiersNames, cls.preds,
+#                        for flag, name, pred, name1, pred1 in zip(cls.flags, cls.classifiers_names, cls.preds,
 #                                                                  cls.classifiersNames2, cls.preds2)]
 #         # cls.results = [[flag, ["", ["", name, "", pred]], ""] for flag, pred, name in
-#         #                zip(cls.flags, cls.preds, cls.classifiersNames)]
+#         #                zip(cls.flags, cls.preds, cls.classifiers_names)]
 #         cls.statsIter = 2
 #         cls.nbExample = 5
 #         cls.nbLabels = 4
@@ -651,7 +652,7 @@ class Test_get_path_dict(unittest.TestCase):
 #                                    default='/home/bbauvin/Documents/data/Data_multi_omics/')
 #         groupStandard.add_argument('--nice', metavar='INT', action='store', type=int,
 #                                    help='Niceness for the process', default=0)
-#         groupStandard.add_argument('--randomState', metavar='STRING', action='store',
+#         groupStandard.add_argument('--random_state', metavar='STRING', action='store',
 #                                    help="The random state seed to use or a file where we can find it's get_state", default=None)
 #
 #         groupClass = parser.add_argument_group('Classification arguments')

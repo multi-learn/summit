@@ -10,26 +10,27 @@ from sklearn.model_selection import RandomizedSearchCV
 from .. import metrics
 
 
-def searchBestSettings(dataset, labels, classifier_module, classifier_name,
-                       metrics, learning_indices, iKFolds, random_state,
-                       directory, viewsIndices=None, nb_cores=1,
-                       searchingTool="randomized_search", n_iter=1,
-                       classifier_config=None):
+def search_best_settings(dataset_var, labels, classifier_module, classifier_name,
+                        metrics, learning_indices, i_k_folds, random_state,
+                        directory, views_indices=None, nb_cores=1,
+                        searching_tool="randomized_search", n_iter=1,
+                        classifier_config=None):
     """Used to select the right hyper-parameter optimization function
     to optimize hyper parameters"""
-    if viewsIndices is None:
-        viewsIndices = range(dataset.get("Metadata").attrs["nbView"])
+    if views_indices is None:
+        views_indices = range(dataset_var.get("Metadata").attrs["nbView"])
     output_file_name = directory
     thismodule = sys.modules[__name__]
-    if searchingTool is not "None":
-        searchingToolMethod = getattr(thismodule, searchingTool)
-        bestSettings, test_folds_preds = searchingToolMethod(dataset, labels, "multiview", random_state, output_file_name,
-                                           classifier_module, classifier_name, iKFolds,
-                                           nb_cores, metrics, n_iter, classifier_config,
-                                           learning_indices=learning_indices, view_indices=viewsIndices,)
+    if searching_tool is not "None":
+        searching_tool_method = getattr(thismodule, searching_tool)
+        best_settings, test_folds_preds = searching_tool_method(
+            dataset_var, labels, "multiview", random_state, output_file_name,
+            classifier_module, classifier_name, i_k_folds,
+            nb_cores, metrics, n_iter, classifier_config,
+            learning_indices=learning_indices, view_indices=views_indices,)
     else:
-        bestSettings = classifier_config
-    return bestSettings  # or well set clasifier ?
+        best_settings = classifier_config
+    return best_settings  # or well set clasifier ?
 
 
 def grid_search(dataset, classifier_name, views_indices=None, k_folds=None, n_iter=1,
@@ -89,9 +90,9 @@ def get_test_folds_preds(X, y, cv, estimator, framework, available_indices=None)
     return test_folds_prediction
 
 
-def randomized_search(X, y, framework, random_state, output_file_name, classifier_module,
-                         classifier_name, folds=4, nb_cores=1, metric=["accuracy_score", None], n_iter=30,
-                         classifier_kwargs =None, learning_indices=None, view_indices=None):
+def randomized_search_x(X, y, framework, random_state, output_file_name, classifier_module,
+                      classifier_name, folds=4, nb_cores=1, metric=["accuracy_score", None],
+                      n_iter=30, classifier_kwargs =None, learning_indices=None, view_indices=None):
     estimator = getattr(classifier_module, classifier_name)(random_state,
                                                             **classifier_kwargs)
     params_dict = estimator.genDistribs()
@@ -215,13 +216,13 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
         return test_folds_prediction
 
 
-def randomizedSearch(dataset, labels, classifier_package, classifier_name,
-                     metrics_list, learning_indices, k_folds, random_state,
-                     views_indices=None, n_iter=1,
-                     nb_cores=1, **classification_kargs):
+def randomized_search(dataset_var, labels, classifier_package, classifier_name,
+                      metrics_list, learning_indices, k_folds, random_state,
+                      views_indices=None, n_iter=1,
+                      nb_cores=1, **classification_kargs):
     """Used to perform a random search on the classifiers to optimize hyper parameters"""
     if views_indices is None:
-        views_indices = range(dataset.get("Metadata").attrs["nbView"])
+        views_indices = range(dataset_var.get("Metadata").attrs["nbView"])
     metric = metrics_list[0]
     metric_module = getattr(metrics, metric[0])
     if metric[1] is not None:
@@ -245,13 +246,13 @@ def randomizedSearch(dataset, labels, classifier_package, classifier_name,
         for params_set in params_sets:
             scores = []
             for trainIndices, testIndices in kk_folds:
-                classifier = classifier_class(random_state, nb_scors=nb_cores,
+                classifier = classifier_class(random_state, nb_scores=nb_cores,
                                              **classification_kargs)
                 classifier.setParams(params_set)
-                classifier.fit_hdf5(dataset, labels,
-                                    trainIndices=learning_indices[trainIndices],
-                                    viewsIndices=views_indices)
-                test_labels = classifier.predict_hdf5(dataset,
+                classifier.fit_hdf5(dataset_var, labels,
+                                    train_indices=learning_indices[trainIndices],
+                                    views_indices=views_indices)
+                test_labels = classifier.predict_hdf5(dataset_var,
                                                       used_indices=learning_indices[testIndices],
                                                       views_indices=views_indices)
                 test_score = metric_module.score(
@@ -271,7 +272,7 @@ def randomizedSearch(dataset, labels, classifier_package, classifier_name,
 
     # TODO : This must be corrected
     else:
-        best_configs, _ = classifier_module.grid_search_hdf5(dataset, labels,
+        best_configs, _ = classifier_module.grid_search_hdf5(dataset_var, labels,
                                                              views_indices,
                                                              classification_kargs,
                                                              learning_indices,

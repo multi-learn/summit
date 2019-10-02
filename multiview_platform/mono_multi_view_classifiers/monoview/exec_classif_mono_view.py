@@ -27,23 +27,24 @@ __status__ = "Prototype"  # Production, Development, Prototype
 # __date__ = 2016 - 03 - 25
 
 
-def exec_monoview_multicore(directory, name, labelsNames, classificationIndices,
-                           KFolds, datasetFileIndex, databaseType,
-                           path, randomState, labels,
+def exec_monoview_multicore(directory, name, labels_names, classification_indices,
+                           k_folds, dataset_file_index, database_type,
+                           path, random_state, labels,
                            hyper_param_search="randomized_search",
-                           metrics=[["accuracy_score", None]], nIter=30,
+                           metrics=[["accuracy_score", None]], n_iter=30,
                            **args):
-    DATASET = h5py.File(path + name + str(datasetFileIndex) + ".hdf5", "r")
+    dataset_var = h5py.File(path + name + str(dataset_file_index) + ".hdf5", "r")
     neededViewIndex = args["viewIndex"]
-    X = DATASET.get("View" + str(neededViewIndex))
+    X = dataset_var.get("View" + str(neededViewIndex))
     Y = labels
-    return exec_monoview(directory, X, Y, name, labelsNames,
-                        classificationIndices, KFolds, 1, databaseType, path,
-                        randomState, hyper_param_search=hyper_param_search,
-                        metrics=metrics, nIter=nIter, **args)
+    return exec_monoview(directory, X, Y, name, labels_names,
+                         classification_indices, k_folds, 1, database_type, path,
+                         random_state, hyper_param_search=hyper_param_search,
+
+                         metrics=metrics, n_iter=n_iter, **args)
 
 
-def exec_monoview(directory, X, Y, name, labelsNames, classificationIndices,
+def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
                  KFolds, nbCores, databaseType, path,
                  randomState, hyper_param_search="randomized_search",
                  metrics=[["accuracy_score", None]], nIter=30, **args):
@@ -55,7 +56,7 @@ def exec_monoview(directory, X, Y, name, labelsNames, classificationIndices,
     X, \
     learningRate, \
     labelsString, \
-    outputFileName = initConstants(args, X, classificationIndices, labelsNames,
+    outputFileName = initConstants(args, X, classificationIndices, labels_names,
                                    name, directory)
     logging.debug("Done:\t Loading data")
 
@@ -115,7 +116,7 @@ def exec_monoview(directory, X, Y, name, labelsNames, classificationIndices,
     imagesAnalysis, \
     metricsScores = execute(name, classificationIndices, KFolds, nbCores,
                             hyper_parameter_search, metrics, nIter, feat, CL_type,
-                            clKWARGS, labelsNames, X.shape,
+                            clKWARGS, labels_names, X.shape,
                             y_train, y_train_pred, y_test, y_test_pred, t_end,
                             randomState, classifier, outputFileName)
     # cl_desc = [value for key, value in sorted(clKWARGS.items())]
@@ -135,7 +136,7 @@ def exec_monoview(directory, X, Y, name, labelsNames, classificationIndices,
     # return viewIndex, [CL_type, feat, metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
 
 
-def initConstants(args, X, classificationIndices, labelsNames, name, directory):
+def initConstants(args, X, classificationIndices, labels_names, name, directory):
     try:
         kwargs = args["args"]
     except KeyError:
@@ -149,7 +150,7 @@ def initConstants(args, X, classificationIndices, labelsNames, name, directory):
     X = get_value(X)
     learningRate = float(len(classificationIndices[0])) / (
                 len(classificationIndices[0]) + len(classificationIndices[1]))
-    labelsString = "-".join(labelsNames)
+    labelsString = "-".join(labels_names)
     CL_type_string = CL_type
     timestr = time.strftime("%Y_%m_%d-%H_%M_%S")
     outputFileName = directory + CL_type_string + "/" + feat + "/" + timestr + "-results-" + CL_type_string + "-" + labelsString + \
@@ -177,15 +178,15 @@ def init_train_test(X, Y, classificationIndices):
     return X_train, y_train, X_test, y_test, X_test_multiclass
 
 
-def getHPs(classifierModule, hyperParamSearch, nIter, classifier_module_name,
+def getHPs(classifierModule, hyper_param_search, nIter, classifier_module_name,
            classifier_class_name, X_train, y_train,
            randomState,
            outputFileName, KFolds, nbCores, metrics, kwargs):
-    if hyperParamSearch != "None":
+    if hyper_param_search != "None":
         logging.debug(
-            "Start:\t " + hyperParamSearch + " best settings with " + str(
+            "Start:\t " + hyper_param_search + " best settings with " + str(
                 nIter) + " iterations for " + classifier_module_name)
-        classifierHPSearch = getattr(hyper_parameter_search, hyperParamSearch)
+        classifierHPSearch = getattr(hyper_parameter_search, hyper_param_search)
         clKWARGS, testFoldsPreds = classifierHPSearch(X_train, y_train, "monoview",
                                                       randomState,
                                                       outputFileName,
@@ -197,7 +198,7 @@ def getHPs(classifierModule, hyperParamSearch, nIter, classifier_module_name,
                                                       n_iter=nIter,
                                                       classifier_kwargs=kwargs[
                                                           classifier_module_name])
-        logging.debug("Done:\t " + hyperParamSearch + " best settings")
+        logging.debug("Done:\t " + hyper_param_search + " best settings")
     else:
         clKWARGS = kwargs[classifier_module_name + "KWARGS"]
         testFoldsPreds = None
@@ -262,7 +263,7 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
 #                                default='../../../data/Plausible')
 #     groupStandard.add_argument('--directory', metavar='STRING', action='store',
 #                                help='Path of the output directory', default='')
-#     groupStandard.add_argument('--labelsNames', metavar='STRING',
+#     groupStandard.add_argument('--labels_names', metavar='STRING',
 #                                action='store', nargs='+',
 #                                help='Name of the labels used for classification',
 #                                default=['Yes', 'No'])
@@ -271,7 +272,7 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
 #                                help='Path to the classificationIndices pickle file',
 #                                default='')
 #     groupStandard.add_argument('--KFolds', metavar='STRING', action='store',
-#                                help='Path to the kFolds pickle file',
+#                                help='Path to the k_folds pickle file',
 #                                default='')
 #     groupStandard.add_argument('--nbCores', metavar='INT', action='store',
 #                                help='Number of cores, -1 for all',
@@ -279,7 +280,7 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
 #     groupStandard.add_argument('--randomState', metavar='INT', action='store',
 #                                help='Seed for the random state or pickable randomstate file',
 #                                default=42)
-#     groupStandard.add_argument('--hyperParamSearch', metavar='STRING',
+#     groupStandard.add_argument('--hyper_param_search', metavar='STRING',
 #                                action='store',
 #                                help='The type of method used to search the best set of hyper parameters',
 #                                default='randomizedSearch')
@@ -299,7 +300,7 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
 #     directory = args.directory
 #     name = args.name
 #     classifierName = args.cl_name
-#     labelsNames = args.labelsNames
+#     labels_names = args.labels_names
 #     viewName = args.view
 #     with open(args.classificationIndices, 'rb') as handle:
 #         classificationIndices = pickle.load(handle)
@@ -309,7 +310,7 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
 #     path = args.pathF
 #     with open(args.randomState, 'rb') as handle:
 #         randomState = pickle.load(handle)
-#     hyperParamSearch = args.hyperParamSearch
+#     hyper_param_search = args.hyper_param_search
 #     with open(args.metrics, 'rb') as handle:
 #         metrics = pickle.load(handle)
 #     nIter = args.nIter
@@ -346,10 +347,10 @@ def saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
 #         logging.getLogger().addHandler(logging.StreamHandler())
 #
 #     # Computing on multiple cores
-#     res = ExecMonoview(directory, X, Y, name, labelsNames,
+#     res = ExecMonoview(directory, X, Y, name, labels_names,
 #                        classificationIndices, KFolds, nbCores, databaseType,
 #                        path,
-#                        randomState, hyperParamSearch=hyperParamSearch,
+#                        randomState, hyper_param_search=hyper_param_search,
 #                        metrics=metrics, nIter=nIter, **kwargs)
 #
 #     with open(directory + "res.pickle", "wb") as handle:
