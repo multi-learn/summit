@@ -24,6 +24,7 @@ def parse_the_args(arguments):
                                help='Path to the hdf5 dataset or database '
                                     'folder (default: %(default)s)',
                                default='../config_files/config.yml')
+<<<<<<< HEAD
 #     groupStandard.add_argument('-log', action='store_true',
 #                                help='Use option to activate logging to console')
 #     groupStandard.add_argument('--name', metavar='STRING', nargs='+', action='store',
@@ -695,6 +696,8 @@ def parse_the_args(arguments):
 #                                      type=float,
 #                                      default=[])
 
+=======
+>>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4
     args = parser.parse_args(arguments)
     return args
 
@@ -779,10 +782,10 @@ def get_database_function(name, type_var):
     getDatabase : function
         The function that will be used to extract the database
     """
-    if name not in ["Fake", "Plausible"]:
-        get_database = getattr(DB, "getClassicDB" + type_var[1:])
+    if name not in ["fake", "plausible"]:
+        get_database = getattr(DB, "get_classic_db_" + type_var[1:])
     else:
-        get_database = getattr(DB, "get" + name + "DB" + type_var[1:])
+        get_database = getattr(DB, "get_" + name + "_db_" + type_var[1:])
     return get_database
 
 

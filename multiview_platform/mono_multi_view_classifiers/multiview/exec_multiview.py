@@ -243,9 +243,9 @@ if __name__ == "__main__":
     directory = args.directory
     name = args.name
     labels_dictionary = args.labels_dictionary
-    classificationIndices = args.classificationIndices
+    classification_indices = args.classification_indices
     k_folds = args.k_folds
-    nbCores = args.nbCores
+    nb_cores = args.nb_cores
     databaseType = None
     path = args.path_f
     random_state = args.random_state

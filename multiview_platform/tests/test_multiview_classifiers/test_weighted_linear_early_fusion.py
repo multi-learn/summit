@@ -4,6 +4,8 @@ import numpy as np
 import h5py
 import os
 
+from ..utils import rm_tmp
+
 from multiview_platform.mono_multi_view_classifiers.multiview_classifiers import \
     weighted_linear_early_fusion
 
@@ -11,6 +13,7 @@ class Test_WeightedLinearEarlyFusion(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         cls.random_state = np.random.RandomState(42)
         cls.view_weights = [0.5, 0.5]
         os.mkdir("multiview_platform/tests/tmp_tests")
@@ -32,7 +35,7 @@ class Test_WeightedLinearEarlyFusion(unittest.TestCase):
         cls.monoview_classifier_config = {"max_depth":1, "criterion": "gini", "splitter": "best"}
         cls.classifier = weighted_linear_early_fusion.WeightedLinearEarlyFusion(
             random_state=cls.random_state, view_weights=cls.view_weights,
-            monoview_classifier=cls.monoview_classifier_name,
+            monoview_classifier_name=cls.monoview_classifier_name,
             monoview_classifier_config=cls.monoview_classifier_config)
 
     @classmethod

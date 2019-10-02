@@ -5,6 +5,8 @@ import h5py
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
+from ..utils import rm_tmp
+
 from ...mono_multi_view_classifiers.monoview import exec_classif_mono_view
 from ...mono_multi_view_classifiers.monoview_classifiers import decision_tree
 
@@ -13,6 +15,7 @@ class Test_initConstants(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir("multiview_platform/tests/temp_tests")
         cls.datasetFile = h5py.File(
             "multiview_platform/tests/temp_tests/test.hdf5", "w")
@@ -65,6 +68,7 @@ class Test_initTrainTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         cls.random_state = np.random.RandomState(42)
         cls.X = cls.random_state.randint(0, 500, (10, 5))
         cls.Y = cls.random_state.randint(0, 2, 10)
@@ -73,8 +77,13 @@ class Test_initTrainTest(unittest.TestCase):
                                      np.array([1, 3, 5, 7, 9])]
 
     def test_simple(cls):
+<<<<<<< HEAD
         X_train, y_train, X_test, y_test, X_test_multiclass = exec_classif_mono_view.initTrainTest(
             cls.X, cls.Y, cls.classification_indices)
+=======
+        X_train, y_train, X_test, y_test, X_test_multiclass = exec_classif_mono_view.init_train_test(
+            cls.X, cls.Y, cls.classificationIndices)
+>>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4
         np.testing.assert_array_equal(X_train, np.array(
             [np.array([102, 435, 348, 270, 106]),
              np.array([466, 214, 330, 458, 87]),
@@ -95,6 +104,7 @@ class Test_getHPs(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir("multiview_platform/tests/tmp_tests")
         cls.classifierModule = decision_tree
         cls.hyper_param_search = "randomized_search"

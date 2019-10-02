@@ -16,9 +16,9 @@ def getClassifiersDecisions(allClassifersNames, views_indices, resultsMonoview):
     And the classifiers_names variable is ordered as :
     classifiers_names[viewIndex][classifierIndex]
     """
-    nbViews = len(viewsIndices)
+    nbViews = len(views_indices)
     nbClassifiers = len(allClassifersNames)
-    classifiersNames = [[] for _ in viewsIndices]
+    classifiersNames = [[] for _ in views_indices]
     more_than_one_fold = len(resultsMonoview[0].test_folds_preds.shape) is not 1
     if more_than_one_fold:
         nbFolds = resultsMonoview[0].test_folds_preds.shape[0]
@@ -31,16 +31,16 @@ def getClassifiersDecisions(allClassifersNames, views_indices, resultsMonoview):
 
     for resultMonoview in resultsMonoview:
         if resultMonoview.classifier_name in classifiersNames[
-            viewsIndices.index(resultMonoview.view_index)]:
+            views_indices.index(resultMonoview.view_index)]:
             pass
         else:
             classifiersNames[
-                viewsIndices.index(resultMonoview.view_index)].append(
+                views_indices.index(resultMonoview.view_index)].append(
                 resultMonoview.classifier_name)
         classifierIndex = classifiersNames[
-            viewsIndices.index(resultMonoview.view_index)].index(
+            views_indices.index(resultMonoview.view_index)].index(
             resultMonoview.classifier_name)
-        classifiersDecisions[viewsIndices.index(
+        classifiersDecisions[views_indices.index(
             resultMonoview.view_index), classifierIndex] = resultMonoview.test_folds_preds
     # else:
     #     train_len = resultsMonoview[0].test_folds_preds.shape[0]

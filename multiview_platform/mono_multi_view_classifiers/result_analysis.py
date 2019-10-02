@@ -1015,6 +1015,7 @@ def get_results(results, stats_iter, nb_multiclass, benchmark_argument_dictionar
                multiclass_labels, metrics,
                classification_indices, directories, directory, labels_dictionary,
                nb_examples, nb_labels):
+
     """Used to analyze the results of the previous benchmarks"""
     data_base_name = benchmark_argument_dictionaries[0]["args"]["Base"]["name"]
     results_means_std, biclass_results = analyze_biclass(results, benchmark_argument_dictionaries,

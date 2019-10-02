@@ -22,7 +22,7 @@ Classification:
   nb_folds: 2
   nb_class: 2
   classes: ["yes", "no"]
-  type: ["multiview", "monoview"]
+  type: ["multiview",]
   algos_monoview: ["all"]
   algos_multiview: ["all"]
   stats_iter: 2
@@ -137,4 +137,42 @@ min_cq:
 
 weighted_linear_early_fusion:
   view_weights: [None]
-  monoview_classifier: ["decision_tree"]
+  monoview_classifier_name: ["decision_tree"]
+  monoview_classifier_config:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]
+
+entropy_fusion:
+  classifier_names: ["decison_tree"]
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]
+
+disagree_fusion:
+  classifier_names: ["decison_tree"]
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]
+
+
+double_fault_fusion:
+  classifier_names: ["decison_tree"]
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]
+
+difficulty_fusion:
+  classifier_names: ["decison_tree"]
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]

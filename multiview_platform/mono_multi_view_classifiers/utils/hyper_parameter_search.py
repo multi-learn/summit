@@ -108,6 +108,7 @@ def randomized_search_x(X, y, framework, random_state, output_file_name, classif
         min_list = np.array(
             [min(nb_possible_combination, n_iter) for nb_possible_combination in
              nb_possible_combinations])
+<<<<<<< HEAD
         random_search = MultiviewCompatibleRandomizedSearchCV(
             estimator,
             n_iter=int(np.sum(min_list)),
@@ -135,6 +136,32 @@ def randomized_search_x(X, y, framework, random_state, output_file_name, classif
     test_folds_preds = get_test_folds_preds(X, y, folds, best_estimator,
                                             framework, learning_indices)
     return best_params, test_folds_preds
+=======
+        random_search = MultiviewCompatibleRandomizedSearchCV(estimator,
+                                                             n_iter=int(np.sum(min_list)),
+                                                             param_distributions=params_dict,
+                                                             refit=True,
+                                                             n_jobs=nb_cores, scoring=scorer,
+                                                             cv=folds, random_state=random_state,
+                                                             learning_indices=learning_indices,
+                                                             view_indices=view_indices,
+                                                             framework = framework)
+        random_search.fit(X, y)
+        best_params = random_search.best_params_
+        if "random_state" in best_params:
+            best_params.pop("random_state")
+
+        scoresArray = random_search.cv_results_['mean_test_score']
+        params = [(key[6:], value ) for key, value in random_search.cv_results_.items() if key.startswith("param_")]
+        # gen_heat_maps(params, scores_array, output_file_name)
+        best_estimator = random_search.best_estimator_
+    else:
+        best_estimator = estimator
+        best_params = {}
+    testFoldsPreds = get_test_folds_preds(X, y, folds, best_estimator,
+                                          framework, learning_indices)
+    return best_params, testFoldsPreds
+>>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4
 
 
 from sklearn.base import clone
@@ -194,6 +221,7 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
                 self.best_score_ = cross_validation_score
         if self.refit:
             self.best_estimator_ = clone(base_estimator).set_params(**self.best_params_)
+            self.best_estimator_.fit(X, y, **fit_params)
         self.n_splits_ = n_splits
         return self
 

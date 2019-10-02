@@ -1,5 +1,5 @@
-import unittest
 
+<<<<<<< HEAD
 import numpy as np
 
 from multiview_platform.mono_multi_view_classifiers.multiview.additions import \
@@ -40,3 +40,5 @@ class Test_global_div_measure(unittest.TestCase):
             cls.folds_ground_truth)
         cls.assertEqual(len(clf_names), 2)
         cls.assertEqual(diversity_measure, 42)
+=======
+>>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4

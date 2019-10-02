@@ -5,6 +5,8 @@ import h5py
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
+from ..utils import rm_tmp
+
 from ...mono_multi_view_classifiers.utils import hyper_parameter_search
 from ...mono_multi_view_classifiers.multiview_classifiers import weighted_linear_early_fusion
 
@@ -12,6 +14,7 @@ class Test_randomized_search(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         cls.random_state = np.random.RandomState(42)
         cls.view_weights = [0.5, 0.5]
         os.mkdir("multiview_platform/tests/tmp_tests")

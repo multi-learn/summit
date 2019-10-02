@@ -22,7 +22,7 @@ class Test_copyhdf5Dataset(unittest.TestCase):
         cls.dataset.attrs["test_arg"] = "Am I copied"
 
     def test_simple_copy(cls):
-        get_multiview_db.copyhdf5Dataset(cls.dataset_file, cls.dataset_file,
+        get_multiview_db.copyhdf5_dataset(cls.dataset_file, cls.dataset_file,
                                        "test", "test_copy_1", np.arange(10))
         np.testing.assert_array_equal(cls.dataset_file.get("test").value,
                                       cls.dataset_file.get("test_copy_1").value)
@@ -31,7 +31,7 @@ class Test_copyhdf5Dataset(unittest.TestCase):
 
     def test_copy_only_some_indices(cls):
         usedIndices = cls.random_state.choice(10, 6, replace=False)
-        get_multiview_db.copyhdf5Dataset(cls.dataset_file, cls.dataset_file,
+        get_multiview_db.copyhdf5_dataset(cls.dataset_file, cls.dataset_file,
                                        "test", "test_copy", usedIndices)
         np.testing.assert_array_equal(
             cls.dataset_file.get("test").value[usedIndices, :],
@@ -68,7 +68,7 @@ class Test_filterViews(unittest.TestCase):
         cls.temp_dataset_file = h5py.File(
             "multiview_platform/tests/temp_tests/test_copy_temp.hdf5", "w")
         cls.dataset_file.copy("Metadata", cls.temp_dataset_file)
-        get_multiview_db.filterViews(cls.dataset_file, cls.temp_dataset_file,
+        get_multiview_db.filter_views(cls.dataset_file, cls.temp_dataset_file,
                                      cls.views, np.arange(10))
         cls.assertEqual(cls.dataset_file.get("View1").attrs["name"],
                         cls.temp_dataset_file.get("View0").attrs["name"])
@@ -82,7 +82,7 @@ class Test_filterViews(unittest.TestCase):
             "multiview_platform/tests/temp_tests/test_copy_temp.hdf5", "w")
         cls.dataset_file.copy("Metadata", cls.temp_dataset_file)
         usedIndices = cls.random_state.choice(10, 6, replace=False)
-        get_multiview_db.filterViews(cls.dataset_file, cls.temp_dataset_file,
+        get_multiview_db.filter_views(cls.dataset_file, cls.temp_dataset_file,
                                      cls.views, usedIndices)
         np.testing.assert_array_equal(
             cls.dataset_file.get("View1").value[usedIndices, :],
@@ -112,7 +112,7 @@ class Test_filterLabels(unittest.TestCase):
     def test_simple(cls):
         newLabels, \
         newLabelsNames, \
-        usedIndices = get_multiview_db.filterLabels(cls.labelsSet,
+        usedIndices = get_multiview_db.filter_labels(cls.labelsSet,
                                                     cls.askedLabelsNamesSet,
                                                     cls.fullLabels,
                                                     cls.availableLabelsNames,
@@ -127,7 +127,7 @@ class Test_filterLabels(unittest.TestCase):
         cls.availableLabelsNames = ["test_label_0", "test_label_1"]
         newLabels, \
         newLabelsNames, \
-        usedIndices = get_multiview_db.filterLabels(cls.labelsSet,
+        usedIndices = get_multiview_db.filter_labels(cls.labelsSet,
                                                     cls.askedLabelsNamesSet,
                                                     cls.fullLabels,
                                                     cls.availableLabelsNames,
@@ -141,7 +141,7 @@ class Test_filterLabels(unittest.TestCase):
                                    "test_label_2", "test_label_3",
                                    "chicken_is_heaven"}
         with cls.assertRaises(get_multiview_db.DatasetError) as catcher:
-            get_multiview_db.filterLabels(cls.labelsSet,
+            get_multiview_db.filter_labels(cls.labelsSet,
                                           cls.askedLabelsNamesSet,
                                           cls.fullLabels,
                                           cls.availableLabelsNames,
@@ -155,7 +155,7 @@ class Test_filterLabels(unittest.TestCase):
                                 "test_label_3"]
         newLabels, \
         newLabelsNames, \
-        usedIndices = get_multiview_db.filterLabels(cls.labelsSet,
+        usedIndices = get_multiview_db.filter_labels(cls.labelsSet,
                                                     cls.askedLabelsNamesSet,
                                                     cls.fullLabels,
                                                     cls.availableLabelsNames,
@@ -179,7 +179,7 @@ class Test_selectAskedLabels(unittest.TestCase):
     def test_simple(cls):
         newLabels, \
         newLabelsNames, \
-        usedIndices = get_multiview_db.selectAskedLabels(cls.askedLabelsNamesSet,
+        usedIndices = get_multiview_db.select_asked_labels(cls.askedLabelsNamesSet,
                                                          cls.availableLabelsNames,
                                                          cls.askedLabelsNames,
                                                          cls.fullLabels)
@@ -194,7 +194,7 @@ class Test_selectAskedLabels(unittest.TestCase):
                                 "test_label_3"]
         newLabels, \
         newLabelsNames, \
-        usedIndices = get_multiview_db.selectAskedLabels(cls.askedLabelsNamesSet,
+        usedIndices = get_multiview_db.select_asked_labels(cls.askedLabelsNamesSet,
                                                          cls.availableLabelsNames,
                                                          cls.askedLabelsNames,
                                                          cls.fullLabels)
@@ -206,7 +206,7 @@ class Test_selectAskedLabels(unittest.TestCase):
         cls.askedLabelsNamesSet = {"test_label_1", "test_label_3",
                                    "chicken_is_heaven"}
         with cls.assertRaises(get_multiview_db.DatasetError) as catcher:
-            get_multiview_db.selectAskedLabels(cls.askedLabelsNamesSet,
+            get_multiview_db.select_asked_labels(cls.askedLabelsNamesSet,
                                                cls.availableLabelsNames,
                                                cls.askedLabelsNames,
                                                cls.fullLabels)
@@ -224,7 +224,7 @@ class Test_getAllLabels(unittest.TestCase):
                                     "test_label_2", "test_label_3"]
 
     def test_simple(cls):
-        newLabels, newLabelsNames, usedIndices = get_multiview_db.getAllLabels(
+        newLabels, newLabelsNames, usedIndices = get_multiview_db.get_all_labels(
             cls.fullLabels, cls.availableLabelsNames)
         cls.assertEqual(cls.availableLabelsNames, newLabelsNames)
         np.testing.assert_array_equal(usedIndices, np.arange(10))
@@ -241,7 +241,7 @@ class Test_fillLabelNames(unittest.TestCase):
         cls.availableLabelsNames = ["test_label_" + str(_) for _ in range(40)]
 
     def test_simple(cls):
-        askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fillLabelNames(
+        askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fill_label_names(
             cls.NB_CLASS,
             cls.askedLabelsNames,
             cls.random_state,
@@ -251,7 +251,7 @@ class Test_fillLabelNames(unittest.TestCase):
 
     def test_missing_labels_names(cls):
         cls.NB_CLASS = 39
-        askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fillLabelNames(
+        askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fill_label_names(
             cls.NB_CLASS,
             cls.askedLabelsNames,
             cls.random_state,
@@ -279,7 +279,7 @@ class Test_fillLabelNames(unittest.TestCase):
         cls.NB_CLASS = 2
         cls.askedLabelsNames = ["test_label_1", "test_label_3", "test_label_4",
                                 "test_label_6"]
-        askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fillLabelNames(
+        askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fill_label_names(
             cls.NB_CLASS,
             cls.askedLabelsNames,
             cls.random_state,
@@ -298,14 +298,14 @@ class Test_allAskedLabelsAreAvailable(unittest.TestCase):
 
     def test_asked_available_labels(cls):
         cls.assertTrue(
-            get_multiview_db.allAskedLabelsAreAvailable(cls.askedLabelsNamesSet,
+            get_multiview_db.all_asked_labels_are_available(cls.askedLabelsNamesSet,
                                                         cls.availableLabelsNames))
 
     def test_asked_unavailable_label(cls):
         cls.askedLabelsNamesSet = {"test_label_1", "test_label_3",
                                    "chicken_is_heaven"}
         cls.assertFalse(
-            get_multiview_db.allAskedLabelsAreAvailable(cls.askedLabelsNamesSet,
+            get_multiview_db.all_asked_labels_are_available(cls.askedLabelsNamesSet,
                                                         cls.availableLabelsNames))
 
 
@@ -316,18 +316,18 @@ class Test_getClasses(unittest.TestCase):
         cls.random_state = np.random.RandomState(42)
 
     def test_multiclass(cls):
-        labelsSet = get_multiview_db.getClasses(
+        labelsSet = get_multiview_db.get_classes(
             cls.random_state.randint(0, 5, 30))
         cls.assertEqual(labelsSet, {0, 1, 2, 3, 4})
 
     def test_biclass(cls):
-        labelsSet = get_multiview_db.getClasses(
+        labelsSet = get_multiview_db.get_classes(
             cls.random_state.randint(0, 2, 30))
         cls.assertEqual(labelsSet, {0, 1})
 
     def test_one_class(cls):
         with cls.assertRaises(get_multiview_db.DatasetError) as catcher:
-            get_multiview_db.getClasses(np.zeros(30, dtype=int))
+            get_multiview_db.get_classes(np.zeros(30, dtype=int))
         exception = catcher.exception
         # cls.assertTrue("Dataset must have at least two different labels" in exception)
 
@@ -363,7 +363,7 @@ class Test_getClassicDBhdf5(unittest.TestCase):
             cls.dataset.attrs["name"] = "test_view_" + str(i)
 
     def test_simple(cls):
-        dataset_file, labels_dictionary, dataset_name = get_multiview_db.getClassicDBhdf5(
+        dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(
             cls.views, cls.pathF, cls.nameDB,
             cls.NB_CLASS, cls.askedLabelsNames,
             cls.random_state)
@@ -381,7 +381,7 @@ class Test_getClassicDBhdf5(unittest.TestCase):
         askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
                             "test_label_3"]
         NB_CLASS = 4
-        dataset_file, labels_dictionary, dataset_name = get_multiview_db.getClassicDBhdf5(
+        dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(
             cls.views, cls.pathF, cls.nameDB,
             NB_CLASS, askedLabelsNames,
             cls.random_state)
@@ -398,7 +398,7 @@ class Test_getClassicDBhdf5(unittest.TestCase):
 
     def test_all_views_asked(cls):
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
-        dataset_file, labels_dictionary, dataset_name = get_multiview_db.getClassicDBhdf5(views,
+        dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(views,
                                                                                           cls.pathF,
                                                                                           cls.nameDB,
                                                                                           cls.NB_CLASS,
@@ -423,7 +423,7 @@ class Test_getClassicDBhdf5(unittest.TestCase):
                             "test_label_3"]
         NB_CLASS = 4
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
-        dataset_file, labels_dictionary, dataset_name = get_multiview_db.getClassicDBhdf5(views,
+        dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(views,
                                                                                           cls.pathF,
                                                                                           cls.nameDB,
                                                                                           NB_CLASS,
@@ -481,7 +481,7 @@ class Test_getClassicDBcsv(unittest.TestCase):
             cls.datas.append(data)
 
     def test_simple(cls):
-        dataset_file, labels_dictionary, dataset_name = get_multiview_db.getClassicDBcsv(
+        dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_csv(
             cls.views, cls.pathF, cls.nameDB,
             cls.NB_CLASS, cls.askedLabelsNames,
             cls.random_state, delimiter=",")
@@ -497,7 +497,7 @@ class Test_getClassicDBcsv(unittest.TestCase):
 
     def test_all_views_asked(cls):
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
-        dataset_file, labels_dictionary, dataset_name = get_multiview_db.getClassicDBcsv(views,
+        dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_csv(views,
                                                                                          cls.pathF,
                                                                                          cls.nameDB,
                                                                                          cls.NB_CLASS,
@@ -522,7 +522,7 @@ class Test_getClassicDBcsv(unittest.TestCase):
         askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
                             "test_label_3"]
         NB_CLASS = 4
-        dataset_file, labels_dictionary, dataset_name = get_multiview_db.getClassicDBcsv(
+        dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_csv(
             cls.views, cls.pathF, cls.nameDB,
             NB_CLASS, askedLabelsNames,
             cls.random_state, delimiter=",")
@@ -541,7 +541,7 @@ class Test_getClassicDBcsv(unittest.TestCase):
                             "test_label_3"]
         NB_CLASS = 4
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
-        dataset_file, labels_dictionary, dataset_name = get_multiview_db.getClassicDBcsv(views,
+        dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_csv(views,
                                                                                          cls.pathF,
                                                                                          cls.nameDB,
                                                                                          NB_CLASS,
