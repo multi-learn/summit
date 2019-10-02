@@ -42,11 +42,11 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
 #     return kwargsDict
 
 
-def paramsToSet(nIter, randomState):
+def paramsToSet(nIter, random_state):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"loss": randomState.choice(['log', 'modified_huber']),
-                          "penalty": randomState.choice(
+        paramsSet.append({"loss": random_state.choice(['log', 'modified_huber']),
+                          "penalty": random_state.choice(
                               ["l1", "l2", "elasticnet"]),
-                          "alpha": randomState.random_sample()})
+                          "alpha": random_state.random_sample()})
     return paramsSet

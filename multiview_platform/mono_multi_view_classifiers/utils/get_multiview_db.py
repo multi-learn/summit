@@ -75,7 +75,7 @@ def deleteHDF5(benchmarkArgumentsDictionaries, nbCores, DATASET):
         os.remove(filename)
 
 
-def makeMeNoisy(viewData, randomState, percentage=5):
+def makeMeNoisy(viewData, random_state, percentage=5):
     """used to introduce some noise in the generated data"""
     viewData = viewData.astype(bool)
     nbNoisyCoord = int(
@@ -83,15 +83,15 @@ def makeMeNoisy(viewData, randomState, percentage=5):
     rows = range(viewData.shape[0])
     cols = range(viewData.shape[1])
     for _ in range(nbNoisyCoord):
-        rowIdx = randomState.choice(rows)
-        colIdx = randomState.choice(cols)
+        rowIdx = random_state.choice(rows)
+        colIdx = random_state.choice(cols)
         viewData[rowIdx, colIdx] = 0
     noisyViewData = viewData.astype(np.uint8)
     return noisyViewData
 
 
 def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
-                       randomState=None, full=True, add_noise=False,
+                       random_state=None, full=True, add_noise=False,
                        noise_std=0.15, nbView=3,
                    nbClass=2, datasetLength=100, randomStateInt=42, nbFeatures = 10):
     """Used to generate a plausible dataset to test the algorithms"""
@@ -112,9 +112,9 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
                 [np.zeros(nbFeatures) for _ in range(int(datasetLength / 2))] +
                 [np.ones(nbFeatures) for _ in
                  range(datasetLength - int(datasetLength / 2))])
-            fakeOneIndices = randomState.randint(0, int(datasetLength / 2),
+            fakeOneIndices = random_state.randint(0, int(datasetLength / 2),
                                                  int(datasetLength / 12))
-            fakeZeroIndices = randomState.randint(int(datasetLength / 2),
+            fakeZeroIndices = random_state.randint(int(datasetLength / 2),
                                                   datasetLength,
                                                   int(datasetLength / 12))
 
@@ -122,7 +122,7 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
                 (len(fakeOneIndices), nbFeatures))
             viewData[fakeZeroIndices] = np.zeros(
                 (len(fakeZeroIndices), nbFeatures))
-            viewData = makeMeNoisy(viewData, randomState)
+            viewData = makeMeNoisy(viewData, random_state)
             viewDset = datasetFile.create_dataset("View" + str(viewIndex),
                                                   viewData.shape,
                                                   data=viewData.astype(
@@ -139,8 +139,8 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
         metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
         datasetFile.close()
         datasetFile = h5py.File(pathF + "Plausible.hdf5", "r")
-        LABELS_DICTIONARY = {0: "No", 1: "Yes"}
-        return datasetFile, LABELS_DICTIONARY, "Plausible"
+        labels_dictionary = {0: "No", 1: "Yes"}
+        return datasetFile, labels_dictionary, "Plausible"
     elif NB_CLASS >= 3:
         firstBound = int(datasetLength / 3)
         rest = datasetLength - 2 * int(datasetLength / 3)
@@ -158,11 +158,11 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
                 [np.zeros(nbFeatures) for _ in range(firstBound)] +
                 [np.ones(nbFeatures) for _ in range(firstBound)] +
                 [np.ones(nbFeatures) + 1 for _ in range(rest)])
-            fakeOneIndices = randomState.randint(0, firstBound,
+            fakeOneIndices = random_state.randint(0, firstBound,
                                                  int(datasetLength / 12))
-            fakeTwoIndices = randomState.randint(firstBound, scndBound,
+            fakeTwoIndices = random_state.randint(firstBound, scndBound,
                                                  int(datasetLength / 12))
-            fakeZeroIndices = randomState.randint(scndBound, thrdBound,
+            fakeZeroIndices = random_state.randint(scndBound, thrdBound,
                                                   int(datasetLength / 12))
 
             viewData[fakeOneIndices] = np.ones(
@@ -171,7 +171,7 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
                 (len(fakeZeroIndices), nbFeatures))
             viewData[fakeTwoIndices] = np.ones(
                 (len(fakeTwoIndices), nbFeatures)) + 1
-            viewData = makeMeNoisy(viewData, randomState)
+            viewData = makeMeNoisy(viewData, random_state)
             viewDset = datasetFile.create_dataset("View" + str(viewIndex),
                                                   viewData.shape,
                                                   data=viewData.astype(
@@ -189,28 +189,28 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
         metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
         datasetFile.close()
         datasetFile = h5py.File(pathF + "Plausible.hdf5", "r")
-        LABELS_DICTIONARY = {0: "No", 1: "Yes", 2: "Maybe"}
-        return datasetFile, LABELS_DICTIONARY, "Plausible"
+        labels_dictionary = {0: "No", 1: "Yes", 2: "Maybe"}
+        return datasetFile, labels_dictionary, "Plausible"
 
 
-# def getFakeDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, randomState):
+# def getFakeDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, random_state):
 #     """Was used to generateafake dataset to run tests"""
 #     NB_VIEW = 4
 #     DATASET_LENGTH = 30
 #     NB_CLASS = 2
-#     VIEW_DIMENSIONS = randomState.random_integers(5, 20, NB_VIEW)
+#     VIEW_DIMENSIONS = random_state.random_integers(5, 20, NB_VIEW)
 #
 #     DATA = dict((indx,
 #                  np.array([
-#                               randomState.normal(0.0, 2, viewDimension)
+#                               random_state.normal(0.0, 2, viewDimension)
 #                               for i in np.arange(DATASET_LENGTH)]))
 #                 for indx, viewDimension in enumerate(VIEW_DIMENSIONS))
 #
-#     CLASS_LABELS = randomState.random_integers(0, NB_CLASS - 1, DATASET_LENGTH)
+#     CLASS_LABELS = random_state.random_integers(0, NB_CLASS - 1, DATASET_LENGTH)
 #     datasetFile = h5py.File(pathF + "Fake.hdf5", "w")
 #     for index, viewData in enumerate(DATA.values()):
 #         if index == 0:
-#             viewData = randomState.randint(0, 1, (DATASET_LENGTH, 300)).astype(
+#             viewData = random_state.randint(0, 1, (DATASET_LENGTH, 300)).astype(
 #                 np.uint8)
 #             # np.zeros(viewData.shape, dtype=bool)+np.ones((viewData.shape[0], viewData.shape[1]/2), dtype=bool)
 #             viewDset = datasetFile.create_dataset("View" + str(index), viewData.shape)
@@ -239,10 +239,10 @@ def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
 #     metaDataGrp.attrs["nbView"] = NB_VIEW
 #     metaDataGrp.attrs["nbClass"] = NB_CLASS
 #     metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
-#     LABELS_DICTIONARY = {0: "No", 1: "Yes"}
+#     labels_dictionary = {0: "No", 1: "Yes"}
 #     datasetFile.close()
 #     datasetFile = h5py.File(pathF + "Fake.hdf5", "r")
-#     return datasetFile, LABELS_DICTIONARY
+#     return datasetFile, labels_dictionary
 
 
 class DatasetError(Exception):
@@ -468,16 +468,16 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
 
 
 def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
-                    randomState, full=False, add_noise=False, noise_std=0.15,
+                    random_state, full=False, add_noise=False, noise_std=0.15,
                     delimiter=","):
     # TODO : Update this one
-    labelsNames = np.genfromtxt(pathF + nameDB + "-labels-names.csv",
+    labels_names = np.genfromtxt(pathF + nameDB + "-labels-names.csv",
                                 dtype='str', delimiter=delimiter)
     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")
     labels = np.genfromtxt(pathF + nameDB + "-labels.csv", delimiter=delimiter)
     labelsDset = datasetFile.create_dataset("Labels", labels.shape, data=labels)
     labelsDset.attrs["names"] = [labelName.encode() for labelName in
-                                 labelsNames]
+                                 labels_names]
     viewFileNames = [viewFileName for viewFileName in
                      os.listdir(pathF + "Views/")]
     for viewIndex, viewFileName in enumerate(os.listdir(pathF + "Views/")):
@@ -494,12 +494,12 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
             pass
     metaDataGrp = datasetFile.create_group("Metadata")
     metaDataGrp.attrs["nbView"] = len(viewFileNames)
-    metaDataGrp.attrs["nbClass"] = len(labelsNames)
+    metaDataGrp.attrs["nbClass"] = len(labels_names)
     metaDataGrp.attrs["datasetLength"] = len(labels)
     datasetFile.close()
     datasetFile, labelsDictionary, dataset_name = getClassicDBhdf5(views, pathF, nameDB,
                                                      NB_CLASS, askedLabelsNames,
-                                                     randomState, full)
+                                                     random_state, full)
 
     return datasetFile, labelsDictionary, dataset_name
 
@@ -518,22 +518,22 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     return False, labelSupports
 
 
-# def splitDataset(DATASET, LEARNING_RATE, DATASET_LENGTH, randomState):
+# def splitDataset(DATASET, LEARNING_RATE, DATASET_LENGTH, random_state):
 #     LABELS = DATASET.get("Labels")[...]
 #     NB_CLASS = int(DATASET["Metadata"].attrs["nbClass"])
-#     validationIndices = extractRandomTrainingSet(LABELS, 1 - LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState)
+#     validationIndices = extractRandomTrainingSet(LABELS, 1 - LEARNING_RATE, DATASET_LENGTH, NB_CLASS, random_state)
 #     validationIndices.sort()
 #     return validationIndices
 
 
-# def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState):
+# def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS, random_state):
 #     labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS))
 #     nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
 #     trainingExamplesIndices = []
 #     usedIndices = []
 #     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
 #         isUseFull = False
-#         index = int(randomState.randint(0, DATASET_LENGTH - 1))
+#         index = int(random_state.randint(0, DATASET_LENGTH - 1))
 #         if index not in usedIndices:
 #             isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
 #         if isUseFull:
@@ -542,7 +542,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     return trainingExamplesIndices
 
 
-# def getKFoldIndices(nbFolds, CLASS_LABELS, NB_CLASS, learningIndices, randomState):
+# def getKFoldIndices(nbFolds, CLASS_LABELS, NB_CLASS, learningIndices, random_state):
 #     labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS[learningIndices]))
 #     nbTrainingExamples = [[int(support / nbFolds) for support in labelSupports] for fold in range(nbFolds)]
 #     trainingExamplesIndices = []
@@ -550,7 +550,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     for foldIndex, fold in enumerate(nbTrainingExamples):
 #         trainingExamplesIndices.append([])
 #         while fold != [0 for i in range(NB_CLASS)]:
-#             index = randomState.randint(0, len(learningIndices))
+#             index = random_state.randint(0, len(learningIndices))
 #             if learningIndices[index] not in usedIndices:
 #                 isUseFull, fold = isUseful(fold, learningIndices[index], CLASS_LABELS, labelDict)
 #                 if isUseFull:
@@ -567,7 +567,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     return usedIndices
 
 
-# def getCaltechDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES, randomState):
+# def getCaltechDBcsv(views, pathF, nameDB, NB_CLASS, LABELS_NAMES, random_state):
 #     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")
 #     labelsNamesFile = open(pathF + nameDB + '-ClassLabels-Description.csv')
 #     if len(LABELS_NAMES) != NB_CLASS:
@@ -575,7 +575,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #         for l in labelsNamesFile:
 #             nbLabelsAvailable += 1
 #         LABELS_NAMES = [line.strip().split(";")[1] for lineIdx, line in enumerate(labelsNamesFile) if
-#                         lineIdx in randomState.randint(nbLabelsAvailable, size=NB_CLASS)]
+#                         lineIdx in random_state.randint(nbLabelsAvailable, size=NB_CLASS)]
 #     fullLabels = np.genfromtxt(pathF + nameDB + '-ClassLabels.csv', delimiter=';').astype(int)
 #     labelsDictionary = dict((classIndice, labelName) for (classIndice, labelName) in
 #                             [(int(line.strip().split(";")[0]), line.strip().split(";")[1]) for lineIndex, line in
@@ -607,7 +607,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 # --------------------------------------------#
 
 
-# def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES, randomState):
+# def getMultiOmicDBcsv(features, path, name, NB_CLASS, LABELS_NAMES, random_state):
 #     datasetFile = h5py.File(path + "MultiOmic.hdf5", "w")
 #
 #     logging.debug("Start:\t Getting Methylation data")
@@ -746,7 +746,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     return factorLeft
 #
 #
-# def findParams(arrayLen, nbPatients, randomState, maxNbBins=2000, minNbBins=10, maxLenBin=70000, minOverlapping=1,
+# def findParams(arrayLen, nbPatients, random_state, maxNbBins=2000, minNbBins=10, maxLenBin=70000, minOverlapping=1,
 #                minNbBinsOverlapped=0, maxNbSolutions=30):
 #     results = []
 #     if arrayLen * arrayLen * 10 / 100 > minNbBinsOverlapped * nbPatients:
@@ -762,7 +762,7 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #                                 if arrayLen == (nbBins - 1) * (lenBin - overlapping) + lenBin:
 #                                     results.append({"nbBins": nbBins, "overlapping": overlapping, "lenBin": lenBin})
 #                                     if len(results) == maxNbSolutions:
-#                                         params = preds[randomState.randrange(len(preds))]
+#                                         params = preds[random_state.randrange(len(preds))]
 #                                         return params
 #
 #
@@ -794,9 +794,9 @@ def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     return sortedBinsMatrix
 #
 #
-# def makeSparseTotalMatrix(sortedRNASeq, randomState):
+# def makeSparseTotalMatrix(sortedRNASeq, random_state):
 #     nbPatients, nbGenes = sortedRNASeq.shape
-#     params = findParams(nbGenes, nbPatients, randomState)
+#     params = findParams(nbGenes, nbPatients, random_state)
 #     nbBins = params["nbBins"]
 #     overlapping = params["overlapping"]
 #     lenBin = params["lenBin"]

@@ -89,7 +89,7 @@
 #         cls.labels = cls.random_state.randint(0, 2, 10)
 #
 #     # def test_inputs(cls):
-#     #     # DATASET, CLASS_LABELS, randomState, NB_CORES=1, **kwargs
+#     #     # DATASET, CLASS_LABELS, random_state, NB_CORES=1, **kwargs
 #     #     for fileName in os.listdir("Code/mono_multi_view_classifiers/monoview_classifiers"):
 #     #         if fileName[-3:] == ".py" and fileName != "__init__.py":
 #     #             monoview_classifier_module = getattr(monoview_classifiers, fileName[:-3])

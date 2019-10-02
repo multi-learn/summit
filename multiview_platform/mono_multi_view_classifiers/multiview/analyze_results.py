@@ -59,10 +59,10 @@ def getMetricsScores(metrics, trainLabels, testLabels,
 def execute(classifier, trainLabels,
             testLabels, DATASET,
             classificationKWARGS, classificationIndices,
-            LABELS_DICTIONARY, views, nbCores, times,
+            labels_dictionary, views, nbCores, times,
             name, KFolds,
-            hyperParamSearch, nIter, metric_list,
-            viewsIndices, randomState, labels, classifierModule):
+            hyper_param_search, nIter, metric_list,
+            views_indices, random_state, labels, classifierModule):
     classifier_name = classifier.short_name
     learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
 
@@ -84,7 +84,7 @@ def execute(classifier, trainLabels,
         scoreOnTest) + \
                      "\n\nDataset info :\n\t-Database name : " + name + "\n\t-Labels : " + \
                      ', '.join(
-                         LABELS_DICTIONARY.values()) + "\n\t-Views : " + ', '.join(
+                         labels_dictionary.values()) + "\n\t-Views : " + ', '.join(
         views) + "\n\t-" + str(
         KFolds.n_splits) + \
                      " folds\n\nClassification configuration : \n\t-Algorithm used : " + classifier_name + " with : " + classifier.getConfig()

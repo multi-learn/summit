@@ -237,14 +237,14 @@ class Test_fillLabelNames(unittest.TestCase):
     def setUpClass(cls):
         cls.NB_CLASS = 2
         cls.askedLabelsNames = ["test_label_1", "test_label_3"]
-        cls.randomState = np.random.RandomState(42)
+        cls.random_state = np.random.RandomState(42)
         cls.availableLabelsNames = ["test_label_" + str(_) for _ in range(40)]
 
     def test_simple(cls):
         askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fillLabelNames(
             cls.NB_CLASS,
             cls.askedLabelsNames,
-            cls.randomState,
+            cls.random_state,
             cls.availableLabelsNames)
         cls.assertEqual(askedLabelsNames, cls.askedLabelsNames)
         cls.assertEqual(askedLabelsNamesSet, set(cls.askedLabelsNames))
@@ -254,7 +254,7 @@ class Test_fillLabelNames(unittest.TestCase):
         askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fillLabelNames(
             cls.NB_CLASS,
             cls.askedLabelsNames,
-            cls.randomState,
+            cls.random_state,
             cls.availableLabelsNames)
 
         cls.assertEqual(askedLabelsNames,
@@ -282,7 +282,7 @@ class Test_fillLabelNames(unittest.TestCase):
         askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fillLabelNames(
             cls.NB_CLASS,
             cls.askedLabelsNames,
-            cls.randomState,
+            cls.random_state,
             cls.availableLabelsNames)
         cls.assertEqual(askedLabelsNames, ["test_label_3", "test_label_6"])
         cls.assertEqual(askedLabelsNamesSet, {"test_label_3", "test_label_6"})

@@ -7,7 +7,7 @@ from ..... import monoview_classifiers
 def genParamsSets(classificationKWARGS, randomState, nIter=1):
     nbView = classificationKWARGS["nbView"]
     if classificationKWARGS["classifiersConfigs"] is None:
-        monoviewClassifierModule = getattr(monoview_classifiers, classificationKWARGS["classifiersNames"])
+        monoviewClassifierModule = getattr(monoview_classifiers, classificationKWARGS["classifiers_names"])
         paramsMonoview = monoviewClassifierModule.paramsToSet(nIter, randomState)
     paramsSets = []
     for iterIndex in range(nIter):
@@ -36,7 +36,7 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
                          "LABELS_NAMES": args.CL_classes,
                          "FusionKWARGS": {"fusionType": "EarlyFusion",
                                           "fusionMethod": "WeightedLinear",
-                                          "classifiersNames": classifierName,
+                                          "classifiers_names": classifierName,
                                           "classifiersConfigs": monoviewClassifierModule.getKWARGS([arg.split(":")
                                                                                                     for arg in
                                                                                                     classifierConfig.split(
@@ -52,7 +52,7 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
                          "LABELS_NAMES": args.CL_classes,
                          "FusionKWARGS": {"fusionType": "EarlyFusion",
                                           "fusionMethod": "WeightedLinear",
-                                          "classifiersNames": classifierName,
+                                          "classifiers_names": classifierName,
                                           "classifiersConfigs": None,
                                           'fusionMethodConfig': args.FU_E_method_configs,
                                           "nbView": (len(viewsIndices))}}
@@ -62,12 +62,12 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
 
 class WeightedLinear(EarlyFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
-        EarlyFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
+        EarlyFusionClassifier.__init__(self, randomState, kwargs['classifiers_names'], kwargs['classifiersConfigs'],
                                        NB_CORES=NB_CORES)
         if kwargs['fusionMethodConfig'] is None:
-            self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
+            self.weights = np.ones(len(kwargs["classifiers_names"]), dtype=float)
         elif kwargs['fusionMethodConfig'] == ['']:
-            self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
+            self.weights = np.ones(len(kwargs["classifiers_names"]), dtype=float)
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig']))
         self.weights /= float(max(self.weights))

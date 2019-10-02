@@ -8,14 +8,14 @@ __status__ = "Prototype"  # Production, Development, Prototype
 def execute(classifier, trainLabels,
             testLabels, DATASET,
             classificationKWARGS, classificationIndices,
-            LABELS_DICTIONARY, views, nbCores, times,
+            labels_dictionary, views, nbCores, times,
             name, KFolds,
-            hyperParamSearch, nIter, metrics,
-            viewsIndices, randomState, labels, classifierModule):
+            hyper_param_search, nIter, metrics,
+            views_indices, randomState, labels, classifierModule):
     return analyze_results.execute(classifier, trainLabels,
                                    testLabels, DATASET,
                                    classificationKWARGS, classificationIndices,
-                                   LABELS_DICTIONARY, views, nbCores, times,
+                                   labels_dictionary, views, nbCores, times,
                                    name, KFolds,
-                                   hyperParamSearch, nIter, metrics,
-                                   viewsIndices, randomState, labels, classifierModule)
+                                   hyper_param_search, nIter, metrics,
+                                   views_indices, randomState, labels, classifierModule)

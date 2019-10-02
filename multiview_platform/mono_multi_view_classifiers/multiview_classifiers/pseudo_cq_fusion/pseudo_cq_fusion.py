@@ -16,9 +16,9 @@ def pseudoCQ(difficulty, doubleFlaut):
     return difficulty/float(doubleFlaut)
 
 
-def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview, classificationIndices):
+def getArgs(args, benchmark, views, views_indices, randomState, directory, resultsMonoview, classificationIndices):
     return diversity_utils.getArgs(args, benchmark, views,
-                                   viewsIndices, randomState, directory,
+                                   views_indices, randomState, directory,
                                    resultsMonoview, classificationIndices,
                                    [doubleFault, difficulty], "pseudo_cq_fusion")
 
@@ -34,6 +34,6 @@ class PseudoCQFusionClass(diversity_utils.DiversityFusionClass):
         diversity_utils.DiversityFusionClass.__init__(self, randomState, NB_CORES=1, **kwargs)
 
     def getSpecificAnalysis(self, classificationKWARGS):
-        stringAnalysis = "Classifiers used for each view : "+ ', '.join(self.classifiersNames)+\
+        stringAnalysis = "Classifiers used for each view : "+ ', '.join(self.classifiers_names)+\
                          ', with a pseudo CQ of '+str(self.div_measure)
         return stringAnalysis

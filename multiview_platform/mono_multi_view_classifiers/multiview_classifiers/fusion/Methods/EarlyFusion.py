@@ -28,10 +28,10 @@ class EarlyFusionClassifier(object):
         self.monoviewData = None
         self.randomState = randomState
 
-    def makeMonoviewData_hdf5(self, DATASET, weights=None, usedIndices=None, viewsIndices=None):
-        if type(viewsIndices) == type(None):
-            viewsIndices = np.arange(DATASET.get("Metadata").attrs["nbView"])
-        nbView = len(viewsIndices)
+    def makeMonoviewData_hdf5(self, DATASET, weights=None, usedIndices=None, views_indices=None):
+        if type(views_indices) == type(None):
+            views_indices = np.arange(DATASET.get("Metadata").attrs["nbView"])
+        nbView = len(views_indices)
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         if type(weights) == type(None):
@@ -39,4 +39,4 @@ class EarlyFusionClassifier(object):
         if sum(weights) != 1:
             weights = weights / sum(weights)
         self.monoviewData = np.concatenate([get_v(DATASET, viewIndex, usedIndices)
-                                            for index, viewIndex in enumerate(viewsIndices)], axis=1)
+                                            for index, viewIndex in enumerate(views_indices)], axis=1)

@@ -49,7 +49,7 @@ def parse_the_args(arguments):
 #     groupStandard.add_argument('--nice', metavar='INT', action='store',
 #                                type=int,
 #                                help='Niceness for the processes', default=0)
-#     groupStandard.add_argument('--randomState', metavar='STRING',
+#     groupStandard.add_argument('--random_state', metavar='STRING',
 #                                action='store',
 #                                help="The random state seed to use or the path "
 #                                     "to a pickle file where it is stored",
@@ -733,7 +733,7 @@ def init_random_state(random_state_arg, directory):
             file_name = random_state_arg
             with open(file_name, 'rb') as handle:
                 random_state = pickle.load(handle)
-    with open(directory + "randomState.pickle", "wb") as handle:
+    with open(directory + "random_state.pickle", "wb") as handle:
         pickle.dump(random_state, handle)
     return random_state
 
@@ -982,8 +982,12 @@ def gen_direcorties_names(directory, statsIter):
 
 
 def find_dataset_names(path, type, names):
-    """This function goal is to browse the dataset directory and extarcts all
+    """This function goal is to browse the dataset directory and extrats all
      the needed dataset names."""
+    config_path = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(config_path, "../..")
+    path = os.path.join(config_path, path)
+
     available_file_names = [file_name.strip().split(".")[0]
                             for file_name in os.listdir(path)
                             if file_name.endswith(type)]
@@ -1051,27 +1055,27 @@ def gen_argument_dictionaries(labels_dictionary, directories, multiclass_labels,
     for combination_index, labels_combination in enumerate(labels_combinations):
         for iter_index, iterRandomState in enumerate(stats_iter_random_states):
             benchmark_argument_dictionary = {
-                "LABELS_DICTIONARY": {0: labels_dictionary[labels_combination[0]],
+                "labels_dictionary": {0: labels_dictionary[labels_combination[0]],
                                       1: labels_dictionary[
                                           labels_combination[1]]},
                 "directory": directories[iter_index] +
                              labels_dictionary[labels_combination[0]] +
                              "-vs-" +
                              labels_dictionary[labels_combination[1]] + "/",
-                "classificationIndices": [
+                "classification_indices": [
                     indices_multiclass[combination_index][0][iter_index],
                     indices_multiclass[combination_index][1][iter_index],
                     indices_multiclass[combination_index][2][iter_index]],
                 "args": args,
                 "labels": multiclass_labels[combination_index],
-                "kFolds": k_folds[iter_index],
-                "randomState": iterRandomState,
-                "hyperParamSearch": hyper_param_search,
+                "k_folds": k_folds[iter_index],
+                "random_state": iterRandomState,
+                "hyper_param_search": hyper_param_search,
                 "metrics": metrics,
-                "argumentDictionaries": argument_dictionaries,
+                "argument_dictionaries": argument_dictionaries,
                 "benchmark": benchmark,
                 "views": views,
-                "viewsIndices": views_indices,
+                "views_indices": views_indices,
                 "flag": [iter_index, labels_combination]}
             benchmark_argument_dictionaries.append(benchmark_argument_dictionary)
     return benchmark_argument_dictionaries

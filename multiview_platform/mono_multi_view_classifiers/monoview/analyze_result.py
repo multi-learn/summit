@@ -3,10 +3,10 @@ from datetime import timedelta as hms
 from .. import metrics
 
 
-def getDBConfigString(name, feat, classificationIndices, shape,
+def getDBConfigString(name, feat, classification_indices, shape,
                       classLabelsNames, KFolds):
-    learningRate = float(len(classificationIndices[0])) / (
-                len(classificationIndices[0]) + len(classificationIndices[1]))
+    learningRate = float(len(classification_indices[0])) / (
+                len(classification_indices[0]) + len(classification_indices[1]))
     dbConfigString = "Database configuration : \n"
     dbConfigString += "\t- Database name : " + name + "\n"
     dbConfigString += "\t- View name : " + feat + "\t View shape : " + str(
@@ -51,7 +51,7 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
 def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics_list, nIter,
             feat, CL_type, clKWARGS, classLabelsNames,
             shape, y_train, y_train_pred, y_test, y_test_pred, time,
-            randomState, classifier, directory):
+            random_state, classifier, directory):
     metricsScores = {}
     metricModule = getattr(metrics, metrics_list[0][0])
     trainScore = metricModule.score(y_train, y_train_pred)

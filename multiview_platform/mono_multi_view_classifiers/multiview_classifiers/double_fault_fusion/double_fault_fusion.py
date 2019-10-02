@@ -17,24 +17,24 @@ def doubleFault(classifierDecision1, classifierDecision2, ground_truth):
                           np.logical_xor(classifierDecision2, ground_truth))
 
 
-def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview, classificationIndices):
+def getArgs(args, benchmark, views, views_indices, random_state, directory, resultsMonoview, classificationIndices):
     return diversity_utils.getArgs(args, benchmark, views,
-                                   viewsIndices, randomState, directory,
+                                   views_indices, random_state, directory,
                                    resultsMonoview, classificationIndices,
                                    doubleFault, "double_fault_fusion")
 
 
-def genParamsSets(classificationKWARGS, randomState, nIter=1):
-    return diversity_utils.genParamsSets(classificationKWARGS, randomState, nIter=nIter)
+def genParamsSets(classificationKWARGS, random_state, nIter=1):
+    return diversity_utils.genParamsSets(classificationKWARGS, random_state, nIter=nIter)
 
 
 
 class DoubleFaultFusionClass(diversity_utils.DiversityFusionClass):
 
-    def __init__(self, randomState, NB_CORES=1, **kwargs):
-        diversity_utils.DiversityFusionClass.__init__(self, randomState, NB_CORES=1, **kwargs)
+    def __init__(self, random_state, NB_CORES=1, **kwargs):
+        diversity_utils.DiversityFusionClass.__init__(self, random_state, NB_CORES=1, **kwargs)
 
     def getSpecificAnalysis(self, classificationKWARGS):
-        stringAnalysis = "Classifiers used for each view : "+ ', '.join(self.classifiersNames)+\
+        stringAnalysis = "Classifiers used for each view : "+ ', '.join(self.classifiers_names)+\
                          ', with a double fault ratio of '+str(self.div_measure)
         return stringAnalysis

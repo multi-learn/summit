@@ -14,7 +14,7 @@ class Test_genMulticlassLabels(unittest.TestCase):
         cls.testIndices = [
             cls.random_state.choice(np.arange(50), size=10, replace=False),
             cls.random_state.choice(np.arange(50), size=10, replace=False)]
-        cls.classificationIndices = [
+        cls.classification_indices = [
             [np.array([_ for _ in range(50) if _ not in cls.testIndices[0]]),
              cls.testIndices[0]],
             [np.array([_ for _ in range(50) if _ not in cls.testIndices[1]]),
@@ -22,7 +22,7 @@ class Test_genMulticlassLabels(unittest.TestCase):
 
     def test_one_versus_one(cls):
         multiclassLabels, labelsIndices, oldIndicesMulticlass = multiclass.genMulticlassLabels(
-            cls.labels, "oneVersusOne", cls.classificationIndices)
+            cls.labels, "oneVersusOne", cls.classification_indices)
         cls.assertEqual(len(multiclassLabels), 10)
         cls.assertEqual(labelsIndices,
                         [(0, 1), (0, 2), (0, 3), (0, 4), (1, 2), (1, 3), (1, 4),

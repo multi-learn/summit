@@ -44,7 +44,7 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
                  "LABELS_NAMES": args.CL_classes,
                  "FusionKWARGS": {"fusionType": "LateFusion",
                                   "fusionMethod": "MajorityVoting",
-                                  "classifiersNames": args.FU_L_cl_names,
+                                  "classifiers_names": args.FU_L_cl_names,
                                   "classifiersConfigs": classifiersConfigs,
                                   'fusionMethodConfig': args.FU_L_method_config,
                                   'monoviewSelection': args.FU_L_select_monoview,
@@ -54,11 +54,11 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
 
 class MajorityVoting(LateFusionClassifier):
     def __init__(self, randomState, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
+        LateFusionClassifier.__init__(self, randomState, kwargs['classifiers_names'], kwargs['classifiersConfigs'],
                                       kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
         if kwargs['fusionMethodConfig'][0] is None or kwargs['fusionMethodConfig'] == ['']:
-            self.weights = np.ones(len(kwargs["classifiersNames"]), dtype=float)
+            self.weights = np.ones(len(kwargs["classifiers_names"]), dtype=float)
         else:
             self.weights = np.array(map(float, kwargs['fusionMethodConfig'][0]))
 

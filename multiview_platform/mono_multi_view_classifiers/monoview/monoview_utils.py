@@ -210,20 +210,20 @@ class MonoviewResult(object):
 #     return supports, dict((label, index) for label, index in zip(labels, range(len(labels))))
 #
 #
-# def splitDataset(LABELS, NB_CLASS, LEARNING_RATE, DATASET_LENGTH, randomState):
-#     validationIndices = extractRandomTrainingSet(LABELS, 1 - LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState)
+# def splitDataset(LABELS, NB_CLASS, LEARNING_RATE, DATASET_LENGTH, random_state):
+#     validationIndices = extractRandomTrainingSet(LABELS, 1 - LEARNING_RATE, DATASET_LENGTH, NB_CLASS, random_state)
 #     validationIndices.sort()
 #     return validationIndices
 #
 #
-# def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS, randomState):
+# def extractRandomTrainingSet(CLASS_LABELS, LEARNING_RATE, DATASET_LENGTH, NB_CLASS, random_state):
 #     labelSupports, labelDict = getLabelSupports(np.array(CLASS_LABELS))
 #     nbTrainingExamples = [int(support * LEARNING_RATE) for support in labelSupports]
 #     trainingExamplesIndices = []
 #     usedIndices = []
 #     while nbTrainingExamples != [0 for i in range(NB_CLASS)]:
 #         isUseFull = False
-#         index = int(randomState.randint(0, DATASET_LENGTH - 1))
+#         index = int(random_state.randint(0, DATASET_LENGTH - 1))
 #         if index not in usedIndices:
 #             isUseFull, nbTrainingExamples = isUseful(nbTrainingExamples, index, CLASS_LABELS, labelDict)
 #         if isUseFull:

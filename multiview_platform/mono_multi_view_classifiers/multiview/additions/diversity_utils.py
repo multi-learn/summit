@@ -7,14 +7,14 @@ import numpy as np
 from ...utils.multiclass import isBiclass, genMulticlassMonoviewDecision
 
 
-def getClassifiersDecisions(allClassifersNames, viewsIndices, resultsMonoview):
+def getClassifiersDecisions(allClassifersNames, views_indices, resultsMonoview):
     """
     This function gets the monoview classifiers decisions from resultsMonoview.
     If no HP optimization is done, there is just one fold, the training set.
     The classifiersDecisions variable is ordered as :
     classifiersDecisions[viewIndex, classifierIndex, foldIndex, exampleIndex]
-    And the classifiersNames variable is ordered as :
-    classifiersNames[viewIndex][classifierIndex]
+    And the classifiers_names variable is ordered as :
+    classifiers_names[viewIndex][classifierIndex]
     """
     nbViews = len(viewsIndices)
     nbClassifiers = len(allClassifersNames)

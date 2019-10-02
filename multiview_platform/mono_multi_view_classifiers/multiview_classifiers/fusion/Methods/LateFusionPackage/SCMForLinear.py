@@ -44,13 +44,13 @@ class DecisionStumpSCMNew(BaseEstimator, ClassifierMixin):
         return {"Binary_attributes": self.clf.model_.rules}
 
 
-def genParamsSets(classificationKWARGS, randomState, nIter=1):
+def genParamsSets(classificationKWARGS, random_state, nIter=1):
     paramsSets = []
     for _ in range(nIter):
-        max_attributes = randomState.randint(1, 20)
-        p = randomState.random_sample()
-        model = randomState.choice(["conjunction", "disjunction"])
-        order = randomState.randint(1, 10)
+        max_attributes = random_state.randint(1, 20)
+        p = random_state.random_sample()
+        model = random_state.choice(["conjunction", "disjunction"])
+        order = random_state.randint(1, 10)
         paramsSets.append([p, max_attributes, model, order])
     return paramsSets
 
@@ -82,7 +82,7 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
                  "LABELS_NAMES": args.CL_classes,
                  "FusionKWARGS": {"fusionType": "LateFusion",
                                   "fusionMethod": "SCMForLinear",
-                                  "classifiersNames": args.FU_L_cl_names,
+                                  "classifiers_names": args.FU_L_cl_names,
                                   "classifiersConfigs": classifiersConfigs,
                                   'fusionMethodConfig': args.FU_L_method_config,
                                   'monoviewSelection': args.FU_L_select_monoview,
@@ -91,8 +91,8 @@ def getArgs(benchmark, args, views, viewsIndices, directory, resultsMonoview, cl
 
 
 class SCMForLinear(LateFusionClassifier):
-    def __init__(self, randomState, NB_CORES=1, **kwargs):
-        LateFusionClassifier.__init__(self, randomState, kwargs['classifiersNames'], kwargs['classifiersConfigs'],
+    def __init__(self, random_state, NB_CORES=1, **kwargs):
+        LateFusionClassifier.__init__(self, random_state, kwargs['classifiers_names'], kwargs['classifiersConfigs'],
                                       kwargs["monoviewSelection"],
                                       NB_CORES=NB_CORES)
         self.SCMClassifier = None
@@ -146,7 +146,7 @@ class SCMForLinear(LateFusionClassifier):
 
         nbView = len(viewsIndices)
         self.SCMClassifier = DecisionStumpSCMNew(p=self.p, max_rules=self.maxAttributes, model_type=self.modelType,
-                                                 random_state=self.randomState)
+                                                 random_state=self.random_state)
         monoViewDecisions = np.zeros((len(usedIndices), nbView), dtype=int)
         for index, viewIndex in enumerate(viewsIndices):
             monoViewDecisions[:, index] = self.monoviewClassifiers[index].predict(

@@ -80,10 +80,10 @@ class DecisionTreePregen(DecisionTreeClassifier, BaseMonoviewClassifier,
 #     return kwargsDict
 
 
-def paramsToSet(nIter, randomState):
+def paramsToSet(nIter, random_state):
     paramsSet = []
     for _ in range(nIter):
-        paramsSet.append({"max_depth": randomState.randint(1, 300),
-                          "criterion": randomState.choice(["gini", "entropy"]),
-                          "splitter": randomState.choice(["best", "random"])})
+        paramsSet.append({"max_depth": random_state.randint(1, 300),
+                          "criterion": random_state.choice(["gini", "entropy"]),
+                          "splitter": random_state.choice(["best", "random"])})
     return paramsSet

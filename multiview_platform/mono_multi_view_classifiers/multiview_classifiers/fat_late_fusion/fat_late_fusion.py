@@ -12,7 +12,7 @@ def getBenchmark(benchmark, args=None):
     return benchmark
 
 
-def getArgs(args, benchmark, views, viewsIndices, randomState, directory, resultsMonoview, classificationIndices):
+def getArgs(args, benchmark, views, views_indices, randomState, directory, resultsMonoview, classificationIndices):
     argumentsList = []
     multiclass_preds = [monoviewResult.y_test_multiclass_pred for monoviewResult in resultsMonoview]
     if isBiclass(multiclass_preds):
@@ -26,7 +26,7 @@ def getArgs(args, benchmark, views, viewsIndices, randomState, directory, result
     arguments = {"CL_type": "fat_late_fusion",
                  "views": views,
                  "NB_VIEW": len(resultsMonoview),
-                 "viewsIndices": range(len(resultsMonoview)),
+                 "views_indices": range(len(resultsMonoview)),
                  "NB_CLASS": len(args.CL_classes),
                  "LABELS_NAMES": args.CL_classes,
                  "FatLateFusionKWARGS": {
@@ -58,10 +58,10 @@ class FatLateFusionClass:
     def setParams(self, paramsSet):
         self.weights = paramsSet[0]
 
-    def fit_hdf5(self, DATASET, labels, trainIndices=None, viewsIndices=None, metric=["f1_score", None]):
+    def fit_hdf5(self, DATASET, labels, trainIndices=None, views_indices=None, metric=["f1_score", None]):
         pass
 
-    def predict_hdf5(self, DATASET, usedIndices=None, viewsIndices=None):
+    def predict_hdf5(self, DATASET, usedIndices=None, views_indices=None):
         if usedIndices is None:
             usedIndices = range(DATASET.get("Metadata").attrs["datasetLength"])
         votes = np.zeros((len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]), dtype=float)
