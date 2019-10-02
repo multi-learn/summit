@@ -108,35 +108,6 @@ def randomized_search_x(X, y, framework, random_state, output_file_name, classif
         min_list = np.array(
             [min(nb_possible_combination, n_iter) for nb_possible_combination in
              nb_possible_combinations])
-<<<<<<< HEAD
-        random_search = MultiviewCompatibleRandomizedSearchCV(
-            estimator,
-            n_iter=int(np.sum(min_list)),
-            param_distributions=params_dict,
-            refit=True,
-            n_jobs=nb_cores, scoring=scorer,
-            cv=folds, random_state=random_state,
-            learning_indices=learning_indices,
-            view_indices=view_indices,
-            framework=framework)
-        detector = random_search.fit(X, y)
-
-        best_params = dict((key, value) for key, value in
-                          estimator.genBestParams(detector).items() if
-                          key is not "random_state")
-
-        scores_array = detector.cv_results_['mean_test_score']
-        params = estimator.genParamsFromDetector(detector)
-
-        gen_heat_maps(params, scores_array, output_file_name)
-        best_estimator = detector.best_estimator_
-    else:
-        best_estimator = estimator
-        best_params = {}
-    test_folds_preds = get_test_folds_preds(X, y, folds, best_estimator,
-                                            framework, learning_indices)
-    return best_params, test_folds_preds
-=======
         random_search = MultiviewCompatibleRandomizedSearchCV(estimator,
                                                              n_iter=int(np.sum(min_list)),
                                                              param_distributions=params_dict,
@@ -161,7 +132,6 @@ def randomized_search_x(X, y, framework, random_state, output_file_name, classif
     testFoldsPreds = get_test_folds_preds(X, y, folds, best_estimator,
                                           framework, learning_indices)
     return best_params, testFoldsPreds
->>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4
 
 
 from sklearn.base import clone

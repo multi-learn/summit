@@ -90,13 +90,8 @@ def makeMeNoisy(viewData, random_state, percentage=5):
     return noisyViewData
 
 
-<<<<<<< HEAD
-def getPlausibleDBhdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
-                       random_state=None, full=True, add_noise=False,
-=======
 def get_plausible_db_hdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
                        randomState=None, full=True, add_noise=False,
->>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4
                        noise_std=0.15, nbView=3,
                    nbClass=2, datasetLength=100, randomStateInt=42, nbFeatures = 10):
     """Used to generate a plausible dataset to test the algorithms"""
@@ -472,14 +467,9 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
     return noisy_dataset, dataset_name + "_noised"
 
 
-<<<<<<< HEAD
-def getClassicDBcsv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
-                    random_state, full=False, add_noise=False, noise_std=0.15,
-=======
 def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
-                    randomState, full=False, add_noise=False, noise_std=0.15,
->>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4
-                    delimiter=","):
+                       randomState, full=False, add_noise=False, noise_std=0.15,
+                        delimiter=","):
     # TODO : Update this one
     labels_names = np.genfromtxt(pathF + nameDB + "-labels-names.csv",
                                 dtype='str', delimiter=delimiter)
