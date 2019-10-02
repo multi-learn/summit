@@ -6,17 +6,19 @@ import os
 import numpy as np
 
 from ...multiview.multiview_utils import ConfigGenerator, \
-    get_monoview_classifier, get_examples_views_indices, \
-    get_available_monoview_classifiers, BaseMultiviewClassifier
+    get_examples_views_indices, get_available_monoview_classifiers, \
+    BaseMultiviewClassifier
+from .fusion_utils import BaseLateFusionClassifier
 
 
-class DiversityFusion(BaseMultiviewClassifier):
+class DiversityFusionClassifier(BaseMultiviewClassifier,
+                                BaseLateFusionClassifier):
     """This is the base class for all the diversity fusion based classifiers."""
 
     def __init__(self, random_state=None, classifier_names=None,
                  monoview_estimators=None, classifiers_configs=None):
         """Used to init the instances"""
-        super(DiversityFusion, self).__init__(random_state)
+        super(DiversityFusionClassifier, self).__init__(random_state)
         if classifier_names is None:
             classifier_names = get_available_monoview_classifiers()
         self.classifier_names = classifier_names
@@ -33,18 +35,7 @@ class DiversityFusion(BaseMultiviewClassifier):
             self.estimator_pool = []
             for classifier_idx, classifier_name in enumerate(self.classifier_names):
                 self.estimator_pool.append([])
-                if self.classifiers_configs is not None and classifier_name in self.classifiers_configs:
-                    if 'random_state' in inspect.getfullargspec(get_monoview_classifier(classifier_name).__init__).args:
-                        estimator = get_monoview_classifier(classifier_name)(random_state=self.random_state,
-                                                                             **self.classifiers_configs[classifier_name])
-                    else:
-                        estimator = get_monoview_classifier(classifier_name)(
-                            **self.classifiers_configs[classifier_name])
-                else:
-                    if 'random_state' in inspect.getfullargspec(get_monoview_classifier(classifier_name).__init__).args:
-                        estimator = get_monoview_classifier(classifier_name)(random_state=self.random_state)
-                    else:
-                        estimator = get_monoview_classifier(classifier_name)()
+                estimator = self.init_monoview_estimator(classifier_name)
                 for idx, view_idx in enumerate(views_indices):
                     estimator.fit(X.get_v(view_idx, train_indices), y[train_indices])
                     self.estimator_pool[classifier_idx].append(estimator)
@@ -96,7 +87,7 @@ class DiversityFusion(BaseMultiviewClassifier):
         return combinations, combis, div_measure, classifiers_decisions, nb_views
 
 
-class GlobalDiversityFusion(DiversityFusion):
+class GlobalDiversityFusionClassifier(DiversityFusionClassifier):
 
     def choose_combination(self, X, y, examples_indices, view_indices):
         combinations, combis, div_measure, classifiers_decisions, nb_views = self.init_combinations(
@@ -114,7 +105,7 @@ class GlobalDiversityFusion(DiversityFusion):
                                     in enumerate(best_combination)]
 
 
-class CoupleDiversityFusion(DiversityFusion):
+class CoupleDiversityFusionClassifier(DiversityFusionClassifier):
 
     def choose_combination(self, X, y, examples_indices, view_indices):
         combinations, combis, div_measure, classifiers_decisions, nb_views = self.init_combinations(
