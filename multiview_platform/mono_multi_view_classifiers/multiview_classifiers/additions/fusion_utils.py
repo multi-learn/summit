@@ -1,10 +1,10 @@
 import inspect
 
 
-from ...multiview.multiview_utils import BaseMultiviewClassifier, get_monoview_classifier
+from ...multiview.multiview_utils import get_monoview_classifier
 
 
-class BaseLateFusionClassifier(BaseMultiviewClassifier):
+class BaseLateFusionClassifier():
 
     def init_monoview_estimator(self, classifier_name, classifier_index=None):
         if classifier_index is not None:

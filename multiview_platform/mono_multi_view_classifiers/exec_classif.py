@@ -539,14 +539,14 @@ def exec_one_benchmark_multicore(nb_cores=-1, labels_dictionary=None,
     for step_index in range(nb_multicore_to_do):
         results_multiview += Parallel(n_jobs=nb_cores)(
             delayed(exec_multiview_multicore)(directory, core_index, args["Base"]["name"],
-                                             classification_indices, k_folds,
-                                             args["Base"]["type"], args["Base"]["pathf"],
-                                             labels_dictionary, random_state,
-                                             labels,
-                                             hyper_param_search=hyper_param_search,
-                                             metrics=metrics,
-                                             nIter=args["Classification"]["hps_iter"],
-                                             **
+                                              classification_indices, k_folds,
+                                              args["Base"]["type"], args["Base"]["pathf"],
+                                              labels_dictionary, random_state,
+                                              labels,
+                                              hyper_param_search=hyper_param_search,
+                                              metrics=metrics,
+                                              n_iter=args["Classification"]["hps_iter"],
+                                              **
                                              argument_dictionaries["multiview"][
                                                  step_index * nb_cores + core_index])
             for core_index in

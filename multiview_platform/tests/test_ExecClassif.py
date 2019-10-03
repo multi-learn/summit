@@ -277,7 +277,7 @@ class Test_execBenchmark(unittest.TestCase):
                                          10, cls.Dataset,
                                          exec_one_benchmark=fakeBenchmarkExec,
                                          exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                         exec_one_benchmark_monoCore=fakeBenchmarkExec_monocore,
+                                         exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
                                          get_results=fakegetResults,
                                          delete=fakeDelete)
         cls.assertEqual(res, 3)
@@ -288,7 +288,7 @@ class Test_execBenchmark(unittest.TestCase):
                                          10, cls.Dataset,
                                          exec_one_benchmark=fakeBenchmarkExec,
                                          exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                         exec_oneBenchmark_mono_core=fakeBenchmarkExec_monocore,
+                                         exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
                                          get_results=fakegetResults,
                                          delete=fakeDelete)
         cls.assertEqual(res, 3)
@@ -304,14 +304,14 @@ class Test_execBenchmark(unittest.TestCase):
 
 def fakeExecMono(directory, name, labels_names, classification_indices, k_folds,
                  coreIndex, type, pathF, random_state, labels,
-                 hyper_param_search="try", metrics="try", nIter=1, **arguments):
+                 hyper_param_search="try", metrics="try", n_iter=1, **arguments):
     return ["Mono", arguments]
 
 
 def fakeExecMulti(directory, coreIndex, name, classification_indices, k_folds,
                   type, pathF, labels_dictionary,
                   random_state, labels, hyper_param_search="", metrics=None,
-                  nIter=1, **arguments):
+                  n_iter=1, **arguments):
     return ["Multi", arguments]
 
 
@@ -412,8 +412,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
 
     def test_simple(cls):
         flag, results = exec_classif.exec_one_benchmark_multicore(
-            nbCores=2,
-
+            nb_cores=2,
             labels_dictionary={0: "a", 1: "b"},
             directory="multiview_platform/tests/tmp_tests/",
             classification_indices=([1, 2, 3, 4], [0, 10, 20, 30, 40]),

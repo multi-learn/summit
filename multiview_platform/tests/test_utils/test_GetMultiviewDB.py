@@ -5,17 +5,19 @@ import h5py
 import numpy as np
 
 from ...mono_multi_view_classifiers.utils import get_multiview_db
+from ..utils import rm_tmp
 
 
 class Test_copyhdf5Dataset(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         cls.random_state = np.random.RandomState(42)
-        if not os.path.exists("multiview_platform/tests/temp_tests"):
-            os.mkdir("multiview_platform/tests/temp_tests")
+        if not os.path.exists("multiview_platform/tests/tmp_tests"):
+            os.mkdir("multiview_platform/tests/tmp_tests")
         cls.dataset_file = h5py.File(
-            "multiview_platform/tests/temp_tests/test_copy.hdf5", "w")
+            "multiview_platform/tests/tmp_tests/test_copy.hdf5", "w")
         cls.dataset = cls.dataset_file.create_dataset("test",
                                                       data=cls.random_state.randint(
                                                           0, 100, (10, 20)))
@@ -41,20 +43,21 @@ class Test_copyhdf5Dataset(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove("multiview_platform/tests/temp_tests/test_copy.hdf5")
-        os.rmdir("multiview_platform/tests/temp_tests")
+        os.remove("multiview_platform/tests/tmp_tests/test_copy.hdf5")
+        os.rmdir("multiview_platform/tests/tmp_tests")
 
 
 class Test_filterViews(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         cls.random_state = np.random.RandomState(42)
         cls.views = ["test_view_1", "test_view_2"]
-        if not os.path.exists("multiview_platform/tests/temp_tests"):
-            os.mkdir("multiview_platform/tests/temp_tests")
+        if not os.path.exists("multiview_platform/tests/tmp_tests"):
+            os.mkdir("multiview_platform/tests/tmp_tests")
         cls.dataset_file = h5py.File(
-            "multiview_platform/tests/temp_tests/test_copy.hdf5", "w")
+            "multiview_platform/tests/tmp_tests/test_copy.hdf5", "w")
         cls.metadata_group = cls.dataset_file.create_group("Metadata")
         cls.metadata_group.attrs["nbView"] = 4
 
@@ -66,7 +69,7 @@ class Test_filterViews(unittest.TestCase):
 
     def test_simple_filter(cls):
         cls.temp_dataset_file = h5py.File(
-            "multiview_platform/tests/temp_tests/test_copy_temp.hdf5", "w")
+            "multiview_platform/tests/tmp_tests/test_copy_temp.hdf5", "w")
         cls.dataset_file.copy("Metadata", cls.temp_dataset_file)
         get_multiview_db.filter_views(cls.dataset_file, cls.temp_dataset_file,
                                      cls.views, np.arange(10))
@@ -79,7 +82,7 @@ class Test_filterViews(unittest.TestCase):
 
     def test_filter_view_and_examples(cls):
         cls.temp_dataset_file = h5py.File(
-            "multiview_platform/tests/temp_tests/test_copy_temp.hdf5", "w")
+            "multiview_platform/tests/tmp_tests/test_copy_temp.hdf5", "w")
         cls.dataset_file.copy("Metadata", cls.temp_dataset_file)
         usedIndices = cls.random_state.choice(10, 6, replace=False)
         get_multiview_db.filter_views(cls.dataset_file, cls.temp_dataset_file,
@@ -91,9 +94,9 @@ class Test_filterViews(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove("multiview_platform/tests/temp_tests/test_copy.hdf5")
-        os.remove("multiview_platform/tests/temp_tests/test_copy_temp.hdf5")
-        os.rmdir("multiview_platform/tests/temp_tests")
+        os.remove("multiview_platform/tests/tmp_tests/test_copy.hdf5")
+        os.remove("multiview_platform/tests/tmp_tests/test_copy_temp.hdf5")
+        os.rmdir("multiview_platform/tests/tmp_tests")
 
 
 #
@@ -336,11 +339,12 @@ class Test_getClassicDBhdf5(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        if not os.path.exists("multiview_platform/tests/temp_tests"):
-            os.mkdir("multiview_platform/tests/temp_tests")
+        rm_tmp()
+        if not os.path.exists("multiview_platform/tests/tmp_tests"):
+            os.mkdir("multiview_platform/tests/tmp_tests")
         cls.dataset_file = h5py.File(
-            "multiview_platform/tests/temp_tests/test_dataset.hdf5", "w")
-        cls.pathF = "multiview_platform/tests/temp_tests/"
+            "multiview_platform/tests/tmp_tests/test_dataset.hdf5", "w")
+        cls.pathF = "multiview_platform/tests/tmp_tests/"
         cls.nameDB = "test_dataset"
         cls.NB_CLASS = 2
         cls.askedLabelsNames = ["test_label_1", "test_label_3"]
@@ -446,21 +450,22 @@ class Test_getClassicDBhdf5(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         os.remove(
-            "multiview_platform/tests/temp_tests/test_dataset_temp_view_label_select.hdf5")
-        os.remove("multiview_platform/tests/temp_tests/test_dataset.hdf5")
-        dirs = os.listdir("multiview_platform/tests/temp_tests")
+            "multiview_platform/tests/tmp_tests/test_dataset_temp_view_label_select.hdf5")
+        os.remove("multiview_platform/tests/tmp_tests/test_dataset.hdf5")
+        dirs = os.listdir("multiview_platform/tests/tmp_tests")
         for dir in dirs:
             print(dir)
-        os.rmdir("multiview_platform/tests/temp_tests")
+        os.rmdir("multiview_platform/tests/tmp_tests")
 
 
 class Test_getClassicDBcsv(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        if not os.path.exists("multiview_platform/tests/temp_tests"):
-            os.mkdir("multiview_platform/tests/temp_tests")
-        cls.pathF = "multiview_platform/tests/temp_tests/"
+        rm_tmp()
+        if not os.path.exists("multiview_platform/tests/tmp_tests"):
+            os.mkdir("multiview_platform/tests/tmp_tests")
+        cls.pathF = "multiview_platform/tests/tmp_tests/"
         cls.NB_CLASS = 2
         cls.nameDB = "test_dataset"
         cls.askedLabelsNames = ["test_label_1", "test_label_3"]
@@ -566,15 +571,15 @@ class Test_getClassicDBcsv(unittest.TestCase):
     def tearDownClass(cls):
         for i in range(4):
             os.remove(
-                "multiview_platform/tests/temp_tests/Views/test_view_" + str(
+                "multiview_platform/tests/tmp_tests/Views/test_view_" + str(
                     i) + ".csv")
-        os.rmdir("multiview_platform/tests/temp_tests/Views")
+        os.rmdir("multiview_platform/tests/tmp_tests/Views")
         os.remove(
-            "multiview_platform/tests/temp_tests/test_dataset-labels-names.csv")
-        os.remove("multiview_platform/tests/temp_tests/test_dataset-labels.csv")
-        os.remove("multiview_platform/tests/temp_tests/test_dataset.hdf5")
+            "multiview_platform/tests/tmp_tests/test_dataset-labels-names.csv")
+        os.remove("multiview_platform/tests/tmp_tests/test_dataset-labels.csv")
+        os.remove("multiview_platform/tests/tmp_tests/test_dataset.hdf5")
         os.remove(
-            "multiview_platform/tests/temp_tests/test_dataset_temp_view_label_select.hdf5")
-        for file in os.listdir("multiview_platform/tests/temp_tests"): print(
+            "multiview_platform/tests/tmp_tests/test_dataset_temp_view_label_select.hdf5")
+        for file in os.listdir("multiview_platform/tests/tmp_tests"): print(
             file)
-        os.rmdir("multiview_platform/tests/temp_tests")
+        os.rmdir("multiview_platform/tests/tmp_tests")

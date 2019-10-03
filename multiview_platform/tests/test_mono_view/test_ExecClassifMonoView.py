@@ -16,9 +16,9 @@ class Test_initConstants(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         rm_tmp()
-        os.mkdir("multiview_platform/tests/temp_tests")
+        os.mkdir("multiview_platform/tests/tmp_tests")
         cls.datasetFile = h5py.File(
-            "multiview_platform/tests/temp_tests/test.hdf5", "w")
+            "multiview_platform/tests/tmp_tests/test.hdf5", "w")
         cls.random_state = np.random.RandomState(42)
         cls.args = {"classifier_name": "test_clf"}
         cls.X_value = cls.random_state.randint(0, 500, (10, 20))
@@ -30,7 +30,7 @@ class Test_initConstants(unittest.TestCase):
                                      np.array([1, 3, 5, 7, 9])]
         cls.labels_names = ["test_true", "test_false"]
         cls.name = "test"
-        cls.directory = "multiview_platform/tests/temp_tests/test_dir/"
+        cls.directory = "multiview_platform/tests/tmp_tests/test_dir/"
 
     def test_simple(cls):
         kwargs, \
@@ -56,12 +56,12 @@ class Test_initConstants(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove("multiview_platform/tests/temp_tests/test.hdf5")
+        os.remove("multiview_platform/tests/tmp_tests/test.hdf5")
         os.rmdir(
-            "multiview_platform/tests/temp_tests/test_dir/test_clf/test_dataset")
-        os.rmdir("multiview_platform/tests/temp_tests/test_dir/test_clf")
-        os.rmdir("multiview_platform/tests/temp_tests/test_dir")
-        os.rmdir("multiview_platform/tests/temp_tests")
+            "multiview_platform/tests/tmp_tests/test_dir/test_clf/test_dataset")
+        os.rmdir("multiview_platform/tests/tmp_tests/test_dir/test_clf")
+        os.rmdir("multiview_platform/tests/tmp_tests/test_dir")
+        os.rmdir("multiview_platform/tests/tmp_tests")
 
 
 class Test_initTrainTest(unittest.TestCase):
@@ -77,13 +77,8 @@ class Test_initTrainTest(unittest.TestCase):
                                      np.array([1, 3, 5, 7, 9])]
 
     def test_simple(cls):
-<<<<<<< HEAD
-        X_train, y_train, X_test, y_test, X_test_multiclass = exec_classif_mono_view.initTrainTest(
-            cls.X, cls.Y, cls.classification_indices)
-=======
         X_train, y_train, X_test, y_test, X_test_multiclass = exec_classif_mono_view.init_train_test(
-            cls.X, cls.Y, cls.classificationIndices)
->>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4
+            cls.X, cls.Y, cls.classification_indices)
         np.testing.assert_array_equal(X_train, np.array(
             [np.array([102, 435, 348, 270, 106]),
              np.array([466, 214, 330, 458, 87]),

@@ -180,7 +180,7 @@ def init_train_test(X, Y, classificationIndices):
 
 def getHPs(classifierModule, hyper_param_search, nIter, classifier_module_name,
            classifier_class_name, X_train, y_train,
-           randomState,
+           random_state,
            outputFileName, KFolds, nbCores, metrics, kwargs):
     if hyper_param_search != "None":
         logging.debug(
@@ -188,7 +188,7 @@ def getHPs(classifierModule, hyper_param_search, nIter, classifier_module_name,
                 nIter) + " iterations for " + classifier_module_name)
         classifierHPSearch = getattr(hyper_parameter_search, hyper_param_search)
         clKWARGS, testFoldsPreds = classifierHPSearch(X_train, y_train, "monoview",
-                                                      randomState,
+                                                      random_state,
                                                       outputFileName,
                                                       classifierModule,
                                                       classifier_class_name,

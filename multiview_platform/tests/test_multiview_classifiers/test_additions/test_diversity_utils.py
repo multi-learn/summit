@@ -24,7 +24,7 @@ class FakeDivCoupleClf(diversity_utils.CoupleDiversityFusionClassifier):
                  classifiers_config=None, monoview_estimators=None):
         super(FakeDivCoupleClf, self).__init__(random_state=rs,
                                                classifier_names=classifier_names,
-                                               classifiers_configs=classifiers_config,
+                                               classifier_configs=classifiers_config,
                                                monoview_estimators=monoview_estimators)
         self.rs = rs
 
@@ -38,7 +38,7 @@ class FakeDivGlobalClf(diversity_utils.GlobalDiversityFusionClassifier):
                  classifiers_config=None, monoview_estimators=None):
         super(FakeDivGlobalClf, self).__init__(random_state=rs,
                                                classifier_names=classifier_names,
-                                               classifiers_configs=classifiers_config,
+                                               classifier_configs=classifiers_config,
                                                monoview_estimators=monoview_estimators)
         self.rs = rs
 

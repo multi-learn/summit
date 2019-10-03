@@ -25,7 +25,7 @@ class BayesianInferenceClassifier(LateFusionClassifier):
         view_scores = []
         for index, view_index in enumerate(views_indices):
             view_scores.append(np.power(
-                self.monoviewClassifiers[index].predict_proba(X.get_v(view_index,
+                self.monoview_estimators[index].predict_proba(X.get_v(view_index,
                                                                       example_indices)),
                 self.weights[index]))
         view_scores = np.array(view_scores)

@@ -19,7 +19,7 @@ class WeightedLinearLateFusion(LateFusionClassifier):
         example_indices, views_indices = get_examples_views_indices(X, example_indices, views_indices)
         view_scores = []
         for index, viewIndex in enumerate(views_indices):
-            view_scores.append(np.array(self.monoviewClassifiers[index].predict_proba(
+            view_scores.append(np.array(self.monoview_estimators[index].predict_proba(
                 X.get_v(viewIndex, example_indices))) * self.weights[index])
         view_scores = np.array(view_scores)
         predicted_labels = np.argmax(np.sum(view_scores, axis=0), axis=1)

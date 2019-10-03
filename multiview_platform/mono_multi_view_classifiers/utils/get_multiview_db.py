@@ -91,7 +91,7 @@ def makeMeNoisy(viewData, random_state, percentage=5):
 
 
 def get_plausible_db_hdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
-                       randomState=None, full=True, add_noise=False,
+                       random_state=None, full=True, add_noise=False,
                        noise_std=0.15, nbView=3,
                    nbClass=2, datasetLength=100, randomStateInt=42, nbFeatures = 10):
     """Used to generate a plausible dataset to test the algorithms"""
@@ -468,7 +468,7 @@ def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
 
 
 def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
-                       randomState, full=False, add_noise=False, noise_std=0.15,
+                       random_state, full=False, add_noise=False, noise_std=0.15,
                         delimiter=","):
     # TODO : Update this one
     labels_names = np.genfromtxt(pathF + nameDB + "-labels-names.csv",

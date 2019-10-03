@@ -16,16 +16,16 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
     """This is the base class for all the diversity fusion based classifiers."""
 
     def __init__(self, random_state=None, classifier_names=None,
-                 monoview_estimators=None, classifiers_configs=None):
+                 monoview_estimators=None, classifier_configs=None):
         """Used to init the instances"""
         super(DiversityFusionClassifier, self).__init__(random_state)
         if classifier_names is None:
             classifier_names = get_available_monoview_classifiers()
         self.classifier_names = classifier_names
-        self.param_names = ["classifiers_configs"]
+        self.param_names = ["classifier_configs"]
         self.distribs = [ConfigGenerator(get_available_monoview_classifiers())]
         self.estimator_pool = monoview_estimators
-        self.classifiers_configs = classifiers_configs
+        self.classifier_configs = classifier_configs
 
     def fit(self, X, y, train_indices=None, views_indices=None):
         train_indices, views_indices = get_examples_views_indices(X,

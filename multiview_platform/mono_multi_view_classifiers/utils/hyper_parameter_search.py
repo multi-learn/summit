@@ -90,7 +90,7 @@ def get_test_folds_preds(X, y, cv, estimator, framework, available_indices=None)
     return test_folds_prediction
 
 
-def randomized_search_x(X, y, framework, random_state, output_file_name, classifier_module,
+def randomized_search(X, y, framework, random_state, output_file_name, classifier_module,
                       classifier_name, folds=4, nb_cores=1, metric=["accuracy_score", None],
                       n_iter=30, classifier_kwargs =None, learning_indices=None, view_indices=None):
     estimator = getattr(classifier_module, classifier_name)(random_state,
@@ -216,74 +216,74 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
         return test_folds_prediction
 
 
-def randomized_search(dataset_var, labels, classifier_package, classifier_name,
-                      metrics_list, learning_indices, k_folds, random_state,
-                      views_indices=None, n_iter=1,
-                      nb_cores=1, **classification_kargs):
-    """Used to perform a random search on the classifiers to optimize hyper parameters"""
-    if views_indices is None:
-        views_indices = range(dataset_var.get("Metadata").attrs["nbView"])
-    metric = metrics_list[0]
-    metric_module = getattr(metrics, metric[0])
-    if metric[1] is not None:
-        metric_kargs = dict((index, metricConfig) for index, metricConfig in
-                            enumerate(metric[1]))
-    else:
-        metric_kargs = {}
-    classifier_module = getattr(classifier_package, classifier_name + "Module")
-    classifier_class = getattr(classifier_module, classifier_name + "Class")
-    if classifier_name != "Mumbo":
-        params_sets = classifier_module.gen_params_sets(classification_kargs,
-                                                    random_state, n_iter=n_iter)
-        if metric_module.getConfig()[-14] == "h":
-            base_score = -1000.0
-            is_better = "higher"
-        else:
-            base_score = 1000.0
-            is_better = "lower"
-        best_settings = None
-        kk_folds = k_folds.split(learning_indices, labels[learning_indices])
-        for params_set in params_sets:
-            scores = []
-            for trainIndices, testIndices in kk_folds:
-                classifier = classifier_class(random_state, nb_scores=nb_cores,
-                                             **classification_kargs)
-                classifier.setParams(params_set)
-                classifier.fit_hdf5(dataset_var, labels,
-                                    train_indices=learning_indices[trainIndices],
-                                    views_indices=views_indices)
-                test_labels = classifier.predict_hdf5(dataset_var,
-                                                      used_indices=learning_indices[testIndices],
-                                                      views_indices=views_indices)
-                test_score = metric_module.score(
-                    labels[learning_indices[testIndices]], test_labels)
-                scores.append(test_score)
-            cross_val_score = np.mean(np.array(scores))
-
-            if is_better == "higher" and cross_val_score > base_score:
-                base_score = cross_val_score
-                best_settings = params_set
-            elif is_better == "lower" and cross_val_score < base_score:
-                base_score = cross_val_score
-                best_settings = params_set
-        classifier = classifier_class(random_state, nb_cores=nb_cores,
-                                     **classification_kargs)
-        classifier.setParams(best_settings)
-
-    # TODO : This must be corrected
-    else:
-        best_configs, _ = classifier_module.grid_search_hdf5(dataset_var, labels,
-                                                             views_indices,
-                                                             classification_kargs,
-                                                             learning_indices,
-                                                             random_state,
-                                                             metric=metric,
-                                                             nI_iter=n_iter)
-        classification_kargs["classifiersConfigs"] = best_configs
-        classifier = classifier_class(random_state, nb_cores=nb_cores,
-                                      **classification_kargs)
-
-    return classifier
+# def randomized_search_(dataset_var, labels, classifier_package, classifier_name,
+#                       metrics_list, learning_indices, k_folds, random_state,
+#                       views_indices=None, n_iter=1,
+#                       nb_cores=1, **classification_kargs):
+#     """Used to perform a random search on the classifiers to optimize hyper parameters"""
+#     if views_indices is None:
+#         views_indices = range(dataset_var.get("Metadata").attrs["nbView"])
+#     metric = metrics_list[0]
+#     metric_module = getattr(metrics, metric[0])
+#     if metric[1] is not None:
+#         metric_kargs = dict((index, metricConfig) for index, metricConfig in
+#                             enumerate(metric[1]))
+#     else:
+#         metric_kargs = {}
+#     classifier_module = getattr(classifier_package, classifier_name + "Module")
+#     classifier_class = getattr(classifier_module, classifier_name + "Class")
+#     if classifier_name != "Mumbo":
+#         params_sets = classifier_module.gen_params_sets(classification_kargs,
+#                                                     random_state, n_iter=n_iter)
+#         if metric_module.getConfig()[-14] == "h":
+#             base_score = -1000.0
+#             is_better = "higher"
+#         else:
+#             base_score = 1000.0
+#             is_better = "lower"
+#         best_settings = None
+#         kk_folds = k_folds.split(learning_indices, labels[learning_indices])
+#         for params_set in params_sets:
+#             scores = []
+#             for trainIndices, testIndices in kk_folds:
+#                 classifier = classifier_class(random_state, nb_scores=nb_cores,
+#                                              **classification_kargs)
+#                 classifier.setParams(params_set)
+#                 classifier.fit_hdf5(dataset_var, labels,
+#                                     train_indices=learning_indices[trainIndices],
+#                                     views_indices=views_indices)
+#                 test_labels = classifier.predict_hdf5(dataset_var,
+#                                                       used_indices=learning_indices[testIndices],
+#                                                       views_indices=views_indices)
+#                 test_score = metric_module.score(
+#                     labels[learning_indices[testIndices]], test_labels)
+#                 scores.append(test_score)
+#             cross_val_score = np.mean(np.array(scores))
+#
+#             if is_better == "higher" and cross_val_score > base_score:
+#                 base_score = cross_val_score
+#                 best_settings = params_set
+#             elif is_better == "lower" and cross_val_score < base_score:
+#                 base_score = cross_val_score
+#                 best_settings = params_set
+#         classifier = classifier_class(random_state, nb_cores=nb_cores,
+#                                      **classification_kargs)
+#         classifier.setParams(best_settings)
+#
+#     # TODO : This must be corrected
+#     else:
+#         best_configs, _ = classifier_module.grid_search_hdf5(dataset_var, labels,
+#                                                              views_indices,
+#                                                              classification_kargs,
+#                                                              learning_indices,
+#                                                              random_state,
+#                                                              metric=metric,
+#                                                              nI_iter=n_iter)
+#         classification_kargs["classifiersConfigs"] = best_configs
+#         classifier = classifier_class(random_state, nb_cores=nb_cores,
+#                                       **classification_kargs)
+#
+#     return classifier
 
 
 def spear_mint(dataset, classifier_name, views_indices=None, k_folds=None, n_iter=1,
