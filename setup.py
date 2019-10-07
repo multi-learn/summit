@@ -3,7 +3,6 @@
 # from Cython.Build import cythonize
 from setuptools import setup, find_packages
 
-import multiview_platform
 
 # Ceci n'est qu'un appel de fonction. Mais il est trèèèèèèèèèèès long
 # et il comporte beaucoup de paramètres
@@ -14,7 +13,7 @@ def setup_package():
     name='multiview_platform',
 
     # la version du code
-    version=multiview_platform.__version__,
+    version=0.0,
     python_requires = '>=3.5',
     # Liste les packages à insérer dans la distribution
     # plutôt que de le faire à la main, on utilise la foncton
@@ -50,11 +49,14 @@ def setup_package():
 
     # Active la prise en compte du fichier MANIFEST.in
     include_package_data=True,
-
+    # dependency_links=['https://github.com/aldro61/pyscm.git#egg=pyscm'],
     # Une url qui pointe vers la page officielle de votre lib
     url='http://github.com/babau1/multiview-machine-learning-omis/',
     install_requires=['numpy>=1.8', 'scipy>=0.16','scikit-learn==0.19',
-                      'matplotlib', 'h5py', 'joblib', 'pyscm', 'pandas', 'm2r', 'pyyaml'],
+                      'matplotlib', 'h5py', 'joblib',
+                      'pandas', 'm2r', 'pyyaml', 'pyscm @ git+https://github.com/aldro61/pyscm',
+                      'cvxopt'],
+
     # Il est d'usage de mettre quelques metadata à propos de sa lib
     # Pour que les robots puissent facilement la classer.
     # La liste des marqueurs autorisées est longue:

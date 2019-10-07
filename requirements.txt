@@ -14,3 +14,4 @@ pandas==0.23.3
 m2r==0.2.1
 docutils==0.12
 pyyaml==3.12
+cvxopt==1.2.0
