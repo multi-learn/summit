@@ -35,11 +35,7 @@ class PseudoCQFusionClass(diversity_utils.DiversityFusionClass):
         diversity_utils.DiversityFusionClass.__init__(self, randomState, NB_CORES=1, **kwargs)
 
     def getSpecificAnalysis(self, classificationKWARGS):
-<<<<<<< HEAD
-        stringAnalysis = "Classifiers used for each view : "+ ', '.join(self.classifiers_names)+\
-                         ', with a pseudo CQ of '+str(self.div_measure)
-=======
+
         stringAnalysis = "Classifiers used for each view : " + ', '.join(self.classifiers_names) +\
                          ', with a pseudo CQ of ' + str(self.div_measure)
->>>>>>> 7b3e918b4fb2938657cae3093d95b1bd6fc461d4
         return stringAnalysis

@@ -26,9 +26,9 @@ class Test_initStatsIterRandomStates(unittest.TestCase):
         cls.statsIter = 1
 
     def test_one_statiter(cls):
-
         cls.state = cls.random_state.get_state()[1]
         statsIterRandomStates = execution.init_stats_iter_random_states(
+
             cls.statsIter, cls.random_state)
         np.testing.assert_array_equal(statsIterRandomStates[0].get_state()[1],
                                       cls.state)
@@ -36,6 +36,7 @@ class Test_initStatsIterRandomStates(unittest.TestCase):
     def test_multiple_iter(cls):
         cls.statsIter = 3
         statsIterRandomStates = execution.init_stats_iter_random_states(
+
             cls.statsIter, cls.random_state)
         cls.assertAlmostEqual(len(statsIterRandomStates), 3)
         cls.assertNotEqual(statsIterRandomStates[0].randint(5000),
@@ -99,6 +100,7 @@ class Test_initRandomState(unittest.TestCase):
             tmp_path+"random_state.pickle",
             tmp_path)
         os.remove(tmp_path+"random_state.pickle")
+
         np.testing.assert_array_equal(randomState_to_pickle.beta(1, 100, 100),
                                       pickled_randomState.beta(1, 100, 100))
 
