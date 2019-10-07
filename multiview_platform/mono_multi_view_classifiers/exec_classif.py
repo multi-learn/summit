@@ -15,7 +15,7 @@ from . import monoview_classifiers
 from . import multiview_classifiers
 from .multiview.exec_multiview import exec_multiview, exec_multiview_multicore
 from .monoview.exec_classif_mono_view import exec_monoview, exec_monoview_multicore
-from .utils import get_multiview_db as DB
+from .utils.dataset import delete_HDF5
 from .result_analysis import get_results
 from .result_analysis import plot_results_noise
 # resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes,
@@ -607,14 +607,14 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
 
 
 def exec_benchmark(nb_cores, stats_iter, nb_multiclass,
-                  benchmark_arguments_dictionaries, classification_indices,
-                  directories,
-                  directory, multi_class_labels, metrics, labels_dictionary,
-                  nb_labels, dataset_var,
-                  exec_one_benchmark=exec_one_benchmark,
-                  exec_one_benchmark_multicore=exec_one_benchmark_multicore,
-                  exec_one_benchmark_mono_core=exec_one_benchmark_mono_core,
-                  get_results=get_results, delete=DB.deleteHDF5):
+                   benchmark_arguments_dictionaries, classification_indices,
+                   directories,
+                   directory, multi_class_labels, metrics, labels_dictionary,
+                   nb_labels, dataset_var,
+                   exec_one_benchmark=exec_one_benchmark,
+                   exec_one_benchmark_multicore=exec_one_benchmark_multicore,
+                   exec_one_benchmark_mono_core=exec_one_benchmark_mono_core,
+                   get_results=get_results, delete=delete_HDF5):
     r"""Used to execute the needed benchmark(s) on multicore or mono-core functions.
 
     Parameters
@@ -742,11 +742,11 @@ def exec_classif(arguments):
                                                                   noise_std)
             args["Base"]["name"] = datasetname
 
-            splits = execution.gen_splits(dataset_var.get("Labels").value, args["Classification"]["split"],
+            splits = execution.gen_splits(dataset_var.get_labels(), args["Classification"]["split"],
                                          stats_iter_random_states)
 
             multiclass_labels, labels_combinations, indices_multiclass = multiclass.gen_multiclass_labels(
-                dataset_var.get("Labels").value, multiclass_method, splits)
+                dataset_var.get_labels(), multiclass_method, splits)
 
             k_folds = execution.gen_k_folds(stats_iter, args["Classification"]["nb_folds"],
                                          stats_iter_random_states)
@@ -757,7 +757,7 @@ def exec_classif(arguments):
             views, views_indices, all_views = execution.init_views(dataset_var, args["Base"]["views"])
             views_dictionary = gen_views_dictionnary(dataset_var, views)
             nb_views = len(views)
-            nb_class = dataset_var.get("Metadata").attrs["nbClass"]
+            nb_class = dataset_var.get_nb_class()
 
             metrics = [metric.split(":") for metric in args["Classification"]["metrics"]]
             if metrics == [["all"]]:

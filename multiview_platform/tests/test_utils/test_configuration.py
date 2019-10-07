@@ -3,7 +3,7 @@ import unittest
 import yaml
 import numpy as np
 
-from ..utils import rm_tmp
+from ..utils import rm_tmp, tmp_path
 
 from multiview_platform.mono_multi_view_classifiers.utils import configuration
 
@@ -12,7 +12,7 @@ class Test_get_the_args(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         rm_tmp()
-        cls.path_to_config_file = "multiview_platform/tests/tmp_tests/config_temp.yml"
+        cls.path_to_config_file = tmp_path+"config_temp.yml"
         os.mkdir("multiview_platform/tests/tmp_tests")
         data = {"Base":{"first_arg": 10, "second_arg":[12.5, 1e-06]}, "Classification":{"third_arg":True}}
         with open(cls.path_to_config_file, "w") as config_file:
@@ -20,7 +20,7 @@ class Test_get_the_args(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove("multiview_platform/tests/tmp_tests/config_temp.yml")
+        os.remove(tmp_path+"config_temp.yml")
         os.rmdir("multiview_platform/tests/tmp_tests")
 
     def test_file_loading(self):

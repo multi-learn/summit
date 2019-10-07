@@ -5,7 +5,7 @@ import h5py
 import numpy as np
 
 from ...mono_multi_view_classifiers.utils import get_multiview_db
-from ..utils import rm_tmp
+from ..utils import rm_tmp, tmp_path
 
 
 class Test_copyhdf5Dataset(unittest.TestCase):
@@ -17,7 +17,7 @@ class Test_copyhdf5Dataset(unittest.TestCase):
         if not os.path.exists("multiview_platform/tests/tmp_tests"):
             os.mkdir("multiview_platform/tests/tmp_tests")
         cls.dataset_file = h5py.File(
-            "multiview_platform/tests/tmp_tests/test_copy.hdf5", "w")
+            tmp_path+"test_copy.hdf5", "w")
         cls.dataset = cls.dataset_file.create_dataset("test",
                                                       data=cls.random_state.randint(
                                                           0, 100, (10, 20)))
@@ -43,7 +43,7 @@ class Test_copyhdf5Dataset(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove("multiview_platform/tests/tmp_tests/test_copy.hdf5")
+        os.remove(tmp_path+"test_copy.hdf5")
         os.rmdir("multiview_platform/tests/tmp_tests")
 
 
@@ -57,7 +57,7 @@ class Test_filterViews(unittest.TestCase):
         if not os.path.exists("multiview_platform/tests/tmp_tests"):
             os.mkdir("multiview_platform/tests/tmp_tests")
         cls.dataset_file = h5py.File(
-            "multiview_platform/tests/tmp_tests/test_copy.hdf5", "w")
+            tmp_path+"test_copy.hdf5", "w")
         cls.metadata_group = cls.dataset_file.create_group("Metadata")
         cls.metadata_group.attrs["nbView"] = 4
 
@@ -69,7 +69,7 @@ class Test_filterViews(unittest.TestCase):
 
     def test_simple_filter(cls):
         cls.temp_dataset_file = h5py.File(
-            "multiview_platform/tests/tmp_tests/test_copy_temp.hdf5", "w")
+            tmp_path+"test_copy_temp.hdf5", "w")
         cls.dataset_file.copy("Metadata", cls.temp_dataset_file)
         get_multiview_db.filter_views(cls.dataset_file, cls.temp_dataset_file,
                                      cls.views, np.arange(10))
@@ -82,7 +82,7 @@ class Test_filterViews(unittest.TestCase):
 
     def test_filter_view_and_examples(cls):
         cls.temp_dataset_file = h5py.File(
-            "multiview_platform/tests/tmp_tests/test_copy_temp.hdf5", "w")
+            tmp_path+"test_copy_temp.hdf5", "w")
         cls.dataset_file.copy("Metadata", cls.temp_dataset_file)
         usedIndices = cls.random_state.choice(10, 6, replace=False)
         get_multiview_db.filter_views(cls.dataset_file, cls.temp_dataset_file,
@@ -94,8 +94,8 @@ class Test_filterViews(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove("multiview_platform/tests/tmp_tests/test_copy.hdf5")
-        os.remove("multiview_platform/tests/tmp_tests/test_copy_temp.hdf5")
+        os.remove(tmp_path+"test_copy.hdf5")
+        os.remove(tmp_path+"test_copy_temp.hdf5")
         os.rmdir("multiview_platform/tests/tmp_tests")
 
 
@@ -343,8 +343,8 @@ class Test_getClassicDBhdf5(unittest.TestCase):
         if not os.path.exists("multiview_platform/tests/tmp_tests"):
             os.mkdir("multiview_platform/tests/tmp_tests")
         cls.dataset_file = h5py.File(
-            "multiview_platform/tests/tmp_tests/test_dataset.hdf5", "w")
-        cls.pathF = "multiview_platform/tests/tmp_tests/"
+            tmp_path+"test_dataset.hdf5", "w")
+        cls.pathF = tmp_path
         cls.nameDB = "test_dataset"
         cls.NB_CLASS = 2
         cls.askedLabelsNames = ["test_label_1", "test_label_3"]
@@ -450,8 +450,8 @@ class Test_getClassicDBhdf5(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         os.remove(
-            "multiview_platform/tests/tmp_tests/test_dataset_temp_view_label_select.hdf5")
-        os.remove("multiview_platform/tests/tmp_tests/test_dataset.hdf5")
+            tmp_path+"test_dataset_temp_view_label_select.hdf5")
+        os.remove(tmp_path+"test_dataset.hdf5")
         dirs = os.listdir("multiview_platform/tests/tmp_tests")
         for dir in dirs:
             print(dir)
@@ -465,7 +465,7 @@ class Test_getClassicDBcsv(unittest.TestCase):
         rm_tmp()
         if not os.path.exists("multiview_platform/tests/tmp_tests"):
             os.mkdir("multiview_platform/tests/tmp_tests")
-        cls.pathF = "multiview_platform/tests/tmp_tests/"
+        cls.pathF = tmp_path
         cls.NB_CLASS = 2
         cls.nameDB = "test_dataset"
         cls.askedLabelsNames = ["test_label_1", "test_label_3"]
@@ -571,15 +571,49 @@ class Test_getClassicDBcsv(unittest.TestCase):
     def tearDownClass(cls):
         for i in range(4):
             os.remove(
-                "multiview_platform/tests/tmp_tests/Views/test_view_" + str(
+                tmp_path+"Views/test_view_" + str(
                     i) + ".csv")
-        os.rmdir("multiview_platform/tests/tmp_tests/Views")
+        os.rmdir(tmp_path+"Views")
         os.remove(
-            "multiview_platform/tests/tmp_tests/test_dataset-labels-names.csv")
-        os.remove("multiview_platform/tests/tmp_tests/test_dataset-labels.csv")
-        os.remove("multiview_platform/tests/tmp_tests/test_dataset.hdf5")
+            tmp_path+"test_dataset-labels-names.csv")
+        os.remove(tmp_path+"test_dataset-labels.csv")
+        os.remove(tmp_path+"test_dataset.hdf5")
         os.remove(
-            "multiview_platform/tests/tmp_tests/test_dataset_temp_view_label_select.hdf5")
+            tmp_path+"test_dataset_temp_view_label_select.hdf5")
         for file in os.listdir("multiview_platform/tests/tmp_tests"): print(
             file)
         os.rmdir("multiview_platform/tests/tmp_tests")
+
+class Test_get_plausible_db_hdf5(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        rm_tmp()
+        cls.path = tmp_path
+        cls.nb_class=3
+        cls.rs = np.random.RandomState(42)
+        cls.nb_view=3
+        cls.nb_examples = 5
+        cls.nb_features = 4
+
+    @classmethod
+    def tearDownClass(cls):
+        rm_tmp()
+
+    def test_simple(self):
+        dataset, labels_dict, name = get_multiview_db.get_plausible_db_hdf5(
+            "", self.path, "", nb_class=self.nb_class, random_state=self.rs,
+            nb_view=3, nb_examples=self.nb_examples,
+            nb_features=self.nb_features)
+        self.assertEqual(dataset.init_example_indces(), range(5))
+        self.assertEqual(dataset.get_nb_class(), self.nb_class)
+
+    def test_two_class(self):
+        dataset, labels_dict, name = get_multiview_db.get_plausible_db_hdf5(
+            "", self.path, "", nb_class=2, random_state=self.rs,
+            nb_view=3, nb_examples=self.nb_examples,
+            nb_features=self.nb_features)
+        self.assertEqual(dataset.init_example_indces(), range(5))
+        self.assertEqual(dataset.get_nb_class(), 2)
+
+

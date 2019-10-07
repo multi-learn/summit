@@ -3,7 +3,7 @@ import unittest
 
 import numpy as np
 
-from ..utils import rm_tmp
+from ..utils import rm_tmp, tmp_path
 
 from ...mono_multi_view_classifiers.utils import execution
 
@@ -79,26 +79,26 @@ class Test_initRandomState(unittest.TestCase):
 
     def setUp(self):
         rm_tmp()
-        os.mkdir("multiview_platform/tests/tmp_tests/")
+        os.mkdir(tmp_path)
 
     def tearDown(self):
-        os.rmdir("multiview_platform/tests/tmp_tests/")
+        os.rmdir(tmp_path)
 
     def test_random_state_42(self):
         randomState_42 = np.random.RandomState(42)
         randomState = execution.init_random_state("42",
-                                                "multiview_platform/tests/tmp_tests/")
-        os.remove("multiview_platform/tests/tmp_tests/random_state.pickle")
+                                                tmp_path)
+        os.remove(tmp_path+"random_state.pickle")
         np.testing.assert_array_equal(randomState.beta(1, 100, 100),
                                       randomState_42.beta(1, 100, 100))
 
     def test_random_state_pickle(self):
         randomState_to_pickle = execution.init_random_state(None,
-                                                          "multiview_platform/tests/tmp_tests/")
+                                                          tmp_path)
         pickled_randomState = execution.init_random_state(
-            "multiview_platform/tests/tmp_tests/random_state.pickle",
-            "multiview_platform/tests/tmp_tests/")
-        os.remove("multiview_platform/tests/tmp_tests/random_state.pickle")
+            tmp_path+"random_state.pickle",
+            tmp_path)
+        os.remove(tmp_path+"random_state.pickle")
         np.testing.assert_array_equal(randomState_to_pickle.beta(1, 100, 100),
                                       pickled_randomState.beta(1, 100, 100))
 

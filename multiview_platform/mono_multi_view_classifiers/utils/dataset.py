@@ -2,18 +2,71 @@ import logging
 import os
 import select
 import sys
+import errno
 
 import h5py
 import numpy as np
 from scipy import sparse
 
-from . import get_multiview_db as DB
+# from . import get_multiview_db as DB
 
 
 class Dataset():
 
-    def __init__(self, dataset):
-        self.dataset = dataset
+    def __init__(self, views=None, labels=None, are_sparse=False,
+                 file_name="dataset.hdf5", view_names=None, path="",
+                 hdf5_file=None, labels_names=None):
+        if hdf5_file is not None:
+            self.dataset=hdf5_file
+        else:
+            if not os.path.exists(os.path.dirname(os.path.join(path, file_name))):
+                try:
+                    os.makedirs(os.path.dirname(os.path.join(path, file_name)))
+                except OSError as exc:
+                    if exc.errno != errno.EEXIST:
+                        raise
+            dataset_file = h5py.File(os.path.join(path, file_name), "w")
+            if view_names is None:
+                view_names = ["View"+str(index) for index in range(len(views))]
+            if isinstance(are_sparse, bool):
+                are_sparse = [are_sparse for _ in views]
+            for view_index, (view_name, view, is_sparse) in enumerate(zip(view_names, views, are_sparse)):
+                view_dataset = dataset_file.create_dataset("View" + str(view_index),
+                                                      view.shape,
+                                                      data=view)
+                view_dataset.attrs["name"] = view_name
+                view_dataset.attrs["sparse"] = is_sparse
+            labels_dataset = dataset_file.create_dataset("Labels",
+                                                         shape=labels.shape,
+                                                         data=labels)
+            if labels_names is None:
+                labels_names = [str(index) for index in np.unique(labels)]
+            labels_dataset.attrs["names"] = [label_name.encode()
+                                             if not isinstance(label_name, bytes)
+                                             else label_name
+                                             for label_name in labels_names]
+            meta_data_grp = dataset_file.create_group("Metadata")
+            meta_data_grp.attrs["nbView"] = len(views)
+            meta_data_grp.attrs["nbClass"] = len(np.unique(labels))
+            meta_data_grp.attrs["datasetLength"] = len(labels)
+            dataset_file.close()
+            dataset_file = h5py.File(os.path.join(path, file_name), "r")
+            self.dataset = dataset_file
+        self.nb_view = self.dataset.get("Metadata").attrs["nbView"]
+        self.view_dict = self.get_view_dict()
+
+    def get_view_dict(self):
+        view_dict = {}
+        for view_index in range(self.nb_view):
+            view_dict[self.dataset.get("View" + str(view_index)).attrs["name"]] = view_index
+        return view_dict
+
+    def get_label_names(self, decode=True):
+        if decode:
+            return [label_name.decode("utf-8")
+                    for label_name in self.dataset.get("Labels").attrs["names"]]
+        else:
+            return self.dataset.get("Labels").attrs["names"]
 
     def init_example_indces(self, example_indices=None):
         if example_indices is None:
@@ -44,10 +97,43 @@ class Dataset():
 
                 return sparse_mat
 
+    # def copy(self, examples_indices, views_indices, target_dataset):
+    #     new_dataset = Dataset(views=,
+    #                           labels=,
+    #                           are_sparse=,
+    #                           file_name=,
+    #                           view_names=,
+    #                           path=,
+    #                           labels_names=)
+    #     return self.dataset.copy(part_name, target_dataset)
+
     def get_nb_class(self, example_indices=None):
         example_indices = self.init_example_indces(example_indices)
         return len(np.unique(self.dataset.get("Labels").value[example_indices]))
 
+    def get_labels(self, example_indices=None):
+        example_indices = self.init_example_indces(example_indices)
+        return self.dataset.get("Labels").value([example_indices])
+
+    def copy_view(self, target_dataset=None, source_view_name=None,
+                  target_view_name=None, example_indices=None):
+        example_indices = self.init_example_indces(example_indices)
+        new_d_set = target_dataset.create_dataset(target_view_name,
+            data=self.get_v(self.view_dict[source_view_name],
+                            example_indices=example_indices))
+        for key, value in self.get_v(self.view_dict[source_view_name]).attrs.items():
+            new_d_set.attrs[key] = value
+
+
+
+def datasets_already_exist(pathF, name, nbCores):
+    """Used to check if it's necessary to copy datasets"""
+    allDatasetExist = True
+    for coreIndex in range(nbCores):
+        import os.path
+        allDatasetExist *= os.path.isfile(
+            pathF + name + str(coreIndex) + ".hdf5")
+    return allDatasetExist
 
 def get_v(dataset, view_index, used_indices=None):
     """Used to extract a view as a numpy array or a sparse mat from the HDF5 dataset"""
@@ -137,7 +223,7 @@ def init_multiple_datasets(path_f, name, nb_cores):
         Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.
     """
     if nb_cores > 1:
-        if DB.datasetsAlreadyExist(path_f, name, nb_cores):
+        if datasets_already_exist(path_f, name, nb_cores):
             logging.debug(
                 "Info:\t Enough copies of the dataset are already available")
             pass
@@ -152,9 +238,34 @@ def init_multiple_datasets(path_f, name, nb_cores):
             if not confirmation:
                 sys.exit(0)
             else:
-                dataset_files = DB.copyHDF5(path_f, name, nb_cores)
+                dataset_files = copy_hdf5(path_f, name, nb_cores)
                 logging.debug("Start:\t Creating datasets for multiprocessing")
                 return dataset_files
+
+
+def copy_hdf5(pathF, name, nbCores):
+    """Used to copy a HDF5 database in case of multicore computing"""
+    datasetFile = h5py.File(pathF + name + ".hdf5", "r")
+    for coreIndex in range(nbCores):
+        newDataSet = h5py.File(pathF + name + str(coreIndex) + ".hdf5", "w")
+        for dataset in datasetFile:
+            datasetFile.copy("/" + dataset, newDataSet["/"])
+        newDataSet.close()
+
+def delete_HDF5(benchmarkArgumentsDictionaries, nbCores, DATASET):
+    """Used to delete temporary copies at the end of the benchmark"""
+    if nbCores > 1:
+        logging.debug("Start:\t Deleting " + str(
+            nbCores) + " temporary datasets for multiprocessing")
+        args = benchmarkArgumentsDictionaries[0]["args"]
+        logging.debug("Start:\t Deleting datasets for multiprocessing")
+
+        for coreIndex in range(nbCores):
+            os.remove(args["Base"]["pathf"] + args["Base"]["name"] + str(coreIndex) + ".hdf5")
+    filename = DATASET.filename
+    DATASET.close()
+    if "_temp_" in filename:
+        os.remove(filename)
 
 
 def confirm(resp=True, timeout=15):

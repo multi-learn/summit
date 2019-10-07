@@ -5,7 +5,7 @@ import h5py
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
-from ..utils import rm_tmp
+from ..utils import rm_tmp, tmp_path
 
 from ...mono_multi_view_classifiers.utils import hyper_parameter_search
 from ...mono_multi_view_classifiers.multiview_classifiers import weighted_linear_early_fusion
@@ -19,7 +19,7 @@ class Test_randomized_search(unittest.TestCase):
         cls.view_weights = [0.5, 0.5]
         os.mkdir("multiview_platform/tests/tmp_tests")
         cls.dataset_file = h5py.File(
-            "multiview_platform/tests/tmp_tests/test_file.hdf5", "w")
+            tmp_path+"test_file.hdf5", "w")
         cls.labels = cls.dataset_file.create_dataset("Labels",
                                                      data=np.array(
                                                          [0, 1, 0, 0, 1, 0, 1, 0, 0, 1, ]))
@@ -53,6 +53,6 @@ class Test_randomized_search(unittest.TestCase):
 
     def test_simple(self):
         best_params, test_folds_preds = hyper_parameter_search.randomized_search(
-            self.dataset_file, self.labels.value, "multiview", self.random_state, "multiview_platform/tests/tmp_tests/",
+            self.dataset_file, self.labels.value, "multiview", self.random_state, tmp_path,
             weighted_linear_early_fusion, "WeightedLinearEarlyFusion", self.k_folds,
         1, ["accuracy_score", None], 2, {}, learning_indices=self.learning_indices)

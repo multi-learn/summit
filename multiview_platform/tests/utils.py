@@ -1,9 +1,12 @@
 import os
 
+
+tmp_path = "multiview_platform/tests/tmp_tests/"
+
 def rm_tmp():
     try:
-        for file_name in os.listdir("multiview_platform/tests/tmp_tests"):
-            os.remove(os.path.join("multiview_platform/tests/tmp_tests", file_name))
-        os.rmdir("multiview_platform/tests/tmp_tests")
+        for file_name in os.listdir(tmp_path):
+            os.remove(os.path.join(tmp_path, file_name))
+        os.rmdir(tmp_path)
     except:
         pass

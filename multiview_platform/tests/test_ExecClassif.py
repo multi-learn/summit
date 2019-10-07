@@ -4,7 +4,7 @@ import unittest
 import h5py
 import numpy as np
 
-from .utils import rm_tmp
+from .utils import rm_tmp, tmp_path
 
 from ..mono_multi_view_classifiers import exec_classif
 
@@ -130,7 +130,6 @@ class Test_InitArgumentDictionaries(unittest.TestCase):
         ]
         self.assertEqual(arguments["multiview"][0], expected_output[0])
 
-
     def test_init_argument_dictionaries_multiview_complex(self):
         self.multiview_classifier_arg_value = {"fake_value_2":"plif", "plaf":"plouf"}
         self.init_kwargs = {
@@ -235,7 +234,7 @@ class Test_execBenchmark(unittest.TestCase):
         rm_tmp()
         os.mkdir("multiview_platform/tests/tmp_tests")
         cls.Dataset = h5py.File(
-            "multiview_platform/tests/tmp_tests/test_file.hdf5", "w")
+            tmp_path+"test_file.hdf5", "w")
         cls.labels = cls.Dataset.create_dataset("Labels",
                                                 data=np.array([0, 1, 2]))
         cls.argument_dictionaries = [{"a": 4, "args": {}}]
@@ -296,7 +295,7 @@ class Test_execBenchmark(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.Dataset.close()
-        path = "multiview_platform/tests/tmp_tests/"
+        path = tmp_path
         for file_name in os.listdir(path):
             os.remove(os.path.join(path, file_name))
         os.rmdir(path)
@@ -348,7 +347,7 @@ class Test_execOneBenchmark(unittest.TestCase):
                                                       labels_dictionary={
                                                                    0: "a",
                                                                    1: "b"},
-                                                      directory="multiview_platform/tests/tmp_tests/",
+                                                      directory=tmp_path,
                                                       classification_indices=(
                                                                [1, 2, 3, 4],
                                                                [0, 5, 6, 7, 8]),
@@ -387,7 +386,7 @@ class Test_execOneBenchmark(unittest.TestCase):
 
     @classmethod
     def tearDown(cls):
-        path = "multiview_platform/tests/tmp_tests/"
+        path = tmp_path
         for file_name in os.listdir(path):
             dir_path = os.path.join(path, file_name)
             if os.path.isdir(dir_path):
@@ -414,7 +413,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
         flag, results = exec_classif.exec_one_benchmark_multicore(
             nb_cores=2,
             labels_dictionary={0: "a", 1: "b"},
-            directory="multiview_platform/tests/tmp_tests/",
+            directory=tmp_path,
             classification_indices=([1, 2, 3, 4], [0, 10, 20, 30, 40]),
             args=cls.args,
             k_folds=FakeKfold(),
@@ -447,7 +446,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
 
     @classmethod
     def tearDown(cls):
-        path = "multiview_platform/tests/tmp_tests/"
+        path = tmp_path
         for file_name in os.listdir(path):
             dir_path = os.path.join(path, file_name)
             if os.path.isdir(dir_path):

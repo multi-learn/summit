@@ -4,7 +4,7 @@ import numpy as np
 import h5py
 import os
 
-from ..utils import rm_tmp
+from ..utils import rm_tmp, tmp_path
 
 from multiview_platform.mono_multi_view_classifiers.multiview_classifiers import \
     weighted_linear_early_fusion
@@ -18,7 +18,7 @@ class Test_WeightedLinearEarlyFusion(unittest.TestCase):
         cls.view_weights = [0.5, 0.5]
         os.mkdir("multiview_platform/tests/tmp_tests")
         cls.dataset_file = h5py.File(
-            "multiview_platform/tests/tmp_tests/test_file.hdf5", "w")
+            tmp_path+"test_file.hdf5", "w")
         cls.labels = cls.dataset_file.create_dataset("Labels",
                                                      data=np.array([0, 1, 0, 0, 1]))
         cls.view0_data = cls.random_state.randint(1,10,size=(5, 4))

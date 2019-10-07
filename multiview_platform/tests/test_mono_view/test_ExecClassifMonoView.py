@@ -5,7 +5,7 @@ import h5py
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
-from ..utils import rm_tmp
+from ..utils import rm_tmp, tmp_path
 
 from ...mono_multi_view_classifiers.monoview import exec_classif_mono_view
 from ...mono_multi_view_classifiers.monoview_classifiers import decision_tree
@@ -18,7 +18,7 @@ class Test_initConstants(unittest.TestCase):
         rm_tmp()
         os.mkdir("multiview_platform/tests/tmp_tests")
         cls.datasetFile = h5py.File(
-            "multiview_platform/tests/tmp_tests/test.hdf5", "w")
+            tmp_path+"test.hdf5", "w")
         cls.random_state = np.random.RandomState(42)
         cls.args = {"classifier_name": "test_clf"}
         cls.X_value = cls.random_state.randint(0, 500, (10, 20))
@@ -30,7 +30,7 @@ class Test_initConstants(unittest.TestCase):
                                      np.array([1, 3, 5, 7, 9])]
         cls.labels_names = ["test_true", "test_false"]
         cls.name = "test"
-        cls.directory = "multiview_platform/tests/tmp_tests/test_dir/"
+        cls.directory = tmp_path+"test_dir/"
 
     def test_simple(cls):
         kwargs, \
@@ -56,11 +56,11 @@ class Test_initConstants(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove("multiview_platform/tests/tmp_tests/test.hdf5")
+        os.remove(tmp_path+"test.hdf5")
         os.rmdir(
-            "multiview_platform/tests/tmp_tests/test_dir/test_clf/test_dataset")
-        os.rmdir("multiview_platform/tests/tmp_tests/test_dir/test_clf")
-        os.rmdir("multiview_platform/tests/tmp_tests/test_dir")
+            tmp_path+"test_dir/test_clf/test_dataset")
+        os.rmdir(tmp_path+"test_dir/test_clf")
+        os.rmdir(tmp_path+"test_dir")
         os.rmdir("multiview_platform/tests/tmp_tests")
 
 
@@ -108,7 +108,7 @@ class Test_getHPs(unittest.TestCase):
         cls.random_state = np.random.RandomState(42)
         cls.X = cls.random_state.randint(0,10,size=(10,5))
         cls.y = cls.random_state.randint(0,2,size=10)
-        cls.output_file_name = "multiview_platform/tests/tmp_tests/"
+        cls.output_file_name = tmp_path
         cls.cv = StratifiedKFold(n_splits=2, random_state=cls.random_state)
         cls.nb_cores = 1
         cls.metrics = [["accuracy_score", None]]

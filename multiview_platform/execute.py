@@ -2,7 +2,7 @@
 
 
 def execute():
-    import multiview_platform.versions as vs
+    from multiview_platform import versions as vs
     vs.test_versions()
     import sys
 

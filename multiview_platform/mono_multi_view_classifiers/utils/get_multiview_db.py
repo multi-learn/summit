@@ -7,242 +7,118 @@ import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils.validation import check_array
 
+from ..utils.dataset import Dataset, copy_hdf5
+
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def copyHDF5(pathF, name, nbCores):
-    """Used to copy a HDF5 database in case of multicore computing"""
-    datasetFile = h5py.File(pathF + name + ".hdf5", "r")
-    for coreIndex in range(nbCores):
-        newDataSet = h5py.File(pathF + name + str(coreIndex) + ".hdf5", "w")
-        for dataset in datasetFile:
-            datasetFile.copy("/" + dataset, newDataSet["/"])
-        newDataSet.close()
 
 
-class TanhNormalizer(BaseEstimator, TransformerMixin):
-    """Normalize data using a tanh function. This is the normalizer used in the so-called "Never-ending paper".
-    It remains here for reproduceability purposes, but you should use Scikit-Learn normalizers instead!
 
-    """
-
-    def __init__(self):
-        self.mean = None
-        self.std = None
-
-    def fit(self, X, y=None, **fit_params):
-        X = check_array(X)
-        self.mean = X.mean(0)
-        self.mean.shape = (1, len(self.mean))
-        self.std = X.std(0)
-        self.std[self.std == 0] = 1
-        self.std.shape = (1, len(self.std))
-        return self
-
-    def transform(self, X):
-        return np.tanh((X - self.mean) / self.std)
-
-    def fit_transform(self, X, y=None, **fit_params):
-        self.fit(X, **fit_params)
-        return self.transform(X)
-
-
-def datasetsAlreadyExist(pathF, name, nbCores):
-    """Used to check if it's necessary to copy datasets"""
-    allDatasetExist = True
-    for coreIndex in range(nbCores):
-        import os.path
-        allDatasetExist *= os.path.isfile(
-            pathF + name + str(coreIndex) + ".hdf5")
-    return allDatasetExist
-
-
-def deleteHDF5(benchmarkArgumentsDictionaries, nbCores, DATASET):
-    """Used to delete temporary copies at the end of the benchmark"""
-    if nbCores > 1:
-        logging.debug("Start:\t Deleting " + str(
-            nbCores) + " temporary datasets for multiprocessing")
-        args = benchmarkArgumentsDictionaries[0]["args"]
-        logging.debug("Start:\t Deleting datasets for multiprocessing")
-
-        for coreIndex in range(nbCores):
-            os.remove(args["Base"]["pathf"] + args["Base"]["name"] + str(coreIndex) + ".hdf5")
-    filename = DATASET.filename
-    DATASET.close()
-    if "_temp_" in filename:
-        os.remove(filename)
-
-
-def makeMeNoisy(viewData, random_state, percentage=5):
+def make_me_noisy(view_data, random_state, percentage=5):
     """used to introduce some noise in the generated data"""
-    viewData = viewData.astype(bool)
-    nbNoisyCoord = int(
-        percentage / 100.0 * viewData.shape[0] * viewData.shape[1])
-    rows = range(viewData.shape[0])
-    cols = range(viewData.shape[1])
-    for _ in range(nbNoisyCoord):
-        rowIdx = random_state.choice(rows)
-        colIdx = random_state.choice(cols)
-        viewData[rowIdx, colIdx] = 0
-    noisyViewData = viewData.astype(np.uint8)
-    return noisyViewData
+    view_data = view_data.astype(bool)
+    nb_noisy_coord = int(
+        percentage / 100.0 * view_data.shape[0] * view_data.shape[1])
+    rows = range(view_data.shape[0])
+    cols = range(view_data.shape[1])
+    for _ in range(nb_noisy_coord):
+        row_idx = random_state.choice(rows)
+        col_idx = random_state.choice(cols)
+        view_data[row_idx, col_idx] = 0
+    noisy_view_data = view_data.astype(np.uint8)
+    return noisy_view_data
 
 
-def get_plausible_db_hdf5(features, pathF, name, NB_CLASS=3, LABELS_NAME="",
-                       random_state=None, full=True, add_noise=False,
-                       noise_std=0.15, nbView=3,
-                   nbClass=2, datasetLength=100, randomStateInt=42, nbFeatures = 10):
+def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
+                          label_names=["No".encode(), "Yes".encode(),
+                                     "Maybe".encode()],
+                          random_state=None, full=True, add_noise=False,
+                          noise_std=0.15, nb_view=3, nb_examples=100,
+                          nb_features=10):
     """Used to generate a plausible dataset to test the algorithms"""
 
-    if not os.path.exists(os.path.dirname(pathF + "Plausible.hdf5")):
+    if not os.path.exists(os.path.dirname(path + "Plausible.hdf5")):
         try:
-            os.makedirs(os.path.dirname(pathF + "Plausible.hdf5"))
+            os.makedirs(os.path.dirname(path + "Plausible.hdf5"))
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-    datasetFile = h5py.File(pathF + "/Plausible.hdf5", "w")
-    if NB_CLASS == 2:
-        CLASS_LABELS = np.array(
-            [0 for _ in range(int(datasetLength / 2))] + [1 for _ in range(
-                datasetLength - int(datasetLength / 2))])
-        for viewIndex in range(nbView):
-            viewData = np.array(
-                [np.zeros(nbFeatures) for _ in range(int(datasetLength / 2))] +
-                [np.ones(nbFeatures) for _ in
-                 range(datasetLength - int(datasetLength / 2))])
-            fakeOneIndices = random_state.randint(0, int(datasetLength / 2),
-                                                 int(datasetLength / 12))
-            fakeZeroIndices = random_state.randint(int(datasetLength / 2),
-                                                  datasetLength,
-                                                  int(datasetLength / 12))
+    views = []
+    view_names = []
+    are_sparse = []
+    if nb_class == 2:
+        labels = np.array(
+            [0 for _ in range(int(nb_examples / 2))] + [1 for _ in range(
+                nb_examples - int(nb_examples / 2))])
+        label_names = ["No".encode(), "Yes".encode()]
+        for view_index in range(nb_view):
+            view_data = np.array(
+                [np.zeros(nb_features) for _ in range(int(nb_examples / 2))] +
+                [np.ones(nb_features) for _ in
+                 range(nb_examples - int(nb_examples / 2))])
+            fake_one_indices = random_state.randint(0, int(nb_examples / 2),
+                                                    int(nb_examples / 12))
+            fake_zero_indices = random_state.randint(int(nb_examples / 2),
+                                                     nb_examples,
+                                                     int(nb_examples / 12))
 
-            viewData[fakeOneIndices] = np.ones(
-                (len(fakeOneIndices), nbFeatures))
-            viewData[fakeZeroIndices] = np.zeros(
-                (len(fakeZeroIndices), nbFeatures))
-            viewData = makeMeNoisy(viewData, random_state)
-            viewDset = datasetFile.create_dataset("View" + str(viewIndex),
-                                                  viewData.shape,
-                                                  data=viewData.astype(
-                                                      np.uint8))
-            viewDset.attrs["name"] = "ViewNumber" + str(viewIndex)
-            viewDset.attrs["sparse"] = False
-        labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
-        labelsDset[...] = CLASS_LABELS
-        labelsDset.attrs["name"] = "Labels"
-        labelsDset.attrs["names"] = ["No".encode(), "Yes".encode()]
-        metaDataGrp = datasetFile.create_group("Metadata")
-        metaDataGrp.attrs["nbView"] = nbView
-        metaDataGrp.attrs["nbClass"] = 2
-        metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
-        datasetFile.close()
-        datasetFile = h5py.File(pathF + "Plausible.hdf5", "r")
+            view_data[fake_one_indices] = np.ones(
+                (len(fake_one_indices), nb_features))
+            view_data[fake_zero_indices] = np.zeros(
+                (len(fake_zero_indices), nb_features))
+            view_data = make_me_noisy(view_data, random_state)
+            views.append(view_data)
+            view_names.append("ViewNumber" + str(view_index))
+            are_sparse.append(False)
+
+        dataset = Dataset(views=views, labels=labels,
+                              labels_names=label_names, view_names=view_names,
+                              are_sparse=are_sparse, file_name="Plausible.hdf5",
+                              path=path)
         labels_dictionary = {0: "No", 1: "Yes"}
-        return datasetFile, labels_dictionary, "Plausible"
-    elif NB_CLASS >= 3:
-        firstBound = int(datasetLength / 3)
-        rest = datasetLength - 2 * int(datasetLength / 3)
-        scndBound = 2 * int(datasetLength / 3)
-        thrdBound = datasetLength
-        CLASS_LABELS = np.array(
-            [0 for _ in range(firstBound)] + [1 for _ in range(firstBound)] + [2
-                                                                               for
-                                                                               _
-                                                                               in
-                                                                               range(
-                                                                                   rest)])
-        for viewIndex in range(nbView):
-            viewData = np.array(
-                [np.zeros(nbFeatures) for _ in range(firstBound)] +
-                [np.ones(nbFeatures) for _ in range(firstBound)] +
-                [np.ones(nbFeatures) + 1 for _ in range(rest)])
-            fakeOneIndices = random_state.randint(0, firstBound,
-                                                 int(datasetLength / 12))
+        return dataset, labels_dictionary, "Plausible"
+    elif nb_class >= 3:
+        firstBound = int(nb_examples / 3)
+        rest = nb_examples - 2 * int(nb_examples / 3)
+        scndBound = 2 * int(nb_examples / 3)
+        thrdBound = nb_examples
+        labels = np.array(
+                            [0 for _ in range(firstBound)] +
+                            [1 for _ in range(firstBound)] +
+                            [2 for _ in range(rest)]
+                        )
+        for view_index in range(nb_view):
+            view_data = np.array(
+                [np.zeros(nb_features) for _ in range(firstBound)] +
+                [np.ones(nb_features) for _ in range(firstBound)] +
+                [np.ones(nb_features) + 1 for _ in range(rest)])
+            fake_one_indices = random_state.randint(0, firstBound,
+                                                    int(nb_examples / 12))
             fakeTwoIndices = random_state.randint(firstBound, scndBound,
-                                                 int(datasetLength / 12))
-            fakeZeroIndices = random_state.randint(scndBound, thrdBound,
-                                                  int(datasetLength / 12))
+                                                  int(nb_examples / 12))
+            fake_zero_indices = random_state.randint(scndBound, thrdBound,
+                                                     int(nb_examples / 12))
 
-            viewData[fakeOneIndices] = np.ones(
-                (len(fakeOneIndices), nbFeatures))
-            viewData[fakeZeroIndices] = np.zeros(
-                (len(fakeZeroIndices), nbFeatures))
-            viewData[fakeTwoIndices] = np.ones(
-                (len(fakeTwoIndices), nbFeatures)) + 1
-            viewData = makeMeNoisy(viewData, random_state)
-            viewDset = datasetFile.create_dataset("View" + str(viewIndex),
-                                                  viewData.shape,
-                                                  data=viewData.astype(
-                                                      np.uint8))
-            viewDset.attrs["name"] = "ViewNumber" + str(viewIndex)
-            viewDset.attrs["sparse"] = False
-        labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
-        labelsDset[...] = CLASS_LABELS
-        labelsDset.attrs["name"] = "Labels"
-        labelsDset.attrs["names"] = ["No".encode(), "Yes".encode(),
-                                     "Maybe".encode()]
-        metaDataGrp = datasetFile.create_group("Metadata")
-        metaDataGrp.attrs["nbView"] = nbView
-        metaDataGrp.attrs["nbClass"] = 3
-        metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
-        datasetFile.close()
-        datasetFile = h5py.File(pathF + "Plausible.hdf5", "r")
+            view_data[fake_one_indices] = np.ones(
+                (len(fake_one_indices), nb_features))
+            view_data[fake_zero_indices] = np.zeros(
+                (len(fake_zero_indices), nb_features))
+            view_data[fakeTwoIndices] = np.ones(
+                (len(fakeTwoIndices), nb_features)) + 1
+            view_data = make_me_noisy(view_data, random_state)
+            views.append(view_data)
+            view_names.append("ViewNumber" + str(view_index))
+            are_sparse.append(False)
+        dataset = Dataset(views=views, labels=labels,
+                              labels_names=label_names, view_names=view_names,
+                              are_sparse=are_sparse,
+                              file_name="Plausible.hdf5",
+                              path=path)
         labels_dictionary = {0: "No", 1: "Yes", 2: "Maybe"}
-        return datasetFile, labels_dictionary, "Plausible"
-
-
-# def getFakeDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, random_state):
-#     """Was used to generateafake dataset to run tests"""
-#     NB_VIEW = 4
-#     DATASET_LENGTH = 30
-#     NB_CLASS = 2
-#     VIEW_DIMENSIONS = random_state.random_integers(5, 20, NB_VIEW)
-#
-#     DATA = dict((indx,
-#                  np.array([
-#                               random_state.normal(0.0, 2, viewDimension)
-#                               for i in np.arange(DATASET_LENGTH)]))
-#                 for indx, viewDimension in enumerate(VIEW_DIMENSIONS))
-#
-#     CLASS_LABELS = random_state.random_integers(0, NB_CLASS - 1, DATASET_LENGTH)
-#     datasetFile = h5py.File(pathF + "Fake.hdf5", "w")
-#     for index, viewData in enumerate(DATA.values()):
-#         if index == 0:
-#             viewData = random_state.randint(0, 1, (DATASET_LENGTH, 300)).astype(
-#                 np.uint8)
-#             # np.zeros(viewData.shape, dtype=bool)+np.ones((viewData.shape[0], viewData.shape[1]/2), dtype=bool)
-#             viewDset = datasetFile.create_dataset("View" + str(index), viewData.shape)
-#             viewDset[...] = viewData
-#             viewDset.attrs["name"] = "View" + str(index)
-#             viewDset.attrs["sparse"] = False
-#         elif index == 1:
-#             viewData = sparse.csr_matrix(viewData)
-#             viewGrp = datasetFile.create_group("View" + str(index))
-#             dataDset = viewGrp.create_dataset("data", viewData.data.shape, data=viewData.data)
-#             indicesDset = viewGrp.create_dataset("indices", viewData.indices.shape, data=viewData.indices)
-#             indptrDset = viewGrp.create_dataset("indptr", viewData.indptr.shape, data=viewData.indptr)
-#             viewGrp.attrs["name"] = "View" + str(index)
-#             viewGrp.attrs["sparse"] = True
-#             viewGrp.attrs["shape"] = viewData.shape
-#         else:
-#             viewDset = datasetFile.create_dataset("View" + str(index), viewData.shape)
-#             viewDset[...] = viewData
-#             viewDset.attrs["name"] = "View" + str(index)
-#             viewDset.attrs["sparse"] = False
-#     labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
-#     labelsDset[...] = CLASS_LABELS
-#     labelsDset.attrs["name"] = "Labels"
-#
-#     metaDataGrp = datasetFile.create_group("Metadata")
-#     metaDataGrp.attrs["nbView"] = NB_VIEW
-#     metaDataGrp.attrs["nbClass"] = NB_CLASS
-#     metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
-#     labels_dictionary = {0: "No", 1: "Yes"}
-#     datasetFile.close()
-#     datasetFile = h5py.File(pathF + "Fake.hdf5", "r")
-#     return datasetFile, labels_dictionary
+        return dataset, labels_dictionary, "Plausible"
 
 
 class DatasetError(Exception):
@@ -259,7 +135,8 @@ def get_classes(labels):
         raise DatasetError("Dataset must have at least two different labels")
 
 
-def all_asked_labels_are_available(asked_labels_names_set, available_labels_names):
+def all_asked_labels_are_available(asked_labels_names_set,
+                                   available_labels_names):
     for askedLabelName in asked_labels_names_set:
         if askedLabelName in available_labels_names:
             pass
@@ -272,9 +149,11 @@ def fill_label_names(nb_class, asked_labels_names, random_state,
                    available_labels_names):
     if len(asked_labels_names) < nb_class:
         nb_labels_to_add = nb_class - len(asked_labels_names)
-        labels_names_to_choose = [available_label_name for available_label_name in
-                               available_labels_names
-                               if available_label_name not in asked_labels_names]
+        labels_names_to_choose = [available_label_name
+                                  for available_label_name
+                                  in available_labels_names
+                                    if available_label_name
+                                    not in asked_labels_names]
         added_labels_names = random_state.choice(labels_names_to_choose,
                                               nb_labels_to_add, replace=False)
         asked_labels_names = list(asked_labels_names) + list(added_labels_names)
@@ -366,7 +245,8 @@ def filter_views(dataset_file, temp_dataset, views, used_indices):
 
 def copyhdf5_dataset(source_data_file, destination_data_file, source_dataset_name,
                      destination_dataset_name, used_indices):
-    """Used to copy a view in a new dataset file using only the examples of usedIndices, and copying the args"""
+    """Used to copy a view in a new dataset file using only the examples of
+    usedIndices, and copying the args"""
     new_d_set = destination_data_file.create_dataset(destination_dataset_name,
                                                  data=source_data_file.get(
                                                       source_dataset_name).value[
@@ -385,10 +265,11 @@ def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
     """Used to load a hdf5 database"""
     if full:
         dataset_file = h5py.File(path_f + name_DB + ".hdf5", "r")
+        dataset = Dataset(hdf5_file=dataset_file)
         dataset_name = name_DB
-        labels_dictionary = dict(
-            (label_index, label_name.decode("utf-8")) for label_index, label_name in
-            enumerate(dataset_file.get("Labels").attrs["names"]))
+        labels_dictionary = dict((label_index, label_name)
+                                 for label_index, label_name
+                                 in dataset.get_label_names())
     else:
         asked_labels_names = [asked_label_name.encode("utf8") for asked_label_name in
                             asked_labels_names]
@@ -429,7 +310,7 @@ def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
                                                         noise_std)
     else:
         pass
-    return dataset_file, labels_dictionary, dataset_name
+    return dataset, labels_dictionary, dataset_name
 
 
 def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
@@ -1400,3 +1281,55 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 # #         if i != value:
 # #             areAllSame = False
 # #     return areAllSame
+
+
+# def getFakeDBhdf5(features, pathF, name, NB_CLASS, LABELS_NAME, random_state):
+#     """Was used to generateafake dataset to run tests"""
+#     NB_VIEW = 4
+#     DATASET_LENGTH = 30
+#     NB_CLASS = 2
+#     VIEW_DIMENSIONS = random_state.random_integers(5, 20, NB_VIEW)
+#
+#     DATA = dict((indx,
+#                  np.array([
+#                               random_state.normal(0.0, 2, viewDimension)
+#                               for i in np.arange(DATASET_LENGTH)]))
+#                 for indx, viewDimension in enumerate(VIEW_DIMENSIONS))
+#
+#     CLASS_LABELS = random_state.random_integers(0, NB_CLASS - 1, DATASET_LENGTH)
+#     datasetFile = h5py.File(pathF + "Fake.hdf5", "w")
+#     for index, viewData in enumerate(DATA.values()):
+#         if index == 0:
+#             viewData = random_state.randint(0, 1, (DATASET_LENGTH, 300)).astype(
+#                 np.uint8)
+#             # np.zeros(viewData.shape, dtype=bool)+np.ones((viewData.shape[0], viewData.shape[1]/2), dtype=bool)
+#             viewDset = datasetFile.create_dataset("View" + str(index), viewData.shape)
+#             viewDset[...] = viewData
+#             viewDset.attrs["name"] = "View" + str(index)
+#             viewDset.attrs["sparse"] = False
+#         elif index == 1:
+#             viewData = sparse.csr_matrix(viewData)
+#             viewGrp = datasetFile.create_group("View" + str(index))
+#             dataDset = viewGrp.create_dataset("data", viewData.data.shape, data=viewData.data)
+#             indicesDset = viewGrp.create_dataset("indices", viewData.indices.shape, data=viewData.indices)
+#             indptrDset = viewGrp.create_dataset("indptr", viewData.indptr.shape, data=viewData.indptr)
+#             viewGrp.attrs["name"] = "View" + str(index)
+#             viewGrp.attrs["sparse"] = True
+#             viewGrp.attrs["shape"] = viewData.shape
+#         else:
+#             viewDset = datasetFile.create_dataset("View" + str(index), viewData.shape)
+#             viewDset[...] = viewData
+#             viewDset.attrs["name"] = "View" + str(index)
+#             viewDset.attrs["sparse"] = False
+#     labelsDset = datasetFile.create_dataset("Labels", CLASS_LABELS.shape)
+#     labelsDset[...] = CLASS_LABELS
+#     labelsDset.attrs["name"] = "Labels"
+#
+#     metaDataGrp = datasetFile.create_group("Metadata")
+#     metaDataGrp.attrs["nbView"] = NB_VIEW
+#     metaDataGrp.attrs["nbClass"] = NB_CLASS
+#     metaDataGrp.attrs["datasetLength"] = len(CLASS_LABELS)
+#     labels_dictionary = {0: "No", 1: "Yes"}
+#     datasetFile.close()
+#     datasetFile = h5py.File(pathF + "Fake.hdf5", "r")
+#     return datasetFile, labels_dictionary
