@@ -47,11 +47,13 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseLateFusionClassifier):
                  classifier_configs=None, nb_cores=1, nb_view=None, weights=None):
         super(LateFusionClassifier, self).__init__(random_state)
         self.verif_clf_views(classifier_names, nb_view)
+        print(classifier_names)
         self.nb_view = len(classifier_names)
         self.classifiers_names = classifier_names
         self.classifier_configs = classifier_configs
         self.monoview_estimators = [self.init_monoview_estimator(classifier_name, classifier_index)
-                                    for classifier_index, classifier_name in self.classifiers_names]
+                                    for classifier_index, classifier_name
+                                    in enumerate(self.classifiers_names)]
         self.nb_cores = nb_cores
         self.accuracies = np.zeros(len(classifier_names))
         self.needProbas = False

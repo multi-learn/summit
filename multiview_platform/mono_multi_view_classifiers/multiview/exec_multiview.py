@@ -33,12 +33,12 @@ def init_constants(kwargs, classification_indices, metrics, name, nb_cores, k_fo
     logging.info("Info\t: Classification - Database : " + str(
         name) + " ; Views : " + ", ".join(views) +
                  " ; Algorithm : " + classifier_name + " ; Cores : " + str(
-        nbCores) + ", Train ratio : " + str(learning_rate) +
+        nb_cores) + ", Train ratio : " + str(learning_rate) +
                  ", CV on " + str(k_folds.n_splits) + " folds")
 
     for view_index, view_name in zip(views_indices, views):
         logging.info("Info:\t Shape of " + str(view_name) + " :" + str(
-            get_shape(dataset_var, view_index)))
+            dataset_var.get_shape()))
     return classifier_name, t_start, views_indices, classifier_config, views, learning_rate
 
 
@@ -168,7 +168,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
     string_analysis, images_analysis, metrics_scores = analyze_results.execute(
         classifier, train_labels,
         test_labels, dataset_var,
-        classifier_config, classificationIndices,
+        classifier_config, classification_indices,
         labels_dictionary, views, nb_cores, times,
         name, k_folds,
         hyper_param_search, n_iter, metrics,

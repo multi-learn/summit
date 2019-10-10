@@ -79,32 +79,32 @@ def init_benchmark(cl_type, monoview_algos, multiview_algos, args):
     return benchmark
 
 
-def gen_views_dictionnary(dataset_var, views):
-    r"""Used to generate a dictionary mapping a view name (key) to it's index in the dataset (value).
-
-    Parameters
-    ----------
-    dataset_var : `h5py` dataset file
-        The full dataset on which the benchmark will be done
-    views : List of strings
-        Names of the selected views on which the banchmark will be done
-
-    Returns
-    -------
-    viewDictionary : Dictionary
-        Dictionary mapping the view names totheir indexin the full dataset.
-        """
-    datasets_names = dataset_var.keys()
-    views_dictionary = {}
-    for dataset_name in datasets_names:
-        if dataset_name[:4] == "View":
-            view_name = dataset_var.get(dataset_name).attrs["name"]
-            if type(view_name) == bytes:
-                view_name = view_name.decode("utf-8")
-            if view_name in views:
-                views_dictionary[view_name] = int(dataset_name[4:])
-
-    return views_dictionary
+# def gen_views_dictionnary(dataset_var, views):
+#     r"""Used to generate a dictionary mapping a view name (key) to it's index in the dataset (value).
+#
+#     Parameters
+#     ----------
+#     dataset_var : `h5py` dataset file
+#         The full dataset on which the benchmark will be done
+#     views : List of strings
+#         Names of the selected views on which the banchmark will be done
+#
+#     Returns
+#     -------
+#     viewDictionary : Dictionary
+#         Dictionary mapping the view names totheir indexin the full dataset.
+#         """
+#     datasets_names = dataset_var.get_view_dict().keys()
+#     views_dictionary = {}
+#     for dataset_name in datasets_names:
+#         if dataset_name[:4] == "View":
+#             view_name = dataset_var.get(dataset_name).attrs["name"]
+#             if type(view_name) == bytes:
+#                 view_name = view_name.decode("utf-8")
+#             if view_name in views:
+#                 views_dictionary[view_name] = int(dataset_name[4:])
+#
+#     return views_dictionary
 
 
 def init_argument_dictionaries(benchmark, views_dictionary,
@@ -312,7 +312,7 @@ def gen_multiple_args_dictionnaries(nb_class, kwargs_init, classifier,
     return args_dictionnaries
 
 
-def init_kwargs(args, classifiers_names):
+def init_kwargs(args, classifiers_names, framework="monoview"):
     r"""Used to init kwargs thanks to a function in each monoview classifier package.
 
     Parameters
@@ -330,42 +330,44 @@ def init_kwargs(args, classifiers_names):
         For example, for Adaboost, the KWARGS will be `{"n_estimators":<value>, "base_estimator":<value>}`"""
 
     logging.debug("Start:\t Initializing monoview classifiers arguments")
-    monoview_kwargs = {}
+    kwargs = {}
     for classifiers_name in classifiers_names:
         try:
-            getattr(monoview_classifiers, classifiers_name)
+            if framework=="monoview":
+                getattr(monoview_classifiers, classifiers_name)
+            else:
+                getattr(multiview_classifiers, classifiers_name)
         except AttributeError:
             raise AttributeError(
                 classifiers_name + " is not implemented in monoview_classifiers, "
                                   "please specify the name of the file in monoview_classifiers")
-        monoview_kwargs[
-            classifiers_name] = args[classifiers_name]
+        kwargs[classifiers_name] = args[classifiers_name]
     logging.debug("Done:\t Initializing monoview classifiers arguments")
 
-    return monoview_kwargs
+    return kwargs
 
 
 def init_kwargs_func(args, benchmark):
     monoview_kwargs = init_kwargs(args, benchmark["monoview"])
-    multiview_kwargs = init_kwargs(args, benchmark["multiview"])
+    multiview_kwargs = init_kwargs(args, benchmark["multiview"], framework="multiview")
     kwargs = {"monoview":monoview_kwargs, "multiview":multiview_kwargs}
     return kwargs
 
 
-def init_multiview_kwargs(args, classifiers_names):
-    logging.debug("Start:\t Initializing multiview classifiers arguments")
-    multiview_kwargs = {}
-    for classifiers_name in classifiers_names:
-        try:
-            getattr(multiview_classifiers, classifiers_name)
-        except AttributeError:
-            raise AttributeError(
-                classifiers_name + " is not implemented in mutliview_classifiers, "
-                                  "please specify the name of the coressponding .py "
-                                   "file in mutliview_classifiers")
-        multiview_kwargs[classifiers_name] = args[classifiers_name]
-    logging.debug("Done:\t Initializing multiview classifiers arguments")
-    return multiview_kwargs
+# def init_multiview_kwargs(args, classifiers_names):
+#     logging.debug("Start:\t Initializing multiview classifiers arguments")
+#     multiview_kwargs = {}
+#     for classifiers_name in classifiers_names:
+#         try:
+#             getattr(multiview_classifiers, classifiers_name)
+#         except AttributeError:
+#             raise AttributeError(
+#                 classifiers_name + " is not implemented in mutliview_classifiers, "
+#                                   "please specify the name of the coressponding .py "
+#                                    "file in mutliview_classifiers")
+#         multiview_kwargs[classifiers_name] = args[classifiers_name]
+#     logging.debug("Done:\t Initializing multiview classifiers arguments")
+#     return multiview_kwargs
 
 
 def init_multiview_arguments(args, benchmark, views, views_indices,
@@ -572,7 +574,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                                                  labels_dictionary, k_folds)
     logging.debug("Start:\t monoview benchmark")
     for arguments in argument_dictionaries["monoview"]:
-        X = dataset_var.get("View" + str(arguments["view_index"]))
+        X = dataset_var.get_v(arguments["view_index"])
         Y = labels
         results_monoview += [
             exec_monoview(directory, X, Y, args["Base"]["name"], labels_names,
@@ -681,7 +683,7 @@ def exec_benchmark(nb_cores, stats_iter, nb_multiclass,
     # Do everything with flagging
     nb_examples = len(classification_indices[0][0]) + len(
         classification_indices[0][1])
-    multiclass_ground_truth = dataset_var.get("Labels").value
+    multiclass_ground_truth = dataset_var.get_labels()
     logging.debug("Start:\t Analyzing predictions")
     results_mean_stds = get_results(results, stats_iter, nb_multiclass,
                                     benchmark_arguments_dictionaries,
@@ -755,7 +757,7 @@ def exec_classif(arguments):
 
 
             views, views_indices, all_views = execution.init_views(dataset_var, args["Base"]["views"])
-            views_dictionary = gen_views_dictionnary(dataset_var, views)
+            views_dictionary = dataset_var.get_view_dict()
             nb_views = len(views)
             nb_class = dataset_var.get_nb_class()
 

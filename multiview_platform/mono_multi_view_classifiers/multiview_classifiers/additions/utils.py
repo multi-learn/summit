@@ -69,9 +69,9 @@ class BaseMultiviewClassifier(BaseEstimator, ClassifierMixin):
 def get_train_views_indices(dataset, train_indices, view_indices,):
     """This function  is used to get all the examples indices and view indices if needed"""
     if view_indices is None:
-        view_indices = np.arange(dataset["Metadata"].attrs["nbView"])
+        view_indices = np.arange(dataset.nb_view)
     if train_indices is None:
-        train_indices = range(dataset["Metadata"].attrs["datasetLength"])
+        train_indices = range(dataset.get_nb_examples())
     return train_indices, view_indices
 
 

@@ -115,7 +115,8 @@ def get_database_function(name, type_var):
     return get_database
 
 
-def init_log_file(name, views, cl_type, log, debug, label, result_directory, add_noise, noise_std):
+def init_log_file(name, views, cl_type, log, debug, label,
+                  result_directory, add_noise, noise_std):
     r"""Used to init the directory where the preds will be stored and the log file.
 
     First this function will check if the result directory already exists (only one per minute is allowed).
@@ -147,6 +148,8 @@ def init_log_file(name, views, cl_type, log, debug, label, result_directory, add
     results_directory : string
         Reference to the main results directory for the benchmark.
     """
+    if views is None:
+        views=[]
     noise_string = "/n_"+str(int(noise_std*100))
     if debug:
         result_directory = result_directory + name + noise_string + \
@@ -256,31 +259,27 @@ def init_views(dataset_var, arg_views):
     all_views : list of strings
         Names of all the available views in the dataset.
     """
-    nb_view = dataset_var.get("Metadata").attrs["nbView"]
-    if arg_views != ["all"]:
+    nb_view = dataset_var.nb_view
+    if arg_views is not None:
         allowed_views = arg_views
-        all_views = [str(dataset_var.get("View" + str(view_index)).attrs["name"])
-                    if type(
-            dataset_var.get("View" + str(view_index)).attrs["name"]) != bytes
-                    else dataset_var.get("View" + str(view_index)).attrs[
-            "name"].decode("utf-8")
+        all_views = [str(dataset_var.get_view_name(view_index))
+                    if type(dataset_var.get_view_name(view_index)) != bytes
+                    else dataset_var.get_view_name(view_index).decode("utf-8")
                     for view_index in range(nb_view)]
         views = []
         views_indices = []
         for view_index in range(nb_view):
-            view_name = dataset_var.get("View" + str(view_index)).attrs["name"]
+            view_name = dataset_var.get_view_name(view_index)
             if type(view_name) == bytes:
                 view_name = view_name.decode("utf-8")
             if view_name in allowed_views:
                 views.append(view_name)
                 views_indices.append(view_index)
     else:
-        views = [str(dataset_var.get("View" + str(viewIndex)).attrs["name"])
-                 if type(
-            dataset_var.get("View" + str(viewIndex)).attrs["name"]) != bytes
-                 else dataset_var.get("View" + str(viewIndex)).attrs["name"].decode(
-            "utf-8")
-                 for viewIndex in range(nb_view)]
+        views = [str(dataset_var.get_view_name(view_index))
+                 if type(dataset_var.get_view_name(view_index)) != bytes
+                 else dataset_var.get_view_name(view_index).decode("utf-8")
+                 for view_index in range(nb_view)]
         views_indices = range(nb_view)
         all_views = views
     return views, views_indices, all_views

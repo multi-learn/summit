@@ -16,7 +16,7 @@ from . import monoview_utils
 from .analyze_result import execute
 # Import own modules
 from .. import monoview_classifiers
-from ..utils.dataset import get_value, extract_subset
+from ..utils.dataset import get_value, extract_subset, Dataset
 from ..utils import hyper_parameter_search
 
 # Author-Info
@@ -33,31 +33,32 @@ def exec_monoview_multicore(directory, name, labels_names, classification_indice
                            hyper_param_search="randomized_search",
                            metrics=[["accuracy_score", None]], n_iter=30,
                            **args):
-    dataset_var = h5py.File(path + name + str(dataset_file_index) + ".hdf5", "r")
-    neededViewIndex = args["viewIndex"]
-    X = dataset_var.get("View" + str(neededViewIndex))
+    dataset_var = Dataset(hdf5_file=h5py.File(path + name + str(dataset_file_index) + ".hdf5", "r"))
+    neededViewIndex = args["view_index"]
+    X = dataset_var.get_v(neededViewIndex)
     Y = labels
     return exec_monoview(directory, X, Y, name, labels_names,
                          classification_indices, k_folds, 1, database_type, path,
                          random_state, hyper_param_search=hyper_param_search,
-
-                         metrics=metrics, n_iter=n_iter, **args)
+                         metrics=metrics, n_iter=n_iter,
+                         view_name=dataset_var.get_view_name(args["view_index"]),
+                         **args)
 
 
 def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
                  KFolds, nbCores, databaseType, path,
                  randomState, hyper_param_search="randomized_search",
-                 metrics=[["accuracy_score", None]], nIter=30, **args):
+                 metrics=[["accuracy_score", None]], nIter=30, view_name="", **args):
     logging.debug("Start:\t Loading data")
     kwargs, \
     t_start, \
     feat, \
-    CL_type, \
+    classifier_name, \
     X, \
     learningRate, \
     labelsString, \
     outputFileName = initConstants(args, X, classificationIndices, labels_names,
-                                   name, directory)
+                                   name, directory, view_name)
     logging.debug("Done:\t Loading data")
 
     logging.debug(
@@ -65,7 +66,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
             feat) + " train ratio:"
         + str(learningRate) + ", CrossValidation k-folds: " + str(
             KFolds.n_splits) + ", cores:"
-        + str(nbCores) + ", algorithm : " + CL_type)
+        + str(nbCores) + ", algorithm : " + classifier_name)
 
     logging.debug("Start:\t Determine Train/Test split")
     X_train, y_train, X_test, y_test, X_test_multiclass = init_train_test(X, Y,
@@ -78,10 +79,10 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     logging.debug("Done:\t Determine Train/Test split")
 
     logging.debug("Start:\t Generate classifier args")
-    classifierModule = getattr(monoview_classifiers, CL_type)
+    classifierModule = getattr(monoview_classifiers, classifier_name)
     classifier_class_name = classifierModule.classifier_class_name
-    clKWARGS, testFoldsPreds = getHPs(classifierModule, hyper_parameter_search,
-                                      nIter, CL_type, classifier_class_name,
+    clKWARGS, testFoldsPreds = getHPs(classifierModule, hyper_param_search,
+                                      nIter, classifier_name, classifier_class_name,
                                       X_train, y_train,
                                       randomState, outputFileName,
                                       KFolds, nbCores, metrics, kwargs)
@@ -115,7 +116,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     stringAnalysis, \
     imagesAnalysis, \
     metricsScores = execute(name, classificationIndices, KFolds, nbCores,
-                            hyper_parameter_search, metrics, nIter, feat, CL_type,
+                            hyper_parameter_search, metrics, nIter, feat, classifier_name,
                             clKWARGS, labels_names, X.shape,
                             y_train, y_train_pred, y_test, y_test_pred, t_end,
                             randomState, classifier, outputFileName)
@@ -130,39 +131,35 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     viewIndex = args["view_index"]
     if testFoldsPreds is None:
         testFoldsPreds = y_train_pred
-    return monoview_utils.MonoviewResult(viewIndex, CL_type, feat, metricsScores,
+    return monoview_utils.MonoviewResult(viewIndex, classifier_name, feat, metricsScores,
                                          full_labels_pred, clKWARGS,
                                          y_test_multiclass_pred, testFoldsPreds)
     # return viewIndex, [CL_type, feat, metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
 
 
-def initConstants(args, X, classificationIndices, labels_names, name, directory):
+def initConstants(args, X, classificationIndices, labels_names,
+                  name, directory, view_name):
     try:
         kwargs = args["args"]
     except KeyError:
         kwargs = args
     t_start = time.time()
-    if type(X.attrs["name"]) == bytes:
-        feat = X.attrs["name"].decode("utf-8")
-    else:
-        feat = X.attrs["name"]
     CL_type = kwargs["classifier_name"]
-    X = get_value(X)
     learningRate = float(len(classificationIndices[0])) / (
                 len(classificationIndices[0]) + len(classificationIndices[1]))
     labelsString = "-".join(labels_names)
     CL_type_string = CL_type
     timestr = time.strftime("%Y_%m_%d-%H_%M_%S")
-    outputFileName = directory + CL_type_string + "/" + feat + "/" + timestr + "-results-" + CL_type_string + "-" + labelsString + \
+    outputFileName = directory + CL_type_string + "/" + view_name + "/" + timestr + "-results-" + CL_type_string + "-" + labelsString + \
                      '-learnRate_{0:.2f}'.format(
-                         learningRate) + '-' + name + "-" + feat + "-"
+                         learningRate) + '-' + name + "-" + view_name + "-"
     if not os.path.exists(os.path.dirname(outputFileName)):
         try:
             os.makedirs(os.path.dirname(outputFileName))
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-    return kwargs, t_start, feat, CL_type, X, learningRate, labelsString, outputFileName
+    return kwargs, t_start, view_name, CL_type, X, learningRate, labelsString, outputFileName
 
 
 def init_train_test(X, Y, classificationIndices):
