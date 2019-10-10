@@ -17,7 +17,7 @@ class Test_initConstants(unittest.TestCase):
     def setUpClass(cls):
         rm_tmp()
         os.mkdir("multiview_platform/tests/tmp_tests")
-        cls.view_name=test_dataset
+        cls.view_name="test_dataset"
         cls.datasetFile = h5py.File(
             tmp_path+"test.hdf5", "w")
         cls.random_state = np.random.RandomState(42)
