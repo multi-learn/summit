@@ -128,9 +128,6 @@ class Test_Dataset(unittest.TestCase):
                                                           "ViewN1": 1,
                                                           "ViewN2": 2,})
 
-# <<<<<<< HEAD
-#
-# =======
     def test_get_label_names(self):
         dataset_object = dataset.Dataset(hdf5_file=self.dataset_file)
         raw_label_names = dataset_object.get_label_names(decode=False)
@@ -240,6 +237,5 @@ class Test_Dataset(unittest.TestCase):
         os.remove(os.path.join(tmp_path, "test_noise.hdf5"))
 
 
-# >>>>>>> 66129965ae7c38b4bdb4ae657369ab24357070cd
 if __name__ == '__main__':
     unittest.main()
