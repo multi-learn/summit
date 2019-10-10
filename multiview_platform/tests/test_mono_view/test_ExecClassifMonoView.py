@@ -17,6 +17,7 @@ class Test_initConstants(unittest.TestCase):
     def setUpClass(cls):
         rm_tmp()
         os.mkdir("multiview_platform/tests/tmp_tests")
+        cls.view_name=test_dataset
         cls.datasetFile = h5py.File(
             tmp_path+"test.hdf5", "w")
         cls.random_state = np.random.RandomState(42)
@@ -45,7 +46,8 @@ class Test_initConstants(unittest.TestCase):
                                                               cls.classification_indices,
                                                               cls.labels_names,
                                                               cls.name,
-                                                              cls.directory)
+                                                              cls.directory,
+                                                              cls.view_name)
         cls.assertEqual(kwargs, cls.args)
         cls.assertEqual(feat, "test_dataset")
         cls.assertEqual(CL_type, "test_clf")
