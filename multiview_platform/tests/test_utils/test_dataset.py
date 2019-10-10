@@ -95,3 +95,6 @@ class Test_Dataset(unittest.TestCase):
         self.assertEqual(dataset_object.get_view_dict(), {"ViewN0":0,
                                                           "ViewN1": 1,
                                                           "ViewN2": 2,})
+
+if __name__ == '__main__':
+    unittest.main()

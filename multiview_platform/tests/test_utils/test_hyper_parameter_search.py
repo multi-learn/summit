@@ -56,3 +56,9 @@ class Test_randomized_search(unittest.TestCase):
             self.dataset_file, self.labels.value, "multiview", self.random_state, tmp_path,
             weighted_linear_early_fusion, "WeightedLinearEarlyFusion", self.k_folds,
         1, ["accuracy_score", None], 2, {}, learning_indices=self.learning_indices)
+
+
+if __name__ == '__main__':
+    # unittest.main()
+    suite = unittest.TestLoader().loadTestsFromTestCase(Test_randomized_search)
+    unittest.TextTestRunner(verbosity=2).run(suite)

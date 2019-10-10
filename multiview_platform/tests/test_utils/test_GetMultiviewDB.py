@@ -23,23 +23,23 @@ class Test_copyhdf5Dataset(unittest.TestCase):
                                                           0, 100, (10, 20)))
         cls.dataset.attrs["test_arg"] = "Am I copied"
 
-    def test_simple_copy(cls):
-        get_multiview_db.copyhdf5_dataset(cls.dataset_file, cls.dataset_file,
+    def test_simple_copy(self):
+        get_multiview_db.copyhdf5_dataset(self.dataset_file, self.dataset_file,
                                        "test", "test_copy_1", np.arange(10))
-        np.testing.assert_array_equal(cls.dataset_file.get("test").value,
-                                      cls.dataset_file.get("test_copy_1").value)
-        cls.assertEqual("Am I copied",
-                        cls.dataset_file.get("test_copy_1").attrs["test_arg"])
+        np.testing.assert_array_equal(self.dataset_file.get("test").value,
+                                      self.dataset_file.get("test_copy_1").value)
+        self.assertEqual("Am I copied",
+                        self.dataset_file.get("test_copy_1").attrs["test_arg"])
 
-    def test_copy_only_some_indices(cls):
-        usedIndices = cls.random_state.choice(10, 6, replace=False)
-        get_multiview_db.copyhdf5_dataset(cls.dataset_file, cls.dataset_file,
+    def test_copy_only_some_indices(self):
+        usedIndices = self.random_state.choice(10, 6, replace=False)
+        get_multiview_db.copyhdf5_dataset(self.dataset_file, self.dataset_file,
                                        "test", "test_copy", usedIndices)
         np.testing.assert_array_equal(
-            cls.dataset_file.get("test").value[usedIndices, :],
-            cls.dataset_file.get("test_copy").value)
-        cls.assertEqual("Am I copied",
-                        cls.dataset_file.get("test_copy").attrs["test_arg"])
+            self.dataset_file.get("test").value[usedIndices, :],
+            self.dataset_file.get("test_copy").value)
+        self.assertEqual("Am I copied",
+                        self.dataset_file.get("test_copy").attrs["test_arg"])
 
     @classmethod
     def tearDownClass(cls):
@@ -67,30 +67,30 @@ class Test_filterViews(unittest.TestCase):
                                                               0, 100, (10, 20)))
             cls.dataset.attrs["name"] = "test_view_" + str(i)
 
-    def test_simple_filter(cls):
-        cls.temp_dataset_file = h5py.File(
+    def test_simple_filter(self):
+        self.temp_dataset_file = h5py.File(
             tmp_path+"test_copy_temp.hdf5", "w")
-        cls.dataset_file.copy("Metadata", cls.temp_dataset_file)
-        get_multiview_db.filter_views(cls.dataset_file, cls.temp_dataset_file,
-                                     cls.views, np.arange(10))
-        cls.assertEqual(cls.dataset_file.get("View1").attrs["name"],
-                        cls.temp_dataset_file.get("View0").attrs["name"])
-        np.testing.assert_array_equal(cls.dataset_file.get("View2").value,
-                                      cls.temp_dataset_file.get("View1").value)
-        cls.assertEqual(cls.temp_dataset_file.get("Metadata").attrs["nbView"],
+        self.dataset_file.copy("Metadata", self.temp_dataset_file)
+        get_multiview_db.filter_views(self.dataset_file, self.temp_dataset_file,
+                                     self.views, np.arange(10))
+        self.assertEqual(self.dataset_file.get("View1").attrs["name"],
+                        self.temp_dataset_file.get("View0").attrs["name"])
+        np.testing.assert_array_equal(self.dataset_file.get("View2").value,
+                                      self.temp_dataset_file.get("View1").value)
+        self.assertEqual(self.temp_dataset_file.get("Metadata").attrs["nbView"],
                         2)
 
-    def test_filter_view_and_examples(cls):
-        cls.temp_dataset_file = h5py.File(
+    def test_filter_view_and_examples(self):
+        self.temp_dataset_file = h5py.File(
             tmp_path+"test_copy_temp.hdf5", "w")
-        cls.dataset_file.copy("Metadata", cls.temp_dataset_file)
-        usedIndices = cls.random_state.choice(10, 6, replace=False)
-        get_multiview_db.filter_views(cls.dataset_file, cls.temp_dataset_file,
-                                     cls.views, usedIndices)
+        self.dataset_file.copy("Metadata", self.temp_dataset_file)
+        usedIndices = self.random_state.choice(10, 6, replace=False)
+        get_multiview_db.filter_views(self.dataset_file, self.temp_dataset_file,
+                                     self.views, usedIndices)
         np.testing.assert_array_equal(
-            cls.dataset_file.get("View1").value[usedIndices, :],
-            cls.temp_dataset_file.get("View0").value)
-        cls.temp_dataset_file.close()
+            self.dataset_file.get("View1").value[usedIndices, :],
+            self.temp_dataset_file.get("View0").value)
+        self.temp_dataset_file.close()
 
     @classmethod
     def tearDownClass(cls):
@@ -112,60 +112,60 @@ class Test_filterLabels(unittest.TestCase):
                                     "test_label_2", "test_label_3"]
         cls.askedLabelsNames = ["test_label_1", "test_label_3"]
 
-    def test_simple(cls):
+    def test_simple(self):
         newLabels, \
         newLabelsNames, \
-        usedIndices = get_multiview_db.filter_labels(cls.labelsSet,
-                                                    cls.askedLabelsNamesSet,
-                                                    cls.fullLabels,
-                                                    cls.availableLabelsNames,
-                                                    cls.askedLabelsNames)
-        cls.assertEqual(["test_label_1", "test_label_3"], newLabelsNames)
+        usedIndices = get_multiview_db.filter_labels(self.labelsSet,
+                                                    self.askedLabelsNamesSet,
+                                                    self.fullLabels,
+                                                    self.availableLabelsNames,
+                                                    self.askedLabelsNames)
+        self.assertEqual(["test_label_1", "test_label_3"], newLabelsNames)
         np.testing.assert_array_equal(usedIndices, np.array([1, 5, 9]))
         np.testing.assert_array_equal(newLabels, np.array([1, 1, 0]))
 
-    def test_biclasse(cls):
-        cls.labelsSet = {0, 1}
-        cls.fullLabels = cls.random_state.randint(0, 2, 10)
-        cls.availableLabelsNames = ["test_label_0", "test_label_1"]
+    def test_biclasse(self):
+        self.labelsSet = {0, 1}
+        self.fullLabels = self.random_state.randint(0, 2, 10)
+        self.availableLabelsNames = ["test_label_0", "test_label_1"]
         newLabels, \
         newLabelsNames, \
-        usedIndices = get_multiview_db.filter_labels(cls.labelsSet,
-                                                    cls.askedLabelsNamesSet,
-                                                    cls.fullLabels,
-                                                    cls.availableLabelsNames,
-                                                    cls.askedLabelsNames)
-        cls.assertEqual(cls.availableLabelsNames, newLabelsNames)
+        usedIndices = get_multiview_db.filter_labels(self.labelsSet,
+                                                     self.askedLabelsNamesSet,
+                                                     self.fullLabels,
+                                                     self.availableLabelsNames,
+                                                     self.askedLabelsNames)
+        self.assertEqual(self.availableLabelsNames, newLabelsNames)
         np.testing.assert_array_equal(usedIndices, np.arange(10))
-        np.testing.assert_array_equal(newLabels, cls.fullLabels)
+        np.testing.assert_array_equal(newLabels, self.fullLabels)
 
-    def test_asked_too_many_labels(cls):
-        cls.askedLabelsNamesSet = {"test_label_0", "test_label_1",
+    def test_asked_too_many_labels(self):
+        self.askedLabelsNamesSet = {"test_label_0", "test_label_1",
                                    "test_label_2", "test_label_3",
                                    "chicken_is_heaven"}
-        with cls.assertRaises(get_multiview_db.DatasetError) as catcher:
-            get_multiview_db.filter_labels(cls.labelsSet,
-                                          cls.askedLabelsNamesSet,
-                                          cls.fullLabels,
-                                          cls.availableLabelsNames,
-                                          cls.askedLabelsNames)
+        with self.assertRaises(get_multiview_db.DatasetError) as catcher:
+            get_multiview_db.filter_labels(self.labelsSet,
+                                          self.askedLabelsNamesSet,
+                                          self.fullLabels,
+                                          self.availableLabelsNames,
+                                          self.askedLabelsNames)
         exception = catcher.exception
 
-    def test_asked_all_labels(cls):
-        cls.askedLabelsNamesSet = {"test_label_0", "test_label_1",
+    def test_asked_all_labels(self):
+        self.askedLabelsNamesSet = {"test_label_0", "test_label_1",
                                    "test_label_2", "test_label_3"}
-        cls.askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
+        self.askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
                                 "test_label_3"]
         newLabels, \
         newLabelsNames, \
-        usedIndices = get_multiview_db.filter_labels(cls.labelsSet,
-                                                    cls.askedLabelsNamesSet,
-                                                    cls.fullLabels,
-                                                    cls.availableLabelsNames,
-                                                    cls.askedLabelsNames)
-        cls.assertEqual(cls.availableLabelsNames, newLabelsNames)
+        usedIndices = get_multiview_db.filter_labels(self.labelsSet,
+                                                    self.askedLabelsNamesSet,
+                                                    self.fullLabels,
+                                                    self.availableLabelsNames,
+                                                    self.askedLabelsNames)
+        self.assertEqual(self.availableLabelsNames, newLabelsNames)
         np.testing.assert_array_equal(usedIndices, np.arange(10))
-        np.testing.assert_array_equal(newLabels, cls.fullLabels)
+        np.testing.assert_array_equal(newLabels, self.fullLabels)
 
 
 class Test_selectAskedLabels(unittest.TestCase):
@@ -179,42 +179,42 @@ class Test_selectAskedLabels(unittest.TestCase):
                                     "test_label_2", "test_label_3"]
         cls.askedLabelsNames = ["test_label_1", "test_label_3"]
 
-    def test_simple(cls):
+    def test_simple(self):
         newLabels, \
         newLabelsNames, \
-        usedIndices = get_multiview_db.select_asked_labels(cls.askedLabelsNamesSet,
-                                                         cls.availableLabelsNames,
-                                                         cls.askedLabelsNames,
-                                                         cls.fullLabels)
-        cls.assertEqual(["test_label_1", "test_label_3"], newLabelsNames)
+        usedIndices = get_multiview_db.select_asked_labels(self.askedLabelsNamesSet,
+                                                         self.availableLabelsNames,
+                                                         self.askedLabelsNames,
+                                                         self.fullLabels)
+        self.assertEqual(["test_label_1", "test_label_3"], newLabelsNames)
         np.testing.assert_array_equal(usedIndices, np.array([1, 5, 9]))
         np.testing.assert_array_equal(newLabels, np.array([1, 1, 0]))
 
-    def test_asked_all_labels(cls):
-        cls.askedLabelsNamesSet = {"test_label_0", "test_label_1",
+    def test_asked_all_labels(self):
+        self.askedLabelsNamesSet = {"test_label_0", "test_label_1",
                                    "test_label_2", "test_label_3"}
-        cls.askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
+        self.askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
                                 "test_label_3"]
         newLabels, \
         newLabelsNames, \
-        usedIndices = get_multiview_db.select_asked_labels(cls.askedLabelsNamesSet,
-                                                         cls.availableLabelsNames,
-                                                         cls.askedLabelsNames,
-                                                         cls.fullLabels)
-        cls.assertEqual(cls.availableLabelsNames, newLabelsNames)
+        usedIndices = get_multiview_db.select_asked_labels(self.askedLabelsNamesSet,
+                                                         self.availableLabelsNames,
+                                                         self.askedLabelsNames,
+                                                         self.fullLabels)
+        self.assertEqual(self.availableLabelsNames, newLabelsNames)
         np.testing.assert_array_equal(usedIndices, np.arange(10))
-        np.testing.assert_array_equal(newLabels, cls.fullLabels)
+        np.testing.assert_array_equal(newLabels, self.fullLabels)
 
-    def test_asked_unavailable_labels(cls):
-        cls.askedLabelsNamesSet = {"test_label_1", "test_label_3",
+    def test_asked_unavailable_labels(self):
+        self.askedLabelsNamesSet = {"test_label_1", "test_label_3",
                                    "chicken_is_heaven"}
-        with cls.assertRaises(get_multiview_db.DatasetError) as catcher:
-            get_multiview_db.select_asked_labels(cls.askedLabelsNamesSet,
-                                               cls.availableLabelsNames,
-                                               cls.askedLabelsNames,
-                                               cls.fullLabels)
+        with self.assertRaises(get_multiview_db.DatasetError) as catcher:
+            get_multiview_db.select_asked_labels(self.askedLabelsNamesSet,
+                                               self.availableLabelsNames,
+                                               self.askedLabelsNames,
+                                               self.fullLabels)
         exception = catcher.exception
-        # cls.assertTrue("Asked labels are not all available in the dataset" in exception)
+        # self.assertTrue("Asked labels are not all available in the dataset" in exception)
 
 
 class Test_getAllLabels(unittest.TestCase):
@@ -226,12 +226,12 @@ class Test_getAllLabels(unittest.TestCase):
         cls.availableLabelsNames = ["test_label_0", "test_label_1",
                                     "test_label_2", "test_label_3"]
 
-    def test_simple(cls):
+    def test_simple(self):
         newLabels, newLabelsNames, usedIndices = get_multiview_db.get_all_labels(
-            cls.fullLabels, cls.availableLabelsNames)
-        cls.assertEqual(cls.availableLabelsNames, newLabelsNames)
+            self.fullLabels, self.availableLabelsNames)
+        self.assertEqual(self.availableLabelsNames, newLabelsNames)
         np.testing.assert_array_equal(usedIndices, np.arange(10))
-        np.testing.assert_array_equal(newLabels, cls.fullLabels)
+        np.testing.assert_array_equal(newLabels, self.fullLabels)
 
 
 class Test_fillLabelNames(unittest.TestCase):
@@ -243,24 +243,24 @@ class Test_fillLabelNames(unittest.TestCase):
         cls.random_state = np.random.RandomState(42)
         cls.availableLabelsNames = ["test_label_" + str(_) for _ in range(40)]
 
-    def test_simple(cls):
+    def test_simple(self):
         askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fill_label_names(
-            cls.NB_CLASS,
-            cls.askedLabelsNames,
-            cls.random_state,
-            cls.availableLabelsNames)
-        cls.assertEqual(askedLabelsNames, cls.askedLabelsNames)
-        cls.assertEqual(askedLabelsNamesSet, set(cls.askedLabelsNames))
+            self.NB_CLASS,
+            self.askedLabelsNames,
+            self.random_state,
+            self.availableLabelsNames)
+        self.assertEqual(askedLabelsNames, self.askedLabelsNames)
+        self.assertEqual(askedLabelsNamesSet, set(self.askedLabelsNames))
 
-    def test_missing_labels_names(cls):
-        cls.NB_CLASS = 39
+    def test_missing_labels_names(self):
+        self.NB_CLASS = 39
         askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fill_label_names(
-            cls.NB_CLASS,
-            cls.askedLabelsNames,
-            cls.random_state,
-            cls.availableLabelsNames)
+            self.NB_CLASS,
+            self.askedLabelsNames,
+            self.random_state,
+            self.availableLabelsNames)
 
-        cls.assertEqual(askedLabelsNames,
+        self.assertEqual(askedLabelsNames,
                         ['test_label_1', 'test_label_3', 'test_label_35',
                          'test_label_38', 'test_label_6', 'test_label_15',
                          'test_label_32', 'test_label_28', 'test_label_8',
@@ -274,21 +274,21 @@ class Test_fillLabelNames(unittest.TestCase):
                          'test_label_36', 'test_label_25', 'test_label_33',
                          'test_label_12', 'test_label_24', 'test_label_20',
                          'test_label_22', 'test_label_9', 'test_label_16'])
-        cls.assertEqual(askedLabelsNamesSet, set(
+        self.assertEqual(askedLabelsNamesSet, set(
             ["test_label_" + str(_) for _ in range(30)] + [
                 "test_label_" + str(31 + _) for _ in range(9)]))
 
-    def test_too_many_label_names(cls):
-        cls.NB_CLASS = 2
-        cls.askedLabelsNames = ["test_label_1", "test_label_3", "test_label_4",
+    def test_too_many_label_names(self):
+        self.NB_CLASS = 2
+        self.askedLabelsNames = ["test_label_1", "test_label_3", "test_label_4",
                                 "test_label_6"]
         askedLabelsNames, askedLabelsNamesSet = get_multiview_db.fill_label_names(
-            cls.NB_CLASS,
-            cls.askedLabelsNames,
-            cls.random_state,
-            cls.availableLabelsNames)
-        cls.assertEqual(askedLabelsNames, ["test_label_3", "test_label_6"])
-        cls.assertEqual(askedLabelsNamesSet, {"test_label_3", "test_label_6"})
+            self.NB_CLASS,
+            self.askedLabelsNames,
+            self.random_state,
+            self.availableLabelsNames)
+        self.assertEqual(askedLabelsNames, ["test_label_3", "test_label_6"])
+        self.assertEqual(askedLabelsNamesSet, {"test_label_3", "test_label_6"})
 
 
 class Test_allAskedLabelsAreAvailable(unittest.TestCase):
@@ -299,17 +299,17 @@ class Test_allAskedLabelsAreAvailable(unittest.TestCase):
         cls.availableLabelsNames = ["test_label_0", "test_label_1",
                                     "test_label_2", "test_label_3"]
 
-    def test_asked_available_labels(cls):
-        cls.assertTrue(
-            get_multiview_db.all_asked_labels_are_available(cls.askedLabelsNamesSet,
-                                                        cls.availableLabelsNames))
+    def test_asked_available_labels(self):
+        self.assertTrue(
+            get_multiview_db.all_asked_labels_are_available(self.askedLabelsNamesSet,
+                                                        self.availableLabelsNames))
 
-    def test_asked_unavailable_label(cls):
-        cls.askedLabelsNamesSet = {"test_label_1", "test_label_3",
+    def test_asked_unavailable_label(self):
+        self.askedLabelsNamesSet = {"test_label_1", "test_label_3",
                                    "chicken_is_heaven"}
-        cls.assertFalse(
-            get_multiview_db.all_asked_labels_are_available(cls.askedLabelsNamesSet,
-                                                        cls.availableLabelsNames))
+        self.assertFalse(
+            get_multiview_db.all_asked_labels_are_available(self.askedLabelsNamesSet,
+                                                        self.availableLabelsNames))
 
 
 class Test_getClasses(unittest.TestCase):
@@ -318,21 +318,21 @@ class Test_getClasses(unittest.TestCase):
     def setUpClass(cls):
         cls.random_state = np.random.RandomState(42)
 
-    def test_multiclass(cls):
+    def test_multiclass(self):
         labelsSet = get_multiview_db.get_classes(
-            cls.random_state.randint(0, 5, 30))
-        cls.assertEqual(labelsSet, {0, 1, 2, 3, 4})
+            self.random_state.randint(0, 5, 30))
+        self.assertEqual(labelsSet, {0, 1, 2, 3, 4})
 
-    def test_biclass(cls):
+    def test_biclass(self):
         labelsSet = get_multiview_db.get_classes(
-            cls.random_state.randint(0, 2, 30))
-        cls.assertEqual(labelsSet, {0, 1})
+            self.random_state.randint(0, 2, 30))
+        self.assertEqual(labelsSet, {0, 1})
 
-    def test_one_class(cls):
-        with cls.assertRaises(get_multiview_db.DatasetError) as catcher:
+    def test_one_class(self):
+        with self.assertRaises(get_multiview_db.DatasetError) as catcher:
             get_multiview_db.get_classes(np.zeros(30, dtype=int))
         exception = catcher.exception
-        # cls.assertTrue("Dataset must have at least two different labels" in exception)
+        # self.assertTrue("Dataset must have at least two different labels" in exception)
 
 
 class Test_getClassicDBhdf5(unittest.TestCase):
@@ -366,86 +366,86 @@ class Test_getClassicDBhdf5(unittest.TestCase):
                                                               0, 100, (10, 20)))
             cls.dataset.attrs["name"] = "test_view_" + str(i)
 
-    def test_simple(cls):
+    def test_simple(self):
         dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(
-            cls.views, cls.pathF, cls.nameDB,
-            cls.NB_CLASS, cls.askedLabelsNames,
-            cls.random_state)
-        cls.assertEqual(dataset_file.get("View1").attrs["name"], "test_view_3")
-        cls.assertEqual(labels_dictionary,
+            self.views, self.pathF, self.nameDB,
+            self.NB_CLASS, self.askedLabelsNames,
+            self.random_state)
+        self.assertEqual(dataset_file.get("View1").attrs["name"], "test_view_3")
+        self.assertEqual(labels_dictionary,
                         {0: "test_label_1", 1: "test_label_3"})
-        cls.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 3)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 2)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 2)
+        self.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 3)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 2)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 2)
         np.testing.assert_array_equal(dataset_file.get("View0").value,
-                                      cls.dataset_file.get("View1").value[
+                                      self.dataset_file.get("View1").value[
                                       np.array([1, 5, 9]), :])
 
-    def test_all_labels_asked(cls):
+    def test_all_labels_asked(self):
         askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
                             "test_label_3"]
         NB_CLASS = 4
         dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(
-            cls.views, cls.pathF, cls.nameDB,
+            self.views, self.pathF, self.nameDB,
             NB_CLASS, askedLabelsNames,
-            cls.random_state)
-        cls.assertEqual(dataset_name, 'test_dataset_temp_view_label_select')
-        cls.assertEqual(dataset_file.get("View1").attrs["name"], "test_view_3")
-        cls.assertEqual(labels_dictionary,
+            self.random_state)
+        self.assertEqual(dataset_name, 'test_dataset_temp_view_label_select')
+        self.assertEqual(dataset_file.get("View1").attrs["name"], "test_view_3")
+        self.assertEqual(labels_dictionary,
                         {0: "test_label_0", 1: "test_label_1",
                          2: "test_label_2", 3: "test_label_3"})
-        cls.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 10)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 2)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 4)
+        self.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 10)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 2)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 4)
         np.testing.assert_array_equal(dataset_file.get("View0").value,
-                                      cls.dataset_file.get("View1").value)
+                                      self.dataset_file.get("View1").value)
 
-    def test_all_views_asked(cls):
+    def test_all_views_asked(self):
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
         dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(views,
-                                                                                          cls.pathF,
-                                                                                          cls.nameDB,
-                                                                                          cls.NB_CLASS,
-                                                                                          cls.askedLabelsNames,
-                                                                                          cls.random_state)
+                                                                                          self.pathF,
+                                                                                          self.nameDB,
+                                                                                          self.NB_CLASS,
+                                                                                          self.askedLabelsNames,
+                                                                                          self.random_state)
         for viewIndex in range(4):
             np.testing.assert_array_equal(
                 dataset_file.get("View" + str(viewIndex)).value,
-                cls.dataset_file.get("View" + str(viewIndex)).value[
+                self.dataset_file.get("View" + str(viewIndex)).value[
                 np.array([1, 5, 9]), :])
-            cls.assertEqual(
+            self.assertEqual(
                 dataset_file.get("View" + str(viewIndex)).attrs["name"],
                 "test_view_" + str(viewIndex))
-        cls.assertEqual(labels_dictionary,
+        self.assertEqual(labels_dictionary,
                         {0: "test_label_1", 1: "test_label_3"})
-        cls.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 3)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 4)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 2)
+        self.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 3)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 4)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 2)
 
-    def test_asked_the_whole_dataset(cls):
+    def test_asked_the_whole_dataset(self):
         askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
                             "test_label_3"]
         NB_CLASS = 4
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
         dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(views,
-                                                                                          cls.pathF,
-                                                                                          cls.nameDB,
+                                                                                          self.pathF,
+                                                                                          self.nameDB,
                                                                                           NB_CLASS,
                                                                                           askedLabelsNames,
-                                                                                          cls.random_state)
+                                                                                          self.random_state)
         for viewIndex in range(4):
             np.testing.assert_array_equal(
                 dataset_file.get("View" + str(viewIndex)).value,
-                cls.dataset_file.get("View" + str(viewIndex)))
-            cls.assertEqual(
+                self.dataset_file.get("View" + str(viewIndex)))
+            self.assertEqual(
                 dataset_file.get("View" + str(viewIndex)).attrs["name"],
                 "test_view_" + str(viewIndex))
-        cls.assertEqual(labels_dictionary,
+        self.assertEqual(labels_dictionary,
                         {0: "test_label_0", 1: "test_label_1",
                          2: "test_label_2", 3: "test_label_3"})
-        cls.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 10)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 4)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 4)
+        self.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 10)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 4)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 4)
 
     @classmethod
     def tearDownClass(cls):
@@ -485,87 +485,87 @@ class Test_getClassicDBcsv(unittest.TestCase):
                        data, delimiter=",")
             cls.datas.append(data)
 
-    def test_simple(cls):
+    def test_simple(self):
         dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_csv(
-            cls.views, cls.pathF, cls.nameDB,
-            cls.NB_CLASS, cls.askedLabelsNames,
-            cls.random_state, delimiter=",")
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 2)
-        cls.assertEqual(dataset_file.get("View1").attrs["name"], "test_view_3")
-        cls.assertEqual(dataset_file.get("View0").attrs["name"], "test_view_1")
-        cls.assertEqual(labels_dictionary,
+            self.views, self.pathF, self.nameDB,
+            self.NB_CLASS, self.askedLabelsNames,
+            self.random_state, delimiter=",")
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 2)
+        self.assertEqual(dataset_file.get("View1").attrs["name"], "test_view_3")
+        self.assertEqual(dataset_file.get("View0").attrs["name"], "test_view_1")
+        self.assertEqual(labels_dictionary,
                         {0: "test_label_1", 1: "test_label_3"})
-        cls.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 3)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 2)
+        self.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 3)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 2)
         np.testing.assert_array_equal(dataset_file.get("View0").value,
-                                      cls.datas[1][np.array([1, 5, 9]), :])
+                                      self.datas[1][np.array([1, 5, 9]), :])
 
-    def test_all_views_asked(cls):
+    def test_all_views_asked(self):
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
         dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_csv(views,
-                                                                                         cls.pathF,
-                                                                                         cls.nameDB,
-                                                                                         cls.NB_CLASS,
-                                                                                         cls.askedLabelsNames,
-                                                                                         cls.random_state,
+                                                                                         self.pathF,
+                                                                                         self.nameDB,
+                                                                                         self.NB_CLASS,
+                                                                                         self.askedLabelsNames,
+                                                                                         self.random_state,
                                                                                          delimiter=",")
-        cls.assertEqual(labels_dictionary,
+        self.assertEqual(labels_dictionary,
                         {0: "test_label_1", 1: "test_label_3"})
-        cls.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 3)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 4)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 2)
-        cls.assertEqual(dataset_name,'test_dataset_temp_view_label_select')
+        self.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 3)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 4)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 2)
+        self.assertEqual(dataset_name,'test_dataset_temp_view_label_select')
         for viewIndex in range(4):
             np.testing.assert_array_equal(
                 dataset_file.get("View" + str(viewIndex)).value,
-                cls.datas[viewIndex][np.array([1, 5, 9]), :])
-            cls.assertEqual(
+                self.datas[viewIndex][np.array([1, 5, 9]), :])
+            self.assertEqual(
                 dataset_file.get("View" + str(viewIndex)).attrs["name"],
                 "test_view_" + str(viewIndex))
 
-    def test_all_labels_asked(cls):
+    def test_all_labels_asked(self):
         askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
                             "test_label_3"]
         NB_CLASS = 4
         dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_csv(
-            cls.views, cls.pathF, cls.nameDB,
+            self.views, self.pathF, self.nameDB,
             NB_CLASS, askedLabelsNames,
-            cls.random_state, delimiter=",")
-        cls.assertEqual(dataset_file.get("View1").attrs["name"], "test_view_3")
-        cls.assertEqual(labels_dictionary,
+            self.random_state, delimiter=",")
+        self.assertEqual(dataset_file.get("View1").attrs["name"], "test_view_3")
+        self.assertEqual(labels_dictionary,
                         {0: "test_label_0", 1: "test_label_1",
                          2: "test_label_2", 3: "test_label_3"})
-        cls.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 10)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 2)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 4)
+        self.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 10)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 2)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 4)
         np.testing.assert_array_equal(dataset_file.get("View0").value,
-                                      cls.datas[1])
+                                      self.datas[1])
 
-    def test_asked_the_whole_dataset(cls):
+    def test_asked_the_whole_dataset(self):
         askedLabelsNames = ["test_label_0", "test_label_1", "test_label_2",
                             "test_label_3"]
         NB_CLASS = 4
         views = ["test_view_0", "test_view_1", "test_view_2", "test_view_3"]
         dataset_file, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_csv(views,
-                                                                                         cls.pathF,
-                                                                                         cls.nameDB,
+                                                                                         self.pathF,
+                                                                                         self.nameDB,
                                                                                          NB_CLASS,
                                                                                          askedLabelsNames,
-                                                                                         cls.random_state,
+                                                                                         self.random_state,
                                                                                          delimiter=",")
         for viewIndex in range(4):
             np.testing.assert_array_equal(
                 dataset_file.get("View" + str(viewIndex)).value,
-                cls.datas[viewIndex])
-            cls.assertEqual(
+                self.datas[viewIndex])
+            self.assertEqual(
                 dataset_file.get("View" + str(viewIndex)).attrs["name"],
                 "test_view_" + str(viewIndex))
-        cls.assertEqual(labels_dictionary,
+        self.assertEqual(labels_dictionary,
                         {0: "test_label_0", 1: "test_label_1",
                          2: "test_label_2", 3: "test_label_3"})
-        cls.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 10)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 4)
-        cls.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 4)
+        self.assertEqual(dataset_file.get("Metadata").attrs["datasetLength"], 10)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbView"], 4)
+        self.assertEqual(dataset_file.get("Metadata").attrs["nbClass"], 4)
 
     @classmethod
     def tearDownClass(cls):
@@ -617,3 +617,5 @@ class Test_get_plausible_db_hdf5(unittest.TestCase):
         self.assertEqual(dataset.get_nb_class(), 2)
 
 
+if __name__ == '__main__':
+    unittest.main()

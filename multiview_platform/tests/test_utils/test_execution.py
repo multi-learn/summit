@@ -225,3 +225,6 @@ class Test_genArgumentDictionaries(unittest.TestCase):
                                 np.array([0, 1, -100, 0, 1])]
         cls.labelsCombinations = [[0, 1], [0, 2], [1, 2]]
         cls.indicesMulticlass = [[[[], []], [[], []], [[], []]], [[], [], []]]
+
+if __name__ == '__main__':
+    unittest.main()

@@ -13,7 +13,7 @@ class Test_get_the_args(unittest.TestCase):
     def setUpClass(cls):
         rm_tmp()
         cls.path_to_config_file = tmp_path+"config_temp.yml"
-        os.mkdir("multiview_platform/tests/tmp_tests")
+        os.mkdir("./multiview_platform/tests/tmp_tests")
         data = {"Base":{"first_arg": 10, "second_arg":[12.5, 1e-06]}, "Classification":{"third_arg":True}}
         with open(cls.path_to_config_file, "w") as config_file:
             yaml.dump(data, config_file)
@@ -74,3 +74,5 @@ class Test_get_the_args(unittest.TestCase):
 #         value = configuration.format_raw_arg("list_str ; list string")
 #         self.assertEqual(value, ["list", "string"])
 
+if __name__ == '__main__':
+    unittest.main()

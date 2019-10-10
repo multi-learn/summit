@@ -68,3 +68,7 @@ class Test_DiversityFusion(unittest.TestCase):
                                classifier_names=self.classifier_names,
                                classifiers_config=self.classifiers_config)
         clf.fit(self.X, self.y, self.train_indices, self.views_indices)
+
+
+if __name__ == '__main__':
+    unittest.main()

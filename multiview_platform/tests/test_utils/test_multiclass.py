@@ -43,3 +43,6 @@ class Test_genMulticlassLabels(unittest.TestCase):
                                                 -100,
                                                 1, -100, 0, 0, 1, 0, -100, 0,
                                                 -100]))
+
+if __name__ == '__main__':
+    unittest.main()

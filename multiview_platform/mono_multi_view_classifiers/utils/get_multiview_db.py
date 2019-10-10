@@ -310,7 +310,7 @@ def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
                                                         noise_std)
     else:
         pass
-    return dataset, labels_dictionary, dataset_name
+    return dataset_file, labels_dictionary, dataset_name
 
 
 def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,

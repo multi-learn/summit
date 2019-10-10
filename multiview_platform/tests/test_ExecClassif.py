@@ -6,7 +6,7 @@ import numpy as np
 
 from .utils import rm_tmp, tmp_path
 
-from ..mono_multi_view_classifiers import exec_classif
+from multiview_platform.mono_multi_view_classifiers import exec_classif
 
 
 class Test_initBenchmark(unittest.TestCase):
@@ -232,7 +232,7 @@ class Test_execBenchmark(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         rm_tmp()
-        os.mkdir("multiview_platform/tests/tmp_tests")
+        os.mkdir("./tests/tmp_tests")
         cls.Dataset = h5py.File(
             tmp_path+"test_file.hdf5", "w")
         cls.labels = cls.Dataset.create_dataset("Labels",
@@ -333,10 +333,10 @@ class FakeKfold():
 class Test_execOneBenchmark(unittest.TestCase):
 
     @classmethod
-
     def setUp(cls):
         rm_tmp()
-        os.mkdir("multiview_platform/tests/tmp_tests")
+        print(os.getcwd())
+        os.mkdir("../tests/tmp_tests")
         cls.args = {
             "Base": {"name": "chicken_is_heaven", "type": "type",
                      "pathf": "pathF"},
@@ -403,7 +403,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         rm_tmp()
-        os.mkdir("multiview_platform/tests/tmp_tests")
+        os.mkdir("./tests/tmp_tests")
         cls.args = {
             "Base": {"name": "chicken_is_heaven", "type": "type",
                      "pathf": "pathF"},
@@ -809,3 +809,6 @@ class Test_get_path_dict(unittest.TestCase):
 #     suite.addTest(Test_initBenchmark('test_initKWARGSFunc_no_monoview'))
 #     # suite.addTest(WidgetTestCase('test_widget_resize'))
 #     return suite
+
+if __name__ == '__main__':
+    unittest.main()
