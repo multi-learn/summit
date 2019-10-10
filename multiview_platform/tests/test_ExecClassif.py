@@ -4,7 +4,7 @@ import unittest
 import h5py
 import numpy as np
 
-from .utils import rm_tmp, tmp_path
+from .utils import rm_tmp, tmp_path, test_dataset
 
 from ..mono_multi_view_classifiers import exec_classif
 
@@ -232,11 +232,8 @@ class Test_execBenchmark(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         rm_tmp()
-        os.mkdir("multiview_platform/tests/tmp_tests")
-        cls.Dataset = h5py.File(
-            tmp_path+"test_file.hdf5", "w")
-        cls.labels = cls.Dataset.create_dataset("Labels",
-                                                data=np.array([0, 1, 2]))
+        os.mkdir(tmp_path)
+        cls.Dataset = test_dataset
         cls.argument_dictionaries = [{"a": 4, "args": {}}]
         cls.args = {
             "Base":{"name": "chicken_is_heaven", "type": "type", "pathf": "pathF"},
@@ -294,12 +291,7 @@ class Test_execBenchmark(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.Dataset.close()
-        path = tmp_path
-        for file_name in os.listdir(path):
-            os.remove(os.path.join(path, file_name))
-        os.rmdir(path)
-
+        rm_tmp()
 
 def fakeExecMono(directory, name, labels_names, classification_indices, k_folds,
                  coreIndex, type, pathF, random_state, labels,

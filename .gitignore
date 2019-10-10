@@ -4,6 +4,7 @@ TODO
 ipynb/.ipynb_checkpoints/**
 docs/source/monomulti/.ipynb_checkpoints/**
 results/**
+data/**
 Data/**
 multiview_platform/MonoMultiviewClassifiers/Results/*
 multiview_platform/tests/temp_tests/**

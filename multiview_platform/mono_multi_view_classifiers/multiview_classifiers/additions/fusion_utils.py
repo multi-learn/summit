@@ -8,7 +8,7 @@ class BaseLateFusionClassifier():
 
     def init_monoview_estimator(self, classifier_name, classifier_index=None):
         if classifier_index is not None:
-            classifier_configs = self.classifier_configs[classifier_index]
+            classifier_configs = self.classifier_configs[classifier_name]
         else:
             classifier_configs = self.classifier_configs
         if classifier_configs is not None and classifier_name in classifier_configs:

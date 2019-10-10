@@ -4,7 +4,7 @@ Base :
   name: ["Plausible"]
   label: "_"
   type: ".hdf5"
-  views: ["all"]
+  views:
   pathf: "../data/"
   nice: 0
   random_state: 42
@@ -21,9 +21,9 @@ Classification:
   split: 0.8
   nb_folds: 2
   nb_class: 2
-  classes: ["yes", "no"]
-  type: ["multiview",]
-  algos_monoview: ["all"]
+  classes:
+  type: ["multiview"]
+  algos_monoview: ["decision_tree", "adaboost"]
   algos_multiview: ["all"]
   stats_iter: 2
   metrics: ["accuracy_score", "f1_score"]
@@ -170,6 +170,41 @@ double_fault_fusion:
       splitter: ["best"]
 
 difficulty_fusion:
+  classifier_names: ["decison_tree"]
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]
+
+scm_late_fusion:
+  classifier_names: ["decison_tree"]
+  p: 0.1
+  max_rules: 10
+  model_type: 'conjunction'
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]
+
+majority_voting_fusion:
+  classifier_names: ["decison_tree"]
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]
+
+bayesian_inference_fusion:
+  classifier_names: ["decison_tree"]
+  classifier_configs:
+    decision_tree:
+      max_depth: [1]
+      criterion: ["gini"]
+      splitter: ["best"]
+
+weighted_linear_late_fusion:
   classifier_names: ["decison_tree"]
   classifier_configs:
     decision_tree:
