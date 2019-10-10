@@ -196,22 +196,22 @@ class Test_genDirecortiesNames(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.directory = "../chicken_is_heaven/"
+        cls.directory = tmp_path
         cls.stats_iter = 5
 
     def test_simple_ovo(cls):
         directories = execution.gen_direcorties_names(cls.directory,
                                                     cls.stats_iter)
         cls.assertEqual(len(directories), 5)
-        cls.assertEqual(directories[0], "../chicken_is_heaven/iter_1/")
-        cls.assertEqual(directories[-1], "../chicken_is_heaven/iter_5/")
+        cls.assertEqual(directories[0], os.path.join(tmp_path, "iter_1/"))
+        cls.assertEqual(directories[-1], os.path.join(tmp_path, "iter_5/"))
 
     def test_ovo_no_iter(cls):
         cls.stats_iter = 1
         directories = execution.gen_direcorties_names(cls.directory,
                                                     cls.stats_iter)
         cls.assertEqual(len(directories), 1)
-        cls.assertEqual(directories[0], "../chicken_is_heaven/")
+        cls.assertEqual(directories[0], tmp_path)
 
 
 class Test_genArgumentDictionaries(unittest.TestCase):

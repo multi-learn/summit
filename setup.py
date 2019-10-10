@@ -52,7 +52,7 @@ def setup_package():
     # dependency_links=['https://github.com/aldro61/pyscm.git#egg=pyscm'],
     # Une url qui pointe vers la page officielle de votre lib
     url='http://github.com/babau1/multiview-machine-learning-omis/',
-    install_requires=['numpy>=1.8', 'scipy>=0.16','scikit-learn==0.19',
+    install_requires=['numpy>=1.16', 'scipy>=0.16','scikit-learn==0.19',
                       'matplotlib', 'h5py', 'joblib',
                       'pandas', 'm2r', 'pyyaml', 'pyscm @ git+https://github.com/aldro61/pyscm',
                       'cvxopt'],

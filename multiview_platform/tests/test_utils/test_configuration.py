@@ -21,7 +21,7 @@ class Test_get_the_args(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         os.remove(tmp_path+"config_temp.yml")
-        os.rmdir("multiview_platform/tests/tmp_tests")
+        os.rmdir(tmp_path)
 
     def test_file_loading(self):
         config_dict = configuration.get_the_args(self.path_to_config_file)

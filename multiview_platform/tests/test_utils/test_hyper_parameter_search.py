@@ -18,7 +18,7 @@ class Test_randomized_search(unittest.TestCase):
         rm_tmp()
         cls.random_state = np.random.RandomState(42)
         cls.view_weights = [0.5, 0.5]
-        os.mkdir("multiview_platform/tests/tmp_tests")
+        os.mkdir(tmp_path)
         cls.dataset_file = h5py.File(
             tmp_path+"test_file.hdf5", "w")
         cls.labels = cls.dataset_file.create_dataset("Labels",
@@ -49,10 +49,7 @@ class Test_randomized_search(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.dataset_file.close()
-        for file_name in os.listdir("multiview_platform/tests/tmp_tests"):
-            os.remove(
-                os.path.join("multiview_platform/tests/tmp_tests", file_name))
-        os.rmdir("multiview_platform/tests/tmp_tests")
+        rm_tmp()
 
 
     def test_simple(self):

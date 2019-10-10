@@ -16,7 +16,7 @@ class Test_initConstants(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         rm_tmp()
-        os.mkdir("multiview_platform/tests/tmp_tests")
+        os.mkdir(tmp_path)
         cls.view_name="test_dataset"
         cls.datasetFile = h5py.File(
             tmp_path+"test.hdf5", "w")
@@ -63,7 +63,7 @@ class Test_initConstants(unittest.TestCase):
             tmp_path+"test_dir/test_clf/test_dataset")
         os.rmdir(tmp_path+"test_dir/test_clf")
         os.rmdir(tmp_path+"test_dir")
-        os.rmdir("multiview_platform/tests/tmp_tests")
+        os.rmdir(tmp_path)
 
 
 class Test_initTrainTest(unittest.TestCase):
@@ -103,7 +103,7 @@ class Test_getHPs(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         rm_tmp()
-        os.mkdir("multiview_platform/tests/tmp_tests")
+        os.mkdir(tmp_path)
         cls.classifierModule = decision_tree
         cls.hyper_param_search = "randomized_search"
         cls.n_iter = 2
@@ -122,10 +122,10 @@ class Test_getHPs(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        for file_name in os.listdir("multiview_platform/tests/tmp_tests"):
+        for file_name in os.listdir(tmp_path):
             os.remove(
-                os.path.join("multiview_platform/tests/tmp_tests", file_name))
-        os.rmdir("multiview_platform/tests/tmp_tests")
+                os.path.join(tmp_path, file_name))
+        os.rmdir(tmp_path)
 
     def test_simple(self):
         kwargs, test_folds_predictions = exec_classif_mono_view.getHPs(self.classifierModule,

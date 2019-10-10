@@ -5,8 +5,8 @@ import h5py
 from ..mono_multi_view_classifiers.utils.dataset import Dataset
 
 
-tmp_path = "multiview_platform/tests/tmp_tests/"
-test_dataset = Dataset(hdf5_file=h5py.File("multiview_platform/tests/test_database.hdf5", "r"))
+tmp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tmp_tests/")
+test_dataset = Dataset(hdf5_file=h5py.File(os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_database.hdf5"), "r"))
 
 def rm_tmp():
     try:

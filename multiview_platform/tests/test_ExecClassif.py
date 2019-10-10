@@ -328,8 +328,7 @@ class Test_execOneBenchmark(unittest.TestCase):
     @classmethod
     def setUp(cls):
         rm_tmp()
-        print(os.getcwd())
-        os.mkdir("../tests/tmp_tests")
+        os.mkdir(tmp_path)
         cls.args = {
             "Base": {"name": "chicken_is_heaven", "type": "type",
                      "pathf": "pathF"},
@@ -396,7 +395,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         rm_tmp()
-        os.mkdir("./tests/tmp_tests")
+        os.mkdir(tmp_path)
         cls.args = {
             "Base": {"name": "chicken_is_heaven", "type": "type",
                      "pathf": "pathF"},
