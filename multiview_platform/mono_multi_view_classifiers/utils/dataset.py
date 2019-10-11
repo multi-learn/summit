@@ -17,7 +17,8 @@ class Dataset():
 
     def __init__(self, views=None, labels=None, are_sparse=False,
                  file_name="dataset.hdf5", view_names=None, path="",
-                 hdf5_file=None, labels_names=None):
+                 hdf5_file=None, labels_names=None, is_temp=False):
+        self.is_temp = False
         if hdf5_file is not None:
             self.dataset=hdf5_file
             self.init_attrs()
@@ -54,6 +55,12 @@ class Dataset():
             meta_data_grp.attrs["datasetLength"] = len(labels)
             dataset_file.close()
             self.update_hdf5_dataset(os.path.join(path, file_name))
+
+    def rm(self):
+        filename = self.dataset.filename
+        self.dataset.close()
+        if self.is_temp:
+            os.remove(filename)
 
     def get_view_name(self, view_idx):
         return self.dataset["View"+str(view_idx)].attrs["name"]
@@ -142,6 +149,7 @@ class Dataset():
         if hasattr(self, 'dataset'):
             self.dataset.close()
         self.dataset = h5py.File(path, 'r')
+        self.is_temp = True
         self.init_attrs()
 
     def filter(self, labels, label_names, example_indices, view_names, path):
@@ -262,6 +270,7 @@ class Dataset():
                                     replace=False))
 
         return selected_label_names
+
 
 
 
@@ -393,7 +402,7 @@ def copy_hdf5(pathF, name, nbCores):
             datasetFile.copy("/" + dataset, newDataSet["/"])
         newDataSet.close()
 
-def delete_HDF5(benchmarkArgumentsDictionaries, nbCores, DATASET):
+def delete_HDF5(benchmarkArgumentsDictionaries, nbCores, dataset):
     """Used to delete temporary copies at the end of the benchmark"""
     if nbCores > 1:
         logging.debug("Start:\t Deleting " + str(
@@ -403,10 +412,8 @@ def delete_HDF5(benchmarkArgumentsDictionaries, nbCores, DATASET):
 
         for coreIndex in range(nbCores):
             os.remove(args["Base"]["pathf"] + args["Base"]["name"] + str(coreIndex) + ".hdf5")
-    filename = DATASET.filename
-    DATASET.close()
-    if "_temp_" in filename:
-        os.remove(filename)
+    if dataset.is_temp:
+        dataset.rm()
 
 
 def confirm(resp=True, timeout=15):

@@ -47,16 +47,17 @@ class DecisionStumpSCMNew(BaseEstimator, ClassifierMixin):
 
 class SCMLateFusionClassifier(LateFusionClassifier):
     def __init__(self, random_state=None, classifier_names=None,
-                 classifier_configs=None, nb_cores=1, nb_view=1,
-                 p=1, max_attributes=5, order=1, model_type="conjunction"):
+                 classifier_configs=None, nb_cores=1,
+                 p=1, max_rules=5, order=1, model_type="conjunction", weights=None):
+        self.need_probas=False
         super(SCMLateFusionClassifier, self).__init__(random_state=random_state,
                                                       classifier_names=classifier_names,
                                                       classifier_configs=classifier_configs,
-                                                      nb_cores=nb_cores,
-                                                      nb_view=nb_view)
+                                                      nb_cores=nb_cores
+                                                      )
         self.scm_classifier = None
         self.p = p
-        self.max_attributes = max_attributes
+        self.max_rules = max_rules
         self.order = order
         self.model_type = model_type
         self.param_names+=["model_type", "max_rules", "p", "order"]
@@ -67,7 +68,7 @@ class SCMLateFusionClassifier(LateFusionClassifier):
     def fit(self, X, y, train_indices=None, view_indices=None):
         super(SCMLateFusionClassifier, self).fit(X, y,
                                                  train_indices=train_indices,
-                                                 views_indices=view_indices)
+                                                 view_indices=view_indices)
         self.scm_fusion_fit(X, y, train_indices=train_indices, view_indices=view_indices)
         return self
 
@@ -75,7 +76,7 @@ class SCMLateFusionClassifier(LateFusionClassifier):
         example_indices, view_indices = get_examples_views_indices(X,
                                                                    example_indices,
                                                                    view_indices)
-        monoview_decisions = np.zeros((len(example_indices), self.nb_view),
+        monoview_decisions = np.zeros((len(example_indices), X.nb_view),
                                       dtype=int)
         for index, view_index in enumerate(view_indices):
             monoview_decision = self.monoview_estimators[index].predict(
@@ -88,11 +89,11 @@ class SCMLateFusionClassifier(LateFusionClassifier):
     def scm_fusion_fit(self, X, y, train_indices=None, view_indices=None):
         train_indices, view_indices = get_examples_views_indices(X, train_indices, view_indices)
 
-        self.scm_classifier = DecisionStumpSCMNew(p=self.p, max_rules=self.max_attributes, model_type=self.model_type,
-                                                  random_state=self.randomState)
-        monoview_decisions = np.zeros((len(train_indices), self.nb_view), dtype=int)
+        self.scm_classifier = DecisionStumpSCMNew(p=self.p, max_rules=self.max_rules, model_type=self.model_type,
+                                                  random_state=self.random_state)
+        monoview_decisions = np.zeros((len(train_indices), X.nb_view), dtype=int)
         for index, view_index in enumerate(view_indices):
-            monoview_decisions[:, index] = self.monoviewClassifiers[index].predict(
+            monoview_decisions[:, index] = self.monoview_estimators[index].predict(
                 X.get_v(view_index, train_indices))
         features = self.generate_interactions(monoview_decisions)
         features = np.array([np.array([feat for feat in feature])

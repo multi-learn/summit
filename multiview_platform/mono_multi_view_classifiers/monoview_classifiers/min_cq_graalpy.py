@@ -30,7 +30,7 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
-        return True
+        return False
 
     def set_params(self, **params):
         self.mu = params["mu"]

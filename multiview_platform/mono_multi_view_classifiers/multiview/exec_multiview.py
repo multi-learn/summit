@@ -141,9 +141,9 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
     logging.debug("Done:\t Fitting classifier")
 
     logging.debug("Start:\t Predicting")
-    train_labels = classifier.predict(dataset_var, predict_indices=learning_indices,
+    train_labels = classifier.predict(dataset_var, example_indices=learning_indices,
                                       view_indices=views_indices)
-    test_labels = classifier.predict(dataset_var, predict_indices=validation_indices,
+    test_labels = classifier.predict(dataset_var, example_indices=validation_indices,
                                      view_indices=views_indices)
     full_labels = np.zeros(labels.shape, dtype=int) - 100
     for train_index, index in enumerate(learning_indices):

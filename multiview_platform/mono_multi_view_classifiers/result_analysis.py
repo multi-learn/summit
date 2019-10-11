@@ -147,22 +147,22 @@ def getExampleErrorsBiclass(groud_truth, results):
 
     Returns
     -------
-    exampleErrors : dict of np.array
+    example_errors : dict of np.array
         For each classifier, has an entry with a `np.array` over the examples, with a 1 if the examples was
         well-classified, a 0 if not and if it's multiclass classification, a -100 if the examples was not seen during
         the one versus one classification.
     """
-    exampleErrors = {}
+    example_errors = {}
 
     for classifierResult in results:
-        errorOnExamples = np.equal(classifierResult.full_labels_pred,
+        error_on_examples = np.equal(classifierResult.full_labels_pred,
                                    groud_truth).astype(int)
         unseenExamples = np.where(groud_truth == -100)[0]
-        errorOnExamples[unseenExamples] = -100
-        exampleErrors[classifierResult.get_classifier_name()] = {
-            "errorOnExamples": errorOnExamples}
+        error_on_examples[unseenExamples] = -100
+        example_errors[classifierResult.get_classifier_name()] = {
+            "error_on_examples": error_on_examples}
 
-    return exampleErrors
+    return example_errors
 
 
 def get_fig_size(nb_results, min_size=15, multiplier=1.0, bar_width=0.35):
@@ -383,7 +383,7 @@ def iterCmap(statsIter):
 
 def publish2Dplot(data, classifiers_names, nbClassifiers, nbExamples, nbCopies,
                   fileName, minSize=10,
-                  width_denominator=2.0, height_denominator=20.0, statsIter=1):
+                  width_denominator=2.0, height_denominator=20.0, stats_iter=1):
     r"""Used to generate a 2D plot of the errors.
 
     Parameters
@@ -407,7 +407,7 @@ def publish2Dplot(data, classifiers_names, nbClassifiers, nbExamples, nbCopies,
         To obtain the image width, the number of classifiers will be divided by this number.
     height_denominator : float, optional, default: 1.0
         To obtain the image width, the number of examples will be divided by this number.
-    statsIter : int, optional, default: 1
+    stats_iter : int, optional, default: 1
         The number of statistical iterations realized.
 
     Returns
@@ -417,26 +417,26 @@ def publish2Dplot(data, classifiers_names, nbClassifiers, nbExamples, nbCopies,
     figHeight = max(nbExamples / height_denominator, minSize)
     figKW = {"figsize": (figWidth, figHeight)}
     fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
-    cmap, norm = iterCmap(statsIter)
+    cmap, norm = iterCmap(stats_iter)
     cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm,
                      aspect='auto')
     plt.title('Errors depending on the classifier')
     ticks = np.arange(nbCopies / 2 - 0.5, nbClassifiers * nbCopies, nbCopies)
     labels = classifiers_names
     plt.xticks(ticks, labels, rotation="vertical")
-    cbar = fig.colorbar(cax, ticks=[-100 * statsIter / 2, 0, statsIter])
+    cbar = fig.colorbar(cax, ticks=[-100 * stats_iter / 2, 0, stats_iter])
     cbar.ax.set_yticklabels(['Unseen', 'Always Wrong', 'Always Right'])
     fig.tight_layout()
     fig.savefig(fileName + "error_analysis_2D.png", bbox_inches="tight", transparent=True)
     plt.close()
 
 
-def publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples, fileName):
+def publishErrorsBarPlot(error_on_examples, nbClassifiers, nbExamples, fileName):
     r"""Used to generate a barplot of the muber of classifiers that failed to classify each examples
 
     Parameters
     ----------
-    errorOnExamples : np.array of shape `(nbExamples,)`
+    error_on_examples : np.array of shape `(nbExamples,)`
         An array counting how many classifiers failed to classifiy each examples.
     classifiers_names : list of str
         The names of the classifiers.
@@ -452,7 +452,7 @@ def publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples, fileName):
     """
     fig, ax = plt.subplots()
     x = np.arange(nbExamples)
-    plt.bar(x, errorOnExamples)
+    plt.bar(x, error_on_examples)
     plt.ylim([0, nbClassifiers])
     plt.title("Number of classifiers that failed to classify each example")
     fig.savefig(fileName + "error_analysis_bar.png", transparent=True)
@@ -466,7 +466,7 @@ def gen_error_data(example_errors, base_file_name, nbCopies=2):
     ----------
     example_errors : dict of dicts of np.arrays
         A dictionary conatining all the useful data. Organized as :
-        `example_errors[<classifier_name>]["errorOnExamples"]` is a np.array of ints with a
+        `example_errors[<classifier_name>]["error_on_examples"]` is a np.array of ints with a
         - 1 if the classifier `<classifier_name>` classifier well the example,
         - 0 if it fail to classify the example,
         - -100 if it did not classify the example (multiclass one versus one).
@@ -490,44 +490,44 @@ def gen_error_data(example_errors, base_file_name, nbCopies=2):
     data : np.array of shape `(nbClassifiers, nbExamples)`
         A matrix with zeros where the classifier failed to classifiy the example, ones where it classified it well
         and -100 if the example was not classified.
-    errorOnExamples : np.array of shape `(nbExamples,)`
+    error_on_examples : np.array of shape `(nbExamples,)`
         An array counting how many classifiers failed to classifiy each examples.
     """
     nbClassifiers = len(example_errors)
-    nbExamples = len(list(example_errors.values())[0]["errorOnExamples"])
+    nbExamples = len(list(example_errors.values())[0]["error_on_examples"])
     classifiers_names = example_errors.keys()
 
     data = np.zeros((nbExamples, nbClassifiers * nbCopies))
     temp_data = np.zeros((nbExamples, nbClassifiers))
-    for classifierIndex, (classifier_name, errorOnExamples) in enumerate(
+    for classifierIndex, (classifier_name, error_on_examples) in enumerate(
             example_errors.items()):
         for iter_index in range(nbCopies):
-            data[:, classifierIndex * nbCopies + iter_index] = errorOnExamples[
-                "errorOnExamples"]
-            temp_data[:, classifierIndex] = errorOnExamples["errorOnExamples"]
-    errorOnExamples = -1 * np.sum(data, axis=1) / nbCopies + nbClassifiers
+            data[:, classifierIndex * nbCopies + iter_index] = error_on_examples[
+                "error_on_examples"]
+            temp_data[:, classifierIndex] = error_on_examples["error_on_examples"]
+    error_on_examples = -1 * np.sum(data, axis=1) / nbCopies + nbClassifiers
 
     np.savetxt(base_file_name + "2D_plot_data.csv", data, delimiter=",")
     np.savetxt(base_file_name + "bar_plot_data.csv", temp_data, delimiter=",")
 
-    return nbClassifiers, nbExamples, nbCopies, classifiers_names, data, errorOnExamples
+    return nbClassifiers, nbExamples, nbCopies, classifiers_names, data, error_on_examples
 
 
-def publishExampleErrors(exampleErrors, directory, databaseName, labels_names):
+def publishExampleErrors(example_errors, directory, databaseName, labels_names):
     logging.debug("Start:\t Biclass Label analysis figure generation")
 
     base_file_name = directory + time.strftime(
         "%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + "_vs_".join(
         labels_names) + "-"
 
-    nbClassifiers, nbExamples, nCopies, classifiers_names, data, errorOnExamples = gen_error_data(
-        exampleErrors,
+    nbClassifiers, nbExamples, nCopies, classifiers_names, data, error_on_examples = gen_error_data(
+        example_errors,
         base_file_name)
 
     publish2Dplot(data, classifiers_names, nbClassifiers, nbExamples, nCopies,
                   base_file_name)
 
-    publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples,
+    publishErrorsBarPlot(error_on_examples, nbClassifiers, nbExamples,
                          base_file_name)
 
     logging.debug("Done:\t Biclass Label analysis figures generation")
@@ -604,8 +604,8 @@ def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metric
 
         biclass_results[iteridex][
             str(classifierPositive) + str(classifierNegative)] = {
-            "metricsScores": metrics_scores,
-            "exampleErrors": example_errors}
+            "metrics_scores": metrics_scores,
+            "example_errors": example_errors}
 
     logging.debug("Done:\t Analzing all biclass resuls")
     return results, biclass_results
@@ -628,8 +628,8 @@ def gen_metrics_scores_multiclass(results, true_labels, metrics,
             train_indices, test_indices, multiclass_test_indices = classification_indices
 
             for classifier_name, resultDictionary in iter_results.items():
-                if not "metricsScores" in resultDictionary:
-                    results[iter_index][classifier_name]["metricsScores"] = {}
+                if not "metrics_scores" in resultDictionary:
+                    results[iter_index][classifier_name]["metrics_scores"] = {}
                 train_score = metric_module.score(true_labels[train_indices],
                                                 resultDictionary["labels"][
                                                     train_indices],
@@ -653,7 +653,7 @@ def get_error_on_labels_multiclass(multiclass_results, multiclass_labels):
         for classifier_name, classifier_results in iter_results.items():
             error_on_examples = classifier_results["labels"] == multiclass_labels
             multiclass_results[iter_index][classifier_name][
-                "errorOnExamples"] = error_on_examples.astype(int)
+                "error_on_examples"] = error_on_examples.astype(int)
 
     logging.debug("Done:\t Getting errors on each example for each classifier")
 
@@ -671,11 +671,11 @@ def publishMulticlassScores(multiclass_results, metrics, stats_iter, direcories,
             classifiers_names = np.array([classifier_name for classifier_name in
                                          multiclass_results[iter_index].keys()])
             train_scores = np.array([multiclass_results[iter_index][
-                                        classifier_name]["metricsScores"][
+                                        classifier_name]["metrics_scores"][
                                         metric[0]][0]
                                     for classifier_name in classifiers_names])
             validationScores = np.array([multiclass_results[iter_index][
-                                             classifier_name]["metricsScores"][
+                                             classifier_name]["metrics_scores"][
                                              metric[0]][1]
                                          for classifier_name in
                                          classifiers_names])
@@ -703,14 +703,14 @@ def publishMulticlassExmapleErrors(multiclass_results, directories,
         base_file_name = directory + time.strftime(
             "%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-"
 
-        nbClassifiers, nbExamples, nCopies, classifiers_names, data, errorOnExamples = gen_error_data(
+        nbClassifiers, nbExamples, nCopies, classifiers_names, data, error_on_examples = gen_error_data(
             multiclassResult,
             base_file_name)
 
         publish2Dplot(data, classifiers_names, nbClassifiers, nbExamples,
                       nCopies, base_file_name)
 
-        publishErrorsBarPlot(errorOnExamples, nbClassifiers, nbExamples,
+        publishErrorsBarPlot(error_on_examples, nbClassifiers, nbExamples,
                              base_file_name)
 
         logging.debug("Done:\t Multiclass Label analysis figure generation")
@@ -793,7 +793,7 @@ def publish_iter_biclass_metrics_scores(iter_results, directory, labels_dictiona
                 if exc.errno != errno.EEXIST:
                     raise
 
-        for metricName, scores in iterResult["metricsScores"].items():
+        for metricName, scores in iterResult["metrics_scores"].items():
             trainMeans, trainSTDs = numpy_mean_and_std(scores["train_scores"])
             testMeans, testSTDs = numpy_mean_and_std(scores["test_scores"])
 
@@ -803,24 +803,22 @@ def publish_iter_biclass_metrics_scores(iter_results, directory, labels_dictiona
                 stats_iter) + "_iter-" + metricName + ".png"
             nbResults = names.shape[0]
 
-            plotMetricScores(train_scores=trainMeans, test_scores=testMeans,
-                             names=names, nbResults=nbResults,
-                             metricName=metricName, fileName=fileName,
-                             tag=" averaged",
+            plotMetricScores(trainMeans, testMeans, names, nbResults,
+                             metricName, fileName, tag=" averaged",
                              train_STDs=trainSTDs, test_STDs=testSTDs)
             results+=[[classifiersName, metricName, testMean, testSTD] for classifiersName, testMean, testSTD in zip(names, testMeans, testSTDs)]
     return results
 
 
 def gen_error_dat_glob(combi_results, stats_iter, base_file_name):
-    nbExamples = combi_results["errorOnExamples"].shape[1]
-    nbClassifiers = combi_results["errorOnExamples"].shape[0]
-    data = np.transpose(combi_results["errorOnExamples"])
-    errorOnExamples = -1 * np.sum(data, axis=1) + (nbClassifiers * stats_iter)
+    nbExamples = combi_results["error_on_examples"].shape[1]
+    nbClassifiers = combi_results["error_on_examples"].shape[0]
+    data = np.transpose(combi_results["error_on_examples"])
+    error_on_examples = -1 * np.sum(data, axis=1) + (nbClassifiers * stats_iter)
     np.savetxt(base_file_name + "clf_errors.csv", data, delimiter=",")
-    np.savetxt(base_file_name + "example_errors.csv", errorOnExamples,
+    np.savetxt(base_file_name + "example_errors.csv", error_on_examples,
                delimiter=",")
-    return nbExamples, nbClassifiers, data, errorOnExamples
+    return nbExamples, nbClassifiers, data, error_on_examples
 
 
 def publish_iter_biclass_example_errors(iter_results, directory, labels_dictionary,
@@ -836,13 +834,13 @@ def publish_iter_biclass_example_errors(iter_results, directory, labels_dictiona
         logging.debug(
             "Start:\t Global biclass label analysis figure generation")
 
-        nbExamples, nbClassifiers, data, errorOnExamples = gen_error_dat_glob(
+        nbExamples, nbClassifiers, data, error_on_examples = gen_error_dat_glob(
             combiResults, stats_iter, base_file_name)
 
         publish2Dplot(data, classifiers_names, nbClassifiers, nbExamples, 1,
                       base_file_name, stats_iter=stats_iter)
 
-        publishErrorsBarPlot(errorOnExamples, nbClassifiers * stats_iter,
+        publishErrorsBarPlot(error_on_examples, nbClassifiers * stats_iter,
                              nbExamples, base_file_name)
 
         logging.debug(
@@ -853,7 +851,7 @@ def publish_iter_multiclass_metrics_scores(iter_multiclass_results, classifiers_
                                            data_base_name, directory, stats_iter,
                                            min_size=10):
     results = []
-    for metric_name, scores in iter_multiclass_results["metricsScores"].items():
+    for metric_name, scores in iter_multiclass_results["metrics_scores"].items():
         trainMeans, trainSTDs = numpy_mean_and_std(scores["train_scores"])
         testMeans, testSTDs = numpy_mean_and_std(scores["test_scores"])
 
@@ -863,10 +861,8 @@ def publish_iter_multiclass_metrics_scores(iter_multiclass_results, classifiers_
             "%Y_%m_%d-%H_%M_%S") + "-" + data_base_name + "-Mean_on_" + str(
             stats_iter) + "_iter-" + metric_name + ".png"
 
-        plotMetricScores(train_scores=trainMeans, test_scores=testMeans,
-                         names=classifiers_names, nbResults=nb_results,
-                         metricName=metric_name, fileName=file_name,
-                         tag=" averaged multiclass",
+        plotMetricScores(trainMeans, testMeans, classifiers_names, nb_results,
+                         metric_name, file_name, tag=" averaged multiclass",
                          train_STDs=trainSTDs, test_STDs=testSTDs)
 
         results+=[[classifiers_name, metric_name,testMean, testSTD] for classifiers_name, testMean, testSTD in zip(classifiers_names, testMeans, testSTDs)]
@@ -895,7 +891,7 @@ def gen_classifiers_dict(results, metrics):
     classifiers_dict = dict((classifier_name, classifierIndex)
                            for classifierIndex, classifier_name
                            in enumerate(
-        results[0][list(results[0].keys())[0]]["metricsScores"][metrics[0][0]][
+        results[0][list(results[0].keys())[0]]["metrics_scores"][metrics[0][0]][
             "classifiers_names"]))
     return classifiers_dict, len(classifiers_dict)
 
@@ -904,19 +900,19 @@ def add_new_labels_combination(iterBiclassResults, labelsComination,
                                nbClassifiers, nbExamples):
     if labelsComination not in iterBiclassResults:
         iterBiclassResults[labelsComination] = {}
-        iterBiclassResults[labelsComination]["metricsScores"] = {}
+        iterBiclassResults[labelsComination]["metrics_scores"] = {}
 
-        iterBiclassResults[labelsComination]["errorOnExamples"] = np.zeros(
+        iterBiclassResults[labelsComination]["error_on_examples"] = np.zeros(
             (nbClassifiers,
              nbExamples),
             dtype=int)
     return iterBiclassResults
 
 
-def add_new_metric(iter_biclass_results, metric, labels_comination, nb_classifiers,
+def add_new_metric(iter_biclass_results, metric, labels_combination, nb_classifiers,
                    stats_iter):
-    if metric[0] not in iter_biclass_results[labels_comination]["metrics_scores"]:
-        iter_biclass_results[labels_comination]["metrics_scores"][metric[0]] = {
+    if metric[0] not in iter_biclass_results[labels_combination]["metrics_scores"]:
+        iter_biclass_results[labels_combination]["metrics_scores"][metric[0]] = {
             "train_scores":
                 np.zeros((nb_classifiers, stats_iter)),
             "test_scores":
@@ -953,11 +949,10 @@ def analyzebiclass_iter(biclass_results, metrics, stats_iter, directory,
                     iter_biclass_results[labelsComination]["metrics_scores"][
                         metric[0]]["test_scores"][
                         classifiers_dict[classifier_name], iter_index] = testScore
-
-            for classifier_name, errorOnExample in results[
+            for classifier_name, error_on_example in results[
                 "example_errors"].items():
                 iter_biclass_results[labelsComination]["error_on_examples"][
-                classifiers_dict[classifier_name], :] += errorOnExample[
+                classifiers_dict[classifier_name], :] += error_on_example[
                     "error_on_examples"]
 
     results = publish_iter_biclass_metrics_scores(

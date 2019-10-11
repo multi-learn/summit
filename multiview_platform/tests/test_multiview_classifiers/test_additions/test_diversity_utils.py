@@ -29,7 +29,7 @@ class FakeDivCoupleClf(diversity_utils.CoupleDiversityFusionClassifier):
                                                monoview_estimators=monoview_estimators)
         self.rs = rs
 
-    def diversity_score(self, a, b, c):
+    def diversity_measure(self, a, b, c):
         return self.rs.randint(0,100)
 
 
@@ -43,7 +43,7 @@ class FakeDivGlobalClf(diversity_utils.GlobalDiversityFusionClassifier):
                                                monoview_estimators=monoview_estimators)
         self.rs = rs
 
-    def diversity_score(self, a, b, c):
+    def diversity_measure(self, a, b, c):
         return self.rs.randint(0,100)
 
 class Test_DiversityFusion(unittest.TestCase):

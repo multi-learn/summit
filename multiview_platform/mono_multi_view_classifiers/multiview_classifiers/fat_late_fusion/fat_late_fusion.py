@@ -67,9 +67,6 @@ class FatLateFusionClass:
         votes = np.zeros((len(usedIndices), DATASET.get("Metadata").attrs["nbClass"]), dtype=float)
         for usedIndex, exampleIndex in enumerate(usedIndices):
             for monoviewDecisionIndex, monoviewDecision in enumerate(self.monoviewDecisions):
-                print(monoviewDecision[exampleIndex])
-                print(self.weights[monoviewDecisionIndex])
-                print(votes[usedIndex, monoviewDecision[exampleIndex]])
                 votes[usedIndex, monoviewDecision[exampleIndex]] += self.weights[monoviewDecisionIndex]
         predictedLabels = np.argmax(votes, axis=1)
         return predictedLabels
