@@ -61,7 +61,7 @@ class DecisionTreePregen(DecisionTreeClassifier, BaseMonoviewClassifier,
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""
-        return True
+        return False
 
     def getInterpret(self, directory, y_test):
         interpretString = ""
