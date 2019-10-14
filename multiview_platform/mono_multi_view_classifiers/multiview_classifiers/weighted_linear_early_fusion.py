@@ -2,10 +2,13 @@ import numpy as np
 import inspect
 
 # from ..utils.dataset import get_v
-from ..multiview.multiview_utils import BaseMultiviewClassifier, get_examples_views_indices, ConfigGenerator, get_available_monoview_classifiers
+from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import BaseMultiviewClassifier
+from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import get_examples_views_indices
+from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import ConfigGenerator
+from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import get_available_monoview_classifiers
 
 
-from .. import monoview_classifiers
+from  multiview_platform.mono_multi_view_classifiers import monoview_classifiers
 
 classifier_class_name = "WeightedLinearEarlyFusion"
 

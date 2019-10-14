@@ -4,12 +4,13 @@ import unittest
 import h5py
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
+from multiview_platform.tests.utils import rm_tmp, tmp_path
 
-from ..utils import rm_tmp, tmp_path
 
-from ...mono_multi_view_classifiers.utils.dataset import Dataset
-from ...mono_multi_view_classifiers.utils import hyper_parameter_search
-from ...mono_multi_view_classifiers.multiview_classifiers import weighted_linear_early_fusion
+from multiview_platform.mono_multi_view_classifiers.utils.dataset import Dataset
+from multiview_platform.mono_multi_view_classifiers.utils import hyper_parameter_search
+from multiview_platform.mono_multi_view_classifiers.multiview_classifiers import weighted_linear_early_fusion
+
 
 class Test_randomized_search(unittest.TestCase):
 

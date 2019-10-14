@@ -4,7 +4,7 @@ import unittest
 import h5py
 import numpy as np
 
-from .utils import rm_tmp, tmp_path, test_dataset
+from multiview_platform.tests.utils import rm_tmp, tmp_path, test_dataset
 
 from multiview_platform.mono_multi_view_classifiers import exec_classif
 

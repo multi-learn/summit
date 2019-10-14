@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from ....mono_multi_view_classifiers.multiview_classifiers.additions import diversity_utils
+import  multiview_platform.mono_multi_view_classifiers.multiview_classifiers.additions.diversity_utils  as du
 
 
 class FakeDataset():
@@ -19,7 +19,7 @@ class FakeDataset():
         return np.unique(self.labels[example_indices])
 
 
-class FakeDivCoupleClf(diversity_utils.CoupleDiversityFusionClassifier):
+class FakeDivCoupleClf(du.CoupleDiversityFusionClassifier):
 
     def __init__(self, rs, classifier_names=None,
                  classifiers_config=None, monoview_estimators=None):
@@ -33,7 +33,7 @@ class FakeDivCoupleClf(diversity_utils.CoupleDiversityFusionClassifier):
         return self.rs.randint(0,100)
 
 
-class FakeDivGlobalClf(diversity_utils.GlobalDiversityFusionClassifier):
+class FakeDivGlobalClf(du.GlobalDiversityFusionClassifier):
 
     def __init__(self, rs, classifier_names=None,
                  classifiers_config=None, monoview_estimators=None):

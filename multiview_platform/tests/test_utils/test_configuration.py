@@ -3,9 +3,9 @@ import unittest
 import yaml
 import numpy as np
 
-from ..utils import rm_tmp, tmp_path
-
+from multiview_platform.tests.utils import rm_tmp, tmp_path
 from multiview_platform.mono_multi_view_classifiers.utils import configuration
+
 
 class Test_get_the_args(unittest.TestCase):
 
@@ -13,7 +13,9 @@ class Test_get_the_args(unittest.TestCase):
     def setUpClass(cls):
         rm_tmp()
         cls.path_to_config_file = tmp_path+"config_temp.yml"
-        os.mkdir("./multiview_platform/tests/tmp_tests")
+        path_file = os.path.dirname(os.path.abspath(__file__))
+        make_tmp_dir = os.path.join(path_file, "../tmp_tests")
+        os.mkdir(make_tmp_dir)
         data = {"Base":{"first_arg": 10, "second_arg":[12.5, 1e-06]}, "Classification":{"third_arg":True}}
         with open(cls.path_to_config_file, "w") as config_file:
             yaml.dump(data, config_file)

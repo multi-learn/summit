@@ -3,9 +3,8 @@ import h5py
 import numpy as np
 import os
 
-from ..utils import rm_tmp, tmp_path
-
-from ...mono_multi_view_classifiers.utils import dataset
+from multiview_platform.tests.utils import rm_tmp, tmp_path
+from multiview_platform.mono_multi_view_classifiers.utils import dataset
 
 
 class Test_Dataset(unittest.TestCase):

@@ -3,9 +3,9 @@ import unittest
 
 import numpy as np
 
-from ..utils import rm_tmp, tmp_path
+from multiview_platform.tests.utils import rm_tmp, tmp_path
 
-from ...mono_multi_view_classifiers.utils import execution
+from multiview_platform.mono_multi_view_classifiers.utils import execution
 
 
 class Test_parseTheArgs(unittest.TestCase):
@@ -56,14 +56,14 @@ class Test_getDatabaseFunction(unittest.TestCase):
 
     def test_simple(cls):
         getDB = execution.get_database_function(cls.name, cls.type)
-        from ...mono_multi_view_classifiers.utils.get_multiview_db import \
+        from multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db import \
             get_classic_db_csv
         cls.assertEqual(getDB, get_classic_db_csv)
 
     def test_hdf5(cls):
         cls.type = ".hdf5"
         getDB = execution.get_database_function(cls.name, cls.type)
-        from ...mono_multi_view_classifiers.utils.get_multiview_db import \
+        from multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db import \
             get_classic_db_hdf5
         cls.assertEqual(getDB, get_classic_db_hdf5)
 
@@ -71,7 +71,7 @@ class Test_getDatabaseFunction(unittest.TestCase):
         cls.name = "plausible"
         cls.type = ".hdf5"
         getDB = execution.get_database_function(cls.name, cls.type)
-        from ...mono_multi_view_classifiers.utils.get_multiview_db import \
+        from multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db import \
             get_plausible_db_hdf5
         cls.assertEqual(getDB, get_plausible_db_hdf5)
 
