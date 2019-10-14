@@ -48,7 +48,7 @@ def exec_monoview_multicore(directory, name, labels_names, classification_indice
 def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
                  KFolds, nbCores, databaseType, path,
                  randomState, hyper_param_search="randomized_search",
-                 metrics=[["accuracy_score", None]], nIter=30, view_name="", **args):
+                 metrics=[["accuracy_score", None]], n_iter=30, view_name="", **args):
     logging.debug("Start:\t Loading data")
     kwargs, \
     t_start, \
@@ -82,7 +82,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     classifierModule = getattr(monoview_classifiers, classifier_name)
     classifier_class_name = classifierModule.classifier_class_name
     clKWARGS, testFoldsPreds = getHPs(classifierModule, hyper_param_search,
-                                      nIter, classifier_name, classifier_class_name,
+                                      n_iter, classifier_name, classifier_class_name,
                                       X_train, y_train,
                                       randomState, outputFileName,
                                       KFolds, nbCores, metrics, kwargs)
@@ -116,7 +116,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     stringAnalysis, \
     imagesAnalysis, \
     metricsScores = execute(name, classificationIndices, KFolds, nbCores,
-                            hyper_parameter_search, metrics, nIter, feat, classifier_name,
+                            hyper_parameter_search, metrics, n_iter, feat, classifier_name,
                             clKWARGS, labels_names, X.shape,
                             y_train, y_train_pred, y_test, y_test_pred, t_end,
                             randomState, classifier, outputFileName)

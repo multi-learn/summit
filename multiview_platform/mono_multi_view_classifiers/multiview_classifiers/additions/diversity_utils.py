@@ -8,11 +8,11 @@ import numpy as np
 from ...multiview.multiview_utils import ConfigGenerator, \
     get_examples_views_indices, get_available_monoview_classifiers, \
     BaseMultiviewClassifier
-from .fusion_utils import BaseLateFusionClassifier
+from .fusion_utils import BaseFusionClassifier
 
 
 class DiversityFusionClassifier(BaseMultiviewClassifier,
-                                BaseLateFusionClassifier):
+                                BaseFusionClassifier):
     """This is the base class for all the diversity fusion based classifiers."""
 
     def __init__(self, random_state=None, classifier_names=None,
@@ -27,37 +27,36 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
         self.estimator_pool = monoview_estimators
         self.classifier_configs = classifier_configs
 
-    def fit(self, X, y, train_indices=None, views_indices=None):
-        train_indices, views_indices = get_examples_views_indices(X,
-                                                                  train_indices,
-                                                                  views_indices)
+    def fit(self, X, y, train_indices=None, view_indices=None):
+        train_indices, view_indices = get_examples_views_indices(X,
+                                                                 train_indices,
+                                                                 view_indices)
         if self.estimator_pool is None:
             self.estimator_pool = []
             for classifier_idx, classifier_name in enumerate(self.classifier_names):
                 self.estimator_pool.append([])
-                estimator = self.init_monoview_estimator(classifier_name)
-                for idx, view_idx in enumerate(views_indices):
+                estimator = self.init_monoview_estimator(classifier_name, self.classifier_configs)
+                for idx, view_idx in enumerate(view_indices):
                     estimator.fit(X.get_v(view_idx, train_indices), y[train_indices])
                     self.estimator_pool[classifier_idx].append(estimator)
         else:
             pass #TODO
-        self.monoview_estimators = self.choose_combination(X, y, train_indices, views_indices)
+        self.choose_combination(X, y, train_indices, view_indices)
         return self
 
-    def predict(self, X, example_indices=None, views_indices=None):
+    def predict(self, X, example_indices=None, view_indices=None):
         """Just a weighted majority vote"""
-        example_indices, views_indices = get_examples_views_indices(X,
-                                                                    example_indices,
-                                                                    views_indices)
+        example_indices, view_indices = get_examples_views_indices(X,
+                                                                   example_indices,
+                                                                   view_indices)
         nb_class = X.get_nb_class(example_indices)
         votes = np.zeros((len(example_indices), nb_class), dtype=float)
         monoview_predictions = [monoview_estimator.predict(X.get_v(view_idx, example_indices))
                                 for view_idx, monoview_estimator
-                                in zip(views_indices, self.monoview_estimators)]
+                                in zip(view_indices, self.monoview_estimators)]
         for idx, example_index in enumerate(example_indices):
             for monoview_estimator_index, monoview_prediciton in enumerate(monoview_predictions):
-                votes[idx, monoview_prediciton[
-                    example_index]] += 1
+                votes[idx, int(monoview_prediciton[idx])] += 1
         predicted_labels = np.argmax(votes, axis=1)
         return predicted_labels
 
@@ -94,7 +93,7 @@ class GlobalDiversityFusionClassifier(DiversityFusionClassifier):
             X, examples_indices, view_indices)
         for combinationsIndex, combination in enumerate(combinations):
             combis[combinationsIndex] = combination
-            div_measure[combinationsIndex] = self.diversity_score(
+            div_measure[combinationsIndex] = self.diversity_measure(
                 classifiers_decisions,
                 combination,
                 y[examples_indices])
@@ -123,9 +122,9 @@ class CoupleDiversityFusionClassifier(DiversityFusionClassifier):
                 (view_index_1, classifier_index_1), (
                     view_index_2, classifier_index_2) = binome
                 couple_diversity = np.mean(
-                    self.diversity_score(
-                        classifiers_decisions[view_index_1, classifier_index_1],
-                        classifiers_decisions[view_index_2, classifier_index_2],
+                    self.diversity_measure(
+                        classifiers_decisions[classifier_index_1, view_index_1],
+                        classifiers_decisions[classifier_index_2, view_index_2],
                         y[examples_indices])
                     )
                 couple_diversities[binome_index] = couple_diversity

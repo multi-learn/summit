@@ -2,18 +2,19 @@ import numpy as np
 import inspect
 
 # from ..utils.dataset import get_v
+
 from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import BaseMultiviewClassifier
 from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import get_examples_views_indices
 from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import ConfigGenerator
 from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import get_available_monoview_classifiers
-
+from multiview_platform.mono_multi_view_classifiers.multiview_classifiers.additions.fusion_utils import BaseFusionClassifier
 
 from  multiview_platform.mono_multi_view_classifiers import monoview_classifiers
 
 classifier_class_name = "WeightedLinearEarlyFusion"
 
 
-class WeightedLinearEarlyFusion(BaseMultiviewClassifier):
+class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
 
     def __init__(self, random_state=None, view_weights=None,
                  monoview_classifier_name="decision_tree",
@@ -44,7 +45,7 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier):
         monoview_classifier_class = getattr(monoview_classifier_module,
                                             monoview_classifier_module.classifier_class_name)
         self.monoview_classifier = monoview_classifier_class()
-        self.set_monoview_classifier_config(monoview_classifier_name,
+        self.init_monoview_estimator(monoview_classifier_name,
                                        monoview_classifier_config)
         return self
 
@@ -59,8 +60,8 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier):
         self.monoview_classifier.fit(X, y[train_indices])
         return self
 
-    def predict(self, X, predict_indices=None, view_indices=None):
-        _, X = self.transform_data_to_monoview(X, predict_indices, view_indices)
+    def predict(self, X, example_indices=None, view_indices=None):
+        _, X = self.transform_data_to_monoview(X, example_indices, view_indices)
         predicted_labels = self.monoview_classifier.predict(X)
         return predicted_labels
 
@@ -88,11 +89,11 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier):
             , axis=1)
         return monoview_data
 
-    def set_monoview_classifier_config(self, monoview_classifier_name, monoview_classifier_config):
-        if monoview_classifier_name in monoview_classifier_config:
-            self.monoview_classifier.set_params(**monoview_classifier_config[monoview_classifier_name])
-        else:
-            self.monoview_classifier.set_params(**monoview_classifier_config)
+    # def set_monoview_classifier_config(self, monoview_classifier_name, monoview_classifier_config):
+    #     if monoview_classifier_name in monoview_classifier_config:
+    #         self.monoview_classifier.set_params(**monoview_classifier_config[monoview_classifier_name])
+    #     else:
+    #         self.monoview_classifier.set_params(**monoview_classifier_config)
 
 
 

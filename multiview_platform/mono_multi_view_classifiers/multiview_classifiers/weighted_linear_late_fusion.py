@@ -8,15 +8,15 @@ classifier_class_name = "WeightedLinearLateFusion"
 
 class WeightedLinearLateFusion(LateFusionClassifier):
     def __init__(self, random_state, classifier_names=None,
-                 classifier_configs=None, nb_view=None, nb_cores=1):
+                 classifier_configs=None, weights=None, nb_cores=1):
+        self.need_probas=True
         super(WeightedLinearLateFusion, self).__init__(random_state=random_state,
                                       classifier_names=classifier_names,
                                       classifier_configs=classifier_configs,
-                                      nb_cores=nb_cores,
-                                      nb_view=nb_view)
+                                      nb_cores=nb_cores,weights=weights)
 
-    def predict(self, X, example_indices=None, views_indices=None):
-        example_indices, views_indices = get_examples_views_indices(X, example_indices, views_indices)
+    def predict(self, X, example_indices=None, view_indices=None):
+        example_indices, views_indices = get_examples_views_indices(X, example_indices, view_indices)
         view_scores = []
         for index, viewIndex in enumerate(views_indices):
             view_scores.append(np.array(self.monoview_estimators[index].predict_proba(

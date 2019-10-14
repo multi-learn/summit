@@ -19,7 +19,7 @@ class MultiviewResult(object):
         multiview_classifier_module = getattr(multiview_classifiers,
                                             self.classifier_name)
         multiview_classifier = getattr(multiview_classifier_module,
-                                       multiview_classifier_module.classifier_class_name)()
+                                       multiview_classifier_module.classifier_class_name)(42)
         return multiview_classifier.short_name
 
 
@@ -32,6 +32,7 @@ class BaseMultiviewClassifier(BaseEstimator, ClassifierMixin):
     def __init__(self, random_state):
         self.random_state = random_state
         self.short_name = self.__class__.__name__
+        self.weird_strings = {}
 
     def genBestParams(self, detector):
         return dict((param_name, detector.best_params_[param_name])
@@ -102,7 +103,8 @@ class ConfigGenerator():
             self.distribs[classifier_name] = dict((param_name, param_distrib)
                                   for param_name, param_distrib in
                                   zip(classifier_class().param_names,
-                                      classifier_class().distribs))
+                                      classifier_class().distribs)
+                                if param_name!="random_state")
 
     def rvs(self, random_state=None):
         config_sample = {}
@@ -117,11 +119,19 @@ class ConfigGenerator():
         return config_sample
 
 
-def get_available_monoview_classifiers():
-    classifiers_names = [module_name
+def get_available_monoview_classifiers(need_probas=False):
+    available_classifiers = [module_name
                          for module_name in dir(monoview_classifiers)
                          if not module_name.startswith("__")]
-    return classifiers_names
+    if need_probas:
+        proba_classifiers = []
+        for module_name in available_classifiers:
+            module = getattr(monoview_classifiers, module_name)
+            can_probas = getattr(module, module.classifier_class_name)().canProbas()
+            if can_probas:
+                proba_classifiers.append(module_name)
+        available_classifiers = proba_classifiers
+    return available_classifiers
 
 def get_monoview_classifier(classifier_name):
     classifier_module = getattr(monoview_classifiers, classifier_name)

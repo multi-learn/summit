@@ -125,6 +125,72 @@ class DatasetError(Exception):
     def __init__(self, *args, **kwargs):
         Exception.__init__(self, *args, **kwargs)
 
+def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
+                     random_state, full=False, add_noise=False, noise_std=0.15,
+                        path_for_new="../data/"):
+    """Used to load a hdf5 database"""
+    if full:
+        dataset_file = h5py.File(path_f + name_DB + ".hdf5", "r")
+        dataset = Dataset(hdf5_file=dataset_file)
+        dataset_name = name_DB
+        labels_dictionary = dict((label_index, label_name)
+                                 for label_index, label_name
+                                 in enumerate(dataset.get_label_names()))
+    else:
+        dataset_file = h5py.File(path_f + name_DB + ".hdf5", "r")
+        dataset = Dataset(hdf5_file=dataset_file)
+        labels_dictionary = dataset.select_views_and_labels(nb_labels=nb_class,
+                                        selected_label_names=asked_labels_names,
+                                        view_names=views, random_state=random_state,
+                                                            path_for_new=path_for_new)
+        dataset_name = dataset.get_name()
+
+    if add_noise:
+        dataset.add_gaussian_noise(random_state, path_for_new, noise_std)
+        dataset_name = dataset.get_name()
+    else:
+        pass
+    return dataset, labels_dictionary, dataset_name
+
+
+def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
+                       random_state, full=False, add_noise=False, noise_std=0.15,
+                        delimiter=",", path_for_new="../data/"):
+    # TODO : Update this one
+    labels_names = np.genfromtxt(pathF + nameDB + "-labels-names.csv",
+                                dtype='str', delimiter=delimiter)
+    datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")
+    labels = np.genfromtxt(pathF + nameDB + "-labels.csv", delimiter=delimiter)
+    labelsDset = datasetFile.create_dataset("Labels", labels.shape, data=labels)
+    labelsDset.attrs["names"] = [labelName.encode() for labelName in
+                                 labels_names]
+    viewFileNames = [viewFileName for viewFileName in
+                     os.listdir(pathF + "Views/")]
+    for viewIndex, viewFileName in enumerate(os.listdir(pathF + "Views/")):
+        viewFile = pathF + "Views/" + viewFileName
+        if viewFileName[-6:] != "-s.csv":
+            viewMatrix = np.genfromtxt(viewFile, delimiter=delimiter)
+            viewDset = datasetFile.create_dataset("View" + str(viewIndex),
+                                                  viewMatrix.shape,
+                                                  data=viewMatrix)
+            del viewMatrix
+            viewDset.attrs["name"] = viewFileName[:-4]
+            viewDset.attrs["sparse"] = False
+        else:
+            pass
+    metaDataGrp = datasetFile.create_group("Metadata")
+    metaDataGrp.attrs["nbView"] = len(viewFileNames)
+    metaDataGrp.attrs["nbClass"] = len(labels_names)
+    metaDataGrp.attrs["datasetLength"] = len(labels)
+    datasetFile.close()
+    datasetFile, labelsDictionary, dataset_name = get_classic_db_hdf5(views, pathF, nameDB,
+                                                     NB_CLASS, askedLabelsNames,
+                                                     random_state, full,
+                                                     path_for_new=path_for_new)
+
+    return datasetFile, labelsDictionary, dataset_name
+
+
 #
 # def get_classes(labels):
 #     labels_set = set(list(labels))
@@ -260,32 +326,7 @@ class DatasetError(Exception):
 #             new_d_set.attrs[key] = value
 
 
-def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
-                     random_state, full=False, add_noise=False, noise_std=0.15,
-                        path_for_new="../data/"):
-    """Used to load a hdf5 database"""
-    if full:
-        dataset_file = h5py.File(path_f + name_DB + ".hdf5", "r")
-        dataset = Dataset(hdf5_file=dataset_file)
-        dataset_name = name_DB
-        labels_dictionary = dict((label_index, label_name)
-                                 for label_index, label_name
-                                 in enumerate(dataset.get_label_names()))
-    else:
-        dataset_file = h5py.File(path_f + name_DB + ".hdf5", "r")
-        dataset = Dataset(hdf5_file=dataset_file)
-        labels_dictionary = dataset.select_views_and_labels(nb_labels=nb_class,
-                                        selected_label_names=asked_labels_names,
-                                        view_names=views, random_state=random_state,
-                                                            path_for_new=path_for_new)
-        dataset_name = dataset.get_name()
 
-    if add_noise:
-        dataset.add_gaussian_noise(random_state, path_for_new, noise_std)
-        dataset_name = dataset.get_name()
-    else:
-        pass
-    return dataset, labels_dictionary, dataset_name
 
 #
 # def add_gaussian_noise(dataset_file, random_state, path_f, dataset_name,
@@ -322,43 +363,6 @@ def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
 #         os.remove(original_dataset_filename)
 #     return noisy_dataset, dataset_name + "_noised"
 
-
-def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
-                       random_state, full=False, add_noise=False, noise_std=0.15,
-                        delimiter=",", path_for_new="../data/"):
-    # TODO : Update this one
-    labels_names = np.genfromtxt(pathF + nameDB + "-labels-names.csv",
-                                dtype='str', delimiter=delimiter)
-    datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")
-    labels = np.genfromtxt(pathF + nameDB + "-labels.csv", delimiter=delimiter)
-    labelsDset = datasetFile.create_dataset("Labels", labels.shape, data=labels)
-    labelsDset.attrs["names"] = [labelName.encode() for labelName in
-                                 labels_names]
-    viewFileNames = [viewFileName for viewFileName in
-                     os.listdir(pathF + "Views/")]
-    for viewIndex, viewFileName in enumerate(os.listdir(pathF + "Views/")):
-        viewFile = pathF + "Views/" + viewFileName
-        if viewFileName[-6:] != "-s.csv":
-            viewMatrix = np.genfromtxt(viewFile, delimiter=delimiter)
-            viewDset = datasetFile.create_dataset("View" + str(viewIndex),
-                                                  viewMatrix.shape,
-                                                  data=viewMatrix)
-            del viewMatrix
-            viewDset.attrs["name"] = viewFileName[:-4]
-            viewDset.attrs["sparse"] = False
-        else:
-            pass
-    metaDataGrp = datasetFile.create_group("Metadata")
-    metaDataGrp.attrs["nbView"] = len(viewFileNames)
-    metaDataGrp.attrs["nbClass"] = len(labels_names)
-    metaDataGrp.attrs["datasetLength"] = len(labels)
-    datasetFile.close()
-    datasetFile, labelsDictionary, dataset_name = get_classic_db_hdf5(views, pathF, nameDB,
-                                                     NB_CLASS, askedLabelsNames,
-                                                     random_state, full,
-                                                     path_for_new=path_for_new)
-
-    return datasetFile, labelsDictionary, dataset_name
 
 # def getLabelSupports(CLASS_LABELS):
 #     """Used to get the number of example for each label"""

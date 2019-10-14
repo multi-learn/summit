@@ -48,6 +48,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
             [estim.predict(X) for estim in self.estimators_])
         self.metrics = np.array([self.plotted_metric.score(pred, y) for pred in
                                  self.staged_predict(X)])
+        return self
 
     def canProbas(self):
         """Used to know if the classifier can return label probabilities"""

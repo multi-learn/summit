@@ -9,15 +9,18 @@ classifier_class_name = "BayesianInferenceClassifier"
 
 class BayesianInferenceClassifier(LateFusionClassifier):
     def __init__(self, random_state, classifier_names=None,
-                 classifier_configs=None, nb_view=None, nb_cores=1):
+                 classifier_configs=None, nb_view=None, nb_cores=1, weights=None):
+        self.need_probas=True
         super(BayesianInferenceClassifier, self).__init__(random_state=random_state,
                                              classifier_names=classifier_names,
                                              classifier_configs=classifier_configs,
                                              nb_cores=nb_cores,
-                                             nb_view=nb_view)
+                                             weights=weights)
 
-    def predict(self, X, example_indices=None, views_indices=None):
-        example_indices, views_indices = get_examples_views_indices(X, example_indices, views_indices)
+    def predict(self, X, example_indices=None, view_indices=None):
+        example_indices, views_indices = get_examples_views_indices(X,
+                                                                    example_indices,
+                                                                    view_indices)
 
         if sum(self.weights) != 1.0:
             self.weights = self.weights / sum(self.weights)
