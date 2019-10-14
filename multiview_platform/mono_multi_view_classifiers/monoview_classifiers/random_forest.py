@@ -10,9 +10,43 @@ __status__ = "Prototype"  # Production, Development, Prototype
 classifier_class_name = "RandomForest"
 
 class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
+    """RandomForest Classifier Class
 
+    Parameters
+    ----------
+    random_state
+
+    n_estimators
+
+    max_depth : int maximum of depth (default : 10)
+
+    criterion : criteria (default : 'gini')
+
+    kwargs
+
+    Attributes
+    ----------
+    param_names
+
+    distribs
+
+    classed_params
+
+    weird_strings
+
+    """
     def __init__(self, random_state=None, n_estimators=10,
                  max_depth=None, criterion='gini', **kwargs):
+        """
+
+        Parameters
+        ----------
+        random_state
+        n_estimators
+        max_depth
+        criterion
+        kwargs
+        """
         super(RandomForest, self).__init__(
             n_estimators=n_estimators,
             max_depth=max_depth,
@@ -28,13 +62,29 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
         self.weird_strings = {}
 
     def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
+        """Used to know if the classifier can return label probabilities
+
+        Returns
+        -------
+        True
+        """
         return True
 
     def getInterpret(self, directory, y_test):
-        interpretString = ""
-        interpretString += self.getFeatureImportance(directory)
-        return interpretString
+        """
+
+        Parameters
+        ----------
+        directory
+        y_test
+
+        Returns
+        -------
+        string for interpretation interpret_string
+        """
+        interpret_string = ""
+        interpret_string += self.getFeatureImportance(directory)
+        return interpret_string
 
 
 # def formatCmdArgs(args):

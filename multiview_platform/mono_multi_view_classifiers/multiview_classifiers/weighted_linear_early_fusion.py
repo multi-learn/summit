@@ -15,10 +15,23 @@ classifier_class_name = "WeightedLinearEarlyFusion"
 
 
 class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
+    """
+    WeightedLinearEarlyFusion
 
+    Parameters
+    ----------
+    random_state
+    view_weights
+    monoview_classifier_name
+    monoview_classifier_config
+
+    Attributes
+    ----------
+    """
     def __init__(self, random_state=None, view_weights=None,
                  monoview_classifier_name="decision_tree",
                  monoview_classifier_config={}):
+
         super(WeightedLinearEarlyFusion, self).__init__(random_state=random_state)
         self.view_weights = view_weights
         self.monoview_classifier_name = monoview_classifier_name

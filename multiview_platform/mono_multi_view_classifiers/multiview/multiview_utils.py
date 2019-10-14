@@ -28,13 +28,34 @@ def get_names(classed_list):
 
 
 class BaseMultiviewClassifier(BaseEstimator, ClassifierMixin):
+    """
+    BaseMultiviewClassifier base of Multiview classifiers
+
+    Parameters
+    ----------
+    random_state : int seed, RandomState instance, or None (default=None)
+        The seed of the pseudo random number generator to use when
+        shuffling the data.
+    """
 
     def __init__(self, random_state):
+
         self.random_state = random_state
         self.short_name = self.__class__.__name__
         self.weird_strings = {}
 
-    def genBestParams(self, detector):
+    def gen_best_params(self, detector):
+        """
+        return best parameters of detector
+        Parameters
+        ----------
+        detector :
+
+        Returns
+        -------
+        best param : dictionary with param name as key and best parameters
+            value
+        """
         return dict((param_name, detector.best_params_[param_name])
                     for param_name in self.param_names)
 

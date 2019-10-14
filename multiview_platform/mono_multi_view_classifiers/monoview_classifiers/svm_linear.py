@@ -9,8 +9,17 @@ __status__ = "Prototype"  # Production, Development, Prototype
 classifier_class_name = "SVMLinear"
 
 class SVMLinear(SVCClassifier, BaseMonoviewClassifier):
+    """SVMLinear
 
+    Parameters
+    ----------
+    random_state
+    C
+    kwargs
+
+    """
     def __init__(self, random_state=None, C=1.0, **kwargs):
+
         super(SVMLinear, self).__init__(
             C=C,
             kernel='linear',

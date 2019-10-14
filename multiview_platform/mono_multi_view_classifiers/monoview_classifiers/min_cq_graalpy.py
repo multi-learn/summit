@@ -8,7 +8,31 @@ from ..monoview.monoview_utils import BaseMonoviewClassifier, CustomUniform
 classifier_class_name = "MinCQGraalpy"
 
 class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
+    """
 
+    Parameters
+    ----------
+    random_state
+    mu
+    self_complemented
+    n_stumps_per_attribute
+    kwargs
+
+    Attributes
+    ----------
+    param_names
+
+    distribs
+
+    n_stumps_per_attribute
+
+    classed_params
+
+    weird_strings
+
+    nbCores
+
+    """
     def __init__(self, random_state=None, mu=0.01, self_complemented=True,
                  n_stumps_per_attribute=1, **kwargs):
         super(MinCQGraalpy, self).__init__(mu=mu,
@@ -29,20 +53,59 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
             self.nbCores = kwargs["nbCores"]
 
     def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
+        """
+        Used to know if the classifier can return label probabilities
+        Returns
+        -------
+        False
+        """
         return False
 
     def set_params(self, **params):
+        """
+        set parameter 'self.mu', 'self.random_state
+        'self.n_stumps_per_attribute
+
+        Parameters
+        ----------
+        params
+
+        Returns
+        -------
+        self : object
+            Returns self.
+        """
         self.mu = params["mu"]
         self.random_state = params["random_state"]
         self.n_stumps_per_attribute = params["n_stumps_per_attribute"]
         return self
 
     def get_params(self, deep=True):
+        """
+
+        Parameters
+        ----------
+        deep : bool (default : true) not used
+
+        Returns
+        -------
+        dictianary with "random_state",  "mu", "n_stumps_per_attribute"
+        """
         return {"random_state": self.random_state, "mu": self.mu,
                 "n_stumps_per_attribute": self.n_stumps_per_attribute}
 
     def getInterpret(self, directory, y_test):
+        """
+
+        Parameters
+        ----------
+        directory
+        y_test
+
+        Returns
+        -------
+        string of interpret_string
+        """
         interpret_string = "Cbound on train :" + str(self.train_cbound)
         np.savetxt(directory + "times.csv", np.array([self.train_time, 0]))
         # interpret_string += "Train C_bound value : "+str(self.cbound_train)

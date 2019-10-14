@@ -44,9 +44,41 @@ __status__ = "Prototype"  # Production, Development, Prototype
 classifier_class_name = "SCM"
 
 class SCM(scm, BaseMonoviewClassifier):
+    """
+    SCM  Classifier
+    Parameters
+    ----------
+    random_state (default : None)
+    model_type : string (default: "conjunction")
+    max_rules : int number maximum of rules (default : 10)
+    p : float value(default : 0.1 )
+
+    kwarg : others arguments
+
+    Attributes
+    ----------
+    param_names
+
+    distribs
+
+    classed_params
+
+    weird_strings
+
+    """
 
     def __init__(self, random_state=None, model_type="conjunction",
                  max_rules=10, p=0.1, **kwargs):
+        """
+
+        Parameters
+        ----------
+        random_state
+        model_type
+        max_rules
+        p
+        kwargs
+        """
         super(SCM, self).__init__(
             random_state=random_state,
             model_type=model_type,
@@ -61,7 +93,13 @@ class SCM(scm, BaseMonoviewClassifier):
         self.weird_strings = {}
 
     def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
+        """
+        Used to know if the classifier can return label probabilities
+
+        Returns
+        -------
+        return False in any case
+        """
         return False
 
     def getInterpret(self, directory, y_test):

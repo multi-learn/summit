@@ -8,9 +8,21 @@ classifier_class_name = "MinCQGraalpyTree"
 
 class MinCQGraalpyTree(RegularizedBinaryMinCqClassifier,
                        BaseMonoviewClassifier):
+    """
 
+    Parameters
+    ----------
+    random_state
+    mu
+    self_complemented
+    n_stumps_per_attribute
+    max_depth
+    kwargs
+
+    """
     def __init__(self, random_state=None, mu=0.01, self_complemented=True,
                  n_stumps_per_attribute=1, max_depth=2, **kwargs):
+
         super(MinCQGraalpyTree, self).__init__(mu=mu,
                                                estimators_generator=TreeClassifiersGenerator(
                                                    n_trees=n_stumps_per_attribute,

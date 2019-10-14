@@ -9,8 +9,28 @@ __status__ = "Prototype"  # Production, Development, Prototype
 classifier_class_name = "SVMPoly"
 
 class SVMPoly(SVCClassifier, BaseMonoviewClassifier):
+    """
+    Class of SVMPoly for SVC Classifier
 
+    Parameters
+    ----------
+    random_state
+
+    C
+
+    degree
+
+    kwargs
+
+    Attributes
+    ----------
+
+    param_names : list of parameters names
+
+    distribs :  list of random_state distribution
+    """
     def __init__(self, random_state=None, C=1.0, degree=3, **kwargs):
+
         super(SVMPoly, self).__init__(
             C=C,
             kernel='poly',
