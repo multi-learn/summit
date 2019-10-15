@@ -4,8 +4,9 @@ import unittest
 import h5py
 import numpy as np
 
-from ...mono_multi_view_classifiers.utils import get_multiview_db
-from ..utils import rm_tmp, tmp_path, test_dataset
+from multiview_platform.mono_multi_view_classifiers.utils import get_multiview_db
+from multiview_platform.tests.utils import rm_tmp, tmp_path
+
 
 class Test_get_classic_db_hdf5(unittest.TestCase):
 

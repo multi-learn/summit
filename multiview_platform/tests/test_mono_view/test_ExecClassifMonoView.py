@@ -5,10 +5,10 @@ import h5py
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
-from ..utils import rm_tmp, tmp_path
+from multiview_platform.tests.utils import rm_tmp, tmp_path
 
-from ...mono_multi_view_classifiers.monoview import exec_classif_mono_view
-from ...mono_multi_view_classifiers.monoview_classifiers import decision_tree
+from multiview_platform.mono_multi_view_classifiers.monoview import exec_classif_mono_view
+from multiview_platform.mono_multi_view_classifiers.monoview_classifiers import decision_tree
 
 
 class Test_initConstants(unittest.TestCase):

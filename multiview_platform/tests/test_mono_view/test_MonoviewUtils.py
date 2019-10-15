@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import StratifiedKFold
 from sklearn.tree.tree import DecisionTreeClassifier
 
-from ...mono_multi_view_classifiers.monoview import monoview_utils
+from multiview_platform.mono_multi_view_classifiers.monoview import monoview_utils
 
 
 class Test_genTestFoldsPreds(unittest.TestCase):

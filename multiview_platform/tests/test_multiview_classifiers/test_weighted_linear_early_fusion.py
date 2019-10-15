@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import os
 
-from ..utils import rm_tmp, tmp_path, test_dataset
+from multiview_platform.tests.utils import rm_tmp, tmp_path, test_dataset
 
 from multiview_platform.mono_multi_view_classifiers.multiview_classifiers import \
     weighted_linear_early_fusion

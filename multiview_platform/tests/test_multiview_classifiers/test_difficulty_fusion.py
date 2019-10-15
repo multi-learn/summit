@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from ...mono_multi_view_classifiers.multiview_classifiers import difficulty_fusion
+from multiview_platform.mono_multi_view_classifiers.multiview_classifiers import difficulty_fusion
 
 
 class Test_difficulty_fusion(unittest.TestCase):

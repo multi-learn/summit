@@ -6,26 +6,60 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 
 def printMetricScore(metricScores, metric_list):
-    metricScoreString = "\n\n"
+    """
+    this function print the metrics scores
+
+    Parameters
+    ----------
+    metricScores : the score of metrics
+
+    metric_list : list of metrics
+
+    Returns
+    -------
+    metric_score_string string constaining all metric results
+    """
+    metric_score_string = "\n\n"
     for metric in metric_list:
-        metricModule = getattr(metrics, metric[0])
+        metric_module = getattr(metrics, metric[0])
         if metric[1] is not None:
-            metricKWARGS = dict((index, metricConfig) for index, metricConfig in
+            metric_kwargs = dict((index, metricConfig) for index, metricConfig in
                                 enumerate(metric[1]))
         else:
-            metricKWARGS = {}
-        metricScoreString += "\tFor " + metricModule.getConfig(
-            **metricKWARGS) + " : "
-        metricScoreString += "\n\t\t- Score on train : " + str(
+            metric_kwargs = {}
+        metric_score_string += "\tFor " + metric_module.getConfig(
+            **metric_kwargs) + " : "
+        metric_score_string += "\n\t\t- Score on train : " + str(
             metricScores[metric[0]][0])
-        metricScoreString += "\n\t\t- Score on test : " + str(
+        metric_score_string += "\n\t\t- Score on test : " + str(
             metricScores[metric[0]][1])
-        metricScoreString += "\n\n"
-    return metricScoreString
+        metric_score_string += "\n\n"
+    return metric_score_string
 
 
 def getTotalMetricScores(metric, trainLabels, testLabels, validationIndices,
                          learningIndices, labels):
+    """
+
+    Parameters
+    ----------
+
+    metric :
+
+    trainLabels : labels of train
+
+    testLabels :  labels of test
+
+    validationIndices :
+
+    learningIndices :
+
+    labels :
+
+    Returns
+    -------
+    list of [trainScore, testScore]
+    """
     metricModule = getattr(metrics, metric[0])
     if metric[1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in
@@ -63,6 +97,52 @@ def execute(classifier, trainLabels,
             name, KFolds,
             hyper_param_search, nIter, metric_list,
             views_indices, random_state, labels, classifierModule):
+    """
+
+    Parameters
+    ----------
+    classifier : classifier used
+
+    trainLabels : labels of train
+
+    testLabels : labels of test
+
+    DATASET :
+
+    classificationKWARGS
+
+    classificationIndices
+
+    labels_dictionary
+
+    views
+
+    nbCores
+
+    times
+
+    name
+
+    KFolds
+
+    hyper_param_search
+
+    nIter
+
+    metric_list
+
+    views_indices
+
+    random_state
+
+    labels
+
+    classifierModule
+
+    Returns
+    -------
+    retuern tuple of (stringAnalysis, imagesAnalysis, metricsScore)
+    """
     classifier_name = classifier.short_name
     learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
 

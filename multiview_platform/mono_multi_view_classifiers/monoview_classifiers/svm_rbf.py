@@ -9,8 +9,24 @@ __status__ = "Prototype"  # Production, Development, Prototype
 classifier_class_name = "SVMRBF"
 
 class SVMRBF(SVCClassifier, BaseMonoviewClassifier):
+    """
+    class SVMRBF for classifier SVCC
 
+    Parameters
+    ----------
+    random_state
+    C
+    kwargs
+
+    Attributes
+    ----------
+
+    param_names : list of parameters names
+
+    distribs :  list of random_state distribution
+    """
     def __init__(self, random_state=None, C=1.0, **kwargs):
+
         super(SVMRBF, self).__init__(
             C=C,
             kernel='rbf',
@@ -27,6 +43,18 @@ class SVMRBF(SVCClassifier, BaseMonoviewClassifier):
 
 
 def paramsToSet(nIter, randomState):
+    """
+
+    Parameters
+    ----------
+    nIter : int number of iterations
+
+    randomState :
+
+    Returns
+    -------
+    paramsSet list of parameters dictionary  with key "C"
+    """
     paramsSet = []
     for _ in range(nIter):
         paramsSet.append({"C": randomState.randint(1, 10000), })

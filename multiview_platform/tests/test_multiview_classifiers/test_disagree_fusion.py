@@ -3,7 +3,7 @@
 import numpy as np
 import unittest
 #
-from ...mono_multi_view_classifiers.multiview_classifiers import disagree_fusion
+from multiview_platform.mono_multi_view_classifiers.multiview_classifiers import disagree_fusion
 
 
 class Test_disagree(unittest.TestCase):

@@ -9,9 +9,19 @@ __status__ = "Prototype"  # Production, Development, Prototype
 classifier_class_name = "SGD"
 
 class SGD(SGDClassifier, BaseMonoviewClassifier):
+    """
 
+    Parameters
+    ----------
+    random_state
+    loss
+    penalty
+    alpha
+    kwargs
+    """
     def __init__(self, random_state=None, loss='hinge',
                  penalty='l2', alpha=0.0001, **kwargs):
+
         super(SGD, self).__init__(
             loss=loss,
             penalty=penalty,
@@ -26,12 +36,31 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
         self.weird_strings = {}
 
     def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
+        """
+        Used to know if the classifier can return label probabilities
+
+        Returns
+        -------
+        return True in all case
+        """
+
         return True
 
     def getInterpret(self, directory, y_test):
-        interpretString = ""
-        return interpretString
+        """
+
+        Parameters
+        ----------
+        directory
+
+        y_test
+
+        Returns
+        -------
+        interpret_string str to interpreted
+        """
+        interpret_string = ""
+        return interpret_string
 
 
 # def formatCmdArgs(args):

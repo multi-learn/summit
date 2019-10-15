@@ -2,19 +2,36 @@ import numpy as np
 import inspect
 
 # from ..utils.dataset import get_v
-from ..multiview.multiview_utils import BaseMultiviewClassifier, get_examples_views_indices, ConfigGenerator, get_available_monoview_classifiers
-from .additions.fusion_utils import BaseFusionClassifier
 
-from .. import monoview_classifiers
+from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import BaseMultiviewClassifier
+from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import get_examples_views_indices
+from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import ConfigGenerator
+from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import get_available_monoview_classifiers
+from multiview_platform.mono_multi_view_classifiers.multiview_classifiers.additions.fusion_utils import BaseFusionClassifier
+
+from  multiview_platform.mono_multi_view_classifiers import monoview_classifiers
 
 classifier_class_name = "WeightedLinearEarlyFusion"
 
 
 class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
+    """
+    WeightedLinearEarlyFusion
 
+    Parameters
+    ----------
+    random_state
+    view_weights
+    monoview_classifier_name
+    monoview_classifier_config
+
+    Attributes
+    ----------
+    """
     def __init__(self, random_state=None, view_weights=None,
                  monoview_classifier_name="decision_tree",
                  monoview_classifier_config={}):
+
         super(WeightedLinearEarlyFusion, self).__init__(random_state=random_state)
         self.view_weights = view_weights
         self.monoview_classifier_name = monoview_classifier_name

@@ -14,7 +14,32 @@ __status__ = "Prototype"  # Production, Development, Prototype
 classifier_class_name = "SCMPregen"
 
 class SCMPregen(BaseMonoviewClassifier, PregenClassifier, scm):
+    """
 
+    Parameters
+    ----------
+    random_state
+    model_type
+    max_rules
+    p
+    n_stumps
+    self_complemented
+    estimators_generator
+    max_depth
+    kwargs
+
+    Attributes
+    ----------
+    param_names
+
+    distribs
+    classed_params
+    weird_strings
+    self_complemented
+    n_stumps
+    estimators_generator
+    max_depth
+    """
     def __init__(self, random_state=None, model_type="conjunction",
                  max_rules=10, p=0.1, n_stumps=10, self_complemented=True,
                  estimators_generator="Stumps", max_depth=1, **kwargs):
@@ -39,13 +64,46 @@ class SCMPregen(BaseMonoviewClassifier, PregenClassifier, scm):
         self.max_depth=1
 
     def get_params(self, deep=True):
+        """
+
+        Parameters
+        ----------
+        deep : boolean  (default : True) not used
+
+        Returns
+        -------
+        parame
+        """
         params = super(SCMPregen, self).get_params(deep)
         params["estimators_generator"] = self.estimators_generator
         params["max_depth"] = self.max_depth
         params["n_stumps"] = self.n_stumps
         return params
 
-    def fit(self, X, y, tiebreaker=None, iteration_callback=None, **fit_params):
+    def fit(self, X, y, tiebreaker=None, iteration_callback=None,
+            **fit_params):
+        """
+        fit function
+
+        Parameters
+        ----------
+        X {array-like, sparse matrix}, shape (n_samples, n_features)
+            For kernel="precomputed", the expected shape of X is
+            (n_samples_test, n_samples_train).
+        y : { array-like, shape (n_samples,)
+            Target values class labels in classification
+
+        tiebreaker
+
+        iteration_callback : (default : None)
+
+        fit_params : others parameters
+
+        Returns
+        -------
+        self : object
+            Returns self.
+        """
         pregen_X, _ = self.pregen_voters(X, y)
         list_files = os.listdir(".")
         a = int(self.random_state.randint(0, 10000))
@@ -66,6 +124,20 @@ class SCMPregen(BaseMonoviewClassifier, PregenClassifier, scm):
         return self
 
     def predict(self, X):
+        """
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape (n_samples, n_features)
+            Training vectors, where n_samples is the number of samples
+            and n_features is the number of features.
+            For kernel="precomputed", the expected shape of X is
+            (n_samples, n_samples).
+
+        Returns
+        -------
+        y_pred : array, shape (n_samples,)
+        """
         pregen_X, _ = self.pregen_voters(X)
         list_files = os.listdir(".")
         a = int(self.random_state.randint(0, 10000))
@@ -83,12 +155,29 @@ class SCMPregen(BaseMonoviewClassifier, PregenClassifier, scm):
         return self.classes_[self.model_.predict(place_holder)]
 
     def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
+        """
+        Used to know if the classifier can return label probabilities
+        Returns
+        -------
+        False in any case
+        """
+
         return False
 
     def getInterpret(self, directory, y_test):
-        interpretString = "Model used : " + str(self.model_)
-        return interpretString
+        """
+
+        Parameters
+        ----------
+        directory
+        y_test
+
+        Returns
+        -------
+        interpret_string string of interpretation
+        """
+        interpret_string = "Model used : " + str(self.model_)
+        return interpret_string
 
 
 # def formatCmdArgs(args):

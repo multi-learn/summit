@@ -18,9 +18,33 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def init_constants(kwargs, classification_indices, metrics, name, nb_cores, k_folds,
+def init_constants(kwargs, classification_indices, metrics,
+                   name, nb_cores, k_folds,
                    dataset_var):
-    """Used to init the constants"""
+    """
+    Used to init the constants
+    Parameters
+    ----------
+    kwargs :
+
+    classification_indices :
+
+    metrics :
+
+    name :
+
+    nb_cores : nint number of cares to execute
+
+    k_folds :
+
+    dataset_var :  {array-like} shape (n_samples, n_features)
+        dataset variable
+
+    Returns
+    -------
+    tuple of (classifier_name, t_start, views_indices,
+              classifier_config, views, learning_rate)
+    """
     views = kwargs["view_names"]
     views_indices = kwargs["view_indices"]
     if not metrics:
@@ -39,12 +63,40 @@ def init_constants(kwargs, classification_indices, metrics, name, nb_cores, k_fo
     for view_index, view_name in zip(views_indices, views):
         logging.info("Info:\t Shape of " + str(view_name) + " :" + str(
             dataset_var.get_shape()))
-    return classifier_name, t_start, views_indices, classifier_config, views, learning_rate
+    return classifier_name, t_start, views_indices,\
+           classifier_config, views, learning_rate
 
 
 def save_results(classifier, labels_dictionary, string_analysis, views, classifier_module,
                  classification_kargs, directory, learning_rate, name,
                  images_analysis):
+    """
+    Save results in derectory
+
+    Parameters
+    ----------
+
+    classifier : classifier class
+
+    labels_dictionary : dict dictionary of labels
+
+    string_analysis : str
+
+    views :
+
+    classifier_module : module of the classifier
+
+    classification_kargs :
+
+    directory : str directory
+
+    learning_rate :
+
+    name :
+
+    images_analysis :
+
+    """
     labels_set = set(labels_dictionary.values())
     logging.info(string_analysis)
     views_string = "-".join(views)
@@ -83,6 +135,52 @@ def exec_multiview_multicore(directory, core_index, name, learning_rate, nb_fold
                              random_state, labels,
                              hyper_param_search=False, nb_cores=1, metrics=None,
                              n_iter=30, **arguments):
+    """
+    execute multiview process on
+
+    Parameters
+    ----------
+
+    directory : indicate the directory
+
+    core_index :
+
+    name : name of the data file to perform
+
+    learning_rate :
+
+    nb_folds :
+
+    database_type :
+
+    path : path to the data name
+
+    labels_dictionary
+
+    random_state : int seed, RandomState instance, or None (default=None)
+        The seed of the pseudo random number generator to use when
+        shuffling the data.
+
+    labels :
+
+    hyper_param_search :
+
+    nb_cores : in number of cores
+
+    metrics : metric to use
+
+    n_iter : int number of iterations
+
+    arguments : others arguments
+
+    Returns
+    -------
+    exec_multiview on directory, dataset_var, name, learning_rate, nb_folds, 1,
+        database_type, path, labels_dictionary,
+        random_state, labels,
+        hyper_param_search=hyper_param_search, metrics=metrics,
+        n_iter=n_iter, **arguments
+    """
     """Used to load an HDF5 dataset_var for each parallel job and execute multiview classification"""
     dataset_var = h5py.File(path + name + str(core_index) + ".hdf5", "r")
     return exec_multiview(directory, dataset_var, name, learning_rate, nb_folds, 1,
@@ -96,7 +194,50 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
                    nb_cores, database_type, path,
                    labels_dictionary, random_state, labels,
                    hyper_param_search=False, metrics=None, n_iter=30, **kwargs):
-    """Used to execute multiview classification and result analysis"""
+    """Used to execute multiview classification and result analysis
+
+    Parameters
+    ----------
+
+    directory : indicate the directory
+
+
+    dataset_var :
+
+    name
+
+    classification_indices
+
+    k_folds
+
+    nb_cores
+
+    database_type
+
+    path
+
+    labels_dictionary : dict dictionary of labels
+
+    random_state : int seed, RandomState instance, or None (default=None)
+        The seed of the pseudo random number generator to use when
+        shuffling the data.
+
+    labels
+
+    hyper_param_search
+
+    metrics
+
+    n_iter : int number of iterations
+
+    kwargs
+
+    Returns
+    -------
+
+    ``MultiviewResult``
+    """
+
     logging.debug("Start:\t Initialize constants")
     cl_type, \
     t_start, \
