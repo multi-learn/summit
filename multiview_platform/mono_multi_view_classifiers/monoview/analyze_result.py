@@ -5,6 +5,21 @@ from .. import metrics
 
 def getDBConfigString(name, feat, classification_indices, shape,
                       classLabelsNames, KFolds):
+    """
+    
+    Parameters
+    ----------
+    name
+    feat
+    classification_indices
+    shape
+    classLabelsNames
+    KFolds
+
+    Returns
+    -------
+
+    """
     learningRate = float(len(classification_indices[0])) / (
                 len(classification_indices[0]) + len(classification_indices[1]))
     dbConfigString = "Database configuration : \n"

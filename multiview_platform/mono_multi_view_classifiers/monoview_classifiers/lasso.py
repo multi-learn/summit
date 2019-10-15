@@ -47,7 +47,6 @@ class Lasso(LassoSK, BaseMonoviewClassifier):
     """
     def __init__(self, random_state=None, alpha=1.0,
                  max_iter=10, warm_start=False, **kwargs):
-
         super(Lasso, self).__init__(
             alpha=alpha,
             max_iter=max_iter,
