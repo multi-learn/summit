@@ -110,25 +110,12 @@ cb_boost:
   n_max_iterations: [10]
   n_stumps: [1]
 
-min_cq_graalpy:
-  mu: [0.01]
-  n_stumps_per_attribute: [1]
-
-min_cq_graalpy_tree:
-  mu: [0.01]
-  n_stumps_per_attribute: [1]
-  max_depth: [2]
-
 lasso:
   alpha: [1]
   max_iter: [2]
 
 gradient_boosting:
   n_estimators: [2]
-
-min_cq:
-  mu: [0.01]
-  n_stumps_per_attribute: [1]
 
 
 ######################################
