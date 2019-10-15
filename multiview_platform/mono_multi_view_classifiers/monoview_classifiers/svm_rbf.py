@@ -14,9 +14,13 @@ class SVMRBF(SVCClassifier, BaseMonoviewClassifier):
 
     Parameters
     ----------
-    random_state
-    C
-    kwargs
+    random_state : int seed, RandomState instance, or None (default=None)
+        The seed of the pseudo random number generator to use when
+        shuffling the data.
+
+    C :
+
+    kwargs : others arguments
 
     Attributes
     ----------

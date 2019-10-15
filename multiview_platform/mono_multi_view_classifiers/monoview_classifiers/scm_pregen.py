@@ -18,7 +18,10 @@ class SCMPregen(BaseMonoviewClassifier, PregenClassifier, scm):
 
     Parameters
     ----------
-    random_state
+    random_state : int seed, RandomState instance, or None (default=None)
+        The seed of the pseudo random number generator to use when
+        shuffling the data.
+
     model_type
     max_rules
     p
@@ -72,7 +75,7 @@ class SCMPregen(BaseMonoviewClassifier, PregenClassifier, scm):
 
         Returns
         -------
-        parame
+        parameters dictionary
         """
         params = super(SCMPregen, self).get_params(deep)
         params["estimators_generator"] = self.estimators_generator
@@ -90,6 +93,7 @@ class SCMPregen(BaseMonoviewClassifier, PregenClassifier, scm):
         X {array-like, sparse matrix}, shape (n_samples, n_features)
             For kernel="precomputed", the expected shape of X is
             (n_samples_test, n_samples_train).
+
         y : { array-like, shape (n_samples,)
             Target values class labels in classification
 

@@ -12,9 +12,42 @@ __status__ = "Prototype"  # Production, Development, Prototype
 classifier_class_name = "Lasso"
 
 class Lasso(LassoSK, BaseMonoviewClassifier):
+    """
 
+    Parameters
+    ----------
+    random_state :
+
+    alpha : float, optional
+        Constant that multiplies the L1 term. Defaults to 1.0.
+        ``alpha = 0`` is equivalent to an ordinary least square, solved
+        by the :class:`LinearRegression` object. For numerical
+        reasons, using ``alpha = 0`` is with the Lasso object is
+        not advised
+        and you should prefer the LinearRegression object. (default( : 10)
+
+    max_iter :  int The maximum number of iterations (default : 10)
+
+    warm_start : bool, optional
+        When set to True, reuse the solution of the previous call to fit as
+        initialization, otherwise, just erase the previous solution.
+
+    kwargs : others arguments
+
+    Attributes
+    ----------
+    param_name :
+
+    classed_params :
+
+    distribs :
+
+    weird_strings :
+
+    """
     def __init__(self, random_state=None, alpha=1.0,
                  max_iter=10, warm_start=False, **kwargs):
+
         super(Lasso, self).__init__(
             alpha=alpha,
             max_iter=max_iter,
@@ -40,12 +73,31 @@ class Lasso(LassoSK, BaseMonoviewClassifier):
         return signed
 
     def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
+        """
+        Used to know if the classifier can return label probabilities
+
+        Returns
+        -------
+        False
+        """
         return False
 
     def getInterpret(self, directory, y_test):
-        interpretString = ""
-        return interpretString
+        """
+        return the interpreted string
+
+        Parameters
+        ----------
+        directory :
+
+        y_test : 
+
+        Returns
+        -------
+        interpreted string, str interpret_string
+        """
+        interpret_string = ""
+        return interpret_string
 
 
 # def formatCmdArgs(args):

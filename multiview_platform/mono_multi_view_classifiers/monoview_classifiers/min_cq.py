@@ -444,6 +444,13 @@ class DecisionStumpVoter(Voter):
 
     direction : int (-1 or 1)
         Used to reverse classification decision
+
+    Attributes
+    ----------
+
+    attribute_index :
+    threshold :
+    direction :
     """
 
     def __init__(self, attribute_index, threshold, direction=1):
@@ -508,6 +515,19 @@ class StumpsVotersGenerator(VotersGenerator):
 
     def generate(self, X, y=None, self_complemented=False,
                  only_complements=False):
+        """
+
+        Parameters
+        ----------
+        X
+        y
+        self_complemented
+        only_complements
+
+        Returns
+        -------
+
+        """
         voters = []
         if len(X) != 0:
             for i in range(len(X[0])):

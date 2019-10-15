@@ -14,13 +14,19 @@ class SVMPoly(SVCClassifier, BaseMonoviewClassifier):
 
     Parameters
     ----------
-    random_state
+    random_state : int seed, RandomState instance, or None (default=None)
+        The seed of the pseudo random number generator to use when
+        shuffling the data.
 
-    C
 
-    degree
+    C : float, optional (default=1.0)
+        Penalty parameter C of the error term.
 
-    kwargs
+
+    degree :
+
+    kwargs : others arguments
+
 
     Attributes
     ----------

@@ -18,12 +18,35 @@ __status__ = "Prototype"  # Production, Development, Prototype
 # __date__ = 2016 - 03 - 25
 
 def change_label_to_minus(y):
+    """
+    Change the label 0 to minus one
+
+    Parameters
+    ----------
+    y :
+
+    Returns
+    -------
+    label y with -1 instead of 0
+
+    """
     minus_y = np.copy(y)
     minus_y[np.where(y == 0)] = -1
     return minus_y
 
 
 def change_label_to_zero(y):
+    """
+    Change the label -1 to 0
+
+    Parameters
+    ----------
+    y
+
+    Returns
+    -------
+
+    """
     zeroed_y = np.copy(y)
     zeroed_y[np.where(y == -1)] = 0
     return zeroed_y

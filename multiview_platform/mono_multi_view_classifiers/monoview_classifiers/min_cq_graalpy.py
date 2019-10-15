@@ -9,14 +9,22 @@ classifier_class_name = "MinCQGraalpy"
 
 class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
     """
+    MinCQGraalpy extend of ``RegularizedBinaryMinCqClassifier ``
 
     Parameters
     ----------
-    random_state
-    mu
-    self_complemented
-    n_stumps_per_attribute
-    kwargs
+    random_state : int seed, RandomState instance, or None (default=None)
+        The seed of the pseudo random number generator to use when
+        shuffling the data.
+
+    mu :  float, (default: 0.01)
+
+    self_complemented : bool (default : True)
+
+    n_stumps_per_attribute : (default: =1
+
+    kwargs : others arguments
+
 
     Attributes
     ----------
@@ -30,7 +38,7 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
 
     weird_strings
 
-    nbCores
+    nbCores : number of cores
 
     """
     def __init__(self, random_state=None, mu=0.01, self_complemented=True,

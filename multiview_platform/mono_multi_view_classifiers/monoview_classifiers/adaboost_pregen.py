@@ -19,7 +19,55 @@ classifier_class_name = "AdaboostPregen"
 
 class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
                      PregenClassifier):
+    """
 
+    Parameters
+    ----------
+    random_state : int seed, RandomState instance, or None (default=None)
+        The seed of the pseudo random number generator to use when
+        shuffling the data.
+
+    n_estimators : int number of estimators (default : 50)
+
+    base_estimator :
+
+    n_stumps : int (default : 1)
+
+    estimators_generator : str, (default : "Stumps")
+
+    max_depth : int (default : 1)
+
+    self_complemeted : bool, (default : True)
+
+    kwargs : others arguments
+
+
+    Attributes
+    ----------
+
+    param_names : list of parameters names
+
+    classed_params :  list of parameters names
+
+    distribs :
+
+    weird_strings :
+
+    plotted_metric
+
+    plotted_metric_name : str name of plotted  metric
+
+    step_predictions :
+
+    estimators_generator :
+
+    max_depth :
+
+    n_stumps :
+
+    self_complemented :
+
+    """
     def __init__(self, random_state=None, n_estimators=50,
                  base_estimator=None, n_stumps=1, estimators_generator="Stumps",
                  max_depth=1, self_complemeted=True,
@@ -48,6 +96,21 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
         self.self_complemented = self_complemeted
 
     def fit(self, X, y, sample_weight=None):
+        """
+        Fit the AdaboostPregen
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape (n_samples, n_features)
+            For kernel="precomputed", the expected shape of X is
+            (n_samples_test, n_samples_train).
+        y :  { array-like, shape (n_samples,)
+            Target values class labels in classification
+
+        sample_weight :
+
+
+        """
         begin = time.time()
         pregen_X, pregen_y = self.pregen_voters(X, y)
         super(AdaboostPregen, self).fit(pregen_X, pregen_y,
@@ -68,10 +131,29 @@ class AdaboostPregen(AdaBoostClassifier, BaseMonoviewClassifier,
                                 range(self.estimator_errors_.shape[0])])
 
     def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
+        """
+        Used to know if the classifier can return label probabilities
+
+        Returns
+        -------
+        True
+        """
         return True
 
     def predict(self, X):
+        """
+
+        Parameters
+        ----------
+
+        X : {array-like, sparse matrix}, shape (n_samples, n_features)
+            For kernel="precomputed", the expected shape of X is
+            (n_samples_test, n_samples_train).
+
+        Returns
+        -------
+
+        """
         begin = time.time()
         pregen_X, _ = self.pregen_voters(X)
         pred = super(AdaboostPregen, self).predict(pregen_X)

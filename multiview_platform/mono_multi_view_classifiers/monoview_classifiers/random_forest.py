@@ -14,25 +14,28 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
 
     Parameters
     ----------
-    random_state
+    random_state : int seed, RandomState instance, or None (default=None)
+        The seed of the pseudo random number generator to use when
+        shuffling the data.
 
-    n_estimators
+    n_estimators : int (default : 10) number of estimators
 
-    max_depth : int maximum of depth (default : 10)
+    max_depth : int , optional (default :  None) maximum of depth
 
     criterion : criteria (default : 'gini')
 
-    kwargs
+    kwargs : others arguments
+
 
     Attributes
     ----------
-    param_names
+    param_names :
 
-    distribs
+    distribs :
 
-    classed_params
+    classed_params :
 
-    weird_strings
+    weird_strings :
 
     """
     def __init__(self, random_state=None, n_estimators=10,

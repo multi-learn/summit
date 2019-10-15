@@ -15,6 +15,26 @@ classifier_class_name = "AdaboostGraalpy"
 class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
     """Scikit-Learn compatible AdaBoost classifier. Original code by Pascal Germain, adapted by Jean-Francis Roy.
 
+
+    Parameters
+    ----------
+
+    n_iterations : int, optional
+        The number of iterations of the algorithm. Defaults to 200.
+
+    iterations_to_collect_as_hyperparameters : list
+        Iteration numbers to collect while learning, that will be converted as hyperparameter values at evaluation time.
+        Defaults to None.
+    classifiers_generator : Transformer, optional
+        A transformer to convert input samples in voters' outputs. Default: Decision stumps transformer, with 10 stumps
+        per attributes.
+    callback_function : function, optional
+        A function to call at each iteration that is supplied learning information. Defaults to None.
+
+    n_stumps : int ( default : 10)
+
+    self_complemented : boolean (default : True
+
     Attributes
     ----------
     n_iterations : int, optional
@@ -34,6 +54,7 @@ class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
                  iterations_to_collect_as_hyperparameters=True,
                  classifiers_generator=None, callback_function=None,
                  n_stumps=10, self_complemented=True):
+
         self.n_iterations = n_iterations
         self.n_stumps = n_stumps
         self.iterations_to_collect_as_hyperparameters = iterations_to_collect_as_hyperparameters
@@ -158,9 +179,37 @@ class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
 
 
 class AdaboostGraalpy(AdaBoostGP, BaseMonoviewClassifier):
+    """AdaboostGraalpy
 
+    Parameters
+    ----------
+    random_state : int seed, RandomState instance, or None (default=None)
+        The seed of the pseudo random number generator to use when
+        shuffling the data.
+
+    n_iterations : in number of iterations (default : 200)
+
+    n_stumps : int (default 1)
+
+    kwargs :  others arguments
+
+
+    Attributes
+    ----------
+    param_names :
+
+    distribs :
+
+    weird_strings :
+
+    n_stumps :
+
+    nbCores :
+
+    """
     def __init__(self, random_state=None, n_iterations=200, n_stumps=1,
                  **kwargs):
+
         super(AdaboostGraalpy, self).__init__(
             n_iterations=n_iterations,
             n_stumps=n_stumps
@@ -177,10 +226,28 @@ class AdaboostGraalpy(AdaBoostGP, BaseMonoviewClassifier):
             self.nbCores = kwargs["nbCores"]
 
     def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
+        """
+        Used to know if the classifier can return label probabilities
+
+        Returns
+        -------
+        True in any case
+        """
         return True
 
     def getInterpret(self, directory, y_test):
+        """
+
+        Parameters
+        ----------
+        directory :
+
+        y_test :
+
+        Returns
+        -------
+        retur string of interpret
+        """
         np.savetxt(directory + "train_metrics.csv", self.losses, delimiter=',')
         np.savetxt(directory + "y_test_step.csv", self.test_preds,
                    delimiter=',')

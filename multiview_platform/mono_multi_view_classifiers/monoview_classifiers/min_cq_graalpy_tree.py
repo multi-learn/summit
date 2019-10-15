@@ -12,13 +12,35 @@ class MinCQGraalpyTree(RegularizedBinaryMinCqClassifier,
 
     Parameters
     ----------
-    random_state
-    mu
-    self_complemented
-    n_stumps_per_attribute
-    max_depth
-    kwargs
+    random_state :
 
+    mu : (default : 0.01)
+
+    self_complemented :  ( default : True)
+
+    n_stumps_per_attribute : int ( default : 1)
+    max_depth :
+
+    kwargs : others parameters
+
+
+    Attributes
+    ----------
+    param_name :
+
+    distribs :
+
+    classed_params :
+
+    n_stumps_per_attribute : int
+
+    weird_strings :
+
+    max_depth :
+
+    random_state :
+
+    nbCores :
     """
     def __init__(self, random_state=None, mu=0.01, self_complemented=True,
                  n_stumps_per_attribute=1, max_depth=2, **kwargs):
@@ -44,10 +66,28 @@ class MinCQGraalpyTree(RegularizedBinaryMinCqClassifier,
             self.nbCores = kwargs["nbCores"]
 
     def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
+        """
+        Used to know if the classifier can return label probabilities
+
+        Returns
+        -------
+        True
+        """
         return True
 
     def set_params(self, **params):
+        """
+        set parameter in the input dictionary
+
+        Parameters
+        ----------
+        params : dict parameter to set
+
+        Returns
+        -------
+        self : object
+            Returns self.
+        """
         self.mu = params["mu"]
         self.random_state = params["random_state"]
         self.n_stumps_per_attribute = params["n_stumps_per_attribute"]
@@ -55,11 +95,35 @@ class MinCQGraalpyTree(RegularizedBinaryMinCqClassifier,
         return self
 
     def get_params(self, deep=True):
+        """
+        get parameter
+
+        Parameters
+        ----------
+        deep : (boolean (default : True) not used
+
+        Returns
+        -------
+        dictionary of parameter as key and its values
+        """
         return {"random_state": self.random_state, "mu": self.mu,
                 "n_stumps_per_attribute": self.n_stumps_per_attribute,
                 "max_depth": self.max_depth}
 
     def getInterpret(self, directory, y_test):
+        """
+
+        Parameters
+        ----------
+        directory :
+
+        y_test :
+
+
+        Returns
+        -------
+        string  for interpretation interpret_string
+        """
         interpret_string = "Cbound on train :" + str(self.train_cbound)
         np.savetxt(directory + "times.csv", np.array([self.train_time, 0]))
         # interpret_string += "Train C_bound value : "+str(self.cbound_train)

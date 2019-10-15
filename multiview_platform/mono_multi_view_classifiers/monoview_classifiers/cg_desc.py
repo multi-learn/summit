@@ -5,10 +5,23 @@ from ..monoview.monoview_utils import BaseMonoviewClassifier, CustomRandint
 classifier_class_name = "CGDesc"
 
 class CGDesc(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
+    """
 
+    Parameters
+    ----------
+    random_state
+    n_max_iterations
+    n_stumps
+    estimators_generator
+    twice_the_same
+    max_depth
+    kwargs
+    
+    """
     def __init__(self, random_state=None, n_max_iterations=500, n_stumps=1,
                  estimators_generator="Stumps", twice_the_same=True, max_depth=1,
                  **kwargs):
+
         super(CGDesc, self).__init__(n_max_iterations=n_max_iterations,
                                      random_state=random_state,
                                      self_complemented=True,

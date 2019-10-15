@@ -13,11 +13,28 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
 
     Parameters
     ----------
-    random_state
-    loss
-    penalty
-    alpha
-    kwargs
+    random_state : int seed, RandomState instance, or None (default=None)
+        The seed of the pseudo random number generator to use when
+        shuffling the data.
+
+    loss : str , (default = "hinge")
+    penalty : str, (default = "l2")
+
+    alpha : float, (default = 0.0001)
+
+    kwargs : other arguments
+
+
+    Attributes
+    ----------
+    param_names :
+
+    distribs :
+
+    classed_params :
+
+    weird_strings :
+
     """
     def __init__(self, random_state=None, loss='hinge',
                  penalty='l2', alpha=0.0001, **kwargs):

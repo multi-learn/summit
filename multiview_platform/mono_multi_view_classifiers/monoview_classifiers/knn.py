@@ -11,9 +11,22 @@ classifier_class_name = "KNN"
 
 
 class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
+    """
+    Implement extention of KNeighborsClassifier of sklearn
+    for the usage of the multiview_platform.
 
+    Parameters
+    ----------
+    random_state
+    n_neighbors
+    weights
+    algorithm
+    p
+    kwargs
+    """
     def __init__(self, random_state=None, n_neighbors=5,
                  weights='uniform', algorithm='auto', p=2, **kwargs):
+
         super(KNN, self).__init__(
             n_neighbors=n_neighbors,
             weights=weights,
