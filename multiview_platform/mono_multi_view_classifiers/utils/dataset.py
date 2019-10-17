@@ -13,22 +13,53 @@ from scipy import sparse
 
 class Dataset():
     """
-    Dataset
+    Class of Dataset
 
-    This class
+    This class is used to encapsulate the multiview dataset
 
 
     Parameters
     ----------
-    views
-    labels
-    are_sparse
-    file_name
-    view_names
-    path
-    hdf5_file
-    labels_names
-    is_temp
+    views : list of numpy arrays or None
+        The list containing each view of the dataset as a numpy array of shape
+        (nb examples, nb features).
+
+    labels : numpy array or None
+        The labels for the multiview dataset, of shape (nb examples, ).
+
+    are_sparse : list of bool, or None
+        The list of boolean telling if each view is sparse or not.
+
+    file_name : str, or None
+        The name of the hdf5 file that will be created to store the multiview
+        dataset.
+
+    view_names : list of str, or None
+        The name of each view.
+
+    path : str, or None
+        The path where the hdf5 dataset file will be stored
+
+    hdf5_file : h5py.File object, or None
+        If not None, the dataset will be imported directly from this file.
+
+    labels_names : list of str, or None
+        The name for each unique value of the labels given in labels.
+
+    is_temp : bool
+        Used if a temporary dataset has to be used by the benchmark.
+
+    Attributes
+    ----------
+    dataset : h5py.File object
+        The h5py file pbject that points to the hdf5 dataset on the disk.
+
+    nb_view : int
+        The number of views in the dataset.
+
+    view_dict : dict
+        The dictionnary with the name of each view as the keys and their indices
+         as values
     """
 
     # The following methods use hdf5
@@ -36,20 +67,6 @@ class Dataset():
     def __init__(self, views=None, labels=None, are_sparse=False,
                  file_name="dataset.hdf5", view_names=None, path="",
                  hdf5_file=None, labels_names=None, is_temp=False):
-        """
-
-        Parameters
-        ----------
-        views
-        labels
-        are_sparse
-        file_name
-        view_names
-        path
-        hdf5_file
-        labels_names
-        is_temp
-        """
         self.is_temp = False
         if hdf5_file is not None:
             self.dataset=hdf5_file
@@ -89,19 +106,54 @@ class Dataset():
             self.update_hdf5_dataset(os.path.join(path, file_name))
 
     def rm(self):
+        """
+        Method used to delete the dataset file on the disk if the dataset is
+        temporary.
+
+        Returns
+        -------
+
+        """
         filename = self.dataset.filename
         self.dataset.close()
         if self.is_temp:
             os.remove(filename)
 
     def get_view_name(self, view_idx):
+        """
+        Method to get a view's name for it's index.
+
+        Parameters
+        ----------
+        view_idx : int
+            The index of the view in the dataset
+
+        Returns
+        -------
+            The view's name.
+
+        """
         return self.dataset["View"+str(view_idx)].attrs["name"]
 
     def init_attrs(self):
+        """
+        Used to init the two attributes that are modified when self.dataset
+        changes
+
+        Returns
+        -------
+
+        """
         self.nb_view = self.dataset.get("Metadata").attrs["nbView"]
         self.view_dict = self.get_view_dict()
 
     def get_nb_examples(self):
+        """
+        Used to get the number of examples available
+        Returns
+        -------
+
+        """
         return self.dataset.get("Metadata").attrs["datasetLength"]
 
     def get_view_dict(self):
