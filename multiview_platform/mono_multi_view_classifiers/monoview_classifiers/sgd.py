@@ -52,16 +52,16 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
                          CustomUniform(loc=0, state=1), [random_state]]
         self.weird_strings = {}
 
-    def canProbas(self):
-        """
-        Used to know if the classifier can return label probabilities
-
-        Returns
-        -------
-        return True in all case
-        """
-
-        return True
+    # def canProbas(self):
+    #     """
+    #     Used to know if the classifier can return label probabilities
+    #
+    #     Returns
+    #     -------
+    #     return True in all case
+    #     """
+    #
+    #     return True
 
     def getInterpret(self, directory, y_test):
         """

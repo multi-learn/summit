@@ -36,7 +36,7 @@ class CBBoost(CBBoostClassifier, BaseMonoviewClassifier):
         super(CBBoost, self).__init__(n_max_iterations=n_max_iterations,
                                      random_state=random_state,
                                      self_complemented=True,
-                                     twice_the_same=True,
+                                     twice_the_same=False,
                                      random_start=False,
                                      n_stumps=n_stumps,
                                      c_bound_sol=True,
@@ -49,15 +49,15 @@ class CBBoost(CBBoostClassifier, BaseMonoviewClassifier):
         self.classed_params = []
         self.weird_strings = {}
 
-    def canProbas(self):
-        """
-        Used to know if the classifier can return label probabilities
-
-        Returns
-        -------
-        True
-        """
-        return True
+    # def canProbas(self):
+    #     """
+    #     Used to know if the classifier can return label probabilities
+    #
+    #     Returns
+    #     -------
+    #     True
+    #     """
+    #     return True
 
 
     def getInterpret(self, directory, y_test):

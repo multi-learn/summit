@@ -71,15 +71,15 @@ class Lasso(LassoSK, BaseMonoviewClassifier):
         signed[np.where(signed == -1)] = 0
         return signed
 
-    def canProbas(self):
-        """
-        Used to know if the classifier can return label probabilities
-
-        Returns
-        -------
-        False
-        """
-        return False
+    # def canProbas(self):
+    #     """
+    #     Used to know if the classifier can return label probabilities
+    #
+    #     Returns
+    #     -------
+    #     False
+    #     """
+    #     return False
 
     def getInterpret(self, directory, y_test):
         """

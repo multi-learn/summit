@@ -158,15 +158,15 @@ class SCMPregen(BaseMonoviewClassifier, PregenClassifier, scm):
         os.remove(file_name)
         return self.classes_[self.model_.predict(place_holder)]
 
-    def canProbas(self):
-        """
-        Used to know if the classifier can return label probabilities
-        Returns
-        -------
-        False in any case
-        """
-
-        return False
+    # def canProbas(self):
+    #     """
+    #     Used to know if the classifier can return label probabilities
+    #     Returns
+    #     -------
+    #     False in any case
+    #     """
+    #
+    #     return False
 
     def getInterpret(self, directory, y_test):
         """

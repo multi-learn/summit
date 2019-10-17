@@ -225,15 +225,15 @@ class AdaboostGraalpy(AdaBoostGP, BaseMonoviewClassifier):
         else:
             self.nbCores = kwargs["nbCores"]
 
-    def canProbas(self):
-        """
-        Used to know if the classifier can return label probabilities
-
-        Returns
-        -------
-        True in any case
-        """
-        return True
+    # def canProbas(self):
+    #     """
+    #     Used to know if the classifier can return label probabilities
+    #
+    #     Returns
+    #     -------
+    #     True in any case
+    #     """
+    #     return True
 
     def getInterpret(self, directory, y_test):
         """

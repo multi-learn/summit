@@ -148,8 +148,9 @@ def get_available_monoview_classifiers(need_probas=False):
         proba_classifiers = []
         for module_name in available_classifiers:
             module = getattr(monoview_classifiers, module_name)
-            can_probas = getattr(module, module.classifier_class_name)().canProbas()
-            if can_probas:
+            classifier_class = getattr(module, module.classifier_class_name)()
+            proba_prediction = getattr(classifier_class, "predict_proba", None)
+            if callable(proba_prediction):
                 proba_classifiers.append(module_name)
         available_classifiers = proba_classifiers
     return available_classifiers

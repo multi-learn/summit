@@ -60,14 +60,14 @@ class MinCQGraalpy(RegularizedBinaryMinCqClassifier, BaseMonoviewClassifier):
         else:
             self.nbCores = kwargs["nbCores"]
 
-    def canProbas(self):
-        """
-        Used to know if the classifier can return label probabilities
-        Returns
-        -------
-        False
-        """
-        return False
+    # def canProbas(self):
+    #     """
+    #     Used to know if the classifier can return label probabilities
+    #     Returns
+    #     -------
+    #     False
+    #     """
+    #     return False
 
     def set_params(self, **params):
         """

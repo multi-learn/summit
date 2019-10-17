@@ -99,15 +99,15 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
                                  self.staged_predict(X)])
         return self
 
-    def canProbas(self):
-        """
-        Used to know if the classifier can return label probabilities
-
-        Returns
-        -------
-        True
-        """
-        return True
+    # def canProbas(self):
+    #     """
+    #     Used to know if the classifier can return label probabilities
+    #
+    #     Returns
+    #     -------
+    #     True
+    #     """
+    #     return True
 
     def predict(self, X):
         """

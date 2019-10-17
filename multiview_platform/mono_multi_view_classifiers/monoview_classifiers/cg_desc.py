@@ -43,9 +43,9 @@ class CGDesc(ColumnGenerationClassifierQar, BaseMonoviewClassifier):
         self.classed_params = []
         self.weird_strings = {}
 
-    def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
-        return False
+    # def canProbas(self):
+    #     """Used to know if the classifier can return label probabilities"""
+    #     return False
 
     def getInterpret(self, directory, y_test):
         return self.getInterpretQar(directory, y_test)

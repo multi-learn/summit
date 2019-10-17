@@ -42,9 +42,9 @@ class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
         self.weird_strings = {}
         self.random_state = random_state
 
-    def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
-        return True
+    # def canProbas(self):
+    #     """Used to know if the classifier can return label probabilities"""
+    #     return True
 
     def getInterpret(self, directory, y_test):
         interpretString = ""

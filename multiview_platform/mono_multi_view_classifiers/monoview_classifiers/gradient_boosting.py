@@ -69,9 +69,9 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
                 [step_pred for step_pred in self.staged_predict(X)])
         return pred
 
-    def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
-        return False
+    # def canProbas(self):
+    #     """Used to know if the classifier can return label probabilities"""
+    #     return False
 
     def getInterpret(self, directory, y_test):
         interpretString = ""

@@ -92,15 +92,15 @@ class SCM(scm, BaseMonoviewClassifier):
         self.classed_params = []
         self.weird_strings = {}
 
-    def canProbas(self):
-        """
-        Used to know if the classifier can return label probabilities
-
-        Returns
-        -------
-        return False in any case
-        """
-        return False
+    # def canProbas(self):
+    #     """
+    #     Used to know if the classifier can return label probabilities
+    #
+    #     Returns
+    #     -------
+    #     return False in any case
+    #     """
+    #     return False
 
     def getInterpret(self, directory, y_test):
         interpretString = "Model used : " + str(self.model_)

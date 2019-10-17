@@ -610,9 +610,9 @@ class MinCQ(MinCqLearner, BaseMonoviewClassifier):
         else:
             self.nbCores = kwargs["nbCores"]
 
-    def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
-        return True
+    # def canProbas(self):
+    #     """Used to know if the classifier can return label probabilities"""
+    #     return True
 
     def set_params(self, **params):
         self.mu = params["mu"]

@@ -12,12 +12,44 @@ from scipy import sparse
 
 
 class Dataset():
+    """
+    Dataset
+
+    This class
+
+
+    Parameters
+    ----------
+    views
+    labels
+    are_sparse
+    file_name
+    view_names
+    path
+    hdf5_file
+    labels_names
+    is_temp
+    """
 
     # The following methods use hdf5
 
     def __init__(self, views=None, labels=None, are_sparse=False,
                  file_name="dataset.hdf5", view_names=None, path="",
                  hdf5_file=None, labels_names=None, is_temp=False):
+        """
+
+        Parameters
+        ----------
+        views
+        labels
+        are_sparse
+        file_name
+        view_names
+        path
+        hdf5_file
+        labels_names
+        is_temp
+        """
         self.is_temp = False
         if hdf5_file is not None:
             self.dataset=hdf5_file

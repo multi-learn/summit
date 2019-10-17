@@ -35,9 +35,9 @@ class CQBoost(ColumnGenerationClassifier, BaseMonoviewClassifier):
         else:
             self.nbCores = kwargs["nbCores"]
 
-    def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
-        return False
+    # def canProbas(self):
+    #     """Used to know if the classifier can return label probabilities"""
+    #     return False
 
     def getInterpret(self, directory, y_test):
         np.savetxt(directory + "train_metrics.csv", self.train_metrics,
