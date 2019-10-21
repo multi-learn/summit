@@ -101,7 +101,8 @@ class AdaBoostGP(BaseEstimator, ClassifierMixin, BaseBoost):
         self.collected_weight_vectors_ = []
         for t in range(self.n_iterations):
 
-            # Step 4: We find the classifier that maximizes the success, weighted by the sample weights.
+            # Step 4: We find the classifier that maximizes the success,
+            # weighted by the sample weights.
             classifier_successes = np.dot(classification_matrix.T,
                                           sample_weights * y_neg)
 
