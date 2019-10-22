@@ -295,6 +295,39 @@ class Dataset():
 
     # The following methods are hdf5 free
 
+    def to_numpy_array(self, example_indices=None, view_indices=None):
+        """
+        To concanteant the needed views in one big numpy array while saving the
+        limits of each view in a list, to be bale to retrieve them later.
+
+        Parameters
+        ----------
+        example_indices : array like,
+        The indices of the examples to extract from the dataset
+
+        view_indices : array like,
+        The indices of the view to concatenate in the numpy array
+
+        Returns
+        -------
+        concat_views : numpy array,
+        The numpy array containing all the needed views.
+
+        view_limits : list of int
+        The limits of each slice used to extract the views.
+
+        """
+        view_limits = [0]
+        for view_index in view_indices:
+            view_data = self.get_v(view_index, example_indices=example_indices)
+            nb_features = view_data.shape[1]
+            view_limits.append(view_limits[-1]+nb_features)
+        concat_views = np.concatenate([self.get_v(view_index,
+                                                  example_indices=example_indices)
+                                       for view_index in view_indices], axis=1)
+        return concat_views, view_limits
+
+
     def select_views_and_labels(self, nb_labels=None,
                                 selected_label_names=None, random_state=None,
                                 view_names = None, path_for_new="../data/"):

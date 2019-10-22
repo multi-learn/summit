@@ -272,7 +272,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
             searching_tool=hyper_param_search, n_iter=n_iter,
             classifier_config=classifier_config)
 
-    classifier = getattr(classifier_module, classifier_name)(random_state,
+    classifier = getattr(classifier_module, classifier_name)(random_state=random_state,
                                                              **classifier_config)
     logging.debug("Done:\t Optimizing hyperparameters")
 

@@ -72,10 +72,13 @@ def init_benchmark(cl_type, monoview_algos, multiview_algos, args):
             benchmark["monoview"] = monoview_algos
 
     if "multiview" in cl_type:
-        benchmark["multiview"] = [name for _, name, isPackage in
-                                 pkgutil.iter_modules([
-                                     "./mono_multi_view_classifiers/multiview_classifiers"])
-                                 if not isPackage]
+        if multiview_algos==["all"]:
+            benchmark["multiview"] = [name for _, name, isPackage in
+                                     pkgutil.iter_modules([
+                                         "./mono_multi_view_classifiers/multiview_classifiers"])
+                                     if not isPackage]
+        else:
+            benchmark["multiview"] = multiview_algos
     return benchmark
 
 

@@ -93,7 +93,7 @@ def get_test_folds_preds(X, y, cv, estimator, framework, available_indices=None)
 def randomized_search(X, y, framework, random_state, output_file_name, classifier_module,
                       classifier_name, folds=4, nb_cores=1, metric=["accuracy_score", None],
                       n_iter=30, classifier_kwargs =None, learning_indices=None, view_indices=None):
-    estimator = getattr(classifier_module, classifier_name)(random_state,
+    estimator = getattr(classifier_module, classifier_name)(random_state=random_state,
                                                             **classifier_kwargs)
     params_dict = estimator.genDistribs()
     if params_dict:
