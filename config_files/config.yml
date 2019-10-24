@@ -198,3 +198,8 @@ weighted_linear_late_fusion:
       max_depth: [1]
       criterion: ["gini"]
       splitter: ["best"]
+
+mumbo:
+  base_estimator: [None]
+  n_estimators: [10]
+  best_view_mode: ["edge"]
