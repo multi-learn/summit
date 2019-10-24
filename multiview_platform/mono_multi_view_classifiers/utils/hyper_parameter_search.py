@@ -3,7 +3,7 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import  randint
+from scipy.stats import randint, uniform
 from sklearn.model_selection import RandomizedSearchCV
 
 
@@ -37,6 +37,23 @@ def grid_search(dataset, classifier_name, views_indices=None, k_folds=None, n_it
                 **kwargs):
     """Used to perfom gridsearch on the classifiers"""
     pass
+
+class CustomUniform:
+    """Used as a distribution returning a float between loc and loc + scale..
+        It can be used with a multiplier agrument to be able to perform more complex generation
+        for example 10 e -(float)"""
+
+    def __init__(self, loc=0, state=1, multiplier=""):
+        self.uniform = uniform(loc, state)
+        self.multiplier = multiplier
+
+    def rvs(self, random_state=None):
+        unif = self.uniform.rvs(random_state=random_state)
+        if self.multiplier == 'e-':
+            return 10 ** -unif
+        else:
+            return unif
+
 
 class CustomRandint:
     """Used as a distribution returning a integer between low and high-1.
