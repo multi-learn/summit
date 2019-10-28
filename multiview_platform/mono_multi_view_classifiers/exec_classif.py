@@ -679,7 +679,6 @@ def exec_benchmark(nb_cores, stats_iter, nb_multiclass,
             benchmark_arguments_dictionaries[0])]
     else:
         for arguments in benchmark_arguments_dictionaries:
-            print(arguments)
             results += [exec_one_benchmark_mono_core(dataset_var=dataset_var, **arguments)]
     logging.debug("Done:\t Executing all the needed biclass benchmarks")
 
