@@ -1,8 +1,9 @@
 from sklearn.metrics import pairwise
 import numpy as np
 
-from ...multiview.multiview_utils import BaseMultiviewClassifier
+from ...multiview.multiview_utils import BaseMultiviewClassifier, get_examples_views_indices
 from ...utils.hyper_parameter_search import CustomUniform, CustomRandint
+from ...utils.transformations import sign_labels, unsign_labels
 
 class KernelClassifier(BaseMultiviewClassifier):
 
@@ -20,6 +21,23 @@ class KernelClassifier(BaseMultiviewClassifier):
                                                    example_indices),
                                            **kernel_config)
         return new_X
+
+    def _init_fit(self, X, y, train_indices, view_indices):
+        train_indices, view_indices = get_examples_views_indices(X,
+                                                                 train_indices,
+                                                                 view_indices)
+        self.init_kernels(nb_view=len(view_indices), )
+        new_X = self._compute_kernels(X,
+                                      train_indices, view_indices)
+        new_y = sign_labels(y[train_indices])
+        return new_X, new_y
+
+    def extract_labels(self, predicted_labels):
+        signed_labels = np.sign(predicted_labels)
+        return unsign_labels(signed_labels)
+
+
+
 
     def init_kernels(self, nb_view=2, ):
         if isinstance(self.kernel_types, KernelDistribution):
@@ -58,11 +76,11 @@ class KernelConfigDistribution:
     def __init__(self, seed=42):
         self.random_state=np.random.RandomState(seed)
         self.possible_config = {
-            "polynomial_kernel":{"degree": CustomRandint(low=1, high=7),
-                                 "gamma": CustomUniform(),
-                                 "coef0": CustomUniform()
-
-            },
+            # "polynomial_kernel":{"degree": CustomRandint(low=1, high=7),
+            #                      "gamma": CustomUniform(),
+            #                      "coef0": CustomUniform()
+            #
+            # },
             "chi2_kernel": {"gamma": CustomUniform()},
             "rbf_kernel": {"gamma": CustomUniform()},
         }
@@ -90,8 +108,7 @@ class KernelDistribution:
 
     def __init__(self, seed=42):
         self.random_state=np.random.RandomState(seed)
-        self.available_kernels = [pairwise.polynomial_kernel,
-                                  pairwise.chi2_kernel,
+        self.available_kernels = [pairwise.chi2_kernel,
                                   pairwise.rbf_kernel,]
 
     def draw(self, nb_view):

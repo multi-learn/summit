@@ -503,17 +503,14 @@ class MVMLClassifier(KernelClassifier, MVML):
                          [0,1], CustomRandint(low=1, high=100), [[0.1,0.9]]]
 
     def fit(self, X, y, train_indices=None, view_indices=None):
-        train_indices, view_indices = get_examples_views_indices(X,
-                                                                 train_indices,
-                                                                 view_indices)
-        self.init_kernels(nb_view=len(view_indices), )
-        new_X = self._compute_kernels(X,
-                                      train_indices, view_indices)
-        return super(MVMLClassifier, self).fit(new_X, y[train_indices])
+        new_X, new_y = self._init_fit(X, y, train_indices, view_indices)
+        return super(MVMLClassifier, self).fit(new_X, new_y)
 
     def predict(self, X, example_indices=None, view_indices=None):
         example_indices, view_indices = get_examples_views_indices(X,
                                                                    example_indices,
                                                                    view_indices)
         new_X = self._compute_kernels(X, example_indices, view_indices)
-        return super(MVMLClassifier, self).predict(new_X)
+        print(self.extract_labels(super(MVMLClassifier, self).predict(new_X)))
+        return self.extract_labels(super(MVMLClassifier, self).predict(new_X))
+

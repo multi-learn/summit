@@ -147,7 +147,6 @@ class MKL(BaseEstimator, ClassifierMixin):
         else:
             return C, weights
 
-
     def predict(self, X, views_ind=None):
         if isinstance(X, Metriclearn_array):
             # self.X_ = X
@@ -157,9 +156,8 @@ class MKL(BaseEstimator, ClassifierMixin):
         elif isinstance(X, np.ndarray):
             X = Metriclearn_array(X, views_ind)
         C = self.C
-        weights  = self.weights
+        weights = self.weights
         return self.lpMKL_predict(X , C, weights)
-
 
     def lpMKL_predict(self, X, C, weights, views_ind=None):
         if isinstance(X, Metriclearn_array):
@@ -177,7 +175,6 @@ class MKL(BaseEstimator, ClassifierMixin):
         # kernel = weights[0] * self.data.test_kernel_dict[0]
         # for v in range(1, views):
         #     kernel = kernel + weights[v] * self.data.test_kernel_dict[v]
-
         # TEST KERNEL APPROXIMATION
         kernel = np.zeros((tt, self.X_.shape[0]))
         for v in range(0, views):
@@ -221,19 +218,15 @@ class LPNormMKL(KernelClassifier, MKL):
         self.prev_alpha = prev_alpha
 
     def fit(self, X, y, train_indices=None, view_indices=None):
-        train_indices, view_indices = get_examples_views_indices(X, train_indices,
-                                                                 view_indices)
-        self.init_kernels(nb_view= len(view_indices), )
-        new_X = self._compute_kernels(X,
-                                      train_indices, view_indices)
-        return super(LPNormMKL, self).fit(new_X, y[train_indices])
+        new_X, new_y = self._init_fit(X, y, train_indices, view_indices)
+        return super(LPNormMKL, self).fit(new_X, new_y)
 
     def predict(self, X, example_indices=None, view_indices=None):
         example_indices, view_indices = get_examples_views_indices(X,
                                                                    example_indices,
                                                                    view_indices)
         new_X = self._compute_kernels(X, example_indices, view_indices)
-        return super(LPNormMKL, self).predict(new_X)
+        return self.extract_labels(super(LPNormMKL, self).predict(new_X))
 
 
 
