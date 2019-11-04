@@ -36,13 +36,13 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
                           label_names=["No".encode(), "Yes".encode(),
                                      "Maybe".encode()],
                           random_state=None, full=True, add_noise=False,
-                          noise_std=0.15, nb_view=3, nb_examples=100,
+                          noise_std=0.15, nb_view=3, nb_examples=5000,
                           nb_features=10):
     """Used to generate a plausible dataset to test the algorithms"""
 
-    if not os.path.exists(os.path.dirname(path + "Plausible.hdf5")):
+    if not os.path.exists(os.path.dirname(path + "plausible.hdf5")):
         try:
-            os.makedirs(os.path.dirname(path + "Plausible.hdf5"))
+            os.makedirs(os.path.dirname(path + "plausible.hdf5"))
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
@@ -76,10 +76,10 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
 
         dataset = Dataset(views=views, labels=labels,
                               labels_names=label_names, view_names=view_names,
-                              are_sparse=are_sparse, file_name="Plausible.hdf5",
+                              are_sparse=are_sparse, file_name="plausible.hdf5",
                               path=path)
         labels_dictionary = {0: "No", 1: "Yes"}
-        return dataset, labels_dictionary, "Plausible"
+        return dataset, labels_dictionary, "plausible"
     elif nb_class >= 3:
         firstBound = int(nb_examples / 3)
         rest = nb_examples - 2 * int(nb_examples / 3)
@@ -115,10 +115,10 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
         dataset = Dataset(views=views, labels=labels,
                               labels_names=label_names, view_names=view_names,
                               are_sparse=are_sparse,
-                              file_name="Plausible.hdf5",
+                              file_name="plausible.hdf5",
                               path=path)
         labels_dictionary = {0: "No", 1: "Yes", 2: "Maybe"}
-        return dataset, labels_dictionary, "Plausible"
+        return dataset, labels_dictionary, "plausible"
 
 
 class DatasetError(Exception):

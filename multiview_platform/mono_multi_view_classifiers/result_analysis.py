@@ -415,10 +415,11 @@ def publish2Dplot(data, classifiers_names, nbClassifiers, nbExamples, nbCopies,
     """
     figWidth = max(nbClassifiers / width_denominator, minSize)
     figHeight = max(nbExamples / height_denominator, minSize)
+    print(figHeight, figWidth, nbClassifiers, nbExamples)
     figKW = {"figsize": (figWidth, figHeight)}
-    fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)
+    fig, ax = plt.subplots(nrows=1, ncols=1,)# **figKW)
     cmap, norm = iterCmap(stats_iter)
-    cax = plt.imshow(data, interpolation='none', cmap=cmap, norm=norm,
+    cax = plt.imshow(data, cmap=cmap, norm=norm,
                      aspect='auto')
     plt.title('Errors depending on the classifier')
     ticks = np.arange(nbCopies / 2 - 0.5, nbClassifiers * nbCopies, nbCopies)
@@ -426,7 +427,8 @@ def publish2Dplot(data, classifiers_names, nbClassifiers, nbExamples, nbCopies,
     plt.xticks(ticks, labels, rotation="vertical")
     cbar = fig.colorbar(cax, ticks=[-100 * stats_iter / 2, 0, stats_iter])
     cbar.ax.set_yticklabels(['Unseen', 'Always Wrong', 'Always Right'])
-    fig.tight_layout()
+    # fig.tight_layout()
+
     fig.savefig(fileName + "error_analysis_2D.png", bbox_inches="tight", transparent=True)
     plt.close()
 
