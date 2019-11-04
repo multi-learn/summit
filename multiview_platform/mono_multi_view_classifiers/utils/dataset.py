@@ -190,7 +190,7 @@ class Dataset():
             example_indices = example_indices[sorted_indices]
 
             if not self.dataset["View" + str(view_index)].attrs["sparse"]:
-                return self.dataset["View" + str(view_index)][example_indices, :][
+                return self.dataset["View" + str(view_index)][()][example_indices, :][
                        np.argsort(sorted_indices), :]
             else:
                 sparse_mat = sparse.csr_matrix(
@@ -208,11 +208,11 @@ class Dataset():
 
     def get_nb_class(self, example_indices=None):
         example_indices = self.init_example_indces(example_indices)
-        return len(np.unique(self.dataset["Labels"][example_indices]))
+        return len(np.unique(self.dataset["Labels"][()][example_indices]))
 
     def get_labels(self, example_indices=None):
         example_indices = self.init_example_indces(example_indices)
-        return self.dataset["Labels"][example_indices]
+        return self.dataset["Labels"][()][example_indices]
 
     def copy_view(self, target_dataset=None, source_view_name=None,
                   target_view_index=None, example_indices=None):
@@ -273,7 +273,7 @@ class Dataset():
                                    target_view_index=view_index)
         for view_index in range(noisy_dataset["Metadata"].attrs["nbView"]):
             view_key = "View" + str(view_index)
-            view_dset = noisy_dataset.get[view_key]
+            view_dset = noisy_dataset[view_key]
             try:
                 view_limits = self.dataset[
                     "Metadata/View" + str(view_index) + "_limits"][()]
