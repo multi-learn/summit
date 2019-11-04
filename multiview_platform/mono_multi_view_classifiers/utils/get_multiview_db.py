@@ -36,7 +36,7 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
                           label_names=["No".encode(), "Yes".encode(),
                                      "Maybe".encode()],
                           random_state=None, full=True, add_noise=False,
-                          noise_std=0.15, nb_view=3, nb_examples=5000,
+                          noise_std=0.15, nb_view=3, nb_examples=100,
                           nb_features=10):
     """Used to generate a plausible dataset to test the algorithms"""
 

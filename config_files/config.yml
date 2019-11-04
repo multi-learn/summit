@@ -1,7 +1,7 @@
 # The base configuration of the benchmark
 Base :
   log: true
-  name: ["Plausible"]
+  name: ["plausible"]
   label: "_"
   type: ".hdf5"
   views:

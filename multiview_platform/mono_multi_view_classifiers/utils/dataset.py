@@ -144,7 +144,7 @@ class Dataset():
         -------
 
         """
-        self.nb_view = self.dataset.get("Metadata").attrs["nbView"]
+        self.nb_view = self.dataset["Metadata"].attrs["nbView"]
         self.view_dict = self.get_view_dict()
 
     def get_nb_examples(self):
@@ -154,12 +154,12 @@ class Dataset():
         -------
 
         """
-        return self.dataset.get("Metadata").attrs["datasetLength"]
+        return self.dataset["Metadata"].attrs["datasetLength"]
 
     def get_view_dict(self):
         view_dict = {}
         for view_index in range(self.nb_view):
-            view_dict[self.dataset.get("View" + str(view_index)).attrs["name"]] = view_index
+            view_dict[self.dataset["View" + str(view_index)].attrs["name"]] = view_index
         return view_dict
 
     def get_label_names(self, decode=True, example_indices=None):
@@ -167,11 +167,11 @@ class Dataset():
         selected_labels = self.get_labels(example_indices)
         if decode:
             return [label_name.decode("utf-8")
-                    for label, label_name in enumerate(self.dataset.get("Labels").attrs["names"])
+                    for label, label_name in enumerate(self.dataset["Labels"].attrs["names"])
                     if label in selected_labels]
         else:
             return [label_name
-                    for label, label_name in enumerate(self.dataset.get("Labels").attrs["names"])
+                    for label, label_name in enumerate(self.dataset["Labels"].attrs["names"])
                     if label in selected_labels]
 
     def init_example_indces(self, example_indices=None):
@@ -183,21 +183,21 @@ class Dataset():
     def get_v(self, view_index, example_indices=None):
         example_indices = self.init_example_indces(example_indices)
         if type(example_indices) is int:
-            return self.dataset.get("View" + str(view_index))[example_indices, :]
+            return self.dataset["View" + str(view_index)][example_indices, :]
         else:
             example_indices = np.array(example_indices)
             sorted_indices = np.argsort(example_indices)
             example_indices = example_indices[sorted_indices]
 
-            if not self.dataset.get("View" + str(view_index)).attrs["sparse"]:
-                return self.dataset.get("View" + str(view_index))[example_indices, :][
+            if not self.dataset["View" + str(view_index)].attrs["sparse"]:
+                return self.dataset["View" + str(view_index)][example_indices, :][
                        np.argsort(sorted_indices), :]
             else:
                 sparse_mat = sparse.csr_matrix(
-                    (self.dataset.get("View" + str(view_index)).get("data").value,
-                     self.dataset.get("View" + str(view_index)).get("indices").value,
-                     self.dataset.get("View" + str(view_index)).get("indptr").value),
-                    shape=self.dataset.get("View" + str(view_index)).attrs["shape"])[
+                    (self.dataset["View" + str(view_index)]["data"][()],
+                     self.dataset["View" + str(view_index)]["indices"][()],
+                     self.dataset["View" + str(view_index)]["indptr"][()]),
+                    shape=self.dataset["View" + str(view_index)].attrs["shape"])[
                              example_indices, :][
                              np.argsort(sorted_indices), :]
 
@@ -208,11 +208,11 @@ class Dataset():
 
     def get_nb_class(self, example_indices=None):
         example_indices = self.init_example_indces(example_indices)
-        return len(np.unique(self.dataset.get("Labels").value[example_indices]))
+        return len(np.unique(self.dataset["Labels"][example_indices]))
 
     def get_labels(self, example_indices=None):
         example_indices = self.init_example_indces(example_indices)
-        return self.dataset.get("Labels").value[example_indices]
+        return self.dataset["Labels"][example_indices]
 
     def copy_view(self, target_dataset=None, source_view_name=None,
                   target_view_index=None, example_indices=None):
@@ -220,7 +220,7 @@ class Dataset():
         new_d_set = target_dataset.create_dataset("View"+str(target_view_index),
             data=self.get_v(self.view_dict[source_view_name],
                             example_indices=example_indices))
-        for key, value in self.dataset.get("View"+str(self.view_dict[source_view_name])).attrs.items():
+        for key, value in self.dataset["View"+str(self.view_dict[source_view_name])].attrs.items():
             new_d_set.attrs[key] = value
 
     def init_view_names(self, view_names=None):
@@ -240,15 +240,15 @@ class Dataset():
         dataset_file_path = os.path.join(path,self.get_name()+"_temp_filter.hdf5")
         new_dataset_file = h5py.File(dataset_file_path,"w")
         self.dataset.copy("Metadata", new_dataset_file)
-        new_dataset_file.get("Metadata").attrs["datasetLength"] = len(example_indices)
-        new_dataset_file.get("Metadata").attrs["nbClass"] = np.unique(labels)
+        new_dataset_file["Metadata"].attrs["datasetLength"] = len(example_indices)
+        new_dataset_file["Metadata"].attrs["nbClass"] = np.unique(labels)
         new_dataset_file.create_dataset("Labels", data=labels)
-        new_dataset_file.get("Labels").attrs["names"] = [label_name.encode()
+        new_dataset_file["Labels"].attrs["names"] = [label_name.encode()
                                                      if not isinstance(label_name, bytes)
                                                      else label_name
                                                      for label_name in label_names]
         view_names = self.init_view_names(view_names)
-        new_dataset_file.get("Metadata").attrs["nbView"] = len(view_names)
+        new_dataset_file["Metadata"].attrs["nbView"] = len(view_names)
         for new_index, view_name in enumerate(view_names):
             self.copy_view(target_dataset=new_dataset_file,
                            source_view_name=view_name,
@@ -271,18 +271,18 @@ class Dataset():
             self.copy_view(target_dataset=noisy_dataset,
                                    source_view_name=self.get_view_name(view_index),
                                    target_view_index=view_index)
-        for view_index in range(noisy_dataset.get("Metadata").attrs["nbView"]):
+        for view_index in range(noisy_dataset["Metadata"].attrs["nbView"]):
             view_key = "View" + str(view_index)
-            view_dset = noisy_dataset.get(view_key)
+            view_dset = noisy_dataset.get[view_key]
             try:
                 view_limits = self.dataset[
-                    "Metadata/View" + str(view_index) + "_limits"].value
+                    "Metadata/View" + str(view_index) + "_limits"][()]
             except:
                 import pdb;pdb.set_trace()
             view_ranges = view_limits[:, 1] - view_limits[:, 0]
-            normal_dist = random_state.normal(0, noise_std, view_dset.value.shape)
+            normal_dist = random_state.normal(0, noise_std, view_dset[()].shape)
             noise = normal_dist * view_ranges
-            noised_data = view_dset.value + noise
+            noised_data = view_dset[()] + noise
             noised_data = np.where(noised_data < view_limits[:, 0],
                                    view_limits[:, 0], noised_data)
             noised_data = np.where(noised_data > view_limits[:, 1],
@@ -439,11 +439,11 @@ def get_shape(dataset, view_index):
 def get_value(dataset):
     """Used to get the value of a view in the HDF5 dataset even if it sparse"""
     if not dataset.attrs["sparse"]:
-        return dataset.value
+        return dataset[()]
     else:
-        sparse_mat = sparse.csr_matrix((dataset.get("data").value,
-                                        dataset.get("indices").value,
-                                        dataset.get("indptr").value),
+        sparse_mat = sparse.csr_matrix((dataset.get("data")[()],
+                                        dataset.get("indices")[()],
+                                        dataset.get("indptr")[()]),
                                        shape=dataset.attrs["shape"])
         return sparse_mat
 
@@ -559,6 +559,6 @@ def input_(timeout=15):
 def get_monoview_shared(path, name, view_name, labels_names, classification_indices):
     """ATM is not used with shared memory, but soon :)"""
     hdf5_dataset_file = h5py.File(path + name + ".hdf5", "w")
-    X = hdf5_dataset_file.get(view_name).value
-    y = hdf5_dataset_file.get("Labels").value
+    X = hdf5_dataset_file.get(view_name)[()]
+    y = hdf5_dataset_file.get("Labels")[()]
     return X, y
