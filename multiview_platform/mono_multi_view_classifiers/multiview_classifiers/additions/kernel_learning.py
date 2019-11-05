@@ -7,11 +7,8 @@ from ...utils.transformations import sign_labels, unsign_labels
 
 class KernelClassifier(BaseMultiviewClassifier):
 
-    def __init__(self, random_state=None,
-                 kernel_types=None, kernel_configs=None):
+    def __init__(self, random_state=None,):
         super().__init__(random_state)
-        self.kernel_configs=kernel_configs
-        self.kernel_types=kernel_types
 
     def _compute_kernels(self, X, example_indices, view_indices, ):
         new_X = {}
@@ -22,42 +19,37 @@ class KernelClassifier(BaseMultiviewClassifier):
                                            **kernel_config)
         return new_X
 
-    def _init_fit(self, X, y, train_indices, view_indices):
-        train_indices, view_indices = get_examples_views_indices(X,
-                                                                 train_indices,
-                                                                 view_indices)
-        self.init_kernels(nb_view=len(view_indices), )
-        new_X = self._compute_kernels(X,
-                                      train_indices, view_indices)
-        new_y = sign_labels(y[train_indices])
-        return new_X, new_y
+    def format_X(self, X, example_indices, view_indices):
+        example_indices, view_indices = get_examples_views_indices(X,
+                                                                   example_indices,
+                                                                   view_indices)
+        formatted_X = dict((index, X.get_v(view_index, example_indices=example_indices))
+                     for index, view_index in enumerate(view_indices))
+
+        return formatted_X, example_indices
 
     def extract_labels(self, predicted_labels):
         signed_labels = np.sign(predicted_labels)
         return unsign_labels(signed_labels)
 
-
-
-
     def init_kernels(self, nb_view=2, ):
-        if isinstance(self.kernel_types, KernelDistribution):
-            self.kernel_functions = self.kernel_types.draw(nb_view)
-        elif isinstance(self.kernel_types, str):
-            self.kernel_functions = [getattr(pairwise, self.kernel_types)
+        if isinstance(self.kernel, KernelDistribution):
+            self.kernel = self.kernel.draw(nb_view)
+        elif isinstance(self.kernel, str):
+            self.kernel = [self.kernel
                                      for _ in range(nb_view)]
-        elif isinstance(self.kernel_types, list):
-            self.kernel_functions = [getattr(pairwise, kernel_type)
-                                     for kernel_type in self.kernel_types]
+        elif isinstance(self.kernel, list):
+            pass
 
-        if isinstance(self.kernel_configs, KernelConfigDistribution):
-            self.kernel_configs = self.kernel_configs.draw(nb_view)
-            self.kernel_configs = [kernel_config[kernel_function.__name__]
-                                   for kernel_config, kernel_function
-                                   in zip(self.kernel_configs,
-                                          self.kernel_functions)]
+        if isinstance(self.kernel_params, KernelConfigDistribution):
+            self.kernel_params = self.kernel_params.draw(nb_view)
+            self.kernel_params = [kernel_config[kernel_name]
+                                   for kernel_config, kernel_name
+                                   in zip(self.kernel_params,
+                                          self.kernel)]
 
-        elif isinstance(self.kernel_configs, dict):
-            self.kernel_configs = [self.kernel_configs for _ in range(nb_view)]
+        elif isinstance(self.kernel_params, dict):
+            self.kernel_params = [self.kernel_params for _ in range(nb_view)]
         else:
             pass
 
@@ -76,13 +68,8 @@ class KernelConfigDistribution:
     def __init__(self, seed=42):
         self.random_state=np.random.RandomState(seed)
         self.possible_config = {
-            # "polynomial_kernel":{"degree": CustomRandint(low=1, high=7),
-            #                      "gamma": CustomUniform(),
-            #                      "coef0": CustomUniform()
-            #
-            # },
-            "chi2_kernel": {"gamma": CustomUniform()},
-            "rbf_kernel": {"gamma": CustomUniform()},
+            "additive_chi2": {"gamma": CustomUniform()},
+            "rbf": {"gamma": CustomUniform()},
         }
 
     def draw(self, nb_view):
@@ -108,8 +95,7 @@ class KernelDistribution:
 
     def __init__(self, seed=42):
         self.random_state=np.random.RandomState(seed)
-        self.available_kernels = [pairwise.chi2_kernel,
-                                  pairwise.rbf_kernel,]
+        self.available_kernels = ["rbf",]
 
     def draw(self, nb_view):
-        return self.random_state.choice(self.available_kernels, nb_view)
+        return list(self.random_state.choice(self.available_kernels, nb_view))

@@ -24,7 +24,7 @@ Classification:
   classes:
   type: ["multiview"]
   algos_monoview: ["all"]
-  algos_multiview: ["mvml", "lp_norm_mkl",]
+  algos_multiview: ["lp_norm_mkl",]
   stats_iter: 2
   metrics: ["accuracy_score", "f1_score"]
   metric_princ: "f1_score"
@@ -210,10 +210,10 @@ easy_mkl:
 
 lp_norm_mkl:
   lmbda: [0.1]
-  max_rounds: [50]
-  max_diff: [0.0001]
-  kernel_types: ["rbf_kernel"]
-  kernel_configs:
+  n_loops: [50]
+  precision: [0.0001]
+  kernel: ["rbf"]
+  kernel_params:
     gamma: [0.1]
 
 mvml:
