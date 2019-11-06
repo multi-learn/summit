@@ -1,7 +1,7 @@
 # The base configuration of the benchmark
 Base :
-  log: true
-  name: ["Plausible"]
+  log: True
+  name: ["control_vs_malade"]
   label: "_"
   type: ".hdf5"
   views:
@@ -18,18 +18,18 @@ Base :
 # All the classification-realted configuration options
 Classification:
   multiclass_method: "oneVersusOne"
-  split: 0.8
-  nb_folds: 2
+  split: 0.4
+  nb_folds: 5
   nb_class: 2
   classes:
   type: ["multiview"]
   algos_monoview: ["all"]
   algos_multiview: ["lp_norm_mkl",]
-  stats_iter: 2
+  stats_iter: 5
   metrics: ["accuracy_score", "f1_score"]
   metric_princ: "f1_score"
   hps_type: "randomized_search"
-  hps_iter: 2
+  hps_iter: 30
 
 
 #####################################
