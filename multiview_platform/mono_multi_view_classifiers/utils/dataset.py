@@ -157,12 +157,31 @@ class Dataset():
         return self.dataset["Metadata"].attrs["datasetLength"]
 
     def get_view_dict(self):
+        """
+        Returns the dictionary with view indices as keys and the corresponding
+        names as values
+        """
         view_dict = {}
         for view_index in range(self.nb_view):
             view_dict[self.dataset["View" + str(view_index)].attrs["name"]] = view_index
         return view_dict
 
     def get_label_names(self, decode=True, example_indices=None):
+        """
+        Used to get the list of the label names for the give set of examples
+
+        Parameters
+        ----------
+        decode : bool
+            If True, will decode the label names before lsiting them
+
+        example_indices : numpy.ndarray
+            The array containig the indices of the needed examples
+
+        Returns
+        -------
+
+        """
         example_indices = self.init_example_indces(example_indices)
         selected_labels = self.get_labels(example_indices)
         if decode:
@@ -175,12 +194,26 @@ class Dataset():
                     if label in selected_labels]
 
     def init_example_indces(self, example_indices=None):
+        """If no example indices are provided, selects all the examples."""
         if example_indices is None:
             return range(self.get_nb_examples())
         else:
             return example_indices
 
     def get_v(self, view_index, example_indices=None):
+        """
+        Selects the view to extract
+        Parameters
+        ----------
+        view_index : int
+            The index of the view to extract
+        example_indices : numpy.ndarray
+            The array containing the indices of the examples to extract.
+
+        Returns
+        -------
+        A numpy.ndarray containing the view data for the needed examples
+        """
         example_indices = self.init_example_indces(example_indices)
         if type(example_indices) is int:
             return self.dataset["View" + str(view_index)][example_indices, :]
@@ -203,10 +236,12 @@ class Dataset():
 
                 return sparse_mat
 
-    def get_shape(self, example_indices=None):
-        return self.get_v(0,example_indices=example_indices).shape
+    def get_shape(self, view_index=0, example_indices=None):
+        """Gets the shape of the needed view"""
+        return self.get_v(view_index,example_indices=example_indices).shape
 
     def get_nb_class(self, example_indices=None):
+        """Gets the number of class of the dataset"""
         example_indices = self.init_example_indces(example_indices)
         return len(np.unique(self.dataset["Labels"][()][example_indices]))
 
