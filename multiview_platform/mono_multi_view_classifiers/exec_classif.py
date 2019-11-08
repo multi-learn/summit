@@ -57,15 +57,13 @@ def init_benchmark(cl_type, monoview_algos, multiview_algos, args):
         Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.
     """
     benchmark = {"monoview": {}, "multiview": {}}
-    all_multiview_packages = [name for _, name, isPackage
-                            in pkgutil.iter_modules(
-            ['./mono_multi_view_classifiers/multiview_classifiers/']) if isPackage]
+
 
     if "monoview" in cl_type:
         if monoview_algos == ['all']:
             benchmark["monoview"] = [name for _, name, isPackage in
                                      pkgutil.iter_modules([
-                                                              "./mono_multi_view_classifiers/monoview_classifiers"])
+                                     "./mono_multi_view_classifiers/monoview_classifiers"])
                                      if not isPackage]
 
         else:
@@ -80,34 +78,6 @@ def init_benchmark(cl_type, monoview_algos, multiview_algos, args):
         else:
             benchmark["multiview"] = multiview_algos
     return benchmark
-
-
-# def gen_views_dictionnary(dataset_var, views):
-#     r"""Used to generate a dictionary mapping a view name (key) to it's index in the dataset (value).
-#
-#     Parameters
-#     ----------
-#     dataset_var : `h5py` dataset file
-#         The full dataset on which the benchmark will be done
-#     views : List of strings
-#         Names of the selected views on which the banchmark will be done
-#
-#     Returns
-#     -------
-#     viewDictionary : Dictionary
-#         Dictionary mapping the view names totheir indexin the full dataset.
-#         """
-#     datasets_names = dataset_var.get_view_dict().keys()
-#     views_dictionary = {}
-#     for dataset_name in datasets_names:
-#         if dataset_name[:4] == "View":
-#             view_name = dataset_var.get(dataset_name).attrs["name"]
-#             if type(view_name) == bytes:
-#                 view_name = view_name.decode("utf-8")
-#             if view_name in views:
-#                 views_dictionary[view_name] = int(dataset_name[4:])
-#
-#     return views_dictionary
 
 
 def init_argument_dictionaries(benchmark, views_dictionary,
@@ -263,6 +233,17 @@ def get_path_dict(multiview_classifier_args):
 
 
 def is_dict_in(dictionary):
+    """
+    Returns True if any of the dictionary value is a dictionary itself.
+
+    Parameters
+    ----------
+    dictionary
+
+    Returns
+    -------
+
+    """
     paths = []
     for key, value in dictionary.items():
         if isinstance(value, dict):
@@ -271,6 +252,24 @@ def is_dict_in(dictionary):
 
 
 def gen_multiple_kwargs_combinations(cl_kwrags):
+    """
+    Generates all the possible combination of the asked args
+
+    Parameters
+    ----------
+    cl_kwrags : dict
+        The arguments, with one at least having multiple values
+
+    Returns
+    -------
+    kwargs_combination : list
+        The list of all the combinations of arguments
+
+    reduced_kwargs_combination : list
+        The reduced names and values of the arguments will be used in the naming
+        process of the different classifiers
+
+    """
     values = list(cl_kwrags.values())
     listed_values = [[_] if type(_) is not list else _ for _ in values]
     values_cartesian_prod = [_ for _ in itertools.product(*listed_values)]
@@ -292,6 +291,39 @@ def gen_multiple_args_dictionnaries(nb_class, kwargs_init, classifier,
                                     view_name=None, view_index=None,
                                     views_dictionary=None,
                                     framework="monoview"):
+    """
+    Used in the case of mutliple arguments asked in the config file.
+    Will combine the arguments to explore all the possibilities.
+
+    Parameters
+    ----------
+    nb_class : int,
+        The number of classes in the dataset
+
+    kwargs_init : dict
+        The arguments given in the config file
+
+    classifier : str
+        The name of the classifier for which multiple arguments have been asked
+
+    view_name : str
+        The name of the view in consideration.
+
+    view_index : int
+        The index of the view in consideration
+
+    views_dictionary : dict
+        The dictionary of all the views indices and their names
+
+    framework : str
+        Either monoview or multiview
+
+    Returns
+    -------
+    args_dictionaries : list
+        The list of all the possible combination of asked arguments
+
+    """
     if framework=="multiview":
         classifier_config = get_path_dict(kwargs_init[classifier])
     else:
@@ -322,12 +354,12 @@ def init_kwargs(args, classifiers_names, framework="monoview"):
     ----------
     args : parsed args objects
         All the args passed by the user.
-    classifiers-names : list of strings
+    classifiers_names : list of strings
         List of the benchmarks's monoview classifiers names.
 
     Returns
     -------
-    monoviewKWARGS : Dictionary of dictionaries
+    kwargs : Dictionary
         Dictionary resuming all the specific arguments for the benchmark, one dictionary for each classifier.
 
         For example, for Adaboost, the KWARGS will be `{"n_estimators":<value>, "base_estimator":<value>}`"""
@@ -351,7 +383,25 @@ def init_kwargs(args, classifiers_names, framework="monoview"):
 
 
 def init_kwargs_func(args, benchmark):
-    monoview_kwargs = init_kwargs(args, benchmark["monoview"])
+    """
+    Dispached the kwargs initialization to monoview and multiview and creates
+    the kwargs variable
+
+    Parameters
+    ----------
+    args : parsed args objects
+        All the args passed by the user.
+
+    benchmark : dict
+        The name of the mono- and mutli-view classifiers to run in the benchmark
+
+    Returns
+    -------
+
+    kwargs : dict
+        The arguments for each mono- and multiview algorithms
+    """
+    monoview_kwargs = init_kwargs(args, benchmark["monoview"], framework="monoview")
     multiview_kwargs = init_kwargs(args, benchmark["multiview"], framework="multiview")
     kwargs = {"monoview":monoview_kwargs, "multiview":multiview_kwargs}
     return kwargs
@@ -373,31 +423,45 @@ def init_kwargs_func(args, benchmark):
 #     return multiview_kwargs
 
 
-def init_multiview_arguments(args, benchmark, views, views_indices,
-                             argument_dictionaries, random_state, directory,
-                             results_monoview, classification_indices):
-    """Used to add each monoview exeperience args to the list of monoview experiences args"""
-    logging.debug("Start:\t Initializing multiview classifiers arguments")
-    multiview_arguments = []
-    if "multiview" in benchmark:
-        for multiview_algo_name in benchmark["multiview"]:
-            mutliview_module = getattr(multiview_classifiers,
-                                      multiview_algo_name)
-
-            multiview_arguments += mutliview_module.getArgs(args, benchmark,
-                                                          views, views_indices,
-                                                          random_state,
-                                                          directory,
-                                                          results_monoview,
-                                                          classification_indices)
-    argument_dictionaries["multiview"] = multiview_arguments
-    logging.debug("Start:\t Initializing multiview classifiers arguments")
-    return argument_dictionaries
+# def init_multiview_arguments(args, benchmark, views, views_indices,
+#                              argument_dictionaries, random_state, directory,
+#                              results_monoview, classification_indices):
+#     """Used to add each monoview exeperience args to the list of monoview experiences args"""
+#     logging.debug("Start:\t Initializing multiview classifiers arguments")
+#     multiview_arguments = []
+#     if "multiview" in benchmark:
+#         for multiview_algo_name in benchmark["multiview"]:
+#             mutliview_module = getattr(multiview_classifiers,
+#                                       multiview_algo_name)
+#
+#             multiview_arguments += mutliview_module.getArgs(args, benchmark,
+#                                                           views, views_indices,
+#                                                           random_state,
+#                                                           directory,
+#                                                           results_monoview,
+#                                                           classification_indices)
+#     argument_dictionaries["multiview"] = multiview_arguments
+#     logging.debug("Start:\t Initializing multiview classifiers arguments")
+#     return argument_dictionaries
 
 
 def arange_metrics(metrics, metric_princ):
     """Used to get the metrics list in the right order so that
-    the first one is the principal metric specified in args"""
+    the first one is the principal metric specified in args
+
+    Parameters
+    ----------
+    metrics : list of lists
+        The metrics that will be used in the benchmark
+
+    metric_princ : str
+        The name of the metric that need to be used for the hyper-parameter
+        optimization process
+
+    Returns
+    -------
+    metrics : list of lists
+        The metrics list, but arranged  so the first one is the principal one."""
     if [metric_princ] in metrics:
         metric_index = metrics.index([metric_princ])
         first_metric = metrics[0]
@@ -410,6 +474,31 @@ def arange_metrics(metrics, metric_princ):
 
 def benchmark_init(directory, classification_indices, labels, labels_dictionary,
                    k_folds):
+    """
+    Initializes the benchmark, by saving the indices of the train
+    examples and the cross validation folds.
+
+    Parameters
+    ----------
+    directory : str
+        The benchmark's result directory
+
+    classification_indices : numpy array
+        The indices of the examples, splitted for the train/test split
+
+    labels : numpy array
+        The labels of the dataset
+
+    labels_dictionary : dict
+        The dictionary with labels as keys and their names as values
+
+    k_folds : sklearn.model_selection.Folds object
+        The folds for the cross validation process
+
+    Returns
+    -------
+
+    """
     logging.debug("Start:\t Benchmark initialization")
     if not os.path.exists(os.path.dirname(directory + "train_labels.csv")):
         try:
@@ -448,8 +537,7 @@ def exec_one_benchmark(core_index=-1, labels_dictionary=None, directory=None,
                      benchmark=None, views=None, views_indices=None, flag=None,
                      labels=None,
                      exec_monoview_multicore=exec_monoview_multicore,
-                     exec_multiview_multicore=exec_multiview_multicore,
-                     init_multiview_arguments=init_multiview_arguments):
+                     exec_multiview_multicore=exec_multiview_multicore,):
     """Used to run a benchmark using one core. ExecMonoview_multicore, initMultiviewArguments and
      exec_multiview_multicore args are only used for tests"""
 
@@ -469,14 +557,6 @@ def exec_one_benchmark(core_index=-1, labels_dictionary=None, directory=None,
         for argument in argument_dictionaries["Monoview"]]
     logging.debug("Done:\t monoview benchmark")
 
-    logging.debug("Start:\t multiview arguments initialization")
-    # argument_dictionaries = initMultiviewArguments(args, benchmark, views,
-    #                                               views_indices,
-    #                                               argument_dictionaries,
-    #                                               random_state, directory,
-    #                                               resultsMonoview,
-    #                                               classification_indices)
-    logging.debug("Done:\t multiview arguments initialization")
 
     logging.debug("Start:\t multiview benchmark")
     results_multiview = [
