@@ -383,7 +383,8 @@ def iterCmap(statsIter):
 
 def publish2Dplot(data, classifiers_names, nbClassifiers, nbExamples, nbCopies,
                   fileName, minSize=10,
-                  width_denominator=2.0, height_denominator=20.0, stats_iter=1):
+                  width_denominator=2.0, height_denominator=20.0, stats_iter=1,
+                  use_plotly=False, example_ids=None):
     r"""Used to generate a 2D plot of the errors.
 
     Parameters
@@ -431,6 +432,20 @@ def publish2Dplot(data, classifiers_names, nbClassifiers, nbExamples, nbCopies,
 
     fig.savefig(fileName + "error_analysis_2D.png", bbox_inches="tight", transparent=True)
     plt.close()
+    ### The following part is used to generate an interactive graph.
+    if use_plotly:
+        import plotly
+        fig = plotly.graph_objs.go.Figure(data=plotly.graph_objs.go.Heatmap(
+            x=classifiers_names,
+            y=example_ids,
+            z=data,
+            colorscale="Greys",
+            ))
+        fig.update_layout(
+            xaxis={"showgrid": False, "showticklabels": False, "ticks": ''},
+            yaxis={"showgrid": False, "showticklabels": False, "ticks": ''})
+        plotly.offline.plot(fig, filename='essai.html', auto_open=False)
+        del fig
 
 
 def publishErrorsBarPlot(error_on_examples, nbClassifiers, nbExamples, fileName):

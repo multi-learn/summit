@@ -424,10 +424,6 @@ class Dataset():
         return selected_label_names
 
 
-
-
-
-
 def datasets_already_exist(pathF, name, nbCores):
     """Used to check if it's necessary to copy datasets"""
     allDatasetExist = True
@@ -436,51 +432,6 @@ def datasets_already_exist(pathF, name, nbCores):
         allDatasetExist *= os.path.isfile(
             pathF + name + str(coreIndex) + ".hdf5")
     return allDatasetExist
-
-# def get_v(dataset, view_index, used_indices=None):
-# #     """Used to extract a view as a numpy array or a sparse mat from the HDF5 dataset"""
-# #     if used_indices is None:
-# #         used_indices = range(dataset.get("Metadata").attrs["datasetLength"])
-# #     if type(used_indices) is int:
-# #         return dataset.get("View" + str(view_index))[used_indices, :]
-# #     else:
-# #         used_indices = np.array(used_indices)
-# #         sorted_indices = np.argsort(used_indices)
-# #         used_indices = used_indices[sorted_indices]
-# #
-# #         if not dataset.get("View" + str(view_index)).attrs["sparse"]:
-# #             return dataset.get("View" + str(view_index))[used_indices, :][
-# #                    np.argsort(sorted_indices), :]
-# #         else:
-# #             sparse_mat = sparse.csr_matrix(
-# #                 (dataset.get("View" + str(view_index)).get("data").value,
-# #                  dataset.get("View" + str(view_index)).get("indices").value,
-# #                  dataset.get("View" + str(view_index)).get("indptr").value),
-# #                 shape=dataset.get("View" + str(view_index)).attrs["shape"])[
-# #                          used_indices, :][
-# #                          np.argsort(sorted_indices), :]
-# #
-# #             return sparse_mat
-
-
-def get_shape(dataset, view_index):
-    """Used to get the dataset shape even if it's sparse"""
-    if not dataset.get("View" + str(view_index)).attrs["sparse"]:
-        return dataset.get("View" + str(view_index)).shape
-    else:
-        return dataset.get("View" + str(view_index)).attrs["shape"]
-
-
-def get_value(dataset):
-    """Used to get the value of a view in the HDF5 dataset even if it sparse"""
-    if not dataset.attrs["sparse"]:
-        return dataset[()]
-    else:
-        sparse_mat = sparse.csr_matrix((dataset.get("data")[()],
-                                        dataset.get("indices")[()],
-                                        dataset.get("indptr")[()]),
-                                       shape=dataset.attrs["shape"])
-        return sparse_mat
 
 
 def extract_subset(matrix, used_indices):
@@ -590,10 +541,3 @@ def input_(timeout=15):
         return sys.stdin.readline().strip()
     else:
         return "y"
-
-def get_monoview_shared(path, name, view_name, labels_names, classification_indices):
-    """ATM is not used with shared memory, but soon :)"""
-    hdf5_dataset_file = h5py.File(path + name + ".hdf5", "w")
-    X = hdf5_dataset_file.get(view_name)[()]
-    y = hdf5_dataset_file.get("Labels")[()]
-    return X, y

@@ -16,7 +16,7 @@ from . import monoview_utils
 from .analyze_result import execute
 # Import own modules
 from .. import monoview_classifiers
-from ..utils.dataset import get_value, extract_subset, Dataset
+from ..utils.dataset import extract_subset, Dataset
 from ..utils import hyper_parameter_search
 
 # Author-Info

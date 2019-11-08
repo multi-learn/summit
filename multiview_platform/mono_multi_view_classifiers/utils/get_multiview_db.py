@@ -4,10 +4,8 @@ import logging
 
 import h5py
 import numpy as np
-from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.utils.validation import check_array
 
-from ..utils.dataset import Dataset, copy_hdf5
+from ..utils.dataset import Dataset
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
