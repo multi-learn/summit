@@ -44,6 +44,7 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
+    example_ids = ["exmaple_id_"+str(i) for i in range(nb_examples)]
     views = []
     view_names = []
     are_sparse = []
@@ -72,10 +73,12 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
             view_names.append("ViewNumber" + str(view_index))
             are_sparse.append(False)
 
+
+
         dataset = Dataset(views=views, labels=labels,
                               labels_names=label_names, view_names=view_names,
                               are_sparse=are_sparse, file_name="plausible.hdf5",
-                              path=path)
+                              path=path, example_ids=example_ids)
         labels_dictionary = {0: "No", 1: "Yes"}
         return dataset, labels_dictionary, "plausible"
     elif nb_class >= 3:
@@ -114,7 +117,7 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
                               labels_names=label_names, view_names=view_names,
                               are_sparse=are_sparse,
                               file_name="plausible.hdf5",
-                              path=path)
+                              path=path, example_ids=example_ids)
         labels_dictionary = {0: "No", 1: "Yes", 2: "Maybe"}
         return dataset, labels_dictionary, "plausible"
 

@@ -219,7 +219,7 @@ def fakeBenchmarkExec_monocore(dataset_var=1, a=4, args=1):
 def fakegetResults(results, stats_iter, nb_multiclass,
                    benchmark_arguments_dictionaries, multi_class_labels, metrics,
                    classification_indices, directories, directory,
-                   labels_dictionary, nb_examples, nb_labels):
+                   labels_dictionary, nb_examples, nb_labels, example_ids):
     return 3
 
 
@@ -368,8 +368,7 @@ class Test_execOneBenchmark(unittest.TestCase):
                                                                     1, 2, 1, 1,
                                                                     2, 1, 21]),
                                                       exec_monoview_multicore=fakeExecMono,
-                                                      exec_multiview_multicore=fakeExecMulti,
-                                                      init_multiview_arguments=fakeInitMulti)
+                                                      exec_multiview_multicore=fakeExecMulti,)
 
         cls.assertEqual(flag, None)
         cls.assertEqual(results ,
@@ -428,8 +427,7 @@ class Test_execOneBenchmark_multicore(unittest.TestCase):
             flag=None,
             labels=np.array([0, 1, 2, 3, 4, 2, 2, 12, 1, 2, 1, 1, 2, 1, 21]),
             exec_monoview_multicore=fakeExecMono,
-            exec_multiview_multicore=fakeExecMulti,
-            init_multiview_arguments=fakeInitMulti)
+            exec_multiview_multicore=fakeExecMulti,)
 
         cls.assertEqual(flag, None)
         cls.assertEqual(results ,

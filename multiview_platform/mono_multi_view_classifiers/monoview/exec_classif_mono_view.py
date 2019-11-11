@@ -97,15 +97,19 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     logging.debug("Start:\t Predicting")
     y_train_pred = classifier.predict(X_train)
     y_test_pred = classifier.predict(X_test)
-    full_labels_pred = np.zeros(Y.shape, dtype=int) - 100
+
+    #Filling the full prediction in the right order
+    full_pred = np.zeros(Y.shape, dtype=int) - 100
     for trainIndex, index in enumerate(classificationIndices[0]):
-        full_labels_pred[index] = y_train_pred[trainIndex]
+        full_pred[index] = y_train_pred[trainIndex]
     for testIndex, index in enumerate(classificationIndices[1]):
-        full_labels_pred[index] = y_test_pred[testIndex]
+        full_pred[index] = y_test_pred[testIndex]
+
     if X_test_multiclass != []:
         y_test_multiclass_pred = classifier.predict(X_test_multiclass)
     else:
         y_test_multiclass_pred = []
+
     logging.debug("Done:\t Predicting")
 
     t_end = time.time() - t_start
@@ -124,7 +128,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     logging.debug("Done:\t Getting results")
 
     logging.debug("Start:\t Saving preds")
-    saveResults(stringAnalysis, outputFileName, full_labels_pred, y_train_pred,
+    saveResults(stringAnalysis, outputFileName, full_pred, y_train_pred,
                 y_train, imagesAnalysis, y_test)
     logging.info("Done:\t Saving results")
 
@@ -132,7 +136,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     if testFoldsPreds is None:
         testFoldsPreds = y_train_pred
     return monoview_utils.MonoviewResult(viewIndex, classifier_name, feat, metricsScores,
-                                         full_labels_pred, clKWARGS,
+                                         full_pred, clKWARGS,
                                          y_test_multiclass_pred, testFoldsPreds)
     # return viewIndex, [CL_type, feat, metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
 

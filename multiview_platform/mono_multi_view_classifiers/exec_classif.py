@@ -581,8 +581,7 @@ def exec_one_benchmark_multicore(nb_cores=-1, labels_dictionary=None,
                                  benchmark=None, views=None, views_indices=None,
                                  flag=None, labels=None,
                                  exec_monoview_multicore=exec_monoview_multicore,
-                                 exec_multiview_multicore=exec_multiview_multicore,
-                                 init_multiview_arguments=init_multiview_arguments):
+                                 exec_multiview_multicore=exec_multiview_multicore,):
     """Used to run a benchmark using multiple cores. ExecMonoview_multicore, initMultiviewArguments and
      exec_multiview_multicore args are only used for tests"""
 
@@ -648,13 +647,11 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                                  hyper_param_search=None, metrics=None,
                                  argument_dictionaries=None,
                                  benchmark=None, views=None, views_indices=None,
-                                 flag=None, labels=None,
-                                 exec_monoview_multicore=exec_monoview_multicore,
-                                 exec_multiview_multicore=exec_multiview_multicore,
-                                 init_multiview_arguments=init_multiview_arguments):
+                                 flag=None, labels=None,):
     results_monoview, labels_names = benchmark_init(directory,
                                                  classification_indices, labels,
                                                  labels_dictionary, k_folds)
+    logging.getLogger('matplotlib.font_manager').disabled = True
     logging.debug("Start:\t monoview benchmark")
     for arguments in argument_dictionaries["monoview"]:
         X = dataset_var.get_v(arguments["view_index"])
@@ -759,7 +756,6 @@ def exec_benchmark(nb_cores, stats_iter, nb_multiclass,
             benchmark_arguments_dictionaries[0])]
     else:
         for arguments in benchmark_arguments_dictionaries:
-            print(arguments)
             results += [exec_one_benchmark_mono_core(dataset_var=dataset_var, **arguments)]
     logging.debug("Done:\t Executing all the needed biclass benchmarks")
 
@@ -777,7 +773,8 @@ def exec_benchmark(nb_cores, stats_iter, nb_multiclass,
                                     directory,
                                     labels_dictionary,
                                     nb_examples,
-                                    nb_labels)
+                                    nb_labels,
+                                    dataset_var.example_ids)
     logging.debug("Done:\t Analyzing predictions")
     delete(benchmark_arguments_dictionaries, nb_cores, dataset_var)
     return results_mean_stds

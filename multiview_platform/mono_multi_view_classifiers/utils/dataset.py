@@ -66,7 +66,8 @@ class Dataset():
 
     def __init__(self, views=None, labels=None, are_sparse=False,
                  file_name="dataset.hdf5", view_names=None, path="",
-                 hdf5_file=None, labels_names=None, is_temp=False):
+                 hdf5_file=None, labels_names=None, is_temp=False,
+                 example_ids=None):
         self.is_temp = False
         if hdf5_file is not None:
             self.dataset=hdf5_file
@@ -104,6 +105,10 @@ class Dataset():
             meta_data_grp.attrs["datasetLength"] = len(labels)
             dataset_file.close()
             self.update_hdf5_dataset(os.path.join(path, file_name))
+            if example_ids is not None:
+                self.example_ids = example_ids
+            else:
+                self.example_ids = [str(i) for i in range(labels.shape[0])]
 
     def rm(self):
         """
@@ -146,6 +151,10 @@ class Dataset():
         """
         self.nb_view = self.dataset["Metadata"].attrs["nbView"]
         self.view_dict = self.get_view_dict()
+        if "example_ids"  in self.dataset["Metadata"].keys():
+            self.example_ids = self.dataset["Metadata"]["example_ids"]
+        else:
+            self.example_ids = [str(i) for i in range(self.dataset["Labels"].shape[0])]
 
     def get_nb_examples(self):
         """

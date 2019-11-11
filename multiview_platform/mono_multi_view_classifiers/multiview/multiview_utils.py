@@ -16,11 +16,14 @@ class MultiviewResult(object):
         self.y_test_multiclass_pred = test_labels_multiclass
 
     def get_classifier_name(self):
-        multiview_classifier_module = getattr(multiview_classifiers,
-                                            self.classifier_name)
-        multiview_classifier = getattr(multiview_classifier_module,
-                                       multiview_classifier_module.classifier_class_name)(42)
-        return multiview_classifier.short_name
+        try:
+            multiview_classifier_module = getattr(multiview_classifiers,
+                                                self.classifier_name)
+            multiview_classifier = getattr(multiview_classifier_module,
+                                           multiview_classifier_module.classifier_class_name)(42)
+            return multiview_classifier.short_name
+        except:
+            return self.classifier_name
 
 
 def get_names(classed_list):
