@@ -182,11 +182,18 @@ def plot_2d(data, classifiers_names, nbClassifiers, nbExamples,
     ### The following part is used to generate an interactive graph.
     if use_plotly:
         import plotly
+        hover_text = [["Failed "+ str(stats_iter-data[i,j])+" time(s)"
+                       for j in range(data.shape[1])]
+                      for i in range(data.shape[0]) ]
         fig = plotly.graph_objs.Figure(data=plotly.graph_objs.Heatmap(
             x=list(classifiers_names),
             y=example_ids,
             z=data,
+            text=hover_text,
+            hoverinfo=["y", "x", "text"],
             colorscale="Greys",
+            colorbar=dict(tickvals=[0, stats_iter],
+                          ticktext=["Always Wrong", "Always Right"]),
             reversescale=True))
         fig.update_layout(
             xaxis={"showgrid": False, "showticklabels": False, "ticks": ''},
@@ -801,67 +808,77 @@ def numpy_mean_and_std(scores_array):
 
 
 def publish_iter_biclass_metrics_scores(iter_results, directory, labels_dictionary,
-                                    classifiers_dict, data_base_name, stats_iter,
+                                    data_base_name, stats_iter,
                                     min_size=10):
     results=[]
-    for labelsCombination, iterResult in iter_results.items():
-        currentDirectory = directory + labels_dictionary[
-            int(labelsCombination[0])] + "-vs-" + labels_dictionary[
-                               int(labelsCombination[1])] + "/"
-        if not os.path.exists(os.path.dirname(currentDirectory + "a")):
+    for labels_combination, iter_result in iter_results.items():
+        current_directory = directory + labels_dictionary[
+            int(labels_combination[0])] + "-vs-" + labels_dictionary[
+                               int(labels_combination[1])] + "/"
+        if not os.path.exists(os.path.dirname(current_directory + "a")):
             try:
-                os.makedirs(os.path.dirname(currentDirectory + "a"))
+                os.makedirs(os.path.dirname(current_directory + "a"))
             except OSError as exc:
                 if exc.errno != errno.EEXIST:
                     raise
 
-        for metricName, scores in iterResult["metrics_scores"].items():
-            trainMeans, trainSTDs = numpy_mean_and_std(scores["train_scores"])
-            testMeans, testSTDs = numpy_mean_and_std(scores["test_scores"])
+        for metric_name, scores in iter_result.items():
+            train = np.array(scores["mean"].loc["train"])
+            test = np.array(scores["mean"].loc["test"])
+            names = np.array(scores["mean"].columns)
+            train_std = np.array(scores["std"].loc["train"])
+            test_std = np.array(scores["std"].loc["test"])
+            # trainMeans, trainSTDs = numpy_mean_and_std(scores["train_scores"])
+            # testMeans, testSTDs = numpy_mean_and_std(scores["test_scores"])
 
-            names = np.array([name for name in classifiers_dict.keys()])
-            fileName = currentDirectory + time.strftime(
+            # names = np.array([name for name in classifiers_dict.keys()])
+            fileName = current_directory + time.strftime(
                 "%Y_%m_%d-%H_%M_%S") + "-" + data_base_name + "-Mean_on_" + str(
-                stats_iter) + "_iter-" + metricName + ".png"
+                stats_iter) + "_iter-" + metric_name + ".png"
             nbResults = names.shape[0]
 
-            plot_metric_scores(trainMeans, testMeans, names, nbResults,
-                               metricName, fileName, tag=" averaged",
-                               train_STDs=trainSTDs, test_STDs=testSTDs)
-            results+=[[classifiersName, metricName, testMean, testSTD] for classifiersName, testMean, testSTD in zip(names, testMeans, testSTDs)]
+            plot_metric_scores(train, test, names, nbResults,
+                               metric_name, fileName, tag=" averaged",
+                               train_STDs=train_std, test_STDs=test_std)
+            results+=[[classifier_name, metric_name, test_mean, test_std] for classifier_name, test_mean, test_std in zip(names, test, test_std)]
     return results
 
 
-def gen_error_dat_glob(combi_results, stats_iter, base_file_name):
-    nbExamples = combi_results["error_on_examples"].shape[1]
-    nbClassifiers = combi_results["error_on_examples"].shape[0]
-    data = np.transpose(combi_results["error_on_examples"])
-    error_on_examples = -1 * np.sum(data, axis=1) + (nbClassifiers * stats_iter)
-    np.savetxt(base_file_name + "clf_errors.csv", data, delimiter=",")
-    np.savetxt(base_file_name + "example_errors.csv", error_on_examples,
-               delimiter=",")
-    return nbExamples, nbClassifiers, data, error_on_examples
+def gen_error_dat_glob(combi_results, stats_iter):
+    nb_examples = next(iter(combi_results.values())).shape[0]
+    nb_classifiers = len(combi_results)
+    data = np.zeros((nb_examples, nb_classifiers), dtype=int)
+    classifier_names = []
+    for clf_index, (classifier_name, error_data) in enumerate(combi_results.items()):
+        data[:, clf_index] = error_data
+        classifier_names.append(classifier_name)
+    error_on_examples = -1 * np.sum(data, axis=1) + (nb_classifiers * stats_iter)
+    return nb_examples, nb_classifiers, data, error_on_examples, classifier_names
 
 
-def publish_iter_biclass_example_errors(iter_results, directory, labels_dictionary,
-                                        classifiers_dict, stats_iter, exmaple_ids, min_size=10):
-    for labelsCombination, combiResults in iter_results.items():
+def publish_iter_biclass_example_errors(iter_results, directory,
+                                        labels_dictionary, stats_iter,
+                                        example_ids):
+    for labels_combination, combi_results in iter_results.items():
         base_file_name = directory + labels_dictionary[
-            int(labelsCombination[0])] + "-vs-" + \
+            int(labels_combination[0])] + "-vs-" + \
                          labels_dictionary[
-                             int(labelsCombination[1])] + "/" + time.strftime(
+                             int(labels_combination[1])] + "/" + time.strftime(
             "%Y_%m_%d-%H_%M_%S") + "-"
-        classifiers_names = [classifier_name for classifier_name in
-                            classifiers_dict.keys()]
+
         logging.debug(
             "Start:\t Global biclass label analysis figure generation")
 
-        nbExamples, nbClassifiers, data, error_on_examples = gen_error_dat_glob(
-            combiResults, stats_iter, base_file_name)
+        nbExamples, nbClassifiers, data, \
+        error_on_examples, classifier_names = gen_error_dat_glob(combi_results,
+                                                                 stats_iter)
 
-        plot_2d(data, classifiers_names, nbClassifiers, nbExamples, 1,
-                base_file_name, stats_iter=stats_iter, example_ids=exmaple_ids)
+        np.savetxt(base_file_name + "clf_errors.csv", data, delimiter=",")
+        np.savetxt(base_file_name + "example_errors.csv", error_on_examples,
+                   delimiter=",")
 
+        plot_2d(data, classifier_names, nbClassifiers, nbExamples,
+                base_file_name, stats_iter=stats_iter, example_ids=example_ids)
         plot_errors_bar(error_on_examples, nbClassifiers * stats_iter,
                         nbExamples, base_file_name)
 
@@ -944,49 +961,39 @@ def add_new_metric(iter_biclass_results, metric, labels_combination, nb_classifi
 def analyzebiclass_iter(biclass_results, metrics, stats_iter, directory,
                        labels_dictionary, data_base_name, nb_examples, example_ids):
     """Used to format the results in order to plot the mean results on the iterations"""
-    iter_biclass_results = {}
-    classifiers_dict, nb_classifiers = gen_classifiers_dict(biclass_results,
+    classifiers_dict = gen_classifiers_dict(biclass_results,
                                                           metrics)
-
+    metrics_analysis = dict((key,{}) for key in biclass_results.keys())
+    error_analysis = dict((key,{}) for key in biclass_results.keys())
     for label_combination, biclass_result in biclass_results.items():
-        for iter_index, metric_score in enumerate(biclass_result["metrics_scores"]):
-            print(metric_score)
 
+        concat_dict = {}
+        for iter_index, metrics_score in enumerate(biclass_result["metrics_scores"]):
+            for metric_name, dataframe in metrics_score.items():
+                if metric_name not in concat_dict:
+                    concat_dict[metric_name] = dataframe
+                else:
+                    concat_dict[metric_name] = pd.concat([concat_dict[metric_name], dataframe])
 
-    for iter_index, biclass_result in enumerate(biclass_results):
-        for labelsComination, results in biclass_result.items():
-            for metric in metrics:
+        for metric_name, dataframe in concat_dict.items():
+            metrics_analysis[label_combination][metric_name] = {}
+            metrics_analysis[label_combination][metric_name]["mean"] = dataframe.groupby(dataframe.index).mean()
+            metrics_analysis[label_combination][metric_name]["std"] = dataframe.groupby(dataframe.index).std()
 
-                iter_biclass_results = add_new_labels_combination(
-                    iter_biclass_results, labelsComination, nb_classifiers,
-                    nb_examples)
-                iter_biclass_results = add_new_metric(iter_biclass_results, metric,
-                                                    labelsComination,
-                                                    nb_classifiers, stats_iter)
+        added_example_errors = {}
+        for example_errors in biclass_result["example_errors"]:
+            for classifier_name, errors in example_errors.items():
+                if classifier_name not in added_example_errors:
+                    added_example_errors[classifier_name] = errors
+                else:
+                    added_example_errors[classifier_name] += errors
+        error_analysis[label_combination] = added_example_errors
 
-                metric_results = results["metrics_scores"][metric[0]]
-                for classifier_name, trainScore, testScore in zip(
-                        metric_results["classifiers_names"],
-                        metric_results["train_scores"],
-                        metric_results["test_scores"], ):
-                    iter_biclass_results[labelsComination]["metrics_scores"][
-                        metric[0]]["train_scores"][
-                        classifiers_dict[classifier_name], iter_index] = trainScore
-                    iter_biclass_results[labelsComination]["metrics_scores"][
-                        metric[0]]["test_scores"][
-                        classifiers_dict[classifier_name], iter_index] = testScore
-            for classifier_name, error_on_example in results[
-                "example_errors"].items():
-                iter_biclass_results[labelsComination]["error_on_examples"][
-                classifiers_dict[classifier_name], :] += error_on_example[
-                    "error_on_examples"]
-
-    results = publish_iter_biclass_metrics_scores(
-        iter_biclass_results, directory,
-        labels_dictionary, classifiers_dict,
-        data_base_name, stats_iter)
-    publish_iter_biclass_example_errors(iter_biclass_results, directory,
-                                        labels_dictionary, classifiers_dict,
+    results = publish_iter_biclass_metrics_scores(metrics_analysis,
+                                                  directory, labels_dictionary,
+                                                  data_base_name, stats_iter)
+    publish_iter_biclass_example_errors(error_analysis, directory,
+                                        labels_dictionary,
                                         stats_iter, example_ids)
     return results
 
