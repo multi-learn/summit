@@ -106,9 +106,12 @@ class Dataset():
             dataset_file.close()
             self.update_hdf5_dataset(os.path.join(path, file_name))
             if example_ids is not None:
+                example_ids = [example_id if not is_just_number(example_id)
+                               else "ID_"+example_id for example_id in example_ids]
                 self.example_ids = example_ids
             else:
-                self.example_ids = [str(i) for i in range(labels.shape[0])]
+                self.example_ids = ["ID_"+str(i)
+                                    for i in range(labels.shape[0])]
 
     def rm(self):
         """
@@ -151,8 +154,11 @@ class Dataset():
         """
         self.nb_view = self.dataset["Metadata"].attrs["nbView"]
         self.view_dict = self.get_view_dict()
-        if "example_ids"  in self.dataset["Metadata"].keys():
-            self.example_ids = self.dataset["Metadata"]["example_ids"]
+        if "example_ids" in self.dataset["Metadata"].keys():
+            self.example_ids = [example_id.decode()
+                                if not is_just_number(example_id.decode())
+                                else "ID_"+example_id.decode()
+                                for example_id in self.dataset["Metadata"]["example_ids"]]
         else:
             self.example_ids = [str(i) for i in range(self.dataset["Labels"].shape[0])]
 
@@ -284,6 +290,14 @@ class Dataset():
         dataset_file_path = os.path.join(path,self.get_name()+"_temp_filter.hdf5")
         new_dataset_file = h5py.File(dataset_file_path,"w")
         self.dataset.copy("Metadata", new_dataset_file)
+        if "example_ids" in self.dataset["Metadata"].keys():
+            ex_ids = new_dataset_file["Metadata"]["example_ids"]
+            ex_ids = np.array([self.example_ids[example_indices]]).astype(np.dtype("S10"))
+        else:
+            new_dataset_file["Metadata"].create_dataset("example_ids",
+                                                        (len(self.example_ids), ),
+                                                        data=np.array(self.example_ids).astype(np.dtype("S10")),
+                                                        dtype=np.dtype("S10"))
         new_dataset_file["Metadata"].attrs["datasetLength"] = len(example_indices)
         new_dataset_file["Metadata"].attrs["nbClass"] = np.unique(labels)
         new_dataset_file.create_dataset("Labels", data=labels)
@@ -432,6 +446,13 @@ class Dataset():
 
         return selected_label_names
 
+
+def is_just_number(string):
+    try:
+        float(string)
+        return True
+    except ValueError:
+        return False
 
 def datasets_already_exist(pathF, name, nbCores):
     """Used to check if it's necessary to copy datasets"""

@@ -1,15 +1,15 @@
 # The base configuration of the benchmark
 Base :
   log: true
-  name: ["plausible"]
+  name: ["control_vs_malade"]
   label: "_"
   type: ".hdf5"
-  views:
+  views: ["300nm", "350nm"]
   pathf: "../data/"
   nice: 0
   random_state: 42
   nb_cores: 1
-  full: False
+  full: True
   debug: True
   add_noise: False
   noise_std: 0.0
@@ -23,7 +23,7 @@ Classification:
   nb_class: 2
   classes:
   type: ["monoview",]
-  algos_monoview: ["adaboost", "decision_tree"]
+  algos_monoview: ["decision_tree"]
   algos_multiview: ["all"]
   stats_iter: 2
   metrics: ["accuracy_score", "f1_score"]

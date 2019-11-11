@@ -63,6 +63,8 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
             fake_zero_indices = random_state.randint(int(nb_examples / 2),
                                                      nb_examples,
                                                      int(nb_examples / 12))
+            for index in np.concatenate((fake_one_indices, fake_zero_indices)):
+                example_ids[index]+="noised"
 
             view_data[fake_one_indices] = np.ones(
                 (len(fake_one_indices), nb_features))

@@ -177,3 +177,91 @@ class Test_gen_error_data(unittest.TestCase):
         self.assertEqual(classifiers_names, ["ada-1", "mv"])
         np.testing.assert_array_equal(data_2d, np.array([ada_data, mv_data]).transpose())
         np.testing.assert_array_equal(error_on_examples, -1*(ada_data+mv_data)/nb_classifiers)
+
+
+class Test_format_previous_results(unittest.TestCase):
+
+    def test_simple(self):
+        biclass_results = {"01":{"metrics_scores":[], "example_errors":[]}}
+        random_state = np.random.RandomState(42)
+
+        # Gen metrics data
+        metrics_1_data = random_state.uniform(size=(2,2))
+        metrics_2_data = random_state.uniform(size=(2,2))
+        metric_1_df = pd.DataFrame(data=metrics_1_data, index=["train", "test"],
+                                   columns=["ada-1", "mv"])
+        metric_2_df = pd.DataFrame(data=metrics_2_data, index=["train", "test"],
+                                   columns=["ada-1", "mv"])
+        biclass_results["01"]["metrics_scores"].append({"acc": metric_1_df})
+        biclass_results["01"]["metrics_scores"].append({"acc": metric_2_df})
+
+        # Gen error data
+        ada_error_data_1 = random_state.randint(0,2,7)
+        ada_error_data_2 = random_state.randint(0, 2, 7)
+        ada_sum = ada_error_data_1+ada_error_data_2
+        mv_error_data_1 = random_state.randint(0, 2, 7)
+        mv_error_data_2 = random_state.randint(0, 2, 7)
+        mv_sum = mv_error_data_1+mv_error_data_2
+        biclass_results["01"]["example_errors"].append({})
+        biclass_results["01"]["example_errors"].append({})
+        biclass_results["01"]["example_errors"][0]["ada-1"] = ada_error_data_1
+        biclass_results["01"]["example_errors"][0]["mv"] = mv_error_data_1
+        biclass_results["01"]["example_errors"][1]["ada-1"] = ada_error_data_2
+        biclass_results["01"]["example_errors"][1]["mv"] = mv_error_data_2
+
+        # Running the function
+        metric_analysis, error_analysis = result_analysis.format_previous_results(biclass_results)
+        mean_df = pd.DataFrame(data=np.mean(np.array([metrics_1_data,
+                                                      metrics_2_data]),
+                                            axis=0),
+                               index=["train", "test"],
+                               columns=["ada-1", "mvm"])
+        std_df =  pd.DataFrame(data=np.std(np.array([metrics_1_data,
+                                                      metrics_2_data]),
+                                            axis=0),
+                               index=["train", "test"],
+                               columns=["ada-1", "mvm"])
+
+        # Testing
+        np.testing.assert_array_equal(metric_analysis["01"]["acc"]["mean"].loc["train"],
+                                      mean_df.loc["train"])
+        np.testing.assert_array_equal(metric_analysis["01"]["acc"]["mean"].loc["test"],
+            mean_df.loc["test"])
+        np.testing.assert_array_equal(metric_analysis["01"]["acc"]["std"].loc["train"],
+            std_df.loc["train"])
+        np.testing.assert_array_equal(metric_analysis["01"]["acc"]["std"].loc["test"],
+            std_df.loc["test"])
+        np.testing.assert_array_equal(ada_sum, error_analysis["01"]["ada-1"])
+        np.testing.assert_array_equal(mv_sum, error_analysis["01"]["mv"])
+
+
+class Test_gen_error_data_glob(unittest.TestCase):
+
+    def test_simple(self):
+        random_state = np.random.RandomState(42)
+
+        ada_error_data_1 = random_state.randint(0,2,7)
+        ada_error_data_2 = random_state.randint(0, 2, 7)
+        ada_sum = ada_error_data_1+ada_error_data_2
+        mv_error_data_1 = random_state.randint(0, 2, 7)
+        mv_error_data_2 = random_state.randint(0, 2, 7)
+        mv_sum = mv_error_data_1+mv_error_data_2
+
+        combi_results = {"ada-1":ada_sum, "mv": mv_sum}
+
+        stats_iter = 2
+
+        nb_examples, nb_classifiers, \
+        data, error_on_examples, \
+        classifier_names = result_analysis.gen_error_data_glob(combi_results,
+                                                              stats_iter)
+        self.assertEqual(nb_examples, 7)
+        self.assertEqual(nb_classifiers, 2)
+        np.testing.assert_array_equal(data, np.array([ada_sum, mv_sum]).transpose())
+        np.testing.assert_array_equal(error_on_examples, -1*np.sum(np.array([ada_sum, mv_sum]), axis=0)+(nb_classifiers*stats_iter))
+        self.assertEqual(classifier_names, ["ada-1", "mv"])
+
+
+
+
+

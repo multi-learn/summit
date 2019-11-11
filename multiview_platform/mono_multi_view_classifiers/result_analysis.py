@@ -108,7 +108,7 @@ def plot_metric_scores(train_scores, test_scores, names, nb_results, metric_name
     autolabel(rect2, ax, set=2, std=train_STDs)
     ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
     ax.set_ylim(-0.1, 1.1)
-    ax.set_xticks(np.arange(nb_results) + barWidth)
+    ax.set_xticks(np.arange(nb_results) + barWidth/2)
     ax.set_xticklabels(names, rotation="vertical")
 
     try:
@@ -187,7 +187,7 @@ def plot_2d(data, classifiers_names, nbClassifiers, nbExamples,
                       for i in range(data.shape[0]) ]
         fig = plotly.graph_objs.Figure(data=plotly.graph_objs.Heatmap(
             x=list(classifiers_names),
-            y=example_ids,
+            y=[_ for _ in example_ids],
             z=data,
             text=hover_text,
             hoverinfo=["y", "x", "text"],
@@ -712,7 +712,7 @@ def publishMulticlassScores(multiclass_results, metrics, stats_iter, direcories,
             nbResults = classifiers_names.shape[0]
             fileName = directory + time.strftime(
                 "%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + metric[
-                           0] + ".png"
+                           0]
 
             plot_metric_scores(train_scores, validationScores, classifiers_names,
                                nbResults, metric[0], fileName, tag=" multiclass")
@@ -844,7 +844,7 @@ def publish_iter_biclass_metrics_scores(iter_results, directory, labels_dictiona
     return results
 
 
-def gen_error_dat_glob(combi_results, stats_iter):
+def gen_error_data_glob(combi_results, stats_iter):
     nb_examples = next(iter(combi_results.values())).shape[0]
     nb_classifiers = len(combi_results)
     data = np.zeros((nb_examples, nb_classifiers), dtype=int)
@@ -870,8 +870,8 @@ def publish_iter_biclass_example_errors(iter_results, directory,
             "Start:\t Global biclass label analysis figure generation")
 
         nbExamples, nbClassifiers, data, \
-        error_on_examples, classifier_names = gen_error_dat_glob(combi_results,
-                                                                 stats_iter)
+        error_on_examples, classifier_names = gen_error_data_glob(combi_results,
+                                                                  stats_iter)
 
         np.savetxt(base_file_name + "clf_errors.csv", data, delimiter=",")
         np.savetxt(base_file_name + "example_errors.csv", error_on_examples,
@@ -914,7 +914,7 @@ def publish_iter_multiclass_example_errors(iter_multiclass_results, directory,
         "Start:\t Global multiclass label analysis figures generation")
     base_file_name = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-"
 
-    nb_examples, nb_classifiers, data, error_on_examples = gen_error_dat_glob(
+    nb_examples, nb_classifiers, data, error_on_examples = gen_error_data_glob(
         iter_multiclass_results, stats_iter, base_file_name)
 
     plot_2d(data, classifiers_names, nb_classifiers, nb_examples, 1,
@@ -958,27 +958,47 @@ def add_new_metric(iter_biclass_results, metric, labels_combination, nb_classifi
     return iter_biclass_results
 
 
-def analyzebiclass_iter(biclass_results, metrics, stats_iter, directory,
-                       labels_dictionary, data_base_name, nb_examples, example_ids):
-    """Used to format the results in order to plot the mean results on the iterations"""
-    classifiers_dict = gen_classifiers_dict(biclass_results,
-                                                          metrics)
-    metrics_analysis = dict((key,{}) for key in biclass_results.keys())
-    error_analysis = dict((key,{}) for key in biclass_results.keys())
+def format_previous_results(biclass_results):
+    """
+    Formats each statistical iteration's result into a mean/std analysis for
+    the metrics and adds the errors of each statistical iteration.
+
+    Parameters
+    ----------
+    biclass_results : The raw results, for each statistical iteration i contains
+        - biclass_results[i]["metrics_scores"] is a dictionary with a pd.dataframe
+          for each metrics
+        - biclass_results[i]["example_errors"], a dicaitonary with a np.array
+        for each classifier.
+
+    Returns
+    -------
+    metrics_analysis : The mean and std dataframes for each metrics
+
+    error_analysis : A dictionary containing the added errors
+                     arrays for each classifier
+
+    """
+    metrics_analysis = dict((key, {}) for key in biclass_results.keys())
+    error_analysis = dict((key, {}) for key in biclass_results.keys())
     for label_combination, biclass_result in biclass_results.items():
 
         concat_dict = {}
-        for iter_index, metrics_score in enumerate(biclass_result["metrics_scores"]):
+        for iter_index, metrics_score in enumerate(
+                biclass_result["metrics_scores"]):
             for metric_name, dataframe in metrics_score.items():
                 if metric_name not in concat_dict:
                     concat_dict[metric_name] = dataframe
                 else:
-                    concat_dict[metric_name] = pd.concat([concat_dict[metric_name], dataframe])
+                    concat_dict[metric_name] = pd.concat(
+                        [concat_dict[metric_name], dataframe])
 
         for metric_name, dataframe in concat_dict.items():
             metrics_analysis[label_combination][metric_name] = {}
-            metrics_analysis[label_combination][metric_name]["mean"] = dataframe.groupby(dataframe.index).mean()
-            metrics_analysis[label_combination][metric_name]["std"] = dataframe.groupby(dataframe.index).std()
+            metrics_analysis[label_combination][metric_name][
+                "mean"] = dataframe.groupby(dataframe.index).mean()
+            metrics_analysis[label_combination][metric_name][
+                "std"] = dataframe.groupby(dataframe.index).std(ddof=0)
 
         added_example_errors = {}
         for example_errors in biclass_result["example_errors"]:
@@ -988,6 +1008,13 @@ def analyzebiclass_iter(biclass_results, metrics, stats_iter, directory,
                 else:
                     added_example_errors[classifier_name] += errors
         error_analysis[label_combination] = added_example_errors
+    return metrics_analysis, error_analysis
+
+
+def analyzebiclass_iter(biclass_results, stats_iter, directory,
+                       labels_dictionary, data_base_name, example_ids):
+    """Used to format the results in order to plot the mean results on the iterations"""
+    metrics_analysis, error_analysis = format_previous_results(biclass_results)
 
     results = publish_iter_biclass_metrics_scores(metrics_analysis,
                                                   directory, labels_dictionary,
@@ -1058,8 +1085,8 @@ def get_results(results, stats_iter, nb_multiclass, benchmark_argument_dictionar
                                               directories, example_ids)
     if stats_iter > 1:
         results_means_std = analyzebiclass_iter(
-            biclass_results, metrics, stats_iter, directory,
-            labels_dictionary, data_base_name, nb_examples, example_ids)
+            biclass_results, stats_iter, directory,
+            labels_dictionary, data_base_name, example_ids)
         if nb_multiclass > 1:
             results_means_std = analyze_iter_multiclass(multiclass_results, directory, stats_iter,
                                   metrics, data_base_name, nb_examples, example_ids)
