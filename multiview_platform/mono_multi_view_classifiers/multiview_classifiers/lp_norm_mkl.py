@@ -31,8 +31,6 @@ class LPNormMKL(KernelClassifier, MKL):
         return super(LPNormMKL, self).fit(formatted_X, y[train_indices])
 
     def predict(self, X, example_indices=None, view_indices=None):
-        # print(self.K_)
-        # import pdb;pdb.set_trace()
         new_X, _ = self.format_X(X, example_indices, view_indices)
         return self.extract_labels(super(LPNormMKL, self).predict(new_X))
 
