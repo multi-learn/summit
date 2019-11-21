@@ -11,7 +11,6 @@ from .multiview_utils import MultiviewResult
 from . import analyze_results
 from .. import multiview_classifiers
 from ..utils import hyper_parameter_search
-from ..utils.dataset import get_shape
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

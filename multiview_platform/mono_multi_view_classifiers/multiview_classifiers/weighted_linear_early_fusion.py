@@ -84,7 +84,7 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         example_indices, self.view_indices = get_examples_views_indices(dataset,
                                                                         example_indices,
                                                                         view_indices)
-        if self.view_weights is None or self.view_weights=="None":
+        if self.view_weights is None:
             self.view_weights = np.ones(len(self.view_indices), dtype=float)
         else:
             self.view_weights = np.array(self.view_weights)

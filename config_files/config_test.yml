@@ -4,12 +4,12 @@ Base :
   name: ["control_vs_malade"]
   label: "_"
   type: ".hdf5"
-  views:
+  views: ["300nm", "350nm"]
   pathf: "../data/"
   nice: 0
   random_state: 42
   nb_cores: 1
-  full: False
+  full: True
   debug: True
   add_noise: False
   noise_std: 0.0
@@ -22,10 +22,10 @@ Classification:
   nb_folds: 5
   nb_class: 2
   classes:
-  type: ["multiview"]
-  algos_monoview: ["all"]
-  algos_multiview: ["lp_norm_mkl",]
-  stats_iter: 5
+  type: ["monoview",]
+  algos_monoview: ["decision_tree"]
+  algos_multiview: ["all"]
+  stats_iter: 4
   metrics: ["accuracy_score", "f1_score"]
   metric_princ: "f1_score"
   hps_type: "randomized_search"

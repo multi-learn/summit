@@ -21,7 +21,7 @@ class Test_get_classic_db_hdf5(unittest.TestCase):
         self.views = [self.rs.randint(0, 10, size=(self.nb_examples, 7))
                       for _ in range(self.nb_view)]
         self.labels = self.rs.randint(0, self.nb_class, self.nb_examples)
-        self.dataset_file = h5py.File(os.path.join(tmp_path, self.file_name))
+        self.dataset_file = h5py.File(os.path.join(tmp_path, self.file_name), 'w')
         self.view_names = ["ViewN" + str(index) for index in
                            range(len(self.views))]
         self.are_sparse = [False for _ in self.views]

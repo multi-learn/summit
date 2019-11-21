@@ -22,7 +22,7 @@ class Test_Dataset(unittest.TestCase):
         cls.views = [cls.rs.randint(0, 10, size=(cls.nb_examples, cls.nb_attr))
                      for _ in range(cls.nb_view)]
         cls.labels = cls.rs.randint(0, cls.nb_class, cls.nb_examples)
-        cls.dataset_file = h5py.File(os.path.join(tmp_path, cls.file_name))
+        cls.dataset_file = h5py.File(os.path.join(tmp_path, cls.file_name), "w")
         cls.view_names = ["ViewN" + str(index) for index in range(len(cls.views))]
         cls.are_sparse = [False for _ in cls.views]
         for view_index, (view_name, view, is_sparse) in enumerate(
@@ -50,7 +50,7 @@ class Test_Dataset(unittest.TestCase):
     def test_filter(self):
         """Had to create a new dataset to aviod playing with the class one"""
         file_name = "test_filter.hdf5"
-        dataset_file_filter = h5py.File(os.path.join(tmp_path, file_name))
+        dataset_file_filter = h5py.File(os.path.join(tmp_path, file_name), "w")
         for view_index, (view_name, view, is_sparse) in enumerate(
                 zip(self.view_names, self.views, self.are_sparse)):
             view_dataset = dataset_file_filter.create_dataset(
@@ -155,7 +155,7 @@ class Test_Dataset(unittest.TestCase):
                                  source_view_name="ViewN0",
                                  target_view_index=1)
         self.assertIn("View1", list(new_dataset.keys()))
-        np.testing.assert_array_equal(dataset_object.get_v(0), new_dataset["View1"].value)
+        np.testing.assert_array_equal(dataset_object.get_v(0), new_dataset["View1"][()])
         self.assertEqual(new_dataset["View1"].attrs["name"], "ViewN0")
         new_dataset.close()
         os.remove(os.path.join(tmp_path, "test_copy.hdf5"))
@@ -180,7 +180,7 @@ class Test_Dataset(unittest.TestCase):
 
     def test_select_views_and_labels(self):
         file_name = "test_filter.hdf5"
-        dataset_file_select = h5py.File(os.path.join(tmp_path, file_name))
+        dataset_file_select = h5py.File(os.path.join(tmp_path, file_name), "w")
         for view_index, (view_name, view, is_sparse) in enumerate(
                 zip(self.view_names, self.views, self.are_sparse)):
             view_dataset = dataset_file_select.create_dataset(
@@ -208,7 +208,7 @@ class Test_Dataset(unittest.TestCase):
 
     def test_add_gaussian_noise(self):
         file_name = "test_noise.hdf5"
-        dataset_file_select = h5py.File(os.path.join(tmp_path, file_name))
+        dataset_file_select = h5py.File(os.path.join(tmp_path, file_name), "w")
         limits = np.zeros((self.nb_attr, 2))
         limits[:, 1] += 100
         meta_data_grp = dataset_file_select.create_group("Metadata")

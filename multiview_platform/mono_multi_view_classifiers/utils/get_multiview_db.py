@@ -4,10 +4,8 @@ import logging
 
 import h5py
 import numpy as np
-from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.utils.validation import check_array
 
-from ..utils.dataset import Dataset, copy_hdf5
+from ..utils.dataset import Dataset
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -40,12 +38,13 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
                           nb_features=10):
     """Used to generate a plausible dataset to test the algorithms"""
 
-    if not os.path.exists(os.path.dirname(path + "Plausible.hdf5")):
+    if not os.path.exists(os.path.dirname(path + "plausible.hdf5")):
         try:
-            os.makedirs(os.path.dirname(path + "Plausible.hdf5"))
+            os.makedirs(os.path.dirname(path + "plausible.hdf5"))
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
+    example_ids = ["exmaple_id_"+str(i) for i in range(nb_examples)]
     views = []
     view_names = []
     are_sparse = []
@@ -64,6 +63,8 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
             fake_zero_indices = random_state.randint(int(nb_examples / 2),
                                                      nb_examples,
                                                      int(nb_examples / 12))
+            for index in np.concatenate((fake_one_indices, fake_zero_indices)):
+                example_ids[index]+="noised"
 
             view_data[fake_one_indices] = np.ones(
                 (len(fake_one_indices), nb_features))
@@ -74,12 +75,14 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
             view_names.append("ViewNumber" + str(view_index))
             are_sparse.append(False)
 
+
+
         dataset = Dataset(views=views, labels=labels,
                               labels_names=label_names, view_names=view_names,
-                              are_sparse=are_sparse, file_name="Plausible.hdf5",
-                              path=path)
+                              are_sparse=are_sparse, file_name="plausible.hdf5",
+                              path=path, example_ids=example_ids)
         labels_dictionary = {0: "No", 1: "Yes"}
-        return dataset, labels_dictionary, "Plausible"
+        return dataset, labels_dictionary, "plausible"
     elif nb_class >= 3:
         firstBound = int(nb_examples / 3)
         rest = nb_examples - 2 * int(nb_examples / 3)
@@ -115,10 +118,10 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
         dataset = Dataset(views=views, labels=labels,
                               labels_names=label_names, view_names=view_names,
                               are_sparse=are_sparse,
-                              file_name="Plausible.hdf5",
-                              path=path)
+                              file_name="plausible.hdf5",
+                              path=path, example_ids=example_ids)
         labels_dictionary = {0: "No", 1: "Yes", 2: "Maybe"}
-        return dataset, labels_dictionary, "Plausible"
+        return dataset, labels_dictionary, "plausible"
 
 
 class DatasetError(Exception):
