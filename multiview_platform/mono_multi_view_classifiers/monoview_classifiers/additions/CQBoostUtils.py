@@ -12,7 +12,7 @@ from sklearn.utils.validation import check_is_fitted
 
 from .BoostUtils import StumpsClassifiersGenerator, ConvexProgram, sign, \
     BaseBoost, TreeClassifiersGenerator
-from ... import metrics
+from multiview_platform.mono_multi_view_classifiers import metrics
 
 
 class ColumnGenerationClassifier(BaseEstimator, ClassifierMixin, BaseBoost):

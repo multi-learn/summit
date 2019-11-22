@@ -1,4 +1,4 @@
-from ..monoview.additions.SVCClassifier import SVCClassifier
+from multiview_platform.mono_multi_view_classifiers.monoview_classifiers.additions.SVCClassifier import SVCClassifier
 from ..monoview.monoview_utils import CustomUniform, CustomRandint, \
     BaseMonoviewClassifier
 

@@ -1,6 +1,6 @@
 from .BoostUtils import StumpsClassifiersGenerator, BaseBoost, \
     TreeClassifiersGenerator
-from ..monoview_utils import change_label_to_minus
+from multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils import change_label_to_minus
 
 
 class PregenClassifier(BaseBoost):
