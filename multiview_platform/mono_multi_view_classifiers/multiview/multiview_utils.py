@@ -146,7 +146,7 @@ class ConfigGenerator():
 def get_available_monoview_classifiers(need_probas=False):
     available_classifiers = [module_name
                          for module_name in dir(monoview_classifiers)
-                         if not module_name.startswith("__")]
+                         if not (module_name.startswith("__") or module_name=="additions")]
     if need_probas:
         proba_classifiers = []
         for module_name in available_classifiers:

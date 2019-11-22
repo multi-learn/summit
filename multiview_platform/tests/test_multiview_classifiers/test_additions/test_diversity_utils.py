@@ -50,8 +50,8 @@ class Test_DiversityFusion(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.classifier_names = ["cb_boost", "decision_tree"]
-        cls.classifiers_config = {"cb_boost":{"n_stumps":1, "n_iterations":5}}
+        cls.classifier_names = ["adaboost", "decision_tree"]
+        cls.classifiers_config = {"adaboost":{"n_estimators":5,}}
         cls.random_state = np.random.RandomState(42)
         cls.y = cls.random_state.randint(0,2,6)
         cls.X = FakeDataset(cls.random_state.randint(0,100,(2,5,6)), cls.y)
