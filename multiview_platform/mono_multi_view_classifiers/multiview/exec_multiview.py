@@ -264,7 +264,6 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
 
     logging.debug("Start:\t Optimizing hyperparameters")
     if hyper_param_search != "None":
-        print(metrics)
         classifier_config = hyper_parameter_search.search_best_settings(
             dataset_var, labels, classifier_module, classifier_name,
             metrics[0], learning_indices, k_folds, random_state,

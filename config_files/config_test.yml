@@ -1,7 +1,7 @@
 # The base configuration of the benchmark
 Base :
   log: True
-  name: ["control_vs_malade"]
+  name: ["plausible"]
   label: "_"
   type: ".hdf5"
   views: ["300nm", "350nm"]
@@ -19,12 +19,12 @@ Base :
 Classification:
   multiclass_method: "oneVersusOne"
   split: 0.4
-  nb_folds: 5
+  nb_folds: 2
   nb_class: 2
   classes:
-  type: ["monoview",]
+  type: ["multiview",]
   algos_monoview: ["decision_tree"]
-  algos_multiview: ["all"]
+  algos_multiview: ["weighted_linear_early_fusion"]
   stats_iter: 2
   metrics: ["accuracy_score", "f1_score"]
   metric_princ: "f1_score"
@@ -123,7 +123,7 @@ gradient_boosting:
 ######################################
 
 weighted_linear_early_fusion:
-  view_weights: [None]
+  view_weights: [null]
   monoview_classifier_name: ["decision_tree"]
   monoview_classifier_config:
     decision_tree:
@@ -200,7 +200,7 @@ weighted_linear_late_fusion:
       splitter: ["best"]
 
 mumbo:
-  base_estimator: [None]
+  base_estimator: [null]
   n_estimators: [10]
   best_view_mode: ["edge"]
 
