@@ -34,6 +34,12 @@ class SVMLinear(SVCClassifier, BaseMonoviewClassifier):
         self.param_names = ["C", "random_state"]
         self.distribs = [CustomUniform(loc=0, state=1), [random_state]]
 
+    def getInterpret(self, directory, y_test):
+        interpret_string = ""
+        import numpy as np
+        self.feature_importances_ = (self.coef_/np.sum(self.coef_)).reshape((self.coef_.shape[1],))
+        return interpret_string
+
 
 # def formatCmdArgs(args):
 #     """Used to format kwargs for the parsed args"""

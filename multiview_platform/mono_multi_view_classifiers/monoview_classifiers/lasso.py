@@ -63,6 +63,7 @@ class Lasso(LassoSK, BaseMonoviewClassifier):
         neg_y = np.copy(y)
         neg_y[np.where(neg_y == 0)] = -1
         super(Lasso, self).fit(X, neg_y)
+        self.feature_importances_ = self.coef_/np.sum(self.coef_)
         return self
 
     def predict(self, X):
