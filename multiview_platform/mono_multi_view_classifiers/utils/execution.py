@@ -8,6 +8,7 @@ import numpy as np
 import sklearn
 
 from . import get_multiview_db as DB
+from ..utils.configuration import save_config
 
 
 def parse_the_args(arguments):
@@ -116,7 +117,7 @@ def get_database_function(name, type_var):
 
 
 def init_log_file(name, views, cl_type, log, debug, label,
-                  result_directory, add_noise, noise_std):
+                  result_directory, add_noise, noise_std, args):
     r"""Used to init the directory where the preds will be stored and the log file.
 
     First this function will check if the result directory already exists (only one per minute is allowed).
@@ -172,7 +173,7 @@ def init_log_file(name, views, cl_type, log, debug, label,
                         filemode='w')
     if log:
         logging.getLogger().addHandler(logging.StreamHandler())
-
+    save_config(result_directory, args)
     return result_directory
 
 

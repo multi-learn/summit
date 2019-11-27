@@ -1,4 +1,5 @@
 import yaml
+import os
 
 
 def get_the_args(path_to_config_file="../config_files/config.yml"):
@@ -18,3 +19,11 @@ def get_the_args(path_to_config_file="../config_files/config.yml"):
     with open(path_to_config_file, 'r') as stream:
         yaml_config = yaml.safe_load(stream)
     return yaml_config
+
+
+def save_config(directory, arguments):
+    """
+    Saves the config file in the result directory.
+    """
+    with open(os.path.join(directory, "config_file.yml"), "w") as stream:
+        yaml.dump(arguments, stream)

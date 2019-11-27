@@ -31,7 +31,6 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
     def __init__(self, random_state=None, view_weights=None,
                  monoview_classifier_name="decision_tree",
                  monoview_classifier_config={}):
-        print(type(view_weights), view_weights)
         super(WeightedLinearEarlyFusion, self).__init__(random_state=random_state)
         self.view_weights = view_weights
         self.monoview_classifier_name = monoview_classifier_name
@@ -84,12 +83,10 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         example_indices, self.view_indices = get_examples_views_indices(dataset,
                                                                         example_indices,
                                                                         view_indices)
-        print(type(self.view_weights))
         if self.view_weights is None:
             self.view_weights = np.ones(len(self.view_indices), dtype=float)
         else:
             self.view_weights = np.array(self.view_weights)
-        print(self.view_weights)
         self.view_weights /= float(np.sum(self.view_weights))
 
         X = self.hdf5_to_monoview(dataset, example_indices)
