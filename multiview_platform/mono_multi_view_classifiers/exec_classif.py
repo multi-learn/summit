@@ -850,7 +850,7 @@ def exec_classif(arguments):
                                                                "matthews_corrcoef",
                                                                "roc_auc_score"]]
                 metrics = [[metricName] for metricName in metrics_names]
-                metrics = arange_metrics(metrics, args["Classification"]["metric_princ"])
+            metrics = arange_metrics(metrics, args["Classification"]["metric_princ"])
             for metricIndex, metric in enumerate(metrics):
                 if len(metric) == 1:
                     metrics[metricIndex] = [metric[0], None]
