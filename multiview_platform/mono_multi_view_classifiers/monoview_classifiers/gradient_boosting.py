@@ -74,7 +74,7 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
 
     def getInterpret(self, directory, y_test):
         interpretString = ""
-        interpretString += self.getFeatureImportance(directory)
+        interpretString += self.get_feature_importance(directory)
         step_test_metrics = np.array(
             [self.plotted_metric.score(y_test, step_pred) for step_pred in
              self.step_predictions])

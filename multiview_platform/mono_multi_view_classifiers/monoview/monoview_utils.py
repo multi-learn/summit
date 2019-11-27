@@ -160,7 +160,7 @@ class BaseMonoviewClassifier(BaseEstimator, ClassifierMixin):
         else:
             return str(self.get_params()[param_name])
 
-    def getFeatureImportance(self, directory, nb_considered_feats=50):
+    def get_feature_importance(self, directory, nb_considered_feats=50):
         """Used to generate a graph and a pickle dictionary representing feature importances"""
         featureImportances = self.feature_importances_
         sortedArgs = np.argsort(-featureImportances)
@@ -206,7 +206,7 @@ def percent(x, pos):
 class MonoviewResult(object):
     def __init__(self, view_index, classifier_name, view_name, metrics_scores,
                  full_labels_pred,
-                 classifier_config, y_test_multiclass_pred, test_folds_preds):
+                 classifier_config, y_test_multiclass_pred, test_folds_preds, classifier, n_features):
         self.view_index = view_index
         self.classifier_name = classifier_name
         self.view_name = view_name
@@ -215,6 +215,8 @@ class MonoviewResult(object):
         self.classifier_config = classifier_config
         self.y_test_multiclass_pred = y_test_multiclass_pred
         self.test_folds_preds = test_folds_preds
+        self.clf = classifier
+        self.n_features = n_features
 
     def get_classifier_name(self):
         return self.classifier_name + "-" + self.view_name

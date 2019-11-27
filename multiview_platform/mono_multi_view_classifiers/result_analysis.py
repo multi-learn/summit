@@ -10,9 +10,11 @@ from matplotlib.patches import Patch
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import plotly
 
 # Import own Modules
-from . import metrics
+from .monoview.monoview_utils import MonoviewResult
+from .multiview.multiview_utils import MultiviewResult
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -181,7 +183,6 @@ def plot_2d(data, classifiers_names, nbClassifiers, nbExamples,
     plt.close()
     ### The following part is used to generate an interactive graph.
     if use_plotly:
-        import plotly
         hover_text = [["Failed "+ str(stats_iter-data[i,j])+" time(s)"
                        for j in range(data.shape[1])]
                       for i in range(data.shape[0]) ]
@@ -559,6 +560,41 @@ def publishExampleErrors(example_errors, directory, databaseName, labels_names, 
     logging.debug("Done:\t Biclass Label analysis figures generation")
 
 
+def publish_feature_importances(feature_importances, directory, database_name, labels_names, feature_stds=None):
+    for view_name, feature_importance in feature_importances.items():
+        file_name = directory + time.strftime(
+            "%Y_%m_%d-%H_%M_%S") + "-" + database_name + "-" + "_vs_".join(
+            labels_names) + "-" + view_name + "-feature_importances"
+        if feature_stds is not None:
+            feature_std = feature_stds[view_name]
+            feature_std.to_csv(file_name+"_dataframe_stds.csv")
+        else:
+            feature_std = pd.DataFrame(data=np.zeros(feature_importance.shape),
+                                       index=feature_importance.index,
+                                       columns=feature_importance.columns)
+        feature_importance.to_csv(file_name+"_dataframe.csv")
+        hover_text = [["-Feature :" + str(feature_name) +
+                       "<br>-Classifier : "+classifier_name+
+                       "<br>-Importance : "+str(feature_importance.loc[feature_name][classifier_name])+
+                       "<br>-STD : " + str(feature_std.loc[feature_name][classifier_name])
+                       for classifier_name in list(feature_importance.columns)]
+                      for feature_name in list(feature_importance.index)]
+        fig = plotly.graph_objs.Figure(data=plotly.graph_objs.Heatmap(
+            x=list(feature_importance.columns),
+            y=list(feature_importance.index),
+            z=feature_importance.values,
+            text=hover_text,
+            hoverinfo=["text"],
+            colorscale="Greys",
+            reversescale=False))
+        fig.update_layout(
+            xaxis={"showgrid": False, "showticklabels": False, "ticks": ''},
+            yaxis={"showgrid": False, "showticklabels": False, "ticks": ''})
+        plotly.offline.plot(fig, filename=file_name + ".html", auto_open=False)
+
+        del fig
+
+
 def get_arguments(benchmark_argument_dictionaries, flag):
     r"""Used to get the arguments passed to the benchmark executing function corresponding to the flag of a
     biclass experimentation.
@@ -578,6 +614,32 @@ def get_arguments(benchmark_argument_dictionaries, flag):
     for benchmarkArgumentDictionary in benchmark_argument_dictionaries:
         if benchmarkArgumentDictionary["flag"] == flag:
             return benchmarkArgumentDictionary
+
+
+def get_feature_importances(result, feature_names=None):
+    r"""Extracts the feature importance from the monoview results and stores them in a dictionnary :
+    feature_importance[view_name] is a pandas.DataFrame of size n_feature*n_clf
+    containing a score of importance for each feature.
+
+    Parameters
+    ----------
+    result : list of results
+
+    Returns
+    -------
+    feature_importances : dict of pd.DataFrame
+        The dictionary containing all the feature importance for each view as pandas DataFrames
+    """
+    feature_importances = {}
+    for classifier_result in result:
+        if isinstance(classifier_result, MonoviewResult):
+            if classifier_result.view_name not in feature_importances:
+                feature_importances[classifier_result.view_name] = pd.DataFrame(index=feature_names)
+            if hasattr(classifier_result.clf, 'feature_importances_'):
+                feature_importances[classifier_result.view_name][classifier_result.classifier_name] = classifier_result.clf.feature_importances_
+            else:
+                feature_importances[classifier_result.view_name][classifier_result.classifier_name] = np.zeros(classifier_result.n_features)
+    return feature_importances
 
 
 def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metrics, example_ids):
@@ -616,6 +678,7 @@ def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metric
 
         metrics_scores = get_metrics_scores_biclass(metrics, result)
         example_errors = get_example_errors_biclass(arguments["labels"], result)
+        feature_importances = get_feature_importances(result)
 
         directory = arguments["directory"]
 
@@ -627,14 +690,18 @@ def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metric
                              labels_names)
         publishExampleErrors(example_errors, directory, database_name,
                              labels_names, example_ids)
+        publish_feature_importances(feature_importances, directory, database_name, labels_names)
         if not str(classifierPositive) + str(classifierNegative) in biclass_results:
             biclass_results[str(classifierPositive) + str(classifierNegative)] = {}
             biclass_results[str(classifierPositive) + str(classifierNegative)][
                 "metrics_scores"] = [i for i in range(stats_iter)]
             biclass_results[str(classifierPositive) + str(classifierNegative)][
                 "example_errors"] = [i for i in range(stats_iter)]
+            biclass_results[str(classifierPositive) + str(classifierNegative)][
+                "feature_importances"] = [i for i in range(stats_iter)]
         biclass_results[str(classifierPositive) + str(classifierNegative)]["metrics_scores"][iteridex] = metrics_scores
         biclass_results[str(classifierPositive) + str(classifierNegative)]["example_errors"][iteridex] = example_errors
+        biclass_results[str(classifierPositive) + str(classifierNegative)]["feature_importances"][iteridex] = feature_importances
 
     logging.debug("Done:\t Analzing all biclass resuls")
     return results, biclass_results
@@ -981,24 +1048,40 @@ def format_previous_results(biclass_results):
     """
     metrics_analysis = dict((key, {}) for key in biclass_results.keys())
     error_analysis = dict((key, {}) for key in biclass_results.keys())
+    feature_importances_analysis = dict((key, {}) for key in biclass_results.keys())
+    feature_importances_stds = dict((key, {}) for key in biclass_results.keys())
     for label_combination, biclass_result in biclass_results.items():
 
-        concat_dict = {}
+        metric_concat_dict = {}
         for iter_index, metrics_score in enumerate(
                 biclass_result["metrics_scores"]):
             for metric_name, dataframe in metrics_score.items():
-                if metric_name not in concat_dict:
-                    concat_dict[metric_name] = dataframe
+                if metric_name not in metric_concat_dict:
+                    metric_concat_dict[metric_name] = dataframe
                 else:
-                    concat_dict[metric_name] = pd.concat(
-                        [concat_dict[metric_name], dataframe])
+                    metric_concat_dict[metric_name] = pd.concat(
+                        [metric_concat_dict[metric_name], dataframe])
 
-        for metric_name, dataframe in concat_dict.items():
+        for metric_name, dataframe in metric_concat_dict.items():
             metrics_analysis[label_combination][metric_name] = {}
             metrics_analysis[label_combination][metric_name][
                 "mean"] = dataframe.groupby(dataframe.index).mean()
             metrics_analysis[label_combination][metric_name][
                 "std"] = dataframe.groupby(dataframe.index).std(ddof=0)
+
+        importance_concat_dict = {}
+        for iter_index, view_feature_importances in enumerate(biclass_result["feature_importances"]):
+            for view_name, feature_importances in view_feature_importances.items():
+                if view_name not in importance_concat_dict:
+                    importance_concat_dict[view_name] = feature_importances
+                else:
+                    importance_concat_dict[view_name] = pd.concat(
+                        [importance_concat_dict[view_name], feature_importances])
+
+        for view_name, dataframe in importance_concat_dict.items():
+            feature_importances_analysis[label_combination][view_name] = dataframe.groupby(dataframe.index).mean()
+
+            feature_importances_stds[label_combination][view_name] = dataframe.groupby(dataframe.index).std(ddof=0)
 
         added_example_errors = {}
         for example_errors in biclass_result["example_errors"]:
@@ -1008,13 +1091,13 @@ def format_previous_results(biclass_results):
                 else:
                     added_example_errors[classifier_name] += errors
         error_analysis[label_combination] = added_example_errors
-    return metrics_analysis, error_analysis
+    return metrics_analysis, error_analysis, feature_importances_analysis, feature_importances_stds
 
 
 def analyzebiclass_iter(biclass_results, stats_iter, directory,
                        labels_dictionary, data_base_name, example_ids):
     """Used to format the results in order to plot the mean results on the iterations"""
-    metrics_analysis, error_analysis = format_previous_results(biclass_results)
+    metrics_analysis, error_analysis, feature_improtances, feature_improtances_stds = format_previous_results(biclass_results)
 
     results = publish_iter_biclass_metrics_scores(metrics_analysis,
                                                   directory, labels_dictionary,
@@ -1022,6 +1105,12 @@ def analyzebiclass_iter(biclass_results, stats_iter, directory,
     publish_iter_biclass_example_errors(error_analysis, directory,
                                         labels_dictionary,
                                         stats_iter, example_ids)
+    for label_combination, feature_improtances_view in feature_improtances.items():
+        labels = [labels_dictionary[
+                     int(label_combination[0])], labels_dictionary[
+                     int(label_combination[1])]]
+        publish_feature_importances(feature_improtances_view, os.path.join(directory,"-vs-".join(labels)+"/"),
+                                    data_base_name, labels, feature_improtances_stds[label_combination])
     return results
 
 def analyze_iter_multiclass(multiclass_results, directory, stats_iter, metrics,

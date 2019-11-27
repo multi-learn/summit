@@ -137,7 +137,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
         testFoldsPreds = y_train_pred
     return monoview_utils.MonoviewResult(viewIndex, classifier_name, feat, metricsScores,
                                          full_pred, clKWARGS,
-                                         y_test_multiclass_pred, testFoldsPreds)
+                                         y_test_multiclass_pred, testFoldsPreds, classifier, X_train.shape[1])
     # return viewIndex, [CL_type, feat, metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
 
 

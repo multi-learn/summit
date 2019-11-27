@@ -4,7 +4,7 @@ Base :
   name: ["plausible"]
   label: "_"
   type: ".hdf5"
-  views: ["300nm", "350nm"]
+  views:
   pathf: "../data/"
   nice: 0
   random_state: 42
@@ -22,8 +22,8 @@ Classification:
   nb_folds: 2
   nb_class: 2
   classes:
-  type: ["multiview",]
-  algos_monoview: ["decision_tree"]
+  type: ["multiview","monoview"]
+  algos_monoview: ["decision_tree", "adaboost"]
   algos_multiview: ["weighted_linear_early_fusion"]
   stats_iter: 2
   metrics: ["accuracy_score", "f1_score"]

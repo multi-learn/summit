@@ -86,7 +86,7 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
         string for interpretation interpret_string
         """
         interpret_string = ""
-        interpret_string += self.getFeatureImportance(directory)
+        interpret_string += self.get_feature_importance(directory)
         return interpret_string
 
 

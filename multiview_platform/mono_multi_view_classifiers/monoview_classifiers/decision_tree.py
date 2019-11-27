@@ -33,7 +33,7 @@ class DecisionTree(DecisionTreeClassifier, BaseMonoviewClassifier):
 
     def getInterpret(self, directory, y_test):
         interpretString = ""
-        interpretString += self.getFeatureImportance(directory)
+        interpretString += self.get_feature_importance(directory)
         return interpretString
 
 

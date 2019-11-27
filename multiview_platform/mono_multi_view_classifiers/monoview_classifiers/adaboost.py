@@ -135,7 +135,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
 
     def getInterpret(self, directory, y_test):
         interpretString = ""
-        interpretString += self.getFeatureImportance(directory)
+        interpretString += self.get_feature_importance(directory)
         interpretString += "\n\n Estimator error | Estimator weight\n"
         interpretString += "\n".join(
             [str(error) + " | " + str(weight / sum(self.estimator_weights_)) for
