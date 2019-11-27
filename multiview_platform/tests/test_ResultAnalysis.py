@@ -29,7 +29,7 @@ class Test_get_metrics_scores_biclass(unittest.TestCase):
                                   "0",
                                   {"accuracy_score":[0.9, 0.95],
                                    "f1_score":[0.91, 0.96]}
-                                  , "", "", "", "")]
+                                  , "", "", "", "", "", "")]
         metrics_scores = result_analysis.get_metrics_scores_biclass(metrics,
                                                                     results)
         self.assertIsInstance(metrics_scores, dict)
@@ -126,7 +126,7 @@ class Test_get_example_errors_biclass(unittest.TestCase):
                                   "1",
                                   {"accuracy_score": [0.8, 0.85],
                                    "f1_score": [0.81, 0.86]}
-                                  , np.array([0,0,1,1,0,0,1,1,0]), "", "", "")
+                                  , np.array([0,0,1,1,0,0,1,1,0]), "", "", "", "", "")
                    ]
         example_errors = result_analysis.get_example_errors_biclass(ground_truth,
                                                                     results)
@@ -182,7 +182,7 @@ class Test_gen_error_data(unittest.TestCase):
 class Test_format_previous_results(unittest.TestCase):
 
     def test_simple(self):
-        biclass_results = {"01":{"metrics_scores":[], "example_errors":[]}}
+        biclass_results = {"01":{"metrics_scores":[], "example_errors":[], "feature_importances":[]}}
         random_state = np.random.RandomState(42)
 
         # Gen metrics data
@@ -210,7 +210,7 @@ class Test_format_previous_results(unittest.TestCase):
         biclass_results["01"]["example_errors"][1]["mv"] = mv_error_data_2
 
         # Running the function
-        metric_analysis, error_analysis = result_analysis.format_previous_results(biclass_results)
+        metric_analysis, error_analysis, feature_importances, feature_stds = result_analysis.format_previous_results(biclass_results)
         mean_df = pd.DataFrame(data=np.mean(np.array([metrics_1_data,
                                                       metrics_2_data]),
                                             axis=0),
