@@ -308,9 +308,6 @@ def gen_direcorties_names(directory, stats_iter):
 def find_dataset_names(path, type, names):
     """This function goal is to browse the dataset directory and extrats all
      the needed dataset names."""
-    config_path = os.path.dirname(os.path.abspath(__file__))
-    config_path = os.path.join(config_path, "../..")
-    path = os.path.join(config_path, path)
 
     available_file_names = [file_name.strip().split(".")[0]
                             for file_name in os.listdir(path)
