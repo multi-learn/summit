@@ -15,5 +15,4 @@ m2r==0.2.1
 docutils==0.12
 pyyaml==3.12
 cvxopt==1.2.0
--e git+https://github.com/IvanoLauriola/MKLpy.git#egg=MKLpy
 plotly==4.2.1

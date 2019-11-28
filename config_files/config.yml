@@ -48,7 +48,7 @@ Classification:
   algos_multiview: ["all"]
   # The number of times the benchamrk is repeated with different train/test
   # split, to have more statistically significant results
-  stats_iter: 2
+  stats_iter: 1
   # The metrics that will be use din the result analysis
   metrics: ["accuracy_score", "f1_score"]
   # The metric that will be used in the hyper-parameter optimization process
@@ -157,7 +157,7 @@ gradient_boosting:
 ######################################
 
 weighted_linear_early_fusion:
-  view_weights: [None]
+  view_weights: [null]
   monoview_classifier_name: ["decision_tree"]
   monoview_classifier_config:
     decision_tree:
@@ -234,6 +234,6 @@ weighted_linear_late_fusion:
       splitter: ["best"]
 
 mumbo:
-  base_estimator: [None]
+  base_estimator: [null]
   n_estimators: [10]
   best_view_mode: ["edge"]

@@ -204,10 +204,6 @@ mumbo:
   n_estimators: [10]
   best_view_mode: ["edge"]
 
-easy_mkl:
-  degrees: [1]
-  lam: [0.1]
-
 lp_norm_mkl:
   lmbda: [0.1]
   n_loops: [50]

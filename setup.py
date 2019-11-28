@@ -55,7 +55,6 @@ def setup_package():
     install_requires=['numpy>=1.16', 'scipy>=0.16','scikit-learn==0.19',
                       'matplotlib', 'h5py', 'joblib',
                       'pandas', 'm2r', 'pyyaml', 'pyscm @ git+https://github.com/aldro61/pyscm',
-                      'MKLpy @ git+https://github.com/IvanoLauriola/MKLpy',
                       'cvxopt', 'plotly==4.2.1'],
 
     # Il est d'usage de mettre quelques metadata à propos de sa lib

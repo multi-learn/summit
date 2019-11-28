@@ -151,25 +151,20 @@ def init_log_file(name, views, cl_type, log, debug, label,
     """
     if views is None:
         views=[]
-    noise_string = "/n_"+str(int(noise_std*100))
+    noise_string = "n_"+str(int(noise_std*100))
     if debug:
-        result_directory = result_directory + name + noise_string + \
-                           "/debug_started_" + \
-                           time.strftime(
-                               "%Y_%m_%d-%H_%M_%S") + "_" + label + "/"
+        result_directory = os.path.join(result_directory, name, noise_string,
+                           "debug_started_" + time.strftime("%Y_%m_%d-%H_%M_%S") + "_" + label)
     else:
-        result_directory = result_directory + name + noise_string+ "/started_" + time.strftime(
-            "%Y_%m_%d-%H_%M") + "_" + label + "/"
-    log_file_name = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(
-        cl_type) + "-" + "_".join(
-        views) + "-" + name + "-LOG"
-    if os.path.exists(os.path.dirname(result_directory)):
+        result_directory = os.path.join(result_directory, name,  noise_string,
+                                        "started_" + time.strftime("%Y_%m_%d-%H_%M") + "_" + label)
+    log_file_name = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(cl_type) + "-" + "_".join(views) + "-" + name + "-LOG.log"
+    if os.path.exists(result_directory):
         raise NameError("The result dir already exists, wait 1 min and retry")
-    os.makedirs(os.path.dirname(result_directory + log_file_name))
-    log_file = result_directory + log_file_name
-    log_file += ".log"
+    log_file_path = os.path.join(result_directory, log_file_name)
+    os.makedirs(os.path.dirname(log_file_path))
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
-                        filename=log_file, level=logging.DEBUG,
+                        filename=log_file_path, level=logging.DEBUG,
                         filemode='w')
     if log:
         logging.getLogger().addHandler(logging.StreamHandler())
