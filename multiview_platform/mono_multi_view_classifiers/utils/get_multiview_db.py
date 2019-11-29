@@ -38,9 +38,9 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
                           nb_features=10):
     """Used to generate a plausible dataset to test the algorithms"""
 
-    if not os.path.exists(os.path.dirname(path + "plausible.hdf5")):
+    if not os.path.exists(os.path.dirname(os.path.join(path, "plausible.hdf5"))):
         try:
-            os.makedirs(os.path.dirname(path + "plausible.hdf5"))
+            os.makedirs(os.path.dirname(os.path.join(path, "plausible.hdf5")))
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
@@ -133,14 +133,14 @@ def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
                         path_for_new="../data/"):
     """Used to load a hdf5 database"""
     if full:
-        dataset_file = h5py.File(path_f + name_DB + ".hdf5", "r")
+        dataset_file = h5py.File(os.path.join(path_f, name_DB + ".hdf5"), "r")
         dataset = Dataset(hdf5_file=dataset_file)
         dataset_name = name_DB
         labels_dictionary = dict((label_index, label_name)
                                  for label_index, label_name
                                  in enumerate(dataset.get_label_names()))
     else:
-        dataset_file = h5py.File(path_f + name_DB + ".hdf5", "r")
+        dataset_file = h5py.File(os.path.join(path_f, name_DB + ".hdf5"), "r")
         dataset = Dataset(hdf5_file=dataset_file)
         labels_dictionary = dataset.select_views_and_labels(nb_labels=nb_class,
                                         selected_label_names=asked_labels_names,

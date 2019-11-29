@@ -154,9 +154,9 @@ def initConstants(args, X, classificationIndices, labels_names,
     labelsString = "-".join(labels_names)
     CL_type_string = CL_type
     timestr = time.strftime("%Y_%m_%d-%H_%M_%S")
-    outputFileName = directory + CL_type_string + "/" + view_name + "/" + timestr + "-results-" + CL_type_string + "-" + labelsString + \
+    outputFileName = os.path.join(directory, CL_type_string, view_name, timestr + "-results-" + CL_type_string + "-" + labelsString + \
                      '-learnRate_{0:.2f}'.format(
-                         learningRate) + '-' + name + "-" + view_name + "-"
+                         learningRate) + '-' + name + "-" + view_name + "-")
     if not os.path.exists(os.path.dirname(outputFileName)):
         try:
             os.makedirs(os.path.dirname(outputFileName))

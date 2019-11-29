@@ -102,9 +102,9 @@ def save_results(classifier, labels_dictionary, string_analysis, views, classifi
     labels_string = "-".join(labels_set)
     timestr = time.strftime("%Y_%m_%d-%H_%M_%S")
     cl_type_string = classifier.short_name
-    output_file_name = directory + "/" + cl_type_string + "/" + timestr + \
-                       "-results-" + cl_type_string + "-" + views_string + '-' + labels_string + \
-                       '-learnRate_{0:.2f}'.format(learning_rate) + '-' + name
+    output_file_name = os.path.join(directory,  cl_type_string,
+                                    timestr + "-results-" + cl_type_string + "-" + views_string + '-' + labels_string + \
+                       '-learnRate_{0:.2f}'.format(learning_rate) + '-' + name)
     if not os.path.exists(os.path.dirname(output_file_name)):
         try:
             os.makedirs(os.path.dirname(output_file_name))
@@ -400,12 +400,12 @@ if __name__ == "__main__":
 
     logfilename = "gen a good logfilename"
 
-    logfile = directory + logfilename
+    logfile = os.path.join(directory, logfilename)
     if os.path.isfile(logfile + ".log"):
         for i in range(1, 20):
             testFileName = logfilename + "-" + str(i) + ".log"
-            if not os.path.isfile(directory + testFileName):
-                logfile = directory + testFileName
+            if not os.path.isfile(os.path.join(directory, testFileName)):
+                logfile = os.path.join(directory, testFileName)
                 break
     else:
         logfile += ".log"

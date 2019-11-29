@@ -58,9 +58,9 @@ def plot_results_noise(directory, noise_results, metric_to_plot, name, width=0.1
     plt.title(name)
     plt.xticks(noise_levels)
     plt.xlabel("Noise level")
-    plt.savefig(directory+name+"_noise_analysis.png")
+    plt.savefig(os.path.join(directory, name+"_noise_analysis.png"))
     plt.close()
-    df.to_csv(directory+name+"_noise_analysis.csv")
+    df.to_csv(os.path.join(directory, name+"_noise_analysis.csv"))
 
 
 def plot_metric_scores(train_scores, test_scores, names, nb_results, metric_name,

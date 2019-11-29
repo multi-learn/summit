@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+#Extracting requrements from requirements.txt
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
 
 # from Cython.Build import cythonize
 from setuptools import setup, find_packages
@@ -52,10 +55,11 @@ def setup_package():
     # dependency_links=['https://github.com/aldro61/pyscm.git#egg=pyscm'],
     # Une url qui pointe vers la page officielle de votre lib
     url='http://github.com/babau1/multiview-machine-learning-omis/',
-    install_requires=['numpy>=1.16', 'scipy>=0.16','scikit-learn==0.19',
-                      'matplotlib', 'h5py', 'joblib',
-                      'pandas', 'm2r', 'pyyaml', 'pyscm @ git+https://github.com/aldro61/pyscm',
-                      'cvxopt', 'plotly==4.2.1'],
+    install_requires=requirements,
+    # install_requires=['numpy>=1.16', 'scipy>=0.16','scikit-learn==0.19',
+    #                   'matplotlib', 'h5py', 'joblib',
+    #                   'pandas', 'm2r', 'pyyaml', 'pyscm @ git+https://github.com/aldro61/pyscm',
+    #                   'cvxopt', 'plotly==4.2.1'],
 
     # Il est d'usage de mettre quelques metadata à propos de sa lib
     # Pour que les robots puissent facilement la classer.

@@ -31,7 +31,7 @@ class Test_initConstants(unittest.TestCase):
                                      np.array([1, 3, 5, 7, 9])]
         cls.labels_names = ["test_true", "test_false"]
         cls.name = "test"
-        cls.directory = tmp_path+"test_dir/"
+        cls.directory = os.path.join(tmp_path, "test_dir/")
 
     def test_simple(cls):
         kwargs, \

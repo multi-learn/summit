@@ -34,7 +34,7 @@ def getDBConfigString(name, feat, classification_indices, shape,
 
 
 def getClassifierConfigString(gridSearch, nbCores, nIter, clKWARGS, classifier,
-                              directory, y_test):
+                              output_file_name, y_test):
     classifierConfigString = "Classifier configuration : \n"
     classifierConfigString += "\t- " + classifier.getConfig()[5:] + "\n"
     classifierConfigString += "\t- Executed on " + str(nbCores) + " core(s) \n"
@@ -42,7 +42,7 @@ def getClassifierConfigString(gridSearch, nbCores, nIter, clKWARGS, classifier,
         classifierConfigString += "\t- Got configuration using randomized search with " + str(
             nIter) + " iterations \n"
     classifierConfigString += "\n\n"
-    classifierInterpretString = classifier.getInterpret(directory, y_test)
+    classifierInterpretString = classifier.getInterpret(output_file_name, y_test)
     return classifierConfigString, classifierInterpretString
 
 
@@ -66,7 +66,7 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
 def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics_list, nIter,
             feat, CL_type, clKWARGS, classLabelsNames,
             shape, y_train, y_train_pred, y_test, y_test_pred, time,
-            random_state, classifier, directory):
+            random_state, classifier, output_file_name):
     metricsScores = {}
     metricModule = getattr(metrics, metrics_list[0][0])
     trainScore = metricModule.score(y_train, y_train_pred)
@@ -78,7 +78,7 @@ def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics_list, nIter
     stringAnalysis += getDBConfigString(name, feat, learningRate, shape,
                                         classLabelsNames, KFolds)
     classifierConfigString, classifierIntepretString = getClassifierConfigString(
-        gridSearch, nbCores, nIter, clKWARGS, classifier, directory, y_test)
+        gridSearch, nbCores, nIter, clKWARGS, classifier, output_file_name, y_test)
     stringAnalysis += classifierConfigString
     for metric in metrics_list:
         metricString, metricScore = getMetricScore(metric, y_train,

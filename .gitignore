@@ -15,4 +15,4 @@ dist*
 docs/build*
 multiview_platform/.idea/*
 .gitignore
-
+multiview_platform/examples/results*

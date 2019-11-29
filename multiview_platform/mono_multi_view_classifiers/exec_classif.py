@@ -62,8 +62,7 @@ def init_benchmark(cl_type, monoview_algos, multiview_algos, args):
     if "monoview" in cl_type:
         if monoview_algos == ['all']:
             benchmark["monoview"] = [name for _, name, isPackage in
-                                     pkgutil.iter_modules([
-                                     "./mono_multi_view_classifiers/monoview_classifiers"])
+                                     pkgutil.iter_modules(monoview_classifiers.__path__)
                                      if not isPackage]
 
         else:
@@ -72,8 +71,7 @@ def init_benchmark(cl_type, monoview_algos, multiview_algos, args):
     if "multiview" in cl_type:
         if multiview_algos==["all"]:
             benchmark["multiview"] = [name for _, name, isPackage in
-                                     pkgutil.iter_modules([
-                                         "./mono_multi_view_classifiers/multiview_classifiers"])
+                                     pkgutil.iter_modules(multiview_classifiers.__path__)
                                      if not isPackage]
         else:
             benchmark["multiview"] = multiview_algos
@@ -500,23 +498,23 @@ def benchmark_init(directory, classification_indices, labels, labels_dictionary,
 
     """
     logging.debug("Start:\t Benchmark initialization")
-    if not os.path.exists(os.path.dirname(directory + "train_labels.csv")):
+    if not os.path.exists(os.path.dirname(os.path.join(directory, "train_labels.csv"))):
         try:
-            os.makedirs(os.path.dirname(directory + "train_labels.csv"))
+            os.makedirs(os.path.dirname(os.path.join(directory, "train_labels.csv")))
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
     train_indices = classification_indices[0]
     train_labels = labels[train_indices]
-    np.savetxt(directory + "train_labels.csv", train_labels, delimiter=",")
-    np.savetxt(directory + "train_indices.csv", classification_indices[0],
+    np.savetxt(os.path.join(directory, "train_labels.csv"), train_labels, delimiter=",")
+    np.savetxt(os.path.join(directory, "train_indices.csv"), classification_indices[0],
                delimiter=",")
     results_monoview = []
     folds = k_folds.split(np.arange(len(train_labels)), train_labels)
     min_fold_len = int(len(train_labels) / k_folds.n_splits)
     for fold_index, (train_cv_indices, test_cv_indices) in enumerate(folds):
-        file_name = directory + "/folds/test_labels_fold_" + str(
-            fold_index) + ".csv"
+        file_name = os.path.join(directory, "folds", "test_labels_fold_" + str(
+            fold_index) + ".csv")
         if not os.path.exists(os.path.dirname(file_name)):
             try:
                 os.makedirs(os.path.dirname(file_name))
@@ -784,7 +782,7 @@ def exec_classif(arguments):
     """Main function to execute the benchmark"""
     start = time.time()
     args = execution.parse_the_args(arguments)
-    args = configuration.get_the_args(args.path_config)
+    args = configuration.get_the_args(args.config_path)
     os.nice(args["Base"]["nice"])
     nb_cores = args["Base"]["nb_cores"]
     if nb_cores == 1:
@@ -845,7 +843,7 @@ def exec_classif(arguments):
             if metrics == [["all"]]:
                 metrics_names = [name for _, name, isPackage
                                 in pkgutil.iter_modules(
-                        ['./mono_multi_view_classifiers/metrics']) if
+                        [os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'metrics')]) if
                                 not isPackage and name not in ["framework", "log_loss",
                                                                "matthews_corrcoef",
                                                                "roc_auc_score"]]

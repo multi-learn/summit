@@ -44,7 +44,7 @@ class BaseMultiviewClassifier(BaseEstimator, ClassifierMixin):
     def __init__(self, random_state):
 
         self.random_state = random_state
-        self.short_name = self.__class__.__name__
+        self.short_name = self.__module__.split(".")[-1]
         self.weird_strings = {}
 
     def gen_best_params(self, detector):

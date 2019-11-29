@@ -10,47 +10,44 @@ This project aims to be an easy-to-use solution to run a prior benchmark on a da
 
 To be able to use this project, you'll need :
 
-* [Python 2.7](https://docs.python.org/2/) or [Python 3](https://docs.python.org/3/) 
+* [Python 3.6](https://docs.python.org/3/) 
 
 And the following python modules :
-* [pyscm](https://github.com/aldro61/pyscm) - Set Covering Machine, Marchand, M., & Taylor, J. S. (2003) by A.Drouin, F.Brochu, G.Letarte St-Pierre, M.Osseni, P-L.Plante
-* [numpy](http://www.numpy.org/), [scipy](https://scipy.org/)
-* [matplotlib](http://matplotlib.org/) - Used to plot results
-* [sklearn](http://scikit-learn.org/stable/) - Used for the monoview classifiers
-* [joblib](https://pypi.python.org/pypi/joblib) - Used to compute on multiple threads
-* [h5py](https://www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to spare RAM
-* [pickle](https://docs.python.org/3/library/pickle.html) - Used to store some results
-* ([graphviz](https://pypi.python.org/pypi/graphviz) - Used for decision tree interpretation)
-* [pandas](https://pandas.pydata.org/) - 
+
+* [numpy](http://www.numpy.org/), [scipy](https://scipy.org/),
+* [matplotlib](http://matplotlib.org/) - Used to plot results,
+* [sklearn](http://scikit-learn.org/stable/) - Used for the monoview classifiers,
+* [joblib](https://pypi.python.org/pypi/joblib) - Used to compute on multiple threads,
+* [h5py](https://www.h5py.org) - Used to generate HDF5 datasets on hard drive and use them to spare RAM,
+* [pickle](https://docs.python.org/3/library/pickle.html) - Used to store some results,
+* [pandas](https://pandas.pydata.org/) - Used to manipulate data efficiently,
+* [six](https://pypi.org/project/six/) - 
+* [m2r](https://pypi.org/project/m2r/) - Used to generate documentation from the readme,
+* [docutils](https://pypi.org/project/docutils/) - Used to generate documentation,
+* [pyyaml](https://pypi.org/project/PyYAML/) - Used to read the config files,
+* [plotly](https://plot.ly/) - Used to generate interactive HTML visuals.
 
 They are all tested in  `multiview-machine-mearning-omis/multiview_platform/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `execute` script
 
 ### Installing
 
-cd in the project directory
-and install the project
+Once you cloned the project from this repository, you just have to use :  
 
 ```
-cd multiview-machine-learning-omis
 pip install -e .
 ```
+In the `multiview_machine-learning-omis` directory.
 
 ### Running on simulated data
 
 In order to run it you'll need to try on **simulated** data with the command
+```python 
+from multiview_platform.execute import execute
+execute()
 ```
-cd multiview-machine-learning-omis/multiview_platform
-python execute.py -log
-```
-Results will be stored in `multiview-machine-learning-omis/multiview_platform/mono_multi_view_classifiers/results/`
+Results will be stored in the results directory of the installation path : `path/to/install/multiview-machine-learning-omis/results`.
 
-If you want to run a multiclass (one versus one) benchmark on simulated data, use : 
-```
-cd multiview-machine-learning-omis/multiview_platform
-python execute.py -log --CL_nbClass 3
-```
-
-If no path is specified, simulated hdf5 datasets are stored in `multiview-machine-learning-omis/data`
+And simulated hdf5 datasets are stored in `path/to/install/multiview-machine-learning-omis/data`
 
 
 ### Discovering the arguments
