@@ -45,47 +45,25 @@ In order to run it you'll need to try on **simulated** data with the command
 from multiview_platform.execute import execute
 execute()
 ```
-Results will be stored in the results directory of the installation path : `path/to/install/multiview-machine-learning-omis/results`.
-
-And simulated hdf5 datasets are stored in `path/to/install/multiview-machine-learning-omis/data`
-
+This will run the first example. For more information about the examples, see the documentation 
+Results will be stored in the results directory of the installation path : 
+`path/to/install/multiview-machine-learning-omis/multiview_platform/examples/results`.
+The documentations proposes a detailed interpretation of the results. 
 
 ### Discovering the arguments
 
-In order to see all the arguments of this script, their description and default values run :
-```
-cd multiview-machine-learning-omis/multiview_platform
-python execute.py -h
-```
-The arguments can be passed through a file using `python Exec.py @<path_to_doc>`
-The file must be formatted with one newline instead of each space : 
-Command line arguments `-debug --CL_type Monoview --CL_algos_monoview Adaboost SVM` will be formatted 
-```
--debug
---CL_type
-Monoview
---CL_algos_monoview
-Adaboost
-SVM
+All the arguments of the platform are stored in a YAML config file. Some config files are given as examples. 
+The file stored in `multiview-machine-learning-omis/config_files/config.yml` is documented and it is highly recommended
+ to read it carefully before playing around with the parameters.   
+
+You can create your own configuration file. In order to run the platform with it, run : 
+```python
+from multiview_platform.execute import execute
+execute(config_path="/absolute/path/to/your/config/file")
 ```
 
-Moreover, for Monoview algorithms (Multiview is still WIP), it is possible to pass multiple arguments instead of just one. 
-Thus, executing `python execute.py --RF_trees 10 100 --RF_max_depth 3 4 --RF_criterion entropy` will result in the generation of several classifiers called
-`RandomForest_10_3_entropy`, with 10 trees and a max depth of 3, `RandomForest_10_4_entropy`, with 10 tress and a max depth of 4,  `RandomForest_100_3_entropy`, `RandomForest_100_4_entropy` to test all the passed arguments combinations. 
+For further information about classifier-specific arguments, see the documentation. 
  
-
-
-### Understanding `results/` architecture
-
-Results are stored in `multiview-machine-learning-omis/multiview_platform/mono_multi_view_classifiers/results/`
-A directory will be created with the name of the database used to run the script.
-For each time the script is run, a new directory named after the running date and time will be created.
-In that directory:
-* If the script is run using more than one statistic iteration (one for each seed), it will create one directory for each iteration and store the statistical analysis in the current directory 
-* If it is run with one iteration, the iteration results will be stored in the current directory
-
-The results for each iteration are graphs plotting the classifiers scores and the classifiers config and results are stored in a directory of their own.
-To explore the results run the `execute` script and go in `multiview-machine-learning-omis/multiview_platform/mono_multi_view_classifiers/results/plausible/`
 
 ### Dataset compatibility
 
