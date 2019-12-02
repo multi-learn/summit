@@ -73,7 +73,9 @@ The results are stored in ``multiview_platform/examples/results/example_1/``. He
 Then, a directory with the amount of noise in the experiments, we didn't add any, so ``n_0/`` finally, a directory with
 the date and time of the beginning of the experiment. Let's say you started the benchmark on the 25th of December 1560,
 at 03:42 PM, the directory's name should be ``started_1560_12_25-15_42/``.
-From here the result directory has the structure that follo
+From here the result directory has the structure that follows  :
+
+
 
 
 
