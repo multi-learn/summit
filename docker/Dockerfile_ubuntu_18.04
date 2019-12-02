@@ -19,6 +19,7 @@ RUN apt-get update && \
         python3-matplotlib \
         python3-pil \
         libhdf5-dev \
+        python3-tk \
         git \
         && \
     apt-get clean
