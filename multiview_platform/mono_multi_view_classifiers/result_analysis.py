@@ -882,9 +882,9 @@ def publish_iter_biclass_metrics_scores(iter_results, directory, labels_dictiona
         current_directory = os.path.join(directory, labels_dictionary[
             int(labels_combination[0])] + "-vs-" + labels_dictionary[
                                int(labels_combination[1])])
-        if not os.path.exists(os.path.dirname(current_directory + "a")):
+        if not os.path.exists(os.path.dirname(os.path.join(current_directory, "a"))):
             try:
-                os.makedirs(os.path.dirname(current_directory + "a"))
+                os.makedirs(os.path.dirname(os.path.join(current_directory, "a")))
             except OSError as exc:
                 if exc.errno != errno.EEXIST:
                     raise
@@ -901,7 +901,7 @@ def publish_iter_biclass_metrics_scores(iter_results, directory, labels_dictiona
             # names = np.array([name for name in classifiers_dict.keys()])
             fileName = os.path.join(current_directory, time.strftime(
                 "%Y_%m_%d-%H_%M_%S") + "-" + data_base_name + "-Mean_on_" + str(
-                stats_iter) + "_iter-" + metric_name + ".png")
+                stats_iter) + "_iter-" + metric_name)
             nbResults = names.shape[0]
 
             plot_metric_scores(train, test, names, nbResults,
