@@ -54,6 +54,10 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
     def __init__(self, random_state=None, n_estimators=50,
                  base_estimator=None, **kwargs):
 
+        if isinstance(base_estimator, str):
+            if base_estimator == "DecisionTreeClassifier":
+                base_estimator = DecisionTreeClassifier()
+
         super(Adaboost, self).__init__(
             random_state=random_state,
             n_estimators=n_estimators,

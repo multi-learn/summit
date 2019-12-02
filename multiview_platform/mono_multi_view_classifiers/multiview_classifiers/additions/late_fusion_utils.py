@@ -113,6 +113,8 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
 
         if isinstance(self.classifier_configs, ConfigDistribution):
             self.classifier_configs = self.classifier_configs.draw(nb_view)
+        elif isinstance(self.classifier_configs, dict):
+            self.classifier_configs = [{classifier_name: self.classifier_configs[classifier_name]} for classifier_name in self.classifiers_names]
 
         self.monoview_estimators = [
             self.init_monoview_estimator(classifier_name,

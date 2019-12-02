@@ -201,7 +201,7 @@ def getHPs(classifierModule, hyper_param_search, nIter, classifier_module_name,
                                                           classifier_module_name])
         logging.debug("Done:\t " + hyper_param_search + " best settings")
     else:
-        clKWARGS = kwargs[classifier_module_name + "KWARGS"]
+        clKWARGS = kwargs[classifier_module_name]
         testFoldsPreds = None
     return clKWARGS, testFoldsPreds
 

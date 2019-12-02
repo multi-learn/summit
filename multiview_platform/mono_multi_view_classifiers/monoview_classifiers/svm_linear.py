@@ -38,7 +38,7 @@ class SVMLinear(SVCClassifier, BaseMonoviewClassifier):
 
     def getInterpret(self, directory, y_test):
         interpret_string = ""
-        self.feature_importances_ = (self.coef_/np.sum(self.coef_)).reshape((self.coef_.shape[1],))
+        # self.feature_importances_ = (self.coef_/np.sum(self.coef_)).reshape((self.coef_.shape[1],))
         return interpret_string
 
 
