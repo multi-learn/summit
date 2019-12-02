@@ -1,5 +1,5 @@
-multiview_platform package
-==========================
+multiview_platform references
+=============================
 
 Subpackages
 -----------

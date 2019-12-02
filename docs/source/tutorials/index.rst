@@ -8,6 +8,7 @@ The following are some tutorials which explain how to use the toolbox.
     :maxdepth: 1
 
     installation
+    example1
     User_Example1
     User_Example2
     User_Example3
