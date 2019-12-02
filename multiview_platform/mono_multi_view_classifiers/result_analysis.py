@@ -879,9 +879,9 @@ def publish_iter_biclass_metrics_scores(iter_results, directory, labels_dictiona
                                     min_size=10):
     results=[]
     for labels_combination, iter_result in iter_results.items():
-        current_directory = directory + labels_dictionary[
+        current_directory = os.path.join(directory, labels_dictionary[
             int(labels_combination[0])] + "-vs-" + labels_dictionary[
-                               int(labels_combination[1])] + "/"
+                               int(labels_combination[1])])
         if not os.path.exists(os.path.dirname(current_directory + "a")):
             try:
                 os.makedirs(os.path.dirname(current_directory + "a"))
@@ -899,9 +899,9 @@ def publish_iter_biclass_metrics_scores(iter_results, directory, labels_dictiona
             # testMeans, testSTDs = numpy_mean_and_std(scores["test_scores"])
 
             # names = np.array([name for name in classifiers_dict.keys()])
-            fileName = current_directory + time.strftime(
+            fileName = os.path.join(current_directory, time.strftime(
                 "%Y_%m_%d-%H_%M_%S") + "-" + data_base_name + "-Mean_on_" + str(
-                stats_iter) + "_iter-" + metric_name + ".png"
+                stats_iter) + "_iter-" + metric_name + ".png")
             nbResults = names.shape[0]
 
             plot_metric_scores(train, test, names, nbResults,
@@ -927,11 +927,11 @@ def publish_iter_biclass_example_errors(iter_results, directory,
                                         labels_dictionary, stats_iter,
                                         example_ids):
     for labels_combination, combi_results in iter_results.items():
-        base_file_name = directory + labels_dictionary[
-            int(labels_combination[0])] + "-vs-" + \
+        base_file_name = os.path.join(directory, labels_dictionary[
+            int(labels_combination[0])] + "-vs-" +
                          labels_dictionary[
-                             int(labels_combination[1])] + "/" + time.strftime(
-            "%Y_%m_%d-%H_%M_%S") + "-"
+                             int(labels_combination[1])], time.strftime(
+            "%Y_%m_%d-%H_%M_%S") + "-")
 
         logging.debug(
             "Start:\t Global biclass label analysis figure generation")
