@@ -111,7 +111,7 @@ def save_results(classifier, labels_dictionary, string_analysis, views, classifi
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-    output_text_file = open(output_file_name + '.txt', 'w')
+    output_text_file = open(output_file_name + 'summary.txt', 'w')
     output_text_file.write(string_analysis)
     output_text_file.close()
 

@@ -52,7 +52,7 @@ Classification:
   # The metrics that will be use din the result analysis
   metrics: ["accuracy_score", "f1_score"]
   # The metric that will be used in the hyper-parameter optimization process
-  metric_princ: "f1_score"
+  metric_princ: "accuracy_score"
   # The type of hyper-parameter optimization method
   hps_type: None
   # The number of iteration in the hyper-parameter optimization process

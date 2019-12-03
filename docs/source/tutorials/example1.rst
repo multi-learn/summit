@@ -37,22 +37,25 @@ Getting started
 **Understanding the config file**
 
 The config file that will be used in this example is located in ``multiview-machine-learning-omis/multiview_platform/examples/config_files/config_exmaple_1.yml``
+
 We will decrypt the main arguments :
 
-The first part of the arguments are the basic ones :
-- ``log: True`` allows to print the log in the terminal,
-- ``name: ["plausible"]`` uses the plausible simulated dataset,
-- ``random_state: 42`` fixes the random state of this benchmark, it is useful for reproductibility,
-- ``full: True`` the benchmark will used the full dataset,
-- ``res_dir: "examples/results/example_1/"`` the results will be saved in ``multiview-machine-learning-omis/multiview_platform/examples/results/example_1``
++ The first part of the arguments are the basic ones :
 
-Then the classification-related arguments
-- ``split: 0.8`` means that 80% of the dataset will be used to test the different classifiers and 20% to train them
-- ``type: ["monoview", "multiview"]`` allows for monoview and multiview algorithms to be used in the benchmark
-- ``algos_monoview: ["all"]`` runs on all the available monoview algorithms (same for ``algos_muliview``)
-- ``metrics: ["accuracy_score", "f1_score"]`` means that the benchmark will evaluate the performance of each algortihms on these two metrics.
+    - ``log: True`` allows to print the log in the terminal,
+    - ``name: ["plausible"]`` uses the plausible simulated dataset,
+    - ``random_state: 42`` fixes the random state of this benchmark, it is useful for reproductibility,
+    - ``full: True`` the benchmark will used the full dataset,
+    - ``res_dir: "examples/results/example_1/"`` the results will be saved in ``multiview-machine-learning-omis/multiview_platform/examples/results/example_1``
 
-Then, the two following categories are algorithm-related and contain all the default values for the hyper-parameters.
++ Then the classification-related arguments :
+
+    - ``split: 0.8`` means that 80% of the dataset will be used to test the different classifiers and 20% to train them
+    - ``type: ["monoview", "multiview"]`` allows for monoview and multiview algorithms to be used in the benchmark
+    - ``algos_monoview: ["all"]`` runs on all the available monoview algorithms (same for ``algos_muliview``)
+    - ``metrics: ["accuracy_score", "f1_score"]`` means that the benchmark will evaluate the performance of each algortihms on these two metrics.
+
++ Then, the two following categories are algorithm-related and contain all the default values for the hyper-parameters.
 
 **Start the benchmark**
 
@@ -75,8 +78,53 @@ the date and time of the beginning of the experiment. Let's say you started the 
 at 03:42 PM, the directory's name should be ``started_1560_12_25-15_42/``.
 From here the result directory has the structure that follows  :
 
+.. code-block:: bash
 
-
+    | started_1560_12_25-15_42
+    | ├── No-vs-Yes
+    | | ├── adaboost
+    | | |   ├── ViewNumber0
+    | | |   |   ├── 1560_12_25-15_42-*-summary.txt
+    | | |   |   ├── <other classifier dependant files>
+    | | |   ├── ViewNumber1
+    | | |   |   ├── 1560_12_25-15_42-*-summary.txt
+    | | |   |   ├── <other classifier dependant files>
+    | | |   ├── ViewNumber2
+    | | |   |   ├── 1560_12_25-15_42-*-summary.txt
+    | | |   |   ├── <other classifier dependant files>
+    | | ├── decision_tree
+    | | |   ├── ViewNumber0
+    | | |   |  ├── <summary & classifier dependant files>
+    | | |   ├── ViewNumber1
+    | | |   |  ├── <summary & classifier dependant files>
+    | | |   ├── ViewNumber2
+    | | |   |  ├── <summary & classifier dependant files>
+    | | ├── [..
+    | | ├── ..]
+    | | ├── weighted_linear_late_fusion
+    | | |   ├── <summary & classifier dependant files>
+    | | ├── [..
+    | | ├── ..]
+    | | ├── train_labels.csv
+    | │ └── train_indices.csv
+    | ├── *.log
+    | ├── config_file.yml
+    | ├── 1560_12_25-15_42-*-accuracy_score.png
+    | ├── 1560_12_25-15_42-*-accuracy_score.csv
+    | ├── 1560_12_25-15_42-*-f1_score.png
+    | ├── 1560_12_25-15_42-*-f1_score.csv
+    | ├── 1560_12_25-15_42-*-error_analysis_2D.png
+    | ├── 1560_12_25-15_42-*-error_analysis_2D.html
+    | ├── 1560_12_25-15_42-*-error_analysis_bar.png
+    | ├── 1560_12_25-15_42-*-ViewNumber0-feature_importance.html
+    | ├── 1560_12_25-15_42-*-ViewNumber0-feature_importance_dataframe.csv
+    | ├── 1560_12_25-15_42-*-ViewNumber1-feature_importance.html
+    | ├── 1560_12_25-15_42-*-ViewNumber1-feature_importance_dataframe.csv
+    | ├── 1560_12_25-15_42-*-ViewNumber2-feature_importance.html
+    | ├── 1560_12_25-15_42-*-ViewNumber2-feature_importance_dataframe.csv
+    | ├── 1560_12_25-15_42-*-bar_plot_data.csv
+    | ├── 1560_12_25-15_42-*-2D_plot_data.csv
+    | └── random_state.pickle
 
 
 

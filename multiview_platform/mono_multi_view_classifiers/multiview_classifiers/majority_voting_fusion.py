@@ -4,7 +4,7 @@ from ..multiview_classifiers.additions.late_fusion_utils import LateFusionClassi
 from ..multiview.multiview_utils import get_examples_views_indices
 
 
-classifier_class_name =  "MajorityVoting"
+classifier_class_name =  "maority_voting_fusion"
 
 class VotingIndecision(Exception):
     pass
