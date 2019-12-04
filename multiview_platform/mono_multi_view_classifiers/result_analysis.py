@@ -124,14 +124,14 @@ def plot_metric_scores(train_scores, test_scores, names, nb_results, metric_name
         dataframe = pd.DataFrame(np.transpose(np.concatenate((
             train_scores.reshape((train_scores.shape[0], 1)),
             test_scores.reshape((train_scores.shape[0], 1))), axis=1)),
-            columns=names)
+            columns=names, index=["Train", "Test"])
     else:
         dataframe = pd.DataFrame(np.transpose(np.concatenate((
             train_scores.reshape((train_scores.shape[0], 1)),
             train_STDs.reshape((train_scores.shape[0], 1)),
             test_scores.reshape((train_scores.shape[0], 1)),
             test_STDs.reshape((train_scores.shape[0], 1))), axis=1)),
-            columns=names)
+            columns=names, index=["Train", "Train STD", "Test", "Test STD"])
     dataframe.to_csv(file_name + ".csv")
 
 

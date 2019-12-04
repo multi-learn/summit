@@ -9,4 +9,5 @@ The following are some tutorials which explain how to use the toolbox.
 
     installation
     example1
+    example2
 
