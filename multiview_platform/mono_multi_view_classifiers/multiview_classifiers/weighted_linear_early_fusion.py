@@ -11,7 +11,7 @@ from multiview_platform.mono_multi_view_classifiers.multiview_classifiers.additi
 
 from  multiview_platform.mono_multi_view_classifiers import monoview_classifiers
 
-classifier_class_name = "weighted_linear_early_fusion"
+classifier_class_name = "WeightedLinearEarlyFusion"
 
 
 class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):

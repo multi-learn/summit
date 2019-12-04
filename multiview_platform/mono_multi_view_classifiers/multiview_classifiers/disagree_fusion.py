@@ -3,7 +3,7 @@ import numpy as np
 from multiview_platform.mono_multi_view_classifiers.multiview_classifiers.additions.diversity_utils import CoupleDiversityFusionClassifier
 
 
-classifier_class_name = "disagree_fusion"
+classifier_class_name = "DisagreeFusion"
 
 
 class DisagreeFusion(CoupleDiversityFusionClassifier):

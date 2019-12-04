@@ -3,7 +3,7 @@ import numpy as np
 from ..multiview_classifiers.additions.late_fusion_utils import LateFusionClassifier
 from ..multiview.multiview_utils import get_examples_views_indices
 
-classifier_class_name = "weighted_linear_late_fusion"
+classifier_class_name = "WeightedLinearLateFusion"
 
 
 class WeightedLinearLateFusion(LateFusionClassifier):

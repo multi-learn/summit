@@ -4,7 +4,7 @@ from ..multiview_classifiers.additions.late_fusion_utils import \
     LateFusionClassifier
 from ..multiview.multiview_utils import get_examples_views_indices
 
-classifier_class_name = "bayesian_inference_fusion"
+classifier_class_name = "BayesianInferenceClassifier"
 
 
 class BayesianInferenceClassifier(LateFusionClassifier):

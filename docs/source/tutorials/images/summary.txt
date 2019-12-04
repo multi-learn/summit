@@ -1,0 +1,29 @@
+Classification on plausible database for ViewNumber0 with svm_linear.
+
+f1_score on train : 0.631578947368421
+f1_score on test : 0.9268292682926829
+
+Database configuration : 
+	- Database name : plausible
+	- View name : ViewNumber0	 View shape : (100, 10)
+	- Learning Rate : 0.2
+	- Labels used : No, Yes
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- SVMLinearwith C : 0.4644332362255428, random_state : <mtrand.RandomState object at 0x7f30a3a1bb40>
+	- Executed on 1 core(s) 
+	- Got configuration using randomized search with 2 iterations 
+
+
+	For F1 score using None as sample_weights, None as labels, 1 as pos_label, binary as average (higher is better) : 
+		- Score on train : 0.631578947368421
+		- Score on test : 0.9268292682926829
+	For Accuracy score using None as sample_weights (higher is better) : 
+		- Score on train : 0.65
+		- Score on test : 0.925
+
+
+ Classification took 0:00:00
+
+ Classifier Interpretation : 
