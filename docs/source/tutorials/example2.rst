@@ -159,7 +159,7 @@ The results for accuracy metric are stored in ``multiview_platform/examples/resu
     :file: ./images/result_default_hp.csv
 
 These results were generated learning with 20% of the dataset and testing on 80%.
-In the config file called ``config_example_2_1_1.yaml``, the line controlling the split ratio is ``split: 0.8``.
+In the config file called ``config_example_2_1_1.yml``, the line controlling the split ratio is ``split: 0.8``.
 
 Now, if you run :
 
@@ -187,7 +187,53 @@ THe impact of split ratio : dataset related.
 Example 2.2 : Usage of hyper-parameter optimization :
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-In the previous exmaple, we have seen that the split ratio has an impact on the computational time. But the most time-consuming task is optimizing the hyper parameters. Up to now, the 
+In the previous example, we have seen that the split ratio has an impact on the computational time.
+But the most time-consuming task is optimizing the hyper parameters.
+Up to now, the platform used the hyper-parameters values given in the config file.
+This happens only if one knows the optimal combination of hyper-parameter for the given task.
+However, most of the time, they are unknown to the user, and then have to be optimized by the platform.
+
+In this example, we will use the hyper-parameter optimization method implemented in the platform, to do so we will use three lines of the config file :
+
+- ``hps_type:``, controlling the type of hyper-parameter search,
+- ``hps_iter:``, controlling the number of random draws during the hyper-parameter search,
+- ``nb_folds:``, controlling the number of folds in the cross-validation process.
+
+So if you run ``example 2.2.1`` with :
+
+.. code-block:: python
+
+   >>> from multiview_platform.execute import execute
+   >>> execute("example2.2.1")
+
+The ``hps_type`` argument is set to ``"randomised_search"``, which is at the moment the only hyper-parameter optimization method implemented in the platform.
+The ``hps_iter`` argument is set to ``5``,
+The ``nb_folds`` argument is set o ``5``.
+
+The computing time should be longer than the previous examples. Let's see the pseudo code of the benchmark, while using the hyper-parameter optimization::
+
+    for each monoview classifier:
+        for each view:
+            ┌
+            |for each draw (here 5):
+            |    for each fold (here 5):
+            |        learn the classifier on 4 folds and test it on 1
+            |    get the mean performance
+            |get the best hyper-parameter set
+            └
+            learn on the whole training set
+    and
+    for each multiview classifier:
+        ┌
+        |for each draw (here 5):
+        |    for each fold (here 5):
+        |        learn the classifier on 4 folds and test it on 1
+        |    get the mean performance
+        |get the best hyper-parameter set
+        └
+        learn on the whole training set
+
+
 
 **Longer computing time**
 
