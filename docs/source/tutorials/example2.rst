@@ -102,7 +102,14 @@ For this example, we only used a subset of the available classifiers, to reduce 
 Each classifier will first be learned on the default hyper-parameters (as in `Example 1 <./example1.rst>`_)
 
 The monoview classifiers that will be used are adaboost and decision_tree,
-and the multivew classifier is a late fusion majority vote.
+and the multivew classifier is a late fusion majority vote. In order to use only a subset of the available classifiers,
+three lines in the configuration file are useful :
+
+- ``type:`` in which one has to specify which type of algorithms are needed, here we used  ``type: ["monoview","multiview"]``,
+- ``algos_monoview:`` in which one specifies the names of the monoview algorithms to run, here we used : ``algos_monoview: ["decision_tree", "adaboost", ]``
+- ``algos_multiview:`` is the same but with multiview algorithms, here we used : `` algos_multiview: ["majority_voting_fusion", ]``
+
+In order for the platofrm to understand the names, the user has to give the name of the python module in which the classifier is implemented in the platform.
 
 In the config file, the default values for adaboost's hyper-parameters are :
 
@@ -152,8 +159,9 @@ The results for accuracy metric are stored in ``multiview_platform/examples/resu
     :file: ./images/result_default_hp.csv
 
 These results were generated learning with 20% of the dataset and testing on 80%.
+In the config file called ``config_example_2_1_1.yaml``, the line controlling the split ratio is ``split: 0.8``.
 
-If you run :
+Now, if you run :
 
 .. code-block:: python
 
@@ -166,11 +174,20 @@ You should obtain these scores in ``multiview_platform/examples/results/example_
 .. csv-table::
     :file: ./images/result_default_hp_high_train.csv
 
+Here we learned on 80% of the dataset and tested on 20%, so the line in the config file has become ``split: 0.2``.
 
-TODO : Commentary
+The first difference between these two examples is the time to run the benchmrak, as in the first on more examples are given to learn the algorithms, it is longer. However, the right amount of training examples depends on the available dataset and the task's complexity.
+
+TODO COMMENT
+
+**Conclusion**
+
+THe impact of split ratio : dataset related.
 
 Example 2.2 : Usage of hyper-parameter optimization :
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+In the previous exmaple, we have seen that the split ratio has an impact on the computational time. But the most time-consuming task is optimizing the hyper parameters. Up to now, the 
 
 **Longer computing time**
 
