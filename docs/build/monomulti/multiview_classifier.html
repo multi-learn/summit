@@ -1,0 +1,829 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>How to add a multiview classifier to the platform &mdash; MultiviewPlatform 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Classification execution module" href="exec_classif.html" />
+    <link rel="prev" title="Monoview classifier framework" href="monoview_classifier.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MultiviewPlatform
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme_link.html#mono-and-multi-view-classification-benchmark">Mono- and Multi-view classification benchmark</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">Multiview Platform</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../execution.html">Welcome to the exection documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../monomultidoc.html">Mono and mutliview classification</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="monoview_classifier.html">Monoview classifier framework</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">How to add a multiview classifier to the platform</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#File-addition">File addition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#NMCModule.py"><code class="docutils literal notranslate"><span class="pre">NMCModule.py</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analyzeResults.py"><code class="docutils literal notranslate"><span class="pre">analyzeResults.py</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Adding-arguments-to-avoid-hyper-parameter-optimization">Adding arguments to avoid hyper parameter optimization</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="exec_classif.html">Classification execution module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiview_classifiers/diversity_fusion.html">Diversity Fusion Classifiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils/execution.html">Utils execution module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils/multiclass.html">Utils Multiclass module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../analyzeresult.html">Result analysis module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiviewPlatform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../api.html">Multiview Platform</a> &raquo;</li>
+        
+          <li><a href="../monomultidoc.html">Mono and mutliview classification</a> &raquo;</li>
+        
+      <li>How to add a multiview classifier to the platform</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/monomulti/multiview_classifier.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="How-to-add-a-multiview-classifier-to-the-platform">
+<h1>How to add a multiview classifier to the platform<a class="headerlink" href="#How-to-add-a-multiview-classifier-to-the-platform" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="File-addition">
+<h2>File addition<a class="headerlink" href="#File-addition" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>In the <code class="docutils literal notranslate"><span class="pre">Code/MonoMultiViewClassifiers/MultiviewClassifiers</span></code>
+package, add a new package named after your multiview classifier
+(let’s call it NMC for New Multiview Classifier).</li>
+<li>In this package
+(<code class="docutils literal notranslate"><span class="pre">Code/MonoMultiViewClassifiers/MultiviewClassifiers/NMC</span></code>), add a
+file called <code class="docutils literal notranslate"><span class="pre">NMCModule.py</span></code> and another one called
+<code class="docutils literal notranslate"><span class="pre">analyzeResults.py</span></code>. These will be the two files used by the
+platform to communicate with your implementation.</li>
+<li>You can now add either a package named after your classifier
+<code class="docutils literal notranslate"><span class="pre">NMCPackage</span></code> and paste your files in it or just add a file with the
+same name if it is enough.</li>
+</ul>
+</div>
+<div class="section" id="NMCModule.py">
+<h2><code class="docutils literal notranslate"><span class="pre">NMCModule.py</span></code><a class="headerlink" href="#NMCModule.py" title="Permalink to this headline">¶</a></h2>
+<p>Here we will list all the necessary functions of the python module to
+allow the platform to use NMC</p>
+<div class="section" id="The-functions">
+<h3>The functions<a class="headerlink" href="#The-functions" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="getArgs">
+<h4><code class="docutils literal notranslate"><span class="pre">getArgs</span></code><a class="headerlink" href="#getArgs" title="Permalink to this headline">¶</a></h4>
+<p>This function is used to multiple arguments dictionaries from one
+benchmark entry. It must return the <code class="docutils literal notranslate"><span class="pre">argumentsList</span></code> to which it must
+have add at least a dictionary containing all the necessary information
+to run NMC. You must add all general fields about the type of classifier
+and a field called <code class="docutils literal notranslate"><span class="pre">NMCKWARGS</span></code> (<code class="docutils literal notranslate"><span class="pre">&lt;classifier_name&gt;KWARGS</span></code>)
+conataining another dictionary with classifier-specific agruments (we
+assume here that NMC has two hyper-parameters : a set of weights and an
+integer)</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;CL_type&quot;</span><span class="p">:</span><span class="s2">&quot;NMC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;views&quot;</span><span class="p">:[</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="s2">&quot;the&quot;</span><span class="p">,</span> <span class="s2">&quot;views&quot;</span><span class="p">,</span> <span class="s2">&quot;names&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;NB_VIEW&quot;</span><span class="p">:</span><span class="nb">len</span><span class="p">([</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="s2">&quot;the&quot;</span><span class="p">,</span> <span class="s2">&quot;views&quot;</span><span class="p">,</span> <span class="s2">&quot;names&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;viewsIndices&quot;</span><span class="p">:[</span><span class="s2">&quot;the indices&quot;</span><span class="p">,</span> <span class="s2">&quot;of the&quot;</span><span class="p">,</span> <span class="s2">&quot;views in&quot;</span><span class="p">,</span> <span class="s2">&quot;the hdf5 file&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;NB_CLASS&quot;</span><span class="p">:</span> <span class="s2">&quot;the number of labels of the dataset&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;LABLELS_NAMES&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;the names of&quot;</span><span class="p">,</span> <span class="s2">&quot;the labels used&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;NMCKWARGS&quot;</span><span class="p">:{</span><span class="s2">&quot;weights&quot;</span><span class="p">:[],</span>
+                         <span class="s2">&quot;integer&quot;</span><span class="p">:</span><span class="mi">42</span><span class="p">,</span>
+                         <span class="s2">&quot;nbViews&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">}</span>
+            <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>To fill these fields, you can use the default values given in argument
+of the function :</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">getArgs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">views</span><span class="p">,</span> <span class="n">viewsIndices</span><span class="p">,</span> <span class="n">randomState</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">resultsMonoview</span><span class="p">,</span> <span class="n">classificationIndices</span><span class="p">):</span>
+    <span class="n">argumentsList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">nbViews</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">views</span><span class="p">)</span>
+    <span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;CL_type&quot;</span><span class="p">:</span> <span class="s2">&quot;NMC&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;views&quot;</span><span class="p">:</span> <span class="n">views</span><span class="p">,</span>
+                 <span class="s2">&quot;NB_VIEW&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">views</span><span class="p">),</span>
+                 <span class="s2">&quot;viewsIndices&quot;</span><span class="p">:</span> <span class="n">viewsIndices</span><span class="p">,</span>
+                 <span class="s2">&quot;NB_CLASS&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">CL_classes</span><span class="p">),</span>
+                 <span class="s2">&quot;LABELS_NAMES&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">CL_classes</span><span class="p">,</span>
+                 <span class="s2">&quot;NMCKWARGS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;weights&quot;</span><span class="p">:[],</span>
+                               <span class="s2">&quot;integer&quot;</span><span class="p">:</span><span class="mi">42</span><span class="p">,</span>
+                              <span class="s2">&quot;nbViews&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">}}</span>
+    <span class="n">argumentsList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">argumentsList</span>
+</pre></div>
+</div>
+</div>
+<p>This function is also used to add the user-defined configuration for the
+classifier, but we will discuss it later</p>
+</div>
+<div class="section" id="genName">
+<h4><code class="docutils literal notranslate"><span class="pre">genName</span></code><a class="headerlink" href="#genName" title="Permalink to this headline">¶</a></h4>
+<p>This function is used to generate a short string describing the
+classifier using its configuration.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">genName</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;NMF&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>Some classifiers, like some late fusion classifiers will have more
+complicated <code class="docutils literal notranslate"><span class="pre">genName</span></code> functions that will need to summurize which
+monoview classifiers they use in a short string using the <code class="docutils literal notranslate"><span class="pre">config</span></code>
+argument that is exactly the dictionay called <code class="docutils literal notranslate"><span class="pre">&quot;NMCKWARGS&quot;</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">getArgs</span></code> function</p>
+</div>
+<div class="section" id="getBenchmark">
+<h4><code class="docutils literal notranslate"><span class="pre">getBenchmark</span></code><a class="headerlink" href="#getBenchmark" title="Permalink to this headline">¶</a></h4>
+<p>This function is used to generate the <code class="docutils literal notranslate"><span class="pre">benchmark</span></code> argument of
+<code class="docutils literal notranslate"><span class="pre">getArgs</span></code>. It stores all the different configurations that will have
+to be tested (does not inculde hyper-parameters sets). For example for
+the Mumbo classifier, il will store the list of possible algorithms to
+use as weak leaners.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">getBenchmark</span><span class="p">(</span><span class="n">benchmark</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">benchmark</span><span class="p">[</span><span class="s2">&quot;Multiview&quot;</span><span class="p">][</span><span class="s2">&quot;NMC&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Some NMC cnfigurations&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">benchmark</span>
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">benchmark</span></code> argument is pre-generated with an entry for all the
+multiview classifiers so you just need to fill it with the different
+configurations</p>
+</div>
+<div class="section" id="genParamsSets">
+<h4><code class="docutils literal notranslate"><span class="pre">genParamsSets</span></code><a class="headerlink" href="#genParamsSets" title="Permalink to this headline">¶</a></h4>
+<p>This function is used to generate random hyper-parameters sets to allow
+a randomized search to estimate the best one. It works in pair with the
+<code class="docutils literal notranslate"><span class="pre">setParams</span></code> method implemented in the classifier’s class so you need
+to keep in mind the order of the hyper-paramters you used here.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">classificationKWARGS</span></code> argument is the <code class="docutils literal notranslate"><span class="pre">&quot;NMCKWARGS&quot;</span></code> entry seen
+earlier, and it is highly recommended to use the <code class="docutils literal notranslate"><span class="pre">randomState</span></code> object
+(which is described
+<a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.random.RandomState.html">here</a>)
+to generate random numbers in order for the results to be reproductible</p>
+<p>Assuming our NMC classifier has 2 HP, one weight vector for each view
+and one integer that can be between 1 and 100, the <code class="docutils literal notranslate"><span class="pre">genParamsSets</span></code>
+function will look like :</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">genParamsSets</span><span class="p">(</span><span class="n">classificationKWARGS</span><span class="p">,</span> <span class="n">randomState</span><span class="p">,</span> <span class="n">nIter</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">weightsVector</span> <span class="o">=</span> <span class="p">[</span><span class="n">randomState</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="n">classificationKWARGS</span><span class="p">[</span><span class="s2">&quot;nbViews&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nIter</span><span class="p">)]</span>
+    <span class="n">nomralizedWeights</span> <span class="o">=</span> <span class="p">[</span><span class="n">weights</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="k">for</span> <span class="n">weights</span> <span class="ow">in</span> <span class="n">weightsVector</span><span class="p">]</span>
+    <span class="n">intsVector</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">randomState</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="n">nIter</span><span class="p">))</span>
+    <span class="n">paramsSets</span> <span class="o">=</span> <span class="p">[[</span><span class="n">normalizedWeight</span><span class="p">,</span> <span class="n">integer</span><span class="p">]</span> <span class="k">for</span> <span class="n">normalizedWeight</span><span class="p">,</span> <span class="n">interger</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">normalizedWeights</span><span class="p">,</span> <span class="n">intsVector</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">paramsSets</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="The-NMC-class">
+<h3>The <code class="docutils literal notranslate"><span class="pre">NMC</span></code> class<a class="headerlink" href="#The-NMC-class" title="Permalink to this headline">¶</a></h3>
+<p>It has to be named after the classifier adding <code class="docutils literal notranslate"><span class="pre">Class</span></code> at the end of
+its name.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">class</span> <span class="nc">NMCClass</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="init-method">
+<h4><code class="docutils literal notranslate"><span class="pre">init</span></code> method<a class="headerlink" href="#init-method" title="Permalink to this headline">¶</a></h4>
+<p>There is nothing specific to define in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method, you just
+need to initialize the attributes of your classifier. The <code class="docutils literal notranslate"><span class="pre">kwargs</span></code>
+argument is the <code class="docutils literal notranslate"><span class="pre">NMCKWARGS</span></code> dictionary seen earlier. In our example,
+NMC uses two hyper parameters : weights and an int.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">randomState</span><span class="p">,</span> <span class="n">NB_CORES</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">randomState</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="n">classificationKWARGS</span><span class="p">[</span><span class="s2">&quot;nbViews&quot;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">integer</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;integer&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="setParams-method">
+<h4><code class="docutils literal notranslate"><span class="pre">setParams</span></code> method<a class="headerlink" href="#setParams-method" title="Permalink to this headline">¶</a></h4>
+<p>This method is used to tune your classifier with a set of hyper
+parameters. The set is a list ordered as in the <code class="docutils literal notranslate"><span class="pre">genParamsSets</span></code>
+function seen earlier. The input of the <code class="docutils literal notranslate"><span class="pre">setParams</span></code> method is a list
+of parameters in the right order.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">setParams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">paramsSet</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">paramsSet</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">integer</span> <span class="o">=</span> <span class="n">paramsSet</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="fit_hdf5-method">
+<h4><code class="docutils literal notranslate"><span class="pre">fit_hdf5</span></code> method<a class="headerlink" href="#fit_hdf5-method" title="Permalink to this headline">¶</a></h4>
+<p>This method is generaly the same as <code class="docutils literal notranslate"><span class="pre">sklearn</span></code>’s <code class="docutils literal notranslate"><span class="pre">fit</span></code> method but
+uses as an input an HDF5 dataset in order to lower the memory usage of
+the whole platform. * The <code class="docutils literal notranslate"><span class="pre">DATASET</span></code> object is an HDF5 dataset file
+containing all the views and labels. * The <code class="docutils literal notranslate"><span class="pre">usedIndices</span></code> object is a
+<code class="docutils literal notranslate"><span class="pre">numpy</span></code> 1d-array containing the indices of the examples want to learn
+from. * The <code class="docutils literal notranslate"><span class="pre">viewsIndices</span></code> object is a <code class="docutils literal notranslate"><span class="pre">numpy</span></code> 1d-array containing
+the indices of the views we want to learn from.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">fit_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">DATASET</span><span class="p">,</span> <span class="n">usedIndices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">viewsIndices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Call the fit function of your own module</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="predict_hdf5-method">
+<h4><code class="docutils literal notranslate"><span class="pre">predict_hdf5</span></code> method<a class="headerlink" href="#predict_hdf5-method" title="Permalink to this headline">¶</a></h4>
+<p>This method is used as an HDF5-compatible method similar to
+<code class="docutils literal notranslate"><span class="pre">sklearn</span></code>’s <code class="docutils literal notranslate"><span class="pre">predict</span></code> method. It has the same input than the
+<code class="docutils literal notranslate"><span class="pre">fit_hdf5</span></code> method but returns a 1d-array containing the labels of the
+asked examples (ordered as in <code class="docutils literal notranslate"><span class="pre">usedIndices</span></code>).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">predict_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">DATASET</span><span class="p">,</span> <span class="n">usedIndices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">viewsIndices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Call the predict function of your own module</span>
+    <span class="n">predictedLabels</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># Just to avoid any ipynb running error</span>
+    <span class="k">return</span> <span class="n">predictedLabels</span>
+</pre></div>
+</div>
+</div>
+<p>Once you’ve added everything to the <code class="docutils literal notranslate"><span class="pre">NMCModule.py</span></code> file you are close
+to be able to run your algorithm on the platform, you just need to fill
+the <code class="docutils literal notranslate"><span class="pre">analyzeResults.py</span></code> file.</p>
+</div>
+</div>
+</div>
+<div class="section" id="analyzeResults.py">
+<h2><code class="docutils literal notranslate"><span class="pre">analyzeResults.py</span></code><a class="headerlink" href="#analyzeResults.py" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">The <code class="docutils literal notranslate"><span class="pre">analyzeResults.py</span></code> file is a module used to get a specific
+result analysis for your classifier. You have, in order to run the
+platform, to add aunique function called <code class="docutils literal notranslate"><span class="pre">execute</span></code> that will run the
+analysis and return three different variables : * <code class="docutils literal notranslate"><span class="pre">stringAnalysis</span></code>
+is a string that will be saved in a file to describe the classifier,
+its performance and may give some insights on the interpretation of
+it’s way to classify. * <code class="docutils literal notranslate"><span class="pre">imagesAnalysis</span></code> is a dictionary where you
+can store images (as values) to describe the classifier &amp; co., the
+keys will be the images names.</div>
+<div class="line">* <code class="docutils literal notranslate"><span class="pre">metricsScores</span></code> is a dictionary where the values are lists
+containing train and test scores, and the keys are the metrics names.
+( <code class="docutils literal notranslate"><span class="pre">metricsScores</span> <span class="pre">=</span> <span class="pre">{&quot;accuracy_score&quot;:[0.99,</span> <span class="pre">0.10]}</span></code> ) The
+<code class="docutils literal notranslate"><span class="pre">execute</span></code> function has as inputs : * <code class="docutils literal notranslate"><span class="pre">classifier</span></code> is a classifier
+object from your classifiers class * <code class="docutils literal notranslate"><span class="pre">trainLabels</span></code> are the labels
+predicted for the train set by the classifier * <code class="docutils literal notranslate"><span class="pre">testLabels</span></code> are
+the labels predicted for the test set by the classifier * <code class="docutils literal notranslate"><span class="pre">DATASET</span></code>
+is the HDF5 dataset object * <code class="docutils literal notranslate"><span class="pre">classificationKWARGS</span></code> is the
+dictionary named <code class="docutils literal notranslate"><span class="pre">NMCKWARGS</span></code> earlier * <code class="docutils literal notranslate"><span class="pre">classificationIndices</span></code> is
+a triplet containing the learning indices, the validation indices and
+the testIndices for multiclass classification * <code class="docutils literal notranslate"><span class="pre">LABELS_DICTIONARY</span></code>
+is a dictionary containing a label as a key and it’s name as a value
+* <code class="docutils literal notranslate"><span class="pre">views</span></code> is the list of the views names used by the classifier *
+<code class="docutils literal notranslate"><span class="pre">nbCores</span></code> is an <code class="docutils literal notranslate"><span class="pre">int</span></code> fixing the number of threads used by the
+platform * <code class="docutils literal notranslate"><span class="pre">times</span></code> is a tuple containing the extraction time and
+the classification time * <code class="docutils literal notranslate"><span class="pre">name</span></code> is the name ofthe database on
+which the plartform is running * <code class="docutils literal notranslate"><span class="pre">KFolds</span></code> is an <code class="docutils literal notranslate"><span class="pre">sklearn</span></code> kfold
+object used for the cross-validation * <code class="docutils literal notranslate"><span class="pre">hyperParamSearch</span></code> is the
+type of the hyper parameters optimization method * <code class="docutils literal notranslate"><span class="pre">nIter</span></code> is the
+number of iterations of the hyper parameters method * <code class="docutils literal notranslate"><span class="pre">metrics</span></code> is
+the list of the metrics and their arguments * <code class="docutils literal notranslate"><span class="pre">viewsIndices</span></code> is
+1d-array of the indices of the views used for classification *
+<code class="docutils literal notranslate"><span class="pre">randomState</span></code> is a <code class="docutils literal notranslate"><span class="pre">numpy</span></code> RandomState object * <code class="docutils literal notranslate"><span class="pre">labels</span></code> are
+the groud truth labels of the dataset</div>
+</div>
+<p>The basic function analyzing results for all the classifiers looks like
+:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">Metrics</span>
+<span class="kn">from</span> <span class="nn">...utils.MultiviewResultAnalysis</span> <span class="k">import</span> <span class="n">printMetricScore</span><span class="p">,</span> <span class="n">getMetricsScores</span>
+
+<span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">trainLabels</span><span class="p">,</span>
+            <span class="n">testLabels</span><span class="p">,</span> <span class="n">DATASET</span><span class="p">,</span>
+            <span class="n">classificationKWARGS</span><span class="p">,</span> <span class="n">classificationIndices</span><span class="p">,</span>
+            <span class="n">LABELS_DICTIONARY</span><span class="p">,</span> <span class="n">views</span><span class="p">,</span> <span class="n">nbCores</span><span class="p">,</span> <span class="n">times</span><span class="p">,</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">KFolds</span><span class="p">,</span>
+            <span class="n">hyperParamSearch</span><span class="p">,</span> <span class="n">nIter</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span>
+            <span class="n">viewsIndices</span><span class="p">,</span> <span class="n">randomState</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+    <span class="n">CLASS_LABELS</span> <span class="o">=</span> <span class="n">labels</span>
+    <span class="n">learningIndices</span><span class="p">,</span> <span class="n">validationIndices</span><span class="p">,</span> <span class="n">testIndicesMulticlass</span> <span class="o">=</span> <span class="n">classificationIndices</span>
+
+    <span class="n">metricModule</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Metrics</span><span class="p">,</span> <span class="n">metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">metricKWARGS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">index</span><span class="p">,</span> <span class="n">metricConfig</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">metricConfig</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">metricKWARGS</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">scoreOnTrain</span> <span class="o">=</span> <span class="n">metricModule</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">CLASS_LABELS</span><span class="p">[</span><span class="n">learningIndices</span><span class="p">],</span> <span class="n">CLASS_LABELS</span><span class="p">[</span><span class="n">learningIndices</span><span class="p">],</span> <span class="o">**</span><span class="n">metricKWARGS</span><span class="p">)</span>
+    <span class="n">scoreOnTest</span> <span class="o">=</span> <span class="n">metricModule</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">CLASS_LABELS</span><span class="p">[</span><span class="n">validationIndices</span><span class="p">],</span> <span class="n">testLabels</span><span class="p">,</span> <span class="o">**</span><span class="n">metricKWARGS</span><span class="p">)</span>
+
+    <span class="c1"># To be modified to fit to your classifier</span>
+    <span class="n">classifierConfigurationString</span> <span class="o">=</span> <span class="s2">&quot;with weights : &quot;</span><span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">classifier</span><span class="o">.</span><span class="n">weights</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">&quot;, and integer : &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">classifier</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
+    <span class="c1"># Modify the name of the classifier in these strings</span>
+    <span class="n">stringAnalysis</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">Result for Multiview classification with NMC &quot;</span><span class="o">+</span> \
+                     <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; :</span><span class="se">\n\t</span><span class="s2">-On Train : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">scoreOnTrain</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">-On Test : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+        <span class="n">scoreOnTest</span><span class="p">)</span> <span class="o">+</span> \
+                     <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Dataset info :</span><span class="se">\n\t</span><span class="s2">-Database name : &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">-Labels : &quot;</span> <span class="o">+</span> \
+                     <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LABELS_DICTIONARY</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">-Views : &quot;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">views</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+        <span class="n">KFolds</span><span class="o">.</span><span class="n">n_splits</span><span class="p">)</span> <span class="o">+</span> \
+                     <span class="s2">&quot; folds</span><span class="se">\n\n</span><span class="s2">Classification configuration : </span><span class="se">\n\t</span><span class="s2">-Algorithm used : NMC &quot;</span> <span class="o">+</span> <span class="n">classifierConfigurationString</span>
+
+    <span class="n">metricsScores</span> <span class="o">=</span> <span class="n">getMetricsScores</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">trainLabels</span><span class="p">,</span> <span class="n">testLabels</span><span class="p">,</span>
+                                     <span class="n">validationIndices</span><span class="p">,</span> <span class="n">learningIndices</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+    <span class="n">stringAnalysis</span> <span class="o">+=</span> <span class="n">printMetricScore</span><span class="p">(</span><span class="n">metricsScores</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+
+    <span class="n">imagesAnalysis</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">stringAnalysis</span><span class="p">,</span> <span class="n">imagesAnalysis</span><span class="p">,</span> <span class="n">metricsScores</span>
+</pre></div>
+</div>
+</div>
+<p>Once you have done this, your classifier is ready to be used by the
+platform, but you can add some description about your classifier in the
+analyzeResults file.</p>
+</div>
+<div class="section" id="Adding-arguments-to-avoid-hyper-parameter-optimization">
+<h2>Adding arguments to avoid hyper parameter optimization<a class="headerlink" href="#Adding-arguments-to-avoid-hyper-parameter-optimization" title="Permalink to this headline">¶</a></h2>
+<p>In order to be able to test a specific set of arguments on this
+platform, you need to add some lines in the argument parser located in
+the file <code class="docutils literal notranslate"><span class="pre">Code/MonoMultiViewClassifiers/utils/execution.py</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">parseTheArgs</span></code> function. What you need to do is to add a group of
+arguments, allowing you to pass the hyper parameters in the command line
+:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">groupNMC</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;New Multiview Classifier arguments&#39;</span><span class="p">)</span>
+<span class="n">groupNMC</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--NMC_weights&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;FLOAT&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+                                 <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Determine the weights of NMC&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                                 <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+<span class="n">groupNMC</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--NMC_integer&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;INT&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
+                                 <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Determine the integer of NMC&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                                 <span class="n">default</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>In order for the platform to use these arguments, you need to modify the
+<code class="docutils literal notranslate"><span class="pre">getArgs</span></code> function of the file <code class="docutils literal notranslate"><span class="pre">NMCModule.py</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">getArgs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">views</span><span class="p">,</span> <span class="n">viewsIndices</span><span class="p">,</span> <span class="n">randomState</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">resultsMonoview</span><span class="p">,</span> <span class="n">classificationIndices</span><span class="p">):</span>
+    <span class="n">argumentsList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">nbViews</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">views</span><span class="p">)</span>
+    <span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;CL_type&quot;</span><span class="p">:</span> <span class="s2">&quot;NMC&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;views&quot;</span><span class="p">:</span> <span class="n">views</span><span class="p">,</span>
+                 <span class="s2">&quot;NB_VIEW&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">views</span><span class="p">),</span>
+                 <span class="s2">&quot;viewsIndices&quot;</span><span class="p">:</span> <span class="n">viewsIndices</span><span class="p">,</span>
+                 <span class="s2">&quot;NB_CLASS&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">CL_classes</span><span class="p">),</span>
+                 <span class="s2">&quot;LABELS_NAMES&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">CL_classes</span><span class="p">,</span>
+                 <span class="s2">&quot;NMCKWARGS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;weights&quot;</span><span class="p">:</span><span class="n">args</span><span class="o">.</span><span class="n">NMC_weights</span><span class="p">,</span>  <span class="c1"># Modified to take the args into account</span>
+                               <span class="s2">&quot;integer&quot;</span><span class="p">:</span><span class="n">args</span><span class="o">.</span><span class="n">NMC_integer</span><span class="p">,</span>  <span class="c1"># Modified to take the args into account</span>
+                              <span class="s2">&quot;nbViews&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">}}</span>
+    <span class="n">argumentsList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">argumentsList</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="exec_classif.html" class="btn btn-neutral float-right" title="Classification execution module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="monoview_classifier.html" class="btn btn-neutral" title="Monoview classifier framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Baptiste BAUVIN.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

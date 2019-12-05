@@ -1,0 +1,268 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Readme &#8212; MultiviewPlatform 0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Multiview Platform Tutorials" href="tutorials/index.html" />
+    <link rel="prev" title="Welcome to MultiviewPlatform’s documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorials/index.html" title="Multiview Platform Tutorials"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to MultiviewPlatform’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">MultiviewPlatform 0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="readme">
+<h1>Readme<a class="headerlink" href="#readme" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="http://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" /></a>
+<a class="reference external image-reference" href="https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/badges/develop/build.svg"><img alt="Build Status" src="https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/badges/develop/build.svg" /></a>
+</div>
+<div class="section" id="mono-and-multi-view-classification-benchmark">
+<h1>Mono- and Multi-view classification benchmark<a class="headerlink" href="#mono-and-multi-view-classification-benchmark" title="Permalink to this headline">¶</a></h1>
+<p>This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- &amp; multi-view algorithms capacity to classify it correctly.</p>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h3>
+<p>To be able to use this project, you’ll need :</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/">Python 3.6</a></li>
+</ul>
+<p>And the following python modules :</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.numpy.org/">numpy</a>, <a class="reference external" href="https://scipy.org/">scipy</a>,</li>
+<li><a class="reference external" href="http://matplotlib.org/">matplotlib</a> - Used to plot results,</li>
+<li><a class="reference external" href="http://scikit-learn.org/stable/">sklearn</a> - Used for the monoview classifiers,</li>
+<li><a class="reference external" href="https://pypi.python.org/pypi/joblib">joblib</a> - Used to compute on multiple threads,</li>
+<li><a class="reference external" href="https://www.h5py.org">h5py</a> - Used to generate HDF5 datasets on hard drive and use them to spare RAM,</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/pickle.html">pickle</a> - Used to store some results,</li>
+<li><a class="reference external" href="https://pandas.pydata.org/">pandas</a> - Used to manipulate data efficiently,</li>
+<li><a class="reference external" href="https://pypi.org/project/six/">six</a> -</li>
+<li><a class="reference external" href="https://pypi.org/project/m2r/">m2r</a> - Used to generate documentation from the readme,</li>
+<li><a class="reference external" href="https://pypi.org/project/docutils/">docutils</a> - Used to generate documentation,</li>
+<li><a class="reference external" href="https://pypi.org/project/PyYAML/">pyyaml</a> - Used to read the config files,</li>
+<li><a class="reference external" href="https://plot.ly/">plotly</a> - Used to generate interactive HTML visuals.</li>
+</ul>
+<p>They are all tested in  <code class="docutils literal notranslate"><span class="pre">multiview-machine-mearning-omis/multiview_platform/MonoMutliViewClassifiers/Versions.py</span></code> which is automatically checked each time you run the <code class="docutils literal notranslate"><span class="pre">execute</span></code> script</p>
+</div>
+<div class="section" id="installing">
+<h3>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h3>
+<p>Once you cloned the project from this repository, you just have to use :</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>pip install -e .
+</pre></div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">multiview_machine-learning-omis</span></code> directory.</p>
+</div>
+<div class="section" id="running-on-simulated-data">
+<h3>Running on simulated data<a class="headerlink" href="#running-on-simulated-data" title="Permalink to this headline">¶</a></h3>
+<p>In order to run it you’ll need to try on <strong>simulated</strong> data with the command</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<span class="n">execute</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This will run the first example. For more information about the examples, see the documentation
+Results will be stored in the results directory of the installation path :
+<code class="docutils literal notranslate"><span class="pre">path/to/install/multiview-machine-learning-omis/multiview_platform/examples/results</span></code>.
+The documentations proposes a detailed interpretation of the results.</p>
+</div>
+<div class="section" id="discovering-the-arguments">
+<h3>Discovering the arguments<a class="headerlink" href="#discovering-the-arguments" title="Permalink to this headline">¶</a></h3>
+<p>All the arguments of the platform are stored in a YAML config file. Some config files are given as examples.
+The file stored in <code class="docutils literal notranslate"><span class="pre">multiview-machine-learning-omis/config_files/config.yml</span></code> is documented and it is highly recommended</p>
+<blockquote>
+<div>to read it carefully before playing around with the parameters.</div></blockquote>
+<p>You can create your own configuration file. In order to run the platform with it, run :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<span class="n">execute</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="s2">&quot;/absolute/path/to/your/config/file&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For further information about classifier-specific arguments, see the documentation.</p>
+</div>
+<div class="section" id="dataset-compatibility">
+<h3>Dataset compatibility<a class="headerlink" href="#dataset-compatibility" title="Permalink to this headline">¶</a></h3>
+<p>In order to start a benchmark on your dataset, you need to format it so the script can use it.
+You can have either a directory containing <code class="docutils literal notranslate"><span class="pre">.csv</span></code> files or a HDF5 file.</p>
+<div class="section" id="if-you-have-multiple-csv-files-you-must-organize-them-as">
+<h4>If you have multiple <code class="docutils literal notranslate"><span class="pre">.csv</span></code> files, you must organize them as :<a class="headerlink" href="#if-you-have-multiple-csv-files-you-must-organize-them-as" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">top_directory/database_name-labels.csv</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">top_directory/database_name-labels-names.csv</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">top_directory/Views/view_name.csv</span></code> or <code class="docutils literal notranslate"><span class="pre">top_directory/Views/view_name-s.csv</span></code> if the view is sparse</li>
+</ul>
+<p>With <code class="docutils literal notranslate"><span class="pre">top_directory</span></code> being the last directory in the <code class="docutils literal notranslate"><span class="pre">pathF</span></code> argument</p>
+</div>
+<div class="section" id="if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as">
+<h4>If you already have an HDF5 dataset file it must be formatted as :<a class="headerlink" href="#if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as" title="Permalink to this headline">¶</a></h4>
+<p>One dataset for each view called <code class="docutils literal notranslate"><span class="pre">ViewX</span></code> with <code class="docutils literal notranslate"><span class="pre">X</span></code> being the view index with 2 attribures :</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;name&quot;]</span></code> a string for the name of the view</li>
+<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;sparse&quot;]</span></code> a boolean specifying whether the view is sparse or not</li>
+<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;ranges&quot;]</span></code> a <code class="docutils literal notranslate"><span class="pre">np.array</span></code> containing the ranges of each attribute in the view (for ex. : for a pixel the range will be 255, for a real attribute in [-1,1], the range will be 2).</li>
+<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;limits&quot;]</span></code> a <code class="docutils literal notranslate"><span class="pre">np.array</span></code> containing all the limits of the attributes int he view. (for ex. : for a pixel the limits will be <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">255]</span></code>, for a real attribute in [-1,1], the limits will be <code class="docutils literal notranslate"><span class="pre">[-1,1]</span></code>).</li>
+</ul>
+<p>One dataset for the labels called <code class="docutils literal notranslate"><span class="pre">Labels</span></code> with one attribute :</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;names&quot;]</span></code> a list of strings encoded in utf-8 namig the labels in the right order</li>
+</ul>
+<p>One group for the additional data called <code class="docutils literal notranslate"><span class="pre">Metadata</span></code> containing at least 3 attributes :</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;nbView&quot;]</span></code> an int counting the total number of views in the dataset</li>
+<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;nbClass&quot;]</span></code> an int counting the total number of different labels in the dataset</li>
+<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;datasetLength&quot;]</span></code> an int counting the total number of examples in the dataset</li>
+</ul>
+</div>
+</div>
+<div class="section" id="running-on-your-dataset">
+<h3>Running on your dataset<a class="headerlink" href="#running-on-your-dataset" title="Permalink to this headline">¶</a></h3>
+<p>In order to run the script on your dataset you need to use :</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>cd multiview-machine-learning-omis/multiview_platform
+python execute.py -log --name &lt;your_dataset_name&gt; --type &lt;.cvs_or_.hdf5&gt; --pathF &lt;path_to_your_dataset&gt;
+</pre></div>
+</div>
+<p>This will run a full benchmark on your dataset using all available views and labels.</p>
+<p>You may configure the <code class="docutils literal notranslate"><span class="pre">--CL_statsiter</span></code>, <code class="docutils literal notranslate"><span class="pre">--CL_split</span></code>, <code class="docutils literal notranslate"><span class="pre">--CL_nbFolds</span></code>, <code class="docutils literal notranslate"><span class="pre">--CL_GS_iter</span></code> arguments to start a meaningful benchmark</p>
+</div>
+</div>
+<div class="section" id="running-the-tests">
+<h2>Running the tests<a class="headerlink" href="#running-the-tests" title="Permalink to this headline">¶</a></h2>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a>/!still in development, test sucess is not meaningful ATM /!**</p>
+<p>In order to run it you’ll need to try on simulated data with the command</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>cd multiview-machine-learning-omis/
+python -m unittest discover
+</pre></div>
+</div>
+</div>
+<div class="section" id="author">
+<h2>Author<a class="headerlink" href="#author" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>Baptiste BAUVIN</strong></li>
+</ul>
+<div class="section" id="contributors">
+<h3>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Mazid Osseni</strong></li>
+<li><strong>Alexandre Drouin</strong></li>
+<li><strong>Nikolas Huelsmann</strong></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Readme</a></li>
+<li><a class="reference internal" href="#mono-and-multi-view-classification-benchmark">Mono- and Multi-view classification benchmark</a><ul>
+<li><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#installing">Installing</a></li>
+<li><a class="reference internal" href="#running-on-simulated-data">Running on simulated data</a></li>
+<li><a class="reference internal" href="#discovering-the-arguments">Discovering the arguments</a></li>
+<li><a class="reference internal" href="#dataset-compatibility">Dataset compatibility</a><ul>
+<li><a class="reference internal" href="#if-you-have-multiple-csv-files-you-must-organize-them-as">If you have multiple <code class="docutils literal notranslate"><span class="pre">.csv</span></code> files, you must organize them as :</a></li>
+<li><a class="reference internal" href="#if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as">If you already have an HDF5 dataset file it must be formatted as :</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#running-on-your-dataset">Running on your dataset</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#running-the-tests">Running the tests</a></li>
+<li><a class="reference internal" href="#author">Author</a><ul>
+<li><a class="reference internal" href="#contributors">Contributors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to MultiviewPlatform’s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorials/index.html"
+                        title="next chapter">Multiview Platform Tutorials</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/readme_link.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorials/index.html" title="Multiview Platform Tutorials"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to MultiviewPlatform’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">MultiviewPlatform 0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Baptiste BAUVIN.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
+    </div>
+  </body>
+</html>

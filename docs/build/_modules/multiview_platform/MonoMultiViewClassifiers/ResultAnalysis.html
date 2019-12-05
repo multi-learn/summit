@@ -1,0 +1,1170 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>multiview_platform.MonoMultiViewClassifiers.ResultAnalysis &mdash; MultiviewPlatform 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> MultiviewPlatform
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme_link.html#mono-and-multi-view-classification-benchmark">Mono- and Multi-view classification benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Multiview Platform</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MultiviewPlatform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>multiview_platform.MonoMultiViewClassifiers.ResultAnalysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for multiview_platform.MonoMultiViewClassifiers.ResultAnalysis</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Import built-in modules</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">errno</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># Import third party modules</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+
+<span class="c1"># Import own Modules</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">Metrics</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">MultiviewClassifiers</span>
+
+<span class="c1"># Author-Info</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Baptiste Bauvin&quot;</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s2">&quot;Prototype&quot;</span>  <span class="c1"># Production, Development, Prototype</span>
+
+
+<div class="viewcode-block" id="autolabel"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.autolabel">[docs]</a><span class="k">def</span> <span class="nf">autolabel</span><span class="p">(</span><span class="n">rects</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="nb">set</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to print the score below the bars.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rects : pyplot bar object</span>
+<span class="sd">        THe bars.</span>
+<span class="sd">    ax : pyplot ax object</span>
+<span class="sd">        The ax.</span>
+<span class="sd">    set : integer</span>
+<span class="sd">        1 means the test scores, anything else means the train score</span>
+<span class="sd">    std: None or array</span>
+<span class="sd">        The standard deviations in the case of statsIter results.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">set</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">text_height</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.05</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="s2">&quot;bold&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">text_height</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.07</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="s2">&quot;normal&quot;</span>
+    <span class="k">for</span> <span class="n">rectIndex</span><span class="p">,</span> <span class="n">rect</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rects</span><span class="p">):</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">rect</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">std</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">rect</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">text_height</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">height</span> <span class="o">+</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="se">\u00B1</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">std</span><span class="p">[</span><span class="n">rectIndex</span><span class="p">],</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
+                    <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;x-small&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">rect</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">text_height</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">height</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
+                    <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;small&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="getMetricsScoresBiclass"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.getMetricsScoresBiclass">[docs]</a><span class="k">def</span> <span class="nf">getMetricsScoresBiclass</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to extract metrics scores in case of biclass classification</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    metrics : list of lists</span>
+<span class="sd">        The metrics names with configuration metrics[i][0] = name of metric i</span>
+<span class="sd">    results : list of MonoviewResult and MultiviewResults objects</span>
+<span class="sd">        A list containing all the resluts for all the monoview experimentations.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    metricsScores : dict of dict of list</span>
+<span class="sd">        Regroups all the scores for each metrics for each classifier and for the train and test sets.</span>
+<span class="sd">        organized as :</span>
+<span class="sd">        -`metricScores[metric_name][&quot;classifiersNames&quot;]` is a list of all the classifiers available for this metric,</span>
+<span class="sd">        -`metricScores[metric_name][&quot;trainScores&quot;]` is a list of all the available classifiers scores on the train set,</span>
+<span class="sd">        -`metricScores[metric_name][&quot;testScores&quot;]` is a list of all the available classifiers scores on the test set.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">metricsScores</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+        <span class="n">classifiersNames</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">trainScores</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">testScores</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">classifierResult</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="n">trainScores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">classifierResult</span><span class="o">.</span><span class="n">metrics_scores</span><span class="p">[</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">testScores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">classifierResult</span><span class="o">.</span><span class="n">metrics_scores</span><span class="p">[</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">classifiersNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">classifierResult</span><span class="o">.</span><span class="n">get_classifier_name</span><span class="p">())</span>
+
+        <span class="n">metricsScores</span><span class="p">[</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;classifiersNames&quot;</span><span class="p">:</span> <span class="n">classifiersNames</span><span class="p">,</span>
+                                    <span class="s2">&quot;trainScores&quot;</span><span class="p">:</span> <span class="n">trainScores</span><span class="p">,</span>
+                                    <span class="s2">&quot;testScores&quot;</span><span class="p">:</span> <span class="n">testScores</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">metricsScores</span></div>
+
+
+<div class="viewcode-block" id="getExampleErrorsBiclass"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.getExampleErrorsBiclass">[docs]</a><span class="k">def</span> <span class="nf">getExampleErrorsBiclass</span><span class="p">(</span><span class="n">groud_truth</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to get for each classifier and each example whether the classifier has misclassified the example or not.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ground_truth : numpy array of 0, 1 and -100 (if multiclass)</span>
+<span class="sd">        The array with the real labels of the examples</span>
+<span class="sd">    results : list of MonoviewResult and MultiviewResults objects</span>
+<span class="sd">        A list containing all the resluts for all the mono- &amp; multi-view experimentations.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    exampleErrors : dict of np.array</span>
+<span class="sd">        For each classifier, has an entry with a `np.array` over the examples, with a 1 if the examples was</span>
+<span class="sd">        well-classified, a 0 if not and if it&#39;s multiclass classification, a -100 if the examples was not seen during</span>
+<span class="sd">        the one versus one classification.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exampleErrors</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">classifierResult</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">errorOnExamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">classifierResult</span><span class="o">.</span><span class="n">full_labels_pred</span><span class="p">,</span> <span class="n">groud_truth</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">unseenExamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">groud_truth</span><span class="o">==-</span><span class="mi">100</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">errorOnExamples</span><span class="p">[</span><span class="n">unseenExamples</span><span class="p">]</span><span class="o">=-</span><span class="mi">100</span>
+        <span class="n">exampleErrors</span><span class="p">[</span><span class="n">classifierResult</span><span class="o">.</span><span class="n">get_classifier_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">:</span> <span class="n">errorOnExamples</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">exampleErrors</span></div>
+
+
+<div class="viewcode-block" id="get_fig_size"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.get_fig_size">[docs]</a><span class="k">def</span> <span class="nf">get_fig_size</span><span class="p">(</span><span class="n">nb_results</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">multiplier</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">bar_width</span><span class="o">=</span><span class="mf">0.35</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to get the image size to save the figure and the bar width, depending on the number of scores to plot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nb_results : int</span>
+<span class="sd">        The number of couple of bar to plot.</span>
+<span class="sd">    min_size : int</span>
+<span class="sd">        The minimum size of the image, if there are few classifiers to plot.</span>
+<span class="sd">    multiplier : float</span>
+<span class="sd">        The ratio between the image size and the number of classifiers.</span>
+<span class="sd">    bar_width : float</span>
+<span class="sd">        The width of the bars in the figure. Mainly here to centralize bar_width.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig_kwargs : dict of arguments</span>
+<span class="sd">        The argument restraining the size of the figure, usable directly in the `subplots` function of</span>
+<span class="sd">        `matplotlib.pyplot`.</span>
+<span class="sd">    bar_width : float</span>
+<span class="sd">        The width of the bars in the figure. Mainly here to centralize bar_width.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">nb_results</span><span class="o">*</span><span class="n">multiplier</span>
+    <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;</span> <span class="n">min_size</span><span class="p">:</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">min_size</span>
+    <span class="n">fig_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)}</span>
+    <span class="k">return</span> <span class="n">fig_kwargs</span><span class="p">,</span> <span class="n">bar_width</span></div>
+
+
+<div class="viewcode-block" id="sort_by_test_score"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.sort_by_test_score">[docs]</a><span class="k">def</span> <span class="nf">sort_by_test_score</span><span class="p">(</span><span class="n">train_scores</span><span class="p">,</span><span class="n">test_scores</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">train_STDs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test_STDs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to sort the results (names and both scores) in descending test score order.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    train_scores : np.array of floats</span>
+<span class="sd">        The scores of each classifier on the training set.</span>
+<span class="sd">    test_scores : np.array of floats</span>
+<span class="sd">        The scores of each classifier on the testing set.</span>
+<span class="sd">    names : np.array of strs</span>
+<span class="sd">        The names of all the classifiers.</span>
+<span class="sd">    train_STDs : np.array of floats or None</span>
+<span class="sd">        The array containing the standard deviations for the averaged scores on the training set.</span>
+<span class="sd">    test_STDs : np.array of floats or None</span>
+<span class="sd">        The array containing the standard deviations for the averaged scores on the testing set.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sorted_names : np.array of strs</span>
+<span class="sd">        The names of all the classifiers, sorted in descending test score order.</span>
+<span class="sd">    sorted_train_scores : np.array of floats</span>
+<span class="sd">        The scores of each classifier on the training set, sorted in descending test score order.</span>
+<span class="sd">    sorted_test_scores : np.array of floats</span>
+<span class="sd">        The scores of each classifier on the testing set, sorted in descending test score order.</span>
+<span class="sd">    sorted_train_STDs : np.array of floats or None</span>
+<span class="sd">        The array containing the standard deviations for the averaged scores on the training set,</span>
+<span class="sd">        sorted in descending test score order.</span>
+<span class="sd">    sorted_test_STDs : np.array of floats or None</span>
+<span class="sd">        The array containing the standard deviations for the averaged scores on the testing set,</span>
+<span class="sd">        sorted in descending test score order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">test_scores</span><span class="p">)</span>
+    <span class="n">sorted_test_scores</span> <span class="o">=</span> <span class="n">test_scores</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+    <span class="n">sorted_train_scores</span> <span class="o">=</span> <span class="n">train_scores</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+    <span class="n">sorted_names</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">train_STDs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">test_STDs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sorted_train_STDs</span> <span class="o">=</span> <span class="n">train_STDs</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+        <span class="n">sorted_test_STDs</span> <span class="o">=</span> <span class="n">test_STDs</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sorted_train_STDs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">sorted_test_STDs</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">sorted_names</span><span class="p">,</span> <span class="n">sorted_train_scores</span><span class="p">,</span> <span class="n">sorted_test_scores</span><span class="p">,</span> <span class="n">sorted_train_STDs</span><span class="p">,</span> <span class="n">sorted_test_STDs</span></div>
+
+
+<div class="viewcode-block" id="plotMetricScores"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.plotMetricScores">[docs]</a><span class="k">def</span> <span class="nf">plotMetricScores</span><span class="p">(</span><span class="n">trainScores</span><span class="p">,</span> <span class="n">testScores</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">nbResults</span><span class="p">,</span> <span class="n">metricName</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span>
+                     <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">train_STDs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test_STDs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to plot and save the score barplot for a specific metric.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trainScores : list or np.array of floats</span>
+<span class="sd">        The scores of each classifier on the training set.</span>
+<span class="sd">    testScores : list or np.array of floats</span>
+<span class="sd">        The scores of each classifier on the testing set.</span>
+<span class="sd">    names : list or np.array of strs</span>
+<span class="sd">        The names of all the classifiers.</span>
+<span class="sd">    nbResults: int</span>
+<span class="sd">        The number of classifiers to plot.</span>
+<span class="sd">    metricName : str</span>
+<span class="sd">        The plotted metric&#39;s name</span>
+<span class="sd">    fileName : str</span>
+<span class="sd">        The name of the file where the figure will be saved.</span>
+<span class="sd">    tag : str</span>
+<span class="sd">        Some text to personalize the title, must start with a whitespace.</span>
+<span class="sd">    train_STDs : np.array of floats or None</span>
+<span class="sd">        The array containing the standard deviations for the averaged scores on the training set.</span>
+<span class="sd">    test_STDs : np.array of floats or None</span>
+<span class="sd">        The array containing the standard deviations for the averaged scores on the testing set.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">figKW</span><span class="p">,</span> <span class="n">barWidth</span> <span class="o">=</span> <span class="n">get_fig_size</span><span class="p">(</span><span class="n">nbResults</span><span class="p">)</span>
+
+    <span class="n">names</span><span class="p">,</span> <span class="n">trainScores</span><span class="p">,</span> <span class="n">testScores</span><span class="p">,</span> <span class="n">train_STDs</span><span class="p">,</span> <span class="n">test_STDs</span> <span class="o">=</span> <span class="n">sort_by_test_score</span><span class="p">(</span><span class="n">trainScores</span><span class="p">,</span> <span class="n">testScores</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span>
+                                                                               <span class="n">train_STDs</span><span class="p">,</span> <span class="n">test_STDs</span><span class="p">)</span>
+
+    <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">figKW</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">metricName</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span> <span class="n">tag</span> <span class="o">+</span><span class="s2">&quot; scores for each classifier&quot;</span><span class="p">)</span>
+
+    <span class="n">rects</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nbResults</span><span class="p">),</span> <span class="n">testScores</span><span class="p">,</span> <span class="n">barWidth</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">test_STDs</span><span class="p">)</span>
+    <span class="n">rect2</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nbResults</span><span class="p">)</span> <span class="o">+</span> <span class="n">barWidth</span><span class="p">,</span> <span class="n">trainScores</span><span class="p">,</span> <span class="n">barWidth</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;0.8&quot;</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">train_STDs</span><span class="p">)</span>
+    <span class="n">autolabel</span><span class="p">(</span><span class="n">rects</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="nb">set</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="n">test_STDs</span><span class="p">)</span>
+    <span class="n">autolabel</span><span class="p">(</span><span class="n">rect2</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="nb">set</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="n">train_STDs</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="n">rects</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rect2</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="s1">&#39;Test&#39;</span><span class="p">,</span> <span class="s1">&#39;Train&#39;</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nbResults</span><span class="p">)</span> <span class="o">+</span> <span class="n">barWidth</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="publishMetricsGraphs"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.publishMetricsGraphs">[docs]</a><span class="k">def</span> <span class="nf">publishMetricsGraphs</span><span class="p">(</span><span class="n">metricsScores</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">databaseName</span><span class="p">,</span> <span class="n">labelsNames</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to sort the results (names and both scores) in descending test score order.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    metricsScores : dict of dicts of lists or np.arrays</span>
+<span class="sd">        Keys : The names of the metrics.</span>
+<span class="sd">        Values : The scores and names of each classifier .</span>
+<span class="sd">    directory : str</span>
+<span class="sd">        The path to the directory where the figures will be saved.</span>
+<span class="sd">    databaseName : str</span>
+<span class="sd">        The name of the database on which the experiments where conducted.</span>
+<span class="sd">    labelsNames : list of strs</span>
+<span class="sd">        The name corresponding to each numerical label.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">metricName</span><span class="p">,</span> <span class="n">metricScores</span> <span class="ow">in</span> <span class="n">metricsScores</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start:</span><span class="se">\t</span><span class="s2"> Biclass score graph generation for &quot;</span><span class="o">+</span><span class="n">metricName</span><span class="p">)</span>
+
+        <span class="n">nbResults</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">metricScores</span><span class="p">[</span><span class="s2">&quot;testScores&quot;</span><span class="p">])</span>
+
+        <span class="n">fileName</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">-%H_%M_%S&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">databaseName</span> <span class="o">+</span><span class="s2">&quot;-&quot;</span><span class="o">+</span><span class="s2">&quot;_vs_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">labelsNames</span><span class="p">)</span><span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">metricName</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span>
+
+        <span class="n">plotMetricScores</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">metricScores</span><span class="p">[</span><span class="s2">&quot;trainScores&quot;</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">metricScores</span><span class="p">[</span><span class="s2">&quot;testScores&quot;</span><span class="p">]),</span>
+                         <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">metricScores</span><span class="p">[</span><span class="s2">&quot;classifiersNames&quot;</span><span class="p">]),</span> <span class="n">nbResults</span><span class="p">,</span> <span class="n">metricName</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="o">+</span><span class="s2">&quot; vs &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">labelsNames</span><span class="p">))</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done:</span><span class="se">\t</span><span class="s2"> Biclass score graph generation for &quot;</span> <span class="o">+</span> <span class="n">metricName</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="iterCmap"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.iterCmap">[docs]</a><span class="k">def</span> <span class="nf">iterCmap</span><span class="p">(</span><span class="n">statsIter</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to generate a colormap that will have a tick for each iteration : the whiter the better.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    statsIter : int</span>
+<span class="sd">        The number of statistical iterations.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cmap : matplotlib.colors.ListedColorMap object</span>
+<span class="sd">        The colormap.</span>
+<span class="sd">    norm : matplotlib.colors.BoundaryNorm object</span>
+<span class="sd">        The bounds for the colormap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cmapList</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0&quot;</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">float</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">statsIter</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">statsIter</span><span class="p">)]</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">cmapList</span><span class="p">)</span>
+    <span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="o">*</span><span class="n">statsIter</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">statsIter</span><span class="p">):</span>
+        <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statsIter</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">BoundaryNorm</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">cmap</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">norm</span></div>
+
+
+<div class="viewcode-block" id="publish2Dplot"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.publish2Dplot">[docs]</a><span class="k">def</span> <span class="nf">publish2Dplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbCopies</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">minSize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                  <span class="n">width_denominator</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">height_denominator</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">statsIter</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to generate a 2D plot of the errors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : np.array of shape `(nbClassifiers, nbExamples)`</span>
+<span class="sd">        A matrix with zeros where the classifier failed to classifiy the example, ones where it classified it well</span>
+<span class="sd">        and -100 if the example was not classified.</span>
+<span class="sd">    classifiersNames : list of str</span>
+<span class="sd">        The names of the classifiers.</span>
+<span class="sd">    nbClassifiers : int</span>
+<span class="sd">        The number of classifiers.</span>
+<span class="sd">    nbExamples : int</span>
+<span class="sd">        The number of examples.</span>
+<span class="sd">    nbCopies : int</span>
+<span class="sd">        The number of times the data is copied (classifier wise) in order for the figure to be more readable</span>
+<span class="sd">    fileName : str</span>
+<span class="sd">        The name of the file in which the figure will be saved (&quot;error_analysis_2D.png&quot; will be added at the end)</span>
+<span class="sd">    minSize : int, optinal, default: 10</span>
+<span class="sd">        The minimum width and height of the figure.</span>
+<span class="sd">    width_denominator : float, optional, default: 1.0</span>
+<span class="sd">        To obtain the image width, the number of classifiers will be divided by this number.</span>
+<span class="sd">    height_denominator : float, optional, default: 1.0</span>
+<span class="sd">        To obtain the image width, the number of examples will be divided by this number.</span>
+<span class="sd">    statsIter : int, optional, default: 1</span>
+<span class="sd">        The number of statistical iterations realized.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">figWidth</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nbClassifiers</span> <span class="o">/</span> <span class="n">width_denominator</span><span class="p">,</span> <span class="n">minSize</span><span class="p">)</span>
+    <span class="n">figHeight</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nbExamples</span> <span class="o">/</span> <span class="n">height_denominator</span><span class="p">,</span> <span class="n">minSize</span><span class="p">)</span>
+    <span class="n">figKW</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">figWidth</span><span class="p">,</span> <span class="n">figHeight</span><span class="p">)}</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">figKW</span><span class="p">)</span>
+    <span class="n">cmap</span><span class="p">,</span> <span class="n">norm</span> <span class="o">=</span> <span class="n">iterCmap</span><span class="p">(</span><span class="n">statsIter</span><span class="p">)</span>
+    <span class="n">cax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Errors depending on the classifier&#39;</span><span class="p">)</span>
+    <span class="n">ticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nbCopies</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">nbClassifiers</span> <span class="o">*</span> <span class="n">nbCopies</span><span class="p">,</span> <span class="n">nbCopies</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">classifiersNames</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cax</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span> <span class="o">*</span> <span class="n">statsIter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">])</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="s1">&#39;Unseen&#39;</span><span class="p">,</span> <span class="s1">&#39;Always Wrong&#39;</span><span class="p">,</span> <span class="s1">&#39;Always Right&#39;</span><span class="p">])</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fileName</span><span class="o">+</span><span class="s2">&quot;error_analysis_2D.png&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="publishErrorsBarPlot"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.publishErrorsBarPlot">[docs]</a><span class="k">def</span> <span class="nf">publishErrorsBarPlot</span><span class="p">(</span><span class="n">errorOnExamples</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to generate a barplot of the muber of classifiers that failed to classify each examples</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    errorOnExamples : np.array of shape `(nbExamples,)`</span>
+<span class="sd">        An array counting how many classifiers failed to classifiy each examples.</span>
+<span class="sd">    classifiersNames : list of str</span>
+<span class="sd">        The names of the classifiers.</span>
+<span class="sd">    nbClassifiers : int</span>
+<span class="sd">        The number of classifiers.</span>
+<span class="sd">    nbExamples : int</span>
+<span class="sd">        The number of examples.</span>
+<span class="sd">    fileName : str</span>
+<span class="sd">        The name of the file in which the figure will be saved (&quot;error_analysis_2D.png&quot; will be added at the end)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nbExamples</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">errorOnExamples</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Number of classifiers that failed to classify each example&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fileName</span><span class="o">+</span><span class="s2">&quot;error_analysis_bar.png&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="gen_error_data"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.gen_error_data">[docs]</a><span class="k">def</span> <span class="nf">gen_error_data</span><span class="p">(</span><span class="n">example_errors</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">,</span> <span class="n">nbCopies</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to format the error data in order to plot it efficiently. The data is saves in a `.csv` file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    example_errors : dict of dicts of np.arrays</span>
+<span class="sd">        A dictionary conatining all the useful data. Organized as :</span>
+<span class="sd">        `example_errors[&lt;classifier_name&gt;][&quot;errorOnExamples&quot;]` is a np.array of ints with a</span>
+<span class="sd">        - 1 if the classifier `&lt;classifier_name&gt;` classifier well the example,</span>
+<span class="sd">        - 0 if it fail to classify the example,</span>
+<span class="sd">        - -100 if it did not classify the example (multiclass one versus one).</span>
+<span class="sd">    base_file_name : list of str</span>
+<span class="sd">        The name of the file in which the figure will be saved (&quot;2D_plot_data.csv&quot; and &quot;bar_plot_data.csv&quot; will</span>
+<span class="sd">        be added at the end)</span>
+<span class="sd">    nbCopies : int, optinal, default: 2</span>
+<span class="sd">        The number of times the data is copied (classifier wise) in order for the figure to be more readable.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    nbClassifiers : int</span>
+<span class="sd">        Number of different classifiers</span>
+<span class="sd">    nbExamples : int</span>
+<span class="sd">        NUmber of examples</span>
+<span class="sd">    nbCopies : int</span>
+<span class="sd">        The number of times the data is copied (classifier wise) in order for the figure to be more readable.</span>
+<span class="sd">    classifiersNames : list of strs</span>
+<span class="sd">        The names fo the classifiers.</span>
+<span class="sd">    data : np.array of shape `(nbClassifiers, nbExamples)`</span>
+<span class="sd">        A matrix with zeros where the classifier failed to classifiy the example, ones where it classified it well</span>
+<span class="sd">        and -100 if the example was not classified.</span>
+<span class="sd">    errorOnExamples : np.array of shape `(nbExamples,)`</span>
+<span class="sd">        An array counting how many classifiers failed to classifiy each examples.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nbClassifiers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">example_errors</span><span class="p">)</span>
+    <span class="n">nbExamples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">example_errors</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">])</span>
+    <span class="n">classifiersNames</span> <span class="o">=</span> <span class="n">example_errors</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbClassifiers</span> <span class="o">*</span> <span class="n">nbCopies</span><span class="p">))</span>
+    <span class="n">temp_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">classifierIndex</span><span class="p">,</span> <span class="p">(</span><span class="n">classifierName</span><span class="p">,</span> <span class="n">errorOnExamples</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">example_errors</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">iterIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbCopies</span><span class="p">):</span>
+            <span class="n">data</span><span class="p">[:,</span> <span class="n">classifierIndex</span> <span class="o">*</span> <span class="n">nbCopies</span> <span class="o">+</span> <span class="n">iterIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">errorOnExamples</span><span class="p">[</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">]</span>
+            <span class="n">temp_data</span><span class="p">[:,</span> <span class="n">classifierIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">errorOnExamples</span><span class="p">[</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">]</span>
+    <span class="n">errorOnExamples</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">nbCopies</span> <span class="o">+</span> <span class="n">nbClassifiers</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">base_file_name</span> <span class="o">+</span> <span class="s2">&quot;2D_plot_data.csv&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">base_file_name</span> <span class="o">+</span> <span class="s2">&quot;bar_plot_data.csv&quot;</span><span class="p">,</span> <span class="n">temp_data</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbCopies</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">errorOnExamples</span></div>
+
+
+<span class="k">def</span> <span class="nf">publishExampleErrors</span><span class="p">(</span><span class="n">exampleErrors</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">databaseName</span><span class="p">,</span> <span class="n">labelsNames</span><span class="p">):</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start:</span><span class="se">\t</span><span class="s2"> Biclass Label analysis figure generation&quot;</span><span class="p">)</span>
+
+    <span class="n">base_file_name</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">-%H_%M_%S&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">databaseName</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="s2">&quot;_vs_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">labelsNames</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span>
+
+    <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nCopies</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">errorOnExamples</span> <span class="o">=</span> <span class="n">gen_error_data</span><span class="p">(</span><span class="n">exampleErrors</span><span class="p">,</span>
+                                                                                                 <span class="n">base_file_name</span><span class="p">)</span>
+
+
+    <span class="n">publish2Dplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nCopies</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">)</span>
+
+    <span class="n">publishErrorsBarPlot</span><span class="p">(</span><span class="n">errorOnExamples</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done:</span><span class="se">\t</span><span class="s2"> Biclass Label analysis figures generation&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">analyzeBiclass</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">metrics</span><span class="p">):</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Srart:</span><span class="se">\t</span><span class="s2"> Analzing all biclass resuls&quot;</span><span class="p">)</span>
+    <span class="n">biclassResults</span> <span class="o">=</span> <span class="p">[{}</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">statsIter</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">flag</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">iteridex</span> <span class="o">=</span> <span class="n">flag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">classifierPositive</span> <span class="o">=</span> <span class="n">flag</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">classifierNegative</span> <span class="o">=</span> <span class="n">flag</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">biclassResults</span><span class="p">[</span><span class="n">iteridex</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">classifierPositive</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">classifierNegative</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">benchmarkArgumentDictionary</span> <span class="ow">in</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">benchmarkArgumentDictionary</span><span class="p">[</span><span class="s2">&quot;flag&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">flag</span><span class="p">:</span>
+                <span class="n">usedBenchmarkArgumentDictionary</span> <span class="o">=</span> <span class="n">benchmarkArgumentDictionary</span>
+        <span class="n">metricsScores</span> <span class="o">=</span> <span class="n">getMetricsScoresBiclass</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="n">exampleErrors</span> <span class="o">=</span> <span class="n">getExampleErrorsBiclass</span><span class="p">(</span><span class="n">usedBenchmarkArgumentDictionary</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">],</span> <span class="n">result</span><span class="p">)</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">usedBenchmarkArgumentDictionary</span><span class="p">[</span><span class="s2">&quot;directory&quot;</span><span class="p">]</span>
+        <span class="n">databaseName</span> <span class="o">=</span> <span class="n">usedBenchmarkArgumentDictionary</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">labelsNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">usedBenchmarkArgumentDictionary</span><span class="p">[</span><span class="s2">&quot;LABELS_DICTIONARY&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                       <span class="n">usedBenchmarkArgumentDictionary</span><span class="p">[</span><span class="s2">&quot;LABELS_DICTIONARY&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">publishMetricsGraphs</span><span class="p">(</span><span class="n">metricsScores</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">databaseName</span><span class="p">,</span> <span class="n">labelsNames</span><span class="p">)</span>
+        <span class="n">publishExampleErrors</span><span class="p">(</span><span class="n">exampleErrors</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">databaseName</span><span class="p">,</span> <span class="n">labelsNames</span><span class="p">)</span>
+        <span class="n">biclassResults</span><span class="p">[</span><span class="n">iteridex</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">classifierPositive</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">classifierNegative</span><span class="p">)][</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metricsScores</span>
+        <span class="n">biclassResults</span><span class="p">[</span><span class="n">iteridex</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">classifierPositive</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">classifierNegative</span><span class="p">)][</span><span class="s2">&quot;exampleErrors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exampleErrors</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done:</span><span class="se">\t</span><span class="s2"> Analzing all biclass resuls&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">biclassResults</span>
+
+
+<div class="viewcode-block" id="genMetricsScoresMulticlass"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.genMetricsScoresMulticlass">[docs]</a><span class="k">def</span> <span class="nf">genMetricsScoresMulticlass</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">trueLabels</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">argumentsDictionaries</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used to add all the metrics scores to the multiclass result structure  for each clf and each iteration&quot;&quot;&quot;</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start:</span><span class="se">\t</span><span class="s2"> Getting multiclass scores for each metric&quot;</span><span class="p">)</span>
+    <span class="c1"># TODO : Metric score for train and test</span>
+    <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+        <span class="n">metricModule</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Metrics</span><span class="p">,</span> <span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">iterIndex</span><span class="p">,</span> <span class="n">iterResults</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">argumentsDictionary</span> <span class="ow">in</span> <span class="n">argumentsDictionaries</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">argumentsDictionary</span><span class="p">[</span><span class="s2">&quot;flag&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">iterIndex</span><span class="p">:</span>
+                    <span class="n">classificationIndices</span> <span class="o">=</span> <span class="n">argumentsDictionary</span><span class="p">[</span><span class="s2">&quot;classificationIndices&quot;</span><span class="p">]</span>
+            <span class="n">trainIndices</span><span class="p">,</span> <span class="n">testIndices</span><span class="p">,</span> <span class="n">multiclassTestIndices</span> <span class="o">=</span> <span class="n">classificationIndices</span>
+            <span class="k">for</span> <span class="n">classifierName</span><span class="p">,</span> <span class="n">resultDictionary</span> <span class="ow">in</span> <span class="n">iterResults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;metricsScores&quot;</span> <span class="ow">in</span> <span class="n">resultDictionary</span><span class="p">:</span>
+                    <span class="n">results</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">][</span><span class="n">classifierName</span><span class="p">][</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">]</span><span class="o">=</span><span class="p">{}</span>
+                <span class="n">trainScore</span> <span class="o">=</span> <span class="n">metricModule</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">trueLabels</span><span class="p">[</span><span class="n">trainIndices</span><span class="p">],</span><span class="n">resultDictionary</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">][</span><span class="n">trainIndices</span><span class="p">],</span> <span class="n">multiclass</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">testScore</span> <span class="o">=</span> <span class="n">metricModule</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">trueLabels</span><span class="p">[</span><span class="n">multiclassTestIndices</span><span class="p">],</span>
+                                               <span class="n">resultDictionary</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">][</span><span class="n">multiclassTestIndices</span><span class="p">],</span>
+                                               <span class="n">multiclass</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">][</span><span class="n">classifierName</span><span class="p">][</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">trainScore</span><span class="p">,</span> <span class="n">testScore</span><span class="p">]</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done:</span><span class="se">\t</span><span class="s2"> Getting multiclass scores for each metric&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="getErrorOnLabelsMulticlass"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.getErrorOnLabelsMulticlass">[docs]</a><span class="k">def</span> <span class="nf">getErrorOnLabelsMulticlass</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">,</span> <span class="n">multiclassLabels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used to add all the arrays showing on which example there is an error for each clf and each iteration&quot;&quot;&quot;</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start:</span><span class="se">\t</span><span class="s2"> Getting errors on each example for each classifier&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">iterIndex</span><span class="p">,</span> <span class="n">iterResults</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">classifierName</span><span class="p">,</span> <span class="n">classifierResults</span> <span class="ow">in</span> <span class="n">iterResults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">errorOnExamples</span> <span class="o">=</span> <span class="n">classifierResults</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">multiclassLabels</span>
+            <span class="n">multiclassResults</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">][</span><span class="n">classifierName</span><span class="p">][</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">errorOnExamples</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done:</span><span class="se">\t</span><span class="s2"> Getting errors on each example for each classifier&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">multiclassResults</span></div>
+
+
+<span class="k">def</span> <span class="nf">publishMulticlassScores</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">direcories</span><span class="p">,</span> <span class="n">databaseName</span><span class="p">,</span> <span class="n">minSize</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">iterIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">statsIter</span><span class="p">):</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">direcories</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start:</span><span class="se">\t</span><span class="s2"> Multiclass score graph generation for &quot;</span><span class="o">+</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">classifiersNames</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">classifierName</span> <span class="k">for</span> <span class="n">classifierName</span> <span class="ow">in</span> <span class="n">multiclassResults</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+            <span class="n">trainScores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">multiclassResults</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">][</span><span class="n">classifierName</span><span class="p">][</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
+                                <span class="k">for</span> <span class="n">classifierName</span> <span class="ow">in</span> <span class="n">classifiersNames</span><span class="p">])</span>
+            <span class="n">validationScores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">multiclassResults</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">][</span><span class="n">classifierName</span><span class="p">][</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">1</span><span class="p">]</span>
+                                <span class="k">for</span> <span class="n">classifierName</span> <span class="ow">in</span> <span class="n">classifiersNames</span><span class="p">])</span>
+
+
+            <span class="n">nbResults</span> <span class="o">=</span> <span class="n">classifiersNames</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">fileName</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">-%H_%M_%S&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">databaseName</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span>
+
+            <span class="n">plotMetricScores</span><span class="p">(</span><span class="n">trainScores</span><span class="p">,</span> <span class="n">validationScores</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">nbResults</span><span class="p">,</span> <span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot; multiclass&quot;</span><span class="p">)</span>
+
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done:</span><span class="se">\t</span><span class="s2"> Multiclass score graph generation for &quot;</span> <span class="o">+</span> <span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">publishMulticlassExmapleErrors</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">databaseName</span><span class="p">,</span> <span class="n">minSize</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">iterIndex</span><span class="p">,</span> <span class="n">multiclassResult</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">):</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">directories</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">]</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start:</span><span class="se">\t</span><span class="s2"> Multiclass Label analysis figure generation&quot;</span><span class="p">)</span>
+
+        <span class="n">base_file_name</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">-%H_%M_%S&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">databaseName</span> <span class="o">+</span><span class="s2">&quot;-&quot;</span>
+
+        <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nCopies</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">errorOnExamples</span> <span class="o">=</span> <span class="n">gen_error_data</span><span class="p">(</span><span class="n">multiclassResult</span><span class="p">,</span>
+                                                                                                     <span class="n">base_file_name</span><span class="p">)</span>
+
+        <span class="n">publish2Dplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nCopies</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">)</span>
+
+        <span class="n">publishErrorsBarPlot</span><span class="p">(</span><span class="n">errorOnExamples</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">)</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done:</span><span class="se">\t</span><span class="s2"> Multiclass Label analysis figure generation&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="analyzeMulticlass"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.analyzeMulticlass">[docs]</a><span class="k">def</span> <span class="nf">analyzeMulticlass</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbLabels</span><span class="p">,</span> <span class="n">multiclassLabels</span><span class="p">,</span>
+                      <span class="n">metrics</span><span class="p">,</span> <span class="n">classificationIndices</span><span class="p">,</span> <span class="n">directories</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used to transform one versus one results in multiclass results and to publish it&quot;&quot;&quot;</span>
+    <span class="n">multiclassResults</span> <span class="o">=</span> <span class="p">[{}</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">statsIter</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="n">flag</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">iterIndex</span> <span class="o">=</span> <span class="n">flag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">classifierPositive</span> <span class="o">=</span> <span class="n">flag</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">classifierNegative</span> <span class="o">=</span> <span class="n">flag</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">benchmarkArgumentDictionary</span> <span class="ow">in</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">benchmarkArgumentDictionary</span><span class="p">[</span><span class="s2">&quot;flag&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">flag</span><span class="p">:</span>
+                <span class="n">trainIndices</span><span class="p">,</span> <span class="n">testIndices</span><span class="p">,</span> <span class="n">testMulticlassIndices</span> <span class="o">=</span> <span class="n">benchmarkArgumentDictionary</span><span class="p">[</span><span class="s2">&quot;classificationIndices&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">classifierResult</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">classifierName</span> <span class="o">=</span> <span class="n">classifierResult</span><span class="o">.</span><span class="n">get_classifier_name</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">classifierName</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">multiclassResults</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">]:</span>
+                <span class="n">multiclassResults</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">][</span><span class="n">classifierName</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbLabels</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">exampleIndex</span> <span class="ow">in</span> <span class="n">trainIndices</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">classifierResult</span><span class="o">.</span><span class="n">full_labels_pred</span><span class="p">[</span><span class="n">exampleIndex</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">multiclassResults</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">][</span><span class="n">classifierName</span><span class="p">][</span><span class="n">exampleIndex</span><span class="p">,</span> <span class="n">classifierPositive</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">multiclassResults</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">][</span><span class="n">classifierName</span><span class="p">][</span><span class="n">exampleIndex</span><span class="p">,</span> <span class="n">classifierNegative</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">multiclassIndex</span><span class="p">,</span> <span class="n">exampleIndex</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">testMulticlassIndices</span><span class="p">):</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">classifierResult</span><span class="o">.</span><span class="n">y_test_multiclass_pred</span><span class="p">[</span><span class="n">multiclassIndex</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">multiclassResults</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">][</span><span class="n">classifierName</span><span class="p">][</span><span class="n">exampleIndex</span><span class="p">,</span> <span class="n">classifierPositive</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">multiclassResults</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">][</span><span class="n">classifierName</span><span class="p">][</span><span class="n">exampleIndex</span><span class="p">,</span> <span class="n">classifierNegative</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">for</span> <span class="n">iterIndex</span><span class="p">,</span> <span class="n">multiclassiterResult</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">multiclassiterResult</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">multiclassResults</span><span class="p">[</span><span class="n">iterIndex</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)}</span>
+
+    <span class="n">multiclassResults</span> <span class="o">=</span> <span class="n">genMetricsScoresMulticlass</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">,</span> <span class="n">multiclassLabels</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">)</span>
+    <span class="n">multiclassResults</span> <span class="o">=</span> <span class="n">getErrorOnLabelsMulticlass</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">,</span> <span class="n">multiclassLabels</span><span class="p">)</span>
+
+    <span class="n">publishMulticlassScores</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;args&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">publishMulticlassExmapleErrors</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;args&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">multiclassResults</span></div>
+
+
+<span class="k">def</span> <span class="nf">numpy_mean_and_std</span><span class="p">(</span><span class="n">scores_array</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores_array</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">scores_array</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">publishIterBiclassMetricsScores</span><span class="p">(</span><span class="n">iterResults</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">labelsDictionary</span><span class="p">,</span> <span class="n">classifiersDict</span><span class="p">,</span> <span class="n">dataBaseName</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">minSize</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">labelsCombination</span><span class="p">,</span> <span class="n">iterResult</span> <span class="ow">in</span> <span class="n">iterResults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">currentDirectory</span> <span class="o">=</span> <span class="n">directory</span><span class="o">+</span> <span class="n">labelsDictionary</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">labelsCombination</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span><span class="o">+</span><span class="s2">&quot;-vs-&quot;</span><span class="o">+</span><span class="n">labelsDictionary</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">labelsCombination</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span><span class="o">+</span><span class="s2">&quot;/&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">currentDirectory</span><span class="o">+</span><span class="s2">&quot;a&quot;</span><span class="p">)):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">currentDirectory</span><span class="o">+</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">exc</span><span class="o">.</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span><span class="p">:</span>
+                    <span class="k">raise</span>
+
+        <span class="k">for</span> <span class="n">metricName</span><span class="p">,</span> <span class="n">scores</span> <span class="ow">in</span> <span class="n">iterResult</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">trainMeans</span><span class="p">,</span> <span class="n">trainSTDs</span> <span class="o">=</span> <span class="n">numpy_mean_and_std</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s2">&quot;trainScores&quot;</span><span class="p">])</span>
+            <span class="n">testMeans</span><span class="p">,</span> <span class="n">testSTDs</span> <span class="o">=</span> <span class="n">numpy_mean_and_std</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s2">&quot;testScores&quot;</span><span class="p">])</span>
+
+            <span class="n">names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">classifiersDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+            <span class="n">fileName</span> <span class="o">=</span> <span class="n">currentDirectory</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">-%H_%M_%S&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">dataBaseName</span> <span class="o">+</span> <span class="s2">&quot;-Mean_on_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">statsIter</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_iter-&quot;</span> <span class="o">+</span> <span class="n">metricName</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span>
+            <span class="n">nbResults</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">plotMetricScores</span><span class="p">(</span><span class="n">trainScores</span><span class="o">=</span><span class="n">trainMeans</span><span class="p">,</span> <span class="n">testScores</span><span class="o">=</span><span class="n">testMeans</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">nbResults</span><span class="o">=</span><span class="n">nbResults</span><span class="p">,</span>
+                             <span class="n">metricName</span><span class="o">=</span><span class="n">metricName</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot; averaged&quot;</span><span class="p">,</span>
+                             <span class="n">train_STDs</span><span class="o">=</span><span class="n">trainSTDs</span><span class="p">,</span> <span class="n">test_STDs</span><span class="o">=</span><span class="n">testSTDs</span><span class="p">)</span>
+
+
+
+<span class="k">def</span> <span class="nf">gen_error_dat_glob</span><span class="p">(</span><span class="n">combiResults</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">):</span>
+    <span class="n">nbExamples</span> <span class="o">=</span> <span class="n">combiResults</span><span class="p">[</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">nbClassifiers</span> <span class="o">=</span> <span class="n">combiResults</span><span class="p">[</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">combiResults</span><span class="p">[</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">])</span>
+    <span class="n">errorOnExamples</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">nbClassifiers</span> <span class="o">*</span> <span class="n">statsIter</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">base_file_name</span> <span class="o">+</span> <span class="s2">&quot;clf_errors.csv&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">base_file_name</span> <span class="o">+</span> <span class="s2">&quot;example_errors.csv&quot;</span><span class="p">,</span> <span class="n">errorOnExamples</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">errorOnExamples</span>
+
+
+<span class="k">def</span> <span class="nf">publishIterBiclassExampleErrors</span><span class="p">(</span><span class="n">iterResults</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">labelsDictionary</span><span class="p">,</span> <span class="n">classifiersDict</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">minSize</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">labelsCombination</span><span class="p">,</span> <span class="n">combiResults</span> <span class="ow">in</span> <span class="n">iterResults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">base_file_name</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">+</span> <span class="n">labelsDictionary</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">labelsCombination</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span><span class="o">+</span><span class="s2">&quot;-vs-&quot;</span><span class="o">+</span>\
+                         <span class="n">labelsDictionary</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">labelsCombination</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span><span class="o">+</span><span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">-%H_%M_%S&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span>
+        <span class="n">classifiersNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">classifierName</span> <span class="k">for</span> <span class="n">classifierName</span> <span class="ow">in</span> <span class="n">classifiersDict</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start:</span><span class="se">\t</span><span class="s2"> Global biclass label analysis figure generation&quot;</span><span class="p">)</span>
+
+        <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">errorOnExamples</span> <span class="o">=</span> <span class="n">gen_error_dat_glob</span><span class="p">(</span><span class="n">combiResults</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">)</span>
+
+        <span class="n">publish2Dplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">,</span> <span class="n">statsIter</span><span class="o">=</span><span class="n">statsIter</span><span class="p">)</span>
+
+        <span class="n">publishErrorsBarPlot</span><span class="p">(</span><span class="n">errorOnExamples</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="o">*</span><span class="n">statsIter</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">)</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done:</span><span class="se">\t</span><span class="s2"> Global biclass label analysis figures generation&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">publishIterMulticlassMetricsScores</span><span class="p">(</span><span class="n">iterMulticlassResults</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">dataBaseName</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">minSize</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">metricName</span><span class="p">,</span> <span class="n">scores</span> <span class="ow">in</span> <span class="n">iterMulticlassResults</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+        <span class="n">trainMeans</span><span class="p">,</span> <span class="n">trainSTDs</span> <span class="o">=</span> <span class="n">numpy_mean_and_std</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s2">&quot;trainScores&quot;</span><span class="p">])</span>
+        <span class="n">testMeans</span><span class="p">,</span> <span class="n">testSTDs</span> <span class="o">=</span> <span class="n">numpy_mean_and_std</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s2">&quot;testScores&quot;</span><span class="p">])</span>
+
+        <span class="n">nbResults</span> <span class="o">=</span> <span class="n">classifiersNames</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">fileName</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">-%H_%M_%S&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">dataBaseName</span> <span class="o">+</span> <span class="s2">&quot;-Mean_on_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">statsIter</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_iter-&quot;</span> <span class="o">+</span> <span class="n">metricName</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span>
+
+        <span class="n">plotMetricScores</span><span class="p">(</span><span class="n">trainScores</span><span class="o">=</span><span class="n">trainMeans</span><span class="p">,</span> <span class="n">testScores</span><span class="o">=</span><span class="n">testMeans</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">classifiersNames</span><span class="p">,</span> <span class="n">nbResults</span><span class="o">=</span><span class="n">nbResults</span><span class="p">,</span>
+                         <span class="n">metricName</span><span class="o">=</span><span class="n">metricName</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot; averaged multiclass&quot;</span><span class="p">,</span>
+                         <span class="n">train_STDs</span><span class="o">=</span><span class="n">trainSTDs</span><span class="p">,</span> <span class="n">test_STDs</span><span class="o">=</span><span class="n">testSTDs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">publishIterMulticlassExampleErrors</span><span class="p">(</span><span class="n">iterMulticlassResults</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">minSize</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start:</span><span class="se">\t</span><span class="s2"> Global multiclass label analysis figures generation&quot;</span><span class="p">)</span>
+    <span class="n">base_file_name</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">-%H_%M_%S&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span>
+
+    <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">errorOnExamples</span> <span class="o">=</span> <span class="n">gen_error_dat_glob</span><span class="p">(</span><span class="n">iterMulticlassResults</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">)</span>
+
+    <span class="n">publish2Dplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">,</span> <span class="n">statsIter</span><span class="o">=</span><span class="n">statsIter</span><span class="p">)</span>
+
+    <span class="n">publishErrorsBarPlot</span><span class="p">(</span><span class="n">errorOnExamples</span><span class="p">,</span> <span class="n">nbClassifiers</span> <span class="o">*</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done:</span><span class="se">\t</span><span class="s2"> Global multiclass label analysis figures generation&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">analyzebiclassIter</span><span class="p">(</span><span class="n">biclassResults</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">labelsDictionary</span><span class="p">,</span> <span class="n">dataBaseName</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">):</span>
+    <span class="n">iterBiclassResults</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">classifiersDict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">iterIndex</span><span class="p">,</span> <span class="n">biclassResult</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">biclassResults</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">labelsComination</span><span class="p">,</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">biclassResult</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+                <span class="n">nbClassifiers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s2">&quot;classifiersNames&quot;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">classifiersDict</span><span class="p">:</span>
+                    <span class="n">classifiersDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">classifierName</span><span class="p">,</span> <span class="n">classifierIndex</span><span class="p">)</span>
+                                           <span class="k">for</span> <span class="n">classifierIndex</span><span class="p">,</span> <span class="n">classifierName</span>
+                                           <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s2">&quot;classifiersNames&quot;</span><span class="p">]))</span>
+                <span class="k">if</span> <span class="n">labelsComination</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">iterBiclassResults</span><span class="p">:</span>
+                    <span class="n">iterBiclassResults</span><span class="p">[</span><span class="n">labelsComination</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="n">iterBiclassResults</span><span class="p">[</span><span class="n">labelsComination</span><span class="p">][</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+                    <span class="n">iterBiclassResults</span><span class="p">[</span><span class="n">labelsComination</span><span class="p">][</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nbClassifiers</span><span class="p">,</span>
+                                                                                        <span class="n">nbExamples</span><span class="p">),</span>
+                                                                                       <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">iterBiclassResults</span><span class="p">[</span><span class="n">labelsComination</span><span class="p">][</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">]:</span>
+                    <span class="n">iterBiclassResults</span><span class="p">[</span><span class="n">labelsComination</span><span class="p">][</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">=</span> <span class="p">{</span><span class="s2">&quot;trainScores&quot;</span><span class="p">:</span>
+                                                                                           <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">)),</span>
+                                                                                       <span class="s2">&quot;testScores&quot;</span><span class="p">:</span>
+                                                                                           <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">))}</span>
+                <span class="k">for</span> <span class="n">classifierName</span><span class="p">,</span> <span class="n">trainScore</span><span class="p">,</span> <span class="n">testScore</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s2">&quot;classifiersNames&quot;</span><span class="p">],</span>
+                                                                 <span class="n">results</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s2">&quot;trainScores&quot;</span><span class="p">],</span>
+                                                                 <span class="n">results</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s2">&quot;testScores&quot;</span><span class="p">],</span>
+                                                                 <span class="p">):</span>
+                    <span class="n">iterBiclassResults</span><span class="p">[</span><span class="n">labelsComination</span><span class="p">][</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s2">&quot;trainScores&quot;</span><span class="p">][</span><span class="n">classifiersDict</span><span class="p">[</span><span class="n">classifierName</span><span class="p">],</span> <span class="n">iterIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">trainScore</span>
+                    <span class="n">iterBiclassResults</span><span class="p">[</span><span class="n">labelsComination</span><span class="p">][</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s2">&quot;testScores&quot;</span><span class="p">][</span><span class="n">classifiersDict</span><span class="p">[</span><span class="n">classifierName</span><span class="p">],</span> <span class="n">iterIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">testScore</span>
+            <span class="k">for</span> <span class="n">classifierName</span><span class="p">,</span> <span class="n">errorOnExample</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;exampleErrors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">iterBiclassResults</span><span class="p">[</span><span class="n">labelsComination</span><span class="p">][</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">][</span><span class="n">classifiersDict</span><span class="p">[</span><span class="n">classifierName</span><span class="p">],</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">errorOnExample</span><span class="p">[</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">]</span>
+    <span class="n">publishIterBiclassMetricsScores</span><span class="p">(</span><span class="n">iterBiclassResults</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">labelsDictionary</span><span class="p">,</span> <span class="n">classifiersDict</span><span class="p">,</span> <span class="n">dataBaseName</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">)</span>
+    <span class="n">publishIterBiclassExampleErrors</span><span class="p">(</span><span class="n">iterBiclassResults</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">labelsDictionary</span><span class="p">,</span> <span class="n">classifiersDict</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="analyzeIterMulticlass"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.analyzeIterMulticlass">[docs]</a><span class="k">def</span> <span class="nf">analyzeIterMulticlass</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">dataBaseName</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used to mean the multiclass results on the iterations executed with different random states&quot;&quot;&quot;</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start:</span><span class="se">\t</span><span class="s2"> Getting mean results for multiclass classification&quot;</span><span class="p">)</span>
+    <span class="n">iterMulticlassResults</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">nbClassifiers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">iterMulticlassResults</span><span class="p">[</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nbClassifiers</span><span class="p">,</span><span class="n">nbExamples</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">iterMulticlassResults</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">classifiersNames</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">iterIndex</span><span class="p">,</span> <span class="n">multiclassResult</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">classifierName</span><span class="p">,</span> <span class="n">classifierResults</span> <span class="ow">in</span> <span class="n">multiclassResult</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">classifierName</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">classifiersNames</span><span class="p">:</span>
+                <span class="n">classifiersNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">classifierName</span><span class="p">)</span>
+            <span class="n">classifierIndex</span> <span class="o">=</span> <span class="n">classifiersNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">classifierName</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">iterMulticlassResults</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">]:</span>
+                    <span class="n">iterMulticlassResults</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;trainScores&quot;</span><span class="p">:</span>
+                                                                             <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">)),</span>
+                                                                         <span class="s2">&quot;testScores&quot;</span><span class="p">:</span>
+                                                                             <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nbClassifiers</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">))}</span>
+                <span class="n">iterMulticlassResults</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s2">&quot;trainScores&quot;</span><span class="p">][</span><span class="n">classifierIndex</span><span class="p">,</span> <span class="n">iterIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">classifierResults</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">iterMulticlassResults</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s2">&quot;testScores&quot;</span><span class="p">][</span><span class="n">classifierIndex</span><span class="p">,</span> <span class="n">iterIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">classifierResults</span><span class="p">[</span><span class="s2">&quot;metricsScores&quot;</span><span class="p">][</span><span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">iterMulticlassResults</span><span class="p">[</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">][</span><span class="n">classifierIndex</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">classifierResults</span><span class="p">[</span><span class="s2">&quot;errorOnExamples&quot;</span><span class="p">]</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start:</span><span class="se">\t</span><span class="s2"> Getting mean results for multiclass classification&quot;</span><span class="p">)</span>
+
+    <span class="n">classifiersNames</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">classifiersNames</span><span class="p">)</span>
+    <span class="n">publishIterMulticlassMetricsScores</span><span class="p">(</span><span class="n">iterMulticlassResults</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">dataBaseName</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">)</span>
+    <span class="n">publishIterMulticlassExampleErrors</span><span class="p">(</span><span class="n">iterMulticlassResults</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">classifiersNames</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="getResults"><a class="viewcode-back" href="../../../analyzeresult.html#multiview_platform.MonoMultiViewClassifiers.ResultAnalysis.getResults">[docs]</a><span class="k">def</span> <span class="nf">getResults</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">nbMulticlass</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">,</span> <span class="n">multiclassLabels</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">classificationIndices</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">labelsDictionary</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbLabels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used to analyze the results of the previous benchmarks&quot;&quot;&quot;</span>
+    <span class="n">dataBaseName</span> <span class="o">=</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;args&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">if</span> <span class="n">statsIter</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">nbMulticlass</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">biclassResults</span> <span class="o">=</span> <span class="n">analyzeBiclass</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+            <span class="n">multiclassResults</span> <span class="o">=</span> <span class="n">analyzeMulticlass</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbLabels</span><span class="p">,</span> <span class="n">multiclassLabels</span><span class="p">,</span>
+                                                  <span class="n">metrics</span><span class="p">,</span> <span class="n">classificationIndices</span><span class="p">,</span> <span class="n">directories</span><span class="p">)</span>
+            <span class="n">analyzebiclassIter</span><span class="p">(</span><span class="n">biclassResults</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">labelsDictionary</span><span class="p">,</span> <span class="n">dataBaseName</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">)</span>
+            <span class="n">analyzeIterMulticlass</span><span class="p">(</span><span class="n">multiclassResults</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">dataBaseName</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">biclassResults</span> <span class="o">=</span> <span class="n">analyzeBiclass</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+            <span class="n">analyzebiclassIter</span><span class="p">(</span><span class="n">biclassResults</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">labelsDictionary</span><span class="p">,</span> <span class="n">dataBaseName</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">nbMulticlass</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">biclassResults</span> <span class="o">=</span> <span class="n">analyzeBiclass</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+            <span class="n">multiclassResults</span> <span class="o">=</span> <span class="n">analyzeMulticlass</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">,</span> <span class="n">nbExamples</span><span class="p">,</span> <span class="n">nbLabels</span><span class="p">,</span> <span class="n">multiclassLabels</span><span class="p">,</span>
+                                                  <span class="n">metrics</span><span class="p">,</span> <span class="n">classificationIndices</span><span class="p">,</span> <span class="n">directories</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">biclassResults</span> <span class="o">=</span> <span class="n">analyzeBiclass</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">benchmarkArgumentDictionaries</span><span class="p">,</span> <span class="n">statsIter</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span></div>
+
+
+
+
+
+<span class="c1"># def genFusionName(type_, a, b, c):</span>
+<span class="c1">#     &quot;&quot;&quot;Used to generate fusion classifiers names&quot;&quot;&quot;</span>
+<span class="c1">#     if type_ == &quot;Fusion&quot; and a[&quot;fusionType&quot;] != &quot;EarlyFusion&quot;:</span>
+<span class="c1">#         return &quot;Late-&quot; + str(a[&quot;fusionMethod&quot;])</span>
+<span class="c1">#     elif type_ == &quot;Fusion&quot; and a[&quot;fusionType&quot;] != &quot;LateFusion&quot;:</span>
+<span class="c1">#         return &quot;Early-&quot; + a[&quot;fusionMethod&quot;] + &quot;-&quot; + a[&quot;classifiersNames&quot;]</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def genNamesFromRes(mono, multi):</span>
+<span class="c1">#     &quot;&quot;&quot;Used to generate classifiers names list (inthe right order) from mono- and multi-view preds&quot;&quot;&quot;</span>
+<span class="c1">#     names = [res[1][0] + &quot;-&quot; + res[1][1][-1] for res in mono]</span>
+<span class="c1">#     names += [type_ if type_ != &quot;Fusion&quot; else genFusionName(type_, a, b, c) for type_, a, b, c in multi]</span>
+<span class="c1">#     return names</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def resultAnalysis(benchmark, results, name, times, metrics, directory, minSize=10):</span>
+<span class="c1">#     &quot;&quot;&quot;Used to generate bar graphs of all the classifiers scores for each metric &quot;&quot;&quot;</span>
+<span class="c1">#     mono, multi = results</span>
+<span class="c1">#     for metric in metrics:</span>
+<span class="c1">#         logging.debug(&quot;Start:\t Score graph generation for &quot;+metric[0])</span>
+<span class="c1">#         names = genNamesFromRes(mono, multi)</span>
+<span class="c1">#         nbResults = len(mono) + len(multi)</span>
+<span class="c1">#         validationScores = [float(res[1][2][metric[0]][1]) for res in mono]</span>
+<span class="c1">#         validationScores += [float(scores[metric[0]][1]) for a, b, scores, c in multi]</span>
+<span class="c1">#         trainScores = [float(res[1][2][metric[0]][0]) for res in mono]</span>
+<span class="c1">#         trainScores += [float(scores[metric[0]][0]) for a, b, scores, c in multi]</span>
+<span class="c1">#</span>
+<span class="c1">#         validationScores = np.array(validationScores)</span>
+<span class="c1">#         trainScores = np.array(trainScores)</span>
+<span class="c1">#         names = np.array(names)</span>
+<span class="c1">#         sorted_indices = np.argsort(validationScores)</span>
+<span class="c1">#         validationScores = validationScores[sorted_indices]</span>
+<span class="c1">#         trainScores = trainScores[sorted_indices]</span>
+<span class="c1">#         names = names[sorted_indices]</span>
+<span class="c1">#</span>
+<span class="c1">#         size = nbResults</span>
+<span class="c1">#         if nbResults &lt; minSize:</span>
+<span class="c1">#             size = minSize</span>
+<span class="c1">#         figKW = {&quot;figsize&quot; : (size, 3.0/4*size+2.0)}</span>
+<span class="c1">#         f, ax = plt.subplots(nrows=1, ncols=1, **figKW)</span>
+<span class="c1">#         barWidth= 0.35</span>
+<span class="c1">#         ax.set_title(metric[0] + &quot;\n on validation set for each classifier&quot;)</span>
+<span class="c1">#         rects = ax.bar(range(nbResults), validationScores, barWidth, color=&quot;r&quot;, )</span>
+<span class="c1">#         rect2 = ax.bar(np.arange(nbResults) + barWidth, trainScores, barWidth, color=&quot;0.7&quot;, )</span>
+<span class="c1">#         autolabel(rects, ax)</span>
+<span class="c1">#         autolabel(rect2, ax)</span>
+<span class="c1">#         ax.legend((rects[0], rect2[0]), (&#39;Test&#39;, &#39;Train&#39;))</span>
+<span class="c1">#         ax.set_ylim(-0.1, 1.1)</span>
+<span class="c1">#         ax.set_xticks(np.arange(nbResults) + barWidth)</span>
+<span class="c1">#         ax.set_xticklabels(names, rotation=&quot;vertical&quot;)</span>
+<span class="c1">#         plt.tight_layout()</span>
+<span class="c1">#         f.savefig(directory + time.strftime(&quot;%Y%m%d-%H%M%S&quot;) + &quot;-&quot; + name + &quot;-&quot; + metric[0] + &quot;.png&quot;)</span>
+<span class="c1">#         plt.close()</span>
+<span class="c1">#         logging.debug(&quot;Done:\t Score graph generation for &quot; + metric[0])</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def analyzeLabels(labelsArrays, realLabels, results, directory, minSize = 10):</span>
+<span class="c1">#     &quot;&quot;&quot;Used to generate a graph showing errors on each example depending on classifier&quot;&quot;&quot;</span>
+<span class="c1">#     logging.debug(&quot;Start:\t Label analysis figure generation&quot;)</span>
+<span class="c1">#     mono, multi = results</span>
+<span class="c1">#     classifiersNames = genNamesFromRes(mono, multi)</span>
+<span class="c1">#     nbClassifiers = len(classifiersNames)</span>
+<span class="c1">#     nbExamples = realLabels.shape[0]</span>
+<span class="c1">#     nbIter = 2</span>
+<span class="c1">#     data = np.zeros((nbExamples, nbClassifiers * nbIter))</span>
+<span class="c1">#     tempData = np.array([labelsArray == realLabels for labelsArray in np.transpose(labelsArrays)]).astype(int)</span>
+<span class="c1">#     for classifierIndex in range(nbClassifiers):</span>
+<span class="c1">#         for iterIndex in range(nbIter):</span>
+<span class="c1">#             data[:, classifierIndex * nbIter + iterIndex] = tempData[classifierIndex, :]</span>
+<span class="c1">#     figWidth = max(nbClassifiers/2, minSize)</span>
+<span class="c1">#     figHeight = max(nbExamples/20, minSize)</span>
+<span class="c1">#     figKW = {&quot;figsize&quot;:(figWidth, figHeight)}</span>
+<span class="c1">#     fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)</span>
+<span class="c1">#     cmap = mpl.colors.ListedColormap([&#39;red&#39;, &#39;green&#39;])</span>
+<span class="c1">#     bounds = [-0.5, 0.5, 1.5]</span>
+<span class="c1">#     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)</span>
+<span class="c1">#</span>
+<span class="c1">#     cax = plt.imshow(data, interpolation=&#39;none&#39;, cmap=cmap, norm=norm, aspect=&#39;auto&#39;)</span>
+<span class="c1">#     plt.title(&#39;Errors depending on the classifier&#39;)</span>
+<span class="c1">#     ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)</span>
+<span class="c1">#     labels = classifiersNames</span>
+<span class="c1">#     plt.xticks(ticks, labels, rotation=&quot;vertical&quot;)</span>
+<span class="c1">#     cbar = fig.colorbar(cax, ticks=[0, 1])</span>
+<span class="c1">#     cbar.ax.set_yticklabels([&#39;Wrong&#39;, &#39; Right&#39;])</span>
+<span class="c1">#     fig.tight_layout()</span>
+<span class="c1">#     fig.savefig(directory + time.strftime(&quot;%Y%m%d-%H%M%S&quot;) + &quot;-error_analysis.png&quot;)</span>
+<span class="c1">#     plt.close()</span>
+<span class="c1">#     logging.debug(&quot;Done:\t Label analysis figure generation&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#     logging.debug(&quot;Start:\t Error by example figure generation&quot;)</span>
+<span class="c1">#     errorOnExamples = -1*np.sum(data, axis=1)/nbIter+nbClassifiers</span>
+<span class="c1">#     np.savetxt(directory + time.strftime(&quot;%Y%m%d-%H%M%S&quot;) + &quot;-clf_errors.csv&quot;, data, delimiter=&quot;,&quot;)</span>
+<span class="c1">#     np.savetxt(directory + time.strftime(&quot;%Y%m%d-%H%M%S&quot;) + &quot;-example_errors.csv&quot;, errorOnExamples, delimiter=&quot;,&quot;)</span>
+<span class="c1">#     fig, ax = plt.subplots()</span>
+<span class="c1">#     x = np.arange(nbExamples)</span>
+<span class="c1">#     plt.bar(x, errorOnExamples)</span>
+<span class="c1">#     plt.ylim([0,nbClassifiers])</span>
+<span class="c1">#     plt.title(&quot;Number of classifiers that failed to classify each example&quot;)</span>
+<span class="c1">#     fig.savefig(directory + time.strftime(&quot;%Y%m%d-%H%M%S&quot;) + &quot;-example_errors.png&quot;)</span>
+<span class="c1">#     plt.close()</span>
+<span class="c1">#     logging.debug(&quot;Done:\t Error by example figure generation&quot;)</span>
+<span class="c1">#     return data</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def analyzeIterLabels(labelsAnalysisList, directory, classifiersNames, minSize=10):</span>
+<span class="c1">#     &quot;&quot;&quot;Used to generate a graph showing errors on each example depending on classifierusing a score</span>
+<span class="c1">#      if multiple iterations&quot;&quot;&quot;</span>
+<span class="c1">#     logging.debug(&quot;Start:\t Global label analysis figure generation&quot;)</span>
+<span class="c1">#     nbExamples = labelsAnalysisList[0].shape[0]</span>
+<span class="c1">#     nbClassifiers = len(classifiersNames)</span>
+<span class="c1">#     nbIter = 2</span>
+<span class="c1">#</span>
+<span class="c1">#     figWidth = max(nbClassifiers / 2, minSize)</span>
+<span class="c1">#     figHeight = max(nbExamples / 20, minSize)</span>
+<span class="c1">#     figKW = {&quot;figsize&quot;: (figWidth, figHeight)}</span>
+<span class="c1">#     fig, ax = plt.subplots(nrows=1, ncols=1, **figKW)</span>
+<span class="c1">#     data = sum(labelsAnalysisList)</span>
+<span class="c1">#     cax = plt.imshow(-data, interpolation=&#39;none&#39;, cmap=&quot;Greys&quot;, aspect=&#39;auto&#39;)</span>
+<span class="c1">#     plt.title(&#39;Errors depending on the classifier&#39;)</span>
+<span class="c1">#     ticks = np.arange(nbIter/2-0.5, nbClassifiers * nbIter, nbIter)</span>
+<span class="c1">#     plt.xticks(ticks, classifiersNames, rotation=&quot;vertical&quot;)</span>
+<span class="c1">#     cbar = fig.colorbar(cax, ticks=[0, -len(labelsAnalysisList)])</span>
+<span class="c1">#     cbar.ax.set_yticklabels([&#39;Always Wrong&#39;, &#39;Always Right&#39;])</span>
+<span class="c1">#     fig.tight_layout()</span>
+<span class="c1">#     fig.savefig(directory + time.strftime(&quot;%Y%m%d-%H%M%S&quot;) + &quot;-error_analysis.png&quot;)</span>
+<span class="c1">#     plt.close()</span>
+<span class="c1">#     logging.debug(&quot;Done:\t Global label analysis figure generation&quot;)</span>
+<span class="c1">#     logging.debug(&quot;Start:\t Global error by example figure generation&quot;)</span>
+<span class="c1">#     errorOnExamples = -1 * np.sum(data, axis=1) / nbIter + (nbClassifiers*len(labelsAnalysisList))</span>
+<span class="c1">#     np.savetxt(directory + time.strftime(&quot;%Y%m%d-%H%M%S&quot;) + &quot;-clf_errors.csv&quot;, data, delimiter=&quot;,&quot;)</span>
+<span class="c1">#     np.savetxt(directory + time.strftime(&quot;%Y%m%d-%H%M%S&quot;) + &quot;-example_errors.csv&quot;, errorOnExamples, delimiter=&quot;,&quot;)</span>
+<span class="c1">#     fig, ax = plt.subplots()</span>
+<span class="c1">#     x = np.arange(nbExamples)</span>
+<span class="c1">#     plt.bar(x, errorOnExamples)</span>
+<span class="c1">#     plt.ylim([0,nbClassifiers*len(labelsAnalysisList)])</span>
+<span class="c1">#     plt.title(&quot;Number of classifiers that failed to classify each example&quot;)</span>
+<span class="c1">#     fig.savefig(directory + time.strftime(&quot;%Y%m%d-%H%M%S&quot;) + &quot;-example_errors.png&quot;)</span>
+<span class="c1">#     plt.close()</span>
+<span class="c1">#     logging.debug(&quot;Done:\t Global error by example figure generation&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def genFig(iterResults, metric, nbResults, names, nbMono, minSize=10):</span>
+<span class="c1">#     &quot;&quot;&quot;Used to generate the bar graph representing the mean scores of each classifiers if multiple iteration</span>
+<span class="c1">#      with different random states&quot;&quot;&quot;</span>
+<span class="c1">#     nbIter = len(iterResults)</span>
+<span class="c1">#     validationScores = np.zeros((nbIter, nbResults))</span>
+<span class="c1">#     trainScores = np.zeros((nbIter, nbResults))</span>
+<span class="c1">#     for iterIndex, iterResult in enumerate(iterResults):</span>
+<span class="c1">#         mono, multi = iterResult</span>
+<span class="c1">#         validationScores[iterIndex, :nbMono] = np.array([float(res[1][2][metric[0]][1]) for res in mono])</span>
+<span class="c1">#         validationScores[iterIndex, nbMono:] = np.array([float(scores[metric[0]][1]) for a, b, scores, c in multi])</span>
+<span class="c1">#         trainScores[iterIndex, :nbMono] = np.array([float(res[1][2][metric[0]][0]) for res in mono])</span>
+<span class="c1">#         trainScores[iterIndex, nbMono:] = np.array([float(scores[metric[0]][0]) for a, b, scores, c in multi])</span>
+<span class="c1">#</span>
+<span class="c1">#     validationSTDs = np.std(validationScores, axis=0)</span>
+<span class="c1">#     trainSTDs = np.std(trainScores, axis=0)</span>
+<span class="c1">#     validationMeans = np.mean(validationScores, axis=0)</span>
+<span class="c1">#     trainMeans = np.mean(trainScores, axis=0)</span>
+<span class="c1">#     size=nbResults</span>
+<span class="c1">#     if nbResults&lt;minSize:</span>
+<span class="c1">#         size=minSize</span>
+<span class="c1">#     figKW = {&quot;figsize&quot; : (size, 3.0/4*size+2.0)}</span>
+<span class="c1">#     f, ax = plt.subplots(nrows=1, ncols=1, **figKW)</span>
+<span class="c1">#     barWidth = 0.35  # the width of the bars</span>
+<span class="c1">#     sorted_indices = np.argsort(validationMeans)</span>
+<span class="c1">#     validationMeans = validationMeans[sorted_indices]</span>
+<span class="c1">#     validationSTDs = validationSTDs[sorted_indices]</span>
+<span class="c1">#     trainSTDs = trainSTDs[sorted_indices]</span>
+<span class="c1">#     trainMeans = trainMeans[sorted_indices]</span>
+<span class="c1">#     names = np.array(names)[sorted_indices]</span>
+<span class="c1">#</span>
+<span class="c1">#     ax.set_title(metric[0] + &quot; for each classifier&quot;)</span>
+<span class="c1">#     rects = ax.bar(range(nbResults), validationMeans, barWidth, color=&quot;r&quot;, yerr=validationSTDs)</span>
+<span class="c1">#     rect2 = ax.bar(np.arange(nbResults) + barWidth, trainMeans, barWidth, color=&quot;0.7&quot;, yerr=trainSTDs)</span>
+<span class="c1">#     autolabel(rects, ax)</span>
+<span class="c1">#     autolabel(rect2, ax)</span>
+<span class="c1">#     ax.set_ylim(-0.1, 1.1)</span>
+<span class="c1">#     ax.legend((rects[0], rect2[0]), (&#39;Test&#39;, &#39;Train&#39;))</span>
+<span class="c1">#     ax.set_xticks(np.arange(nbResults) + barWidth)</span>
+<span class="c1">#     ax.set_xticklabels(names, rotation=&quot;vertical&quot;)</span>
+<span class="c1">#     f.tight_layout()</span>
+<span class="c1">#</span>
+<span class="c1">#     return f</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def analyzeIterResults(iterResults, name, metrics, directory):</span>
+<span class="c1">#     nbResults = len(iterResults[0][0]) + len(iterResults[0][1])</span>
+<span class="c1">#     nbMono = len(iterResults[0][0])</span>
+<span class="c1">#     nbIter = len(iterResults)</span>
+<span class="c1">#     names = genNamesFromRes(iterResults[0][0], iterResults[0][1])</span>
+<span class="c1">#     for metric in metrics:</span>
+<span class="c1">#         logging.debug(&quot;Start:\t Global score graph generation for &quot; + metric[0])</span>
+<span class="c1">#         figure = genFig(iterResults, metric, nbResults, names, nbMono)</span>
+<span class="c1">#         figure.savefig(directory + time.strftime(&quot;%Y%m%d-%H%M%S&quot;) + &quot;-&quot; + name + &quot;-Mean_on_&quot;</span>
+<span class="c1">#                        + str(nbIter) + &quot;_iter-&quot; + metric[0] + &quot;.png&quot;)</span>
+<span class="c1">#         logging.debug(&quot;Done:\t Global score graph generation for &quot; + metric[0])</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Baptiste BAUVIN.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

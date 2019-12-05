@@ -1,0 +1,978 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>multiview_platform.mono_multi_view_classifiers.monoview_classifiers package &#8212; MultiviewPlatform 0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="multiview_platform.mono_multi_view_classifiers.multiview package" href="multiview_platform.mono_multi_view_classifiers.multiview.html" />
+    <link rel="prev" title="multiview_platform.mono_multi_view_classifiers.monoview.additions package" href="multiview_platform.mono_multi_view_classifiers.monoview.additions.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.mono_multi_view_classifiers.multiview.html" title="multiview_platform.mono_multi_view_classifiers.multiview package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.mono_multi_view_classifiers.monoview.additions.html" title="multiview_platform.mono_multi_view_classifiers.monoview.additions package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">MultiviewPlatform 0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="multiview_platform.html" >multiview_platform package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="multiview_platform.mono_multi_view_classifiers.html" accesskey="U">multiview_platform.mono_multi_view_classifiers package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-package">
+<h1>multiview_platform.mono_multi_view_classifiers.monoview_classifiers package<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost">
+<span id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-module"></span><h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost">
+<em class="property">class </em><code class="descname">Adaboost</code><span class="sig-paren">(</span><em>random_state=None</em>, <em>n_estimators=50</em>, <em>base_estimator=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.weight_boosting.AdaBoostClassifier</span></code>, <a class="reference internal" href="multiview_platform.mono_multi_view_classifiers.monoview.html#multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier" title="multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier</span></code></a></p>
+<p>This class implement a Classifier with adaboost algorithm inherit from sklearn
+AdaBoostClassifier</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>random_state</strong> (<em>int seed</em><em>, </em><em>RandomState instance</em><em>, or </em><em>None</em><em> (</em><em>default=None</em><em>)</em>) – The seed of the pseudo random number generator to use when
+shuffling the data.</li>
+<li><strong>n_estimators</strong> (<em>int number of estimators</em>) – </li>
+<li><strong>base_estimator</strong> – </li>
+<li><strong>kwargs</strong> (<em>others arguments</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.param_name">
+<code class="descname">param_name</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.param_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.classed_params">
+<code class="descname">classed_params</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.classed_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.distribs">
+<code class="descname">distribs</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.distribs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.weird_strings">
+<code class="descname">weird_strings</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.weird_strings" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.plotted_metric">
+<code class="descname">plotted_metric</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.plotted_metric" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">selection of metric to plot</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.plotted_metric_name">
+<code class="descname">plotted_metric_name</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.plotted_metric_name" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">name of the metric to plot</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.step_predictions">
+<code class="descname">step_predictions</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.step_predictions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit adaboost model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>{array-like</em><em>, </em><em>sparse matrix}</em><em>, </em><em>shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – </li>
+<li><strong>y</strong> (<em>{ array-like</em><em>, </em><em>shape</em><em> (</em><em>n_samples</em><em>,</em><em>)</em>) – Target values class labels in classification</li>
+<li><strong>sample_weight</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> – Returns self.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.getInterpret">
+<code class="descname">getInterpret</code><span class="sig-paren">(</span><em>directory</em>, <em>y_test</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.getInterpret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.Adaboost.predict" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>{array-like</em><em>, </em><em>sparse matrix}</em><em>, </em><em>shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Training vectors, where n_samples is the number of samples
+and n_features is the number of features.
+For kernel=”precomputed”, the expected shape of X is
+(n_samples, n_samples).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>predictions</strong> – The estimated labels.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">ndarray of shape (n_samples, )</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.paramsToSet">
+<code class="descname">paramsToSet</code><span class="sig-paren">(</span><em>nIter</em>, <em>random_state</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost.paramsToSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for weighted linear early fusion to generate random search sets</p>
+</dd></dl>
+
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-graal-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost_graal module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-graal-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-pregen-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost_pregen module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-pregen-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-pregen10-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost_pregen10 module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-pregen10-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-pregen-tree-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost_pregen_tree module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-pregen-tree-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-c-greed-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.c_greed module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-c-greed-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cb-boost-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cb_boost module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cb-boost-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cg-desc-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cg_desc module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cg-desc-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cg-desc10-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cg_desc10 module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cg-desc10-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cg-desc-tree-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cg_desc_tree module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cg-desc-tree-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boost-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cq_boost module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boost-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boosttree-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cq_boosttree module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boosttree-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boostv2-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cq_boostv2 module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boostv2-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boostv21-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cq_boostv21 module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boostv21-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree">
+<span id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-decision-tree-module"></span><h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree.DecisionTree">
+<em class="property">class </em><code class="descname">DecisionTree</code><span class="sig-paren">(</span><em>random_state=None</em>, <em>max_depth=None</em>, <em>criterion='gini'</em>, <em>splitter='best'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree.DecisionTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.tree.tree.DecisionTreeClassifier</span></code>, <a class="reference internal" href="multiview_platform.mono_multi_view_classifiers.monoview.html#multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier" title="multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier</span></code></a></p>
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree.DecisionTree.getInterpret">
+<code class="descname">getInterpret</code><span class="sig-paren">(</span><em>directory</em>, <em>y_test</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree.DecisionTree.getInterpret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree.paramsToSet">
+<code class="descname">paramsToSet</code><span class="sig-paren">(</span><em>nIter</em>, <em>randomState</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree.paramsToSet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-decision-tree-pregen-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree_pregen module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-decision-tree-pregen-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting">
+<span id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-gradient-boosting-module"></span><h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.CustomDecisionTree">
+<em class="property">class </em><code class="descname">CustomDecisionTree</code><span class="sig-paren">(</span><em>criterion='gini'</em>, <em>splitter='best'</em>, <em>max_depth=None</em>, <em>min_samples_split=2</em>, <em>min_samples_leaf=1</em>, <em>min_weight_fraction_leaf=0.0</em>, <em>max_features=None</em>, <em>random_state=None</em>, <em>max_leaf_nodes=None</em>, <em>min_impurity_decrease=0.0</em>, <em>min_impurity_split=None</em>, <em>class_weight=None</em>, <em>presort=False</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.CustomDecisionTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.tree.tree.DecisionTreeClassifier</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.CustomDecisionTree.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em>, <em>check_input=True</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.CustomDecisionTree.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict class or regression value for X.</p>
+<p>For a classification model, the predicted class for each sample in X is
+returned. For a regression model, the predicted value based on X is
+returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>array-like</em><em> or </em><em>sparse matrix of shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em>]</em>) – The input samples. Internally, it will be converted to
+<code class="docutils literal notranslate"><span class="pre">dtype=np.float32</span></code> and if a sparse matrix is provided
+to a sparse <code class="docutils literal notranslate"><span class="pre">csr_matrix</span></code>.</li>
+<li><strong>check_input</strong> (<em>boolean</em><em>, </em><em>(</em><em>default=True</em><em>)</em>) – Allow to bypass several input checking.
+Don’t use this parameter unless you know what you do.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>y</strong> – The predicted classes, or the predict values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">array of shape = [n_samples] or [n_samples, n_outputs]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.GradientBoosting">
+<em class="property">class </em><code class="descname">GradientBoosting</code><span class="sig-paren">(</span><em>random_state=None</em>, <em>loss='exponential'</em>, <em>max_depth=1.0</em>, <em>n_estimators=100</em>, <em>init=CustomDecisionTree(class_weight=None</em>, <em>criterion='gini'</em>, <em>max_depth=1</em>, <em>max_features=None</em>, <em>max_leaf_nodes=None</em>, <em>min_impurity_decrease=0.0</em>, <em>min_impurity_split=None</em>, <em>min_samples_leaf=1</em>, <em>min_samples_split=2</em>, <em>min_weight_fraction_leaf=0.0</em>, <em>presort=False</em>, <em>random_state=None</em>, <em>splitter='best')</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.GradientBoosting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.gradient_boosting.GradientBoostingClassifier</span></code>, <a class="reference internal" href="multiview_platform.mono_multi_view_classifiers.monoview.html#multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier" title="multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier</span></code></a></p>
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.GradientBoosting.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight=None</em>, <em>monitor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.GradientBoosting.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the gradient boosting model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>array-like</em><em>, </em><em>shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em>]</em>) – Training vectors, where n_samples is the number of samples
+and n_features is the number of features.</li>
+<li><strong>y</strong> (<em>array-like</em><em>, </em><em>shape =</em><em> [</em><em>n_samples</em><em>]</em>) – Target values (integers in classification, real numbers in
+regression)
+For classification, labels must correspond to classes.</li>
+<li><strong>sample_weight</strong> (<em>array-like</em><em>, </em><em>shape =</em><em> [</em><em>n_samples</em><em>] or </em><em>None</em>) – Sample weights. If None, then samples are equally weighted. Splits
+that would create child nodes with net zero or negative weight are
+ignored while searching for a split in each node. In the case of
+classification, splits are also ignored if they would result in any
+single class carrying a negative weight in either child node.</li>
+<li><strong>monitor</strong> (<em>callable</em><em>, </em><em>optional</em>) – The monitor is called after each iteration with the current
+iteration, a reference to the estimator and the local variables of
+<code class="docutils literal notranslate"><span class="pre">_fit_stages</span></code> as keyword arguments <code class="docutils literal notranslate"><span class="pre">callable(i,</span> <span class="pre">self,</span>
+<span class="pre">locals())</span></code>. If the callable returns <code class="docutils literal notranslate"><span class="pre">True</span></code> the fitting procedure
+is stopped. The monitor can be used for various things such as
+computing held-out estimates, early stopping, model introspect, and
+snapshoting.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>self</strong> – Returns self.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.GradientBoosting.getInterpret">
+<code class="descname">getInterpret</code><span class="sig-paren">(</span><em>directory</em>, <em>y_test</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.GradientBoosting.getInterpret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.GradientBoosting.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.GradientBoosting.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict class for X.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>array-like</em><em> or </em><em>sparse matrix</em><em>, </em><em>shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em>]</em>) – The input samples. Internally, it will be converted to
+<code class="docutils literal notranslate"><span class="pre">dtype=np.float32</span></code> and if a sparse matrix is provided
+to a sparse <code class="docutils literal notranslate"><span class="pre">csr_matrix</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>y</strong> – The predicted values.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">array of shape = [n_samples]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.paramsToSet">
+<code class="descname">paramsToSet</code><span class="sig-paren">(</span><em>nIter</em>, <em>randomState</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting.paramsToSet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.knn">
+<span id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-knn-module"></span><h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.knn module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.knn" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.knn.KNN">
+<em class="property">class </em><code class="descname">KNN</code><span class="sig-paren">(</span><em>random_state=None</em>, <em>n_neighbors=5</em>, <em>weights='uniform'</em>, <em>algorithm='auto'</em>, <em>p=2</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.knn.KNN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.neighbors.classification.KNeighborsClassifier</span></code>, <a class="reference internal" href="multiview_platform.mono_multi_view_classifiers.monoview.html#multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier" title="multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier</span></code></a></p>
+<p>Implement extention of KNeighborsClassifier of sklearn
+for the usage of the multiview_platform.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>random_state</strong> – </li>
+<li><strong>n_neighbors</strong> – </li>
+<li><strong>weights</strong> – </li>
+<li><strong>algorithm</strong> – </li>
+<li><strong>p</strong> – </li>
+<li><strong>kwargs</strong> – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.knn.KNN.getInterpret">
+<code class="descname">getInterpret</code><span class="sig-paren">(</span><em>directory</em>, <em>y_test</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.knn.KNN.getInterpret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.knn.paramsToSet">
+<code class="descname">paramsToSet</code><span class="sig-paren">(</span><em>nIter</em>, <em>random_state</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.knn.paramsToSet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso">
+<span id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-lasso-module"></span><h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso">
+<em class="property">class </em><code class="descname">Lasso</code><span class="sig-paren">(</span><em>random_state=None</em>, <em>alpha=1.0</em>, <em>max_iter=10</em>, <em>warm_start=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.coordinate_descent.Lasso</span></code>, <a class="reference internal" href="multiview_platform.mono_multi_view_classifiers.monoview.html#multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier" title="multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>random_state</strong> – </li>
+<li><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – Constant that multiplies the L1 term. Defaults to 1.0.
+<code class="docutils literal notranslate"><span class="pre">alpha</span> <span class="pre">=</span> <span class="pre">0</span></code> is equivalent to an ordinary least square, solved
+by the <code class="xref py py-class docutils literal notranslate"><span class="pre">LinearRegression</span></code> object. For numerical
+reasons, using <code class="docutils literal notranslate"><span class="pre">alpha</span> <span class="pre">=</span> <span class="pre">0</span></code> is with the Lasso object is
+not advised
+and you should prefer the LinearRegression object. (default( : 10)</li>
+<li><strong>max_iter</strong> (<em>int The maximum number of iterations</em><em> (</em><em>default : 10</em><em>)</em>) – </li>
+<li><strong>warm_start</strong> (<em>bool</em><em>, </em><em>optional</em>) – When set to True, reuse the solution of the previous call to fit as
+initialization, otherwise, just erase the previous solution.</li>
+<li><strong>kwargs</strong> (<em>others arguments</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.param_name">
+<code class="descname">param_name</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.param_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.classed_params">
+<code class="descname">classed_params</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.classed_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.distribs">
+<code class="descname">distribs</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.distribs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.weird_strings">
+<code class="descname">weird_strings</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.weird_strings" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>check_input=True</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit model with coordinate descent.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>X</strong> (<em>ndarray</em><em> or </em><em>scipy.sparse matrix</em><em>, </em><em>(</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Data</li>
+<li><strong>y</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples</em><em>,</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_targets</em><em>)</em>) – Target. Will be cast to X’s dtype if necessary</li>
+<li><strong>check_input</strong> (<em>boolean</em><em>, </em><em>(</em><em>default=True</em><em>)</em>) – Allow to bypass several input checking.
+Don’t use this parameter unless you know what you do.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Coordinate descent is an algorithm that considers each column of
+data at a time hence it will automatically convert the X input
+as a Fortran-contiguous numpy array if necessary.</p>
+<p>To avoid memory re-allocation it is advised to allocate the
+initial data in memory directly using that format.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.getInterpret">
+<code class="descname">getInterpret</code><span class="sig-paren">(</span><em>directory</em>, <em>y_test</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.getInterpret" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the interpreted string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>directory</strong> – </li>
+<li><strong>y_test</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">interpreted string, str interpret_string</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.Lasso.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict using the linear model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>{array-like</em><em>, </em><em>sparse matrix}</em><em>, </em><em>shape =</em><em> (</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Samples.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>C</strong> – Returns predicted values.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">array, shape = (n_samples,)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.paramsToSet">
+<code class="descname">paramsToSet</code><span class="sig-paren">(</span><em>nIter</em>, <em>randomState</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso.paramsToSet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-min-cq-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.min_cq module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-min-cq-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-min-cq-graalpy-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.min_cq_graalpy module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-min-cq-graalpy-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-min-cq-graalpy-tree-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.min_cq_graalpy_tree module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-min-cq-graalpy-tree-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boost-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.qar_boost module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boost-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boost-nc3-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.qar_boost_nc3 module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boost-nc3-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boostv2-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.qar_boostv2 module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boostv2-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boostv3-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.qar_boostv3 module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boostv3-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest">
+<span id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-random-forest-module"></span><h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest">
+<em class="property">class </em><code class="descname">RandomForest</code><span class="sig-paren">(</span><em>random_state=None</em>, <em>n_estimators=10</em>, <em>max_depth=None</em>, <em>criterion='gini'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.forest.RandomForestClassifier</span></code>, <a class="reference internal" href="multiview_platform.mono_multi_view_classifiers.monoview.html#multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier" title="multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier</span></code></a></p>
+<p>RandomForest Classifier Class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>random_state</strong> (<em>int seed</em><em>, </em><em>RandomState instance</em><em>, or </em><em>None</em><em> (</em><em>default=None</em><em>)</em>) – The seed of the pseudo random number generator to use when
+shuffling the data.</li>
+<li><strong>n_estimators</strong> (<em>int</em><em> (</em><em>default : 10</em><em>) </em><em>number of estimators</em>) – </li>
+<li><strong>max_depth</strong> (<em>int</em><em> , </em><em>optional</em><em> (</em><em>default :  None</em><em>) </em><em>maximum of depth</em>) – </li>
+<li><strong>criterion</strong> (<em>criteria</em><em> (</em><em>default : 'gini'</em><em>)</em>) – </li>
+<li><strong>kwargs</strong> (<em>others arguments</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest.param_names">
+<code class="descname">param_names</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest.param_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest.distribs">
+<code class="descname">distribs</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest.distribs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest.classed_params">
+<code class="descname">classed_params</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest.classed_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest.weird_strings">
+<code class="descname">weird_strings</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest.weird_strings" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest.getInterpret">
+<code class="descname">getInterpret</code><span class="sig-paren">(</span><em>directory</em>, <em>y_test</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.RandomForest.getInterpret" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>directory</strong> – </li>
+<li><strong>y_test</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string for interpretation interpret_string</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.paramsToSet">
+<code class="descname">paramsToSet</code><span class="sig-paren">(</span><em>nIter</em>, <em>random_state</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest.paramsToSet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.scm module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-pregen-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.scm_pregen module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-pregen-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-pregen-tree-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.scm_pregen_tree module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-pregen-tree-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-sparsity-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.scm_sparsity module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-sparsity-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-sparsity-ttee-module">
+<h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.scm_sparsity_ttee module<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-sparsity-ttee-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd">
+<span id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-sgd-module"></span><h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD">
+<em class="property">class </em><code class="descname">SGD</code><span class="sig-paren">(</span><em>random_state=None</em>, <em>loss='hinge'</em>, <em>penalty='l2'</em>, <em>alpha=0.0001</em>, <em>max_iter=5</em>, <em>tol=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.stochastic_gradient.SGDClassifier</span></code>, <a class="reference internal" href="multiview_platform.mono_multi_view_classifiers.monoview.html#multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier" title="multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>random_state</strong> (<em>int seed</em><em>, </em><em>RandomState instance</em><em>, or </em><em>None</em><em> (</em><em>default=None</em><em>)</em>) – The seed of the pseudo random number generator to use when
+shuffling the data.</li>
+<li><strong>loss</strong> (<em>str</em><em> , </em><em>(</em><em>default = &quot;hinge&quot;</em><em>)</em>) – </li>
+<li><strong>penalty</strong> (<em>str</em><em>, </em><em>(</em><em>default = &quot;l2&quot;</em><em>)</em>) – </li>
+<li><strong>alpha</strong> (<em>float</em><em>, </em><em>(</em><em>default = 0.0001</em><em>)</em>) – </li>
+<li><strong>kwargs</strong> (<em>other arguments</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD.param_names">
+<code class="descname">param_names</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD.param_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD.distribs">
+<code class="descname">distribs</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD.distribs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD.classed_params">
+<code class="descname">classed_params</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD.classed_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD.weird_strings">
+<code class="descname">weird_strings</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD.weird_strings" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD.getInterpret">
+<code class="descname">getInterpret</code><span class="sig-paren">(</span><em>directory</em>, <em>y_test</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.SGD.getInterpret" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>directory</strong> – </li>
+<li><strong>y_test</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">interpret_string str to interpreted</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.paramsToSet">
+<code class="descname">paramsToSet</code><span class="sig-paren">(</span><em>nIter</em>, <em>random_state</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd.paramsToSet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_linear">
+<span id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-svm-linear-module"></span><h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_linear module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_linear" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_linear.SVMLinear">
+<em class="property">class </em><code class="descname">SVMLinear</code><span class="sig-paren">(</span><em>random_state=None</em>, <em>C=1.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_linear.SVMLinear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.additions.SVCClassifier.SVCClassifier</span></code>, <a class="reference internal" href="multiview_platform.mono_multi_view_classifiers.monoview.html#multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier" title="multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>random_state</strong> (<em>int seed</em><em>, </em><em>RandomState instance</em><em>, or </em><em>None</em><em> (</em><em>default=None</em><em>)</em>) – The seed of the pseudo random number generator to use when
+shuffling the data.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>C <span class="classifier-delimiter">:</span> <span class="classifier">float, optional (default=1.0)</span></dt>
+<dd>Penalty parameter C of the error term.</dd>
+</dl>
+<p>kwargs : others arguments</p>
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_linear.SVMLinear.getInterpret">
+<code class="descname">getInterpret</code><span class="sig-paren">(</span><em>directory</em>, <em>y_test</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_linear.SVMLinear.getInterpret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_linear.paramsToSet">
+<code class="descname">paramsToSet</code><span class="sig-paren">(</span><em>nIter</em>, <em>randomState</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_linear.paramsToSet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly">
+<span id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-svm-poly-module"></span><h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly.SVMPoly">
+<em class="property">class </em><code class="descname">SVMPoly</code><span class="sig-paren">(</span><em>random_state=None</em>, <em>C=1.0</em>, <em>degree=3</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly.SVMPoly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.additions.SVCClassifier.SVCClassifier</span></code>, <a class="reference internal" href="multiview_platform.mono_multi_view_classifiers.monoview.html#multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier" title="multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier</span></code></a></p>
+<p>Class of SVMPoly for SVC Classifier</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>random_state</strong> (<em>int seed</em><em>, </em><em>RandomState instance</em><em>, or </em><em>None</em><em> (</em><em>default=None</em><em>)</em>) – The seed of the pseudo random number generator to use when
+shuffling the data.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>C <span class="classifier-delimiter">:</span> <span class="classifier">float, optional (default=1.0)</span></dt>
+<dd>Penalty parameter C of the error term.</dd>
+</dl>
+<p>degree :</p>
+<p>kwargs : others arguments</p>
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly.SVMPoly.param_names">
+<code class="descname">param_names</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly.SVMPoly.param_names" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of parameters names</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly.SVMPoly.distribs">
+<code class="descname">distribs</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly.SVMPoly.distribs" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of random_state distribution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly.paramsToSet">
+<code class="descname">paramsToSet</code><span class="sig-paren">(</span><em>nIter</em>, <em>randomState</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly.paramsToSet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf">
+<span id="multiview-platform-mono-multi-view-classifiers-monoview-classifiers-svm-rbf-module"></span><h2>multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf.SVMRBF">
+<em class="property">class </em><code class="descname">SVMRBF</code><span class="sig-paren">(</span><em>random_state=None</em>, <em>C=1.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf.SVMRBF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.additions.SVCClassifier.SVCClassifier</span></code>, <a class="reference internal" href="multiview_platform.mono_multi_view_classifiers.monoview.html#multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier" title="multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils.BaseMonoviewClassifier</span></code></a></p>
+<p>class SVMRBF for classifier SVCC</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>random_state</strong> (<em>int seed</em><em>, </em><em>RandomState instance</em><em>, or </em><em>None</em><em> (</em><em>default=None</em><em>)</em>) – The seed of the pseudo random number generator to use when
+shuffling the data.</li>
+<li><strong>C</strong> – </li>
+<li><strong>kwargs</strong> (<em>others arguments</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf.SVMRBF.param_names">
+<code class="descname">param_names</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf.SVMRBF.param_names" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of parameters names</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf.SVMRBF.distribs">
+<code class="descname">distribs</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf.SVMRBF.distribs" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of random_state distribution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf.paramsToSet">
+<code class="descname">paramsToSet</code><span class="sig-paren">(</span><em>nIter</em>, <em>randomState</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf.paramsToSet" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>nIter</strong> (<em>int number of iterations</em>) – </li>
+<li><strong>randomState</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">paramsSet list of parameters dictionary  with key “C”</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">multiview_platform.mono_multi_view_classifiers.monoview_classifiers package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-graal-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost_graal module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-pregen-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost_pregen module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-pregen10-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost_pregen10 module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-adaboost-pregen-tree-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.adaboost_pregen_tree module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-c-greed-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.c_greed module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cb-boost-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cb_boost module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cg-desc-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cg_desc module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cg-desc10-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cg_desc10 module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cg-desc-tree-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cg_desc_tree module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boost-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cq_boost module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boosttree-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cq_boosttree module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boostv2-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cq_boostv2 module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-cq-boostv21-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.cq_boostv21 module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-decision-tree-pregen-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.decision_tree_pregen module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.gradient_boosting module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.knn">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.knn module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.lasso module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-min-cq-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.min_cq module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-min-cq-graalpy-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.min_cq_graalpy module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-min-cq-graalpy-tree-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.min_cq_graalpy_tree module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boost-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.qar_boost module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boost-nc3-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.qar_boost_nc3 module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boostv2-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.qar_boostv2 module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-qar-boostv3-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.qar_boostv3 module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.random_forest module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.scm module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-pregen-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.scm_pregen module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-pregen-tree-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.scm_pregen_tree module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-sparsity-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.scm_sparsity module</a></li>
+<li><a class="reference internal" href="#multiview-platform-mono-multi-view-classifiers-monoview-classifiers-scm-sparsity-ttee-module">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.scm_sparsity_ttee module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.sgd module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_linear">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_linear module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_poly module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf">multiview_platform.mono_multi_view_classifiers.monoview_classifiers.svm_rbf module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.monoview_classifiers">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="multiview_platform.mono_multi_view_classifiers.monoview.additions.html"
+                        title="previous chapter">multiview_platform.mono_multi_view_classifiers.monoview.additions package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="multiview_platform.mono_multi_view_classifiers.multiview.html"
+                        title="next chapter">multiview_platform.mono_multi_view_classifiers.multiview package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/multiview_platform.mono_multi_view_classifiers.monoview_classifiers.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.mono_multi_view_classifiers.multiview.html" title="multiview_platform.mono_multi_view_classifiers.multiview package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.mono_multi_view_classifiers.monoview.additions.html" title="multiview_platform.mono_multi_view_classifiers.monoview.additions package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">MultiviewPlatform 0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="multiview_platform.html" >multiview_platform package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="multiview_platform.mono_multi_view_classifiers.html" >multiview_platform.mono_multi_view_classifiers package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Baptiste BAUVIN.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
+    </div>
+  </body>
+</html>

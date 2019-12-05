@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>multiview_platform.MonoMultiViewClassifiers.utils.Multiclass &mdash; MultiviewPlatform 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> MultiviewPlatform
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">Multiview Platform</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">MultiviewPlatform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>multiview_platform.MonoMultiViewClassifiers.utils.Multiclass</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for multiview_platform.MonoMultiViewClassifiers.utils.Multiclass</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+
+
+<div class="viewcode-block" id="genMulticlassLabels"><a class="viewcode-back" href="../../../../monomulti/utils/multiclass.html#multiview_platform.MonoMultiViewClassifiers.utils.Multiclass.genMulticlassLabels">[docs]</a><span class="k">def</span> <span class="nf">genMulticlassLabels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">multiclassMethod</span><span class="p">,</span> <span class="n">splits</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Used to gen the train/test splits and to set up the framework of the adaptation of a multiclass dataset</span>
+<span class="sd">    to biclass algorithms.</span>
+
+<span class="sd">    First, the function checks whether the dataset is really multiclass.</span>
+
+<span class="sd">    Then, it generates all the possible couples of different labels in order to perform one versus one classification.</span>
+
+<span class="sd">    For each combination, it selects the examples in the training sets (for each statistical iteration) that have their</span>
+<span class="sd">    label in the combination and does the same for the testing set. It also saves the multiclass testing set in order to</span>
+<span class="sd">    use multiclass metrics on the decisions.</span>
+
+<span class="sd">    Lastly, it creates a new array of biclass labels (0/1) for the biclass classifications used in oneVersusOne</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    labels : numpy.ndarray</span>
+<span class="sd">        Name of the database.</span>
+<span class="sd">    multiclassMethod : string</span>
+<span class="sd">        The name of the multiclass method used (oneVersusOne, oneVersusAll, ...).</span>
+<span class="sd">    splits : list of lists of numpy.ndarray</span>
+<span class="sd">        For each statistical iteration a couple of numpy.ndarrays is stored with the indices for the training set and</span>
+<span class="sd">        the ones of the testing set.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    multiclassLabels : list of lists of numpy.ndarray</span>
+<span class="sd">        For each label couple, for each statistical iteration a triplet of numpy.ndarrays is stored with the</span>
+<span class="sd">        indices for the biclass training set, the ones for the biclass testing set and the ones for the</span>
+<span class="sd">        multiclass testing set.</span>
+
+<span class="sd">    labelsIndices : list of lists of numpy.ndarray</span>
+<span class="sd">        Each original couple of different labels.</span>
+
+<span class="sd">    indicesMulticlass : list of lists of numpy.ndarray</span>
+<span class="sd">        For each combination, contains a biclass labels numpy.ndarray with the 0/1 labels of combination.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">multiclassMethod</span> <span class="o">==</span> <span class="s2">&quot;oneVersusOne&quot;</span><span class="p">:</span>
+        <span class="n">nbLabels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">labels</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">nbLabels</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">splits</span> <span class="o">=</span> <span class="p">[[</span><span class="n">trainIndices</span> <span class="k">for</span> <span class="n">trainIndices</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">splits</span><span class="p">],</span>
+                      <span class="p">[</span><span class="n">testIndices</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">testIndices</span> <span class="ow">in</span> <span class="n">splits</span><span class="p">],</span>
+                      <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">splits</span><span class="p">]]</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">labels</span><span class="p">],</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)],</span> <span class="p">[</span><span class="n">splits</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">combinations</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nbLabels</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">multiclassLabels</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">labelsIndices</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">indicesMulticlass</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">combination</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">:</span>
+                <span class="n">labelsIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combination</span><span class="p">)</span>
+                <span class="n">oldIndices</span> <span class="o">=</span> <span class="p">[</span><span class="n">exampleIndex</span>
+                              <span class="k">for</span> <span class="n">exampleIndex</span><span class="p">,</span> <span class="n">exampleLabel</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+                              <span class="k">if</span> <span class="n">exampleLabel</span> <span class="ow">in</span> <span class="n">combination</span><span class="p">]</span>
+                <span class="n">trainIndices</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">oldIndex</span> <span class="k">for</span> <span class="n">oldIndex</span> <span class="ow">in</span> <span class="n">oldIndices</span> <span class="k">if</span> <span class="n">oldIndex</span> <span class="ow">in</span> <span class="n">iterIndices</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                                <span class="k">for</span> <span class="n">iterIndices</span> <span class="ow">in</span> <span class="n">splits</span><span class="p">]</span>
+                <span class="n">testIndices</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">oldIndex</span> <span class="k">for</span> <span class="n">oldIndex</span> <span class="ow">in</span> <span class="n">oldIndices</span> <span class="k">if</span> <span class="n">oldIndex</span> <span class="ow">in</span> <span class="n">iterindices</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+                               <span class="k">for</span> <span class="n">iterindices</span> <span class="ow">in</span> <span class="n">splits</span><span class="p">]</span>
+                <span class="n">testIndicesMulticlass</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterindices</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">iterindices</span> <span class="ow">in</span> <span class="n">splits</span><span class="p">]</span>
+                <span class="n">indicesMulticlass</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">trainIndices</span><span class="p">,</span> <span class="n">testIndices</span><span class="p">,</span> <span class="n">testIndicesMulticlass</span><span class="p">])</span>
+                <span class="n">newLabels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span><span class="o">-</span><span class="mi">100</span>
+                <span class="k">for</span> <span class="n">labelIndex</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="n">combination</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="n">newLabels</span><span class="p">[</span><span class="n">labelIndex</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="n">label</span> <span class="o">==</span> <span class="n">combination</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">newLabels</span><span class="p">[</span><span class="n">labelIndex</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                <span class="n">multiclassLabels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newLabels</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">multiclassMethod</span> <span class="o">==</span> <span class="s2">&quot;oneVersusRest&quot;</span><span class="p">:</span>
+        <span class="c1"># TODO : Implement one versus rest if probas are not a problem anymore</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">multiclassLabels</span><span class="p">,</span> <span class="n">labelsIndices</span><span class="p">,</span> <span class="n">indicesMulticlass</span></div>
+
+
+<span class="k">def</span> <span class="nf">genMulticlassMonoviewDecision</span><span class="p">(</span><span class="n">monoviewResult</span><span class="p">,</span> <span class="n">classificationIndices</span><span class="p">):</span>
+    <span class="n">learningIndices</span><span class="p">,</span> <span class="n">validationIndices</span><span class="p">,</span> <span class="n">testIndicesMulticlass</span> <span class="o">=</span> <span class="n">classificationIndices</span>
+    <span class="n">multiclassMonoviewDecisions</span> <span class="o">=</span> <span class="n">monoviewResult</span><span class="o">.</span><span class="n">full_labels_pred</span>
+    <span class="n">multiclassMonoviewDecisions</span><span class="p">[</span><span class="n">testIndicesMulticlass</span><span class="p">]</span> <span class="o">=</span> <span class="n">monoviewResult</span><span class="o">.</span><span class="n">y_test_multiclass_pred</span>
+    <span class="k">return</span> <span class="n">multiclassMonoviewDecisions</span>
+
+
+<span class="k">def</span> <span class="nf">isBiclass</span><span class="p">(</span><span class="n">multiclass_preds</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">multiclass_preds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="p">[]:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Baptiste BAUVIN.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

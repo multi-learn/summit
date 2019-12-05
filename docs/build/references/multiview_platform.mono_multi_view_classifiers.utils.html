@@ -1,0 +1,1041 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>multiview_platform.mono_multi_view_classifiers.utils package &#8212; MultiviewPlatform 0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="multiview_platform.tests package" href="multiview_platform.tests.html" />
+    <link rel="prev" title="multiview_platform.mono_multi_view_classifiers.multiview_classifiers.pseudo_cq_fusion package" href="multiview_platform.mono_multi_view_classifiers.multiview_classifiers.pseudo_cq_fusion.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.tests.html" title="multiview_platform.tests package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.mono_multi_view_classifiers.multiview_classifiers.pseudo_cq_fusion.html" title="multiview_platform.mono_multi_view_classifiers.multiview_classifiers.pseudo_cq_fusion package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MultiviewPlatform 0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="multiview_platform.html" >multiview_platform references</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="multiview_platform.mono_multi_view_classifiers.html" accesskey="U">multiview_platform.mono_multi_view_classifiers package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="multiview-platform-mono-multi-view-classifiers-utils-package">
+<h1>multiview_platform.mono_multi_view_classifiers.utils package<a class="headerlink" href="#multiview-platform-mono-multi-view-classifiers-utils-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.utils.configuration">
+<span id="multiview-platform-mono-multi-view-classifiers-utils-configuration-module"></span><h2>multiview_platform.mono_multi_view_classifiers.utils.configuration module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.utils.configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.configuration.get_the_args">
+<code class="descname">get_the_args</code><span class="sig-paren">(</span><em>path_to_config_file='../config_files/config.yml'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.configuration.get_the_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function for extracting the args for a ‘.yml’ file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path_to_config_file</strong> (<em>str</em><em>, </em><em>path to the yml file containing the configuration</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>yaml_config</strong> (<em>dict, the dictionary conaining the configuration for the</em>)</li>
+<li><em>benchmark</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.configuration.save_config">
+<code class="descname">save_config</code><span class="sig-paren">(</span><em>directory</em>, <em>arguments</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.configuration.save_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the config file in the result directory.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.utils.dataset">
+<span id="multiview-platform-mono-multi-view-classifiers-utils-dataset-module"></span><h2>multiview_platform.mono_multi_view_classifiers.utils.dataset module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.utils.dataset" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset">
+<em class="property">class </em><code class="descname">Dataset</code><span class="sig-paren">(</span><em>views=None</em>, <em>labels=None</em>, <em>are_sparse=False</em>, <em>file_name='dataset.hdf5'</em>, <em>view_names=None</em>, <em>path=''</em>, <em>hdf5_file=None</em>, <em>labels_names=None</em>, <em>is_temp=False</em>, <em>example_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class of Dataset</p>
+<p>This class is used to encapsulate the multiview dataset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>views</strong> (<em>list of numpy arrays</em><em> or </em><em>None</em>) – The list containing each view of the dataset as a numpy array of shape
+(nb examples, nb features).</li>
+<li><strong>labels</strong> (<em>numpy array</em><em> or </em><em>None</em>) – The labels for the multiview dataset, of shape (nb examples, ).</li>
+<li><strong>are_sparse</strong> (<em>list of bool</em><em>, or </em><em>None</em>) – The list of boolean telling if each view is sparse or not.</li>
+<li><strong>file_name</strong> (<em>str</em><em>, or </em><em>None</em>) – The name of the hdf5 file that will be created to store the multiview
+dataset.</li>
+<li><strong>view_names</strong> (<em>list of str</em><em>, or </em><em>None</em>) – The name of each view.</li>
+<li><strong>path</strong> (<em>str</em><em>, or </em><em>None</em>) – The path where the hdf5 dataset file will be stored</li>
+<li><strong>hdf5_file</strong> (<em>h5py.File object</em><em>, or </em><em>None</em>) – If not None, the dataset will be imported directly from this file.</li>
+<li><strong>labels_names</strong> (<em>list of str</em><em>, or </em><em>None</em>) – The name for each unique value of the labels given in labels.</li>
+<li><strong>is_temp</strong> (<em>bool</em>) – Used if a temporary dataset has to be used by the benchmark.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.dataset">
+<code class="descname">dataset</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>The h5py file pbject that points to the hdf5 dataset on the disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">h5py.File object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.nb_view">
+<code class="descname">nb_view</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.nb_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of views in the dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.view_dict">
+<code class="descname">view_dict</code><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.view_dict" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>The dictionnary with the name of each view as the keys and their indices</dt>
+<dd>as values</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.add_gaussian_noise">
+<code class="descname">add_gaussian_noise</code><span class="sig-paren">(</span><em>random_state</em>, <em>path</em>, <em>noise_std=0.15</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.add_gaussian_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>In this function, we add a guaussian noise centered in 0 with specified
+std to each view, according to it’s range (the noise will be
+mutliplied by this range) and we crop the noisy signal according to the
+view’s attributes limits.
+This is done by creating a new dataset, to keep clean data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.check_selected_label_names">
+<code class="descname">check_selected_label_names</code><span class="sig-paren">(</span><em>nb_labels=None</em>, <em>selected_label_names=None</em>, <em>random_state=&lt;mtrand.RandomState object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.check_selected_label_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.copy_view">
+<code class="descname">copy_view</code><span class="sig-paren">(</span><em>target_dataset=None</em>, <em>source_view_name=None</em>, <em>target_view_index=None</em>, <em>example_indices=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.copy_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.filter">
+<code class="descname">filter</code><span class="sig-paren">(</span><em>labels</em>, <em>label_names</em>, <em>example_indices</em>, <em>view_names</em>, <em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_label_names">
+<code class="descname">get_label_names</code><span class="sig-paren">(</span><em>decode=True</em>, <em>example_indices=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_label_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to get the list of the label names for the give set of examples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>decode</strong> (<em>bool</em>) – If True, will decode the label names before lsiting them</li>
+<li><strong>example_indices</strong> (<em>numpy.ndarray</em>) – The array containig the indices of the needed examples</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_labels">
+<code class="descname">get_labels</code><span class="sig-paren">(</span><em>example_indices=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_labels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_name">
+<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ony works if there are not multiple dots in the files name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_nb_class">
+<code class="descname">get_nb_class</code><span class="sig-paren">(</span><em>example_indices=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_nb_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of class of the dataset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_nb_examples">
+<code class="descname">get_nb_examples</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_nb_examples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to get the number of examples available</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_shape">
+<code class="descname">get_shape</code><span class="sig-paren">(</span><em>view_index=0</em>, <em>example_indices=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the shape of the needed view</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_v">
+<code class="descname">get_v</code><span class="sig-paren">(</span><em>view_index</em>, <em>example_indices=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_v" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects the view to extract
+:param view_index: The index of the view to extract
+:type view_index: int
+:param example_indices: The array containing the indices of the examples to extract.
+:type example_indices: numpy.ndarray</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">A numpy.ndarray containing the view data for the needed examples</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_view_dict">
+<code class="descname">get_view_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_view_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the dictionary with view indices as keys and the corresponding
+names as values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_view_name">
+<code class="descname">get_view_name</code><span class="sig-paren">(</span><em>view_idx</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.get_view_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get a view’s name for it’s index.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>view_idx</strong> (<em>int</em>) – The index of the view in the dataset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">The view’s name.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.init_attrs">
+<code class="descname">init_attrs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.init_attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to init the two attributes that are modified when self.dataset
+changes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.init_example_indces">
+<code class="descname">init_example_indces</code><span class="sig-paren">(</span><em>example_indices=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.init_example_indces" title="Permalink to this definition">¶</a></dt>
+<dd><p>If no example indices are provided, selects all the examples.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.init_view_names">
+<code class="descname">init_view_names</code><span class="sig-paren">(</span><em>view_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.init_view_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.rm">
+<code class="descname">rm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.rm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to delete the dataset file on the disk if the dataset is
+temporary.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.select_labels">
+<code class="descname">select_labels</code><span class="sig-paren">(</span><em>selected_label_names</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.select_labels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.select_views_and_labels">
+<code class="descname">select_views_and_labels</code><span class="sig-paren">(</span><em>nb_labels=None</em>, <em>selected_label_names=None</em>, <em>random_state=None</em>, <em>view_names=None</em>, <em>path_for_new='../data/'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.select_views_and_labels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.to_numpy_array">
+<code class="descname">to_numpy_array</code><span class="sig-paren">(</span><em>example_indices=None</em>, <em>view_indices=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.to_numpy_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>To concanteant the needed views in one big numpy array while saving the
+limits of each view in a list, to be bale to retrieve them later.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>example_indices</strong> (<em>array like</em><em>,</em>) – </li>
+<li><strong>indices of the examples to extract from the dataset</strong> (<em>The</em>) – </li>
+<li><strong>view_indices</strong> (<em>array like</em><em>,</em>) – </li>
+<li><strong>indices of the view to concatenate in the numpy array</strong> (<em>The</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>concat_views</strong> (<em>numpy array,</em>)</li>
+<li><em>The numpy array containing all the needed views.</em></li>
+<li><strong>view_limits</strong> (<em>list of int</em>)</li>
+<li><em>The limits of each slice used to extract the views.</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.update_hdf5_dataset">
+<code class="descname">update_hdf5_dataset</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.Dataset.update_hdf5_dataset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.confirm">
+<code class="descname">confirm</code><span class="sig-paren">(</span><em>resp=True</em>, <em>timeout=15</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.confirm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to process answer</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.copy_hdf5">
+<code class="descname">copy_hdf5</code><span class="sig-paren">(</span><em>pathF</em>, <em>name</em>, <em>nbCores</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.copy_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to copy a HDF5 database in case of multicore computing</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.datasets_already_exist">
+<code class="descname">datasets_already_exist</code><span class="sig-paren">(</span><em>pathF</em>, <em>name</em>, <em>nbCores</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.datasets_already_exist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to check if it’s necessary to copy datasets</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.delete_HDF5">
+<code class="descname">delete_HDF5</code><span class="sig-paren">(</span><em>benchmarkArgumentsDictionaries</em>, <em>nbCores</em>, <em>dataset</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.delete_HDF5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to delete temporary copies at the end of the benchmark</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.extract_subset">
+<code class="descname">extract_subset</code><span class="sig-paren">(</span><em>matrix</em>, <em>used_indices</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.extract_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to extract a subset of a matrix even if it’s sparse</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.init_multiple_datasets">
+<code class="descname">init_multiple_datasets</code><span class="sig-paren">(</span><em>path_f</em>, <em>name</em>, <em>nb_cores</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.init_multiple_datasets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to create copies of the dataset if multicore computation is used.</p>
+<p>This is a temporary solution to fix the sharing memory issue with HDF5 datasets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path_f</strong> (<em>string</em>) – Path to the original dataset directory</li>
+<li><strong>name</strong> (<em>string</em>) – Name of the dataset</li>
+<li><strong>nb_cores</strong> (<em>int</em>) – The number of threads that the benchmark can use</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>datasetFiles</strong> – Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.input_">
+<code class="descname">input_</code><span class="sig-paren">(</span><em>timeout=15</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.input_" title="Permalink to this definition">¶</a></dt>
+<dd><p>used as a UI to stop if too much HDD space will be used</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.dataset.is_just_number">
+<code class="descname">is_just_number</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.dataset.is_just_number" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.utils.execution">
+<span id="multiview-platform-mono-multi-view-classifiers-utils-execution-module"></span><h2>multiview_platform.mono_multi_view_classifiers.utils.execution module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.utils.execution" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.execution.find_dataset_names">
+<code class="descname">find_dataset_names</code><span class="sig-paren">(</span><em>path</em>, <em>type</em>, <em>names</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.execution.find_dataset_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function goal is to browse the dataset directory and extrats all
+the needed dataset names.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.execution.gen_argument_dictionaries">
+<code class="descname">gen_argument_dictionaries</code><span class="sig-paren">(</span><em>labels_dictionary</em>, <em>directories</em>, <em>multiclass_labels</em>, <em>labels_combinations</em>, <em>indices_multiclass</em>, <em>hyper_param_search</em>, <em>args</em>, <em>k_folds</em>, <em>stats_iter_random_states</em>, <em>metrics</em>, <em>argument_dictionaries</em>, <em>benchmark</em>, <em>nb_views</em>, <em>views</em>, <em>views_indices</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.execution.gen_argument_dictionaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to generate a dictionary for each benchmark.</p>
+<p>One for each label combination (if multiclass), for each statistical iteration, generates an dictionary with
+all necessary information to perform the benchmark</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>labels_dictionary</strong> (<em>dictionary</em>) – Dictionary mapping labels indices to labels names.</li>
+<li><strong>directories</strong> (<em>list of strings</em>) – List of the paths to the result directories for each statistical iteration.</li>
+<li><strong>multiclass_labels</strong> (<em>list of lists of numpy.ndarray</em>) – For each label couple, for each statistical iteration a triplet of numpy.ndarrays is stored with the
+indices for the biclass training set, the ones for the biclass testing set and the ones for the
+multiclass testing set.</li>
+<li><strong>labels_combinations</strong> (<em>list of lists of numpy.ndarray</em>) – Each original couple of different labels.</li>
+<li><strong>indices_multiclass</strong> (<em>list of lists of numpy.ndarray</em>) – For each combination, contains a biclass labels numpy.ndarray with the 0/1 labels of combination.</li>
+<li><strong>hyper_param_search</strong> (<em>string</em>) – Type of hyper parameter optimization method</li>
+<li><strong>args</strong> (<em>parsed args objects</em>) – All the args passed by the user.</li>
+<li><strong>k_folds</strong> (<em>list of list of sklearn.model_selection.StratifiedKFold</em>) – For each statistical iteration a Kfold stratified (keeping the ratio between classes in each fold).</li>
+<li><strong>stats_iter_random_states</strong> (<em>list of numpy.random.RandomState objects</em>) – Multiple random states, one for each sattistical iteration of the same benchmark.</li>
+<li><strong>metrics</strong> (<em>list of lists</em>) – metrics that will be used to evaluate the algorithms performance.</li>
+<li><strong>argument_dictionaries</strong> (<em>dictionary</em>) – Dictionary resuming all the specific arguments for the benchmark, oe dictionary for each classifier.</li>
+<li><strong>benchmark</strong> (<em>dictionary</em>) – Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.</li>
+<li><strong>nb_views</strong> (<em>int</em>) – THe number of views used by the benchmark.</li>
+<li><strong>views</strong> (<em>list of strings</em>) – List of the names of the used views.</li>
+<li><strong>views_indices</strong> (<em>list of ints</em>) – List of indices (according to the dataset) of the used views.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>benchmarkArgumentDictionaries</strong> – All the needed arguments for the benchmarks.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.execution.gen_direcorties_names">
+<code class="descname">gen_direcorties_names</code><span class="sig-paren">(</span><em>directory</em>, <em>stats_iter</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.execution.gen_direcorties_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to generate the different directories of each iteration if needed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>directory</strong> (<em>string</em>) – Path to the results directory.</li>
+<li><strong>statsIter</strong> (<em>int</em>) – The number of statistical iterations.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>directories</strong> – Paths to each statistical iterations result directory.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of strings</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.execution.gen_k_folds">
+<code class="descname">gen_k_folds</code><span class="sig-paren">(</span><em>stats_iter</em>, <em>nb_folds</em>, <em>stats_iter_random_states</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.execution.gen_k_folds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to generate folds indices for cross validation for each statistical iteration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stats_iter</strong> (<em>integer</em>) – Number of statistical iterations of the benchmark.</li>
+<li><strong>nb_folds</strong> (<em>integer</em>) – The number of cross-validation folds for the benchmark.</li>
+<li><strong>stats_iter_random_states</strong> (<em>list of numpy.random.RandomState</em>) – The random states for each statistical iteration.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>folds_list</strong> – For each statistical iteration a Kfold stratified (keeping the ratio between classes in each fold).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of list of sklearn.model_selection.StratifiedKFold</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.execution.gen_splits">
+<code class="descname">gen_splits</code><span class="sig-paren">(</span><em>labels</em>, <em>split_ratio</em>, <em>stats_iter_random_states</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.execution.gen_splits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to _gen the train/test splits using one or multiple random states.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>labels</strong> (<em>numpy.ndarray</em>) – Name of the database.</li>
+<li><strong>split_ratio</strong> (<em>float</em>) – The ratio of examples between train and test set.</li>
+<li><strong>stats_iter_random_states</strong> (<em>list of numpy.random.RandomState</em>) – The random states for each statistical iteration.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>splits</strong> – For each statistical iteration a couple of numpy.ndarrays is stored with the indices for the training set and
+the ones of the testing set.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of lists of numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.execution.get_database_function">
+<code class="descname">get_database_function</code><span class="sig-paren">(</span><em>name</em>, <em>type_var</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.execution.get_database_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to get the right database extraction function according to the type of database and it’s name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) – Name of the database.</li>
+<li><strong>type_var</strong> (<em>string</em>) – type of dataset hdf5 or csv</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>getDatabase</strong> – The function that will be used to extract the database</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">function</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.execution.init_log_file">
+<code class="descname">init_log_file</code><span class="sig-paren">(</span><em>name</em>, <em>views</em>, <em>cl_type</em>, <em>log</em>, <em>debug</em>, <em>label</em>, <em>result_directory</em>, <em>add_noise</em>, <em>noise_std</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.execution.init_log_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to init the directory where the preds will be stored and the log file.</p>
+<p>First this function will check if the result directory already exists (only one per minute is allowed).</p>
+<p>If the the result directory name is available, it is created, and the logfile is initiated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) – Name of the database.</li>
+<li><strong>views</strong> (<em>list of strings</em>) – List of the view names that will be used in the benchmark.</li>
+<li><strong>cl_type</strong> (<em>list of strings</em>) – Type of benchmark that will be made .</li>
+<li><strong>log</strong> (<em>bool</em>) – Whether to show the log file in console or hide it.</li>
+<li><strong>debug</strong> (<em>bool</em>) – for debug option</li>
+<li><strong>label</strong> (<em>str  for label</em>) – </li>
+<li><strong>result_directory</strong> (<em>str name of the result directory</em>) – </li>
+<li><strong>add_noise</strong> (<em>bool for add noise</em>) – </li>
+<li><strong>noise_std</strong> (<em>level of std noise</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>results_directory</strong> – Reference to the main results directory for the benchmark.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.execution.init_random_state">
+<code class="descname">init_random_state</code><span class="sig-paren">(</span><em>random_state_arg</em>, <em>directory</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.execution.init_random_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to init a random state.
+If no random state is specified, it will generate a ‘random’ seed.
+If the <cite>randomSateArg</cite> is a string containing only numbers, it will be converted in</p>
+<blockquote>
+<div>an int to generate a seed.</div></blockquote>
+<p>If the <cite>randomSateArg</cite> is a string with letters, it must be a path to a pickled random
+state file that will be loaded.
+The function will also pickle the new random state in a file tobe able to retrieve it later.
+Tested</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random_state_arg</strong> (<em>None</em><em> or </em><em>string</em>) – See function description.</li>
+<li><strong>directory</strong> (<em>string</em>) – Path to the results directory.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>random_state</strong> – This random state will be used all along the benchmark .</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.random.RandomState object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.execution.init_stats_iter_random_states">
+<code class="descname">init_stats_iter_random_states</code><span class="sig-paren">(</span><em>stats_iter</em>, <em>random_state</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.execution.init_stats_iter_random_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to initialize multiple random states if needed because of multiple statistical iteration of the same benchmark</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stats_iter</strong> (<em>int</em>) – Number of statistical iterations of the same benchmark done (with a different random state).</li>
+<li><strong>random_state</strong> (<em>numpy.random.RandomState object</em>) – The random state of the whole experimentation, that will be used to generate the ones for each
+statistical iteration.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>stats_iter_random_states</strong> – Multiple random states, one for each sattistical iteration of the same benchmark.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of numpy.random.RandomState objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.execution.init_views">
+<code class="descname">init_views</code><span class="sig-paren">(</span><em>dataset_var</em>, <em>arg_views</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.execution.init_views" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to return the views names that will be used by the
+benchmark, their indices and all the views names.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dataset_var</strong> (<em>HDF5 dataset file</em>) – The full dataset that wil be used by the benchmark.</li>
+<li><strong>arg_views</strong> (<em>list of strings</em>) – The views that will be used by the benchmark (arg).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>views</strong> (<em>list of strings</em>) – Names of the views that will be used by the benchmark.</li>
+<li><strong>view_indices</strong> (<em>list of ints</em>) – The list of the indices of the view that will be used in the benchmark (according to the dataset).</li>
+<li><strong>all_views</strong> (<em>list of strings</em>) – Names of all the available views in the dataset.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.execution.parse_the_args">
+<code class="descname">parse_the_args</code><span class="sig-paren">(</span><em>arguments</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.execution.parse_the_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to parse the args entered by the user</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db">
+<span id="multiview-platform-mono-multi-view-classifiers-utils-get-multiview-db-module"></span><h2>multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db.DatasetError">
+<em class="property">exception </em><code class="descname">DatasetError</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db.DatasetError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db.get_classic_db_csv">
+<code class="descname">get_classic_db_csv</code><span class="sig-paren">(</span><em>views</em>, <em>pathF</em>, <em>nameDB</em>, <em>NB_CLASS</em>, <em>askedLabelsNames</em>, <em>random_state</em>, <em>full=False</em>, <em>add_noise=False</em>, <em>noise_std=0.15</em>, <em>delimiter='</em>, <em>'</em>, <em>path_for_new='../data/'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db.get_classic_db_csv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db.get_classic_db_hdf5">
+<code class="descname">get_classic_db_hdf5</code><span class="sig-paren">(</span><em>views</em>, <em>path_f</em>, <em>name_DB</em>, <em>nb_class</em>, <em>asked_labels_names</em>, <em>random_state</em>, <em>full=False</em>, <em>add_noise=False</em>, <em>noise_std=0.15</em>, <em>path_for_new='../data/'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db.get_classic_db_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to load a hdf5 database</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db.get_plausible_db_hdf5">
+<code class="descname">get_plausible_db_hdf5</code><span class="sig-paren">(</span><em>features, path, file_name, nb_class=3, label_names=[b'No', b'Yes', b'Maybe'], random_state=None, full=True, add_noise=False, noise_std=0.15, nb_view=3, nb_examples=100, nb_features=10</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db.get_plausible_db_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to generate a plausible dataset to test the algorithms</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db.make_me_noisy">
+<code class="descname">make_me_noisy</code><span class="sig-paren">(</span><em>view_data</em>, <em>random_state</em>, <em>percentage=5</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db.make_me_noisy" title="Permalink to this definition">¶</a></dt>
+<dd><p>used to introduce some noise in the generated data</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search">
+<span id="multiview-platform-mono-multi-view-classifiers-utils-hyper-parameter-search-module"></span><h2>multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.CustomRandint">
+<em class="property">class </em><code class="descname">CustomRandint</code><span class="sig-paren">(</span><em>low=0</em>, <em>high=0</em>, <em>multiplier=''</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.CustomRandint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Used as a distribution returning a integer between low and high-1.
+It can be used with a multiplier agrument to be able to perform more complex generation
+for example 10 e -(randint)</p>
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.CustomRandint.get_nb_possibilities">
+<code class="descname">get_nb_possibilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.CustomRandint.get_nb_possibilities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.CustomRandint.rvs">
+<code class="descname">rvs</code><span class="sig-paren">(</span><em>random_state=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.CustomRandint.rvs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.CustomUniform">
+<em class="property">class </em><code class="descname">CustomUniform</code><span class="sig-paren">(</span><em>loc=0</em>, <em>state=1</em>, <em>multiplier=''</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.CustomUniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Used as a distribution returning a float between loc and loc + scale..
+It can be used with a multiplier agrument to be able to perform more complex generation
+for example 10 e -(float)</p>
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.CustomUniform.rvs">
+<code class="descname">rvs</code><span class="sig-paren">(</span><em>random_state=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.CustomUniform.rvs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV">
+<em class="property">class </em><code class="descname">MultiviewCompatibleRandomizedSearchCV</code><span class="sig-paren">(</span><em>estimator</em>, <em>param_distributions</em>, <em>n_iter=10</em>, <em>refit=True</em>, <em>n_jobs=1</em>, <em>scoring=None</em>, <em>cv=None</em>, <em>random_state=None</em>, <em>learning_indices=None</em>, <em>view_indices=None</em>, <em>framework='monoview'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection._search.RandomizedSearchCV</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>groups=None</em>, <em>**fit_params</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run fit with all sets of parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>X</strong> (<em>array-like</em><em>, </em><em>shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em>]</em>) – Training vector, where n_samples is the number of samples and
+n_features is the number of features.</li>
+<li><strong>y</strong> (<em>array-like</em><em>, </em><em>shape =</em><em> [</em><em>n_samples</em><em>] or </em><em>[</em><em>n_samples</em><em>, </em><em>n_output</em><em>]</em><em>, </em><em>optional</em>) – Target relative to X for classification or regression;
+None for unsupervised learning.</li>
+<li><strong>groups</strong> (<em>array-like</em><em>, </em><em>with shape</em><em> (</em><em>n_samples</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – Group labels for the samples used while splitting the dataset into
+train/test set.</li>
+<li><strong>**fit_params</strong> (<em>dict of string -&gt; object</em>) – Parameters passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method of the estimator</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV.fit_multiview">
+<code class="descname">fit_multiview</code><span class="sig-paren">(</span><em>X</em>, <em>y=None</em>, <em>groups=None</em>, <em>**fit_params</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV.fit_multiview" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV.get_test_folds_preds">
+<code class="descname">get_test_folds_preds</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>estimator</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV.get_test_folds_preds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.compute_possible_combinations">
+<code class="descname">compute_possible_combinations</code><span class="sig-paren">(</span><em>params_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.compute_possible_combinations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.gen_heat_maps">
+<code class="descname">gen_heat_maps</code><span class="sig-paren">(</span><em>params</em>, <em>scores_array</em>, <em>output_file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.gen_heat_maps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to generate a heat map for each doublet of hyperparms optimized on the previous function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.get_test_folds_preds">
+<code class="descname">get_test_folds_preds</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>cv</em>, <em>estimator</em>, <em>framework</em>, <em>available_indices=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.get_test_folds_preds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.grid_search">
+<code class="descname">grid_search</code><span class="sig-paren">(</span><em>dataset</em>, <em>classifier_name</em>, <em>views_indices=None</em>, <em>k_folds=None</em>, <em>n_iter=1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.grid_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to perfom gridsearch on the classifiers</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.randomized_search">
+<code class="descname">randomized_search</code><span class="sig-paren">(</span><em>X, y, framework, random_state, output_file_name, classifier_module, classifier_name, folds=4, nb_cores=1, metric=['accuracy_score', None], n_iter=30, classifier_kwargs=None, learning_indices=None, view_indices=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.randomized_search" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.search_best_settings">
+<code class="descname">search_best_settings</code><span class="sig-paren">(</span><em>dataset_var</em>, <em>labels</em>, <em>classifier_module</em>, <em>classifier_name</em>, <em>metrics</em>, <em>learning_indices</em>, <em>i_k_folds</em>, <em>random_state</em>, <em>directory</em>, <em>views_indices=None</em>, <em>nb_cores=1</em>, <em>searching_tool='randomized_search'</em>, <em>n_iter=1</em>, <em>classifier_config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.search_best_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to select the right hyper-parameter optimization function
+to optimize hyper parameters</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.spear_mint">
+<code class="descname">spear_mint</code><span class="sig-paren">(</span><em>dataset</em>, <em>classifier_name</em>, <em>views_indices=None</em>, <em>k_folds=None</em>, <em>n_iter=1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.spear_mint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to perform spearmint on the classifiers to optimize hyper parameters,
+longer than randomsearch (can’t be parallelized)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.utils.make_file_config">
+<span id="multiview-platform-mono-multi-view-classifiers-utils-make-file-config-module"></span><h2>multiview_platform.mono_multi_view_classifiers.utils.make_file_config module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.utils.make_file_config" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.make_file_config.ConfigurationMaker">
+<em class="property">class </em><code class="descname">ConfigurationMaker</code><span class="sig-paren">(</span><em>classifier_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.make_file_config.ConfigurationMaker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Find the name of the classifier from the dict classier to report</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.utils.multiclass">
+<span id="multiview-platform-mono-multi-view-classifiers-utils-multiclass-module"></span><h2>multiview_platform.mono_multi_view_classifiers.utils.multiclass module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.utils.multiclass" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.multiclass.gen_multiclass_labels">
+<code class="descname">gen_multiclass_labels</code><span class="sig-paren">(</span><em>labels</em>, <em>multiclass_method</em>, <em>splits</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.multiclass.gen_multiclass_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to gen the train/test splits and to set up the framework of the adaptation of a multiclass dataset
+to biclass algorithms.</p>
+<p>First, the function checks whether the dataset is really multiclass.</p>
+<p>Then, it generates all the possible couples of different labels in order to perform one versus one classification.</p>
+<p>For each combination, it selects the examples in the training sets (for each statistical iteration) that have their
+label in the combination and does the same for the testing set. It also saves the multiclass testing set in order to
+use multiclass metrics on the decisions.</p>
+<p>Lastly, it creates a new array of biclass labels (0/1) for the biclass classifications used in oneVersusOne</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>labels</strong> (<em>numpy.ndarray</em>) – Name of the database.</li>
+<li><strong>multiclass_method</strong> (<em>string</em>) – The name of the multiclass method used (oneVersusOne, oneVersusAll, …).</li>
+<li><strong>splits</strong> (<em>list of lists of numpy.ndarray</em>) – For each statistical iteration a couple of numpy.ndarrays is stored with the indices for the training set and
+the ones of the testing set.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>multiclass_labels</strong> (<em>list of lists of numpy.ndarray</em>) – For each label couple, for each statistical iteration a triplet of numpy.ndarrays is stored with the
+indices for the biclass training set, the ones for the biclass testing set and the ones for the
+multiclass testing set.</li>
+<li><strong>labels_indices</strong> (<em>list of lists of numpy.ndarray</em>) – Each original couple of different labels.</li>
+<li><strong>indices_multiclass</strong> (<em>list of lists of numpy.ndarray</em>) – For each combination, contains a biclass labels numpy.ndarray with the 0/1 labels of combination.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.multiclass.gen_multiclass_monoview_decision">
+<code class="descname">gen_multiclass_monoview_decision</code><span class="sig-paren">(</span><em>monoview_result</em>, <em>classification_indices</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.multiclass.gen_multiclass_monoview_decision" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.multiclass.is_biclass">
+<code class="descname">is_biclass</code><span class="sig-paren">(</span><em>multiclass_preds</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.multiclass.is_biclass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.utils.multiview_result_analysis">
+<span id="multiview-platform-mono-multi-view-classifiers-utils-multiview-result-analysis-module"></span><h2>multiview_platform.mono_multi_view_classifiers.utils.multiview_result_analysis module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.utils.multiview_result_analysis" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.multiview_result_analysis.get_metrics_scores">
+<code class="descname">get_metrics_scores</code><span class="sig-paren">(</span><em>metrics_var</em>, <em>train_labels</em>, <em>test_labels</em>, <em>validation_indices</em>, <em>learning_indices</em>, <em>labels</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.multiview_result_analysis.get_metrics_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.multiview_result_analysis.get_total_metric_scores">
+<code class="descname">get_total_metric_scores</code><span class="sig-paren">(</span><em>metric</em>, <em>train_labels</em>, <em>test_labels</em>, <em>validation_indices</em>, <em>learning_indices</em>, <em>labels</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.multiview_result_analysis.get_total_metric_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.multiview_result_analysis.print_metric_score">
+<code class="descname">print_metric_score</code><span class="sig-paren">(</span><em>metric_scores</em>, <em>metrics</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.multiview_result_analysis.print_metric_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.utils.transformations">
+<span id="multiview-platform-mono-multi-view-classifiers-utils-transformations-module"></span><h2>multiview_platform.mono_multi_view_classifiers.utils.transformations module<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.utils.transformations" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.transformations.sign_labels">
+<code class="descname">sign_labels</code><span class="sig-paren">(</span><em>labels</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.transformations.sign_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a label array with (-1,1) as labels.
+If labels was already made of (-1,1), returns labels.
+If labels is made of (0,1), returns labels with all
+zeros transformed in -1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>labels</strong> – </li>
+<li><strong>original label numpy array</strong> (<em>The</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A np.array with labels made of (-1,1)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.mono_multi_view_classifiers.utils.transformations.unsign_labels">
+<code class="descname">unsign_labels</code><span class="sig-paren">(</span><em>labels</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.transformations.unsign_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>The inverse function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>labels</strong> – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.mono_multi_view_classifiers.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-multiview_platform.mono_multi_view_classifiers.utils" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">multiview_platform.mono_multi_view_classifiers.utils package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.utils.configuration">multiview_platform.mono_multi_view_classifiers.utils.configuration module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.utils.dataset">multiview_platform.mono_multi_view_classifiers.utils.dataset module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.utils.execution">multiview_platform.mono_multi_view_classifiers.utils.execution module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db">multiview_platform.mono_multi_view_classifiers.utils.get_multiview_db module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search">multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.utils.make_file_config">multiview_platform.mono_multi_view_classifiers.utils.make_file_config module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.utils.multiclass">multiview_platform.mono_multi_view_classifiers.utils.multiclass module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.utils.multiview_result_analysis">multiview_platform.mono_multi_view_classifiers.utils.multiview_result_analysis module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.utils.transformations">multiview_platform.mono_multi_view_classifiers.utils.transformations module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.mono_multi_view_classifiers.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="multiview_platform.mono_multi_view_classifiers.multiview_classifiers.pseudo_cq_fusion.html"
+                        title="previous chapter">multiview_platform.mono_multi_view_classifiers.multiview_classifiers.pseudo_cq_fusion package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="multiview_platform.tests.html"
+                        title="next chapter">multiview_platform.tests package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/references/multiview_platform.mono_multi_view_classifiers.utils.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.tests.html" title="multiview_platform.tests package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.mono_multi_view_classifiers.multiview_classifiers.pseudo_cq_fusion.html" title="multiview_platform.mono_multi_view_classifiers.multiview_classifiers.pseudo_cq_fusion package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MultiviewPlatform 0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="multiview_platform.html" >multiview_platform references</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="multiview_platform.mono_multi_view_classifiers.html" >multiview_platform.mono_multi_view_classifiers package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Baptiste BAUVIN.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
+    </div>
+  </body>
+</html>

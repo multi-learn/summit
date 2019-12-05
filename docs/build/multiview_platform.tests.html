@@ -1,0 +1,553 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>multiview_platform.tests package &#8212; MultiviewPlatform 0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="multiview_platform.tests.test_metrics package" href="multiview_platform.tests.test_metrics.html" />
+    <link rel="prev" title="multiview_platform.mono_multi_view_classifiers.utils package" href="multiview_platform.mono_multi_view_classifiers.utils.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.tests.test_metrics.html" title="multiview_platform.tests.test_metrics package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.mono_multi_view_classifiers.utils.html" title="multiview_platform.mono_multi_view_classifiers.utils package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">MultiviewPlatform 0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="multiview_platform.html" accesskey="U">multiview_platform package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="multiview-platform-tests-package">
+<h1>multiview_platform.tests package<a class="headerlink" href="#multiview-platform-tests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="multiview_platform.tests.test_metrics.html">multiview_platform.tests.test_metrics package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_metrics.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_metrics.html#module-multiview_platform.tests.test_metrics.test_accuracy_score">multiview_platform.tests.test_metrics.test_accuracy_score module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_metrics.html#module-multiview_platform.tests.test_metrics">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="multiview_platform.tests.test_mono_view.html">multiview_platform.tests.test_mono_view package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_mono_view.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_mono_view.html#module-multiview_platform.tests.test_mono_view.test_ExecClassifMonoView">multiview_platform.tests.test_mono_view.test_ExecClassifMonoView module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_mono_view.html#module-multiview_platform.tests.test_mono_view.test_MonoviewUtils">multiview_platform.tests.test_mono_view.test_MonoviewUtils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_mono_view.html#module-multiview_platform.tests.test_mono_view">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="multiview_platform.tests.test_monoview_classifiers.html">multiview_platform.tests.test_monoview_classifiers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_monoview_classifiers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_monoview_classifiers.html#module-multiview_platform.tests.test_monoview_classifiers.test_adaboost">multiview_platform.tests.test_monoview_classifiers.test_adaboost module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_monoview_classifiers.html#module-multiview_platform.tests.test_monoview_classifiers.test_compatibility">multiview_platform.tests.test_monoview_classifiers.test_compatibility module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_monoview_classifiers.html#module-multiview_platform.tests.test_monoview_classifiers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.html">multiview_platform.tests.test_multiview_classifiers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DifficultyMeasure.html">multiview_platform.tests.test_multiview_classifiers.Test_DifficultyMeasure package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DifficultyMeasure.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DifficultyMeasure.html#multiview-platform-tests-test-multiview-classifiers-test-difficultymeasure-test-difficultymeasuremodule-module">multiview_platform.tests.test_multiview_classifiers.Test_DifficultyMeasure.test_DifficultyMeasureModule module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DifficultyMeasure.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DisagreeFusion.html">multiview_platform.tests.test_multiview_classifiers.Test_DisagreeFusion package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DisagreeFusion.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DisagreeFusion.html#multiview-platform-tests-test-multiview-classifiers-test-disagreefusion-test-disagreefusionmodule-module">multiview_platform.tests.test_multiview_classifiers.Test_DisagreeFusion.test_DisagreeFusionModule module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DisagreeFusion.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DoubleFaultFusion.html">multiview_platform.tests.test_multiview_classifiers.Test_DoubleFaultFusion package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DoubleFaultFusion.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DoubleFaultFusion.html#multiview-platform-tests-test-multiview-classifiers-test-doublefaultfusion-test-doublefaultfusionmodule-module">multiview_platform.tests.test_multiview_classifiers.Test_DoubleFaultFusion.test_DoubleFaultFusionModule module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_DoubleFaultFusion.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_EntropyFusion.html">multiview_platform.tests.test_multiview_classifiers.Test_EntropyFusion package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_EntropyFusion.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_EntropyFusion.html#multiview-platform-tests-test-multiview-classifiers-test-entropyfusion-test-entropyfusionmodule-module">multiview_platform.tests.test_multiview_classifiers.Test_EntropyFusion.test_EntropyFusionModule module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_EntropyFusion.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_Fusion.html">multiview_platform.tests.test_multiview_classifiers.Test_Fusion package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_Fusion.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_Fusion.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_Fusion.html#multiview-platform-tests-test-multiview-classifiers-test-fusion-test-fusionmodule-module">multiview_platform.tests.test_multiview_classifiers.Test_Fusion.test_FusionModule module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_Fusion.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_PseudoCQMeasure.html">multiview_platform.tests.test_multiview_classifiers.Test_PseudoCQMeasure package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_PseudoCQMeasure.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_PseudoCQMeasure.html#module-multiview_platform.tests.test_multiview_classifiers.Test_PseudoCQMeasure.test_PseudoCQFusionModule">multiview_platform.tests.test_multiview_classifiers.Test_PseudoCQMeasure.test_PseudoCQFusionModule module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.Test_PseudoCQMeasure.html#module-multiview_platform.tests.test_multiview_classifiers.Test_PseudoCQMeasure">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.html#module-multiview_platform.tests.test_multiview_classifiers.test_diversity_utils">multiview_platform.tests.test_multiview_classifiers.test_diversity_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_multiview_classifiers.html#module-multiview_platform.tests.test_multiview_classifiers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="multiview_platform.tests.test_utils.html">multiview_platform.tests.test_utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_utils.html#module-multiview_platform.tests.test_utils.test_GetMultiviewDB">multiview_platform.tests.test_utils.test_GetMultiviewDB module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_utils.html#module-multiview_platform.tests.test_utils.test_configuration">multiview_platform.tests.test_utils.test_configuration module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_utils.html#module-multiview_platform.tests.test_utils.test_execution">multiview_platform.tests.test_utils.test_execution module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_utils.html#module-multiview_platform.tests.test_utils.test_multiclass">multiview_platform.tests.test_utils.test_multiclass module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiview_platform.tests.test_utils.html#module-multiview_platform.tests.test_utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-multiview_platform.tests.test_ExecClassif">
+<span id="multiview-platform-tests-test-execclassif-module"></span><h2>multiview_platform.tests.test_ExecClassif module<a class="headerlink" href="#module-multiview_platform.tests.test_ExecClassif" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.tests.test_ExecClassif.FakeKfold">
+<em class="property">class </em><code class="descname">FakeKfold</code><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.FakeKfold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.FakeKfold.split">
+<code class="descname">split</code><span class="sig-paren">(</span><em>X</em>, <em>Y</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.FakeKfold.split" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries">
+<em class="property">class </em><code class="descname">Test_InitArgumentDictionaries</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="classmethod">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.setUpClass">
+<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.test_init_argument_dictionaries_monoview">
+<code class="descname">test_init_argument_dictionaries_monoview</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.test_init_argument_dictionaries_monoview" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.test_init_argument_dictionaries_multiview">
+<code class="descname">test_init_argument_dictionaries_multiview</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.test_init_argument_dictionaries_multiview" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.test_init_argument_dictionaries_multiview_complex">
+<code class="descname">test_init_argument_dictionaries_multiview_complex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.test_init_argument_dictionaries_multiview_complex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.test_init_argument_dictionaries_multiview_multiple">
+<code class="descname">test_init_argument_dictionaries_multiview_multiple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.test_init_argument_dictionaries_multiview_multiple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.test_init_argument_dictionaries_multiview_multiple_complex">
+<code class="descname">test_init_argument_dictionaries_multiview_multiple_complex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_InitArgumentDictionaries.test_init_argument_dictionaries_multiview_multiple_complex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execBenchmark">
+<em class="property">class </em><code class="descname">Test_execBenchmark</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execBenchmark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="classmethod">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execBenchmark.setUpClass">
+<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execBenchmark.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execBenchmark.tearDownClass">
+<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execBenchmark.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execBenchmark.test_multiclass_and_iter">
+<code class="descname">test_multiclass_and_iter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execBenchmark.test_multiclass_and_iter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execBenchmark.test_multiclass_no_iter">
+<code class="descname">test_multiclass_no_iter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execBenchmark.test_multiclass_no_iter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execBenchmark.test_no_iter_biclass_multicore">
+<code class="descname">test_no_iter_biclass_multicore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execBenchmark.test_no_iter_biclass_multicore" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execBenchmark.test_simple">
+<code class="descname">test_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execBenchmark.test_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark">
+<em class="property">class </em><code class="descname">Test_execOneBenchmark</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="classmethod">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark.setUp">
+<em class="property">classmethod </em><code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark.tearDown">
+<em class="property">classmethod </em><code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark.test_simple">
+<code class="descname">test_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark.test_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark_multicore">
+<em class="property">class </em><code class="descname">Test_execOneBenchmark_multicore</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark_multicore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="classmethod">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark_multicore.setUpClass">
+<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark_multicore.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark_multicore.tearDown">
+<em class="property">classmethod </em><code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark_multicore.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark_multicore.test_simple">
+<code class="descname">test_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_execOneBenchmark_multicore.test_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_get_path_dict">
+<em class="property">class </em><code class="descname">Test_get_path_dict</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_get_path_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="classmethod">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_get_path_dict.setUpClass">
+<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_get_path_dict.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_get_path_dict.tearDownClass">
+<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_get_path_dict.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_get_path_dict.test_simple">
+<code class="descname">test_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_get_path_dict.test_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_initBenchmark">
+<em class="property">class </em><code class="descname">Test_initBenchmark</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_initBenchmark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_initBenchmark.test_benchmark_wanted">
+<code class="descname">test_benchmark_wanted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_initBenchmark.test_benchmark_wanted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_initKWARGS">
+<em class="property">class </em><code class="descname">Test_initKWARGS</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_initKWARGS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_initKWARGS.test_initKWARGSFunc_no_monoview">
+<code class="descname">test_initKWARGSFunc_no_monoview</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_initKWARGS.test_initKWARGSFunc_no_monoview" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_set_element">
+<em class="property">class </em><code class="descname">Test_set_element</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_set_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="classmethod">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_set_element.setUpClass">
+<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_set_element.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_set_element.tearDownClass">
+<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_set_element.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ExecClassif.Test_set_element.test_simple">
+<code class="descname">test_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.Test_set_element.test_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.tests.test_ExecClassif.fakeBenchmarkExec">
+<code class="descname">fakeBenchmarkExec</code><span class="sig-paren">(</span><em>core_index=-1</em>, <em>a=7</em>, <em>args=1</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.fakeBenchmarkExec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.tests.test_ExecClassif.fakeBenchmarkExec_monocore">
+<code class="descname">fakeBenchmarkExec_monocore</code><span class="sig-paren">(</span><em>dataset_var=1</em>, <em>a=4</em>, <em>args=1</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.fakeBenchmarkExec_monocore" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.tests.test_ExecClassif.fakeBenchmarkExec_mutlicore">
+<code class="descname">fakeBenchmarkExec_mutlicore</code><span class="sig-paren">(</span><em>nb_cores=-1</em>, <em>a=6</em>, <em>args=1</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.fakeBenchmarkExec_mutlicore" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.tests.test_ExecClassif.fakeDelete">
+<code class="descname">fakeDelete</code><span class="sig-paren">(</span><em>a</em>, <em>b</em>, <em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.fakeDelete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.tests.test_ExecClassif.fakeExecMono">
+<code class="descname">fakeExecMono</code><span class="sig-paren">(</span><em>directory</em>, <em>name</em>, <em>labels_names</em>, <em>classification_indices</em>, <em>k_folds</em>, <em>coreIndex</em>, <em>type</em>, <em>pathF</em>, <em>random_state</em>, <em>labels</em>, <em>hyper_param_search='try'</em>, <em>metrics='try'</em>, <em>n_iter=1</em>, <em>**arguments</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.fakeExecMono" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.tests.test_ExecClassif.fakeExecMulti">
+<code class="descname">fakeExecMulti</code><span class="sig-paren">(</span><em>directory</em>, <em>coreIndex</em>, <em>name</em>, <em>classification_indices</em>, <em>k_folds</em>, <em>type</em>, <em>pathF</em>, <em>labels_dictionary</em>, <em>random_state</em>, <em>labels</em>, <em>hyper_param_search=''</em>, <em>metrics=None</em>, <em>n_iter=1</em>, <em>**arguments</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.fakeExecMulti" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.tests.test_ExecClassif.fakeInitMulti">
+<code class="descname">fakeInitMulti</code><span class="sig-paren">(</span><em>args</em>, <em>benchmark</em>, <em>views</em>, <em>views_indices</em>, <em>argument_dictionaries</em>, <em>random_state</em>, <em>directory</em>, <em>resultsMonoview</em>, <em>classification_indices</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.fakeInitMulti" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="multiview_platform.tests.test_ExecClassif.fakegetResults">
+<code class="descname">fakegetResults</code><span class="sig-paren">(</span><em>results</em>, <em>stats_iter</em>, <em>nb_multiclass</em>, <em>benchmark_arguments_dictionaries</em>, <em>multi_class_labels</em>, <em>metrics</em>, <em>classification_indices</em>, <em>directories</em>, <em>directory</em>, <em>labels_dictionary</em>, <em>nb_examples</em>, <em>nb_labels</em>, <em>example_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ExecClassif.fakegetResults" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.tests.test_ResultAnalysis">
+<span id="multiview-platform-tests-test-resultanalysis-module"></span><h2>multiview_platform.tests.test_ResultAnalysis module<a class="headerlink" href="#module-multiview_platform.tests.test_ResultAnalysis" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_format_previous_results">
+<em class="property">class </em><code class="descname">Test_format_previous_results</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_format_previous_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_format_previous_results.test_simple">
+<code class="descname">test_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_format_previous_results.test_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_gen_error_data">
+<em class="property">class </em><code class="descname">Test_gen_error_data</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_gen_error_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_gen_error_data.test_simple">
+<code class="descname">test_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_gen_error_data.test_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_gen_error_data_glob">
+<em class="property">class </em><code class="descname">Test_gen_error_data_glob</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_gen_error_data_glob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_gen_error_data_glob.test_simple">
+<code class="descname">test_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_gen_error_data_glob.test_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_get_arguments">
+<em class="property">class </em><code class="descname">Test_get_arguments</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_get_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_get_arguments.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_get_arguments.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_get_arguments.test_benchmark_wanted">
+<code class="descname">test_benchmark_wanted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_get_arguments.test_benchmark_wanted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_get_example_errors_biclass">
+<em class="property">class </em><code class="descname">Test_get_example_errors_biclass</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_get_example_errors_biclass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_get_example_errors_biclass.test_simple">
+<code class="descname">test_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_get_example_errors_biclass.test_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_get_metrics_scores_biclass">
+<em class="property">class </em><code class="descname">Test_get_metrics_scores_biclass</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_get_metrics_scores_biclass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_get_metrics_scores_biclass.multiple_monoview_classifiers">
+<code class="descname">multiple_monoview_classifiers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_get_metrics_scores_biclass.multiple_monoview_classifiers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_get_metrics_scores_biclass.mutiview_result">
+<code class="descname">mutiview_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_get_metrics_scores_biclass.mutiview_result" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_get_metrics_scores_biclass.test_simple">
+<code class="descname">test_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_get_metrics_scores_biclass.test_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_init_plot">
+<em class="property">class </em><code class="descname">Test_init_plot</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_init_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="multiview_platform.tests.test_ResultAnalysis.Test_init_plot.test_simple">
+<code class="descname">test_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.tests.test_ResultAnalysis.Test_init_plot.test_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-multiview_platform.tests">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-multiview_platform.tests" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">multiview_platform.tests package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.tests.test_ExecClassif">multiview_platform.tests.test_ExecClassif module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.tests.test_ResultAnalysis">multiview_platform.tests.test_ResultAnalysis module</a></li>
+<li><a class="reference internal" href="#module-multiview_platform.tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="multiview_platform.mono_multi_view_classifiers.utils.html"
+                        title="previous chapter">multiview_platform.mono_multi_view_classifiers.utils package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="multiview_platform.tests.test_metrics.html"
+                        title="next chapter">multiview_platform.tests.test_metrics package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/multiview_platform.tests.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.tests.test_metrics.html" title="multiview_platform.tests.test_metrics package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="multiview_platform.mono_multi_view_classifiers.utils.html" title="multiview_platform.mono_multi_view_classifiers.utils package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">MultiviewPlatform 0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="multiview_platform.html" >multiview_platform package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Baptiste BAUVIN.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
+    </div>
+  </body>
+</html>

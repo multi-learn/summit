@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>multiview_platform.MonoMultiViewClassifiers.Metrics.framework &mdash; MultiviewPlatform 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> MultiviewPlatform
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../readme_link.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../readme_link.html#mono-and-multi-view-classification-benchmark">Mono- and Multi-view classification benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">Multiview Platform</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">MultiviewPlatform</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>multiview_platform.MonoMultiViewClassifiers.Metrics.framework</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for multiview_platform.MonoMultiViewClassifiers.Metrics.framework</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;In ths file, we explain how to add a metric to the platform.</span>
+
+<span class="sd">In order to do that, on needs to add a file with the following functions</span>
+<span class="sd">which are mandatory for the metric to work with the platform.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Author-Info</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Baptiste Bauvin&quot;</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s2">&quot;Prototype&quot;</span>  <span class="c1"># Production, Development, Prototype</span>
+
+
+<div class="viewcode-block" id="score"><a class="viewcode-back" href="../../../../monomulti/metrics.html#multiview_platform.MonoMultiViewClassifiers.Metrics.framework.score">[docs]</a><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">multiclass</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the metric&#39;s score from the ground truth (``y_true``) and predictions (``y_pred``).</span>
+
+<span class="sd">   Parameters</span>
+<span class="sd">   ----------</span>
+<span class="sd">   y_true : array-like, shape = (n_samples,)</span>
+<span class="sd">            Target values (class labels).</span>
+
+<span class="sd">   y_pred : array-like, shape = (n_samples,)</span>
+<span class="sd">            Predicted target values (class labels).</span>
+
+<span class="sd">   multiclass : boolean (default=False)</span>
+<span class="sd">                Parameter specifying whether the target values are multiclass or not.</span>
+
+<span class="sd">   kwargs : dict</span>
+<span class="sd">            The arguments stored in this dictionary must be keyed by string of</span>
+<span class="sd">            integers as &quot;0&quot;, .., etc and decrypted in the function</span>
+
+<span class="sd">   Returns</span>
+<span class="sd">   -------</span>
+<span class="sd">   score : float</span>
+<span class="sd">           Returns the score of the prediction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">return</span> <span class="n">score</span></div>
+
+
+<div class="viewcode-block" id="get_scorer"><a class="viewcode-back" href="../../../../monomulti/metrics.html#multiview_platform.MonoMultiViewClassifiers.Metrics.framework.get_scorer">[docs]</a><span class="k">def</span> <span class="nf">get_scorer</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the metric&#39;s scorer as in the sklearn.metrics package.</span>
+
+<span class="sd">   Parameters</span>
+<span class="sd">   ----------</span>
+<span class="sd">   kwargs : dict</span>
+<span class="sd">           The arguments stored in this dictionary must be keyed by string of</span>
+<span class="sd">           integers as &quot;0&quot;, .., etc and decrypted in the function. These arguments</span>
+<span class="sd">           are a configuration of the metric.</span>
+
+<span class="sd">   Returns</span>
+<span class="sd">   -------</span>
+<span class="sd">   scorer : object</span>
+<span class="sd">           Callable object that returns a scalar score; greater is better. (cf sklearn.metrics.make_scorer)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scorer</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">scorer</span></div>
+
+
+<div class="viewcode-block" id="getConfig"><a class="viewcode-back" href="../../../../monomulti/metrics.html#multiview_platform.MonoMultiViewClassifiers.Metrics.framework.getConfig">[docs]</a><span class="k">def</span> <span class="nf">getConfig</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the metric&#39;s configuration as a string.</span>
+
+<span class="sd">   Parameters</span>
+<span class="sd">   ----------</span>
+<span class="sd">   kwargs : dict</span>
+<span class="sd">           The arguments stored in this dictionary must be keyed by string of</span>
+<span class="sd">           integers as &quot;0&quot;, .., etc and decrypted in the function. These arguments</span>
+<span class="sd">           are a configuration of the metric.</span>
+
+<span class="sd">   Returns</span>
+<span class="sd">   -------</span>
+<span class="sd">   configString : string</span>
+<span class="sd">           The string describing the metric&#39;s configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">configString</span> <span class="o">=</span> <span class="s2">&quot;This is a framework&quot;</span>
+    <span class="k">return</span> <span class="n">configString</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Baptiste BAUVIN.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

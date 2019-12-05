@@ -1,0 +1,402 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Example 2 : Understanding the hyper-parameter optimization &#8212; MultiviewPlatform 0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="multiview_platform references" href="../references/multiview_platform.html" />
+    <link rel="prev" title="Example 1 : First steps with Multiview Platform" href="example1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../references/multiview_platform.html" title="multiview_platform references"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="example1.html" title="Example 1 : First steps with Multiview Platform"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MultiviewPlatform 0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Multiview Platform Tutorials</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="example-2-understanding-the-hyper-parameter-optimization">
+<h1>Example 2 : Understanding the hyper-parameter optimization<a class="headerlink" href="#example-2-understanding-the-hyper-parameter-optimization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="intuitive-explanation-on-hyper-parameters">
+<h2>Intuitive explanation on hyper-parameters<a class="headerlink" href="#intuitive-explanation-on-hyper-parameters" title="Permalink to this headline">¶</a></h2>
+<p>Hyper-parameters are parameters of a classifier (monoview or multiview) that are task-dependant and have a huge part in the performance of the algorithm for a given task.</p>
+<p>The simplest example is the decision tree. One of it’s hyper-parameter is the depth of the tree. The deeper the tree is,
+the most it will fit on the learning data. However a tree too deep will most likely overfit and won’t have any value on
+unseen testing data.</p>
+<p>This platform proposes a randomized search for optimizing hyperparamter on the given task. In this example,
+we first will analyze how it works and then how to use it.</p>
+</div>
+<div class="section" id="understanding-train-test-split">
+<h2>Understanding train/test split<a class="headerlink" href="#understanding-train-test-split" title="Permalink to this headline">¶</a></h2>
+<p>In order to provide robust results, this platform splits the dataset in a training set, tha will be used by the
+classifier to optimize their hyper-parameter and learn a relevant model, and a testing set that will take no part in
+the learning process and serve as unseen data to estimate each model’s generalization capacity.</p>
+<p>This split is controlled by the config file’s argument <code class="docutils literal notranslate"><span class="pre">split:</span></code>. It uses a float to pass the ratio between the size of the testing set and the training set  :
+<img class="math" src="../_images/math/db7e01742f2503f433edf60a93d678b26b5c756b.png" alt="\text{split} = \frac{\text{test size}}{\text{train size}}"/>. In order to be as fare as possible, this split is made by keeping the ratio btween each class in the training set and in the testing set.</p>
+<p>So if a dataset has 100 examples with 60% of them in class A, and 40% of them in class B, using <code class="docutils literal notranslate"><span class="pre">split:</span> <span class="pre">0.2</span></code>
+will generate a training set with 48 examples of class A and 32 examples of class B and a testing set
+with 12 examples of class A and 8 examples of class B.</p>
+<p>Ths process uses sklearn’s <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedShuffleSplit.html">StratifiedShuffleSplit</a> to split the dataset at random while being reproductilbe thanks to the random state.</p>
+</div>
+<div class="section" id="understanding-hyper-parameter-optimization">
+<h2>Understanding hyper-parameter optimization<a class="headerlink" href="#understanding-hyper-parameter-optimization" title="Permalink to this headline">¶</a></h2>
+<p>As hyper-paramters are task dependant, there are two ways in the platform to set their value :</p>
+<ul class="simple">
+<li>If you know the value (or a set of values), specify them at the end of the config file for each algorithm you want to test, and use <code class="docutils literal notranslate"><span class="pre">hps_type:</span> <span class="pre">None</span></code> in the classifiaction section of the config file. This will set the Hyper Parameter Search to None, and bypass the optimization process to run the algorithm on the specified values.</li>
+<li>If you don’t know the value, the platform proposes a random search for hyper-parameter optimization.</li>
+</ul>
+<div class="section" id="random-search">
+<h3>Random search<a class="headerlink" href="#random-search" title="Permalink to this headline">¶</a></h3>
+<p>The random search is one of the most efficient while fairest method to optimize hyper-parameter.
+Thus, for each algorithm in the platform, each of its hyper-paramter is provided with distribution of possible values,
+(for example, the decision tree’s max depth parameter is provided with a uniform distribution between 1 and 300).
+The random search method will randomly select hyper-parameters within this distribution and evaluate the performance of
+the classifier with this configuration. It will repeat that process with different randomly selected sets of
+hyper-parameter and keep the best configuration performance-wise.</p>
+<p>In the config file, to enable random search, set the <code class="docutils literal notranslate"><span class="pre">hps_type:</span></code> line to <code class="docutils literal notranslate"><span class="pre">hps_type:</span> <span class="pre">&quot;randomized_search&quot;</span></code> and to
+control the number of draws, use the <code class="docutils literal notranslate"><span class="pre">hps_iter:</span></code> line.</p>
+</div>
+<div class="section" id="k-folds-cross-validation">
+<h3>K-folds cross-validation<a class="headerlink" href="#k-folds-cross-validation" title="Permalink to this headline">¶</a></h3>
+<p>During the process of optimizing the hyper-parameter, the random serach has to estimate the perofmance of the classifier.</p>
+<p>In order to do so, the platform uses k-folds cross-validation. This method consists in splitting the training set in
+<img class="math" src="../_images/math/0b7c1e16a3a8a849bb8ffdcdbf86f65fd1f30438.png" alt="k"/> equal sub-sets, training the classifier (with the randomly chose hyper-parameters) on <img class="math" src="../_images/math/61e28425012ff04c501a81720cdd9f9b5afb962e.png" alt="k-1"/> subsets an
+testing it on the last one, evaluating it’s predictive performance.</p>
+<p>This learning-and-testing process is repeated <img class="math" src="../_images/math/0b7c1e16a3a8a849bb8ffdcdbf86f65fd1f30438.png" alt="k"/> times and the estimated performance is the mean of the
+performance on each testing set.</p>
+<p>In the platform, the training set (the 48 examples of class A and 32 examples of class B from last example) will be
+divided in k folds for the cross-validation process and the testing set (the 12 examples of class A and 8 examples of
+class B for last examples) will in no way be involved in the training process of the classifier.</p>
+<p>The cross-validation process can be controled with the <code class="docutils literal notranslate"><span class="pre">nb_folds:</span></code> line of the configuration file in which the number
+of folds is specified.</p>
+</div>
+<div class="section" id="metric-choice">
+<h3>Metric choice<a class="headerlink" href="#metric-choice" title="Permalink to this headline">¶</a></h3>
+<p>This hyper-parameter optimization can be strongly metric-dependant. For example, for an unbalanced dataset, evaluating
+the accuracy is not relevant and will not provide a good estimation of the performance of the classifier.
+In the platform, it is possible to specify the metric that will be used for the hyper-parameter optimization process
+thanks to the <code class="docutils literal notranslate"><span class="pre">metric_princ:</span></code> line in the configuration file.</p>
+</div>
+</div>
+<div class="section" id="hands-on-experience">
+<h2>Hands-on experience<a class="headerlink" href="#hands-on-experience" title="Permalink to this headline">¶</a></h2>
+<p>In order to understand the process and it’s usefulness, let’s run some configurations and analyze the results.</p>
+<p>This example will focus only on some lines of the configuration file :</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">split:</span></code>, controlling the ration of size between the testing set and the training set,</li>
+<li><code class="docutils literal notranslate"><span class="pre">hps_type:</span></code>, controlling the type of hyper-parameter search,</li>
+<li><code class="docutils literal notranslate"><span class="pre">hps_iter:</span></code>, controlling the number of random draws during the hyper-parameter search,</li>
+<li><code class="docutils literal notranslate"><span class="pre">nb_folds:</span></code>, controlling the number of folds in the cross-validation process.</li>
+</ul>
+<div class="section" id="example-2-1-no-hyper-parameter-optimization-impact-of-split-size">
+<h3>Example 2.1 : No hyper-parameter optimization, impact of split size<a class="headerlink" href="#example-2-1-no-hyper-parameter-optimization-impact-of-split-size" title="Permalink to this headline">¶</a></h3>
+<p>For this example, we only used a subset of the available classifiers, to reduce the computation time and the complexity of the results.</p>
+<p>Each classifier will first be learned on the default hyper-parameters (as in <a class="reference external" href="./example1.rst">Example 1</a>)</p>
+<p>The monoview classifiers that will be used are adaboost and decision_tree,
+and the multivew classifier is a late fusion majority vote. In order to use only a subset of the available classifiers,
+three lines in the configuration file are useful :</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">type:</span></code> in which one has to specify which type of algorithms are needed, here we used  <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">[&quot;monoview&quot;,&quot;multiview&quot;]</span></code>,</li>
+<li><code class="docutils literal notranslate"><span class="pre">algos_monoview:</span></code> in which one specifies the names of the monoview algorithms to run, here we used : <code class="docutils literal notranslate"><span class="pre">algos_monoview:</span> <span class="pre">[&quot;decision_tree&quot;,</span> <span class="pre">&quot;adaboost&quot;,</span> <span class="pre">]</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">algos_multiview:</span></code> is the same but with multiview algorithms, here we used : `` algos_multiview: [“majority_voting_fusion”, ]``</li>
+</ul>
+<p>In order for the platofrm to understand the names, the user has to give the name of the python module in which the classifier is implemented in the platform.</p>
+<p>In the config file, the default values for adaboost’s hyper-parameters are :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">adaboost</span><span class="p">:</span>
+    <span class="nt">n_estimators</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">50</span><span class="p p-Indicator">]</span>
+    <span class="nt">base_estimator</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;DecisionTreeClassifier&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>(see <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier">adaboost’s sklearn’s page</a> for more information)</p>
+<p>For decision_tree :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">decision_tree</span><span class="p">:</span>
+    <span class="nt">max_depth</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">10</span><span class="p p-Indicator">]</span>
+    <span class="nt">criterion</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;gini&quot;</span><span class="p p-Indicator">]</span>
+    <span class="nt">splitter</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;best&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html">sklearn’s decision tree</a>)</p>
+<p>And for the late fusion majority vote :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">majority_voting_fusion</span><span class="p">:</span>
+    <span class="nt">classifier_names</span><span class="p">:</span> <span class="p p-Indicator">[[</span><span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span> <span class="p p-Indicator">]]</span>
+    <span class="nt">classifier_configs</span><span class="p">:</span>
+        <span class="nt">decision_tree</span><span class="p">:</span>
+            <span class="nt">max_depth</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
+            <span class="nt">criterion</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;gini&quot;</span><span class="p p-Indicator">]</span>
+            <span class="nt">splitter</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;best&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>(It will build a vote with one decision tree on each view, with the specified configuration for the decision trees)</p>
+<p>To run this example,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example2.1.1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The results for accuracy metric are stored in <code class="docutils literal notranslate"><span class="pre">multiview_platform/examples/results/example_2_1/plausible/n_0/started_1560_04_01-12_42__/1560_04_01-12_42_-plausible-No_vs_Yes-accuracy_score.csv</span></code></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>&#160;</td>
+<td>double_fault_fusion</td>
+<td>difficulty_fusion</td>
+<td>lasso-ViewNumber1</td>
+<td>sgd-ViewNumber0</td>
+<td>svm_poly-ViewNumber1</td>
+<td>svm_poly-ViewNumber2</td>
+<td>svm_poly-ViewNumber0</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.7</td>
+<td>0.7</td>
+<td>0.65</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.7125</td>
+<td>0.7125</td>
+<td>0.8</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p>These results were generated learning with 20% of the dataset and testing on 80%.
+In the config file called <code class="docutils literal notranslate"><span class="pre">config_example_2_1_1.yml</span></code>, the line controlling the split ratio is <code class="docutils literal notranslate"><span class="pre">split:</span> <span class="pre">0.8</span></code>.</p>
+<p>Now, if you run :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example2.1.2&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You should obtain these scores in <code class="docutils literal notranslate"><span class="pre">multiview_platform/examples/results/example_2_1/plausible/n_0/started_1560_04_01-12_42__/1560_04_01-12_42_-plausible-No_vs_Yes-accuracy_score.csv</span></code> :</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>&#160;</td>
+<td>double_fault_fusion</td>
+<td>difficulty_fusion</td>
+<td>lasso-ViewNumber1</td>
+<td>sgd-ViewNumber0</td>
+<td>svm_poly-ViewNumber1</td>
+<td>svm_poly-ViewNumber2</td>
+<td>svm_poly-ViewNumber0</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.7</td>
+<td>0.7</td>
+<td>0.65</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0.7125</td>
+<td>0.7125</td>
+<td>0.8</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p>Here we learned on 80% of the dataset and tested on 20%, so the line in the config file has become <code class="docutils literal notranslate"><span class="pre">split:</span> <span class="pre">0.2</span></code>.</p>
+<p>The first difference between these two examples is the time to run the benchmrak, as in the first on more examples are given to learn the algorithms, it is longer. However, the right amount of training examples depends on the available dataset and the task’s complexity.</p>
+<p>TODO COMMENT</p>
+<p><strong>Conclusion</strong></p>
+<p>THe impact of split ratio : dataset related.</p>
+</div>
+<div class="section" id="example-2-2-usage-of-hyper-parameter-optimization">
+<h3>Example 2.2 : Usage of hyper-parameter optimization :<a class="headerlink" href="#example-2-2-usage-of-hyper-parameter-optimization" title="Permalink to this headline">¶</a></h3>
+<p>In the previous example, we have seen that the split ratio has an impact on the computational time.
+But the most time-consuming task is optimizing the hyper parameters.
+Up to now, the platform used the hyper-parameters values given in the config file.
+This happens only if one knows the optimal combination of hyper-parameter for the given task.
+However, most of the time, they are unknown to the user, and then have to be optimized by the platform.</p>
+<p>In this example, we will use the hyper-parameter optimization method implemented in the platform, to do so we will use three lines of the config file :</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">hps_type:</span></code>, controlling the type of hyper-parameter search,</li>
+<li><code class="docutils literal notranslate"><span class="pre">hps_iter:</span></code>, controlling the number of random draws during the hyper-parameter search,</li>
+<li><code class="docutils literal notranslate"><span class="pre">nb_folds:</span></code>, controlling the number of folds in the cross-validation process.</li>
+</ul>
+<p>So if you run <code class="docutils literal notranslate"><span class="pre">example</span> <span class="pre">2.2.1</span></code> with :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example2.2.1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">hps_type</span></code> argument is set to <code class="docutils literal notranslate"><span class="pre">&quot;randomised_search&quot;</span></code>, which is at the moment the only hyper-parameter optimization method implemented in the platform.
+The <code class="docutils literal notranslate"><span class="pre">hps_iter</span></code> argument is set to <code class="docutils literal notranslate"><span class="pre">5</span></code>,
+The <code class="docutils literal notranslate"><span class="pre">nb_folds</span></code> argument is set o <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p>
+<p>The computing time should be longer than the previous examples. Let’s see the pseudo code of the benchmark, while using the hyper-parameter optimization:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>for each monoview classifier:
+    for each view:
+        ┌
+        |for each draw (here 5):
+        |    for each fold (here 5):
+        |        learn the classifier on 4 folds and test it on 1
+        |    get the mean performance
+        |get the best hyper-parameter set
+        └
+        learn on the whole training set
+and
+for each multiview classifier:
+    ┌
+    |for each draw (here 5):
+    |    for each fold (here 5):
+    |        learn the classifier on 4 folds and test it on 1
+    |    get the mean performance
+    |get the best hyper-parameter set
+    └
+    learn on the whole training set
+</pre></div>
+</div>
+<p><strong>Longer computing time</strong></p>
+<p><strong>Better perf</strong></p>
+<p><strong>Importance of difference between Mono and multi</strong></p>
+<p><strong>Importance of subset size</strong></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Example 2 : Understanding the hyper-parameter optimization</a><ul>
+<li><a class="reference internal" href="#intuitive-explanation-on-hyper-parameters">Intuitive explanation on hyper-parameters</a></li>
+<li><a class="reference internal" href="#understanding-train-test-split">Understanding train/test split</a></li>
+<li><a class="reference internal" href="#understanding-hyper-parameter-optimization">Understanding hyper-parameter optimization</a><ul>
+<li><a class="reference internal" href="#random-search">Random search</a></li>
+<li><a class="reference internal" href="#k-folds-cross-validation">K-folds cross-validation</a></li>
+<li><a class="reference internal" href="#metric-choice">Metric choice</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hands-on-experience">Hands-on experience</a><ul>
+<li><a class="reference internal" href="#example-2-1-no-hyper-parameter-optimization-impact-of-split-size">Example 2.1 : No hyper-parameter optimization, impact of split size</a></li>
+<li><a class="reference internal" href="#example-2-2-usage-of-hyper-parameter-optimization">Example 2.2 : Usage of hyper-parameter optimization :</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="example1.html"
+                        title="previous chapter">Example 1 : First steps with Multiview Platform</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../references/multiview_platform.html"
+                        title="next chapter">multiview_platform references</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorials/example2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../references/multiview_platform.html" title="multiview_platform references"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="example1.html" title="Example 1 : First steps with Multiview Platform"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MultiviewPlatform 0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Multiview Platform Tutorials</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Baptiste BAUVIN.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
+    </div>
+  </body>
+</html>
