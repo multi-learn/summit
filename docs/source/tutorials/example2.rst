@@ -210,6 +210,14 @@ The ``hps_type`` argument is set to ``"randomised_search"``, which is at the mom
 The ``hps_iter`` argument is set to ``5``,
 The ``nb_folds`` argument is set o ``5``.
 
+**WARNING : The "csv-table" directive's ":file:" and ":url:" options represent a potential security holes. They can be disabled with the "file_insertion_enabled" runtime setting.**
+
+.. csv-table::
+    :file: ./images/result_default_hp_high_train.csv
+
+Here, we used ``split: 0.2`` and the results are far better than with the preset of hyper paramters, as the classifiers are able to fit the task.
+
+
 The computing time should be longer than the previous examples. Let's see the pseudo code of the benchmark, while using the hyper-parameter optimization::
 
     for each monoview classifier:
@@ -233,14 +241,28 @@ The computing time should be longer than the previous examples. Let's see the ps
         └
         learn on the whole training set
 
+The instructions inside the brackets are the one that the HP optimization adds. So for the monoview algorithms,
+the computational impact of the HPO is bigger than for the multiview algorithms.
 
+The choice made here is to allow the same amount of draws for each HPO. However, as many of the multiview algorithms
+are more complex and have bigger HP spaces, allowing them more draws, can be a defendable idea.
 
-**Longer computing time**
+However, for most of the tasks, using the HPO is a necessity to be able to get the most of each classifier in terms
+of performance.
 
-**Better perf**
+The HPO is a matter of tradeoff between precision and computational demand. For most algorithms the more draws you
+allow, the closer to ideal the outputted HP will be, however, many draws mean much longer computational time.
 
-**Importance of difference between Mono and multi**
+Similarly, the number of folds has a great importance in estimating the performance of a specific Hp combination,
+and the more folds the but more folds take also more time, as one has to train more times and on bigger parts of the
+dataset.
 
-**Importance of subset size**
+The figure below represents the duration of the execution on a personal computer with different fold/draws settings :
+
+.. raw:: html
+    :file: ./images/durations.html
+
+The duration is in seconds, and we used 2,5,10,15,20 as values for ``nb_folds`` and 2,5,10,20,30,50,100 for ``hps_iter`` with two monoview classifiers and one multiview classifier on simulated data.
+
 
 
