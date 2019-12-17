@@ -118,7 +118,7 @@ In order to be able to analyze the results with more clarity, one can add the ex
 
 Let's suppose that the objects we are trying to classify between 'Animal' and 'Object' are all bears, cars, planes, and birds. And that one has a ``.csv`` file with an ID for each of them (:python:`"bear_112", "plane_452", "bird_785", "car_369", ...` for example)
 
-Then as long as the IDs order conresspond to the example order in the lines of the previous matrices, to add the IDs in the hdf5 file, just add :
+Then as long as the IDs order corresponds to the example order in the lines of the previous matrices, to add the IDs in the hdf5 file, just add :
 
 .. code-block:: python
 

@@ -23,7 +23,7 @@ Classification:
   nb_class: 2
   classes:
   type: ["monoview"]
-  algos_monoview: ["all", ]
+  algos_monoview: ["adaboost",]
   algos_multiview: ["weighted_linear_early_fusion"]
   stats_iter: 2
   metrics: ["accuracy_score", "f1_score"]
