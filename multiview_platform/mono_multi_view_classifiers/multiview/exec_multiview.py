@@ -98,7 +98,8 @@ def save_results(classifier, labels_dictionary, string_analysis, views, classifi
     """
     labels_set = set(labels_dictionary.values())
     logging.info(string_analysis)
-    views_string = "-".join(views)
+    # views_string = "-".join(views)
+    views_string = "mv"
     labels_string = "-".join(labels_set)
     timestr = time.strftime("%Y_%m_%d-%H_%M_%S")
     cl_type_string = classifier.short_name

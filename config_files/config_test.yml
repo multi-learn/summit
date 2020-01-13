@@ -20,7 +20,7 @@ Classification:
   multiclass_method: "oneVersusOne"
   split: 0.4
   nb_folds: 2
-  nb_class: 2
+  nb_class: 3
   classes:
   type: ["monoview", "multiview"]
   algos_monoview: ["adaboost",]
