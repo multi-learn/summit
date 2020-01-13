@@ -187,7 +187,7 @@ def getHPs(classifierModule, hyper_param_search, nIter, classifier_module_name,
         logging.debug(
             "Start:\t " + hyper_param_search + " best settings with " + str(
                 nIter) + " iterations for " + classifier_module_name)
-        classifierHPSearch = getattr(hyper_parameter_search, hyper_param_search)
+        classifierHPSearch = getattr(hyper_parameter_search, hyper_param_search.split("-")[0])
         clKWARGS, testFoldsPreds = classifierHPSearch(X_train, y_train, "monoview",
                                                       random_state,
                                                       outputFileName,

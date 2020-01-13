@@ -264,5 +264,9 @@ The figure below represents the duration of the execution on a personal computer
 
 The duration is in seconds, and we used 2,5,10,15,20 as values for ``nb_folds`` and 2,5,10,20,30,50,100 for ``hps_iter`` with two monoview classifiers and one multiview classifier on simulated data.
 
+.. note::
+    In order to compensate the fact that the multiview classifiers have more complex problems to solve, it is possible to use ``"randomized_search-equiv"`` as the HPS optimization method to allow
+    ``hps_iter`` draws for the monoview classifiers and ``hps_iter * nb_view`` draws for the ones that are multiview.
+
 
 

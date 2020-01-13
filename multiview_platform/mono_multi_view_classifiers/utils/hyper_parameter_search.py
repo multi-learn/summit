@@ -13,7 +13,7 @@ from .. import metrics
 def search_best_settings(dataset_var, labels, classifier_module, classifier_name,
                         metrics, learning_indices, i_k_folds, random_state,
                         directory, views_indices=None, nb_cores=1,
-                        searching_tool="randomized_search", n_iter=1,
+                        searching_tool="randomized_search-equiv", n_iter=1,
                         classifier_config=None):
     """Used to select the right hyper-parameter optimization function
     to optimize hyper parameters"""
@@ -22,12 +22,12 @@ def search_best_settings(dataset_var, labels, classifier_module, classifier_name
     output_file_name = directory
     thismodule = sys.modules[__name__]
     if searching_tool is not "None":
-        searching_tool_method = getattr(thismodule, searching_tool)
+        searching_tool_method = getattr(thismodule, searching_tool.split("-")[0])
         best_settings, test_folds_preds = searching_tool_method(
             dataset_var, labels, "multiview", random_state, output_file_name,
             classifier_module, classifier_name, i_k_folds,
             nb_cores, metrics, n_iter, classifier_config,
-            learning_indices=learning_indices, view_indices=views_indices,)
+            learning_indices=learning_indices, view_indices=views_indices, equivalent_draws=searching_tool.endswith("equiv"))
     else:
         best_settings = classifier_config
     return best_settings  # or well set clasifier ?
@@ -108,7 +108,8 @@ def get_test_folds_preds(X, y, cv, estimator, framework, available_indices=None)
 
 def randomized_search(X, y, framework, random_state, output_file_name, classifier_module,
                       classifier_name, folds=4, nb_cores=1, metric=["accuracy_score", None],
-                      n_iter=30, classifier_kwargs =None, learning_indices=None, view_indices=None):
+                      n_iter=30, classifier_kwargs =None, learning_indices=None, view_indices=None,
+                      equivalent_draws=True):
     estimator = getattr(classifier_module, classifier_name)(random_state=random_state,
                                                             **classifier_kwargs)
     params_dict = estimator.genDistribs()
@@ -132,7 +133,8 @@ def randomized_search(X, y, framework, random_state, output_file_name, classifie
                                                              cv=folds, random_state=random_state,
                                                              learning_indices=learning_indices,
                                                              view_indices=view_indices,
-                                                             framework = framework)
+                                                             framework = framework,
+                                                            equivalent_draws=equivalent_draws)
         random_search.fit(X, y)
         best_params = random_search.best_params_
         if "random_state" in best_params:
@@ -157,7 +159,8 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
 
     def __init__(self, estimator, param_distributions, n_iter=10,
                  refit=True, n_jobs=1, scoring=None, cv=None,
-                 random_state=None, learning_indices=None, view_indices=None, framework="monoview"):
+                 random_state=None, learning_indices=None, view_indices=None, framework="monoview",
+                 equivalent_draws=True):
         super(MultiviewCompatibleRandomizedSearchCV, self).__init__(estimator,
                                                                     n_iter=n_iter,
                                                                     param_distributions=param_distributions,
@@ -167,6 +170,7 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
         self.framework = framework
         self.available_indices = learning_indices
         self.view_indices = view_indices
+        self.equivalent_draws = equivalent_draws
 
     def fit(self, X, y=None, groups=None, **fit_params):
         if self.framework == "monoview":
@@ -180,6 +184,8 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
         candidate_params = list(self._get_param_iterator())
         base_estimator = clone(self.estimator)
         results = {}
+        if self.equivalent_draws:
+            self.n_iter = self.n_iter*X.nb_view
         self.cv_results_ = dict(("param_"+param_name, []) for param_name in candidate_params[0].keys())
         self.cv_results_["mean_test_score"] = []
         for candidate_param_idx, candidate_param in enumerate(candidate_params):

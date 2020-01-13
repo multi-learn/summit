@@ -22,13 +22,13 @@ Classification:
   nb_folds: 2
   nb_class: 2
   classes:
-  type: ["monoview"]
+  type: ["monoview", "multiview"]
   algos_monoview: ["adaboost",]
   algos_multiview: ["weighted_linear_early_fusion"]
   stats_iter: 2
   metrics: ["accuracy_score", "f1_score"]
   metric_princ: "f1_score"
-  hps_type: "randomized_search"
+  hps_type: "randomized_search-equiv"
   hps_iter: 2
 
 
