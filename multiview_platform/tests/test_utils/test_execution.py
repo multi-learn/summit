@@ -203,8 +203,8 @@ class Test_genDirecortiesNames(unittest.TestCase):
         directories = execution.gen_direcorties_names(cls.directory,
                                                     cls.stats_iter)
         cls.assertEqual(len(directories), 5)
-        cls.assertEqual(directories[0], os.path.join(tmp_path, "iter_1/"))
-        cls.assertEqual(directories[-1], os.path.join(tmp_path, "iter_5/"))
+        cls.assertEqual(directories[0], os.path.join(tmp_path, "iter_1"))
+        cls.assertEqual(directories[-1], os.path.join(tmp_path, "iter_5"))
 
     def test_ovo_no_iter(cls):
         cls.stats_iter = 1
