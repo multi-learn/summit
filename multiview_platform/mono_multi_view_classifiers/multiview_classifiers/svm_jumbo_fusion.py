@@ -1,6 +1,6 @@
 from sklearn.svm import SVC
 
-from .additions.jumbo_multiview_utils import BaseJumboFusion
+from .additions.jumbo_fusion_utils import BaseJumboFusion
 from ..monoview.monoview_utils import CustomUniform, CustomRandint
 
 classifier_class_name = "SVMJumboFusion"
@@ -17,9 +17,9 @@ class SVMJumboFusion(BaseJumboFusion):
         self.distribs += [CustomUniform(), ["rbf", "poly", "linear"], CustomRandint(2, 5)]
         self.aggregation_estimator = SVC(C=C, kernel=kernel, degree=degree)
 
-    def set_params(self, **params):
+    def set_params(self, C=1.0, kernel="rbf", degree=1, **params):
         super(SVMJumboFusion, self).set_params(**params)
-        self.aggregation_estimator.set_params(**dict((key, value) for key, value in params.items() if key in ["C", "kernel", "degree"]))
+        self.aggregation_estimator.set_params(C=C, kernel=kernel, degree=degree)
         return self
 
 

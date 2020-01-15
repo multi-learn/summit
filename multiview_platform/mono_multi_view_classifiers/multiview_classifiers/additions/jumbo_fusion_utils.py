@@ -16,8 +16,8 @@ class BaseJumboFusion(LateFusionClassifier):
         self.distribs += [CustomRandint(1,10)]
         self.nb_monoview_per_view = nb_monoview_per_view
 
-    def set_params(self, **params):
-        self.nb_monoview_per_view = params["nb_monoview_per_view"]
+    def set_params(self, nb_monoview_per_view=1, **params):
+        self.nb_monoview_per_view = nb_monoview_per_view
         super(BaseJumboFusion, self).set_params(**params)
 
     def predict(self, X, example_indices=None, view_indices=None):
@@ -28,7 +28,6 @@ class BaseJumboFusion(LateFusionClassifier):
     def fit(self, X, y, train_indices=None, view_indices=None):
         train_indices, view_indices = get_examples_views_indices(X, train_indices, view_indices)
         self.init_classifiers(len(view_indices), nb_monoview_per_view=self.nb_monoview_per_view)
-        print(self.classifiers_names, self.nb_monoview_per_view)
         self.fit_monoview_estimators(X, y, train_indices=train_indices, view_indices=view_indices)
         monoview_decisions = self.predict_monoview(X, example_indices=train_indices, view_indices=view_indices)
         self.aggregation_estimator.fit(monoview_decisions, y[train_indices])
