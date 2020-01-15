@@ -35,8 +35,8 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
             self.estimator_pool = []
             for classifier_idx, classifier_name in enumerate(self.classifier_names):
                 self.estimator_pool.append([])
-                estimator = self.init_monoview_estimator(classifier_name, self.classifier_configs)
                 for idx, view_idx in enumerate(view_indices):
+                    estimator = self.init_monoview_estimator(classifier_name, self.classifier_configs)
                     estimator.fit(X.get_v(view_idx, train_indices), y[train_indices])
                     self.estimator_pool[classifier_idx].append(estimator)
         else:
@@ -49,14 +49,19 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
         example_indices, view_indices = get_examples_views_indices(X,
                                                                    example_indices,
                                                                    view_indices)
-        nb_class = X.get_nb_class(example_indices)
+        nb_class = X.get_nb_class()
+        if nb_class>2:
+            nb_class=3
         votes = np.zeros((len(example_indices), nb_class), dtype=float)
         monoview_predictions = [monoview_estimator.predict(X.get_v(view_idx, example_indices))
                                 for view_idx, monoview_estimator
                                 in zip(view_indices, self.monoview_estimators)]
         for idx, example_index in enumerate(example_indices):
             for monoview_estimator_index, monoview_prediciton in enumerate(monoview_predictions):
-                votes[idx, int(monoview_prediciton[idx])] += 1
+                if int(monoview_prediciton[idx]) == -100:
+                    votes[idx, 2] += 1
+                else:
+                    votes[idx, int(monoview_prediciton[idx])] += 1
         predicted_labels = np.argmax(votes, axis=1)
         return predicted_labels
 

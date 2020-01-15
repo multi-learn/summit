@@ -73,14 +73,14 @@ class WeightsGenerator:
 
 class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
 
-    def __init__(self, random_state=None, classifier_names=None,
+    def __init__(self, random_state=None, classifiers_names=None,
                  classifier_configs=None, nb_cores=1, weights=None):
         super(LateFusionClassifier, self).__init__(random_state)
-        self.classifiers_names = classifier_names
+        self.classifiers_names = classifiers_names
         self.classifier_configs = classifier_configs
         self.nb_cores = nb_cores
         self.weights = weights
-        self.param_names = ["classifier_names", "classifier_configs", "weights"]
+        self.param_names = ["classifiers_names", "classifier_configs", "weights"]
         self.distribs =[ClassifierCombinator(need_probas=self.need_probas),
                         MultipleConfigGenerator(),
                         WeightsGenerator()]
@@ -106,15 +106,7 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
         else:
             self.weights = self.weights/np.sum(self.weights)
 
-        if isinstance(self.classifiers_names, ClassifierDistribution):
-            self.classifiers_names = self.classifiers_names.draw(nb_view)
-        elif self.classifiers_names is None:
-            self.classifiers_names = ["decision_tree" for _ in range(nb_view)]
-
-        if isinstance(self.classifier_configs, ConfigDistribution):
-            self.classifier_configs = self.classifier_configs.draw(nb_view)
-        elif isinstance(self.classifier_configs, dict):
-            self.classifier_configs = [{classifier_name: self.classifier_configs[classifier_name]} for classifier_name in self.classifiers_names]
+        self.init_classifiers(nb_view)
 
         self.monoview_estimators = [
             self.init_monoview_estimator(classifier_name,
@@ -123,7 +115,23 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
             for classifier_index, classifier_name
             in enumerate(self.classifiers_names)]
 
-    # def verif_clf_views(self, classifier_names, nb_view):
+    def init_classifiers(self, nb_view, nb_monoview_per_view=None):
+        if nb_monoview_per_view is not None:
+            nb_clfs = nb_monoview_per_view
+        else:
+            nb_clfs = nb_view
+        if isinstance(self.classifiers_names, ClassifierDistribution):
+            self.classifiers_names = self.classifiers_names.draw(nb_clfs)
+        elif self.classifiers_names is None:
+            self.classifiers_names = ["decision_tree" for _ in range(nb_clfs)]
+
+        if isinstance(self.classifier_configs, ConfigDistribution):
+            self.classifier_configs = self.classifier_configs.draw(nb_clfs)
+        elif isinstance(self.classifier_configs, dict):
+            self.classifier_configs = [{classifier_name: self.classifier_configs[classifier_name]} for classifier_name in self.classifiers_names]
+
+
+# def verif_clf_views(self, classifier_names, nb_view):
     #     if classifier_names is None:
     #         if nb_view is None:
     #             raise AttributeError(self.__class__.__name__+" must have either classifier_names or nb_views provided.")
