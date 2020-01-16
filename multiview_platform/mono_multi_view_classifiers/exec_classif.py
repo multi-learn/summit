@@ -107,6 +107,7 @@ def init_multiview_exps(classifier_names, views_dictionary, nb_class, kwargs_ini
                                                                   views_dictionary=views_dictionary,
                                                                   framework="multiview")
         else:
+            print(classifier_name)
             arguments = get_path_dict(kwargs_init[classifier_name])
             multiview_arguments += [gen_single_multiview_arg_dictionary(classifier_name,
                                                                         arguments,
@@ -161,8 +162,12 @@ def init_monoview_exps(classifier_names,
 
 def gen_single_monoview_arg_dictionary(classifier_name, arguments, nb_class,
                                        view_index, view_name):
-    return {classifier_name: dict((key, value[0]) for key, value in arguments[
-                                                 classifier_name].items()),
+    if classifier_name in arguments:
+        classifier_config = dict((key, value[0]) for key, value in arguments[
+                            classifier_name].items())
+    else:
+        classifier_config = {}
+    return {classifier_name: classifier_config,
             "view_name": view_name,
             "view_index": view_index,
             "classifier_name": classifier_name,
@@ -375,7 +380,10 @@ def init_kwargs(args, classifiers_names, framework="monoview"):
             raise AttributeError(
                 classifiers_name + " is not implemented in monoview_classifiers, "
                                   "please specify the name of the file in monoview_classifiers")
-        kwargs[classifiers_name] = args[classifiers_name]
+        if classifiers_name in args:
+            kwargs[classifiers_name] = args[classifiers_name]
+        else:
+            kwargs[classifiers_name] = {}
     logging.debug("Done:\t Initializing monoview classifiers arguments")
 
     return kwargs
