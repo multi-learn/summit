@@ -732,7 +732,7 @@ def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metric
         metrics_scores = get_metrics_scores_biclass(metrics, result)
         example_errors = get_example_errors_biclass(arguments["labels"], result)
         feature_importances = get_feature_importances(result)
-
+        print(feature_importances)
         directory = arguments["directory"]
 
         database_name = arguments["args"]["Base"]["name"]

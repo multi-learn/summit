@@ -22,8 +22,8 @@ Classification:
   nb_folds: 2
   nb_class: 2
   classes:
-  type: ["multiview"]
-  algos_monoview: ["decision_tree","bayesian_inference_fusion"]
+  type: ["monoview"]
+  algos_monoview: ["adaboost",]
   algos_multiview: ["svm_jumbo_fusion"]
   stats_iter: 1
   metrics: ["accuracy_score", "f1_score"]

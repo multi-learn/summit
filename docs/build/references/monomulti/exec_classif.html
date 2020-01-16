@@ -89,7 +89,7 @@ examples and the cross validation folds.</p>
 
 <dl class="function">
 <dt id="multiview_platform.mono_multi_view_classifiers.exec_classif.exec_benchmark">
-<code class="descname">exec_benchmark</code><span class="sig-paren">(</span><em>nb_cores</em>, <em>stats_iter</em>, <em>nb_multiclass</em>, <em>benchmark_arguments_dictionaries</em>, <em>classification_indices</em>, <em>directories</em>, <em>directory</em>, <em>multi_class_labels</em>, <em>metrics</em>, <em>labels_dictionary</em>, <em>nb_labels</em>, <em>dataset_var</em>, <em>exec_one_benchmark=&lt;function exec_one_benchmark&gt;</em>, <em>exec_one_benchmark_multicore=&lt;function exec_one_benchmark_multicore&gt;</em>, <em>exec_one_benchmark_mono_core=&lt;function exec_one_benchmark_mono_core&gt;</em>, <em>get_results=&lt;function get_results&gt;</em>, <em>delete=&lt;function delete_HDF5&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.exec_classif.exec_benchmark" title="Permalink to this definition">¶</a></dt>
+<code class="descname">exec_benchmark</code><span class="sig-paren">(</span><em>nb_cores</em>, <em>stats_iter</em>, <em>nb_multiclass</em>, <em>benchmark_arguments_dictionaries</em>, <em>classification_indices</em>, <em>directories</em>, <em>directory</em>, <em>multi_class_labels</em>, <em>metrics</em>, <em>labels_dictionary</em>, <em>nb_labels</em>, <em>dataset_var</em>, <em>exec_one_benchmark_mono_core=&lt;function exec_one_benchmark_mono_core&gt;</em>, <em>get_results=&lt;function get_results&gt;</em>, <em>delete=&lt;function delete_HDF5&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.exec_classif.exec_benchmark" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to execute the needed benchmark(s) on multicore or mono-core functions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -128,21 +128,21 @@ multiclass testing set.</li>
 <dl class="function">
 <dt id="multiview_platform.mono_multi_view_classifiers.exec_classif.exec_classif">
 <code class="descname">exec_classif</code><span class="sig-paren">(</span><em>arguments</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.exec_classif.exec_classif" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main function to execute the benchmark</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="multiview_platform.mono_multi_view_classifiers.exec_classif.exec_one_benchmark">
-<code class="descname">exec_one_benchmark</code><span class="sig-paren">(</span><em>core_index=-1</em>, <em>labels_dictionary=None</em>, <em>directory=None</em>, <em>classification_indices=None</em>, <em>args=None</em>, <em>k_folds=None</em>, <em>random_state=None</em>, <em>hyper_param_search=None</em>, <em>metrics=None</em>, <em>argument_dictionaries=None</em>, <em>benchmark=None</em>, <em>views=None</em>, <em>views_indices=None</em>, <em>flag=None</em>, <em>labels=None</em>, <em>exec_monoview_multicore=&lt;function exec_monoview_multicore&gt;</em>, <em>exec_multiview_multicore=&lt;function exec_multiview_multicore&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.exec_classif.exec_one_benchmark" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used to run a benchmark using one core. ExecMonoview_multicore, initMultiviewArguments and
-exec_multiview_multicore args are only used for tests</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="multiview_platform.mono_multi_view_classifiers.exec_classif.exec_one_benchmark_multicore">
-<code class="descname">exec_one_benchmark_multicore</code><span class="sig-paren">(</span><em>nb_cores=-1</em>, <em>labels_dictionary=None</em>, <em>directory=None</em>, <em>classification_indices=None</em>, <em>args=None</em>, <em>k_folds=None</em>, <em>random_state=None</em>, <em>hyper_param_search=None</em>, <em>metrics=None</em>, <em>argument_dictionaries=None</em>, <em>benchmark=None</em>, <em>views=None</em>, <em>views_indices=None</em>, <em>flag=None</em>, <em>labels=None</em>, <em>exec_monoview_multicore=&lt;function exec_monoview_multicore&gt;</em>, <em>exec_multiview_multicore=&lt;function exec_multiview_multicore&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.exec_classif.exec_one_benchmark_multicore" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used to run a benchmark using multiple cores. ExecMonoview_multicore, initMultiviewArguments and
-exec_multiview_multicore args are only used for tests</p>
+<dd><p>Runs the benchmark with the given arguments</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>arguments</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>&gt;&gt;&gt; exec_classif([–config_path, /path/to/config/files/])</em></li>
+<li><em>&gt;&gt;&gt;</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">

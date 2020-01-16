@@ -18,7 +18,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Example 2 : Understanding the statistical iterations" href="example3.html" />
+    <link rel="next" title="Example 3 : Understanding the statistical iterations" href="example3.html" />
     <link rel="prev" title="Example 1 : First steps with Multiview Platform" href="example1.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -31,7 +31,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="example3.html" title="Example 2 : Understanding the statistical iterations"
+          <a href="example3.html" title="Example 3 : Understanding the statistical iterations"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="example1.html" title="Example 1 : First steps with Multiview Platform"
@@ -402,6 +402,11 @@ dataset.</p>
         </div>
 </body>
 </html><p>The duration is in seconds, and we used 2,5,10,15,20 as values for <code class="docutils literal notranslate"><span class="pre">nb_folds</span></code> and 2,5,10,20,30,50,100 for <code class="docutils literal notranslate"><span class="pre">hps_iter</span></code> with two monoview classifiers and one multiview classifier on simulated data.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In order to compensate the fact that the multiview classifiers have more complex problems to solve, it is possible to use <code class="docutils literal notranslate"><span class="pre">&quot;randomized_search-equiv&quot;</span></code> as the HPS optimization method to allow
+<code class="docutils literal notranslate"><span class="pre">hps_iter</span></code> draws for the monoview classifiers and <code class="docutils literal notranslate"><span class="pre">hps_iter</span> <span class="pre">*</span> <span class="pre">nb_view</span></code> draws for the ones that are multiview.</p>
+</div>
 </div>
 </div>
 </div>
@@ -437,7 +442,7 @@ dataset.</p>
                         title="previous chapter">Example 1 : First steps with Multiview Platform</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="example3.html"
-                        title="next chapter">Example 2 : Understanding the statistical iterations</a></p>
+                        title="next chapter">Example 3 : Understanding the statistical iterations</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -471,7 +476,7 @@ dataset.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="example3.html" title="Example 2 : Understanding the statistical iterations"
+          <a href="example3.html" title="Example 3 : Understanding the statistical iterations"
              >next</a> |</li>
         <li class="right" >
           <a href="example1.html" title="Example 1 : First steps with Multiview Platform"

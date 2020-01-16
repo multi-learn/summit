@@ -80,7 +80,7 @@ label combination, regrouping the scores for each metrics and the information us
 
 <dl class="function">
 <dt id="multiview_platform.mono_multi_view_classifiers.result_analysis.analyze_iter_multiclass">
-<code class="descname">analyze_iter_multiclass</code><span class="sig-paren">(</span><em>multiclass_results</em>, <em>directory</em>, <em>stats_iter</em>, <em>metrics</em>, <em>data_base_name</em>, <em>nb_examples</em>, <em>example_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.result_analysis.analyze_iter_multiclass" title="Permalink to this definition">¶</a></dt>
+<code class="descname">analyze_iter_multiclass</code><span class="sig-paren">(</span><em>multiclass_results</em>, <em>directory</em>, <em>stats_iter</em>, <em>metrics</em>, <em>data_base_name</em>, <em>nb_examples</em>, <em>example_ids</em>, <em>multiclass_labels</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.result_analysis.analyze_iter_multiclass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to mean the multiclass results on the iterations executed with different random states</p>
 </dd></dl>
 
@@ -175,7 +175,7 @@ and -100 if the example was not classified.</li>
 
 <dl class="function">
 <dt id="multiview_platform.mono_multi_view_classifiers.result_analysis.gen_metrics_scores_multiclass">
-<code class="descname">gen_metrics_scores_multiclass</code><span class="sig-paren">(</span><em>results</em>, <em>true_labels</em>, <em>metrics</em>, <em>arguments_dictionaries</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.result_analysis.gen_metrics_scores_multiclass" title="Permalink to this definition">¶</a></dt>
+<code class="descname">gen_metrics_scores_multiclass</code><span class="sig-paren">(</span><em>results</em>, <em>true_labels</em>, <em>metrics_list</em>, <em>arguments_dictionaries</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.result_analysis.gen_metrics_scores_multiclass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to add all the metrics scores to the multiclass result structure  for each clf and each iteration</p>
 </dd></dl>
 
@@ -340,7 +340,7 @@ organized as :
 
 <dl class="function">
 <dt id="multiview_platform.mono_multi_view_classifiers.result_analysis.plot_2d">
-<code class="descname">plot_2d</code><span class="sig-paren">(</span><em>data</em>, <em>classifiers_names</em>, <em>nbClassifiers</em>, <em>nbExamples</em>, <em>fileName</em>, <em>minSize=10</em>, <em>width_denominator=2.0</em>, <em>height_denominator=20.0</em>, <em>stats_iter=1</em>, <em>use_plotly=True</em>, <em>example_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.result_analysis.plot_2d" title="Permalink to this definition">¶</a></dt>
+<code class="descname">plot_2d</code><span class="sig-paren">(</span><em>data</em>, <em>classifiers_names</em>, <em>nbClassifiers</em>, <em>nbExamples</em>, <em>file_name</em>, <em>minSize=10</em>, <em>labels=None</em>, <em>width_denominator=2.0</em>, <em>height_denominator=20.0</em>, <em>stats_iter=1</em>, <em>use_plotly=True</em>, <em>example_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.result_analysis.plot_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to generate a 2D plot of the errors.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -353,7 +353,7 @@ and -100 if the example was not classified.</li>
 <li><strong>nbClassifiers</strong> (<em>int</em>) – The number of classifiers.</li>
 <li><strong>nbExamples</strong> (<em>int</em>) – The number of examples.</li>
 <li><strong>nbCopies</strong> (<em>int</em>) – The number of times the data is copied (classifier wise) in order for the figure to be more readable</li>
-<li><strong>fileName</strong> (<em>str</em>) – The name of the file in which the figure will be saved (“error_analysis_2D.png” will be added at the end)</li>
+<li><strong>file_name</strong> (<em>str</em>) – The name of the file in which the figure will be saved (“error_analysis_2D.png” will be added at the end)</li>
 <li><strong>minSize</strong> (<em>int</em><em>, </em><em>optinal</em><em>, </em><em>default: 10</em>) – The minimum width and height of the figure.</li>
 <li><strong>width_denominator</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default: 1.0</em>) – To obtain the image width, the number of classifiers will be divided by this number.</li>
 <li><strong>height_denominator</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default: 1.0</em>) – To obtain the image width, the number of examples will be divided by this number.</li>
@@ -388,7 +388,7 @@ and -100 if the example was not classified.</li>
 
 <dl class="function">
 <dt id="multiview_platform.mono_multi_view_classifiers.result_analysis.plot_metric_scores">
-<code class="descname">plot_metric_scores</code><span class="sig-paren">(</span><em>train_scores</em>, <em>test_scores</em>, <em>names</em>, <em>nb_results</em>, <em>metric_name</em>, <em>file_name</em>, <em>tag=''</em>, <em>train_STDs=None</em>, <em>test_STDs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.result_analysis.plot_metric_scores" title="Permalink to this definition">¶</a></dt>
+<code class="descname">plot_metric_scores</code><span class="sig-paren">(</span><em>train_scores</em>, <em>test_scores</em>, <em>names</em>, <em>nb_results</em>, <em>metric_name</em>, <em>file_name</em>, <em>tag=''</em>, <em>train_STDs=None</em>, <em>test_STDs=None</em>, <em>use_plotly=True</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.result_analysis.plot_metric_scores" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to plot and save the score barplot for a specific metric.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

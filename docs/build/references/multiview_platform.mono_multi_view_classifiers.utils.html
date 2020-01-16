@@ -754,7 +754,7 @@ for example 10 e -(float)</p>
 
 <dl class="class">
 <dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV">
-<em class="property">class </em><code class="descname">MultiviewCompatibleRandomizedSearchCV</code><span class="sig-paren">(</span><em>estimator</em>, <em>param_distributions</em>, <em>n_iter=10</em>, <em>refit=True</em>, <em>n_jobs=1</em>, <em>scoring=None</em>, <em>cv=None</em>, <em>random_state=None</em>, <em>learning_indices=None</em>, <em>view_indices=None</em>, <em>framework='monoview'</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">MultiviewCompatibleRandomizedSearchCV</code><span class="sig-paren">(</span><em>estimator</em>, <em>param_distributions</em>, <em>n_iter=10</em>, <em>refit=True</em>, <em>n_jobs=1</em>, <em>scoring=None</em>, <em>cv=None</em>, <em>random_state=None</em>, <em>learning_indices=None</em>, <em>view_indices=None</em>, <em>framework='monoview'</em>, <em>equivalent_draws=True</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection._search.RandomizedSearchCV</span></code></p>
 <dl class="method">
 <dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV.fit">
@@ -815,12 +815,12 @@ train/test set.</li>
 
 <dl class="function">
 <dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.randomized_search">
-<code class="descname">randomized_search</code><span class="sig-paren">(</span><em>X, y, framework, random_state, output_file_name, classifier_module, classifier_name, folds=4, nb_cores=1, metric=['accuracy_score', None], n_iter=30, classifier_kwargs=None, learning_indices=None, view_indices=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.randomized_search" title="Permalink to this definition">¶</a></dt>
+<code class="descname">randomized_search</code><span class="sig-paren">(</span><em>X, y, framework, random_state, output_file_name, classifier_module, classifier_name, folds=4, nb_cores=1, metric=['accuracy_score', None], n_iter=30, classifier_kwargs=None, learning_indices=None, view_indices=None, equivalent_draws=True</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.randomized_search" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.search_best_settings">
-<code class="descname">search_best_settings</code><span class="sig-paren">(</span><em>dataset_var</em>, <em>labels</em>, <em>classifier_module</em>, <em>classifier_name</em>, <em>metrics</em>, <em>learning_indices</em>, <em>i_k_folds</em>, <em>random_state</em>, <em>directory</em>, <em>views_indices=None</em>, <em>nb_cores=1</em>, <em>searching_tool='randomized_search'</em>, <em>n_iter=1</em>, <em>classifier_config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.search_best_settings" title="Permalink to this definition">¶</a></dt>
+<code class="descname">search_best_settings</code><span class="sig-paren">(</span><em>dataset_var</em>, <em>labels</em>, <em>classifier_module</em>, <em>classifier_name</em>, <em>metrics</em>, <em>learning_indices</em>, <em>i_k_folds</em>, <em>random_state</em>, <em>directory</em>, <em>views_indices=None</em>, <em>nb_cores=1</em>, <em>searching_tool='randomized_search-equiv'</em>, <em>n_iter=1</em>, <em>classifier_config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#multiview_platform.mono_multi_view_classifiers.utils.hyper_parameter_search.search_best_settings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to select the right hyper-parameter optimization function
 to optimize hyper parameters</p>
 </dd></dl>
