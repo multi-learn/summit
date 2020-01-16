@@ -154,7 +154,7 @@ class Test_init_plot(unittest.TestCase):
                                                                    directory,
                                                                    database_name,
                                                                    labels_names)
-        self.assertEqual(file_name, "dir"+time.strftime(
+        self.assertEqual(file_name, "dir/"+time.strftime(
             "%Y_%m_%d-%H_%M_%S")+"-db-lb1_vs_lb2-acc")
         np.testing.assert_array_equal(train, data[0,:])
         np.testing.assert_array_equal(test, data[1, :])
