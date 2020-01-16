@@ -779,7 +779,20 @@ def exec_benchmark(nb_cores, stats_iter, nb_multiclass,
 
 
 def exec_classif(arguments):
-    """Main function to execute the benchmark"""
+    """
+    Runs the benchmark with the given arguments
+
+    Parameters
+    ----------
+    arguments :
+
+    Returns
+    -------
+
+
+    >>> exec_classif([--config_path, /path/to/config/files/])
+    >>> 
+    """
     start = time.time()
     args = execution.parse_the_args(arguments)
     args = configuration.get_the_args(args.config_path)

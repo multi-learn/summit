@@ -10,11 +10,11 @@ class VotingIndecision(Exception):
     pass
 
 class MajorityVoting(LateFusionClassifier):
-    def __init__(self, random_state, classifier_names=None,
+    def __init__(self, random_state, classifiers_names=None,
                  classifier_configs=None, weights=None, nb_cores=1):
         self.need_probas=False
         super(MajorityVoting, self).__init__(random_state=random_state,
-                                      classifier_names=classifier_names,
+                                      classifiers_names=classifiers_names,
                                       classifier_configs=classifier_configs,
                                       nb_cores=nb_cores,
                                       weights=weights)
