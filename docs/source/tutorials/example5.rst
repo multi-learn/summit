@@ -45,6 +45,8 @@ Then, the :python:`__init__()` method of the :python:`AlgoClassifier` class wil 
     import Algo
     from ..monoview.monoview_utils import BaseMonoviewClassifier, CustomUniform, CustomRandint
 
+    classifier_class_name = "AlgoClassifier"
+
     class AlgoClassifier(Algo, BaseMonoviewClassifier):
 
         def __init__(self, random_sate=42, trade_off=0.5, norm_type='l1', max_depth=50)
@@ -64,3 +66,48 @@ In this method, we added the needed attributes. See REF TO DOC OF DISTRIBS for t
 If "algo" is implemented in a sklearn fashion, it is now usable in the platform.
 
 TODO interpretation
+
+More complex task : Adding a multiview classifier
+-------------------------------------------------
+
+
+
+.. code-block:: python
+
+    from mimbo import MimboClassifier
+    from ..multiview.multiview_utils import BaseMultiviewClassifier, \
+                                            get_examples_views_indices
+    from ..utils.hyper_parameter_search import CustomRandint
+
+    classifier_class_name = "Mimbo"
+
+    class Mimbo(BaseMultiviewClassifier, MimboClassifier):
+
+        def __init__(self, n_estimators=50,
+                     random_state=None,
+                     best_view_mode="edge"):
+            super().__init__(random_state)
+            super(BaseMultiviewClassifier, self).__init__(n_estimators=n_estimators,
+                                        random_state=random_state,
+                                        best_view_mode=best_view_mode)
+            self.param_names = ["n_estimators", "random_state", "best_view_mode"]
+            self.distribs = [CustomRandint(5,200), [random_state], ["edge", "error"]]
+
+        def fit(self, X, y, train_indices=None, view_indices=None):
+            train_indices, view_indices = get_examples_views_indices(X,
+                                                                     train_indices,
+                                                                     view_indices)
+            numpy_X, view_limits = X.to_numpy_array(example_indices=train_indices,
+                                                    view_indices=view_indices)
+            return super(Mimbo, self).fit(numpy_X, y[train_indices],
+                                                    view_limits)
+
+        def predict(self, X, example_indices=None, view_indices=None):
+            example_indices, view_indices = get_examples_views_indices(X,
+                                                                     example_indices,
+                                                                     view_indices)
+            numpy_X, view_limits = X.to_numpy_array(example_indices=example_indices,
+                                                    view_indices=view_indices)
+            return super(Mimbo, self).predict(numpy_X)
+
+

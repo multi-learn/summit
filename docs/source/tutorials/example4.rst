@@ -11,7 +11,7 @@ In order to do so, a fixed input format is used, and we choosed HDF5 as it allow
 The bare necessities
 --------------------
 
-At the moment, in order for the platfro to work, the dataset must satisfy the following minimum requirements :
+At the moment, in order for the platform to work, the dataset must satisfy the following minimum requirements :
 
 - Each example must be described in each view, with no missing data (you can use external tools to fill the gaps, or use only the fully-described examples of you dataset)
 - ?
@@ -31,7 +31,7 @@ So three matrices (200x100 ; 200x40 ; 200x55) make up the dataset. THe most usua
 2. ``image.csv``
 3. ``commentary.csv``.
 
-LEt's suppose that all this data should be used to classify the examples in two classes : Animal or Object and that on has a ``labels.csv`` file wit one value for each example, a 0 if the example is an Animal and a 1 if it is an Object.
+Let's suppose that all this data should be used to classify the examples in two classes : Animal or Object and that on has a ``labels.csv`` file wit one value for each example, a 0 if the example is an Animal and a 1 if it is an Object.
 
 In order to run a benchmark on this dataset, one has to format it using HDF5.
 
