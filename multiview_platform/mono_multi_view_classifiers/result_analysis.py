@@ -759,6 +759,7 @@ def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metric
         biclass_results[str(classifierPositive) + str(classifierNegative)]["metrics_scores"][iteridex] = metrics_scores
         biclass_results[str(classifierPositive) + str(classifierNegative)]["example_errors"][iteridex] = example_errors
         biclass_results[str(classifierPositive) + str(classifierNegative)]["feature_importances"][iteridex] = feature_importances
+        biclass_results[str(classifierPositive) + str(classifierNegative)]["labels"] = arguments["labels"]
 
     logging.debug("Done:\t Analzing all biclass resuls")
 
@@ -982,7 +983,7 @@ def gen_error_data_glob(combi_results, stats_iter):
 
 def publish_iter_biclass_example_errors(iter_results, directory,
                                         labels_dictionary, stats_iter,
-                                        example_ids):
+                                        example_ids, labels):
     for labels_combination, combi_results in iter_results.items():
         base_file_name = os.path.join(directory, labels_dictionary[
             int(labels_combination[0])] + "-vs-" +
@@ -1002,7 +1003,7 @@ def publish_iter_biclass_example_errors(iter_results, directory,
                    delimiter=",")
 
         plot_2d(data, classifier_names, nbClassifiers, nbExamples,
-                base_file_name, stats_iter=stats_iter, example_ids=example_ids)
+                base_file_name, stats_iter=stats_iter, example_ids=example_ids, labels=labels[labels_combination])
         plot_errors_bar(error_on_examples, nbClassifiers * stats_iter,
                         nbExamples, base_file_name)
 
@@ -1110,6 +1111,7 @@ def format_previous_results(biclass_results):
     error_analysis = dict((key, {}) for key in biclass_results.keys())
     feature_importances_analysis = dict((key, {}) for key in biclass_results.keys())
     feature_importances_stds = dict((key, {}) for key in biclass_results.keys())
+    labels = dict((key,"") for key in biclass_results.keys())
     for label_combination, biclass_result in biclass_results.items():
 
         metric_concat_dict = {}
@@ -1143,6 +1145,8 @@ def format_previous_results(biclass_results):
 
             feature_importances_stds[label_combination][view_name] = dataframe.groupby(dataframe.index).std(ddof=0)
 
+        labels[label_combination] = biclass_result["labels"]
+
         added_example_errors = {}
         for example_errors in biclass_result["example_errors"]:
             for classifier_name, errors in example_errors.items():
@@ -1151,20 +1155,20 @@ def format_previous_results(biclass_results):
                 else:
                     added_example_errors[classifier_name] += errors
         error_analysis[label_combination] = added_example_errors
-    return metrics_analysis, error_analysis, feature_importances_analysis, feature_importances_stds
+    return metrics_analysis, error_analysis, feature_importances_analysis, feature_importances_stds, labels
 
 
 def analyzebiclass_iter(biclass_results, stats_iter, directory,
                        labels_dictionary, data_base_name, example_ids):
     """Used to format the results in order to plot the mean results on the iterations"""
-    metrics_analysis, error_analysis, feature_improtances, feature_improtances_stds = format_previous_results(biclass_results)
+    metrics_analysis, error_analysis, feature_improtances, feature_improtances_stds, labels = format_previous_results(biclass_results)
 
     results = publish_iter_biclass_metrics_scores(metrics_analysis,
                                                   directory, labels_dictionary,
                                                   data_base_name, stats_iter)
     publish_iter_biclass_example_errors(error_analysis, directory,
                                         labels_dictionary,
-                                        stats_iter, example_ids)
+                                        stats_iter, example_ids, labels)
     for label_combination, feature_improtances_view in feature_improtances.items():
         labels = [labels_dictionary[
                      int(label_combination[0])], labels_dictionary[
