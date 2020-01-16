@@ -598,7 +598,9 @@ def publishExampleErrors(example_errors, directory, databaseName, labels_names, 
 
 def publish_feature_importances(feature_importances, directory, database_name, labels_names, feature_stds=None):
     for view_name, feature_importance in feature_importances.items():
-        file_name = os.path.join(directory, time.strftime(
+        if not os.path.exists(os.path.join(directory, "feature_importances")):
+            os.mkdir(os.path.join(directory, "feature_importances"))
+        file_name = os.path.join(directory, "feature_importances" ,  time.strftime(
             "%Y_%m_%d-%H_%M_%S") + "-" + database_name + "-" + "_vs_".join(
             labels_names) + "-" + view_name + "-feature_importances")
         if feature_stds is not None:
