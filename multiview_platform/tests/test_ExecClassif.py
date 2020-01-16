@@ -244,8 +244,8 @@ class Test_execBenchmark(unittest.TestCase):
         res = exec_classif.exec_benchmark(1, 2, 3, cls.argument_dictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
-                                         exec_one_benchmark=fakeBenchmarkExec,
-                                         exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                         # exec_one_benchmark=fakeBenchmarkExec,
+                                         # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
                                          get_results=fakegetResults,
                                          delete=fakeDelete)
@@ -257,8 +257,8 @@ class Test_execBenchmark(unittest.TestCase):
         res = exec_classif.exec_benchmark(2, 1, 2, cls.argument_dictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
-                                         exec_one_benchmark=fakeBenchmarkExec,
-                                         exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                         # exec_one_benchmark=fakeBenchmarkExec,
+                                         # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
                                          get_results=fakegetResults,
                                          delete=fakeDelete)
@@ -272,8 +272,8 @@ class Test_execBenchmark(unittest.TestCase):
         res = exec_classif.exec_benchmark(2, 2, 2, cls.argument_dictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
-                                         exec_one_benchmark=fakeBenchmarkExec,
-                                         exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                         # exec_one_benchmark=fakeBenchmarkExec,
+                                         # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
                                          get_results=fakegetResults,
                                          delete=fakeDelete)
@@ -283,8 +283,8 @@ class Test_execBenchmark(unittest.TestCase):
         res = exec_classif.exec_benchmark(2, 1, 1, cls.argument_dictionaries,
                                          [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
                                          10, cls.Dataset,
-                                         exec_one_benchmark=fakeBenchmarkExec,
-                                         exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                         # exec_one_benchmark=fakeBenchmarkExec,
+                                         # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
                                          get_results=fakegetResults,
                                          delete=fakeDelete)
@@ -323,129 +323,129 @@ class FakeKfold():
         return [([X[0], X[1]], [X[2], X[3]]), (([X[2], X[3]], [X[0], X[1]]))]
 
 
-class Test_execOneBenchmark(unittest.TestCase):
-
-    @classmethod
-    def setUp(cls):
-        rm_tmp()
-        os.mkdir(tmp_path)
-        cls.args = {
-            "Base": {"name": "chicken_is_heaven", "type": "type",
-                     "pathf": "pathF"},
-            "Classification": {"hps_iter": 1}}
-
-    def test_simple(cls):
-        flag, results = exec_classif.exec_one_benchmark(core_index=10,
-                                                      labels_dictionary={
-                                                                   0: "a",
-                                                                   1: "b"},
-                                                      directory=tmp_path,
-                                                      classification_indices=(
-                                                               [1, 2, 3, 4],
-                                                               [0, 5, 6, 7, 8]),
-                                                               args=cls.args,
-                                                               k_folds=FakeKfold(),
-                                                               random_state="try",
-                                                               hyper_param_search="try",
-                                                               metrics="try",
-                                                               argument_dictionaries={
-                                                                   "Monoview": [
-                                                                       {
-                                                                           "try": 0},
-                                                                       {
-                                                                           "try2": 100}],
-                                                                   "multiview":[{
-                                                                           "try3": 5},
-                                                                       {
-                                                                           "try4": 10}]},
-                                                      benchmark="try",
-                                                      views="try",
-                                                      views_indices="try",
-                                                      flag=None,
-                                                      labels=np.array(
-                                                                   [0, 1, 2, 1,
-                                                                    2, 2, 2, 12,
-                                                                    1, 2, 1, 1,
-                                                                    2, 1, 21]),
-                                                      exec_monoview_multicore=fakeExecMono,
-                                                      exec_multiview_multicore=fakeExecMulti,)
-
-        cls.assertEqual(flag, None)
-        cls.assertEqual(results ,
-                        [['Mono', {'try': 0}], ['Mono', {'try2': 100}],
-                         ['Multi', {'try3': 5}], ['Multi', {'try4': 10}]])
-
-    @classmethod
-    def tearDown(cls):
-        path = tmp_path
-        for file_name in os.listdir(path):
-            dir_path = os.path.join(path, file_name)
-            if os.path.isdir(dir_path):
-                for file_name in os.listdir(dir_path):
-                    os.remove(os.path.join(dir_path, file_name))
-                os.rmdir(dir_path)
-            else:
-                os.remove(os.path.join(path, file_name))
-        os.rmdir(path)
-
-
-class Test_execOneBenchmark_multicore(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        rm_tmp()
-        os.mkdir(tmp_path)
-        cls.args = {
-            "Base": {"name": "chicken_is_heaven", "type": "type",
-                     "pathf": "pathF"},
-            "Classification": {"hps_iter": 1}}
-
-    def test_simple(cls):
-        flag, results = exec_classif.exec_one_benchmark_multicore(
-            nb_cores=2,
-            labels_dictionary={0: "a", 1: "b"},
-            directory=tmp_path,
-            classification_indices=([1, 2, 3, 4], [0, 10, 20, 30, 40]),
-            args=cls.args,
-            k_folds=FakeKfold(),
-            random_state="try",
-            hyper_param_search="try",
-            metrics="try",
-            argument_dictionaries={
-                                                                   "monoview": [
-                                                                       {
-                                                                           "try": 0},
-                                                                       {
-                                                                           "try2": 100}],
-                                                                   "multiview":[{
-                                                                           "try3": 5},
-                                                                       {
-                                                                           "try4": 10}]},
-            benchmark="try",
-            views="try",
-            views_indices="try",
-            flag=None,
-            labels=np.array([0, 1, 2, 3, 4, 2, 2, 12, 1, 2, 1, 1, 2, 1, 21]),
-            exec_monoview_multicore=fakeExecMono,
-            exec_multiview_multicore=fakeExecMulti,)
-
-        cls.assertEqual(flag, None)
-        cls.assertEqual(results ,
-                        [['Mono', {'try': 0}], ['Mono', {'try2': 100}],
-                         ['Multi', {'try3': 5}], ['Multi', {'try4': 10}]])
-
-    @classmethod
-    def tearDown(cls):
-        path = tmp_path
-        for file_name in os.listdir(path):
-            dir_path = os.path.join(path, file_name)
-            if os.path.isdir(dir_path):
-                for file_name in os.listdir(dir_path):
-                    os.remove(os.path.join(dir_path, file_name))
-                os.rmdir(dir_path)
-            else:
-                os.remove(os.path.join(path, file_name))
-        os.rmdir(path)
+# class Test_execOneBenchmark(unittest.TestCase):
+#
+#     @classmethod
+#     def setUp(cls):
+#         rm_tmp()
+#         os.mkdir(tmp_path)
+#         cls.args = {
+#             "Base": {"name": "chicken_is_heaven", "type": "type",
+#                      "pathf": "pathF"},
+#             "Classification": {"hps_iter": 1}}
+#
+#     def test_simple(cls):
+#         flag, results = exec_classif.exec_one_benchmark(core_index=10,
+#                                                       labels_dictionary={
+#                                                                    0: "a",
+#                                                                    1: "b"},
+#                                                       directory=tmp_path,
+#                                                       classification_indices=(
+#                                                                [1, 2, 3, 4],
+#                                                                [0, 5, 6, 7, 8]),
+#                                                                args=cls.args,
+#                                                                k_folds=FakeKfold(),
+#                                                                random_state="try",
+#                                                                hyper_param_search="try",
+#                                                                metrics="try",
+#                                                                argument_dictionaries={
+#                                                                    "Monoview": [
+#                                                                        {
+#                                                                            "try": 0},
+#                                                                        {
+#                                                                            "try2": 100}],
+#                                                                    "multiview":[{
+#                                                                            "try3": 5},
+#                                                                        {
+#                                                                            "try4": 10}]},
+#                                                       benchmark="try",
+#                                                       views="try",
+#                                                       views_indices="try",
+#                                                       flag=None,
+#                                                       labels=np.array(
+#                                                                    [0, 1, 2, 1,
+#                                                                     2, 2, 2, 12,
+#                                                                     1, 2, 1, 1,
+#                                                                     2, 1, 21]),
+#                                                       exec_monoview_multicore=fakeExecMono,
+#                                                       exec_multiview_multicore=fakeExecMulti,)
+#
+#         cls.assertEqual(flag, None)
+#         cls.assertEqual(results ,
+#                         [['Mono', {'try': 0}], ['Mono', {'try2': 100}],
+#                          ['Multi', {'try3': 5}], ['Multi', {'try4': 10}]])
+#
+#     @classmethod
+#     def tearDown(cls):
+#         path = tmp_path
+#         for file_name in os.listdir(path):
+#             dir_path = os.path.join(path, file_name)
+#             if os.path.isdir(dir_path):
+#                 for file_name in os.listdir(dir_path):
+#                     os.remove(os.path.join(dir_path, file_name))
+#                 os.rmdir(dir_path)
+#             else:
+#                 os.remove(os.path.join(path, file_name))
+#         os.rmdir(path)
+#
+#
+# class Test_execOneBenchmark_multicore(unittest.TestCase):
+#
+#     @classmethod
+#     def setUpClass(cls):
+#         rm_tmp()
+#         os.mkdir(tmp_path)
+#         cls.args = {
+#             "Base": {"name": "chicken_is_heaven", "type": "type",
+#                      "pathf": "pathF"},
+#             "Classification": {"hps_iter": 1}}
+#
+#     def test_simple(cls):
+#         flag, results = exec_classif.exec_one_benchmark_multicore(
+#             nb_cores=2,
+#             labels_dictionary={0: "a", 1: "b"},
+#             directory=tmp_path,
+#             classification_indices=([1, 2, 3, 4], [0, 10, 20, 30, 40]),
+#             args=cls.args,
+#             k_folds=FakeKfold(),
+#             random_state="try",
+#             hyper_param_search="try",
+#             metrics="try",
+#             argument_dictionaries={
+#                                                                    "monoview": [
+#                                                                        {
+#                                                                            "try": 0},
+#                                                                        {
+#                                                                            "try2": 100}],
+#                                                                    "multiview":[{
+#                                                                            "try3": 5},
+#                                                                        {
+#                                                                            "try4": 10}]},
+#             benchmark="try",
+#             views="try",
+#             views_indices="try",
+#             flag=None,
+#             labels=np.array([0, 1, 2, 3, 4, 2, 2, 12, 1, 2, 1, 1, 2, 1, 21]),
+#             exec_monoview_multicore=fakeExecMono,
+#             exec_multiview_multicore=fakeExecMulti,)
+#
+#         cls.assertEqual(flag, None)
+#         cls.assertEqual(results ,
+#                         [['Mono', {'try': 0}], ['Mono', {'try2': 100}],
+#                          ['Multi', {'try3': 5}], ['Multi', {'try4': 10}]])
+#
+#     @classmethod
+#     def tearDown(cls):
+#         path = tmp_path
+#         for file_name in os.listdir(path):
+#             dir_path = os.path.join(path, file_name)
+#             if os.path.isdir(dir_path):
+#                 for file_name in os.listdir(dir_path):
+#                     os.remove(os.path.join(dir_path, file_name))
+#                 os.rmdir(dir_path)
+#             else:
+#                 os.remove(os.path.join(path, file_name))
+#         os.rmdir(path)
 
 
 class Test_set_element(unittest.TestCase):

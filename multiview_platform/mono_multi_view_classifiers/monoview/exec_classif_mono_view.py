@@ -52,7 +52,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     logging.debug("Start:\t Loading data")
     kwargs, \
     t_start, \
-    feat, \
+    view_name, \
     classifier_name, \
     X, \
     learningRate, \
@@ -62,8 +62,8 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     logging.debug("Done:\t Loading data")
 
     logging.debug(
-        "Info:\t Classification - Database:" + str(name) + " Feature:" + str(
-            feat) + " train ratio:"
+        "Info:\t Classification - Database:" + str(name) + " View:" + str(
+            view_name) + " train ratio:"
         + str(learningRate) + ", CrossValidation k-folds: " + str(
             KFolds.n_splits) + ", cores:"
         + str(nbCores) + ", algorithm : " + classifier_name)
@@ -120,7 +120,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     stringAnalysis, \
     imagesAnalysis, \
     metricsScores = execute(name, classificationIndices, KFolds, nbCores,
-                            hyper_parameter_search, metrics, n_iter, feat, classifier_name,
+                            hyper_parameter_search, metrics, n_iter, view_name, classifier_name,
                             clKWARGS, labels_names, X.shape,
                             y_train, y_train_pred, y_test, y_test_pred, t_end,
                             randomState, classifier, outputFileName)
@@ -135,10 +135,10 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     viewIndex = args["view_index"]
     if testFoldsPreds is None:
         testFoldsPreds = y_train_pred
-    return monoview_utils.MonoviewResult(viewIndex, classifier_name, feat, metricsScores,
+    return monoview_utils.MonoviewResult(viewIndex, classifier_name, view_name, metricsScores,
                                          full_pred, clKWARGS,
                                          y_test_multiclass_pred, testFoldsPreds, classifier, X_train.shape[1])
-    # return viewIndex, [CL_type, feat, metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
+    # return viewIndex, [CL_type, view_name, metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
 
 
 def initConstants(args, X, classificationIndices, labels_names,

@@ -22,8 +22,8 @@ Classification:
   nb_folds: 2
   nb_class: 2
   classes:
-  type: ["multiview"]
-  algos_monoview: ["adaboost",]
+  type: ["multiview", "monoview"]
+  algos_monoview: ["adaboost","decision_tree"]
   algos_multiview: ["svm_jumbo_fusion"]
   stats_iter: 1
   metrics: ["accuracy_score", "f1_score"]

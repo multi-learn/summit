@@ -3,6 +3,7 @@ import errno
 import logging
 import os
 import time
+import yaml
 
 import matplotlib as mpl
 from matplotlib.patches import Patch
@@ -14,11 +15,22 @@ import plotly
 
 # Import own Modules
 from .monoview.monoview_utils import MonoviewResult
+from . import metrics
 from .multiview.multiview_utils import MultiviewResult
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
+
+def save_dict_to_text(dictionnary, output_file):
+    #TODO : smarter way must exist
+    output_file.write("Failed algorithms : \n\t"+ ",\n\t".join(dictionnary.keys())+".\n\n\n")
+    for key, value in dictionnary.items():
+        output_file.write(key)
+        output_file.write("\n\n")
+        output_file.write(value)
+        output_file.write("\n\n\n")
+    return dictionnary.keys()
 
 
 def plot_results_noise(directory, noise_results, metric_to_plot, name, width=0.1):
@@ -647,6 +659,20 @@ def get_feature_importances(result, feature_names=None):
     return feature_importances
 
 
+def publish_tracebacks(directory, database_name, labels_names, tracebacks, flag):
+    if tracebacks:
+        with open(os.path.join(directory, time.strftime(
+                "%Y_%m_%d-%H_%M_%S") + "-" + database_name + "-" + "_vs_".join(
+                labels_names) + "-iter"+str(flag[0])+"-"+str(flag[1][0])+"vs"+
+                str(flag[1][1])+"tacebacks.txt"), "w") as traceback_file:
+            failed_list = save_dict_to_text(tracebacks, traceback_file)
+        flagged_list = [_ + "-iter"+str(flag[0])+"-"+str(flag[1][0])+"vs"+
+                        str(flag[1][1]) for _ in failed_list]
+    else:
+        flagged_list = {}
+    return flagged_list
+
+
 def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metrics, example_ids):
     r"""Used to extract and format the results of the different biclass experimentations performed.
 
@@ -675,8 +701,9 @@ def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metric
     """
     logging.debug("Srart:\t Analzing all biclass resuls")
     biclass_results = {}
+    flagged_tracebacks_list = []
 
-    for flag, result in results:
+    for flag, result, tracebacks in results:
         iteridex, [classifierPositive, classifierNegative] = flag
 
         arguments = get_arguments(benchmark_argument_dictionaries, flag)
@@ -696,6 +723,10 @@ def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metric
         publishExampleErrors(example_errors, directory, database_name,
                              labels_names, example_ids, arguments["labels"])
         publish_feature_importances(feature_importances, directory, database_name, labels_names)
+
+        flagged_tracebacks_list += publish_tracebacks(directory, database_name, labels_names, tracebacks, flag)
+
+
         if not str(classifierPositive) + str(classifierNegative) in biclass_results:
             biclass_results[str(classifierPositive) + str(classifierNegative)] = {}
             biclass_results[str(classifierPositive) + str(classifierNegative)][
@@ -709,16 +740,17 @@ def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metric
         biclass_results[str(classifierPositive) + str(classifierNegative)]["feature_importances"][iteridex] = feature_importances
 
     logging.debug("Done:\t Analzing all biclass resuls")
-    return results, biclass_results
+
+    return results, biclass_results, flagged_tracebacks_list
 
 
-def gen_metrics_scores_multiclass(results, true_labels, metrics,
+def gen_metrics_scores_multiclass(results, true_labels, metrics_list,
                                   arguments_dictionaries):
     """Used to add all the metrics scores to the multiclass result structure  for each clf and each iteration"""
 
     logging.debug("Start:\t Getting multiclass scores for each metric")
 
-    for metric in metrics:
+    for metric in metrics_list:
         metric_module = getattr(metrics, metric[0])
         for iter_index, iter_results in enumerate(results):
 
@@ -823,7 +855,7 @@ def analyzeMulticlass(results, stats_iter, benchmark_argument_dictionaries,
     """Used to transform one versus one results in multiclass results and to publish it"""
     multiclass_results = [{} for _ in range(stats_iter)]
 
-    for flag, result in results:
+    for flag, result, tracebacks in results:
         iter_index = flag[0]
         classifierPositive = flag[1][0]
         classifierNegative = flag[1][1]
@@ -872,6 +904,7 @@ def analyzeMulticlass(results, stats_iter, benchmark_argument_dictionaries,
     publishMulticlassExmapleErrors(multiclass_results, directories,
                                    benchmark_argument_dictionaries[0][
                                        "args"].name, example_ids)
+
     return results, multiclass_results
 
 
@@ -1160,6 +1193,12 @@ def analyze_iter_multiclass(multiclass_results, directory, stats_iter, metrics,
     return results
 
 
+def save_failed(failed_list, directory):
+    with open(os.path.join(directory, "failed_algorithms.txt"), "w") as failed_file:
+        failed_file.write("The following algorithms sent an error, the tracebacks are stored in the coressponding directory :\n")
+        failed_file.write(", \n".join(failed_list)+".")
+
+
 def get_results(results, stats_iter, nb_multiclass, benchmark_argument_dictionaries,
                multiclass_labels, metrics,
                classification_indices, directories, directory, labels_dictionary,
@@ -1167,8 +1206,12 @@ def get_results(results, stats_iter, nb_multiclass, benchmark_argument_dictionar
 
     """Used to analyze the results of the previous benchmarks"""
     data_base_name = benchmark_argument_dictionaries[0]["args"]["Base"]["name"]
-    results_means_std, biclass_results = analyze_biclass(results, benchmark_argument_dictionaries,
+
+
+    results_means_std, biclass_results, flagged_failed = analyze_biclass(results, benchmark_argument_dictionaries,
                                          stats_iter, metrics, example_ids)
+    if flagged_failed:
+        save_failed(flagged_failed, directory)
 
     if nb_multiclass > 1:
         results_means_std, multiclass_results = analyzeMulticlass(results, stats_iter,
