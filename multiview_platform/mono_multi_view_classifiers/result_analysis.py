@@ -196,7 +196,6 @@ def plot_2d(data, classifiers_names, nbClassifiers, nbExamples,
     ### The following part is used to generate an interactive graph.
     if use_plotly:
         label_index_list = [np.where(labels==i)[0] for i in np.unique(labels)]
-        print(label_index_list)
         hover_text = [[example_ids[i] + " failed "+ str(stats_iter-data[i,j])+" time(s)"
                        for j in range(data.shape[1])]
                       for i in range(data.shape[0]) ]
@@ -498,9 +497,9 @@ def init_plot(results, metric_name, metric_dataframe,
 
     nb_results = metric_dataframe.shape[1]
 
-    file_name = directory + time.strftime(
+    file_name = os.path.join(directory, time.strftime(
         "%Y_%m_%d-%H_%M_%S") + "-" + database_name + "-" + "_vs_".join(
-        labels_names) + "-" + metric_name
+        labels_names) + "-" + metric_name)
 
     results += [[classifiers_name, metric_name, testMean, testSTD]
                 for classifiers_name, testMean, testSTD in
@@ -548,18 +547,20 @@ def gen_error_data(example_errors):
     data_2d = np.zeros((nb_examples, nb_classifiers))
     for classifierIndex, (classifier_name, error_on_examples) in enumerate(
             example_errors.items()):
-        data_2d[:, classifierIndex] = error_on_examples
+        try:
+            data_2d[:, classifierIndex] = error_on_examples
+        except:
+            import pdb;pdb.set_trace()
     error_on_examples = -1 * np.sum(data_2d, axis=1) / nb_classifiers
-
     return nb_classifiers, nb_examples, classifiers_names, data_2d, error_on_examples
 
 
 def publishExampleErrors(example_errors, directory, databaseName, labels_names, example_ids, labels):
     logging.debug("Start:\t Biclass Label analysis figure generation")
 
-    base_file_name = directory + time.strftime(
+    base_file_name = os.path.join(directory,  time.strftime(
         "%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + "_vs_".join(
-        labels_names) + "-"
+        labels_names) + "-")
 
     nb_classifiers, nb_examples, classifiers_names, \
     data_2d, error_on_examples = gen_error_data(example_errors)
@@ -579,9 +580,9 @@ def publishExampleErrors(example_errors, directory, databaseName, labels_names, 
 
 def publish_feature_importances(feature_importances, directory, database_name, labels_names, feature_stds=None):
     for view_name, feature_importance in feature_importances.items():
-        file_name = directory + time.strftime(
+        file_name = os.path.join(directory, time.strftime(
             "%Y_%m_%d-%H_%M_%S") + "-" + database_name + "-" + "_vs_".join(
-            labels_names) + "-" + view_name + "-feature_importances"
+            labels_names) + "-" + view_name + "-feature_importances")
         if feature_stds is not None:
             feature_std = feature_stds[view_name]
             feature_std.to_csv(file_name+"_dataframe_stds.csv")
@@ -814,9 +815,9 @@ def publishMulticlassScores(multiclass_results, metrics, stats_iter, direcories,
                                          classifiers_names])
 
             nbResults = classifiers_names.shape[0]
-            fileName = directory + time.strftime(
+            fileName = os.path.join(directory , time.strftime(
                 "%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-" + metric[
-                           0]
+                           0])
 
             plot_metric_scores(train_scores, validationScores, classifiers_names,
                                nbResults, metric[0], fileName, tag=" multiclass")
@@ -828,22 +829,20 @@ def publishMulticlassScores(multiclass_results, metrics, stats_iter, direcories,
 
 
 def publishMulticlassExmapleErrors(multiclass_results, directories,
-                                   databaseName, example_ids):
-    for iter_index, multiclassResult in enumerate(multiclass_results):
+                                   databaseName, example_ids, multiclass_labels):
+    for iter_index, multiclass_result in enumerate(multiclass_results):
         directory = directories[iter_index]
         logging.debug("Start:\t Multiclass Label analysis figure generation")
 
-        base_file_name = directory + time.strftime(
-            "%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-"
+        base_file_name = os.path.join(directory, time.strftime(
+            "%Y_%m_%d-%H_%M_%S") + "-" + databaseName + "-")
+        nb_classifiers, nb_examples, classifiers_names, data, error_on_examples = gen_error_data(
+                                                                                        dict((key, multiclass_result[key]['error_on_examples'])
+                                                                                             for key in multiclass_result.keys()),)
+        plot_2d(data, classifiers_names, nb_classifiers, nb_examples,
+                base_file_name, example_ids=example_ids, labels=multiclass_labels)
 
-        nbClassifiers, nbExamples, nCopies, classifiers_names, data, error_on_examples = gen_error_data(
-            multiclassResult,
-            base_file_name)
-
-        plot_2d(data, classifiers_names, nbClassifiers, nbExamples,
-                nCopies, base_file_name, example_ids=example_ids)
-
-        plot_errors_bar(error_on_examples, nbClassifiers, nbExamples,
+        plot_errors_bar(error_on_examples, nb_classifiers, nb_examples,
                         base_file_name)
 
         logging.debug("Done:\t Multiclass Label analysis figure generation")
@@ -903,7 +902,7 @@ def analyzeMulticlass(results, stats_iter, benchmark_argument_dictionaries,
                             benchmark_argument_dictionaries[0]["args"]["Base"]["name"])
     publishMulticlassExmapleErrors(multiclass_results, directories,
                                    benchmark_argument_dictionaries[0][
-                                       "args"].name, example_ids)
+                                       "args"]["Base"]["name"], example_ids, multiclass_labels)
 
     return results, multiclass_results
 
@@ -1001,9 +1000,9 @@ def publish_iter_multiclass_metrics_scores(iter_multiclass_results, classifiers_
 
         nb_results = classifiers_names.shape[0]
 
-        file_name = directory + time.strftime(
+        file_name = os.path.join(directory, time.strftime(
             "%Y_%m_%d-%H_%M_%S") + "-" + data_base_name + "-Mean_on_" + str(
-            stats_iter) + "_iter-" + metric_name + ".png"
+            stats_iter) + "_iter-" + metric_name + ".png")
 
         plot_metric_scores(trainMeans, testMeans, classifiers_names, nb_results,
                            metric_name, file_name, tag=" averaged multiclass",
@@ -1014,16 +1013,19 @@ def publish_iter_multiclass_metrics_scores(iter_multiclass_results, classifiers_
 
 
 def publish_iter_multiclass_example_errors(iter_multiclass_results, directory,
-                                           classifiers_names, stats_iter, example_ids, min_size=10):
+                                           classifiers_names, stats_iter, example_ids, multiclass_labels, min_size=10):
     logging.debug(
         "Start:\t Global multiclass label analysis figures generation")
-    base_file_name = directory + time.strftime("%Y_%m_%d-%H_%M_%S") + "-"
+    base_file_name = os.path.join(directory, time.strftime("%Y_%m_%d-%H_%M_%S") + "-")
+    nb_examples, nb_classifiers, data, error_on_examples, classifiers_names = gen_error_data_glob(
+        dict((clf_name, combi_res)
+             for clf_name, combi_res
+             in zip(classifiers_names,
+                    iter_multiclass_results["error_on_examples"])),
+             stats_iter)
 
-    nb_examples, nb_classifiers, data, error_on_examples = gen_error_data_glob(
-        iter_multiclass_results, stats_iter, base_file_name)
-
-    plot_2d(data, classifiers_names, nb_classifiers, nb_examples, 1,
-            base_file_name, stats_iter=stats_iter, example_ids=example_ids)
+    plot_2d(data, classifiers_names, nb_classifiers, nb_examples,
+            base_file_name, stats_iter=stats_iter, example_ids=example_ids, labels=multiclass_labels)
 
     plot_errors_bar(error_on_examples, nb_classifiers * stats_iter, nb_examples,
                     base_file_name)
@@ -1152,7 +1154,7 @@ def analyzebiclass_iter(biclass_results, stats_iter, directory,
     return results
 
 def analyze_iter_multiclass(multiclass_results, directory, stats_iter, metrics,
-                           data_base_name, nb_examples, example_ids):
+                           data_base_name, nb_examples, example_ids, multiclass_labels):
     """Used to mean the multiclass results on the iterations executed with different random states"""
 
     logging.debug("Start:\t Getting mean results for multiclass classification")
@@ -1189,7 +1191,7 @@ def analyze_iter_multiclass(multiclass_results, directory, stats_iter, metrics,
         iter_multiclass_results, classifiers_names,
         data_base_name, directory, stats_iter)
     publish_iter_multiclass_example_errors(iter_multiclass_results, directory,
-                                       classifiers_names, stats_iter, example_ids)
+                                       classifiers_names, stats_iter, example_ids, multiclass_labels)
     return results
 
 
@@ -1226,5 +1228,5 @@ def get_results(results, stats_iter, nb_multiclass, benchmark_argument_dictionar
             labels_dictionary, data_base_name, example_ids)
         if nb_multiclass > 1:
             results_means_std = analyze_iter_multiclass(multiclass_results, directory, stats_iter,
-                                  metrics, data_base_name, nb_examples, example_ids)
+                                  metrics, data_base_name, nb_examples, example_ids, multiclass_labels)
     return results_means_std

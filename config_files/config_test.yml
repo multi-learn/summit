@@ -20,16 +20,16 @@ Classification:
   multiclass_method: "oneVersusOne"
   split: 0.4
   nb_folds: 2
-  nb_class: 2
+  nb_class: 3
   classes:
-  type: ["multiview", "monoview"]
-  algos_monoview: ["adaboost","decision_tree"]
+  type: ["monoview"]
+  algos_monoview: ["decision_tree",]
   algos_multiview: ["svm_jumbo_fusion"]
-  stats_iter: 1
+  stats_iter: 2
   metrics: ["accuracy_score", "f1_score"]
   metric_princ: "f1_score"
   hps_type: "randomized_search-equiv"
-  hps_iter: 2
+  hps_iter: 1
 
 
 #####################################
