@@ -1,11 +1,11 @@
 # The base configuration of the benchmark
 Base :
   log: True
-  name: ["plausible"]
+  name: ["outliers_dset"]
   label: "_"
   type: ".hdf5"
   views:
-  pathf: "../data/"
+  pathf: "/home/baptiste/Documents/Datasets/Generated/outliers_dset/"
   nice: 0
   random_state: 42
   nb_cores: 1
@@ -18,18 +18,18 @@ Base :
 # All the classification-realted configuration options
 Classification:
   multiclass_method: "oneVersusOne"
-  split: 0.4
+  split: 0.2
   nb_folds: 2
   nb_class: 2
   classes:
-  type: ["monoview"]
-  algos_monoview: ["adaboost",]
-  algos_multiview: ["svm_jumbo_fusion"]
-  stats_iter: 2
+  type: ["monoview", "multiview"]
+  algos_monoview: ["decision_tree", "adaboost", "svm_linear", "random_forest"]
+  algos_multiview: ["weighted_linear_early_fusion", "difficulty_fusion", "double_fault_fusion"]
+  stats_iter: 30
   metrics: ["accuracy_score", "f1_score"]
-  metric_princ: "f1_score"
+  metric_princ: "accuracy_score"
   hps_type: "randomized_search-equiv"
-  hps_iter: 1
+  hps_iter: 5
 
 
 #####################################

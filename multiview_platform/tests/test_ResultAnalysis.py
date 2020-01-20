@@ -182,7 +182,7 @@ class Test_gen_error_data(unittest.TestCase):
 class Test_format_previous_results(unittest.TestCase):
 
     def test_simple(self):
-        biclass_results = {"01":{"metrics_scores":[], "example_errors":[], "feature_importances":[]}}
+        biclass_results = {"01":{"metrics_scores":[], "example_errors":[], "feature_importances":[], "labels":[]}}
         random_state = np.random.RandomState(42)
 
         # Gen metrics data

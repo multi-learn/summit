@@ -7,6 +7,7 @@ import yaml
 
 import matplotlib as mpl
 from matplotlib.patches import Patch
+
 # Import third party modules
 import matplotlib.pyplot as plt
 import numpy as np
@@ -213,7 +214,7 @@ def plot_2d(data, classifiers_names, nbClassifiers, nbExamples,
     plt.close()
     ### The following part is used to generate an interactive graph.
     if use_plotly:
-        label_index_list = [np.where(labels==i)[0] for i in np.unique(labels)]
+        label_index_list = [np.arange(len(labels))] #[np.where(labels==i)[0] for i in np.unique(labels)]
         hover_text = [[example_ids[i] + " failed "+ str(stats_iter-data[i,j])+" time(s)"
                        for j in range(data.shape[1])]
                       for i in range(data.shape[0]) ]
@@ -732,7 +733,6 @@ def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metric
         metrics_scores = get_metrics_scores_biclass(metrics, result)
         example_errors = get_example_errors_biclass(arguments["labels"], result)
         feature_importances = get_feature_importances(result)
-        print(feature_importances)
         directory = arguments["directory"]
 
         database_name = arguments["args"]["Base"]["name"]
