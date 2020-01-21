@@ -1,11 +1,11 @@
 # The base configuration of the benchmark
 Base :
   log: True
-  name: ["outliers_dset"]
+  name: ["awa-tiger-wolf-all"]
   label: "_"
   type: ".hdf5"
   views:
-  pathf: "/home/baptiste/Documents/Datasets/Generated/outliers_dset/"
+  pathf: "/home/baptiste/Documents/Datasets/AWA/base/"
   nice: 0
   random_state: 42
   nb_cores: 1
@@ -18,16 +18,16 @@ Base :
 # All the classification-realted configuration options
 Classification:
   multiclass_method: "oneVersusOne"
-  split: 0.2
+  split: 0.9
   nb_folds: 2
   nb_class: 2
   classes:
-  type: ["monoview", "multiview"]
-  algos_monoview: ["decision_tree", "adaboost", "svm_linear", "random_forest"]
-  algos_multiview: ["weighted_linear_early_fusion", "difficulty_fusion", "double_fault_fusion"]
-  stats_iter: 30
+  type: ["multiview", "monoview"]
+  algos_monoview: ["decision_tree", "adaboost", "random_forest" ]
+  algos_multiview: ["weighted_linear_early_fusion",]
+  stats_iter: 1
   metrics: ["accuracy_score", "f1_score"]
-  metric_princ: "accuracy_score"
+  metric_princ: "f1_score"
   hps_type: "randomized_search-equiv"
   hps_iter: 5
 
@@ -65,7 +65,7 @@ adaboost_graalpy:
   n_stumps: [1]
 
 decision_tree:
-  max_depth: [10]
+  max_depth: [2]
   criterion: ["gini"]
   splitter: ["best"]
 

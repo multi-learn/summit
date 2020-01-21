@@ -4,6 +4,7 @@ import logging
 import os
 import time
 import yaml
+import traceback
 
 import matplotlib as mpl
 from matplotlib.patches import Patch
@@ -162,6 +163,8 @@ def plot_metric_scores(train_scores, test_scores, names, nb_results, metric_name
         ))
 
         fig.update_layout(title=metric_name + "\n" + tag + " scores for each classifier")
+        fig.update_layout(paper_bgcolor = 'rgba(0,0,0,0)',
+                          plot_bgcolor = 'rgba(0,0,0,0)')
         plotly.offline.plot(fig, filename=file_name + ".html", auto_open=False)
         del fig
 
@@ -232,7 +235,8 @@ def plot_2d(data, classifiers_names, nbClassifiers, nbExamples,
                 reversescale=True), row=row_index+1, col=1)
             fig.update_yaxes(title_text="Label "+str(row_index), showticklabels=False, ticks='', row=row_index+1, col=1)
             fig.update_xaxes(showticklabels=False, row=row_index+1, col=1)
-
+        fig.update_layout(paper_bgcolor = 'rgba(0,0,0,0)',
+                          plot_bgcolor = 'rgba(0,0,0,0)')
         fig.update_xaxes(showticklabels=True, row=len(label_index_list), col=1)
         plotly.offline.plot(fig, filename=file_name + "error_analysis_2D.html", auto_open=False)
         del fig
@@ -629,6 +633,8 @@ def publish_feature_importances(feature_importances, directory, database_name, l
         fig.update_layout(
             xaxis={"showgrid": False, "showticklabels": False, "ticks": ''},
             yaxis={"showgrid": False, "showticklabels": False, "ticks": ''})
+        fig.update_layout(paper_bgcolor = 'rgba(0,0,0,0)',
+                          plot_bgcolor = 'rgba(0,0,0,0)')
         plotly.offline.plot(fig, filename=file_name + ".html", auto_open=False)
 
         del fig
@@ -724,7 +730,7 @@ def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metric
     logging.debug("Srart:\t Analzing all biclass resuls")
     biclass_results = {}
     flagged_tracebacks_list = []
-
+    fig_errors = []
     for flag, result, tracebacks in results:
         iteridex, [classifierPositive, classifierNegative] = flag
 
@@ -739,13 +745,12 @@ def analyze_biclass(results, benchmark_argument_dictionaries, stats_iter, metric
         labels_names = [arguments["labels_dictionary"][0],
                        arguments["labels_dictionary"][1]]
 
+        flagged_tracebacks_list += publish_tracebacks(directory, database_name, labels_names, tracebacks, flag)
         results = publishMetricsGraphs(metrics_scores, directory, database_name,
-                             labels_names)
+                                       labels_names)
         publishExampleErrors(example_errors, directory, database_name,
                              labels_names, example_ids, arguments["labels"])
         publish_feature_importances(feature_importances, directory, database_name, labels_names)
-
-        flagged_tracebacks_list += publish_tracebacks(directory, database_name, labels_names, tracebacks, flag)
 
 
         if not str(classifierPositive) + str(classifierNegative) in biclass_results:

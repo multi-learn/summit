@@ -180,12 +180,12 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
 
     def fit_multiview(self, X, y=None, groups=None, **fit_params):
         n_splits = self.cv.get_n_splits(self.available_indices, y[self.available_indices])
-        folds = self.cv.split(self.available_indices, y[self.available_indices])
+        folds = list(self.cv.split(self.available_indices, y[self.available_indices]))
+        if self.equivalent_draws:
+            self.n_iter = self.n_iter*X.nb_view
         candidate_params = list(self._get_param_iterator())
         base_estimator = clone(self.estimator)
         results = {}
-        if self.equivalent_draws:
-            self.n_iter = self.n_iter*X.nb_view
         self.cv_results_ = dict(("param_"+param_name, []) for param_name in candidate_params[0].keys())
         self.cv_results_["mean_test_score"] = []
         for candidate_param_idx, candidate_param in enumerate(candidate_params):
