@@ -18,7 +18,7 @@ def score(y_true, y_pred, multiclass=False, **kwargs):
     try:
         beta = kwargs["1"]
     except Exception:
-        beta = 1.0
+        beta = 10.0
     try:
         labels = kwargs["2"]
     except Exception:
