@@ -114,7 +114,7 @@ class CustomUniform:
             return unif
 
 
-class BaseMonoviewClassifier(BaseEstimator, ClassifierMixin):
+class BaseMonoviewClassifier(BaseEstimator, ):#ClassifierMixin):
 
     def genBestParams(self, detector):
         return dict(
