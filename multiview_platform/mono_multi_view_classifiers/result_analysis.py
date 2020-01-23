@@ -218,7 +218,7 @@ def plot_2d(data, classifiers_names, nbClassifiers, nbExamples,
     ### The following part is used to generate an interactive graph.
     if use_plotly:
         label_index_list = np.concatenate([np.where(labels==i)[0] for i in np.unique(labels)]) #[np.where(labels==i)[0] for i in np.unique(labels)]
-        hover_text = [[example_ids[example_index] + " failed "+ str(stats_iter-data[example_index,classifier_index])+" time(s), labelled "+str(example_index)
+        hover_text = [[example_ids[example_index] + " failed "+ str(stats_iter-data[example_index,classifier_index])+" time(s), labelled "+str(labels[example_index])
                        for classifier_index in range(data.shape[1])]
                       for example_index in range(data.shape[0]) ]
         fig = plotly.graph_objs.Figure()

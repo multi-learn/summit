@@ -230,10 +230,14 @@ def gen_k_folds(stats_iter, nb_folds, stats_iter_random_states):
         for random_state in stats_iter_random_states:
             folds_list.append(
                 sklearn.model_selection.StratifiedKFold(n_splits=nb_folds,
-                                                        random_state=random_state))
+                                                        random_state=random_state,
+                                                        shuffle=True))
     else:
+        if isinstance(stats_iter_random_states, list):
+            stats_iter_random_states = stats_iter_random_states[0]
         folds_list = [sklearn.model_selection.StratifiedKFold(n_splits=nb_folds,
-                                                             random_state=stats_iter_random_states)]
+                                                             random_state=stats_iter_random_states,
+                                                              shuffle=True)]
     return folds_list
 
 

@@ -193,6 +193,9 @@ class BaseMonoviewClassifier(BaseEstimator, ):#ClassifierMixin):
     def get_name_for_fusion(self):
         return self.__class__.__name__[:4]
 
+    def getInterpret(self, directory, y_test):
+        return ""
+
 
 def get_names(classed_list):
     return np.array([object_.__class__.__name__ for object_ in classed_list])
