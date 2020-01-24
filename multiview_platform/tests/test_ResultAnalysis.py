@@ -210,7 +210,7 @@ class Test_format_previous_results(unittest.TestCase):
         biclass_results["01"]["example_errors"][1]["mv"] = mv_error_data_2
 
         # Running the function
-        metric_analysis, error_analysis, feature_importances, feature_stds = result_analysis.format_previous_results(biclass_results)
+        metric_analysis, error_analysis, feature_importances, feature_stds,labels = result_analysis.format_previous_results(biclass_results)
         mean_df = pd.DataFrame(data=np.mean(np.array([metrics_1_data,
                                                       metrics_2_data]),
                                             axis=0),

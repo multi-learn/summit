@@ -183,7 +183,11 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
         folds = list(self.cv.split(self.available_indices, y[self.available_indices]))
         if self.equivalent_draws:
             self.n_iter = self.n_iter*X.nb_view
-        candidate_params = list(self._get_param_iterator())
+        # Fix to allow sklearn > 0.19
+        from sklearn.model_selection import ParameterSampler
+        candidate_params = list(
+            ParameterSampler(self.param_distributions, self.n_iter,
+                             random_state=self.random_state))
         base_estimator = clone(self.estimator)
         results = {}
         self.cv_results_ = dict(("param_"+param_name, []) for param_name in candidate_params[0].keys())
