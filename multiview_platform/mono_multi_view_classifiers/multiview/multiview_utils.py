@@ -25,6 +25,11 @@ class MultiviewResult(object):
         except:
             return self.classifier_name
 
+class FakeEstimator():
+
+    def predict(self, X, example_indices=None, view_indices=None):
+        return np.zeros(example_indices.shape[0])
+
 
 def get_names(classed_list):
     return np.array([object_.__class__.__name__ for object_ in classed_list])
