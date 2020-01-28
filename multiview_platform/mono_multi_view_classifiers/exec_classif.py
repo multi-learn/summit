@@ -771,7 +771,10 @@ def exec_benchmark(nb_cores, stats_iter, nb_multiclass,
     #         benchmark_arguments_dictionaries[0])]
     # else:
     for arguments in benchmark_arguments_dictionaries:
-        results += [exec_one_benchmark_mono_core(dataset_var=dataset_var, **arguments)]
+        benchmark_results = exec_one_benchmark_mono_core(dataset_var=dataset_var, **arguments)
+        from .result_analysis import analyze_biclass
+        analyze_biclass([benchmark_results], benchmark_arguments_dictionaries, stats_iter, metrics, example_ids=dataset_var.example_ids)
+        results += [benchmark_results]
     logging.debug("Done:\t Executing all the needed biclass benchmarks")
 
     # Do everything with flagging

@@ -1,11 +1,11 @@
 # The base configuration of the benchmark
 Base :
   log: True
-  name: ["awa-tiger-wolf-all"]
+  name: ["plausible", "koukou"]
   label: "_"
   type: ".hdf5"
   views:
-  pathf: "/home/baptiste/Documents/Datasets/AWA/base/"
+  pathf: "../data/"
   nice: 0
   random_state: 42
   nb_cores: 1
@@ -25,7 +25,7 @@ Classification:
   type: ["multiview", "monoview"]
   algos_monoview: ["decision_tree", "adaboost", "random_forest" ]
   algos_multiview: ["weighted_linear_early_fusion",]
-  stats_iter: 1
+  stats_iter: 2
   metrics: ["accuracy_score", "f1_score"]
   metric_princ: "f1_score"
   hps_type: "randomized_search-equiv"
