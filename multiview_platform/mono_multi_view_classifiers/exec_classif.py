@@ -11,15 +11,14 @@ import itertools
 import numpy as np
 from joblib import Parallel, delayed
 from sklearn.tree import DecisionTreeClassifier
+
 # Import own modules
 from . import monoview_classifiers
 from . import multiview_classifiers
 from .multiview.exec_multiview import exec_multiview, exec_multiview_multicore
 from .monoview.exec_classif_mono_view import exec_monoview, exec_monoview_multicore
 from .utils.dataset import delete_HDF5
-from .result_analysis import get_results
-from .result_analysis import plot_results_noise
-# resultAnalysis, analyzeLabels, analyzeIterResults, analyzeIterLabels, genNamesFromRes,
+from .result_analysis import get_results, plot_results_noise, analyze_biclass
 from .utils import execution, dataset, multiclass, configuration
 
 matplotlib.use(
@@ -772,7 +771,6 @@ def exec_benchmark(nb_cores, stats_iter, nb_multiclass,
     # else:
     for arguments in benchmark_arguments_dictionaries:
         benchmark_results = exec_one_benchmark_mono_core(dataset_var=dataset_var, **arguments)
-        from .result_analysis import analyze_biclass
         analyze_biclass([benchmark_results], benchmark_arguments_dictionaries, stats_iter, metrics, example_ids=dataset_var.example_ids)
         results += [benchmark_results]
     logging.debug("Done:\t Executing all the needed biclass benchmarks")
