@@ -291,8 +291,8 @@ class Dataset():
         new_dataset_file = h5py.File(dataset_file_path,"w")
         self.dataset.copy("Metadata", new_dataset_file)
         if "example_ids" in self.dataset["Metadata"].keys():
-            ex_ids = new_dataset_file["Metadata"]["example_ids"]
-            ex_ids[...] = np.array(self.example_ids)[example_indices].astype(np.dtype("S10"))
+            del new_dataset_file["Metadata"]["example_ids"]
+            ex_ids = new_dataset_file["Metadata"].create_dataset("example_ids", data=np.array(self.example_ids)[example_indices].astype(np.dtype("S10")))
         else:
             new_dataset_file["Metadata"].create_dataset("example_ids",
                                                         (len(self.example_ids), ),
