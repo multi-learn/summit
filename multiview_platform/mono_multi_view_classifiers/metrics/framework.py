@@ -58,7 +58,7 @@ def get_scorer(**kwargs):
     return scorer
 
 
-def getConfig(**kwargs):
+def get_config(**kwargs):
     """Get the metric's configuration as a string.
 
    Parameters

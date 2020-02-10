@@ -10,7 +10,7 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def score(y_true, y_pred, multiclass=False, **kwargs):
+def score(y_true, y_pred, multiclass=True, **kwargs):
     try:
         sample_weight = kwargs["0"]
     except Exception:
@@ -60,13 +60,13 @@ def get_scorer(**kwargs):
     try:
         average = kwargs["4"]
     except Exception:
-        average = "binary"
+        average = "micro"
     return make_scorer(metric, greater_is_better=True, beta=beta,
                        sample_weight=sample_weight, labels=labels,
                        pos_label=pos_label, average=average)
 
 
-def getConfig(**kwargs):
+def get_config(**kwargs):
     try:
         sample_weight = kwargs["0"]
     except Exception:

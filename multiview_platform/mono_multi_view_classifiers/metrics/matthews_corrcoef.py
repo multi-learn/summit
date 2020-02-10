@@ -18,6 +18,6 @@ def get_scorer(**kwargs):
     return make_scorer(metric, greater_is_better=True)
 
 
-def getConfig(**kwargs):
+def get_config(**kwargs):
     config_string = "Matthews correlation coefficient (higher is better)"
     return config_string

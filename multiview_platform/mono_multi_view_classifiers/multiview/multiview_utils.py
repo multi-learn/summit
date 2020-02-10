@@ -8,12 +8,11 @@ from .. import monoview_classifiers
 
 class MultiviewResult(object):
     def __init__(self, classifier_name, classifier_config,
-                 metrics_scores, full_labels, test_labels_multiclass):
+                 metrics_scores, full_labels):
         self.classifier_name = classifier_name
         self.classifier_config = classifier_config
         self.metrics_scores = metrics_scores
         self.full_labels_pred = full_labels
-        self.y_test_multiclass_pred = test_labels_multiclass
 
     def get_classifier_name(self):
         try:

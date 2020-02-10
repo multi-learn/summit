@@ -72,23 +72,26 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
     #     """Used to know if the classifier can return label probabilities"""
     #     return False
 
-    def getInterpret(self, directory, y_test):
+    def get_interpret(self, directory, y_test, multi_class=False):
         interpretString = ""
-        interpretString += self.get_feature_importance(directory)
-        step_test_metrics = np.array(
-            [self.plotted_metric.score(y_test, step_pred) for step_pred in
-             self.step_predictions])
-        get_accuracy_graph(step_test_metrics, "AdaboostClassic",
-                           directory + "test_metrics.png",
-                           self.plotted_metric_name, set="test")
-        get_accuracy_graph(self.metrics, "AdaboostClassic",
-                           directory + "metrics.png", self.plotted_metric_name)
-        np.savetxt(directory + "test_metrics.csv", step_test_metrics,
-                   delimiter=',')
-        np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')
-        np.savetxt(directory + "times.csv",
-                   np.array([self.train_time, self.pred_time]), delimiter=',')
-        return interpretString
+        if multi_class:
+            return interpretString
+        else:
+            interpretString += self.get_feature_importance(directory)
+            step_test_metrics = np.array(
+                [self.plotted_metric.score(y_test, step_pred) for step_pred in
+                 self.step_predictions])
+            get_accuracy_graph(step_test_metrics, "AdaboostClassic",
+                               directory + "test_metrics.png",
+                               self.plotted_metric_name, set="test")
+            get_accuracy_graph(self.metrics, "AdaboostClassic",
+                               directory + "metrics.png", self.plotted_metric_name)
+            np.savetxt(directory + "test_metrics.csv", step_test_metrics,
+                       delimiter=',')
+            np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')
+            np.savetxt(directory + "times.csv",
+                       np.array([self.train_time, self.pred_time]), delimiter=',')
+            return interpretString
 
 
 # def formatCmdArgs(args):

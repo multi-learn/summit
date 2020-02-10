@@ -1,6 +1,8 @@
 import itertools
-
+from sklearn.multiclass import OneVsOneClassifier, OneVsRestClassifier
 import numpy as np
+
+from .base import BaseClassifier
 
 
 def gen_multiclass_labels(labels, multiclass_method, splits):
@@ -97,3 +99,38 @@ def is_biclass(multiclass_preds):
         return True
     else:
         return False
+
+
+def get_mc_estim(estimator, random_state):
+    # print(estimator.accepts_multi_class(random_state))
+    if not estimator.accepts_multi_class(random_state):
+        if hasattr(estimator, "predict_proba"):
+            estimator = OVRWrapper(estimator)
+            print(estimator.get_params().keys())
+        else:
+            estimator = OneVsOneClassifier(estimator)
+    return estimator
+
+class MCWrapper():
+
+    def set_params(self, **params):
+        self.estimator.set_params(**params)
+        return self
+
+    def get_config(self):
+        return self.estimator.get_config()
+
+    def get_interpret(self, output_file_name, y_test):
+        return self.estimator.get_interpret(output_file_name, y_test,
+                                            multi_class=True)
+
+#
+#
+class OVRWrapper(MCWrapper, OneVsOneClassifier):
+
+    pass
+
+
+class OVOWrapper(MCWrapper, BaseClassifier):
+
+    pass

@@ -26,7 +26,7 @@ def get_scorer(**kwargs):
     return make_scorer(metric, greater_is_better=False, classes=classes)
 
 
-def getConfig(**kwargs):
+def get_config(**kwargs):
     try:
         classes = kwargs["0"]
     except Exception:

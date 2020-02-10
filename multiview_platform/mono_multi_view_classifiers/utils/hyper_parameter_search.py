@@ -6,7 +6,7 @@ import numpy as np
 from scipy.stats import randint, uniform
 from sklearn.model_selection import RandomizedSearchCV
 
-
+from .multiclass import get_mc_estim
 from .. import metrics
 
 
@@ -112,7 +112,8 @@ def randomized_search(X, y, framework, random_state, output_file_name, classifie
                       equivalent_draws=True):
     estimator = getattr(classifier_module, classifier_name)(random_state=random_state,
                                                             **classifier_kwargs)
-    params_dict = estimator.genDistribs()
+    params_dict = estimator.gen_distribs()
+    estimator = get_mc_estim(estimator, random_state)
     if params_dict:
         metric_module = getattr(metrics, metric[0])
         if metric[1] is not None:
@@ -126,15 +127,15 @@ def randomized_search(X, y, framework, random_state, output_file_name, classifie
             [min(nb_possible_combination, n_iter) for nb_possible_combination in
              nb_possible_combinations])
         random_search = MultiviewCompatibleRandomizedSearchCV(estimator,
-                                                             n_iter=int(np.sum(min_list)),
-                                                             param_distributions=params_dict,
-                                                             refit=True,
-                                                             n_jobs=nb_cores, scoring=scorer,
-                                                             cv=folds, random_state=random_state,
-                                                             learning_indices=learning_indices,
-                                                             view_indices=view_indices,
-                                                             framework = framework,
-                                                            equivalent_draws=equivalent_draws)
+                                                              n_iter=int(np.sum(min_list)),
+                                                              param_distributions=params_dict,
+                                                              refit=True,
+                                                              n_jobs=nb_cores, scoring=scorer,
+                                                              cv=folds, random_state=random_state,
+                                                              learning_indices=learning_indices,
+                                                              view_indices=view_indices,
+                                                              framework = framework,
+                                                              equivalent_draws=equivalent_draws)
         random_search.fit(X, y)
         best_params = random_search.best_params_
         if "random_state" in best_params:

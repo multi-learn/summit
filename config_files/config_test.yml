@@ -1,11 +1,11 @@
 # The base configuration of the benchmark
 Base :
   log: True
-  name: ["lives_13view", "koukou"]
+  name: ["plausible",]
   label: "_"
   type: ".hdf5"
   views:
-  pathf: "/home/baptiste/Documents/Datasets/Alexis/data/"
+  pathf: "../data/"
   nice: 0
   random_state: 42
   nb_cores: 1
@@ -18,18 +18,18 @@ Base :
 # All the classification-realted configuration options
 Classification:
   multiclass_method: "oneVersusOne"
-  split: 0.9
+  split: 0.8
   nb_folds: 2
   nb_class: 2
-  classes: ["EMF", ]
-  type: ["multiview", "monoview"]
-  algos_monoview: ["decision_tree", "adaboost", "random_forest" ]
+  classes:
+  type: ["monoview",]
+  algos_monoview: ["gradient_boosting", ]
   algos_multiview: ["weighted_linear_early_fusion",]
   stats_iter: 2
   metrics: ["accuracy_score", "f1_score"]
   metric_princ: "f1_score"
   hps_type: "randomized_search-equiv"
-  hps_iter: 5
+  hps_iter: 1
 
 
 #####################################

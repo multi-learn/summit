@@ -293,7 +293,7 @@ def get_scorer(type='f1_score', **kwargs):
         return scorer
 
 
-def getConfig(type='f1_score', **kwargs):
+def get_config(type='f1_score', **kwargs):
     _type_names = ['accuracy_score', 'f1_score', 'fbeta_score', 'hamming_loss',
                   'jaccard_similarity_score', 'precision_score', 'recall_score',
                   'roc_auc_score', 'zero_one_loss', 'zero_one_loss', 'framework']

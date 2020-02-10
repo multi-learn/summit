@@ -57,7 +57,6 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         if isinstance(base_estimator, str):
             if base_estimator == "DecisionTreeClassifier":
                 base_estimator = DecisionTreeClassifier()
-
         super(Adaboost, self).__init__(
             random_state=random_state,
             n_estimators=n_estimators,
@@ -137,7 +136,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
                 [step_pred for step_pred in self.staged_predict(X)])
         return pred
 
-    def getInterpret(self, directory, y_test):
+    def get_interpret(self, directory, y_test):
         interpretString = ""
         interpretString += self.get_feature_importance(directory)
         interpretString += "\n\n Estimator error | Estimator weight\n"

@@ -14,7 +14,7 @@ def print_metric_score(metric_scores, metrics):
                                  enumerate(metric[1]))
         else:
             metric_kwargs = {}
-        metric_score_string += "\tFor " + metric_module.getConfig(
+        metric_score_string += "\tFor " + metric_module.get_config(
             **metric_kwargs) + " : "
         metric_score_string += "\n\t\t- Score on train : " + str(
             metric_scores[metric[0]][0])

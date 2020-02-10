@@ -18,6 +18,7 @@ from .analyze_result import execute
 from .. import monoview_classifiers
 from ..utils.dataset import extract_subset, Dataset
 from ..utils import hyper_parameter_search
+from ..utils.multiclass import get_mc_estim
 
 # Author-Info
 __author__ = "Nikolas Huelsmann, Baptiste BAUVIN"
@@ -45,10 +46,10 @@ def exec_monoview_multicore(directory, name, labels_names, classification_indice
                          **args)
 
 
-def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
-                 KFolds, nbCores, databaseType, path,
-                 randomState, hyper_param_search="randomized_search",
-                 metrics=[["accuracy_score", None]], n_iter=30, view_name="", **args):
+def exec_monoview(directory, X, Y, name, labels_names, classification_indices,
+                  KFolds, nbCores, databaseType, path,
+                  random_state, hyper_param_search="randomized_search",
+                  metrics=[["accuracy_score", None]], n_iter=30, view_name="", **args):
     logging.debug("Start:\t Loading data")
     kwargs, \
     t_start, \
@@ -57,7 +58,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     X, \
     learningRate, \
     labelsString, \
-    outputFileName = initConstants(args, X, classificationIndices, labels_names,
+    outputFileName = initConstants(args, X, classification_indices, labels_names,
                                    name, directory, view_name)
     logging.debug("Done:\t Loading data")
 
@@ -69,8 +70,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
         + str(nbCores) + ", algorithm : " + classifier_name)
 
     logging.debug("Start:\t Determine Train/Test split")
-    X_train, y_train, X_test, y_test, X_test_multiclass = init_train_test(X, Y,
-                                                                        classificationIndices)
+    X_train, y_train, X_test, y_test = init_train_test(X, Y, classification_indices)
 
     logging.debug("Info:\t Shape X_train:" + str(
         X_train.shape) + ", Length of y_train:" + str(len(y_train)))
@@ -79,17 +79,21 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     logging.debug("Done:\t Determine Train/Test split")
 
     logging.debug("Start:\t Generate classifier args")
-    classifierModule = getattr(monoview_classifiers, classifier_name)
-    classifier_class_name = classifierModule.classifier_class_name
-    clKWARGS, testFoldsPreds = getHPs(classifierModule, hyper_param_search,
-                                      n_iter, classifier_name, classifier_class_name,
-                                      X_train, y_train,
-                                      randomState, outputFileName,
-                                      KFolds, nbCores, metrics, kwargs)
+    classifier_module = getattr(monoview_classifiers, classifier_name)
+    classifier_class_name = classifier_module.classifier_class_name
+    cl_kwargs, testFoldsPreds = getHPs(classifier_module, hyper_param_search,
+                                       n_iter, classifier_name, classifier_class_name,
+                                       X_train, y_train,
+                                       random_state, outputFileName,
+                                       KFolds, nbCores, metrics, kwargs)
     logging.debug("Done:\t Generate classifier args")
 
     logging.debug("Start:\t Training")
-    classifier = getattr(classifierModule, classifier_class_name)(randomState, **clKWARGS)
+
+    classifier = get_mc_estim(getattr(classifier_module,
+                                      classifier_class_name)
+                              (random_state, **cl_kwargs),
+                              random_state)
 
     classifier.fit(X_train, y_train)  # NB_CORES=nbCores,
     logging.debug("Done:\t Training")
@@ -100,15 +104,11 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
 
     #Filling the full prediction in the right order
     full_pred = np.zeros(Y.shape, dtype=int) - 100
-    for trainIndex, index in enumerate(classificationIndices[0]):
+    for trainIndex, index in enumerate(classification_indices[0]):
         full_pred[index] = y_train_pred[trainIndex]
-    for testIndex, index in enumerate(classificationIndices[1]):
+    for testIndex, index in enumerate(classification_indices[1]):
         full_pred[index] = y_test_pred[testIndex]
 
-    if X_test_multiclass != []:
-        y_test_multiclass_pred = classifier.predict(X_test_multiclass)
-    else:
-        y_test_multiclass_pred = []
 
     logging.debug("Done:\t Predicting")
 
@@ -119,12 +119,11 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     logging.debug("Start:\t Getting results")
     stringAnalysis, \
     imagesAnalysis, \
-    metricsScores = execute(name, classificationIndices, KFolds, nbCores,
+    metricsScores = execute(name, classification_indices, KFolds, nbCores,
                             hyper_parameter_search, metrics, n_iter, view_name, classifier_name,
-                            clKWARGS, labels_names, X.shape,
+                            cl_kwargs, labels_names, X.shape,
                             y_train, y_train_pred, y_test, y_test_pred, t_end,
-                            randomState, classifier, outputFileName)
-    # cl_desc = [value for key, value in sorted(clKWARGS.items())]
+                            random_state, classifier, outputFileName)
     logging.debug("Done:\t Getting results")
 
     logging.debug("Start:\t Saving preds")
@@ -136,47 +135,41 @@ def exec_monoview(directory, X, Y, name, labels_names, classificationIndices,
     if testFoldsPreds is None:
         testFoldsPreds = y_train_pred
     return monoview_utils.MonoviewResult(viewIndex, classifier_name, view_name, metricsScores,
-                                         full_pred, clKWARGS,
-                                         y_test_multiclass_pred, testFoldsPreds, classifier, X_train.shape[1])
-    # return viewIndex, [CL_type, view_name, metricsScores, full_labels_pred, clKWARGS, y_test_multiclass_pred, testFoldsPreds]
+                                         full_pred, cl_kwargs,
+                                         testFoldsPreds, classifier, X_train.shape[1])
 
 
-def initConstants(args, X, classificationIndices, labels_names,
+def initConstants(args, X, classification_indices, labels_names,
                   name, directory, view_name):
     try:
         kwargs = args["args"]
     except KeyError:
         kwargs = args
     t_start = time.time()
-    CL_type = kwargs["classifier_name"]
-    learningRate = float(len(classificationIndices[0])) / (
-                len(classificationIndices[0]) + len(classificationIndices[1]))
-    labelsString = "-".join(labels_names)
-    CL_type_string = CL_type
-    timestr = time.strftime("%Y_%m_%d-%H_%M_%S")
-    outputFileName = os.path.join(directory, CL_type_string, view_name, timestr + "-results-" + CL_type_string + "-" + labelsString + \
-                     '-learnRate_{0:.2f}'.format(
-                         learningRate) + '-' + name + "-" + view_name + "-")
-    if not os.path.exists(os.path.dirname(outputFileName)):
+    cl_type = kwargs["classifier_name"]
+    learning_rate = float(len(classification_indices[0])) / (
+            len(classification_indices[0]) + len(classification_indices[1]))
+    labels_string = "-".join(labels_names)
+    cl_type_string = cl_type
+    output_file_name = os.path.join(directory, cl_type_string, view_name,
+                                  cl_type_string + '-' + name + "-" +
+                                  view_name + "-")
+    if not os.path.exists(os.path.dirname(output_file_name)):
         try:
-            os.makedirs(os.path.dirname(outputFileName))
+            os.makedirs(os.path.dirname(output_file_name))
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-    return kwargs, t_start, view_name, CL_type, X, learningRate, labelsString, outputFileName
+    return kwargs, t_start, view_name, cl_type, X, learning_rate, labels_string, output_file_name
 
 
 def init_train_test(X, Y, classificationIndices):
-    trainIndices, testIndices, testIndicesMulticlass = classificationIndices
+    trainIndices, testIndices = classificationIndices
     X_train = extract_subset(X, trainIndices)
     X_test = extract_subset(X, testIndices)
-    if np.array(testIndicesMulticlass).size != 0:
-        X_test_multiclass = extract_subset(X, testIndicesMulticlass)
-    else:
-        X_test_multiclass = []
     y_train = Y[trainIndices]
     y_test = Y[testIndices]
-    return X_train, y_train, X_test, y_test, X_test_multiclass
+    return X_train, y_train, X_test, y_test
 
 
 def getHPs(classifierModule, hyper_param_search, nIter, classifier_module_name,

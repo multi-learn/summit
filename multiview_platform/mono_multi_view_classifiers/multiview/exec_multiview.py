@@ -100,12 +100,9 @@ def save_results(classifier, labels_dictionary, string_analysis, views, classifi
     logging.info(string_analysis)
     # views_string = "-".join(views)
     views_string = "mv"
-    labels_string = "-".join(labels_set)
-    timestr = time.strftime("%Y_%m_%d-%H_%M_%S")
     cl_type_string = classifier.short_name
     output_file_name = os.path.join(directory,  cl_type_string,
-                                    timestr + "-results-" + cl_type_string + "-" + views_string + '-' + labels_string + \
-                       '-learnRate_{0:.2f}'.format(learning_rate) + '-' + name)
+                                    cl_type_string+"-"+views_string+'-'+name)
     if not os.path.exists(os.path.dirname(output_file_name)):
         try:
             os.makedirs(os.path.dirname(output_file_name))
@@ -252,7 +249,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
     logging.info("Info:\t Extraction duration " + str(extraction_time) + "s")
 
     logging.debug("Start:\t Getting train/test split")
-    learning_indices, validation_indices, test_indices_multiclass = classification_indices
+    learning_indices, validation_indices = classification_indices
     logging.debug("Done:\t Getting train/test split")
 
     logging.debug("Start:\t Getting classifiers modules")
@@ -266,7 +263,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
     logging.debug("Start:\t Optimizing hyperparameters")
     if hyper_param_search != "None":
         classifier_config = hyper_parameter_search.search_best_settings(
-            dataset_var, labels, classifier_module, classifier_name,
+            dataset_var, dataset_var.get_labels(), classifier_module, classifier_name,
             metrics[0], learning_indices, k_folds, random_state,
             directory, nb_cores=nb_cores, views_indices=views_indices,
             searching_tool=hyper_param_search, n_iter=n_iter,
@@ -277,7 +274,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
     logging.debug("Done:\t Optimizing hyperparameters")
 
     logging.debug("Start:\t Fitting classifier")
-    classifier.fit(dataset_var, labels, train_indices=learning_indices,
+    classifier.fit(dataset_var, dataset_var.get_labels(), train_indices=learning_indices,
                         view_indices=views_indices)
     logging.debug("Done:\t Fitting classifier")
 
@@ -286,17 +283,11 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
                                       view_indices=views_indices)
     test_labels = classifier.predict(dataset_var, example_indices=validation_indices,
                                      view_indices=views_indices)
-    full_labels = np.zeros(labels.shape, dtype=int) - 100
+    full_labels = np.zeros(dataset_var.get_labels().shape, dtype=int) - 100
     for train_index, index in enumerate(learning_indices):
         full_labels[index] = train_labels[train_index]
     for test_index, index in enumerate(validation_indices):
         full_labels[index] = test_labels[test_index]
-    if test_indices_multiclass != []:
-        test_labels_multiclass = classifier.predict(dataset_var,
-                                                    example_indices=test_indices_multiclass,
-                                                    view_indices=views_indices)
-    else:
-        test_labels_multiclass = []
     logging.info("Done:\t Pertidcting")
 
     classification_time = time.time() - t_start
@@ -323,7 +314,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
     logging.debug("Start:\t Saving preds")
 
     return MultiviewResult(cl_type, classifier_config, metrics_scores,
-                           full_labels, test_labels_multiclass)
+                           full_labels)
     # return CL_type, classificationKWARGS, metricsScores, fullLabels, testLabelsMulticlass
 
 

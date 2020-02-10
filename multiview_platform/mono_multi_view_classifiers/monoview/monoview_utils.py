@@ -1,6 +1,7 @@
 import pickle
 
 import matplotlib.pyplot as plt
+from abc import abstractmethod
 import numpy as np
 from matplotlib.ticker import FuncFormatter
 from scipy.stats import uniform, randint
@@ -135,7 +136,7 @@ class BaseMonoviewClassifier(BaseEstimator, ):#ClassifierMixin):
         else:
             return [()]
 
-    def genDistribs(self):
+    def gen_distribs(self):
         return dict((param_name, distrib) for param_name, distrib in
                     zip(self.param_names, self.distribs))
 
@@ -144,7 +145,7 @@ class BaseMonoviewClassifier(BaseEstimator, ):#ClassifierMixin):
                 [param_name + " : " + self.to_str(param_name) for param_name in
                  self.param_names])
 
-    def getConfig(self):
+    def get_config(self):
         if self.param_names:
             return "\n\t\t- " + self.__class__.__name__ + "with " + self.params_to_string()
         else:
@@ -190,11 +191,39 @@ class BaseMonoviewClassifier(BaseEstimator, ):#ClassifierMixin):
                     featureImportance) + "\n"
         return interpretString
 
+    @abstractmethod
+    def fit(self, X, y):
+        pass
+
+    @abstractmethod
+    def predict(self, X):
+        pass
+
     def get_name_for_fusion(self):
         return self.__class__.__name__[:4]
 
-    def getInterpret(self, directory, y_test):
+    def get_interpret(self, directory, y_test):
         return ""
+
+    def accepts_multi_class(self, random_state, n_samples=10, dim=2,
+                           n_classes=3):
+        if int(n_samples / n_classes) < 1:
+            raise ValueError(
+                "n_samples ({}) / n_classe ({}) must be over 1".format(
+                    n_samples,
+                    n_classes))
+        fake_mc_X = random_state.random_integers(low=0, high=100,
+                                                 size=(n_samples, dim))
+        fake_mc_y = [class_index
+                     for _ in range(int(n_samples / n_classes))
+                     for class_index in range(n_classes)]
+        fake_mc_y += [0 for _ in range(n_samples % n_classes)]
+        try:
+            self.fit(fake_mc_X, fake_mc_y)
+            self.predict(fake_mc_X)
+            return True
+        except ValueError:
+            return False
 
 
 def get_names(classed_list):
@@ -208,15 +237,13 @@ def percent(x, pos):
 
 class MonoviewResult(object):
     def __init__(self, view_index, classifier_name, view_name, metrics_scores,
-                 full_labels_pred,
-                 classifier_config, y_test_multiclass_pred, test_folds_preds, classifier, n_features):
+                 full_labels_pred, classifier_config, test_folds_preds, classifier, n_features):
         self.view_index = view_index
         self.classifier_name = classifier_name
         self.view_name = view_name
         self.metrics_scores = metrics_scores
         self.full_labels_pred = full_labels_pred
         self.classifier_config = classifier_config
-        self.y_test_multiclass_pred = y_test_multiclass_pred
         self.test_folds_preds = test_folds_preds
         self.clf = classifier
         self.n_features = n_features
@@ -250,6 +277,8 @@ def get_accuracy_graph(plotted_data, classifier_name, file_name,
         ax.legend((scat,), (name,))
     f.savefig(file_name, transparent=True)
     plt.close()
+
+
 
 # def isUseful(labelSupports, index, CLASS_LABELS, labelDict):
 #     if labelSupports[labelDict[CLASS_LABELS[index]]] != 0:

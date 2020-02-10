@@ -27,7 +27,7 @@ def printMetricScore(metricScores, metric_list):
                                 enumerate(metric[1]))
         else:
             metric_kwargs = {}
-        metric_score_string += "\tFor " + metric_module.getConfig(
+        metric_score_string += "\tFor " + metric_module.get_config(
             **metric_kwargs) + " : "
         metric_score_string += "\n\t\t- Score on train : " + str(
             metricScores[metric[0]][0])
@@ -161,7 +161,7 @@ def execute(classifier, trainLabels,
                          labels_dictionary.values()) + "\n\t-Views : " + ', '.join(
         views) + "\n\t-" + str(
         KFolds.n_splits) + \
-                     " folds\n\nClassification configuration : \n\t-Algorithm used : " + classifier_name + " with : " + classifier.getConfig()
+                     " folds\n\nClassification configuration : \n\t-Algorithm used : " + classifier_name + " with : " + classifier.get_config()
 
     metricsScores = getMetricsScores(metric_list, trainLabels, testLabels,
                                      validationIndices, learningIndices, labels)

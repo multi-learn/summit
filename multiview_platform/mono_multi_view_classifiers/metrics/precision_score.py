@@ -55,7 +55,7 @@ def get_scorer(**kwargs):
                        average=average)
 
 
-def getConfig(**kwargs):
+def get_config(**kwargs):
     try:
         sample_weight = kwargs["0"]
     except:

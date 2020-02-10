@@ -82,7 +82,7 @@ class Lasso(LassoSK, BaseMonoviewClassifier):
     #     """
     #     return False
 
-    def getInterpret(self, directory, y_test):
+    def get_interpret(self, directory, y_test):
         """
         return the interpreted string
 

@@ -35,7 +35,7 @@ def get_scorer(**kwargs):
                        sample_weight=sample_weight, eps=eps)
 
 
-def getConfig(**kwargs):
+def get_config(**kwargs):
     try:
         sample_weight = kwargs["0"]
     except Exception:

@@ -47,20 +47,30 @@ class Test_get_metrics_scores_biclass(unittest.TestCase):
         np.testing.assert_array_equal(np.array(metrics_scores["f1_score"].columns),
                                       np.array(["ada-0"]))
 
-    def multiple_monoview_classifiers(self):
+    def test_multiple_monoview_classifiers(self):
         metrics = [["accuracy_score"], ["f1_score"]]
-        results = [MonoviewResult(0,
-                                  "ada",
-                                  "0",
-                                  {"accuracy_score": [0.9, 0.95],
-                                   "f1_score": [0.91, 0.96]}
-                                  , "", "", "", ""),
-                   MonoviewResult(0,
-                                  "dt",
-                                  "1",
-                                  {"accuracy_score": [0.8, 0.85],
-                                   "f1_score": [0.81, 0.86]}
-                                  , "", "", "", "")
+        results = [MonoviewResult(view_index=0,
+                                  classifier_name="ada",
+                                  view_name="0",
+                                  metrics_scores={"accuracy_score": [0.9, 0.95],
+                                   "f1_score": [0.91, 0.96]},
+                                  full_labels_pred="",
+                                  classifier_config="",
+                                  y_test_multiclass_pred="",
+                                  test_folds_preds="",
+                                  classifier="",
+                                  n_features=""),
+                   MonoviewResult(view_index=0,
+                                  classifier_name="dt",
+                                  view_name="1",
+                                  metrics_scores={"accuracy_score": [0.8, 0.85],
+                                   "f1_score": [0.81, 0.86]},
+                                  full_labels_pred="",
+                                  classifier_config="",
+                                  y_test_multiclass_pred="",
+                                  test_folds_preds="",
+                                  classifier="",
+                                  n_features="")
                    ]
         metrics_scores = result_analysis.get_metrics_scores_biclass(metrics,
                                                                     results)
@@ -82,16 +92,21 @@ class Test_get_metrics_scores_biclass(unittest.TestCase):
             np.array(metrics_scores["f1_score"].columns),
             np.array(["ada-0", "dt-1"]))
 
-    def mutiview_result(self):
+    def test_mutiview_result(self):
         metrics = [["accuracy_score"], ["f1_score"]]
         results = [MultiviewResult("mv", "", {"accuracy_score": [0.7, 0.75],
                                    "f1_score": [0.71, 0.76]}, "", ""),
-                   MonoviewResult(0,
-                                  "dt",
-                                  "1",
-                                  {"accuracy_score": [0.8, 0.85],
-                                   "f1_score": [0.81, 0.86]}
-                                  , "", "", "", "")
+                   MonoviewResult(view_index=0,
+                                  classifier_name="dt",
+                                  view_name="1",
+                                  metrics_scores={"accuracy_score": [0.8, 0.85],
+                                                  "f1_score": [0.81, 0.86]},
+                                  full_labels_pred="",
+                                  classifier_config="",
+                                  y_test_multiclass_pred="",
+                                  test_folds_preds="",
+                                  classifier="",
+                                  n_features="")
                    ]
         metrics_scores = result_analysis.get_metrics_scores_biclass(metrics,
                                                                     results)
@@ -126,7 +141,8 @@ class Test_get_example_errors_biclass(unittest.TestCase):
                                   "1",
                                   {"accuracy_score": [0.8, 0.85],
                                    "f1_score": [0.81, 0.86]}
-                                  , np.array([0,0,1,1,0,0,1,1,0]), "", "", "", "", "")
+                                  , np.array([0,0,1,1,0,0,1,1,0]), "", "",
+                                  "", "", "")
                    ]
         example_errors = result_analysis.get_example_errors_biclass(ground_truth,
                                                                     results)
@@ -143,7 +159,8 @@ class Test_init_plot(unittest.TestCase):
         results = []
         metric_name = "acc"
         data = np.random.RandomState(42).uniform(0,1,(2,2))
-        metric_dataframe = pd.DataFrame(index=["train", "test"], columns=["dt-1", "mv"], data=data)
+        metric_dataframe = pd.DataFrame(index=["train", "test"],
+                                        columns=["dt-1", "mv"], data=data)
         directory = "dir"
         database_name = 'db'
         labels_names = ['lb1', "lb2"]
@@ -160,7 +177,8 @@ class Test_init_plot(unittest.TestCase):
         np.testing.assert_array_equal(test, data[1, :])
         np.testing.assert_array_equal(classifier_names, np.array(["dt-1", "mv"]))
         self.assertEqual(nb_results, 2)
-        self.assertEqual(results, [["dt-1", "acc", data[1,0], 0], ["mv", "acc", data[1,1], 0]])
+        self.assertEqual(results, [["dt-1", "acc", data[1,0], 0],
+                                   ["mv", "acc", data[1,1], 0]])
 
 class Test_gen_error_data(unittest.TestCase):
 
@@ -182,7 +200,7 @@ class Test_gen_error_data(unittest.TestCase):
 class Test_format_previous_results(unittest.TestCase):
 
     def test_simple(self):
-        biclass_results = {"01":{"metrics_scores":[], "example_errors":[], "feature_importances":[], "labels":[]}}
+        biclass_results = {"metrics_scores":[], "example_errors":[], "feature_importances":[], "labels":[]}
         random_state = np.random.RandomState(42)
 
         # Gen metrics data
@@ -192,8 +210,8 @@ class Test_format_previous_results(unittest.TestCase):
                                    columns=["ada-1", "mv"])
         metric_2_df = pd.DataFrame(data=metrics_2_data, index=["train", "test"],
                                    columns=["ada-1", "mv"])
-        biclass_results["01"]["metrics_scores"].append({"acc": metric_1_df})
-        biclass_results["01"]["metrics_scores"].append({"acc": metric_2_df})
+        biclass_results["metrics_scores"].append({"acc": metric_1_df})
+        biclass_results["metrics_scores"].append({"acc": metric_2_df})
 
         # Gen error data
         ada_error_data_1 = random_state.randint(0,2,7)
@@ -202,12 +220,12 @@ class Test_format_previous_results(unittest.TestCase):
         mv_error_data_1 = random_state.randint(0, 2, 7)
         mv_error_data_2 = random_state.randint(0, 2, 7)
         mv_sum = mv_error_data_1+mv_error_data_2
-        biclass_results["01"]["example_errors"].append({})
-        biclass_results["01"]["example_errors"].append({})
-        biclass_results["01"]["example_errors"][0]["ada-1"] = ada_error_data_1
-        biclass_results["01"]["example_errors"][0]["mv"] = mv_error_data_1
-        biclass_results["01"]["example_errors"][1]["ada-1"] = ada_error_data_2
-        biclass_results["01"]["example_errors"][1]["mv"] = mv_error_data_2
+        biclass_results["example_errors"].append({})
+        biclass_results["example_errors"].append({})
+        biclass_results["example_errors"][0]["ada-1"] = ada_error_data_1
+        biclass_results["example_errors"][0]["mv"] = mv_error_data_1
+        biclass_results["example_errors"][1]["ada-1"] = ada_error_data_2
+        biclass_results["example_errors"][1]["mv"] = mv_error_data_2
 
         # Running the function
         metric_analysis, error_analysis, feature_importances, feature_stds,labels = result_analysis.format_previous_results(biclass_results)
@@ -223,16 +241,16 @@ class Test_format_previous_results(unittest.TestCase):
                                columns=["ada-1", "mvm"])
 
         # Testing
-        np.testing.assert_array_equal(metric_analysis["01"]["acc"]["mean"].loc["train"],
+        np.testing.assert_array_equal(metric_analysis["acc"]["mean"].loc["train"],
                                       mean_df.loc["train"])
-        np.testing.assert_array_equal(metric_analysis["01"]["acc"]["mean"].loc["test"],
+        np.testing.assert_array_equal(metric_analysis["acc"]["mean"].loc["test"],
             mean_df.loc["test"])
-        np.testing.assert_array_equal(metric_analysis["01"]["acc"]["std"].loc["train"],
+        np.testing.assert_array_equal(metric_analysis["acc"]["std"].loc["train"],
             std_df.loc["train"])
-        np.testing.assert_array_equal(metric_analysis["01"]["acc"]["std"].loc["test"],
+        np.testing.assert_array_equal(metric_analysis["acc"]["std"].loc["test"],
             std_df.loc["test"])
-        np.testing.assert_array_equal(ada_sum, error_analysis["01"]["ada-1"])
-        np.testing.assert_array_equal(mv_sum, error_analysis["01"]["mv"])
+        np.testing.assert_array_equal(ada_sum, error_analysis["ada-1"])
+        np.testing.assert_array_equal(mv_sum, error_analysis["mv"])
 
 
 class Test_gen_error_data_glob(unittest.TestCase):
