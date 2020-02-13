@@ -128,19 +128,19 @@ class Test_getHPs(unittest.TestCase):
         os.rmdir(tmp_path)
 
     def test_simple(self):
-        kwargs, test_folds_predictions = exec_classif_mono_view.getHPs(self.classifierModule,
-                                                                       self.hyper_param_search,
-                                                                       self.n_iter,
-                                                                       self.classifier_name,
-                                                                       self.classifier_class_name,
-                                                                       self.X,
-                                                                       self.y,
-                                                                       self.random_state,
-                                                                       self.output_file_name,
-                                                                       self.cv,
-                                                                       self.nb_cores,
-                                                                       self.metrics,
-                                                                       self.kwargs)
+        kwargs = exec_classif_mono_view.getHPs(self.classifierModule,
+                                               self.hyper_param_search,
+                                               self.n_iter,
+                                               self.classifier_name,
+                                               self.classifier_class_name,
+                                               self.X,
+                                               self.y,
+                                               self.random_state,
+                                               self.output_file_name,
+                                               self.cv,
+                                               self.nb_cores,
+                                               self.metrics,
+                                               self.kwargs)
 
 # class Test_getKWARGS(unittest.TestCase):
 #
