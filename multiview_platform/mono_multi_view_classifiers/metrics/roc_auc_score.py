@@ -11,17 +11,6 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 
 def score(y_true, y_pred, multiclass=False, **kwargs):
-    try:
-        sample_weight = kwargs["0"]
-    except Exception :
-        sample_weight = None
-    try:
-        average = kwargs["1"]
-    except Exception:
-        if multiclass:
-            average = "micro"
-        else:
-            average = None
     if multiclass:
         mlb = MultiLabelBinarizer()
         y_true = mlb.fit_transform([(label) for label in y_true])
