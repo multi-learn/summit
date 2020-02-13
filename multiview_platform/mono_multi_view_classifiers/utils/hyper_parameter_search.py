@@ -80,7 +80,7 @@ def compute_possible_combinations(params_dict):
             n_possibs[value_index] = len(value)
         elif isinstance(value, CustomRandint):
             n_possibs[value_index] = value.get_nb_possibilities()
-    return n_possibs
+    return np.prod(n_possibs)
 
 
 def get_test_folds_preds(X, y, cv, estimator, framework, available_indices=None):
@@ -113,7 +113,8 @@ def randomized_search(X, y, framework, random_state, output_file_name, classifie
     estimator = getattr(classifier_module, classifier_name)(random_state=random_state,
                                                             **classifier_kwargs)
     params_dict = estimator.gen_distribs()
-    estimator = get_mc_estim(estimator, random_state)
+    estimator = get_mc_estim(estimator, y, random_state,
+                             multiview=(framework=="multiview"))
     if params_dict:
         metric_module = getattr(metrics, metric[0])
         if metric[1] is not None:
@@ -121,13 +122,14 @@ def randomized_search(X, y, framework, random_state, output_file_name, classifie
                                 enumerate(metric[1]))
         else:
             metric_kargs = {}
+
+
         scorer = metric_module.get_scorer(**metric_kargs)
         nb_possible_combinations = compute_possible_combinations(params_dict)
-        min_list = np.array(
-            [min(nb_possible_combination, n_iter) for nb_possible_combination in
-             nb_possible_combinations])
+        n_iter_real= min(n_iter, nb_possible_combinations)
+
         random_search = MultiviewCompatibleRandomizedSearchCV(estimator,
-                                                              n_iter=int(np.sum(min_list)),
+                                                              n_iter=int(n_iter_real),
                                                               param_distributions=params_dict,
                                                               refit=True,
                                                               n_jobs=nb_cores, scoring=scorer,
@@ -206,7 +208,8 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
                     self.available_indices[test_indices],
                     view_indices=self.view_indices)
                 test_score = self.scoring._score_func(y[self.available_indices[test_indices]],
-                                                      test_prediction)
+                                                      test_prediction,
+                                                     **self.scoring._kwargs)
                 test_scores[fold_idx] = test_score
             for param_name, param in candidate_param.items():
                 self.cv_results_["param_"+param_name].append(param)

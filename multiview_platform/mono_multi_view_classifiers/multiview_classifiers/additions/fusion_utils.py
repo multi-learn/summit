@@ -9,7 +9,10 @@ class BaseFusionClassifier():
     def init_monoview_estimator(self, classifier_name, classifier_config,
                                 classifier_index=None,):
         if classifier_index is not None:
-            classifier_configs = classifier_config[classifier_name]
+            if classifier_config is not None:
+                classifier_configs = classifier_config[classifier_name]
+            else:
+                classifier_configs = None
         else:
             classifier_configs = classifier_config
         if classifier_configs is not None and classifier_name in classifier_configs:

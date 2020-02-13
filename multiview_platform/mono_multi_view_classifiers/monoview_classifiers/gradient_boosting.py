@@ -72,7 +72,7 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
     #     """Used to know if the classifier can return label probabilities"""
     #     return False
 
-    def get_interpret(self, directory, y_test, multi_class=False):
+    def get_interpretation(self, directory, y_test, multi_class=False):
         interpretString = ""
         if multi_class:
             return interpretString

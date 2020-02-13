@@ -1,28 +1,12 @@
 from sklearn.base import BaseEstimator, ClassifierMixin
+from abc import abstractmethod
 import numpy as np
 
-from .. import multiview_classifiers
+from ..utils.base import BaseClassifier
+from ..utils.dataset import RAMDataset
+
 from .. import monoview_classifiers
 
-
-
-class MultiviewResult(object):
-    def __init__(self, classifier_name, classifier_config,
-                 metrics_scores, full_labels):
-        self.classifier_name = classifier_name
-        self.classifier_config = classifier_config
-        self.metrics_scores = metrics_scores
-        self.full_labels_pred = full_labels
-
-    def get_classifier_name(self):
-        try:
-            multiview_classifier_module = getattr(multiview_classifiers,
-                                                self.classifier_name)
-            multiview_classifier = getattr(multiview_classifier_module,
-                                           multiview_classifier_module.classifier_class_name)(42)
-            return multiview_classifier.short_name
-        except:
-            return self.classifier_name
 
 class FakeEstimator():
 
@@ -30,11 +14,7 @@ class FakeEstimator():
         return np.zeros(example_indices.shape[0])
 
 
-def get_names(classed_list):
-    return np.array([object_.__class__.__name__ for object_ in classed_list])
-
-
-class BaseMultiviewClassifier(BaseEstimator, ClassifierMixin):
+class BaseMultiviewClassifier(BaseClassifier):
     """
     BaseMultiviewClassifier base of Multiview classifiers
 
@@ -51,49 +31,13 @@ class BaseMultiviewClassifier(BaseEstimator, ClassifierMixin):
         self.short_name = self.__module__.split(".")[-1]
         self.weird_strings = {}
 
-    def gen_best_params(self, detector):
-        """
-        return best parameters of detector
-        Parameters
-        ----------
-        detector :
+    @abstractmethod
+    def fit(self, X, y, train_indices=None, view_indices=None):
+        pass
 
-        Returns
-        -------
-        best param : dictionary with param name as key and best parameters
-            value
-        """
-        return dict((param_name, detector.best_params_[param_name])
-                    for param_name in self.param_names)
-
-    def genParamsFromDetector(self, detector):
-        if self.classed_params:
-            classed_dict = dict((classed_param, get_names(
-                detector.cv_results_["param_" + classed_param]))
-                                for classed_param in self.classed_params)
-        if self.param_names:
-            return [(param_name,
-                     np.array(detector.cv_results_["param_" + param_name]))
-                    if param_name not in self.classed_params else (
-                param_name, classed_dict[param_name])
-                    for param_name in self.param_names]
-        else:
-            return [()]
-
-    def genDistribs(self):
-        return dict((param_name, distrib) for param_name, distrib in
-                    zip(self.param_names, self.distribs))
-
-    def params_to_string(self):
-        return ", ".join(
-                [param_name + " : " + self.to_str(param_name) for param_name in
-                 self.param_names])
-
-    def getConfig(self):
-        if self.param_names:
-            return "\n\t\t- " + self.__class__.__name__ + "with " + self.params_to_string()
-        else:
-            return "\n\t\t- " + self.__class__.__name__ + "with no config."
+    @abstractmethod
+    def predict(self, X, example_indices=None, view_indices=None):
+        pass
 
     def to_str(self, param_name):
         if param_name in self.weird_strings:
@@ -109,17 +53,36 @@ class BaseMultiviewClassifier(BaseEstimator, ClassifierMixin):
         else:
             return str(self.get_params()[param_name])
 
-    def get_interpretation(self):
-        return "No detailed interpretation function"
+    def accepts_multi_class(self, random_state, n_samples=10, dim=2,
+                           n_classes=3, n_views=2):
+        if int(n_samples / n_classes) < 1:
+            raise ValueError(
+                "n_samples ({}) / n_classe ({}) must be over 1".format(
+                    n_samples,
+                    n_classes))
+        fake_mc_X = RAMDataset(views= [random_state.random_integers(low=0, high=100,
+                                                 size=(n_samples, dim))
+                                    for i in range(n_views)],
+                            labels=[class_index
+                     for _ in range(int(n_samples / n_classes))
+                     for class_index in range(n_classes)],
+                            are_sparse=False,
+                            name="mc_dset",
+                            labels_names=[str(class_index) for class_index in range(n_classes)],
+                            view_names=["V0", "V1"],
+                            )
 
-
-def get_examples_views_indices(dataset, examples_indices, view_indices, ):
-    """This function  is used to get all the examples indices and view indices if needed"""
-    if view_indices is None:
-        view_indices = np.arange(dataset.nb_view)
-    if examples_indices is None:
-        examples_indices = range(dataset.get_nb_examples())
-    return examples_indices, view_indices
+        fake_mc_y = [class_index
+                     for _ in range(int(n_samples / n_classes))
+                     for class_index in range(n_classes)]
+        fake_mc_y += [0 for _ in range(n_samples % n_classes)]
+        fake_mc_y = np.asarray(fake_mc_y)
+        try:
+            self.fit(fake_mc_X, fake_mc_y)
+            self.predict(fake_mc_X)
+            return True
+        except ValueError:
+            return False
 
 
 class ConfigGenerator():
@@ -166,3 +129,22 @@ def get_monoview_classifier(classifier_name):
     classifier_module = getattr(monoview_classifiers, classifier_name)
     classifier_class = getattr(classifier_module, classifier_module.classifier_class_name)
     return classifier_class
+
+from .. import multiview_classifiers
+class MultiviewResult(object):
+    def __init__(self, classifier_name, classifier_config,
+                 metrics_scores, full_labels):
+        self.classifier_name = classifier_name
+        self.classifier_config = classifier_config
+        self.metrics_scores = metrics_scores
+        self.full_labels_pred = full_labels
+
+    def get_classifier_name(self):
+        try:
+            multiview_classifier_module = getattr(multiview_classifiers,
+                                                self.classifier_name)
+            multiview_classifier = getattr(multiview_classifier_module,
+                                           multiview_classifier_module.classifier_class_name)(42)
+            return multiview_classifier.short_name
+        except:
+            return self.classifier_name

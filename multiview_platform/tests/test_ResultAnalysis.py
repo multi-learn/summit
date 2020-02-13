@@ -1,11 +1,11 @@
 import unittest
 import numpy as np
 import pandas as pd
-import time
+import os
 
-from ..mono_multi_view_classifiers import result_analysis
-from ..mono_multi_view_classifiers.multiview.multiview_utils import MultiviewResult
-from ..mono_multi_view_classifiers.monoview.monoview_utils import MonoviewResult
+from multiview_platform.mono_multi_view_classifiers import result_analysis
+from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import MultiviewResult
+from multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils import MonoviewResult
 
 
 class Test_get_arguments(unittest.TestCase):
@@ -29,7 +29,7 @@ class Test_get_metrics_scores_biclass(unittest.TestCase):
                                   "0",
                                   {"accuracy_score":[0.9, 0.95],
                                    "f1_score":[0.91, 0.96]}
-                                  , "", "", "", "", "", "")]
+                                  , "", "", "", "", "",)]
         metrics_scores = result_analysis.get_metrics_scores_biclass(metrics,
                                                                     results)
         self.assertIsInstance(metrics_scores, dict)
@@ -56,7 +56,6 @@ class Test_get_metrics_scores_biclass(unittest.TestCase):
                                    "f1_score": [0.91, 0.96]},
                                   full_labels_pred="",
                                   classifier_config="",
-                                  y_test_multiclass_pred="",
                                   test_folds_preds="",
                                   classifier="",
                                   n_features=""),
@@ -67,7 +66,6 @@ class Test_get_metrics_scores_biclass(unittest.TestCase):
                                    "f1_score": [0.81, 0.86]},
                                   full_labels_pred="",
                                   classifier_config="",
-                                  y_test_multiclass_pred="",
                                   test_folds_preds="",
                                   classifier="",
                                   n_features="")
@@ -95,7 +93,7 @@ class Test_get_metrics_scores_biclass(unittest.TestCase):
     def test_mutiview_result(self):
         metrics = [["accuracy_score"], ["f1_score"]]
         results = [MultiviewResult("mv", "", {"accuracy_score": [0.7, 0.75],
-                                   "f1_score": [0.71, 0.76]}, "", ""),
+                                   "f1_score": [0.71, 0.76]}, "", ),
                    MonoviewResult(view_index=0,
                                   classifier_name="dt",
                                   view_name="1",
@@ -103,7 +101,6 @@ class Test_get_metrics_scores_biclass(unittest.TestCase):
                                                   "f1_score": [0.81, 0.86]},
                                   full_labels_pred="",
                                   classifier_config="",
-                                  y_test_multiclass_pred="",
                                   test_folds_preds="",
                                   classifier="",
                                   n_features="")
@@ -135,14 +132,14 @@ class Test_get_example_errors_biclass(unittest.TestCase):
         results = [MultiviewResult("mv", "", {"accuracy_score": [0.7, 0.75],
                                               "f1_score": [0.71, 0.76]},
                                    np.array([0,0,0,0,1,1,1,1,1]),
-                                   ""),
+                                   ),
                    MonoviewResult(0,
                                   "dt",
                                   "1",
                                   {"accuracy_score": [0.8, 0.85],
                                    "f1_score": [0.81, 0.86]}
                                   , np.array([0,0,1,1,0,0,1,1,0]), "", "",
-                                  "", "", "")
+                                  "", "",)
                    ]
         example_errors = result_analysis.get_example_errors_biclass(ground_truth,
                                                                     results)
@@ -171,8 +168,7 @@ class Test_init_plot(unittest.TestCase):
                                                                    directory,
                                                                    database_name,
                                                                    labels_names)
-        self.assertEqual(file_name, "dir/"+time.strftime(
-            "%Y_%m_%d-%H_%M_%S")+"-db-lb1_vs_lb2-acc")
+        self.assertEqual(file_name, os.path.join("dir", "db-lb1_vs_lb2-acc"))
         np.testing.assert_array_equal(train, data[0,:])
         np.testing.assert_array_equal(test, data[1, :])
         np.testing.assert_array_equal(classifier_names, np.array(["dt-1", "mv"]))

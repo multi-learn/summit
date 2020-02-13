@@ -73,7 +73,7 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
     #     """
     #     return True
 
-    def get_interpret(self, directory, y_test):
+    def get_interpretation(self, directory, y_test):
         """
 
         Parameters

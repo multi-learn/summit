@@ -42,7 +42,7 @@ def getClassifierConfigString(gridSearch, nbCores, nIter, clKWARGS, classifier,
         classifierConfigString += "\t- Got configuration using randomized search with " + str(
             nIter) + " iterations \n"
     classifierConfigString += "\n\n"
-    classifierInterpretString = classifier.get_interpret(output_file_name, y_test)
+    classifierInterpretString = classifier.get_interpretation(output_file_name, y_test)
     return classifierConfigString, classifierInterpretString
 
 

@@ -5,7 +5,7 @@ import logging
 import h5py
 import numpy as np
 
-from ..utils.dataset import Dataset
+from ..utils.dataset import RAMDataset, HDF5Dataset
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -77,10 +77,10 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
 
 
 
-        dataset = Dataset(views=views, labels=labels,
+        dataset = RAMDataset(views=views, labels=labels,
                               labels_names=label_names, view_names=view_names,
-                              are_sparse=are_sparse, file_name="plausible.hdf5",
-                              path=path, example_ids=example_ids)
+                              are_sparse=are_sparse, example_ids=example_ids,
+                             name='plausible')
         labels_dictionary = {0: "No", 1: "Yes"}
         return dataset, labels_dictionary, "plausible"
     elif nb_class >= 3:
@@ -115,11 +115,11 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
             views.append(view_data)
             view_names.append("ViewNumber" + str(view_index))
             are_sparse.append(False)
-        dataset = Dataset(views=views, labels=labels,
+        dataset = RAMDataset(views=views, labels=labels,
                               labels_names=label_names, view_names=view_names,
                               are_sparse=are_sparse,
-                              file_name="plausible.hdf5",
-                              path=path, example_ids=example_ids)
+                              name="plausible",
+                              example_ids=example_ids)
         labels_dictionary = {0: "No", 1: "Yes", 2: "Maybe"}
         return dataset, labels_dictionary, "plausible"
 
@@ -134,14 +134,14 @@ def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
     """Used to load a hdf5 database"""
     if full:
         dataset_file = h5py.File(os.path.join(path_f, name_DB + ".hdf5"), "r")
-        dataset = Dataset(hdf5_file=dataset_file)
+        dataset = HDF5Dataset(hdf5_file=dataset_file)
         dataset_name = name_DB
         labels_dictionary = dict((label_index, label_name)
                                  for label_index, label_name
                                  in enumerate(dataset.get_label_names()))
     else:
         dataset_file = h5py.File(os.path.join(path_f, name_DB + ".hdf5"), "r")
-        dataset = Dataset(hdf5_file=dataset_file)
+        dataset = HDF5Dataset(hdf5_file=dataset_file)
         labels_dictionary = dataset.select_views_and_labels(nb_labels=nb_class,
                                         selected_label_names=asked_labels_names,
                                         view_names=views, random_state=random_state,

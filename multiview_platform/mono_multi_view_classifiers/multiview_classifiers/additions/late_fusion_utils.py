@@ -3,8 +3,9 @@ import warnings
 from scipy.stats import uniform
 
 
-from ...multiview.multiview_utils import BaseMultiviewClassifier, get_available_monoview_classifiers, get_monoview_classifier, get_examples_views_indices, ConfigGenerator
+from ...multiview.multiview_utils import BaseMultiviewClassifier, get_available_monoview_classifiers, get_monoview_classifier, ConfigGenerator
 from .fusion_utils import BaseFusionClassifier
+from ...utils.dataset import get_examples_views_indices
 
 
 class ClassifierDistribution:
@@ -13,7 +14,9 @@ class ClassifierDistribution:
         self.random_state = np.random.RandomState(seed)
         self.available_classifiers = available_classifiers
 
-    def draw(self, nb_view):
+    def draw(self, nb_view, rs=None):
+        if rs is not None:
+            self.random_state.seed(rs)
         return self.random_state.choice(self.available_classifiers,
                                         size=nb_view, replace=True)
 
@@ -34,7 +37,9 @@ class ConfigDistribution:
         self.random_state = np.random.RandomState(seed)
         self.config_generator = ConfigGenerator(available_classifiers)
 
-    def draw(self, nb_view):
+    def draw(self, nb_view, rs=None):
+        if rs is not None:
+            self.random_state.seed(rs)
         config_samples = [self.config_generator.rvs(self.random_state)
                           for _ in range(nb_view)]
         return config_samples
@@ -74,23 +79,27 @@ class WeightsGenerator:
 class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
 
     def __init__(self, random_state=None, classifiers_names=None,
-                 classifier_configs=None, nb_cores=1, weights=None):
+                 classifier_configs=None, nb_cores=1, weights=None,
+                 rs=None):
         super(LateFusionClassifier, self).__init__(random_state)
         self.classifiers_names = classifiers_names
         self.classifier_configs = classifier_configs
         self.nb_cores = nb_cores
         self.weights = weights
-        self.param_names = ["classifiers_names", "classifier_configs", "weights"]
+        self.rs=rs
+        self.param_names = ["classifiers_names", "classifier_configs", "weights", "rs"]
         self.distribs =[ClassifierCombinator(need_probas=self.need_probas),
                         MultipleConfigGenerator(),
-                        WeightsGenerator()]
+                        WeightsGenerator(),
+                        np.arange(1000)]
 
     def fit(self, X, y, train_indices=None, view_indices=None):
-        self.init_params(X.nb_view)
-
         train_indices, view_indices = get_examples_views_indices(X,
                                                                   train_indices,
                                                                   view_indices)
+        self.init_params(len(view_indices))
+        if np.unique(y[train_indices]).shape[0] > 2:
+            raise ValueError("Multiclass not supported")
         self.monoview_estimators = [monoview_estimator.fit(X.get_v(view_index, train_indices),
                                                            y[train_indices])
                                     for view_index, monoview_estimator
@@ -121,14 +130,16 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
         else:
             nb_clfs = nb_view
         if isinstance(self.classifiers_names, ClassifierDistribution):
-            self.classifiers_names = self.classifiers_names.draw(nb_clfs)
+            self.classifiers_names = self.classifiers_names.draw(nb_clfs, self.rs)
         elif self.classifiers_names is None:
             self.classifiers_names = ["decision_tree" for _ in range(nb_clfs)]
 
         if isinstance(self.classifier_configs, ConfigDistribution):
-            self.classifier_configs = self.classifier_configs.draw(nb_clfs)
+            self.classifier_configs = self.classifier_configs.draw(nb_clfs, self.rs)
         elif isinstance(self.classifier_configs, dict):
             self.classifier_configs = [{classifier_name: self.classifier_configs[classifier_name]} for classifier_name in self.classifiers_names]
+        elif self.classifier_configs is None:
+            self.classifier_configs = [None for _ in range(nb_clfs)]
 
 
 # def verif_clf_views(self, classifier_names, nb_view):

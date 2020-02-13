@@ -6,9 +6,10 @@ import os
 import numpy as np
 
 from ...multiview.multiview_utils import ConfigGenerator, \
-    get_examples_views_indices, get_available_monoview_classifiers, \
+    get_available_monoview_classifiers, \
     BaseMultiviewClassifier
 from .fusion_utils import BaseFusionClassifier
+from ...utils.dataset import get_examples_views_indices
 
 
 class DiversityFusionClassifier(BaseMultiviewClassifier,
@@ -24,21 +25,23 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
         self.classifier_names = classifier_names
         self.param_names = ["classifier_configs"]
         self.distribs = [ConfigGenerator(get_available_monoview_classifiers())]
-        self.estimator_pool = monoview_estimators
+        self.monoview_estimators = monoview_estimators
         self.classifier_configs = classifier_configs
 
     def fit(self, X, y, train_indices=None, view_indices=None):
         train_indices, view_indices = get_examples_views_indices(X,
                                                                  train_indices,
                                                                  view_indices)
-        if self.estimator_pool is None:
-            self.estimator_pool = []
+        if np.unique(y[train_indices]).shape[0] > 2:
+            raise ValueError("Multiclass not supported, classes used : {}".format(np.unique(y[train_indices])))
+        if self.monoview_estimators is None:
+            self.monoview_estimators = []
             for classifier_idx, classifier_name in enumerate(self.classifier_names):
-                self.estimator_pool.append([])
+                self.monoview_estimators.append([])
                 for idx, view_idx in enumerate(view_indices):
                     estimator = self.init_monoview_estimator(classifier_name, self.classifier_configs)
                     estimator.fit(X.get_v(view_idx, train_indices), y[train_indices])
-                    self.estimator_pool[classifier_idx].append(estimator)
+                    self.monoview_estimators[classifier_idx].append(estimator)
         else:
             pass #TODO
         self.choose_combination(X, y, train_indices, view_indices)
@@ -66,10 +69,10 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
         return predicted_labels
 
     def get_classifiers_decisions(self, X, view_indices, examples_indices):
-        classifiers_decisions = np.zeros((len(self.estimator_pool),
+        classifiers_decisions = np.zeros((len(self.monoview_estimators),
                                               len(view_indices),
                                               len(examples_indices)))
-        for estimator_idx, estimator in enumerate(self.estimator_pool):
+        for estimator_idx, estimator in enumerate(self.monoview_estimators):
             for idx, view_index in enumerate(view_indices):
                 classifiers_decisions[estimator_idx, idx, :] = estimator[
                     idx].predict(X.get_v(view_index, examples_indices))
@@ -104,7 +107,7 @@ class GlobalDiversityFusionClassifier(DiversityFusionClassifier):
                 y[examples_indices])
         best_combi_index = np.argmax(div_measure)
         best_combination = combis[best_combi_index]
-        self.monoview_estimators = [self.estimator_pool[classifier_index][view_index]
+        self.monoview_estimators = [self.monoview_estimators[classifier_index][view_index]
                                     for view_index, classifier_index
                                     in enumerate(best_combination)]
 
@@ -136,7 +139,7 @@ class CoupleDiversityFusionClassifier(DiversityFusionClassifier):
             div_measure[combinations_index] = np.mean(couple_diversities)
         best_combi_index = np.argmax(div_measure)
         best_combination = combis[best_combi_index]
-        self.monoview_estimators = [self.estimator_pool[classifier_index][view_index]
+        self.monoview_estimators = [self.monoview_estimators[classifier_index][view_index]
                                     for view_index, classifier_index
                                     in enumerate(best_combination)]
 

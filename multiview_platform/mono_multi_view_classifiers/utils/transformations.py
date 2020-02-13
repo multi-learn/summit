@@ -37,7 +37,6 @@ def unsign_labels(labels):
     """
     if len(labels.shape)==2:
         labels = labels.reshape((labels.shape[0], ))
-    print(labels)
     if -1 in labels:
         return np.array([label if label != -1 else 0 for label in labels])
     else:

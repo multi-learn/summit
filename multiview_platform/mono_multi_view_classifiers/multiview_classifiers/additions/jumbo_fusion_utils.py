@@ -1,17 +1,18 @@
 import numpy as np
 
-from ...multiview.multiview_utils import get_examples_views_indices
 from .late_fusion_utils import LateFusionClassifier
 from ...monoview.monoview_utils import CustomRandint
+from ...utils.dataset import get_examples_views_indices
 
 class BaseJumboFusion(LateFusionClassifier):
 
     def __init__(self, random_state, classifiers_names=None,
                  classifier_configs=None,
-                 nb_cores=1, weights=None, nb_monoview_per_view=1):
+                 nb_cores=1, weights=None, nb_monoview_per_view=1, rs=None):
         super(BaseJumboFusion, self).__init__(random_state, classifiers_names=classifiers_names,
                                              classifier_configs=classifier_configs,
-                                             nb_cores=nb_cores, weights=weights)
+                                             nb_cores=nb_cores, weights=weights,
+                                              rs=rs)
         self.param_names += ["nb_monoview_per_view", ]
         self.distribs += [CustomRandint(1,10)]
         self.nb_monoview_per_view = nb_monoview_per_view

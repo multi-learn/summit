@@ -16,7 +16,7 @@ from . import monoview_utils
 from .analyze_result import execute
 # Import own modules
 from .. import monoview_classifiers
-from ..utils.dataset import extract_subset, Dataset
+from ..utils.dataset import extract_subset, HDF5Dataset
 from ..utils import hyper_parameter_search
 from ..utils.multiclass import get_mc_estim
 
@@ -34,7 +34,7 @@ def exec_monoview_multicore(directory, name, labels_names, classification_indice
                            hyper_param_search="randomized_search",
                            metrics=[["accuracy_score", None]], n_iter=30,
                            **args):
-    dataset_var = Dataset(hdf5_file=h5py.File(path + name + str(dataset_file_index) + ".hdf5", "r"))
+    dataset_var = HDF5Dataset(hdf5_file=h5py.File(path + name + str(dataset_file_index) + ".hdf5", "r"))
     neededViewIndex = args["view_index"]
     X = dataset_var.get_v(neededViewIndex)
     Y = labels
@@ -93,6 +93,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classification_indices,
     classifier = get_mc_estim(getattr(classifier_module,
                                       classifier_class_name)
                               (random_state, **cl_kwargs),
+                              Y,
                               random_state)
 
     classifier.fit(X_train, y_train)  # NB_CORES=nbCores,
@@ -102,7 +103,7 @@ def exec_monoview(directory, X, Y, name, labels_names, classification_indices,
     y_train_pred = classifier.predict(X_train)
     y_test_pred = classifier.predict(X_test)
 
-    #Filling the full prediction in the right order
+    # Filling the full prediction in the right order
     full_pred = np.zeros(Y.shape, dtype=int) - 100
     for trainIndex, index in enumerate(classification_indices[0]):
         full_pred[index] = y_train_pred[trainIndex]

@@ -7,7 +7,7 @@ from sklearn.model_selection import StratifiedKFold
 from multiview_platform.tests.utils import rm_tmp, tmp_path
 
 
-from multiview_platform.mono_multi_view_classifiers.utils.dataset import Dataset
+from multiview_platform.mono_multi_view_classifiers.utils.dataset import HDF5Dataset
 from multiview_platform.mono_multi_view_classifiers.utils import hyper_parameter_search
 from multiview_platform.mono_multi_view_classifiers.multiview_classifiers import weighted_linear_early_fusion
 
@@ -43,9 +43,10 @@ class Test_randomized_search(unittest.TestCase):
         cls.monoview_classifier_config = {"max_depth": 1,
                                           "criterion": "gini",
                                           "splitter": "best"}
-        cls.k_folds = StratifiedKFold(n_splits=3, random_state=cls.random_state)
+        cls.k_folds = StratifiedKFold(n_splits=3, random_state=cls.random_state,
+                                      shuffle=True)
         cls.learning_indices = np.array([1,2,3,4, 5,6,7,8,9])
-        cls.dataset = Dataset(hdf5_file=cls.dataset_file)
+        cls.dataset = HDF5Dataset(hdf5_file=cls.dataset_file)
 
     @classmethod
     def tearDownClass(cls):

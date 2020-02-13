@@ -68,7 +68,7 @@ class Test_Dataset(unittest.TestCase):
         meta_data_grp.attrs["nbView"] = len(self.views)
         meta_data_grp.attrs["nbClass"] = len(np.unique(self.labels))
         meta_data_grp.attrs["datasetLength"] = len(self.labels)
-        dataset_object = dataset.Dataset(hdf5_file=dataset_file_filter)
+        dataset_object = dataset.HDF5Dataset(hdf5_file=dataset_file_filter)
         dataset_object.filter(np.array([0, 1, 0]), ["0", "1"], [1, 2, 3],
                               ["ViewN0"], tmp_path)
         self.assertEqual(dataset_object.nb_view, 1)
@@ -78,10 +78,10 @@ class Test_Dataset(unittest.TestCase):
         os.remove(os.path.join(tmp_path, "test_filter.hdf5"))
 
     def test_for_hdf5_file(self):
-        dataset_object = dataset.Dataset(hdf5_file=self.dataset_file)
+        dataset_object = dataset.HDF5Dataset(hdf5_file=self.dataset_file)
 
     def test_from_scratch(self):
-        dataset_object = dataset.Dataset(views=self.views,
+        dataset_object = dataset.HDF5Dataset(views=self.views,
                                              labels=self.labels,
                                              are_sparse=self.are_sparse,
                                              file_name="from_scratch"+self.file_name,
@@ -96,27 +96,27 @@ class Test_Dataset(unittest.TestCase):
         np.testing.assert_array_equal(view, self.views[0])
 
     def test_init_example_indices(self):
-        example_indices = dataset.Dataset(hdf5_file=self.dataset_file).init_example_indces()
+        example_indices = dataset.HDF5Dataset(hdf5_file=self.dataset_file).init_example_indces()
         self.assertEqual(example_indices, range(self.nb_examples))
-        example_indices = dataset.Dataset(hdf5_file=self.dataset_file).init_example_indces([0,1,2])
+        example_indices = dataset.HDF5Dataset(hdf5_file=self.dataset_file).init_example_indces([0,1,2])
         self.assertEqual(example_indices, [0,1,2])
 
     def test_get_v(self):
-        view = dataset.Dataset(hdf5_file=self.dataset_file).get_v(0)
+        view = dataset.HDF5Dataset(hdf5_file=self.dataset_file).get_v(0)
         np.testing.assert_array_equal(view, self.views[0])
-        view = dataset.Dataset(hdf5_file=self.dataset_file).get_v(1, [0,1,2])
+        view = dataset.HDF5Dataset(hdf5_file=self.dataset_file).get_v(1, [0,1,2])
         np.testing.assert_array_equal(view, self.views[1][[0,1,2,], :])
 
     def test_get_nb_class(self):
-        nb_class = dataset.Dataset(hdf5_file=self.dataset_file).get_nb_class()
+        nb_class = dataset.HDF5Dataset(hdf5_file=self.dataset_file).get_nb_class()
         self.assertEqual(nb_class, self.nb_class)
-        nb_class = dataset.Dataset(hdf5_file=self.dataset_file).get_nb_class([0])
+        nb_class = dataset.HDF5Dataset(hdf5_file=self.dataset_file).get_nb_class([0])
         self.assertEqual(nb_class, 1)
 
 
 
     def test_get_view_dict(self):
-        dataset_object = dataset.Dataset(views=self.views,
+        dataset_object = dataset.HDF5Dataset(views=self.views,
                                          labels=self.labels,
                                          are_sparse=self.are_sparse,
                                          file_name="from_scratch" + self.file_name,
@@ -128,7 +128,7 @@ class Test_Dataset(unittest.TestCase):
                                                           "ViewN2": 2,})
 
     def test_get_label_names(self):
-        dataset_object = dataset.Dataset(hdf5_file=self.dataset_file)
+        dataset_object = dataset.HDF5Dataset(hdf5_file=self.dataset_file)
         raw_label_names = dataset_object.get_label_names(decode=False)
         decoded_label_names = dataset_object.get_label_names()
         restricted_label_names = dataset_object.get_label_names(example_indices=[3,4])
@@ -137,19 +137,19 @@ class Test_Dataset(unittest.TestCase):
         self.assertEqual(restricted_label_names, ['2'])
 
     def test_get_nb_exmaples(self):
-        dataset_object = dataset.Dataset(hdf5_file=self.dataset_file)
+        dataset_object = dataset.HDF5Dataset(hdf5_file=self.dataset_file)
         nb_examples = dataset_object.get_nb_examples()
         self.assertEqual(nb_examples, self.nb_examples)
 
     def test_get_labels(self):
-        dataset_object = dataset.Dataset(hdf5_file=self.dataset_file)
+        dataset_object = dataset.HDF5Dataset(hdf5_file=self.dataset_file)
         labels = dataset_object.get_labels()
         np.testing.assert_array_equal(labels, self.labels)
         labels = dataset_object.get_labels([1,2,0])
         np.testing.assert_array_equal(labels, self.labels[[1,2,0]])
 
     def test_copy_view(self):
-        dataset_object = dataset.Dataset(hdf5_file=self.dataset_file)
+        dataset_object = dataset.HDF5Dataset(hdf5_file=self.dataset_file)
         new_dataset = h5py.File(os.path.join(tmp_path, "test_copy.hdf5"), "w")
         dataset_object.copy_view(target_dataset=new_dataset,
                                  source_view_name="ViewN0",
@@ -161,17 +161,17 @@ class Test_Dataset(unittest.TestCase):
         os.remove(os.path.join(tmp_path, "test_copy.hdf5"))
 
     def test_get_name(self):
-        dataset_object = dataset.Dataset(hdf5_file=self.dataset_file)
+        dataset_object = dataset.HDF5Dataset(hdf5_file=self.dataset_file)
         self.assertEqual("test", dataset_object.get_name())
 
     def test_select_labels(self):
-        dataset_object = dataset.Dataset(hdf5_file=self.dataset_file)
+        dataset_object = dataset.HDF5Dataset(hdf5_file=self.dataset_file)
         labels, label_names, indices = dataset_object.select_labels(["0", "2"])
         np.testing.assert_array_equal(np.unique(labels), np.array([0,1]))
         self.assertEqual(label_names, ["0","2"])
 
     def test_check_selected_label_names(self):
-        dataset_object = dataset.Dataset(hdf5_file=self.dataset_file)
+        dataset_object = dataset.HDF5Dataset(hdf5_file=self.dataset_file)
         names = dataset_object.check_selected_label_names(nb_labels=2, random_state=self.rs)
         self.assertEqual(names, ["1", "0"])
         names = dataset_object.check_selected_label_names(selected_label_names=['0', '2'],
@@ -198,7 +198,7 @@ class Test_Dataset(unittest.TestCase):
         meta_data_grp.attrs["nbView"] = len(self.views)
         meta_data_grp.attrs["nbClass"] = len(np.unique(self.labels))
         meta_data_grp.attrs["datasetLength"] = len(self.labels)
-        dataset_object = dataset.Dataset(hdf5_file=dataset_file_select)
+        dataset_object = dataset.HDF5Dataset(hdf5_file=dataset_file_select)
         names = dataset_object.select_views_and_labels(nb_labels=2, view_names=["ViewN0"], random_state=self.rs, path_for_new=tmp_path)
         self.assertEqual(names, {0: '2', 1: '1'})
         self.assertEqual(dataset_object.nb_view, 1)
@@ -229,7 +229,7 @@ class Test_Dataset(unittest.TestCase):
         meta_data_grp.attrs["nbView"] = len(self.views)
         meta_data_grp.attrs["nbClass"] = len(np.unique(self.labels))
         meta_data_grp.attrs["datasetLength"] = len(self.labels)
-        dataset_object = dataset.Dataset(hdf5_file=dataset_file_select)
+        dataset_object = dataset.HDF5Dataset(hdf5_file=dataset_file_select)
         dataset_object.add_gaussian_noise(self.rs, tmp_path)
         dataset_object.dataset.close()
         os.remove(os.path.join(tmp_path, "test_noise_noised.hdf5"))

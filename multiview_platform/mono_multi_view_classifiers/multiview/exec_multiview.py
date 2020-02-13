@@ -11,6 +11,7 @@ from .multiview_utils import MultiviewResult
 from . import analyze_results
 from .. import multiview_classifiers
 from ..utils import hyper_parameter_search
+from ..utils.multiclass import get_mc_estim
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -62,8 +63,9 @@ def init_constants(kwargs, classification_indices, metrics,
     for view_index, view_name in zip(views_indices, views):
         logging.info("Info:\t Shape of " + str(view_name) + " :" + str(
             dataset_var.get_shape()))
+    labels = dataset_var.get_labels()
     return classifier_name, t_start, views_indices,\
-           classifier_config, views, learning_rate
+           classifier_config, views, learning_rate,labels
 
 
 def save_results(classifier, labels_dictionary, string_analysis, views, classifier_module,
@@ -241,7 +243,8 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
     views_indices, \
     classifier_config, \
     views, \
-    learning_rate = init_constants(kwargs, classification_indices, metrics, name,
+    learning_rate,\
+    labels = init_constants(kwargs, classification_indices, metrics, name,
                                    nb_cores, k_folds, dataset_var)
     logging.debug("Done:\t Initialize constants")
 
@@ -268,26 +271,23 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
             directory, nb_cores=nb_cores, views_indices=views_indices,
             searching_tool=hyper_param_search, n_iter=n_iter,
             classifier_config=classifier_config)
-
-    classifier = getattr(classifier_module, classifier_name)(random_state=random_state,
-                                                             **classifier_config)
+    classifier = get_mc_estim(getattr(classifier_module, classifier_name)(random_state=random_state,
+                                                             **classifier_config),
+                              dataset_var.get_labels(), random_state, multiview=True,)
     logging.debug("Done:\t Optimizing hyperparameters")
-
     logging.debug("Start:\t Fitting classifier")
     classifier.fit(dataset_var, dataset_var.get_labels(), train_indices=learning_indices,
                         view_indices=views_indices)
     logging.debug("Done:\t Fitting classifier")
 
     logging.debug("Start:\t Predicting")
-    train_labels = classifier.predict(dataset_var, example_indices=learning_indices,
+    pred_train_labels = classifier.predict(dataset_var, example_indices=learning_indices,
                                       view_indices=views_indices)
-    test_labels = classifier.predict(dataset_var, example_indices=validation_indices,
+    pred_test_labels = classifier.predict(dataset_var, example_indices=validation_indices,
                                      view_indices=views_indices)
     full_labels = np.zeros(dataset_var.get_labels().shape, dtype=int) - 100
-    for train_index, index in enumerate(learning_indices):
-        full_labels[index] = train_labels[train_index]
-    for test_index, index in enumerate(validation_indices):
-        full_labels[index] = test_labels[test_index]
+    full_labels[learning_indices] = pred_train_labels
+    full_labels[validation_indices] = pred_test_labels
     logging.info("Done:\t Pertidcting")
 
     classification_time = time.time() - t_start
@@ -298,13 +298,13 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
     logging.info("Start:\t Result Analysis for " + cl_type)
     times = (extraction_time, classification_time)
     string_analysis, images_analysis, metrics_scores = analyze_results.execute(
-        classifier, train_labels,
-        test_labels, dataset_var,
+        classifier, pred_train_labels,
+        pred_test_labels, dataset_var,
         classifier_config, classification_indices,
         labels_dictionary, views, nb_cores, times,
         name, k_folds,
         hyper_param_search, n_iter, metrics,
-        views_indices, random_state, labels, classifier_module)
+        views_indices, random_state, labels, classifier_module, directory)
     logging.info("Done:\t Result Analysis for " + cl_type)
 
     logging.debug("Start:\t Saving preds")

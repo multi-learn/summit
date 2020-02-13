@@ -33,7 +33,7 @@ def score(y_true, y_pred, multiclass=True, **kwargs):
         if multiclass:
             average = "micro"
         else:
-            average = "binary"
+            average = "micro"
 
     score = metric(y_true, y_pred, sample_weight=sample_weight, labels=labels,
                    pos_label=pos_label, average=average)
@@ -79,7 +79,7 @@ def get_config(**kwargs):
     try:
         average = kwargs["3"]
     except Exception:
-        average = "binary"
+        average = "micro"
     config_string = "F1 score using " + str(
         sample_weight) + " as sample_weights, " + str(
         labels) + " as labels, " + str(

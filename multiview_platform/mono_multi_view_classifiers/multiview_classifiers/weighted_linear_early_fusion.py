@@ -3,11 +3,11 @@ import inspect
 
 # from ..utils.dataset import get_v
 
-from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import BaseMultiviewClassifier
-from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import get_examples_views_indices
-from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import ConfigGenerator
-from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import get_available_monoview_classifiers
-from multiview_platform.mono_multi_view_classifiers.multiview_classifiers.additions.fusion_utils import BaseFusionClassifier
+from ..utils.dataset import get_examples_views_indices
+from ..multiview.multiview_utils import get_available_monoview_classifiers, \
+    BaseMultiviewClassifier, ConfigGenerator
+from .additions.fusion_utils import BaseFusionClassifier
+from ..utils.multiclass import get_mc_estim, MultiClassWrapper
 
 from  multiview_platform.mono_multi_view_classifiers import monoview_classifiers
 
@@ -63,13 +63,20 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         return self
 
     def get_params(self, deep=True):
-        return {"random_state":self.random_state,
-                "view_weights":self.view_weights,
-                "monoview_classifier_name":self.monoview_classifier_name,
-                "monoview_classifier_config":self.monoview_classifier_config}
+        return {"random_state": self.random_state,
+                "view_weights": self.view_weights,
+                "monoview_classifier_name": self.monoview_classifier_name,
+                "monoview_classifier_config": self.monoview_classifier_config}
 
     def fit(self, X, y, train_indices=None, view_indices=None):
-        train_indices, X = self.transform_data_to_monoview(X, train_indices, view_indices)
+        train_indices, X = self.transform_data_to_monoview(X, train_indices,
+                                                           view_indices)
+        if np.unique(y[train_indices]).shape[0] > 2 and \
+                not(isinstance(self.monoview_classifier, MultiClassWrapper)):
+            self.monoview_classifier = get_mc_estim(self.monoview_classifier,
+                                                    y[train_indices],
+                                                    self.random_state,
+                                                    multiview=False)
         self.monoview_classifier.fit(X, y[train_indices])
         return self
 

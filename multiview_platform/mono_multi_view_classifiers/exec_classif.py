@@ -106,7 +106,6 @@ def init_multiview_exps(classifier_names, views_dictionary, nb_class, kwargs_ini
                                                                   views_dictionary=views_dictionary,
                                                                   framework="multiview")
         else:
-            print(classifier_name)
             arguments = get_path_dict(kwargs_init[classifier_name])
             multiview_arguments += [gen_single_multiview_arg_dictionary(classifier_name,
                                                                         arguments,
@@ -653,7 +652,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                                  hyper_param_search=None, metrics=None,
                                  argument_dictionaries=None,
                                  benchmark=None, views=None, views_indices=None,
-                                 flag=None, labels=None,):
+                                 flag=None, labels=None, track_tracebacks=False):
     results_monoview, labels_names = benchmark_init(directory,
                                                  classification_indices, labels,
                                                  labels_dictionary, k_folds, dataset_var)
@@ -671,7 +670,10 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                               hyper_param_search=hyper_param_search, metrics=metrics,
                               n_iter=args["Classification"]["hps_iter"], **arguments)]
         except:
-            traceback_outputs[arguments["classifier_name"]+"-"+arguments["view_name"]] = traceback.format_exc()
+            if track_tracebacks:
+                traceback_outputs[arguments["classifier_name"]+"-"+arguments["view_name"]] = traceback.format_exc()
+            else:
+                raise
 
     logging.debug("Done:\t monoview benchmark")
 
@@ -696,7 +698,10 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                               hyper_param_search=hyper_param_search,
                               metrics=metrics, n_iter=args["Classification"]["hps_iter"], **arguments)]
         except:
-            traceback_outputs[arguments["classifier_name"]] = traceback.format_exc()
+            if track_tracebacks:
+                traceback_outputs[arguments["classifier_name"]] = traceback.format_exc()
+            else:
+                raise
     logging.debug("Done:\t multiview benchmark")
 
     return [flag, results_monoview + results_multiview, traceback_outputs]
@@ -704,11 +709,10 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
 
 def exec_benchmark(nb_cores, stats_iter,
                    benchmark_arguments_dictionaries,
-                   directory,  metrics, dataset_var,
-                   # exec_one_benchmark=exec_one_benchmark,
-                   # exec_one_benchmark_multicore=exec_one_benchmark_multicore,
+                   directory,  metrics, dataset_var, track_tracebacks,
                    exec_one_benchmark_mono_core=exec_one_benchmark_mono_core,
-                   get_results=get_results, delete=delete_HDF5):
+                   get_results=get_results, delete=delete_HDF5,
+                   analyze_iterations=analyze_iterations):
     r"""Used to execute the needed benchmark(s) on multicore or mono-core functions.
 
     Parameters
@@ -768,7 +772,9 @@ def exec_benchmark(nb_cores, stats_iter,
     #         benchmark_arguments_dictionaries[0])]
     # else:
     for arguments in benchmark_arguments_dictionaries:
-        benchmark_results = exec_one_benchmark_mono_core(dataset_var=dataset_var, **arguments)
+        benchmark_results = exec_one_benchmark_mono_core(dataset_var=dataset_var,
+                                                         track_tracebacks=track_tracebacks,
+                                                         **arguments)
         analyze_iterations([benchmark_results], benchmark_arguments_dictionaries, stats_iter, metrics, example_ids=dataset_var.example_ids, labels=dataset_var.get_labels())
         results += [benchmark_results]
     logging.debug("Done:\t Executing all the needed biclass benchmarks")
@@ -892,7 +898,8 @@ def exec_classif(arguments):
                 views, views_indices,)
             results_mean_stds = exec_benchmark(
                 nb_cores, stats_iter,
-                benchmark_argument_dictionaries, directory, metrics, dataset_var)
+                benchmark_argument_dictionaries, directory, metrics, dataset_var,
+                args["Base"]["track_tracebacks"])
             noise_results.append([noise_std, results_mean_stds])
             plot_results_noise(directory, noise_results, metrics[0][0], dataset_name)
 

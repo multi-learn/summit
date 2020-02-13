@@ -1,48 +1,164 @@
 import unittest
 
 import numpy as np
+from sklearn.base import BaseEstimator
 
-import multiview_platform.mono_multi_view_classifiers.utils.multiclass as mm
+from multiview_platform.mono_multi_view_classifiers.utils.multiclass import get_mc_estim, \
+OVRWrapper, OVOWrapper, MultiviewOVOWrapper, MultiviewOVRWrapper
+
+class FakeMCEstim(BaseEstimator):
+
+    def __init__(self):
+        self.short_name="short_name"
+
+    def accepts_multi_class(self, random_state):
+        return False
+
+class FakeEstimNative(FakeMCEstim):
+
+    def accepts_multi_class(self, random_state):
+        return True
 
 
-class Test_genMulticlassLabels(unittest.TestCase):
+class FakeNonProbaEstim(FakeMCEstim):
+    pass
+
+
+class FakeProbaEstim(FakeMCEstim):
+
+    def predict_proba(self):
+        pass
+
+
+class Test_get_mc_estim(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         cls.random_state = np.random.RandomState(42)
-        cls.labels = cls.random_state.randint(0, 5, 50)
-        cls.testIndices = [
-            cls.random_state.choice(np.arange(50), size=10, replace=False),
-            cls.random_state.choice(np.arange(50), size=10, replace=False)]
-        cls.classification_indices = [
-            [np.array([_ for _ in range(50) if _ not in cls.testIndices[0]]),
-             cls.testIndices[0]],
-            [np.array([_ for _ in range(50) if _ not in cls.testIndices[1]]),
-             cls.testIndices[1]]]
+        cls.y = cls.random_state.randint(0, 3, 10)
 
-    def test_one_versus_one(cls):
-        multiclassLabels, labelsIndices, oldIndicesMulticlass = mm.gen_multiclass_labels(
-            cls.labels, "oneVersusOne", cls.classification_indices)
-        cls.assertEqual(len(multiclassLabels), 10)
-        cls.assertEqual(labelsIndices,
-                        [(0, 1), (0, 2), (0, 3), (0, 4), (1, 2), (1, 3), (1, 4),
-                         (2, 3), (2, 4), (3, 4)])
-        np.testing.assert_array_equal(oldIndicesMulticlass[0][0][0],
-                                      np.array(
-                                          [5, 13, 15, 18, 20, 24, 27, 39, 41,
-                                           43, 44, 45, 46, 48]))
-        np.testing.assert_array_equal(multiclassLabels[0],
-                                      np.array([-100, -100, -100, -100, -100, 0,
-                                                -100, -100, -100, -100, -100,
-                                                -100,
-                                                -100, 0, -100, 0, -100, -100, 1,
-                                                -100, 0, -100, -100, 1, 1, -100,
-                                                -100,
-                                                0, -100, -100, -100, -100, -100,
-                                                1, -100, -100, -100, -100, 1, 0,
-                                                -100,
-                                                1, -100, 0, 0, 1, 0, -100, 0,
-                                                -100]))
+    def test_biclass(self):
+        y = self.random_state.randint(0,2,10)
+        estimator="Test"
+        returned_estimator = get_mc_estim(estimator, y, self.random_state,)
+        self.assertEqual(returned_estimator, estimator)
+
+    def test_multiclass_native(self):
+        estimator = FakeEstimNative()
+        returned_estimator = get_mc_estim(estimator, self.y, self.random_state)
+        self.assertIsInstance(returned_estimator, FakeEstimNative)
+
+    def test_multiclass_ovo(self):
+        estimator = FakeNonProbaEstim()
+        returned_estimator = get_mc_estim(estimator, self.y, self.random_state)
+        self.assertIsInstance(returned_estimator, OVOWrapper)
+
+    def test_multiclass_ovr(self):
+        estimator = FakeProbaEstim()
+        returned_estimator = get_mc_estim(estimator, self.y, self.random_state)
+        self.assertIsInstance(returned_estimator, OVRWrapper)
+
+    def test_multiclass_ovo_multiview(self):
+        estimator = FakeNonProbaEstim()
+        returned_estimator = get_mc_estim(estimator, self.y, self.random_state,
+                                          multiview=True)
+        self.assertIsInstance(returned_estimator, MultiviewOVOWrapper)
+
+    def test_multiclass_ovr_multiview(self):
+        estimator = FakeProbaEstim()
+        returned_estimator = get_mc_estim(estimator, self.y, self.random_state,
+                                          multiview=True)
+        self.assertIsInstance(returned_estimator, MultiviewOVRWrapper)
+
+class FakeMVClassifier(BaseEstimator):
+
+    def __init__(self, short_name="None"):
+        self.short_name = short_name
+
+    def fit(self, X, y, train_indices=None, view_indices=None):
+        self.n_classes = np.unique(y[train_indices]).shape[0]
+        self.views_indices = view_indices
+
+    def predict(self, X, example_indices=None, view_indices=None):
+        self.example_indices = example_indices
+        self.views_indices = view_indices
+        return np.zeros((example_indices.shape[0]))
+
+class FakeMVClassifierProb(FakeMVClassifier):
+
+    def predict_proba(self, X, example_indices=None, view_indices=None):
+        self.example_indices = example_indices
+        self.views_indices = view_indices
+        return np.zeros((example_indices.shape[0], 2))
+
+class Test_MultiviewOVRWrapper_fit(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.random_state = np.random.RandomState(42)
+        cls.X = "dataset"
+        cls.n_classes=3
+        cls.y = cls.random_state.randint(0,cls.n_classes,50)
+        cls.train_indices = np.arange(25)
+        cls.example_indices = np.arange(25)+25
+        cls.view_indices="None"
+        cls.wrapper = MultiviewOVRWrapper(FakeMVClassifierProb(), )
+
+    def test_fit(self):
+        fitted = self.wrapper.fit(self.X, self.y, train_indices=self.train_indices,
+                                  view_indices=self.view_indices)
+        for estimator in fitted.estimators_:
+            self.assertEqual(estimator.n_classes,2)
+            self.assertEqual(estimator.views_indices, "None")
+
+    def test_predict(self):
+        fitted = self.wrapper.fit(self.X, self.y, train_indices=self.train_indices,
+                                  view_indices=self.view_indices)
+        pred = fitted.predict(self.X, example_indices=self.example_indices,
+                       view_indices=self.view_indices)
+        for estimator in fitted.estimators_:
+            np.testing.assert_array_equal(estimator.example_indices,
+                                          self.example_indices)
+
+
+class FakeDset:
+
+    def __init__(self, n_examples):
+        self.n_examples = n_examples
+
+    def get_nb_examples(self):
+        return self.n_examples
+
+class Test_MultiviewOVOWrapper_fit(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.random_state = np.random.RandomState(42)
+        cls.n_examples=50
+        cls.X = FakeDset(n_examples=cls.n_examples)
+        cls.n_classes=3
+        cls.y = cls.random_state.randint(0,cls.n_classes,cls.n_examples)
+        cls.train_indices = np.arange(int(cls.n_examples/2))
+        cls.example_indices = np.arange(int(cls.n_examples/2))+int(cls.n_examples/2)
+        cls.view_indices="None"
+        cls.wrapper = MultiviewOVOWrapper(FakeMVClassifier(), )
+
+    def test_fit(self):
+        fitted = self.wrapper.fit(self.X, self.y, train_indices=self.train_indices,
+                                  view_indices=self.view_indices)
+        for estimator in fitted.estimators_:
+            self.assertEqual(estimator.n_classes,2)
+            self.assertEqual(estimator.views_indices, "None")
+
+    def test_predict(self):
+        fitted = self.wrapper.fit(self.X, self.y, train_indices=self.train_indices,
+                                  view_indices=self.view_indices)
+        pred = fitted.predict(self.X, example_indices=self.example_indices,
+                       view_indices=self.view_indices)
+        for estimator in fitted.estimators_:
+            np.testing.assert_array_equal(estimator.example_indices,
+                                          self.example_indices)
+
 
 if __name__ == '__main__':
     unittest.main()

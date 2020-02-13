@@ -31,7 +31,7 @@ class DecisionTree(DecisionTreeClassifier, BaseMonoviewClassifier):
     #     """Used to know if the classifier can return label probabilities"""
     #     return True
 
-    def get_interpret(self, directory, y_test):
+    def get_interpretation(self, directory, y_test):
         interpretString = ""
         interpretString += self.get_feature_importance(directory)
         return interpretString

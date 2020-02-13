@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
-from sklearn.tree.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier
 
 from multiview_platform.mono_multi_view_classifiers.monoview import monoview_utils
 
@@ -14,7 +14,8 @@ class Test_genTestFoldsPreds(unittest.TestCase):
         cls.random_state = np.random.RandomState(42)
         cls.X_train = cls.random_state.random_sample((31, 10))
         cls.y_train = np.ones(31, dtype=int)
-        cls.KFolds = StratifiedKFold(n_splits=3, random_state=cls.random_state)
+        cls.KFolds = StratifiedKFold(n_splits=3, random_state=cls.random_state,
+                                     shuffle=True)
 
         cls.estimator = DecisionTreeClassifier(max_depth=1)
 
@@ -29,5 +30,5 @@ class Test_genTestFoldsPreds(unittest.TestCase):
                                                           cls.estimator)
         cls.assertEqual(testFoldsPreds.shape, (3, 10))
         np.testing.assert_array_equal(testFoldsPreds[0], np.array(
-            [1, 1, -1, -1, 1, 1, -1, 1, -1, 1]))
+            [ 1,  1,  1,  1, -1, -1,  1, -1,  1,  1]))
 

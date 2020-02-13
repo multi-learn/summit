@@ -2,11 +2,12 @@ import os
 import numpy as np
 import h5py
 
-from ..mono_multi_view_classifiers.utils.dataset import Dataset
+from ..mono_multi_view_classifiers.utils.dataset import HDF5Dataset
 
 
 tmp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tmp_tests/")
-test_dataset = Dataset(hdf5_file=h5py.File(os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_database.hdf5"), "r"))
+# TODO Convert to ram dataset
+test_dataset = HDF5Dataset(hdf5_file=h5py.File(os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_database.hdf5"), "r"))
 
 def rm_tmp():
     try:

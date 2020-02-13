@@ -212,20 +212,21 @@ def fakeBenchmarkExec_mutlicore(nb_cores=-1, a=6, args=1):
     return [nb_cores, a]
 
 
-def fakeBenchmarkExec_monocore(dataset_var=1, a=4, args=1):
+def fakeBenchmarkExec_monocore(dataset_var=1, a=4, args=1, track_tracebacks=False):
     return [a]
 
 
-def fakegetResults(results, stats_iter, nb_multiclass,
-                   benchmark_arguments_dictionaries, multi_class_labels, metrics,
-                   classification_indices, directories, directory,
-                   labels_dictionary, nb_examples, nb_labels, example_ids):
+def fakegetResults(results, stats_iter,
+                   benchmark_arguments_dictionaries, metrics, directory,
+                   example_ids, labels):
     return 3
 
 
 def fakeDelete(a, b, c):
     return 9
 
+def fake_analyze(a, b, c, d, example_ids=None, labels=None):
+    pass
 
 class Test_execBenchmark(unittest.TestCase):
 
@@ -241,27 +242,37 @@ class Test_execBenchmark(unittest.TestCase):
             "Classification":{"hps_iter": 1}}
 
     def test_simple(cls):
-        res = exec_classif.exec_benchmark(1, 2, 3, cls.argument_dictionaries,
-                                         [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
-                                         10, cls.Dataset,
-                                         # exec_one_benchmark=fakeBenchmarkExec,
-                                         # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                         exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
-                                         get_results=fakegetResults,
-                                         delete=fakeDelete)
+        res = exec_classif.exec_benchmark(nb_cores=1,
+                                          stats_iter=2,
+                                          benchmark_arguments_dictionaries=cls.argument_dictionaries,
+                                          directory="",
+                                          metrics=[[[1, 2], [3, 4, 5]]],
+                                          dataset_var=cls.Dataset,
+                                          track_tracebacks=6,
+                                          # exec_one_benchmark=fakeBenchmarkExec,
+                                          # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
+                                          get_results=fakegetResults,
+                                          delete=fakeDelete,
+                                          analyze_iterations=fake_analyze)
         cls.assertEqual(res, 3)
 
     def test_multiclass_no_iter(cls):
         cls.argument_dictionaries = [{"a": 10, "args": cls.args},
                                     {"a": 4, "args": cls.args}]
-        res = exec_classif.exec_benchmark(2, 1, 2, cls.argument_dictionaries,
-                                         [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
-                                         10, cls.Dataset,
+        res = exec_classif.exec_benchmark(nb_cores=1,
+                                          stats_iter=1,
+                                          benchmark_arguments_dictionaries=cls.argument_dictionaries,
+                                          directory="",
+                                          metrics=[[[1, 2], [3, 4, 5]]],
+                                          dataset_var=cls.Dataset,
+                                          track_tracebacks=6,
                                          # exec_one_benchmark=fakeBenchmarkExec,
                                          # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
                                          get_results=fakegetResults,
-                                         delete=fakeDelete)
+                                         delete=fakeDelete,
+                                          analyze_iterations=fake_analyze)
         cls.assertEqual(res, 3)
 
     def test_multiclass_and_iter(cls):
@@ -269,25 +280,35 @@ class Test_execBenchmark(unittest.TestCase):
                                     {"a": 4, "args": cls.args},
                                     {"a": 55, "args": cls.args},
                                     {"a": 24, "args": cls.args}]
-        res = exec_classif.exec_benchmark(2, 2, 2, cls.argument_dictionaries,
-                                         [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
-                                         10, cls.Dataset,
+        res = exec_classif.exec_benchmark(nb_cores=1,
+                                          stats_iter=2,
+                                          benchmark_arguments_dictionaries=cls.argument_dictionaries,
+                                          directory="",
+                                          metrics=[[[1, 2], [3, 4, 5]]],
+                                          dataset_var=cls.Dataset,
+                                          track_tracebacks=6,
                                          # exec_one_benchmark=fakeBenchmarkExec,
                                          # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
                                          get_results=fakegetResults,
-                                         delete=fakeDelete)
+                                         delete=fakeDelete,
+                                          analyze_iterations=fake_analyze)
         cls.assertEqual(res, 3)
 
     def test_no_iter_biclass_multicore(cls):
-        res = exec_classif.exec_benchmark(2, 1, 1, cls.argument_dictionaries,
-                                         [[[1, 2], [3, 4, 5]]], 5, 6, 7, 8, 9,
-                                         10, cls.Dataset,
+        res = exec_classif.exec_benchmark(nb_cores=1,
+                                          stats_iter=1,
+                                          benchmark_arguments_dictionaries=cls.argument_dictionaries,
+                                          directory="",
+                                          metrics=[[[1, 2], [3, 4, 5]]],
+                                          dataset_var=cls.Dataset,
+                                          track_tracebacks=6,
                                          # exec_one_benchmark=fakeBenchmarkExec,
                                          # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
                                          get_results=fakegetResults,
-                                         delete=fakeDelete)
+                                         delete=fakeDelete,
+                                          analyze_iterations=fake_analyze)
         cls.assertEqual(res, 3)
 
     @classmethod

@@ -1,19 +1,19 @@
 import numpy as np
 
 from ..multiview_classifiers.additions.late_fusion_utils import LateFusionClassifier
-from ..multiview.multiview_utils import get_examples_views_indices
+from ..utils.dataset import get_examples_views_indices
 
 classifier_class_name = "WeightedLinearLateFusion"
 
 
 class WeightedLinearLateFusion(LateFusionClassifier):
     def __init__(self, random_state, classifiers_names=None,
-                 classifier_configs=None, weights=None, nb_cores=1):
+                 classifier_configs=None, weights=None, nb_cores=1, rs=None):
         self.need_probas=True
         super(WeightedLinearLateFusion, self).__init__(random_state=random_state,
                                       classifiers_names=classifiers_names,
                                       classifier_configs=classifier_configs,
-                                      nb_cores=nb_cores,weights=weights)
+                                      nb_cores=nb_cores,weights=weights, rs=rs)
 
     def predict(self, X, example_indices=None, view_indices=None):
         example_indices, views_indices = get_examples_views_indices(X, example_indices, view_indices)

@@ -84,22 +84,23 @@ def getMetricsScores(metrics, trainLabels, testLabels,
     return metricsScores
 
 
-def execute(classifier, trainLabels,
-            testLabels, DATASET,
+def execute(classifier, pred_train_labels,
+            pred_test_labels, DATASET,
             classificationKWARGS, classificationIndices,
             labels_dictionary, views, nbCores, times,
             name, KFolds,
             hyper_param_search, nIter, metric_list,
-            views_indices, random_state, labels, classifierModule):
+            views_indices, random_state, labels, classifierModule,
+            directory):
     """
 
     Parameters
     ----------
     classifier : classifier used
 
-    trainLabels : labels of train
+    pred_train_labels : labels of train
 
-    testLabels : labels of test
+    pred_test_labels : labels of test
 
     DATASET :
 
@@ -138,19 +139,18 @@ def execute(classifier, trainLabels,
     retuern tuple of (stringAnalysis, imagesAnalysis, metricsScore)
     """
     classifier_name = classifier.short_name
-    learningIndices, validationIndices, testIndicesMulticlass = classificationIndices
-
+    learning_indices, validation_indices = classificationIndices
     metricModule = getattr(metrics, metric_list[0][0])
     if metric_list[0][1] is not None:
         metricKWARGS = dict((index, metricConfig) for index, metricConfig in
                             enumerate(metric_list[0][1]))
     else:
         metricKWARGS = {}
-    scoreOnTrain = metricModule.score(labels[learningIndices],
-                                      labels[learningIndices],
+    scoreOnTrain = metricModule.score(labels[learning_indices],
+                                      pred_train_labels,
                                       **metricKWARGS)
-    scoreOnTest = metricModule.score(labels[validationIndices],
-                                     testLabels, **metricKWARGS)
+    scoreOnTest = metricModule.score(labels[validation_indices],
+                                     pred_test_labels, **metricKWARGS)
 
     stringAnalysis = "\t\tResult for multiview classification with " + classifier_name + \
                      "\n\n" + metric_list[0][0] + " :\n\t-On Train : " + str(
@@ -163,9 +163,9 @@ def execute(classifier, trainLabels,
         KFolds.n_splits) + \
                      " folds\n\nClassification configuration : \n\t-Algorithm used : " + classifier_name + " with : " + classifier.get_config()
 
-    metricsScores = getMetricsScores(metric_list, trainLabels, testLabels,
-                                     validationIndices, learningIndices, labels)
+    metricsScores = getMetricsScores(metric_list, pred_train_labels, pred_test_labels,
+                                     validation_indices, learning_indices, labels)
     stringAnalysis += printMetricScore(metricsScores, metric_list)
-    stringAnalysis += "\n\n Interpretation : \n\n" + classifier.get_interpretation()
+    stringAnalysis += "\n\n Interpretation : \n\n" + classifier.get_interpretation(directory, labels)
     imagesAnalysis = {}
     return stringAnalysis, imagesAnalysis, metricsScores
