@@ -81,49 +81,49 @@ From here the result directory has the structure that follows  :
 .. code-block:: bash
 
     | started_1560_12_25-15_42
-    | ├── No-vs-Yes
-    | | ├── adaboost
-    | | |   ├── ViewNumber0
-    | | |   |   ├── 1560_12_25-15_42-*-summary.txt
-    | | |   |   ├── <other classifier dependant files>
-    | | |   ├── ViewNumber1
-    | | |   |   ├── 1560_12_25-15_42-*-summary.txt
-    | | |   |   ├── <other classifier dependant files>
-    | | |   ├── ViewNumber2
-    | | |   |   ├── 1560_12_25-15_42-*-summary.txt
-    | | |   |   ├── <other classifier dependant files>
-    | | ├── decision_tree
-    | | |   ├── ViewNumber0
-    | | |   |  ├── <summary & classifier dependant files>
-    | | |   ├── ViewNumber1
-    | | |   |  ├── <summary & classifier dependant files>
-    | | |   ├── ViewNumber2
-    | | |   |  ├── <summary & classifier dependant files>
-    | | ├── [..
-    | | ├── ..]
-    | | ├── weighted_linear_late_fusion
-    | | |   ├── <summary & classifier dependant files>
-    | | ├── [..
-    | | ├── ..]
-    | | ├── train_labels.csv
-    | │ └── train_indices.csv
+    | ├── adaboost
+    | |   ├── ViewNumber0
+    | |   |   ├── *-summary.txt
+    | |   |   ├── <other classifier dependant files>
+    | |   ├── ViewNumber1
+    | |   |   ├── *-summary.txt
+    | |   |   ├── <other classifier dependant files>
+    | |   ├── ViewNumber2
+    | |   |   ├── *-summary.txt
+    | |   |   ├── <other classifier dependant files>
+    | ├── decision_tree
+    | |   ├── ViewNumber0
+    | |   |  ├── <summary & classifier dependant files>
+    | |   ├── ViewNumber1
+    | |   |  ├── <summary & classifier dependant files>
+    | |   ├── ViewNumber2
+    | |   |  ├── <summary & classifier dependant files>
+    | ├── [..
+    | ├── ..]
+    | ├── weighted_linear_late_fusion
+    | |   ├── <summary & classifier dependant files>
+    | ├── [..
+    | ├── ..]
+    | ├── train_labels.csv
+    | └── train_indices.csv
     | ├── 1560_12_25-15_42-*-LOG.log
     | ├── config_file.yml
-    | ├── 1560_12_25-15_42-*-accuracy_score.png
-    | ├── 1560_12_25-15_42-*-accuracy_score.csv
-    | ├── 1560_12_25-15_42-*-f1_score.png
-    | ├── 1560_12_25-15_42-*-f1_score.csv
-    | ├── 1560_12_25-15_42-*-error_analysis_2D.png
-    | ├── 1560_12_25-15_42-*-error_analysis_2D.html
-    | ├── 1560_12_25-15_42-*-error_analysis_bar.png
-    | ├── 1560_12_25-15_42-*-ViewNumber0-feature_importance.html
-    | ├── 1560_12_25-15_42-*-ViewNumber0-feature_importance_dataframe.csv
-    | ├── 1560_12_25-15_42-*-ViewNumber1-feature_importance.html
-    | ├── 1560_12_25-15_42-*-ViewNumber1-feature_importance_dataframe.csv
-    | ├── 1560_12_25-15_42-*-ViewNumber2-feature_importance.html
-    | ├── 1560_12_25-15_42-*-ViewNumber2-feature_importance_dataframe.csv
-    | ├── 1560_12_25-15_42-*-bar_plot_data.csv
-    | ├── 1560_12_25-15_42-*-2D_plot_data.csv
+    | ├── *-accuracy_score.png
+    | ├── *-accuracy_score.csv
+    | ├── *-f1_score.png
+    | ├── *-f1_score.csv
+    | ├── *-error_analysis_2D.png
+    | ├── *-error_analysis_2D.html
+    | ├── *-error_analysis_bar.png
+    | ├── feature_importances
+    | | ├── *-ViewNumber0-feature_importance.html
+    | | ├── *-ViewNumber0-feature_importance_dataframe.csv
+    | | ├── *-ViewNumber1-feature_importance.html
+    | | ├── *-ViewNumber1-feature_importance_dataframe.csv
+    | | ├── *-ViewNumber2-feature_importance.html
+    | | ├── *-ViewNumber2-feature_importance_dataframe.csv
+    | ├── *-bar_plot_data.csv
+    | ├── *-2D_plot_data.csv
     | └── random_state.pickle
 
 
@@ -131,7 +131,7 @@ The structure can seem complex, but it priovides a lot of information, from the 
 
 Let's comment each file :
 
-``1560_12_25-15_42-*-accuracy_score.png`` and ``1560_12_25-15_42-*-accuracy_score.csv``
+``*-accuracy_score.png`` and ``*-accuracy_score.csv``
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 These files contain the scores of each classifier for the accuracy metric, ordered with le best ones on the right and
@@ -147,15 +147,15 @@ The image version is as follows :
 
 The csv file is a matrix with the score on train stored in the first row and the score on test stored in the second one. Each classifier is presented in a row. It is loadable with pandas.
 
-Similar files have been generated for the f1 metric (``1560_12_25-15_42-*-f1_score.png`` and ``1560_12_25-15_42-*-f1_score.csv``).
+Similar files have been generated for the f1 metric (``*-f1_score.png`` and ``*-f1_score.csv``).
 
 
-``1560_12_25-15_42-*-error_analysis_2D.png`` and ``1560_12_25-15_42-*-error_analysis_2D.html``
+``*-error_analysis_2D.png`` and ``*-error_analysis_2D.html``
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 In these files, one can visualize the success or failure of each classifier on each example.
 
-Below, ``1560_12_25-15_42-*-error_analysis_2D.html`` is displayed.
+Below, ``*-error_analysis_2D.html`` is displayed.
 
 It is the representation of a matrix, where the rows are the examples, and the columns are the classifiers.
 
@@ -185,9 +185,9 @@ It is an understandable behaviour as the Plausible dataset's view are generated 
 Morever, as confirmed by the accuracy graph, four monoview classifiers classified all the example to the same class,
 and then, display a black half-column.
 
-The data used to generate those matrices is available in ``1560_12_25-15_42-*-2D_plot_data.csv``
+The data used to generate those matrices is available in ``*-2D_plot_data.csv``
 
-``1560_12_25-15_42-*-error_analysis_bar.png``
+``*-error_analysis_bar.png``
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 This file is a different way to visualize the same information as the two previous ones. Indeed, it is a bar plot,
@@ -198,7 +198,7 @@ with a bar for each example, counting the number of classifiers that failed to c
 
     The bar plot showing for each example how many classifiers failed on it.
 
-The data used to generate this graph is available in ``1560_12_25-15_42-*-bar_plot_data.csv``
+The data used to generate this graph is available in ``*-bar_plot_data.csv``
 
 ``config_file.yml``
 <<<<<<<<<<<<<<<<<<<
@@ -218,7 +218,7 @@ The log file
 Classifier-dependant files
 <<<<<<<<<<<<<<<<<<<<<<<<<<
 
-For each classifier, at least one file is generated, called ``1560_12_25-15_42-*-summary.txt``.
+For each classifier, at least one file is generated, called ``*-summary.txt``.
 
 .. include:: ./images/summary.txt
     :literal:
