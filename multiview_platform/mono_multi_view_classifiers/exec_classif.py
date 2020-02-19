@@ -816,7 +816,6 @@ def exec_classif(arguments):
         os.environ['OPENBLAS_NUM_THREADS'] = '1'
     stats_iter = args["stats_iter"]
     hyper_param_search = args["hps_type"]
-    multiclass_method = args["multiclass_method"]
     cl_type = args["type"]
     monoview_algos = args["algos_monoview"]
     multiview_algos = args["algos_multiview"]
@@ -825,7 +824,6 @@ def exec_classif(arguments):
                                                 args["name"])
     if not args["add_noise"]:
         args["noise_std"]=[0.0]
-    print(dataset_list)
     for dataset_name in dataset_list:
         noise_results = []
         for noise_std in args["noise_std"]:

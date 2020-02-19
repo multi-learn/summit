@@ -36,7 +36,6 @@ def pass_default_config(log=True,
                         noise_std=0.0,
                         res_dir="../results/",
                         track_tracebacks=False,
-                        multiclass_method="oneVersusOne",
                         split=0.49,
                         nb_folds=5,
                         nb_class=None,
@@ -66,7 +65,6 @@ def pass_default_config(log=True,
     :param noise_std:
     :param res_dir:
     :param track_tracebacks:
-    :param multiclass_method:
     :param split:
     :param nb_folds:
     :param nb_class:
@@ -81,6 +79,7 @@ def pass_default_config(log=True,
     :param hps_iter:
     :return:
     """
+    print(locals()["name"])
     args = dict((key, value) for key, value in locals().items() if key !="kwargs")
     args = dict(args, **kwargs)
     return args

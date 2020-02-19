@@ -32,7 +32,8 @@ class DecisionTree(DecisionTreeClassifier, BaseMonoviewClassifier):
     #     return True
 
     def get_interpretation(self, directory, y_test):
-        interpretString = ""
+        interpretString = "First featrue : \n\t{} <= {}\n".format(self.tree_.feature[0],
+                                                               self.tree_.threshold[0])
         interpretString += self.get_feature_importance(directory)
         return interpretString
 

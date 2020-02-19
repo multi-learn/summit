@@ -97,6 +97,11 @@ def exec_monoview(directory, X, Y, name, labels_names, classification_indices,
                               random_state)
 
     classifier.fit(X_train, y_train)  # NB_CORES=nbCores,
+    print(y_train)
+    print(X_train[:, 6])
+    print(X_train[:, 6]<=41.0)
+    quit()
+    print(X_test.shape)
     logging.debug("Done:\t Training")
 
     logging.debug("Start:\t Predicting")
