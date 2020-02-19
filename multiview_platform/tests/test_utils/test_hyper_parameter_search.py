@@ -150,6 +150,7 @@ class Test_MultiviewCompatibleRandomizedSearchCV(unittest.TestCase):
         self.assertEqual(RSCV.n_iter, self.n_iter)
 
     def test_fit_multiview_equiv(self):
+        self.n_iter=1
         RSCV = hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV(
             FakeEstimMV(), self.param_distributions, n_iter=self.n_iter,
             refit=self.refit, n_jobs=self.n_jobs, scoring=self.scoring,

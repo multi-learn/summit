@@ -1,36 +1,34 @@
 # The base configuration of the benchmark
-Base :
-  log: True
-  name: ["plausible",]
-  label: "_"
-  type: ".hdf5"
-  views:
-  pathf: "../data/"
-  nice: 0
-  random_state: 42
-  nb_cores: 1
-  full: False
-  debug: True
-  add_noise: False
-  noise_std: 0.0
-  res_dir: "../results/"
-  track_tracebacks: False
+log: True
+name: ["plausible",]
+label: "_"
+file_type: ".hdf5"
+views:
+pathf: "../data/"
+nice: 0
+random_state: 42
+nb_cores: 1
+full: False
+debug: True
+add_noise: False
+noise_std: 0.0
+res_dir: "../results/"
+track_tracebacks: False
 
 # All the classification-realted configuration options
-Classification:
-  multiclass_method: "oneVersusOne"
-  split: 0.49
-  nb_folds: 2
-  nb_class: 3
-  classes:
-  type: ["multiview",]
-  algos_monoview: ["all" ]
-  algos_multiview: ["svm_jumbo_fusion",]
-  stats_iter: 2
-  metrics: ["accuracy_score", "f1_score"]
-  metric_princ: "f1_score"
-  hps_type: "randomized_search"
-  hps_iter: 1
+multiclass_method: "oneVersusOne"
+split: 0.49
+nb_folds: 2
+nb_class: 3
+classes:
+type: ["multiview",]
+algos_monoview: ["all" ]
+algos_multiview: ["svm_jumbo_fusion",]
+stats_iter: 2
+metrics: ["accuracy_score", "f1_score"]
+metric_princ: "f1_score"
+hps_type: "randomized_search"
+hps_iter: 1
 
 
 ######################################

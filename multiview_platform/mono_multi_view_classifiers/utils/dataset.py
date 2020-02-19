@@ -677,7 +677,7 @@ def delete_HDF5(benchmarkArgumentsDictionaries, nbCores, dataset):
         logging.debug("Start:\t Deleting datasets for multiprocessing")
 
         for coreIndex in range(nbCores):
-            os.remove(args["Base"]["pathf"] + args["Base"]["name"] + str(coreIndex) + ".hdf5")
+            os.remove(args["pathf"] + args["name"] + str(coreIndex) + ".hdf5")
     if dataset.is_temp:
         dataset.rm()
 

@@ -18,7 +18,73 @@ def get_the_args(path_to_config_file="../config_files/config.yml"):
     """
     with open(path_to_config_file, 'r') as stream:
         yaml_config = yaml.safe_load(stream)
-    return yaml_config
+    return pass_default_config(**yaml_config)
+
+
+def pass_default_config(log=True,
+                        name=["plausible",],
+                        label="_",
+                        file_type=".hdf5",
+                        views=None,
+                        pathf="../data/",
+                        nice=0,
+                        random_state=42,
+                        nb_cores=1,
+                        full=True,
+                        debug=False,
+                        add_noise=False,
+                        noise_std=0.0,
+                        res_dir="../results/",
+                        track_tracebacks=False,
+                        multiclass_method="oneVersusOne",
+                        split=0.49,
+                        nb_folds=5,
+                        nb_class=None,
+                        classes=None,
+                        type=["multiview",],
+                        algos_monoview=["all" ],
+                        algos_multiview=["svm_jumbo_fusion",],
+                        stats_iter=2,
+                        metrics=["accuracy_score", "f1_score"],
+                        metric_princ="f1_score",
+                        hps_type="randomized_search",
+                        hps_iter=1, **kwargs):
+    """
+
+    :param log:
+    :param name:
+    :param label:
+    :param file_type:
+    :param views:
+    :param pathf:
+    :param nice:
+    :param random_state:
+    :param nb_cores:
+    :param full:
+    :param debug:
+    :param add_noise:
+    :param noise_std:
+    :param res_dir:
+    :param track_tracebacks:
+    :param multiclass_method:
+    :param split:
+    :param nb_folds:
+    :param nb_class:
+    :param classes:
+    :param type:
+    :param algos_monoview:
+    :param algos_multiview:
+    :param stats_iter:
+    :param metrics:
+    :param metric_princ:
+    :param hps_type:
+    :param hps_iter:
+    :return:
+    """
+    args = dict((key, value) for key, value in locals().items() if key !="kwargs")
+    args = dict(args, **kwargs)
+    return args
+
 
 
 def save_config(directory, arguments):

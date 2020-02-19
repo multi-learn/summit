@@ -16,7 +16,7 @@ class Test_get_the_args(unittest.TestCase):
         path_file = os.path.dirname(os.path.abspath(__file__))
         make_tmp_dir = os.path.join(path_file, "../tmp_tests")
         os.mkdir(make_tmp_dir)
-        data = {"Base":{"first_arg": 10, "second_arg":[12.5, 1e-06]}, "Classification":{"third_arg":True}}
+        data = {"log": 10, "name":[12.5, 1e-06], "type":True}
         with open(cls.path_to_config_file, "w") as config_file:
             yaml.dump(data, config_file)
 
@@ -31,16 +31,14 @@ class Test_get_the_args(unittest.TestCase):
 
     def test_dict_format(self):
         config_dict = configuration.get_the_args(self.path_to_config_file)
-        self.assertIn("Base", config_dict)
-        self.assertIn("Classification", config_dict)
-        self.assertIn("first_arg", config_dict["Base"])
-        self.assertIn("third_arg", config_dict["Classification"])
+        self.assertIn("log", config_dict)
+        self.assertIn("name", config_dict)
 
     def test_arguments(self):
         config_dict = configuration.get_the_args(self.path_to_config_file)
-        self.assertEqual(config_dict["Base"]["first_arg"], 10)
-        self.assertEqual(config_dict["Base"]["second_arg"], [12.5, 1e-06])
-        self.assertEqual(config_dict["Classification"]["third_arg"], True)
+        self.assertEqual(config_dict["log"], 10)
+        self.assertEqual(config_dict["name"], [12.5, 1e-06])
+        self.assertEqual(config_dict["type"], True)
 
 # class Test_format_the_args(unittest.TestCase):
 #

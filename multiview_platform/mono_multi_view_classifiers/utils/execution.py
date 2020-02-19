@@ -156,7 +156,7 @@ def init_log_file(name, views, cl_type, log, debug, label,
     result_directory = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))), result_directory)
     if debug:
         result_directory = os.path.join(result_directory, name, noise_string,
-                           "debug_started_" + time.strftime("%Y_%m_%d-%H_%M_%S") + "_" + label)
+                                        "debug_started_" + time.strftime("%Y_%m_%d-%H_%M_%S") + "_" + label)
     else:
         result_directory = os.path.join(result_directory, name,  noise_string,
                                         "started_" + time.strftime("%Y_%m_%d-%H_%M") + "_" + label)
@@ -321,6 +321,9 @@ def find_dataset_names(path, type, names):
     if names == ["all"]:
         return available_file_names
     elif len(names)>1:
+        selected_names = [used_name for used_name in available_file_names if used_name in names]
+        if not selected_names:
+            raise ValueError("None of the provided dataset names are available. Available datasets are {}".format(available_file_names))
         return [used_name for used_name in available_file_names if used_name in names]
     else:
         return names

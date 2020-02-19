@@ -738,7 +738,7 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
         feature_importances = get_feature_importances(result)
         directory = arguments["directory"]
 
-        database_name = arguments["args"]["Base"]["name"]
+        database_name = arguments["args"]["name"]
         labels_names = [arguments["labels_dictionary"][0],
                        arguments["labels_dictionary"][1]]
 
@@ -916,10 +916,10 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
 #                                                    multiclass_labels)
 #
 #     results = publishMulticlassScores(multiclass_results, metrics, stats_iter, directories,
-#                             benchmark_argument_dictionaries[0]["args"]["Base"]["name"])
+#                             benchmark_argument_dictionaries[0]["args"]["name"])
 #     publishMulticlassExmapleErrors(multiclass_results, directories,
 #                                    benchmark_argument_dictionaries[0][
-#                                        "args"]["Base"]["name"], example_ids, multiclass_labels)
+#                                        "args"]["name"], example_ids, multiclass_labels)
 #
 #     return results, multiclass_results
 
@@ -982,14 +982,14 @@ def publish_all_example_errors(iter_results, directory,
     error_on_examples, classifier_names = gen_error_data_glob(iter_results,
                                                               stats_iter)
 
-    np.savetxt(directory + "clf_errors.csv", data, delimiter=",")
-    np.savetxt(directory + "example_errors.csv", error_on_examples,
+    np.savetxt(os.path.join(directory,  "clf_errors.csv"), data, delimiter=",")
+    np.savetxt(os.path.join(directory,  "example_errors.csv"), error_on_examples,
                delimiter=",")
 
     plot_2d(data, classifier_names, nbClassifiers, nbExamples,
-            directory, stats_iter=stats_iter, example_ids=example_ids, labels=labels)
+            os.path.join(directory, ""), stats_iter=stats_iter, example_ids=example_ids, labels=labels)
     plot_errors_bar(error_on_examples, nbClassifiers * stats_iter,
-                    nbExamples, directory)
+                    nbExamples, os.path.join(directory, ""))
 
     logging.debug(
         "Done:\t Global biclass label analysis figures generation")
@@ -1207,7 +1207,7 @@ def get_results(results, stats_iter, benchmark_argument_dictionaries,
                 metrics, directory, example_ids, labels):
 
     """Used to analyze the results of the previous benchmarks"""
-    data_base_name = benchmark_argument_dictionaries[0]["args"]["Base"]["name"]
+    data_base_name = benchmark_argument_dictionaries[0]["args"]["name"]
 
 
     results_means_std, biclass_results, flagged_failed = analyze_iterations(results, benchmark_argument_dictionaries,
