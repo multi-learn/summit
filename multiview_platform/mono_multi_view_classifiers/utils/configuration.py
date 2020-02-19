@@ -79,7 +79,6 @@ def pass_default_config(log=True,
     :param hps_iter:
     :return:
     """
-    print(locals()["name"])
     args = dict((key, value) for key, value in locals().items() if key !="kwargs")
     args = dict(args, **kwargs)
     return args
