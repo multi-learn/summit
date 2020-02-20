@@ -195,9 +195,9 @@ class RAMDataset(Dataset):
         if type(example_indices) is int:
             return self.views[view_index][example_indices, :]
         else:
-            example_indices = np.array(example_indices)
-            sorted_indices = np.argsort(example_indices)
-            example_indices = example_indices[sorted_indices]
+            example_indices = np.asarray(example_indices)
+            # sorted_indices = np.argsort(example_indices)
+            # example_indices = example_indices[sorted_indices]
             if not self.are_sparse[view_index]:
                 return self.views[view_index][
                        example_indices, :]
@@ -452,12 +452,11 @@ class HDF5Dataset(Dataset):
             return self.dataset["View" + str(view_index)][example_indices, :]
         else:
             example_indices = np.array(example_indices)
-            sorted_indices = np.argsort(example_indices)
-            example_indices = example_indices[sorted_indices]
+            # sorted_indices = np.argsort(example_indices)
+            # example_indices = example_indices[sorted_indices]
 
             if not self.dataset["View" + str(view_index)].attrs["sparse"]:
-                return self.dataset["View" + str(view_index)][()][example_indices, :][
-                       np.argsort(sorted_indices), :]
+                return self.dataset["View" + str(view_index)][()][example_indices, :]#[np.argsort(sorted_indices), :]
             else:
                 sparse_mat = sparse.csr_matrix(
                     (self.dataset["View" + str(view_index)]["data"][()],

@@ -1,5 +1,5 @@
 # The base configuration of the benchmark
-log: True
+log: False
 name: ["plausible",]
 label: "_"
 file_type: ".hdf5"
@@ -19,15 +19,15 @@ track_tracebacks: False
 multiclass_method: "oneVersusOne"
 split: 0.49
 nb_folds: 2
-nb_class: 3
+nb_class: 2
 classes:
-type: ["multiview",]
+type: ["multiview","monoview"]
 algos_monoview: ["decision_tree" ]
-algos_multiview: ["svm_jumbo_fusion",]
+algos_multiview: ["weighted_linear_early_fusion",]
 stats_iter: 2
 metrics: ["accuracy_score", "f1_score"]
-metric_princ: "f1_score"
-hps_type: "randomized_search"
+metric_princ: "accuracy_score"
+hps_type: "None"
 hps_iter: 1
 
 
