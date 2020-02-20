@@ -81,6 +81,7 @@ class BaseClassifier(BaseEstimator, ):
                          for _ in range(int(n_samples / n_classes))
                          for class_index in range(n_classes)]
             fake_mc_y += [0 for _ in range(n_samples % n_classes)]
+            fake_mc_y = np.asarray(fake_mc_y)
             try:
                 self.fit(fake_mc_X, fake_mc_y)
                 self.predict(fake_mc_X)
