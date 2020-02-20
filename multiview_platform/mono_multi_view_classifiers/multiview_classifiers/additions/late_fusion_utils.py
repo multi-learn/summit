@@ -97,7 +97,11 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
         train_indices, view_indices = get_examples_views_indices(X,
                                                                   train_indices,
                                                                   view_indices)
-        self.init_params(len(view_indices))
+        if np.unique(y).shape[0]>2:
+            multiclass=True
+        else:
+            multiclass=False
+        self.init_params(len(view_indices), multiclass)
         if np.unique(y[train_indices]).shape[0] > 2:
             raise ValueError("Multiclass not supported")
         self.monoview_estimators = [monoview_estimator.fit(X.get_v(view_index, train_indices),
@@ -107,7 +111,7 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
                                            self.monoview_estimators)]
         return self
 
-    def init_params(self, nb_view):
+    def init_params(self, nb_view, mutliclass=False):
         if self.weights is None:
             self.weights = np.ones(nb_view) / nb_view
         elif isinstance(self.weights, WeightDistribution):
@@ -120,7 +124,8 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
         self.monoview_estimators = [
             self.init_monoview_estimator(classifier_name,
                                          self.classifier_configs[classifier_index],
-                                         classifier_index=classifier_index)
+                                         classifier_index=classifier_index,
+                                         multiclass=mutliclass)
             for classifier_index, classifier_name
             in enumerate(self.classifiers_names)]
 

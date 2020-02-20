@@ -114,8 +114,9 @@ def randomized_search(X, y, framework, random_state, output_file_name, classifie
     estimator = getattr(classifier_module, classifier_name)(random_state=random_state,
                                                             **classifier_kwargs)
     params_dict = estimator.gen_distribs()
-    estimator = get_mc_estim(estimator, y, random_state,
-                             multiview=(framework=="multiview"))
+    estimator = get_mc_estim(estimator, random_state,
+                             multiview=(framework=="multiview"),
+                             y=y)
     if params_dict:
         metric_module = getattr(metrics, metric[0])
         if metric[1] is not None:

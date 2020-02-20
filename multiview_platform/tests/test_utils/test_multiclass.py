@@ -40,34 +40,34 @@ class Test_get_mc_estim(unittest.TestCase):
     def test_biclass(self):
         y = self.random_state.randint(0,2,10)
         estimator="Test"
-        returned_estimator = get_mc_estim(estimator, y, self.random_state,)
+        returned_estimator = get_mc_estim(estimator, self.random_state, y=y)
         self.assertEqual(returned_estimator, estimator)
 
     def test_multiclass_native(self):
         estimator = FakeEstimNative()
-        returned_estimator = get_mc_estim(estimator, self.y, self.random_state)
+        returned_estimator = get_mc_estim(estimator, self.random_state, y=self.y)
         self.assertIsInstance(returned_estimator, FakeEstimNative)
 
     def test_multiclass_ovo(self):
         estimator = FakeNonProbaEstim()
-        returned_estimator = get_mc_estim(estimator, self.y, self.random_state)
+        returned_estimator = get_mc_estim(estimator, self.random_state, y=self.y)
         self.assertIsInstance(returned_estimator, OVOWrapper)
 
     def test_multiclass_ovr(self):
         estimator = FakeProbaEstim()
-        returned_estimator = get_mc_estim(estimator, self.y, self.random_state)
+        returned_estimator = get_mc_estim(estimator, self.random_state, y=self.y)
         self.assertIsInstance(returned_estimator, OVRWrapper)
 
     def test_multiclass_ovo_multiview(self):
         estimator = FakeNonProbaEstim()
-        returned_estimator = get_mc_estim(estimator, self.y, self.random_state,
-                                          multiview=True)
+        returned_estimator = get_mc_estim(estimator, self.random_state,
+                                          multiview=True, y=self.y, )
         self.assertIsInstance(returned_estimator, MultiviewOVOWrapper)
 
     def test_multiclass_ovr_multiview(self):
         estimator = FakeProbaEstim()
-        returned_estimator = get_mc_estim(estimator, self.y, self.random_state,
-                                          multiview=True)
+        returned_estimator = get_mc_estim(estimator, self.random_state,
+                                          multiview=True, y=self.y,)
         self.assertIsInstance(returned_estimator, MultiviewOVRWrapper)
 
 class FakeMVClassifier(BaseEstimator):

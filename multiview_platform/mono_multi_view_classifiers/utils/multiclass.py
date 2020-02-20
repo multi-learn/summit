@@ -110,7 +110,8 @@ from .dataset import get_examples_views_indices
 #         return False
 
 
-def get_mc_estim(estimator, y, random_state, multiview=False):
+def get_mc_estim(estimator, random_state, y=None, multiview=False,
+                 multiclass=False):
     r"""Used to get a multiclass-compatible estimator if the one in param does not natively support multiclass.
     If perdict_proba is available in the asked estimator, a One Versus Rest wrapper is returned,
     else, a One Versus One wrapper is returned.
@@ -133,7 +134,7 @@ def get_mc_estim(estimator, y, random_state, multiview=False):
     estimator : sklearn-like estimator
         Either the aksed estimator, or a multiclass-compatible wrapper over the asked estimator
     """
-    if np.unique(y).shape[0]>2:
+    if (y is not None and np.unique(y).shape[0]>2) or multiclass :
         if not clone(estimator).accepts_multi_class(random_state):
             if hasattr(estimator, "predict_proba"):
                 if multiview:

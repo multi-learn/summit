@@ -50,15 +50,12 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         self.classed_params = []
         self.weird_strings={}
 
-    def set_params(self, monoview_classifier_name=None, monoview_classifier_config=None, **params):
+    def set_params(self, monoview_classifier_name=None,
+                   monoview_classifier_config=None, **params):
         self.monoview_classifier_name = monoview_classifier_name
-        monoview_classifier_module = getattr(monoview_classifiers,
-                                             self.monoview_classifier_name)
-        monoview_classifier_class = getattr(monoview_classifier_module,
-                                            monoview_classifier_module.classifier_class_name)
-        self.monoview_classifier = monoview_classifier_class()
-        self.init_monoview_estimator(monoview_classifier_name,
+        self.monoview_classifier = self.init_monoview_estimator(monoview_classifier_name,
                                        monoview_classifier_config)
+        self.monoview_classifier_config = self.monoview_classifier.get_params()
         self.short_name = "early fusion " + self.monoview_classifier_name
         return self
 
@@ -74,9 +71,9 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         if np.unique(y[train_indices]).shape[0] > 2 and \
                 not(isinstance(self.monoview_classifier, MultiClassWrapper)):
             self.monoview_classifier = get_mc_estim(self.monoview_classifier,
-                                                    y[train_indices],
                                                     self.random_state,
-                                                    multiview=False)
+                                                    multiview=False,
+                                                    y=y[train_indices])
         self.monoview_classifier.fit(X, y[train_indices])
         return self
 
@@ -100,10 +97,10 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         X = self.hdf5_to_monoview(dataset, example_indices)
         return example_indices, X
 
-    def hdf5_to_monoview(self, dataset, exmaples):
+    def hdf5_to_monoview(self, dataset, examples):
         """Here, we concatenate the views for the asked examples """
         monoview_data = np.concatenate(
-            [dataset.get_v(view_idx, exmaples)
+            [dataset.get_v(view_idx, examples)
              for view_weight, (index, view_idx)
              in zip(self.view_weights, enumerate(self.view_indices))]
             , axis=1)

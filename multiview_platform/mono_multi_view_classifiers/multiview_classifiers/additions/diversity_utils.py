@@ -32,6 +32,7 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
         train_indices, view_indices = get_examples_views_indices(X,
                                                                  train_indices,
                                                                  view_indices)
+        # TODO : Finer analysis, may support a bit of mutliclass
         if np.unique(y[train_indices]).shape[0] > 2:
             raise ValueError("Multiclass not supported, classes used : {}".format(np.unique(y[train_indices])))
         if self.monoview_estimators is None:

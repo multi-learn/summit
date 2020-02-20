@@ -35,8 +35,13 @@ class BaseJumboFusion(LateFusionClassifier):
         return self
 
     def fit_monoview_estimators(self, X, y, train_indices=None, view_indices=None):
+        if np.unique(y).shape[0]>2:
+            multiclass=True
+        else:
+            multiclass=False
         self.monoview_estimators = [[self.init_monoview_estimator(classifier_name,
-                                                                  self.classifier_configs[classifier_index])
+                                                                  self.classifier_configs[classifier_index],
+                                                                  multiclass=multiclass)
                                      for classifier_index, classifier_name
                                      in enumerate(self.classifiers_names)]
                                     for _ in view_indices]

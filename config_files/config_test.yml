@@ -22,7 +22,7 @@ nb_folds: 2
 nb_class: 3
 classes:
 type: ["multiview",]
-algos_monoview: ["all" ]
+algos_monoview: ["decision_tree" ]
 algos_multiview: ["svm_jumbo_fusion",]
 stats_iter: 2
 metrics: ["accuracy_score", "f1_score"]

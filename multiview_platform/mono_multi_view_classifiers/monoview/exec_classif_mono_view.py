@@ -93,8 +93,8 @@ def exec_monoview(directory, X, Y, name, labels_names, classification_indices,
     classifier = get_mc_estim(getattr(classifier_module,
                                       classifier_class_name)
                               (random_state, **cl_kwargs),
-                              Y,
-                              random_state)
+                              random_state,
+                              y=Y)
 
     classifier.fit(X_train, y_train)  # NB_CORES=nbCores,
     logging.debug("Done:\t Training")

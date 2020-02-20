@@ -125,7 +125,7 @@ def get_available_monoview_classifiers(need_probas=False):
         available_classifiers = proba_classifiers
     return available_classifiers
 
-def get_monoview_classifier(classifier_name):
+def get_monoview_classifier(classifier_name, multiclass=False):
     classifier_module = getattr(monoview_classifiers, classifier_name)
     classifier_class = getattr(classifier_module, classifier_module.classifier_class_name)
     return classifier_class

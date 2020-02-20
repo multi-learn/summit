@@ -273,7 +273,8 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
             classifier_config=classifier_config)
     classifier = get_mc_estim(getattr(classifier_module, classifier_name)(random_state=random_state,
                                                              **classifier_config),
-                              dataset_var.get_labels(), random_state, multiview=True,)
+                              random_state, multiview=True,
+                              y=dataset_var.get_labels())
     logging.debug("Done:\t Optimizing hyperparameters")
     logging.debug("Start:\t Fitting classifier")
     classifier.fit(dataset_var, dataset_var.get_labels(), train_indices=learning_indices,
