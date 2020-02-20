@@ -184,7 +184,24 @@ class OVRWrapper(MonoviewWrapper, OneVsRestClassifier):
 
 
 class OVOWrapper(MonoviewWrapper, OneVsOneClassifier):
-    pass
+    def decision_function(self, X):
+        # check_is_fitted(self)
+
+        indices = self.pairwise_indices_
+        if indices is None:
+            Xs = [X] * len(self.estimators_)
+        else:
+            Xs = [X[:, idx] for idx in indices]
+
+        predictions = np.vstack([est.predict(Xi)
+                                 for est, Xi in zip(self.estimators_, Xs)]).T
+        confidences = np.ones(predictions.shape)
+        Y = _ovr_decision_function(predictions,
+                                   confidences, len(self.classes_))
+        if self.n_classes_ == 2:
+            return Y[:, 1]
+        return Y
+
 
 
 # The following code is a mutliview adaptation of sklearns multiclass package
