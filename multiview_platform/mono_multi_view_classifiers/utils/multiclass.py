@@ -171,8 +171,10 @@ class MultiClassWrapper:
         return self.estimator.get_config()
 
     def get_interpretation(self, output_file_name=None, y_test=None):
-        return self.estimator.get_interpretation(output_file_name, y_test,
-                                            multi_class=True)
+        # return self.estimator.get_interpretation(output_file_name, y_test,
+        #                                     multi_class=True)
+        # TODO : Multiclass interpretation
+        return "Multiclass wrapper is not interpretable yet"
 
 
 class MonoviewWrapper(MultiClassWrapper):
