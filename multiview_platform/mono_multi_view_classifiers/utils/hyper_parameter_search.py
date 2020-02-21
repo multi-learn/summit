@@ -373,7 +373,8 @@ def spear_mint(dataset, classifier_name, views_indices=None, k_folds=None,
 
 
 def gen_heat_maps(params, scores_array, output_file_name):
-    """Used to generate a heat map for each doublet of hyperparms optimized on the previous function"""
+    """Used to generate a heat map for each doublet of hyperparms
+    optimized on the previous function"""
     nb_params = len(params)
     if nb_params > 2:
         combinations = itertools.combinations(range(nb_params), 2)
