@@ -8,8 +8,8 @@ from ..monoview.monoview_utils import CustomRandint, CustomUniform, \
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
-
 classifier_class_name = "Lasso"
+
 
 class Lasso(LassoSK, BaseMonoviewClassifier):
     """
@@ -45,14 +45,15 @@ class Lasso(LassoSK, BaseMonoviewClassifier):
     weird_strings :
 
     """
+
     def __init__(self, random_state=None, alpha=1.0,
                  max_iter=10, warm_start=False, **kwargs):
         LassoSK.__init__(self,
-            alpha=alpha,
-            max_iter=max_iter,
-            warm_start=warm_start,
-            random_state=random_state
-        )
+                         alpha=alpha,
+                         max_iter=max_iter,
+                         warm_start=warm_start,
+                         random_state=random_state
+                         )
         self.param_names = ["max_iter", "alpha", "random_state"]
         self.classed_params = []
         self.distribs = [CustomRandint(low=1, high=300),

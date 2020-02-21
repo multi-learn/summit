@@ -1,6 +1,5 @@
 import errno
 import os
-import logging
 
 import h5py
 import numpy as np
@@ -10,9 +9,6 @@ from ..utils.dataset import RAMDataset, HDF5Dataset
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
-
-
-
 
 
 def make_me_noisy(view_data, random_state, percentage=5):
@@ -32,19 +28,20 @@ def make_me_noisy(view_data, random_state, percentage=5):
 
 def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
                           label_names=["No".encode(), "Yes".encode(),
-                                     "Maybe".encode()],
+                                       "Maybe".encode()],
                           random_state=None, full=True, add_noise=False,
                           noise_std=0.15, nb_view=3, nb_examples=100,
                           nb_features=10):
     """Used to generate a plausible dataset to test the algorithms"""
 
-    if not os.path.exists(os.path.dirname(os.path.join(path, "plausible.hdf5"))):
+    if not os.path.exists(
+            os.path.dirname(os.path.join(path, "plausible.hdf5"))):
         try:
             os.makedirs(os.path.dirname(os.path.join(path, "plausible.hdf5")))
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-    example_ids = ["exmaple_id_"+str(i) for i in range(nb_examples)]
+    example_ids = ["exmaple_id_" + str(i) for i in range(nb_examples)]
     views = []
     view_names = []
     are_sparse = []
@@ -64,7 +61,7 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
                                                      nb_examples,
                                                      int(nb_examples / 12))
             for index in np.concatenate((fake_one_indices, fake_zero_indices)):
-                example_ids[index]+="noised"
+                example_ids[index] += "noised"
 
             view_data[fake_one_indices] = np.ones(
                 (len(fake_one_indices), nb_features))
@@ -75,11 +72,9 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
             view_names.append("ViewNumber" + str(view_index))
             are_sparse.append(False)
 
-
-
         dataset = RAMDataset(views=views, labels=labels,
-                              labels_names=label_names, view_names=view_names,
-                              are_sparse=are_sparse, example_ids=example_ids,
+                             labels_names=label_names, view_names=view_names,
+                             are_sparse=are_sparse, example_ids=example_ids,
                              name='plausible')
         labels_dictionary = {0: "No", 1: "Yes"}
         return dataset, labels_dictionary, "plausible"
@@ -89,10 +84,10 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
         scndBound = 2 * int(nb_examples / 3)
         thrdBound = nb_examples
         labels = np.array(
-                            [0 for _ in range(firstBound)] +
-                            [1 for _ in range(firstBound)] +
-                            [2 for _ in range(rest)]
-                        )
+            [0 for _ in range(firstBound)] +
+            [1 for _ in range(firstBound)] +
+            [2 for _ in range(rest)]
+        )
         for view_index in range(nb_view):
             view_data = np.array(
                 [np.zeros(nb_features) for _ in range(firstBound)] +
@@ -116,10 +111,10 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
             view_names.append("ViewNumber" + str(view_index))
             are_sparse.append(False)
         dataset = RAMDataset(views=views, labels=labels,
-                              labels_names=label_names, view_names=view_names,
-                              are_sparse=are_sparse,
-                              name="plausible",
-                              example_ids=example_ids)
+                             labels_names=label_names, view_names=view_names,
+                             are_sparse=are_sparse,
+                             name="plausible",
+                             example_ids=example_ids)
         labels_dictionary = {0: "No", 1: "Yes", 2: "Maybe"}
         return dataset, labels_dictionary, "plausible"
 
@@ -128,8 +123,10 @@ class DatasetError(Exception):
     def __init__(self, *args, **kwargs):
         Exception.__init__(self, *args, **kwargs)
 
+
 def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
-                     random_state, full=False, add_noise=False, noise_std=0.15,
+                        random_state, full=False, add_noise=False,
+                        noise_std=0.15,
                         path_for_new="../data/"):
     """Used to load a hdf5 database"""
     if full:
@@ -143,8 +140,9 @@ def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
         dataset_file = h5py.File(os.path.join(path_f, name_DB + ".hdf5"), "r")
         dataset = HDF5Dataset(hdf5_file=dataset_file)
         labels_dictionary = dataset.select_views_and_labels(nb_labels=nb_class,
-                                        selected_label_names=asked_labels_names,
-                                        view_names=views, random_state=random_state,
+                                                            selected_label_names=asked_labels_names,
+                                                            view_names=views,
+                                                            random_state=random_state,
                                                             path_for_new=path_for_new)
         dataset_name = dataset.get_name()
 
@@ -157,11 +155,12 @@ def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
 
 
 def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
-                       random_state, full=False, add_noise=False, noise_std=0.15,
-                        delimiter=",", path_for_new="../data/"):
+                       random_state, full=False, add_noise=False,
+                       noise_std=0.15,
+                       delimiter=",", path_for_new="../data/"):
     # TODO : Update this one
     labels_names = np.genfromtxt(pathF + nameDB + "-labels-names.csv",
-                                dtype='str', delimiter=delimiter)
+                                 dtype='str', delimiter=delimiter)
     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")
     labels = np.genfromtxt(pathF + nameDB + "-labels.csv", delimiter=delimiter)
     labelsDset = datasetFile.create_dataset("Labels", labels.shape, data=labels)
@@ -186,13 +185,16 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
     metaDataGrp.attrs["nbClass"] = len(labels_names)
     metaDataGrp.attrs["datasetLength"] = len(labels)
     datasetFile.close()
-    datasetFile, labelsDictionary, dataset_name = get_classic_db_hdf5(views, pathF, nameDB,
-                                                     NB_CLASS, askedLabelsNames,
-                                                     random_state, full,
-                                                     path_for_new=path_for_new)
+    datasetFile, labelsDictionary, dataset_name = get_classic_db_hdf5(views,
+                                                                      pathF,
+                                                                      nameDB,
+                                                                      NB_CLASS,
+                                                                      askedLabelsNames,
+                                                                      random_state,
+                                                                      full,
+                                                                      path_for_new=path_for_new)
 
     return datasetFile, labelsDictionary, dataset_name
-
 
 #
 # def get_classes(labels):
@@ -327,8 +329,6 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     else:
 #         for key, value in source_data_file.get(source_dataset_name).attrs.items():
 #             new_d_set.attrs[key] = value
-
-
 
 
 #

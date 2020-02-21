@@ -8,6 +8,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 classifier_class_name = "SGD"
 
+
 class SGD(SGDClassifier, BaseMonoviewClassifier):
     """
 
@@ -36,17 +37,17 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
     weird_strings :
 
     """
+
     def __init__(self, random_state=None, loss='hinge',
                  penalty='l2', alpha=0.0001, max_iter=5, tol=None, **kwargs):
-
         SGDClassifier.__init__(self,
-            loss=loss,
-            penalty=penalty,
-            alpha=alpha,
-            max_iter=5,
-            tol=None,
-            random_state=random_state
-        )
+                               loss=loss,
+                               penalty=penalty,
+                               alpha=alpha,
+                               max_iter=5,
+                               tol=None,
+                               random_state=random_state
+                               )
         self.param_names = ["loss", "penalty", "alpha", "random_state"]
         self.classed_params = []
         self.distribs = [['log', 'modified_huber'],
@@ -68,6 +69,5 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
         interpret_string str to interpreted
         """
         interpret_string = ""
-        import numpy as np
         # self.feature_importances_ = (self.coef_/np.sum(self.coef_)).reshape(self.coef_.shape[1])
         return interpret_string

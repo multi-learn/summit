@@ -10,8 +10,9 @@ def print_metric_score(metric_scores, metrics):
     for metric in metrics:
         metric_module = getattr(metrics, metric[0])
         if metric[1] is not None:
-            metric_kwargs = dict((index, metricConfig) for index, metricConfig in
-                                 enumerate(metric[1]))
+            metric_kwargs = dict(
+                (index, metricConfig) for index, metricConfig in
+                enumerate(metric[1]))
         else:
             metric_kwargs = {}
         metric_score_string += "\tFor " + metric_module.get_config(
@@ -24,7 +25,8 @@ def print_metric_score(metric_scores, metrics):
     return metric_score_string
 
 
-def get_total_metric_scores(metric, train_labels, test_labels, validation_indices,
+def get_total_metric_scores(metric, train_labels, test_labels,
+                            validation_indices,
                             learning_indices, labels):
     metric_module = getattr(metrics, metric[0])
     if metric[1] is not None:
@@ -43,8 +45,10 @@ def get_metrics_scores(metrics_var, train_labels, test_labels,
                        validation_indices, learning_indices, labels):
     metrics_scores = {}
     for metric in metrics_var:
-        metrics_scores[metric[0]] = get_total_metric_scores(metric, train_labels,
+        metrics_scores[metric[0]] = get_total_metric_scores(metric,
+                                                            train_labels,
                                                             test_labels,
                                                             validation_indices,
-                                                            learning_indices, labels)
+                                                            learning_indices,
+                                                            labels)
     return metrics_scores

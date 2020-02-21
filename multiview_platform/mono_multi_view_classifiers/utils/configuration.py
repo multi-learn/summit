@@ -1,5 +1,6 @@
-import yaml
 import os
+
+import yaml
 
 
 def get_the_args(path_to_config_file="../config_files/config.yml"):
@@ -22,7 +23,7 @@ def get_the_args(path_to_config_file="../config_files/config.yml"):
 
 
 def pass_default_config(log=True,
-                        name=["plausible",],
+                        name=["plausible", ],
                         label="_",
                         file_type=".hdf5",
                         views=None,
@@ -40,9 +41,9 @@ def pass_default_config(log=True,
                         nb_folds=5,
                         nb_class=None,
                         classes=None,
-                        type=["multiview",],
-                        algos_monoview=["all" ],
-                        algos_multiview=["svm_jumbo_fusion",],
+                        type=["multiview", ],
+                        algos_monoview=["all"],
+                        algos_multiview=["svm_jumbo_fusion", ],
                         stats_iter=2,
                         metrics=["accuracy_score", "f1_score"],
                         metric_princ="f1_score",
@@ -79,10 +80,10 @@ def pass_default_config(log=True,
     :param hps_iter:
     :return:
     """
-    args = dict((key, value) for key, value in locals().items() if key !="kwargs")
+    args = dict(
+        (key, value) for key, value in locals().items() if key != "kwargs")
     args = dict(args, **kwargs)
     return args
-
 
 
 def save_config(directory, arguments):

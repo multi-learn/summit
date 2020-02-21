@@ -1,11 +1,10 @@
-from sklearn.base import BaseEstimator, ClassifierMixin
 from abc import abstractmethod
+
 import numpy as np
 
+from .. import monoview_classifiers
 from ..utils.base import BaseClassifier
 from ..utils.dataset import RAMDataset
-
-from .. import monoview_classifiers
 
 
 class FakeEstimator():
@@ -42,35 +41,37 @@ class BaseMultiviewClassifier(BaseClassifier):
     def to_str(self, param_name):
         if param_name in self.weird_strings:
             string = ""
-            if "class_name" in self.weird_strings[param_name] :
-                string+=self.get_params()[param_name].__class__.__name__
+            if "class_name" in self.weird_strings[param_name]:
+                string += self.get_params()[param_name].__class__.__name__
             if "config" in self.weird_strings[param_name]:
-                string += "( with "+ self.get_params()[param_name].params_to_string()+")"
+                string += "( with " + self.get_params()[
+                    param_name].params_to_string() + ")"
             else:
-                string+=self.weird_strings[param_name](
+                string += self.weird_strings[param_name](
                     self.get_params()[param_name])
             return string
         else:
             return str(self.get_params()[param_name])
 
     def accepts_multi_class(self, random_state, n_samples=10, dim=2,
-                           n_classes=3, n_views=2):
+                            n_classes=3, n_views=2):
         if int(n_samples / n_classes) < 1:
             raise ValueError(
                 "n_samples ({}) / n_classe ({}) must be over 1".format(
                     n_samples,
                     n_classes))
-        fake_mc_X = RAMDataset(views= [random_state.random_integers(low=0, high=100,
-                                                 size=(n_samples, dim))
-                                    for i in range(n_views)],
-                            labels=[class_index
-                     for _ in range(int(n_samples / n_classes))
-                     for class_index in range(n_classes)],
-                            are_sparse=False,
-                            name="mc_dset",
-                            labels_names=[str(class_index) for class_index in range(n_classes)],
-                            view_names=["V0", "V1"],
-                            )
+        fake_mc_X = RAMDataset(
+            views=[random_state.random_integers(low=0, high=100,
+                                                size=(n_samples, dim))
+                   for i in range(n_views)],
+            labels=[class_index
+                    for _ in range(int(n_samples / n_classes))
+                    for class_index in range(n_classes)],
+            are_sparse=False,
+            name="mc_dset",
+            labels_names=[str(class_index) for class_index in range(n_classes)],
+            view_names=["V0", "V1"],
+            )
 
         fake_mc_y = [class_index
                      for _ in range(int(n_samples / n_classes))
@@ -92,10 +93,13 @@ class ConfigGenerator():
         for classifier_name in classifier_names:
             classifier_class = get_monoview_classifier(classifier_name)
             self.distribs[classifier_name] = dict((param_name, param_distrib)
-                                  for param_name, param_distrib in
-                                  zip(classifier_class().param_names,
-                                      classifier_class().distribs)
-                                if param_name!="random_state")
+                                                  for param_name, param_distrib
+                                                  in
+                                                  zip(
+                                                      classifier_class().param_names,
+                                                      classifier_class().distribs)
+                                                  if
+                                                  param_name != "random_state")
 
     def rvs(self, random_state=None):
         config_sample = {}
@@ -103,17 +107,21 @@ class ConfigGenerator():
             config_sample[classifier_name] = {}
             for param_name, param_distrib in classifier_config.items():
                 if hasattr(param_distrib, "rvs"):
-                    config_sample[classifier_name][param_name]=param_distrib.rvs(random_state=random_state)
+                    config_sample[classifier_name][
+                        param_name] = param_distrib.rvs(
+                        random_state=random_state)
                 else:
                     config_sample[classifier_name][
-                        param_name] = param_distrib[random_state.randint(len(param_distrib))]
+                        param_name] = param_distrib[
+                        random_state.randint(len(param_distrib))]
         return config_sample
 
 
 def get_available_monoview_classifiers(need_probas=False):
     available_classifiers = [module_name
-                         for module_name in dir(monoview_classifiers)
-                         if not (module_name.startswith("__") or module_name=="additions")]
+                             for module_name in dir(monoview_classifiers)
+                             if not (
+                    module_name.startswith("__") or module_name == "additions")]
     if need_probas:
         proba_classifiers = []
         for module_name in available_classifiers:
@@ -125,12 +133,17 @@ def get_available_monoview_classifiers(need_probas=False):
         available_classifiers = proba_classifiers
     return available_classifiers
 
+
 def get_monoview_classifier(classifier_name, multiclass=False):
     classifier_module = getattr(monoview_classifiers, classifier_name)
-    classifier_class = getattr(classifier_module, classifier_module.classifier_class_name)
+    classifier_class = getattr(classifier_module,
+                               classifier_module.classifier_class_name)
     return classifier_class
 
+
 from .. import multiview_classifiers
+
+
 class MultiviewResult(object):
     def __init__(self, classifier_name, classifier_config,
                  metrics_scores, full_labels):
@@ -142,9 +155,10 @@ class MultiviewResult(object):
     def get_classifier_name(self):
         try:
             multiview_classifier_module = getattr(multiview_classifiers,
-                                                self.classifier_name)
+                                                  self.classifier_name)
             multiview_classifier = getattr(multiview_classifier_module,
-                                           multiview_classifier_module.classifier_class_name)(42)
+                                           multiview_classifier_module.classifier_class_name)(
+                42)
             return multiview_classifier.short_name
         except:
             return self.classifier_name

@@ -5,19 +5,20 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.tree import DecisionTreeClassifier
 
 from .. import metrics
-from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier, get_accuracy_graph
+from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier, \
+    get_accuracy_graph
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
-
 classifier_class_name = "GradientBoosting"
+
 
 class CustomDecisionTree(DecisionTreeClassifier):
     def predict(self, X, check_input=True):
         y_pred = DecisionTreeClassifier.predict(self, X,
-                                                         check_input=check_input)
+                                                check_input=check_input)
         return y_pred.reshape((y_pred.shape[0], 1)).astype(float)
 
 
@@ -28,12 +29,12 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
                  init=CustomDecisionTree(max_depth=1),
                  **kwargs):
         GradientBoostingClassifier.__init__(self,
-            loss=loss,
-            max_depth=max_depth,
-            n_estimators=n_estimators,
-            init=init,
-            random_state=random_state
-        )
+                                            loss=loss,
+                                            max_depth=max_depth,
+                                            n_estimators=n_estimators,
+                                            init=init,
+                                            random_state=random_state
+                                            )
         self.param_names = ["n_estimators", ]
         self.classed_params = []
         self.distribs = [CustomRandint(low=50, high=500), ]
@@ -81,10 +82,13 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
                                directory + "test_metrics.png",
                                self.plotted_metric_name, set="test")
             get_accuracy_graph(self.metrics, "AdaboostClassic",
-                               directory + "metrics.png", self.plotted_metric_name)
+                               directory + "metrics.png",
+                               self.plotted_metric_name)
             np.savetxt(directory + "test_metrics.csv", step_test_metrics,
                        delimiter=',')
-            np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')
+            np.savetxt(directory + "train_metrics.csv", self.metrics,
+                       delimiter=',')
             np.savetxt(directory + "times.csv",
-                       np.array([self.train_time, self.pred_time]), delimiter=',')
+                       np.array([self.train_time, self.pred_time]),
+                       delimiter=',')
             return interpretString

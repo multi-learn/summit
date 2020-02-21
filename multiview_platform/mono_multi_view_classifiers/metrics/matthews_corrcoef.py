@@ -1,6 +1,7 @@
+import warnings
+
 from sklearn.metrics import make_scorer
 from sklearn.metrics import matthews_corrcoef as metric
-import warnings
 
 warnings.warn("the matthews_corrcoef module  is deprecated", DeprecationWarning,
               stacklevel=2)

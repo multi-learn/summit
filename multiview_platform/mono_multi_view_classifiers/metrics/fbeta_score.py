@@ -1,6 +1,7 @@
+import warnings
+
 from sklearn.metrics import fbeta_score as metric
 from sklearn.metrics import make_scorer
-import warnings
 
 warnings.warn("the fbeta_score module is deprecated", DeprecationWarning,
               stacklevel=2)
@@ -21,5 +22,6 @@ def get_scorer(beta=2.0, average="micro", **kwargs):
 
 
 def get_config(beta=2.0, average="micro", **kwargs):
-    config_string = "F-beta score using beta: {}, average: {}, {} (higher is better)".format(beta, average, kwargs)
+    config_string = "F-beta score using beta: {}, average: {}, {} (higher is better)".format(
+        beta, average, kwargs)
     return config_string

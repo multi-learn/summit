@@ -1,6 +1,7 @@
+import warnings
+
 from sklearn.metrics import make_scorer
 from sklearn.metrics import recall_score as metric
-import warnings
 
 warnings.warn("the recall_score module  is deprecated", DeprecationWarning,
               stacklevel=2)
@@ -20,5 +21,6 @@ def get_scorer(average='micro', **kwargs):
 
 
 def get_config(average="micro", **kwargs):
-    configString = "Recall score using average: {}, {} (higher is better)".format(average, kwargs)
+    configString = "Recall score using average: {}, {} (higher is better)".format(
+        average, kwargs)
     return configString

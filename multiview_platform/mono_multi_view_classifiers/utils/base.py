@@ -1,8 +1,5 @@
 import numpy as np
-import pickle
 from sklearn.base import BaseEstimator
-from matplotlib.ticker import FuncFormatter
-import matplotlib.pyplot as plt
 
 
 class BaseClassifier(BaseEstimator, ):
@@ -32,7 +29,7 @@ class BaseClassifier(BaseEstimator, ):
             return [(param_name,
                      np.array(detector.cv_results_["param_" + param_name]))
                     if param_name not in self.classed_params else (
-            param_name, classed_dict[param_name])
+                param_name, classed_dict[param_name])
                     for param_name in self.param_names]
         else:
             return [()]
@@ -43,8 +40,8 @@ class BaseClassifier(BaseEstimator, ):
 
     def params_to_string(self):
         return ", ".join(
-                [param_name + " : " + self.to_str(param_name) for param_name in
-                 self.param_names])
+            [param_name + " : " + self.to_str(param_name) for param_name in
+             self.param_names])
 
     def get_config(self):
         if self.param_names:
@@ -66,7 +63,7 @@ class BaseClassifier(BaseEstimator, ):
         return ""
 
     def accepts_multi_class(self, random_state, n_samples=10, dim=2,
-                           n_classes=3):
+                            n_classes=3):
         if int(n_samples / n_classes) < 1:
             raise ValueError(
                 "n_samples ({}) / n_classe ({}) must be over 1".format(

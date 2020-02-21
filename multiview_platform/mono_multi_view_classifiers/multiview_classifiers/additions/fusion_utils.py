@@ -1,6 +1,5 @@
 import inspect
 
-
 from ...multiview.multiview_utils import get_monoview_classifier
 from ...utils.multiclass import get_mc_estim
 
@@ -35,4 +34,3 @@ class BaseFusionClassifier():
 
         return get_mc_estim(estimator, random_state=self.random_state,
                             multiview=False, multiclass=multiclass)
-

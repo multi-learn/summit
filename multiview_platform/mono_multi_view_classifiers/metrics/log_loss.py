@@ -1,6 +1,7 @@
+import warnings
+
 from sklearn.metrics import log_loss as metric
 from sklearn.metrics import make_scorer
-import warnings
 
 warnings.warn("the log_loss module  is deprecated", DeprecationWarning,
               stacklevel=2)

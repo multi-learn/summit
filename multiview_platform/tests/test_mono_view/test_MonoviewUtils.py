@@ -23,10 +23,10 @@ class Test_genTestFoldsPreds(unittest.TestCase):
         # print(cls.y_train)
 
     def test_simple(cls):
-        testFoldsPreds = monoview_utils.genTestFoldsPreds(cls.X_train,
-                                                          cls.y_train,
-                                                          cls.KFolds,
-                                                          cls.estimator)
+        testFoldsPreds = monoview_utils.gen_test_folds_preds(cls.X_train,
+                                                             cls.y_train,
+                                                             cls.KFolds,
+                                                             cls.estimator)
         cls.assertEqual(testFoldsPreds.shape, (3, 10))
         np.testing.assert_array_equal(testFoldsPreds[0], np.array(
             [ 1,  1, -1, -1,  1,  1, -1,  1, -1,  1]))

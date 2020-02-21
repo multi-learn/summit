@@ -6,8 +6,8 @@ from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
-
 classifier_class_name = "RandomForest"
+
 
 class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
     """RandomForest Classifier Class
@@ -38,6 +38,7 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
     weird_strings :
 
     """
+
     def __init__(self, random_state=None, n_estimators=10,
                  max_depth=None, criterion='gini', **kwargs):
         """
@@ -51,11 +52,11 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
         kwargs
         """
         RandomForestClassifier.__init__(self,
-            n_estimators=n_estimators,
-            max_depth=max_depth,
-            criterion=criterion,
-            random_state=random_state
-        )
+                                        n_estimators=n_estimators,
+                                        max_depth=max_depth,
+                                        criterion=criterion,
+                                        random_state=random_state
+                                        )
         self.param_names = ["n_estimators", "max_depth", "criterion",
                             "random_state"]
         self.classed_params = []

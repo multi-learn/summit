@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.preprocessing import LabelEncoder
+
 
 def sign_labels(labels):
     """
@@ -23,6 +23,7 @@ def sign_labels(labels):
     else:
         return labels
 
+
 def unsign_labels(labels):
     """
     The inverse function
@@ -35,10 +36,9 @@ def unsign_labels(labels):
     -------
 
     """
-    if len(labels.shape)==2:
-        labels = labels.reshape((labels.shape[0], ))
+    if len(labels.shape) == 2:
+        labels = labels.reshape((labels.shape[0],))
     if -1 in labels:
         return np.array([label if label != -1 else 0 for label in labels])
     else:
         return labels
-

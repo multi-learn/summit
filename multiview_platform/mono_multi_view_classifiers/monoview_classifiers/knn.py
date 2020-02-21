@@ -6,7 +6,6 @@ from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
-
 classifier_class_name = "KNN"
 
 
@@ -24,15 +23,15 @@ class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
     p
     kwargs
     """
+
     def __init__(self, random_state=None, n_neighbors=5,
                  weights='uniform', algorithm='auto', p=2, **kwargs):
-
         KNeighborsClassifier.__init__(self,
-            n_neighbors=n_neighbors,
-            weights=weights,
-            algorithm=algorithm,
-            p=p
-        )
+                                      n_neighbors=n_neighbors,
+                                      weights=weights,
+                                      algorithm=algorithm,
+                                      p=p
+                                      )
         self.param_names = ["n_neighbors", "weights", "algorithm", "p",
                             "random_state", ]
         self.classed_params = []

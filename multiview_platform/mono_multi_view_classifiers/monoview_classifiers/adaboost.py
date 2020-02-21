@@ -5,7 +5,8 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 
 from .. import metrics
-from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier, get_accuracy_graph
+from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier, \
+    get_accuracy_graph
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -58,11 +59,11 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
             if base_estimator == "DecisionTreeClassifier":
                 base_estimator = DecisionTreeClassifier()
         AdaBoostClassifier.__init__(self,
-            random_state=random_state,
-            n_estimators=n_estimators,
-            base_estimator=base_estimator,
-            algorithm="SAMME"
-        )
+                                    random_state=random_state,
+                                    n_estimators=n_estimators,
+                                    base_estimator=base_estimator,
+                                    algorithm="SAMME"
+                                    )
         self.param_names = ["n_estimators", "base_estimator"]
         self.classed_params = ["base_estimator"]
         self.distribs = [CustomRandint(low=1, high=500),
@@ -147,4 +148,3 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         np.savetxt(directory + "times.csv",
                    np.array([self.train_time, self.pred_time]), delimiter=',')
         return interpretString
-

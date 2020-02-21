@@ -1,8 +1,10 @@
-from sklearn.metrics import jaccard_similarity_score as metric
-from sklearn.metrics import make_scorer
 import warnings
 
-warnings.warn("the jaccard_similarity_score module  is deprecated", DeprecationWarning,
+from sklearn.metrics import jaccard_similarity_score as metric
+from sklearn.metrics import make_scorer
+
+warnings.warn("the jaccard_similarity_score module  is deprecated",
+              DeprecationWarning,
               stacklevel=2)
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -20,5 +22,6 @@ def get_scorer(**kwargs):
 
 
 def get_config(**kwargs):
-    config_string = "Jaccard_similarity score using {} (higher is better)".format(kwargs)
+    config_string = "Jaccard_similarity score using {} (higher is better)".format(
+        kwargs)
     return config_string

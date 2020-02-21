@@ -1,16 +1,5 @@
-import logging
-import math
-import time
-from collections import defaultdict
-
 import numpy as np
-import numpy.ma as ma
-import scipy
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.validation import check_is_fitted
-
-from ... import metrics
-from ... import monoview_classifiers
 
 
 def get_names(classed_list):
@@ -66,13 +55,10 @@ class BaseMultiviewClassifier(BaseEstimator, ClassifierMixin):
         return "No detailed interpretation function"
 
 
-def get_train_views_indices(dataset, train_indices, view_indices,):
+def get_train_views_indices(dataset, train_indices, view_indices, ):
     """This function  is used to get all the examples indices and view indices if needed"""
     if view_indices is None:
         view_indices = np.arange(dataset.nb_view)
     if train_indices is None:
         train_indices = range(dataset.get_nb_examples())
     return train_indices, view_indices
-
-
-

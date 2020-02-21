@@ -1,30 +1,26 @@
 import errno
+import itertools
 import logging
-import math
 import os
 import pkgutil
 import time
 import traceback
 
 import matplotlib
-import itertools
 import numpy as np
-from joblib import Parallel, delayed
 from sklearn.tree import DecisionTreeClassifier
 
 # Import own modules
 from . import monoview_classifiers
 from . import multiview_classifiers
-from .multiview.exec_multiview import exec_multiview, exec_multiview_multicore
-from .monoview.exec_classif_mono_view import exec_monoview, exec_monoview_multicore
-from .utils.dataset import delete_HDF5
+from .monoview.exec_classif_mono_view import exec_monoview
+from .multiview.exec_multiview import exec_multiview
 from .result_analysis import get_results, plot_results_noise, analyze_iterations
-from .utils import execution, dataset, multiclass, configuration
+from .utils import execution, dataset, configuration
+from .utils.dataset import delete_HDF5
 
 matplotlib.use(
     'Agg')  # Anti-Grain Geometry C++ library to make a raster (pixel) image of the figure
-
-
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -58,59 +54,63 @@ def init_benchmark(cl_type, monoview_algos, multiview_algos, args):
     """
     benchmark = {"monoview": {}, "multiview": {}}
 
-
     if "monoview" in cl_type:
         if monoview_algos == ['all']:
             benchmark["monoview"] = [name for _, name, isPackage in
-                                     pkgutil.iter_modules(monoview_classifiers.__path__)
+                                     pkgutil.iter_modules(
+                                         monoview_classifiers.__path__)
                                      if not isPackage]
 
         else:
             benchmark["monoview"] = monoview_algos
 
     if "multiview" in cl_type:
-        if multiview_algos==["all"]:
+        if multiview_algos == ["all"]:
             benchmark["multiview"] = [name for _, name, isPackage in
-                                     pkgutil.iter_modules(multiview_classifiers.__path__)
-                                     if not isPackage]
+                                      pkgutil.iter_modules(
+                                          multiview_classifiers.__path__)
+                                      if not isPackage]
         else:
             benchmark["multiview"] = multiview_algos
     return benchmark
 
 
 def init_argument_dictionaries(benchmark, views_dictionary,
-                                nb_class, init_kwargs):
+                               nb_class, init_kwargs):
     argument_dictionaries = {"monoview": [], "multiview": []}
     if benchmark["monoview"]:
         argument_dictionaries["monoview"] = init_monoview_exps(
-                                                   benchmark["monoview"],
-                                                   views_dictionary,
-                                                   nb_class,
-                                                   init_kwargs["monoview"])
+            benchmark["monoview"],
+            views_dictionary,
+            nb_class,
+            init_kwargs["monoview"])
     if benchmark["multiview"]:
-        argument_dictionaries["multiview"] = init_multiview_exps(benchmark["multiview"],
-                                                   views_dictionary,
-                                                   nb_class,
-                                                   init_kwargs["multiview"])
+        argument_dictionaries["multiview"] = init_multiview_exps(
+            benchmark["multiview"],
+            views_dictionary,
+            nb_class,
+            init_kwargs["multiview"])
     return argument_dictionaries
 
 
-def init_multiview_exps(classifier_names, views_dictionary, nb_class, kwargs_init):
+def init_multiview_exps(classifier_names, views_dictionary, nb_class,
+                        kwargs_init):
     multiview_arguments = []
     for classifier_name in classifier_names:
         if multiple_args(get_path_dict(kwargs_init[classifier_name])):
             multiview_arguments += gen_multiple_args_dictionnaries(
-                                                                  nb_class,
-                                                                  kwargs_init,
-                                                                  classifier_name,
-                                                                  views_dictionary=views_dictionary,
-                                                                  framework="multiview")
+                nb_class,
+                kwargs_init,
+                classifier_name,
+                views_dictionary=views_dictionary,
+                framework="multiview")
         else:
             arguments = get_path_dict(kwargs_init[classifier_name])
-            multiview_arguments += [gen_single_multiview_arg_dictionary(classifier_name,
-                                                                        arguments,
-                                                                        nb_class,
-                                                                        views_dictionary=views_dictionary)]
+            multiview_arguments += [
+                gen_single_multiview_arg_dictionary(classifier_name,
+                                                    arguments,
+                                                    nb_class,
+                                                    views_dictionary=views_dictionary)]
     return multiview_arguments
 
 
@@ -162,7 +162,7 @@ def gen_single_monoview_arg_dictionary(classifier_name, arguments, nb_class,
                                        view_index, view_name):
     if classifier_name in arguments:
         classifier_config = dict((key, value[0]) for key, value in arguments[
-                            classifier_name].items())
+            classifier_name].items())
     else:
         classifier_config = {}
     return {classifier_name: classifier_config,
@@ -172,7 +172,7 @@ def gen_single_monoview_arg_dictionary(classifier_name, arguments, nb_class,
             "nb_class": nb_class}
 
 
-def gen_single_multiview_arg_dictionary(classifier_name,arguments,nb_class,
+def gen_single_multiview_arg_dictionary(classifier_name, arguments, nb_class,
                                         views_dictionary=None):
     return {"classifier_name": classifier_name,
             "view_names": list(views_dictionary.keys()),
@@ -210,11 +210,11 @@ def set_element(dictionary, path, value):
 
 def multiple_args(classifier_configuration):
     """Checks if multiple values were provided for at least one arg"""
-    listed_args = [type(value) == list and len(value)>1 for key, value in
+    listed_args = [type(value) == list and len(value) > 1 for key, value in
                    classifier_configuration.items()]
     if True in listed_args:
         return True
-    else: 
+    else:
         return False
 
 
@@ -223,7 +223,8 @@ def get_path_dict(multiview_classifier_args):
     the path to the value.
     If given {"key1":{"key1_1":value1}, "key2":value2}, it will return
     {"key1.key1_1":value1, "key2":value2}"""
-    path_dict = dict((key, value) for key, value in multiview_classifier_args.items())
+    path_dict = dict(
+        (key, value) for key, value in multiview_classifier_args.items())
     paths = is_dict_in(path_dict)
     while paths:
         for path in paths:
@@ -283,9 +284,11 @@ def gen_multiple_kwargs_combinations(cl_kwrags):
     reduced_listed_values = [
         [_ if type(_) not in reduce_dict else reduce_dict[type(_)] for _ in
          list_] for list_ in listed_values]
-    reduced_values_cartesian_prod = [_ for _ in itertools.product(*reduced_listed_values)]
-    reduced_kwargs_combination = [dict((key, value) for key, value in zip(keys, values))
-                          for values in reduced_values_cartesian_prod]
+    reduced_values_cartesian_prod = [_ for _ in
+                                     itertools.product(*reduced_listed_values)]
+    reduced_kwargs_combination = [
+        dict((key, value) for key, value in zip(keys, values))
+        for values in reduced_values_cartesian_prod]
     return kwargs_combination, reduced_kwargs_combination
 
 
@@ -326,26 +329,29 @@ def gen_multiple_args_dictionnaries(nb_class, kwargs_init, classifier,
         The list of all the possible combination of asked arguments
 
     """
-    if framework=="multiview":
+    if framework == "multiview":
         classifier_config = get_path_dict(kwargs_init[classifier])
     else:
         classifier_config = kwargs_init[classifier]
-    multiple_kwargs_list, reduced_multiple_kwargs_list = gen_multiple_kwargs_combinations(classifier_config)
+    multiple_kwargs_list, reduced_multiple_kwargs_list = gen_multiple_kwargs_combinations(
+        classifier_config)
     multiple_kwargs_dict = dict(
-        (classifier+"_"+"_".join(map(str,list(reduced_dictionary.values()))), dictionary)
-        for reduced_dictionary, dictionary in zip(reduced_multiple_kwargs_list, multiple_kwargs_list ))
+        (classifier + "_" + "_".join(
+            map(str, list(reduced_dictionary.values()))), dictionary)
+        for reduced_dictionary, dictionary in
+        zip(reduced_multiple_kwargs_list, multiple_kwargs_list))
     args_dictionnaries = [gen_single_monoview_arg_dictionary(classifier_name,
                                                              arguments,
                                                              nb_class,
                                                              view_index=view_index,
                                                              view_name=view_name)
-                           if framework=="monoview" else
-                           gen_single_multiview_arg_dictionary(classifier_name,
-                                                            arguments,
-                                                            nb_class,
-                                                            views_dictionary=views_dictionary)
-                           for classifier_name, arguments
-                           in multiple_kwargs_dict.items()]
+                          if framework == "monoview" else
+                          gen_single_multiview_arg_dictionary(classifier_name,
+                                                              arguments,
+                                                              nb_class,
+                                                              views_dictionary=views_dictionary)
+                          for classifier_name, arguments
+                          in multiple_kwargs_dict.items()]
     return args_dictionnaries
 
 
@@ -370,14 +376,14 @@ def init_kwargs(args, classifiers_names, framework="monoview"):
     kwargs = {}
     for classifiers_name in classifiers_names:
         try:
-            if framework=="monoview":
+            if framework == "monoview":
                 getattr(monoview_classifiers, classifiers_name)
             else:
                 getattr(multiview_classifiers, classifiers_name)
         except AttributeError:
             raise AttributeError(
                 classifiers_name + " is not implemented in monoview_classifiers, "
-                                  "please specify the name of the file in monoview_classifiers")
+                                   "please specify the name of the file in monoview_classifiers")
         if classifiers_name in args:
             kwargs[classifiers_name] = args[classifiers_name]
         else:
@@ -406,9 +412,11 @@ def init_kwargs_func(args, benchmark):
     kwargs : dict
         The arguments for each mono- and multiview algorithms
     """
-    monoview_kwargs = init_kwargs(args, benchmark["monoview"], framework="monoview")
-    multiview_kwargs = init_kwargs(args, benchmark["multiview"], framework="multiview")
-    kwargs = {"monoview":monoview_kwargs, "multiview":multiview_kwargs}
+    monoview_kwargs = init_kwargs(args, benchmark["monoview"],
+                                  framework="monoview")
+    multiview_kwargs = init_kwargs(args, benchmark["multiview"],
+                                   framework="multiview")
+    kwargs = {"monoview": monoview_kwargs, "multiview": multiview_kwargs}
     return kwargs
 
 
@@ -505,16 +513,20 @@ def benchmark_init(directory, classification_indices, labels, labels_dictionary,
 
     """
     logging.debug("Start:\t Benchmark initialization")
-    if not os.path.exists(os.path.dirname(os.path.join(directory, "train_labels.csv"))):
+    if not os.path.exists(
+            os.path.dirname(os.path.join(directory, "train_labels.csv"))):
         try:
-            os.makedirs(os.path.dirname(os.path.join(directory, "train_labels.csv")))
+            os.makedirs(
+                os.path.dirname(os.path.join(directory, "train_labels.csv")))
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
     train_indices = classification_indices[0]
     train_labels = dataset_var.get_labels(example_indices=train_indices)
-    np.savetxt(os.path.join(directory, "train_labels.csv"), train_labels, delimiter=",")
-    np.savetxt(os.path.join(directory, "train_indices.csv"), classification_indices[0],
+    np.savetxt(os.path.join(directory, "train_labels.csv"), train_labels,
+               delimiter=",")
+    np.savetxt(os.path.join(directory, "train_indices.csv"),
+               classification_indices[0],
                delimiter=",")
     results_monoview = []
     folds = k_folds.split(np.arange(len(train_labels)), train_labels)
@@ -652,10 +664,13 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                                  hyper_param_search=None, metrics=None,
                                  argument_dictionaries=None,
                                  benchmark=None, views=None, views_indices=None,
-                                 flag=None, labels=None, track_tracebacks=False):
+                                 flag=None, labels=None,
+                                 track_tracebacks=False):
     results_monoview, labels_names = benchmark_init(directory,
-                                                 classification_indices, labels,
-                                                 labels_dictionary, k_folds, dataset_var)
+                                                    classification_indices,
+                                                    labels,
+                                                    labels_dictionary, k_folds,
+                                                    dataset_var)
     logging.getLogger('matplotlib.font_manager').disabled = True
     logging.debug("Start:\t monoview benchmark")
     traceback_outputs = {}
@@ -667,11 +682,14 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                 exec_monoview(directory, X, Y, args["name"], labels_names,
                               classification_indices, k_folds,
                               1, args["file_type"], args["pathf"], random_state,
-                              hyper_param_search=hyper_param_search, metrics=metrics,
+                              hyper_param_search=hyper_param_search,
+                              metrics=metrics,
                               n_iter=args["hps_iter"], **arguments)]
         except:
             if track_tracebacks:
-                traceback_outputs[arguments["classifier_name"]+"-"+arguments["view_name"]] = traceback.format_exc()
+                traceback_outputs[
+                    arguments["classifier_name"] + "-" + arguments[
+                        "view_name"]] = traceback.format_exc()
             else:
                 raise
 
@@ -692,14 +710,18 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
     for arguments in argument_dictionaries["multiview"]:
         try:
             results_multiview += [
-                exec_multiview(directory, dataset_var, args["name"], classification_indices,
-                              k_folds, 1, args["file_type"],
-                              args["pathf"], labels_dictionary, random_state, labels,
-                              hyper_param_search=hyper_param_search,
-                              metrics=metrics, n_iter=args["hps_iter"], **arguments)]
+                exec_multiview(directory, dataset_var, args["name"],
+                               classification_indices,
+                               k_folds, 1, args["file_type"],
+                               args["pathf"], labels_dictionary, random_state,
+                               labels,
+                               hyper_param_search=hyper_param_search,
+                               metrics=metrics, n_iter=args["hps_iter"],
+                               **arguments)]
         except:
             if track_tracebacks:
-                traceback_outputs[arguments["classifier_name"]] = traceback.format_exc()
+                traceback_outputs[
+                    arguments["classifier_name"]] = traceback.format_exc()
             else:
                 raise
     logging.debug("Done:\t multiview benchmark")
@@ -709,7 +731,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
 
 def exec_benchmark(nb_cores, stats_iter,
                    benchmark_arguments_dictionaries,
-                   directory,  metrics, dataset_var, track_tracebacks,
+                   directory, metrics, dataset_var, track_tracebacks,
                    exec_one_benchmark_mono_core=exec_one_benchmark_mono_core,
                    get_results=get_results, delete=delete_HDF5,
                    analyze_iterations=analyze_iterations):
@@ -772,10 +794,14 @@ def exec_benchmark(nb_cores, stats_iter,
     #         benchmark_arguments_dictionaries[0])]
     # else:
     for arguments in benchmark_arguments_dictionaries:
-        benchmark_results = exec_one_benchmark_mono_core(dataset_var=dataset_var,
-                                                         track_tracebacks=track_tracebacks,
-                                                         **arguments)
-        analyze_iterations([benchmark_results], benchmark_arguments_dictionaries, stats_iter, metrics, example_ids=dataset_var.example_ids, labels=dataset_var.get_labels())
+        benchmark_results = exec_one_benchmark_mono_core(
+            dataset_var=dataset_var,
+            track_tracebacks=track_tracebacks,
+            **arguments)
+        analyze_iterations([benchmark_results],
+                           benchmark_arguments_dictionaries, stats_iter,
+                           metrics, example_ids=dataset_var.example_ids,
+                           labels=dataset_var.get_labels())
         results += [benchmark_results]
     logging.debug("Done:\t Executing all the needed biclass benchmarks")
 
@@ -823,44 +849,56 @@ def exec_classif(arguments):
                                                 args["file_type"],
                                                 args["name"])
     if not args["add_noise"]:
-        args["noise_std"]=[0.0]
+        args["noise_std"] = [0.0]
     for dataset_name in dataset_list:
         noise_results = []
         for noise_std in args["noise_std"]:
 
-            directory = execution.init_log_file(dataset_name, args["views"], args["file_type"],
-                                              args["log"], args["debug"], args["label"],
-                                              args["res_dir"], args["add_noise"], noise_std, args)
+            directory = execution.init_log_file(dataset_name, args["views"],
+                                                args["file_type"],
+                                                args["log"], args["debug"],
+                                                args["label"],
+                                                args["res_dir"],
+                                                args["add_noise"], noise_std,
+                                                args)
 
-            random_state = execution.init_random_state(args["random_state"], directory)
-            stats_iter_random_states = execution.init_stats_iter_random_states(stats_iter,
-                                                                        random_state)
+            random_state = execution.init_random_state(args["random_state"],
+                                                       directory)
+            stats_iter_random_states = execution.init_stats_iter_random_states(
+                stats_iter,
+                random_state)
 
-            get_database = execution.get_database_function(dataset_name, args["file_type"])
+            get_database = execution.get_database_function(dataset_name,
+                                                           args["file_type"])
 
-            dataset_var, labels_dictionary, datasetname = get_database(args["views"],
-                                                                  args["pathf"], dataset_name,
-                                                                  args["nb_class"],
-                                                                  args["classes"],
-                                                                  random_state,
-                                                                  args["full"],
-                                                                  args["add_noise"],
-                                                                  noise_std)
+            dataset_var, labels_dictionary, datasetname = get_database(
+                args["views"],
+                args["pathf"], dataset_name,
+                args["nb_class"],
+                args["classes"],
+                random_state,
+                args["full"],
+                args["add_noise"],
+                noise_std)
             args["name"] = datasetname
 
-            splits = execution.gen_splits(dataset_var.get_labels(), args["split"],
-                                         stats_iter_random_states)
+            splits = execution.gen_splits(dataset_var.get_labels(),
+                                          args["split"],
+                                          stats_iter_random_states)
 
             # multiclass_labels, labels_combinations, indices_multiclass = multiclass.gen_multiclass_labels(
             #     dataset_var.get_labels(), multiclass_method, splits)
 
             k_folds = execution.gen_k_folds(stats_iter, args["nb_folds"],
-                                         stats_iter_random_states)
+                                            stats_iter_random_states)
 
-            dataset_files = dataset.init_multiple_datasets(args["pathf"], args["name"], nb_cores)
+            dataset_files = dataset.init_multiple_datasets(args["pathf"],
+                                                           args["name"],
+                                                           nb_cores)
 
-
-            views, views_indices, all_views = execution.init_views(dataset_var, args["views"])
+            views, views_indices, all_views = execution.init_views(dataset_var,
+                                                                   args[
+                                                                       "views"])
             views_dictionary = dataset_var.get_view_dict()
             nb_views = len(views)
             nb_class = dataset_var.get_nb_class()
@@ -868,19 +906,23 @@ def exec_classif(arguments):
             metrics = [metric.split(":") for metric in args["metrics"]]
             if metrics == [["all"]]:
                 metrics_names = [name for _, name, isPackage
-                                in pkgutil.iter_modules(
-                        [os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'metrics')]) if
-                                not isPackage and name not in ["framework", "log_loss",
-                                                               "matthews_corrcoef",
-                                                               "roc_auc_score"]]
+                                 in pkgutil.iter_modules(
+                        [os.path.join(os.path.dirname(
+                            os.path.dirname(os.path.realpath(__file__))),
+                                      'metrics')]) if
+                                 not isPackage and name not in ["framework",
+                                                                "log_loss",
+                                                                "matthews_corrcoef",
+                                                                "roc_auc_score"]]
                 metrics = [[metricName] for metricName in metrics_names]
             metrics = arange_metrics(metrics, args["metric_princ"])
             for metricIndex, metric in enumerate(metrics):
                 if len(metric) == 1:
                     metrics[metricIndex] = [metric[0], None]
 
-            benchmark = init_benchmark(cl_type, monoview_algos, multiview_algos, args)
-            init_kwargs= init_kwargs_func(args, benchmark)
+            benchmark = init_benchmark(cl_type, monoview_algos, multiview_algos,
+                                       args)
+            init_kwargs = init_kwargs_func(args, benchmark)
             data_base_time = time.time() - start
             argument_dictionaries = init_argument_dictionaries(
                 benchmark, views_dictionary,
@@ -894,12 +936,12 @@ def exec_classif(arguments):
                 hyper_param_search, args, k_folds,
                 stats_iter_random_states, metrics,
                 argument_dictionaries, benchmark,
-                views, views_indices,)
+                views, views_indices, )
             results_mean_stds = exec_benchmark(
                 nb_cores, stats_iter,
-                benchmark_argument_dictionaries, directory, metrics, dataset_var,
+                benchmark_argument_dictionaries, directory, metrics,
+                dataset_var,
                 args["track_tracebacks"])
             noise_results.append([noise_std, results_mean_stds])
-            plot_results_noise(directory, noise_results, metrics[0][0], dataset_name)
-
-
+            plot_results_noise(directory, noise_results, metrics[0][0],
+                               dataset_name)

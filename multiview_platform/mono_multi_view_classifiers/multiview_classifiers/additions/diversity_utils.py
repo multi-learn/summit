@@ -1,14 +1,12 @@
 import itertools
 import math
-import inspect
-import os
 
 import numpy as np
 
+from .fusion_utils import BaseFusionClassifier
 from ...multiview.multiview_utils import ConfigGenerator, \
     get_available_monoview_classifiers, \
     BaseMultiviewClassifier
-from .fusion_utils import BaseFusionClassifier
 from ...utils.dataset import get_examples_views_indices
 
 
@@ -34,17 +32,22 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
                                                                  view_indices)
         # TODO : Finer analysis, may support a bit of mutliclass
         if np.unique(y[train_indices]).shape[0] > 2:
-            raise ValueError("Multiclass not supported, classes used : {}".format(np.unique(y[train_indices])))
+            raise ValueError(
+                "Multiclass not supported, classes used : {}".format(
+                    np.unique(y[train_indices])))
         if self.monoview_estimators is None:
             self.monoview_estimators = []
-            for classifier_idx, classifier_name in enumerate(self.classifier_names):
+            for classifier_idx, classifier_name in enumerate(
+                    self.classifier_names):
                 self.monoview_estimators.append([])
                 for idx, view_idx in enumerate(view_indices):
-                    estimator = self.init_monoview_estimator(classifier_name, self.classifier_configs)
-                    estimator.fit(X.get_v(view_idx, train_indices), y[train_indices])
+                    estimator = self.init_monoview_estimator(classifier_name,
+                                                             self.classifier_configs)
+                    estimator.fit(X.get_v(view_idx, train_indices),
+                                  y[train_indices])
                     self.monoview_estimators[classifier_idx].append(estimator)
         else:
-            pass #TODO
+            pass  # TODO
         self.choose_combination(X, y, train_indices, view_indices)
         return self
 
@@ -54,14 +57,16 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
                                                                    example_indices,
                                                                    view_indices)
         nb_class = X.get_nb_class()
-        if nb_class>2:
-            nb_class=3
+        if nb_class > 2:
+            nb_class = 3
         votes = np.zeros((len(example_indices), nb_class), dtype=float)
-        monoview_predictions = [monoview_estimator.predict(X.get_v(view_idx, example_indices))
-                                for view_idx, monoview_estimator
-                                in zip(view_indices, self.monoview_estimators)]
+        monoview_predictions = [
+            monoview_estimator.predict(X.get_v(view_idx, example_indices))
+            for view_idx, monoview_estimator
+            in zip(view_indices, self.monoview_estimators)]
         for idx, example_index in enumerate(example_indices):
-            for monoview_estimator_index, monoview_prediciton in enumerate(monoview_predictions):
+            for monoview_estimator_index, monoview_prediciton in enumerate(
+                    monoview_predictions):
                 if int(monoview_prediciton[idx]) == -100:
                     votes[idx, 2] += 1
                 else:
@@ -71,8 +76,8 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
 
     def get_classifiers_decisions(self, X, view_indices, examples_indices):
         classifiers_decisions = np.zeros((len(self.monoview_estimators),
-                                              len(view_indices),
-                                              len(examples_indices)))
+                                          len(view_indices),
+                                          len(examples_indices)))
         for estimator_idx, estimator in enumerate(self.monoview_estimators):
             for idx, view_index in enumerate(view_indices):
                 classifiers_decisions[estimator_idx, idx, :] = estimator[
@@ -108,9 +113,10 @@ class GlobalDiversityFusionClassifier(DiversityFusionClassifier):
                 y[examples_indices])
         best_combi_index = np.argmax(div_measure)
         best_combination = combis[best_combi_index]
-        self.monoview_estimators = [self.monoview_estimators[classifier_index][view_index]
-                                    for view_index, classifier_index
-                                    in enumerate(best_combination)]
+        self.monoview_estimators = [
+            self.monoview_estimators[classifier_index][view_index]
+            for view_index, classifier_index
+            in enumerate(best_combination)]
 
 
 class CoupleDiversityFusionClassifier(DiversityFusionClassifier):
@@ -121,8 +127,8 @@ class CoupleDiversityFusionClassifier(DiversityFusionClassifier):
         for combinations_index, combination in enumerate(combinations):
             combis[combinations_index] = combination
             combi_with_view = [(viewIndex, combiIndex) for viewIndex, combiIndex
-                             in
-                             enumerate(combination)]
+                               in
+                               enumerate(combination)]
             binomes = itertools.combinations(combi_with_view, 2)
             nb_binomes = int(
                 math.factorial(nb_views) / 2 / math.factorial(nb_views - 2))
@@ -135,16 +141,15 @@ class CoupleDiversityFusionClassifier(DiversityFusionClassifier):
                         classifiers_decisions[classifier_index_1, view_index_1],
                         classifiers_decisions[classifier_index_2, view_index_2],
                         y[examples_indices])
-                    )
+                )
                 couple_diversities[binome_index] = couple_diversity
             div_measure[combinations_index] = np.mean(couple_diversities)
         best_combi_index = np.argmax(div_measure)
         best_combination = combis[best_combi_index]
-        self.monoview_estimators = [self.monoview_estimators[classifier_index][view_index]
-                                    for view_index, classifier_index
-                                    in enumerate(best_combination)]
-
-
+        self.monoview_estimators = [
+            self.monoview_estimators[classifier_index][view_index]
+            for view_index, classifier_index
+            in enumerate(best_combination)]
 
 #
 # def CQ_div_measure(classifiersNames, classifiersDecisions, measurement,

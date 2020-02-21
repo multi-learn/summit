@@ -1,15 +1,13 @@
 import numpy as np
-import inspect
 
-# from ..utils.dataset import get_v
-
-from ..utils.dataset import get_examples_views_indices
+from multiview_platform.mono_multi_view_classifiers import monoview_classifiers
+from .additions.fusion_utils import BaseFusionClassifier
 from ..multiview.multiview_utils import get_available_monoview_classifiers, \
     BaseMultiviewClassifier, ConfigGenerator
-from .additions.fusion_utils import BaseFusionClassifier
+from ..utils.dataset import get_examples_views_indices
 from ..utils.multiclass import get_mc_estim, MultiClassWrapper
 
-from  multiview_platform.mono_multi_view_classifiers import monoview_classifiers
+# from ..utils.dataset import get_v
 
 classifier_class_name = "WeightedLinearEarlyFusion"
 
@@ -28,6 +26,7 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
     Attributes
     ----------
     """
+
     def __init__(self, random_state=None, view_weights=None,
                  monoview_classifier_name="decision_tree",
                  monoview_classifier_config={}):
@@ -36,25 +35,29 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         self.monoview_classifier_name = monoview_classifier_name
         self.short_name = "early fusion " + self.monoview_classifier_name
         if monoview_classifier_name in monoview_classifier_config:
-            self.monoview_classifier_config = monoview_classifier_config[monoview_classifier_name]
+            self.monoview_classifier_config = monoview_classifier_config[
+                monoview_classifier_name]
         self.monoview_classifier_config = monoview_classifier_config
         monoview_classifier_module = getattr(monoview_classifiers,
-                                              self.monoview_classifier_name)
+                                             self.monoview_classifier_name)
         monoview_classifier_class = getattr(monoview_classifier_module,
-                                             monoview_classifier_module.classifier_class_name)
-        self.monoview_classifier = monoview_classifier_class(random_state=random_state,
-                                                             **self.monoview_classifier_config)
-        self.param_names = ["monoview_classifier_name", "monoview_classifier_config"]
+                                            monoview_classifier_module.classifier_class_name)
+        self.monoview_classifier = monoview_classifier_class(
+            random_state=random_state,
+            **self.monoview_classifier_config)
+        self.param_names = ["monoview_classifier_name",
+                            "monoview_classifier_config"]
         self.distribs = [get_available_monoview_classifiers(),
                          ConfigGenerator(get_available_monoview_classifiers())]
         self.classed_params = []
-        self.weird_strings={}
+        self.weird_strings = {}
 
     def set_params(self, monoview_classifier_name=None,
                    monoview_classifier_config=None, **params):
         self.monoview_classifier_name = monoview_classifier_name
-        self.monoview_classifier = self.init_monoview_estimator(monoview_classifier_name,
-                                       monoview_classifier_config)
+        self.monoview_classifier = self.init_monoview_estimator(
+            monoview_classifier_name,
+            monoview_classifier_config)
         self.monoview_classifier_config = self.monoview_classifier.get_params()
         self.short_name = "early fusion " + self.monoview_classifier_name
         return self
@@ -69,7 +72,7 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         train_indices, X = self.transform_data_to_monoview(X, train_indices,
                                                            view_indices)
         if np.unique(y[train_indices]).shape[0] > 2 and \
-                not(isinstance(self.monoview_classifier, MultiClassWrapper)):
+                not (isinstance(self.monoview_classifier, MultiClassWrapper)):
             self.monoview_classifier = get_mc_estim(self.monoview_classifier,
                                                     self.random_state,
                                                     multiview=False,
@@ -82,7 +85,8 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         predicted_labels = self.monoview_classifier.predict(X)
         return predicted_labels
 
-    def transform_data_to_monoview(self, dataset, example_indices, view_indices):
+    def transform_data_to_monoview(self, dataset, example_indices,
+                                   view_indices):
         """Here, we extract the data from the HDF5 dataset file and store all
         the concatenated views in one variable"""
         example_indices, self.view_indices = get_examples_views_indices(dataset,
@@ -111,9 +115,3 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
     #         self.monoview_classifier.set_params(**monoview_classifier_config[monoview_classifier_name])
     #     else:
     #         self.monoview_classifier.set_params(**monoview_classifier_config)
-
-
-
-
-
-

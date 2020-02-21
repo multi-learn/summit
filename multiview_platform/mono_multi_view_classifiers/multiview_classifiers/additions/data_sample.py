@@ -46,6 +46,7 @@ class Metriclearn_array(ma.MaskedArray, np.ndarray):
     >>> data.data
 
     """
+
     def __new__(cls, data, view_ind=None):
 
         shapes_int = []
@@ -53,7 +54,7 @@ class Metriclearn_array(ma.MaskedArray, np.ndarray):
         new_data = np.ndarray([])
         n_views = len(data)
         thekeys = None
-        view_ind_self =  None
+        view_ind_self = None
         if isinstance(data, dict):
             n_views = len(data)
             for key, dat_values in data.items():
@@ -68,16 +69,17 @@ class Metriclearn_array(ma.MaskedArray, np.ndarray):
                 new_data = cls._populate_new_data(index, dat_values, new_data)
                 index += 1
         elif isinstance(data, np.ndarray) and data.ndim > 1:
-            if  view_ind is not None:
+            if view_ind is not None:
                 n_views = view_ind.shape[0]
-                shapes_int = [  in2-in1  for in1, in2 in  zip(view_ind, view_ind[1: ])]
+                shapes_int = [in2 - in1 for in1, in2 in
+                              zip(view_ind, view_ind[1:])]
             elif view_ind is None:
                 if data.shape[1] > 1:
-                    view_ind = np.array([0, data.shape[1]//2, data.shape[1]])
+                    view_ind = np.array([0, data.shape[1] // 2, data.shape[1]])
                 else:
                     view_ind = np.array([0, data.shape[1]])
                 view_ind, n_views = cls._validate_views_ind(view_ind,
-                                                              data.shape[1])
+                                                            data.shape[1])
             new_data = data
             view_ind_self = view_ind
 
@@ -99,16 +101,20 @@ class Metriclearn_array(ma.MaskedArray, np.ndarray):
     @staticmethod
     def _populate_new_data(index, dat_values, new_data):
         if index == 0:
-            if isinstance(dat_values, ma.MaskedArray)  or isinstance(dat_values, np.ndarray):
+            if isinstance(dat_values, ma.MaskedArray) or isinstance(dat_values,
+                                                                    np.ndarray):
                 new_data = dat_values
             else:
-                new_data = dat_values.view(ma.MaskedArray) #  ma.masked_array(dat_values, mask=ma.nomask) dat_values.view(ma.MaskedArray) #(
+                new_data = dat_values.view(
+                    ma.MaskedArray)  # ma.masked_array(dat_values, mask=ma.nomask) dat_values.view(ma.MaskedArray) #(
                 new_data.mask = ma.nomask
         else:
-            if isinstance(dat_values, ma.MaskedArray) or isinstance(dat_values, np.ndarray):
+            if isinstance(dat_values, ma.MaskedArray) or isinstance(dat_values,
+                                                                    np.ndarray):
                 new_data = ma.hstack((new_data, dat_values))
             else:
-                new_data = ma.hstack((new_data,  dat_values.view(ma.MaskedArray) ) ) #  ma.masked_array(dat_values, mask=ma.nomask
+                new_data = ma.hstack((new_data, dat_values.view(
+                    ma.MaskedArray)))  # ma.masked_array(dat_values, mask=ma.nomask
         return new_data
 
     def __array_finalize__(self, obj):
@@ -121,7 +127,7 @@ class Metriclearn_array(ma.MaskedArray, np.ndarray):
 
     def get_col(self, view, col):
         start = np.sum(np.asarray(self.shapes_int[0: view]))
-        return self.data[start+col, :]
+        return self.data[start + col, :]
 
     def get_view(self, view):
         start = int(np.sum(np.asarray(self.shapes_int[0: view])))
@@ -131,30 +137,32 @@ class Metriclearn_array(ma.MaskedArray, np.ndarray):
     def set_view(self, view, data):
         start = int(np.sum(np.asarray(self.shapes_int[0: view])))
         stop = int(start + self.shapes_int[view])
-        if stop-start == data.shape[0] and data.shape[1]== self.data.shape[1]:
-             self.data[:, start:stop] = data
+        if stop - start == data.shape[0] and data.shape[1] == self.data.shape[
+            1]:
+            self.data[:, start:stop] = data
         else:
             raise ValueError(
-                "shape of data does not match (%d, %d)" %stop-start %self.data.shape[1])
+                "shape of data does not match (%d, %d)" % stop - start %
+                self.data.shape[1])
 
     def get_raw(self, view, raw):
         start = np.sum(np.asarray(self.shapes_int[0: view]))
-        stop = np.sum(np.asarray(self.shapes_int[0: view+1]))
+        stop = np.sum(np.asarray(self.shapes_int[0: view + 1]))
         return self.data[start:stop, raw]
 
     def add_view(self, v, data):
         if len(self.shape) > 0:
             if data.shape[0] == self.data.shape[0]:
                 indice = self.shapes_int[v]
-                np.insert(self.data, data, indice+1, axis=0)
+                np.insert(self.data, data, indice + 1, axis=0)
                 self.shapes_int.append(data.shape[1])
-                self.n_views +=1
+                self.n_views += 1
         else:
             raise ValueError("New view can't initialazed")
-           # self.shapes_int= [data.shape[1]]
-           # self.data.reshape(data.shape[0],)
-           # np.insert(self.data, data, 0)
-           # self.n_views = 1
+        # self.shapes_int= [data.shape[1]]
+        # self.data.reshape(data.shape[0],)
+        # np.insert(self.data, data, 0)
+        # self.n_views = 1
 
     def _todict(self):
         dico = {}
@@ -172,10 +180,10 @@ class Metriclearn_array(ma.MaskedArray, np.ndarray):
                 raise ValueError("Values in views_ind are not in a correct "
                                  + "range for the provided data.")
             self.view_mode_ = "slices"
-            n_views = views_ind.shape[0]-1
+            n_views = views_ind.shape[0] - 1
         else:
             raise ValueError("The format of views_ind is not "
-                                     + "supported.")
+                             + "supported.")
 
         return (views_ind, n_views)
 
@@ -218,10 +226,9 @@ class DataSample(dict):
 
         # The dictionary that contains the sample
         super(DataSample, self).__init__(kwargs)
-        self._data = None # Metriclearn_array(np.zeros((0,0)))
+        self._data = None  # Metriclearn_array(np.zeros((0,0)))
         if data is not None:
             self._data = Metriclearn_array(data)
-
 
     @property
     def data(self):
@@ -231,7 +238,8 @@ class DataSample(dict):
 
     @data.setter
     def data(self, data):
-        if isinstance(data, (Metriclearn_array, np.ndarray, ma.MaskedArray, np.generic)):
+        if isinstance(data, (
+        Metriclearn_array, np.ndarray, ma.MaskedArray, np.generic)):
             self._data = data
         else:
             raise TypeError("sample should be a Metriclearn_array.")

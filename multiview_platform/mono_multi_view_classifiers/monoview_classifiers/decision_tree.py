@@ -14,11 +14,11 @@ class DecisionTree(DecisionTreeClassifier, BaseMonoviewClassifier):
     def __init__(self, random_state=None, max_depth=None,
                  criterion='gini', splitter='best', **kwargs):
         DecisionTreeClassifier.__init__(self,
-            max_depth=max_depth,
-            criterion=criterion,
-            splitter=splitter,
-            random_state=random_state
-        )
+                                        max_depth=max_depth,
+                                        criterion=criterion,
+                                        splitter=splitter,
+                                        random_state=random_state
+                                        )
         self.param_names = ["max_depth", "criterion", "splitter",
                             'random_state']
         self.classed_params = []
@@ -28,7 +28,8 @@ class DecisionTree(DecisionTreeClassifier, BaseMonoviewClassifier):
         self.weird_strings = {}
 
     def get_interpretation(self, directory, y_test):
-        interpretString = "First featrue : \n\t{} <= {}\n".format(self.tree_.feature[0],
-                                                               self.tree_.threshold[0])
+        interpretString = "First featrue : \n\t{} <= {}\n".format(
+            self.tree_.feature[0],
+            self.tree_.threshold[0])
         interpretString += self.get_feature_importance(directory)
         return interpretString

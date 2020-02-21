@@ -7,8 +7,8 @@ import time
 import h5py
 import numpy as np
 
-from .multiview_utils import MultiviewResult
 from . import analyze_results
+from .multiview_utils import MultiviewResult
 from .. import multiview_classifiers
 from ..utils import hyper_parameter_search
 from ..utils.multiclass import get_mc_estim
@@ -64,11 +64,12 @@ def init_constants(kwargs, classification_indices, metrics,
         logging.info("Info:\t Shape of " + str(view_name) + " :" + str(
             dataset_var.get_shape()))
     labels = dataset_var.get_labels()
-    return classifier_name, t_start, views_indices,\
-           classifier_config, views, learning_rate,labels
+    return classifier_name, t_start, views_indices, \
+           classifier_config, views, learning_rate, labels
 
 
-def save_results(classifier, labels_dictionary, string_analysis, views, classifier_module,
+def save_results(classifier, labels_dictionary, string_analysis, views,
+                 classifier_module,
                  classification_kargs, directory, learning_rate, name,
                  images_analysis):
     """
@@ -103,8 +104,8 @@ def save_results(classifier, labels_dictionary, string_analysis, views, classifi
     # views_string = "-".join(views)
     views_string = "mv"
     cl_type_string = classifier.short_name
-    output_file_name = os.path.join(directory,  cl_type_string,
-                                    cl_type_string+"-"+views_string+'-'+name)
+    output_file_name = os.path.join(directory, cl_type_string,
+                                    cl_type_string + "-" + views_string + '-' + name)
     if not os.path.exists(os.path.dirname(output_file_name)):
         try:
             os.makedirs(os.path.dirname(output_file_name))
@@ -122,14 +123,16 @@ def save_results(classifier, labels_dictionary, string_analysis, views, classifi
                     test_file_name = output_file_name + image_name + "-" + str(
                         i) + ".png"
                     if not os.path.isfile(testFileName):
-                        images_analysis[image_name].savefig(test_file_name, transparent=True)
+                        images_analysis[image_name].savefig(test_file_name,
+                                                            transparent=True)
                         break
 
             images_analysis[image_name].savefig(
                 output_file_name + image_name + '.png', transparent=True)
 
 
-def exec_multiview_multicore(directory, core_index, name, learning_rate, nb_folds,
+def exec_multiview_multicore(directory, core_index, name, learning_rate,
+                             nb_folds,
                              database_type, path, labels_dictionary,
                              random_state, labels,
                              hyper_param_search=False, nb_cores=1, metrics=None,
@@ -182,14 +185,17 @@ def exec_multiview_multicore(directory, core_index, name, learning_rate, nb_fold
     """
     """Used to load an HDF5 dataset_var for each parallel job and execute multiview classification"""
     dataset_var = h5py.File(path + name + str(core_index) + ".hdf5", "r")
-    return exec_multiview(directory, dataset_var, name, learning_rate, nb_folds, 1,
+    return exec_multiview(directory, dataset_var, name, learning_rate, nb_folds,
+                          1,
                           database_type, path, labels_dictionary,
                           random_state, labels,
-                          hyper_param_search=hyper_param_search, metrics=metrics,
+                          hyper_param_search=hyper_param_search,
+                          metrics=metrics,
                           n_iter=n_iter, **arguments)
 
 
-def exec_multiview(directory, dataset_var, name, classification_indices, k_folds,
+def exec_multiview(directory, dataset_var, name, classification_indices,
+                   k_folds,
                    nb_cores, database_type, path,
                    labels_dictionary, random_state, labels,
                    hyper_param_search=False, metrics=None, n_iter=30, **kwargs):
@@ -243,9 +249,9 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
     views_indices, \
     classifier_config, \
     views, \
-    learning_rate,\
+    learning_rate, \
     labels = init_constants(kwargs, classification_indices, metrics, name,
-                                   nb_cores, k_folds, dataset_var)
+                            nb_cores, k_folds, dataset_var)
     logging.debug("Done:\t Initialize constants")
 
     extraction_time = time.time() - t_start
@@ -266,33 +272,39 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
     logging.debug("Start:\t Optimizing hyperparameters")
     if hyper_param_search != "None":
         classifier_config = hyper_parameter_search.search_best_settings(
-            dataset_var, dataset_var.get_labels(), classifier_module, classifier_name,
+            dataset_var, dataset_var.get_labels(), classifier_module,
+            classifier_name,
             metrics[0], learning_indices, k_folds, random_state,
             directory, nb_cores=nb_cores, views_indices=views_indices,
             searching_tool=hyper_param_search, n_iter=n_iter,
             classifier_config=classifier_config)
-    classifier = get_mc_estim(getattr(classifier_module, classifier_name)(random_state=random_state,
-                                                             **classifier_config),
-                              random_state, multiview=True,
-                              y=dataset_var.get_labels())
+    classifier = get_mc_estim(
+        getattr(classifier_module, classifier_name)(random_state=random_state,
+                                                    **classifier_config),
+        random_state, multiview=True,
+        y=dataset_var.get_labels())
     logging.debug("Done:\t Optimizing hyperparameters")
     logging.debug("Start:\t Fitting classifier")
-    classifier.fit(dataset_var, dataset_var.get_labels(), train_indices=learning_indices,
-                        view_indices=views_indices)
+    classifier.fit(dataset_var, dataset_var.get_labels(),
+                   train_indices=learning_indices,
+                   view_indices=views_indices)
     logging.debug("Done:\t Fitting classifier")
 
     logging.debug("Start:\t Predicting")
-    pred_train_labels = classifier.predict(dataset_var, example_indices=learning_indices,
-                                      view_indices=views_indices)
-    pred_test_labels = classifier.predict(dataset_var, example_indices=validation_indices,
-                                     view_indices=views_indices)
+    pred_train_labels = classifier.predict(dataset_var,
+                                           example_indices=learning_indices,
+                                           view_indices=views_indices)
+    pred_test_labels = classifier.predict(dataset_var,
+                                          example_indices=validation_indices,
+                                          view_indices=views_indices)
     full_labels = np.zeros(dataset_var.get_labels().shape, dtype=int) - 100
     full_labels[learning_indices] = pred_train_labels
     full_labels[validation_indices] = pred_test_labels
     logging.info("Done:\t Pertidcting")
 
     classification_time = time.time() - t_start
-    logging.info("Info:\t Classification duration " + str(extraction_time) + "s")
+    logging.info(
+        "Info:\t Classification duration " + str(extraction_time) + "s")
 
     # TODO: get better cltype
 
@@ -309,7 +321,8 @@ def exec_multiview(directory, dataset_var, name, classification_indices, k_folds
     logging.info("Done:\t Result Analysis for " + cl_type)
 
     logging.debug("Start:\t Saving preds")
-    save_results(classifier, labels_dictionary, string_analysis, views, classifier_module,
+    save_results(classifier, labels_dictionary, string_analysis, views,
+                 classifier_module,
                  classifier_config, directory,
                  learning_rate, name, images_analysis)
     logging.debug("Start:\t Saving preds")
@@ -410,7 +423,8 @@ if __name__ == "__main__":
     if args.log:
         logging.getLogger().addHandler(logging.StreamHandler())
 
-    res = exec_multiview(directory, dataset_var, name, classification_indices, k_folds,
+    res = exec_multiview(directory, dataset_var, name, classification_indices,
+                         k_folds,
                          nb_cores, databaseType, path,
                          labels_dictionary, random_state, labels,
                          hyper_param_search=hyper_param_search, metrics=metrics,

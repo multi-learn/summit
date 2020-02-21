@@ -5,13 +5,13 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-def printMetricScore(metricScores, metric_list):
+def print_metric_score(metric_scores, metric_list):
     """
     this function print the metrics scores
 
     Parameters
     ----------
-    metricScores : the score of metrics
+    metric_scores : the score of metrics
 
     metric_list : list of metrics
 
@@ -23,22 +23,24 @@ def printMetricScore(metricScores, metric_list):
     for metric in metric_list:
         metric_module = getattr(metrics, metric[0])
         if metric[1] is not None:
-            metric_kwargs = dict((index, metricConfig) for index, metricConfig in
-                                enumerate(metric[1]))
+            metric_kwargs = dict(
+                (index, metricConfig) for index, metricConfig in
+                enumerate(metric[1]))
         else:
             metric_kwargs = {}
         metric_score_string += "\tFor " + metric_module.get_config(
             **metric_kwargs) + " : "
         metric_score_string += "\n\t\t- Score on train : " + str(
-            metricScores[metric[0]][0])
+            metric_scores[metric[0]][0])
         metric_score_string += "\n\t\t- Score on test : " + str(
-            metricScores[metric[0]][1])
+            metric_scores[metric[0]][1])
         metric_score_string += "\n\n"
     return metric_score_string
 
 
-def getTotalMetricScores(metric, trainLabels, testLabels, validationIndices,
-                         learningIndices, labels):
+def get_total_metric_scores(metric, train_labels, test_labels,
+                            validation_indices,
+                            learning_indices, labels):
     """
 
     Parameters
@@ -46,51 +48,53 @@ def getTotalMetricScores(metric, trainLabels, testLabels, validationIndices,
 
     metric :
 
-    trainLabels : labels of train
+    train_labels : labels of train
 
-    testLabels :  labels of test
+    test_labels :  labels of test
 
-    validationIndices :
+    validation_indices :
 
-    learningIndices :
+    learning_indices :
 
     labels :
 
     Returns
     -------
-    list of [trainScore, testScore]
+    list of [train_score, test_score]
     """
-    metricModule = getattr(metrics, metric[0])
+    metric_module = getattr(metrics, metric[0])
     if metric[1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in
-                            enumerate(metric[1]))
+        metric_kwargs = dict((index, metricConfig) for index, metricConfig in
+                             enumerate(metric[1]))
     else:
-        metricKWARGS = {}
-    trainScore = metricModule.score(labels[learningIndices], trainLabels,
-                                        **metricKWARGS)
-    testScore = metricModule.score(labels[validationIndices], testLabels,
-                                   **metricKWARGS)
-    return [trainScore, testScore]
+        metric_kwargs = {}
+    train_score = metric_module.score(labels[learning_indices], train_labels,
+                                      **metric_kwargs)
+    test_score = metric_module.score(labels[validation_indices], test_labels,
+                                     **metric_kwargs)
+    return [train_score, test_score]
 
 
-def getMetricsScores(metrics, trainLabels, testLabels,
-                     validationIndices, learningIndices, labels):
-    metricsScores = {}
+def get_metrics_scores(metrics, train_labels, test_labels,
+                       validation_indices, learning_indices, labels):
+    metrics_scores = {}
     for metric in metrics:
-        metricsScores[metric[0]] = getTotalMetricScores(metric, trainLabels,
-                                                        testLabels,
-                                                        validationIndices,
-                                                        learningIndices, labels)
-    return metricsScores
+        metrics_scores[metric[0]] = get_total_metric_scores(metric,
+                                                            train_labels,
+                                                            test_labels,
+                                                            validation_indices,
+                                                            learning_indices,
+                                                            labels)
+    return metrics_scores
 
 
 def execute(classifier, pred_train_labels,
             pred_test_labels, DATASET,
-            classificationKWARGS, classificationIndices,
-            labels_dictionary, views, nbCores, times,
-            name, KFolds,
-            hyper_param_search, nIter, metric_list,
-            views_indices, random_state, labels, classifierModule,
+            classification_kwargs, classification_indices,
+            labels_dictionary, views, nb_cores, times,
+            name, k_folds,
+            hyper_param_search, n_iter, metric_list,
+            views_indices, random_state, labels, classifier_module,
             directory):
     """
 
@@ -104,25 +108,25 @@ def execute(classifier, pred_train_labels,
 
     DATASET :
 
-    classificationKWARGS
+    classification_kwargs
 
-    classificationIndices
+    classification_indices
 
     labels_dictionary
 
     views
 
-    nbCores
+    nb_cores
 
     times
 
     name
 
-    KFolds
+    k_folds
 
     hyper_param_search
 
-    nIter
+    n_iter
 
     metric_list
 
@@ -132,40 +136,43 @@ def execute(classifier, pred_train_labels,
 
     labels
 
-    classifierModule
+    classifier_module
 
     Returns
     -------
-    retuern tuple of (stringAnalysis, imagesAnalysis, metricsScore)
+    retuern tuple of (string_analysis, images_analysis, metricsScore)
     """
     classifier_name = classifier.short_name
-    learning_indices, validation_indices = classificationIndices
-    metricModule = getattr(metrics, metric_list[0][0])
+    learning_indices, validation_indices = classification_indices
+    metric_module = getattr(metrics, metric_list[0][0])
     if metric_list[0][1] is not None:
-        metricKWARGS = dict((index, metricConfig) for index, metricConfig in
-                            enumerate(metric_list[0][1]))
+        metric_kwargs = dict((index, metricConfig) for index, metricConfig in
+                             enumerate(metric_list[0][1]))
     else:
-        metricKWARGS = {}
-    scoreOnTrain = metricModule.score(labels[learning_indices],
-                                      pred_train_labels,
-                                      **metricKWARGS)
-    scoreOnTest = metricModule.score(labels[validation_indices],
-                                     pred_test_labels, **metricKWARGS)
+        metric_kwargs = {}
+    score_on_train = metric_module.score(labels[learning_indices],
+                                         pred_train_labels,
+                                         **metric_kwargs)
+    score_on_test = metric_module.score(labels[validation_indices],
+                                        pred_test_labels, **metric_kwargs)
 
-    stringAnalysis = "\t\tResult for multiview classification with " + classifier_name + \
-                     "\n\n" + metric_list[0][0] + " :\n\t-On Train : " + str(
-        scoreOnTrain) + "\n\t-On Test : " + str(
-        scoreOnTest) + \
-                     "\n\nDataset info :\n\t-Database name : " + name + "\n\t-Labels : " + \
-                     ', '.join(
-                         labels_dictionary.values()) + "\n\t-Views : " + ', '.join(
+    string_analysis = "\t\tResult for multiview classification with " + classifier_name + \
+                      "\n\n" + metric_list[0][0] + " :\n\t-On Train : " + str(
+        score_on_train) + "\n\t-On Test : " + str(
+        score_on_test) + \
+                      "\n\nDataset info :\n\t-Database name : " + name + "\n\t-Labels : " + \
+                      ', '.join(
+                          labels_dictionary.values()) + "\n\t-Views : " + ', '.join(
         views) + "\n\t-" + str(
-        KFolds.n_splits) + \
-                     " folds\n\nClassification configuration : \n\t-Algorithm used : " + classifier_name + " with : " + classifier.get_config()
+        k_folds.n_splits) + \
+                      " folds\n\nClassification configuration : \n\t-Algorithm used : " + classifier_name + " with : " + classifier.get_config()
 
-    metricsScores = getMetricsScores(metric_list, pred_train_labels, pred_test_labels,
-                                     validation_indices, learning_indices, labels)
-    stringAnalysis += printMetricScore(metricsScores, metric_list)
-    stringAnalysis += "\n\n Interpretation : \n\n" + classifier.get_interpretation(directory, labels)
-    imagesAnalysis = {}
-    return stringAnalysis, imagesAnalysis, metricsScores
+    metrics_scores = get_metrics_scores(metric_list, pred_train_labels,
+                                        pred_test_labels,
+                                        validation_indices, learning_indices,
+                                        labels)
+    string_analysis += print_metric_score(metrics_scores, metric_list)
+    string_analysis += "\n\n Interpretation : \n\n" + classifier.get_interpretation(
+        directory, labels)
+    images_analysis = {}
+    return string_analysis, images_analysis, metrics_scores
