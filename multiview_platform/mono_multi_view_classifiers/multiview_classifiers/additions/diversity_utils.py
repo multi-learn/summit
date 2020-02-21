@@ -19,7 +19,7 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
     def __init__(self, random_state=None, classifier_names=None,
                  monoview_estimators=None, classifier_configs=None):
         """Used to init the instances"""
-        super(DiversityFusionClassifier, self).__init__(random_state)
+        BaseMultiviewClassifier.__init__(self, random_state)
         if classifier_names is None:
             classifier_names = get_available_monoview_classifiers()
         self.classifier_names = classifier_names

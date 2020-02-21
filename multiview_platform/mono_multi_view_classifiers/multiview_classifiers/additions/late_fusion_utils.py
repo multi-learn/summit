@@ -81,7 +81,7 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
     def __init__(self, random_state=None, classifiers_names=None,
                  classifier_configs=None, nb_cores=1, weights=None,
                  rs=None):
-        super(LateFusionClassifier, self).__init__(random_state)
+        BaseMultiviewClassifier.__init__(self, random_state)
         self.classifiers_names = classifiers_names
         self.classifier_configs = classifier_configs
         self.nb_cores = nb_cores

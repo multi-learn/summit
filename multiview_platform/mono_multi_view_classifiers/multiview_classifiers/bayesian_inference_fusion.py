@@ -12,7 +12,7 @@ class BayesianInferenceClassifier(LateFusionClassifier):
                  classifier_configs=None, nb_cores=1, weights=None,
                  rs=None):
         self.need_probas=True
-        super(BayesianInferenceClassifier, self).__init__(random_state=random_state,
+        LateFusionClassifier.__init__(self, random_state=random_state,
                                              classifiers_names=classifiers_names,
                                              classifier_configs=classifier_configs,
                                              nb_cores=nb_cores,

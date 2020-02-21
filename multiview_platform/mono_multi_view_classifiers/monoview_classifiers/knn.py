@@ -27,7 +27,7 @@ class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
     def __init__(self, random_state=None, n_neighbors=5,
                  weights='uniform', algorithm='auto', p=2, **kwargs):
 
-        super(KNN, self).__init__(
+        KNeighborsClassifier.__init__(self,
             n_neighbors=n_neighbors,
             weights=weights,
             algorithm=algorithm,
@@ -42,31 +42,6 @@ class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
         self.weird_strings = {}
         self.random_state = random_state
 
-    # def canProbas(self):
-    #     """Used to know if the classifier can return label probabilities"""
-    #     return True
-
-    def get_interpretation(self, directory, y_test):
+    def get_interpretation(self, directory, y_test, multiclass=False):
         interpretString = ""
         return interpretString
-
-
-# def formatCmdArgs(args):
-#     """Used to format kwargs for the parsed args"""
-#     kwargsDict = {"n_neighbors": args.KNN_neigh,
-#                   "weights": args.KNN_weights,
-#                   "algorithm": args.KNN_algo,
-#                   "p": args.KNN_p}
-#     return kwargsDict
-
-
-def paramsToSet(nIter, random_state):
-    paramsSet = []
-    for _ in range(nIter):
-        paramsSet.append({"n_neighbors": random_state.randint(1, 20),
-                          "weights": random_state.choice(
-                              ["uniform", "distance"]),
-                          "algorithm": random_state.choice(
-                              ["auto", "ball_tree", "kd_tree", "brute"]),
-                          "p": random_state.choice([1, 2])})
-    return paramsSet

@@ -4,7 +4,7 @@ from .. import metrics
 
 
 def getDBConfigString(name, feat, classification_indices, shape,
-                      classLabelsNames, KFolds):
+                      class_labels_names, KFolds):
     """
     
     Parameters
@@ -13,7 +13,7 @@ def getDBConfigString(name, feat, classification_indices, shape,
     feat
     classification_indices
     shape
-    classLabelsNames
+    class_labels_names
     KFolds
 
     Returns
@@ -21,13 +21,14 @@ def getDBConfigString(name, feat, classification_indices, shape,
 
     """
     learningRate = float(len(classification_indices[0])) / (
-                len(classification_indices[0]) + len(classification_indices[1]))
+            len(classification_indices[0]) + len(classification_indices[1]))
     dbConfigString = "Database configuration : \n"
     dbConfigString += "\t- Database name : " + name + "\n"
     dbConfigString += "\t- View name : " + feat + "\t View shape : " + str(
         shape) + "\n"
     dbConfigString += "\t- Learning Rate : " + str(learningRate) + "\n"
-    dbConfigString += "\t- Labels used : " + ", ".join(classLabelsNames) + "\n"
+    dbConfigString += "\t- Labels used : " + ", ".join(
+        class_labels_names) + "\n"
     dbConfigString += "\t- Number of cross validation folds : " + str(
         KFolds.n_splits) + "\n\n"
     return dbConfigString
@@ -42,7 +43,8 @@ def getClassifierConfigString(gridSearch, nbCores, nIter, clKWARGS, classifier,
         classifierConfigString += "\t- Got configuration using randomized search with " + str(
             nIter) + " iterations \n"
     classifierConfigString += "\n\n"
-    classifierInterpretString = classifier.get_interpretation(output_file_name, y_test)
+    classifierInterpretString = classifier.get_interpretation(output_file_name,
+                                                              y_test)
     return classifierConfigString, classifierInterpretString
 
 
@@ -63,7 +65,8 @@ def getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred):
     return metricScoreString, [metricScoreTrain, metricScoreTest]
 
 
-def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics_list, nIter,
+def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics_list,
+            nIter,
             feat, CL_type, clKWARGS, classLabelsNames,
             shape, y_train, y_train_pred, y_test, y_test_pred, time,
             random_state, classifier, output_file_name):
@@ -72,13 +75,15 @@ def execute(name, learningRate, KFolds, nbCores, gridSearch, metrics_list, nIter
     trainScore = metricModule.score(y_train, y_train_pred)
     testScore = metricModule.score(y_test, y_test_pred)
     stringAnalysis = "Classification on " + name + " database for " + feat + " with " + CL_type + ".\n\n"
-    stringAnalysis += metrics_list[0][0] + " on train : " + str(trainScore) + "\n" + \
+    stringAnalysis += metrics_list[0][0] + " on train : " + str(
+        trainScore) + "\n" + \
                       metrics_list[0][0] + " on test : " + str(
         testScore) + "\n\n"
     stringAnalysis += getDBConfigString(name, feat, learningRate, shape,
                                         classLabelsNames, KFolds)
     classifierConfigString, classifierIntepretString = getClassifierConfigString(
-        gridSearch, nbCores, nIter, clKWARGS, classifier, output_file_name, y_test)
+        gridSearch, nbCores, nIter, clKWARGS, classifier, output_file_name,
+        y_test)
     stringAnalysis += classifierConfigString
     for metric in metrics_list:
         metricString, metricScore = getMetricScore(metric, y_train,

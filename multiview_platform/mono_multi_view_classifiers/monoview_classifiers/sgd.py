@@ -39,7 +39,7 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
     def __init__(self, random_state=None, loss='hinge',
                  penalty='l2', alpha=0.0001, max_iter=5, tol=None, **kwargs):
 
-        super(SGD, self).__init__(
+        SGDClassifier.__init__(self,
             loss=loss,
             penalty=penalty,
             alpha=alpha,
@@ -54,18 +54,7 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
                          CustomUniform(loc=0, state=1), [random_state]]
         self.weird_strings = {}
 
-    # def canProbas(self):
-    #     """
-    #     Used to know if the classifier can return label probabilities
-    #
-    #     Returns
-    #     -------
-    #     return True in all case
-    #     """
-    #
-    #     return True
-
-    def get_interpretation(self, directory, y_test):
+    def get_interpretation(self, directory, y_test, multiclass=False):
         """
 
         Parameters
@@ -82,21 +71,3 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
         import numpy as np
         # self.feature_importances_ = (self.coef_/np.sum(self.coef_)).reshape(self.coef_.shape[1])
         return interpret_string
-
-
-# def formatCmdArgs(args):
-#     """Used to format kwargs for the parsed args"""
-#     kwargsDict = {"loss": args.SGD_loss,
-#                   "penalty": args.SGD_penalty,
-#                   "alpha": args.SGD_alpha}
-#     return kwargsDict
-
-
-def paramsToSet(nIter, random_state):
-    paramsSet = []
-    for _ in range(nIter):
-        paramsSet.append({"loss": random_state.choice(['log', 'modified_huber']),
-                          "penalty": random_state.choice(
-                              ["l1", "l2", "elasticnet"]),
-                          "alpha": random_state.random_sample()})
-    return paramsSet

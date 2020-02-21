@@ -37,7 +37,7 @@ class SVMPoly(SVCClassifier, BaseMonoviewClassifier):
     """
     def __init__(self, random_state=None, C=1.0, degree=3, **kwargs):
 
-        super(SVMPoly, self).__init__(
+        SVCClassifier.__init__(self,
             C=C,
             kernel='poly',
             degree=degree,
@@ -46,17 +46,3 @@ class SVMPoly(SVCClassifier, BaseMonoviewClassifier):
         self.param_names = ["C", "degree", "random_state"]
         self.distribs = [CustomUniform(loc=0, state=1),
                          CustomRandint(low=2, high=30), [random_state]]
-
-
-# def formatCmdArgs(args):
-#     """Used to format kwargs for the parsed args"""
-#     kwargsDict = {"C": args.SVMPoly_C, "degree": args.SVMPoly_deg}
-#     return kwargsDict
-
-
-def paramsToSet(nIter, randomState):
-    paramsSet = []
-    for _ in range(nIter):
-        paramsSet.append({"C": randomState.randint(1, 10000),
-                          "degree": randomState.randint(1, 30)})
-    return paramsSet

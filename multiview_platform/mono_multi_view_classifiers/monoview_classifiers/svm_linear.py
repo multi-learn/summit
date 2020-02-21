@@ -28,7 +28,7 @@ class SVMLinear(SVCClassifier, BaseMonoviewClassifier):
     """
     def __init__(self, random_state=None, C=1.0, **kwargs):
 
-        super(SVMLinear, self).__init__(
+        SVCClassifier.__init__(self,
             C=C,
             kernel='linear',
             random_state=random_state
@@ -41,15 +41,3 @@ class SVMLinear(SVCClassifier, BaseMonoviewClassifier):
         # self.feature_importances_ = (self.coef_/np.sum(self.coef_)).reshape((self.coef_.shape[1],))
         return interpret_string
 
-
-# def formatCmdArgs(args):
-#     """Used to format kwargs for the parsed args"""
-#     kwargsDict = {"C": args.SVML_C, }
-#     return kwargsDict
-
-
-def paramsToSet(nIter, randomState):
-    paramsSet = []
-    for _ in range(nIter):
-        paramsSet.append({"C": randomState.randint(1, 10000), })
-    return paramsSet

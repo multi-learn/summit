@@ -9,7 +9,7 @@ class BaseJumboFusion(LateFusionClassifier):
     def __init__(self, random_state, classifiers_names=None,
                  classifier_configs=None,
                  nb_cores=1, weights=None, nb_monoview_per_view=1, rs=None):
-        super(BaseJumboFusion, self).__init__(random_state, classifiers_names=classifiers_names,
+        LateFusionClassifier.__init__(self, random_state, classifiers_names=classifiers_names,
                                              classifier_configs=classifier_configs,
                                              nb_cores=nb_cores, weights=weights,
                                               rs=rs)
@@ -19,7 +19,7 @@ class BaseJumboFusion(LateFusionClassifier):
 
     def set_params(self, nb_monoview_per_view=1, **params):
         self.nb_monoview_per_view = nb_monoview_per_view
-        super(BaseJumboFusion, self).set_params(**params)
+        LateFusionClassifier.set_params(self, **params)
 
     def predict(self, X, example_indices=None, view_indices=None):
         example_indices, view_indices = get_examples_views_indices(X, example_indices, view_indices)

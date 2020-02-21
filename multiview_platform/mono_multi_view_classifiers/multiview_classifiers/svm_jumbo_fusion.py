@@ -11,7 +11,7 @@ class SVMJumboFusion(BaseJumboFusion):
                  classifier_configs=None, nb_cores=1, weights=None,
                  nb_monoview_per_view=1,  C=1.0, kernel="rbf", degree=2, rs=None):
         self.need_probas=False
-        super(SVMJumboFusion, self).__init__(random_state, classifiers_names=classifiers_names,
+        BaseJumboFusion.__init__(self, random_state, classifiers_names=classifiers_names,
                                              classifier_configs=classifier_configs,
                                              nb_cores=nb_cores, weights=weights,
                                              nb_monoview_per_view=nb_monoview_per_view,
