@@ -1,14 +1,13 @@
 import pickle
-
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import FuncFormatter
 from scipy.stats import uniform, randint
 
-from ..utils.base import BaseClassifier
+from ..utils.base import BaseClassifier, ResultAnalyser
 
 # Author-Info
-__author__ = "Nikolas Huelsmann, Baptiste Bauvin"
+__author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
@@ -114,14 +113,9 @@ class CustomUniform:
 
 class BaseMonoviewClassifier(BaseClassifier):
 
-    def get_config(self):
-        if self.param_names:
-            return "\n\t\t- " + self.__class__.__name__ + "with " + self.params_to_string()
-        else:
-            return "\n\t\t- " + self.__class__.__name__ + "with no config."
-
     def get_feature_importance(self, directory, nb_considered_feats=50):
-        """Used to generate a graph and a pickle dictionary representing feature importances"""
+        """Used to generate a graph and a pickle dictionary representing
+        feature importances"""
         feature_importances = self.feature_importances_
         sorted_args = np.argsort(-feature_importances)
         feature_importances_sorted = feature_importances[sorted_args][
@@ -203,3 +197,28 @@ def get_accuracy_graph(plotted_data, classifier_name, file_name,
         ax.legend((scat,), (name,))
     f.savefig(file_name, transparent=True)
     plt.close()
+
+
+class MonoviewResultAnalyzer(ResultAnalyser):
+
+    def __init__(self, view_name, classifier_name, shape, classifier,
+                 classification_indices, k_folds, hps_method, metrics_list,
+                 n_iter, class_label_names, train_pred, test_pred,
+                 directory, labels, database_name, nb_cores, duration):
+        ResultAnalyser.__init__(self, classifier, classification_indices,
+                                k_folds, hps_method, metrics_list, n_iter,
+                                class_label_names, train_pred, test_pred,
+                                directory, labels, database_name, nb_cores,
+                                duration)
+        self.view_name = view_name
+        self.classifier_name = classifier_name
+        self.shape = shape
+
+    def get_base_string(self):
+        return "Classification on {} for {} with {}.\n\n".format(
+            self.database_name, self.view_name, self.classifier_name
+        )
+
+    def get_view_specific_info(self):
+        return "\t- View name : {}\t View shape : {}\n".format(self.view_name,
+                                                               self.shape)

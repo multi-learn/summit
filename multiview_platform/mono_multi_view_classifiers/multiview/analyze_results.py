@@ -1,5 +1,7 @@
 from .. import metrics
 
+from ..utils.base import get_metric
+
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
@@ -88,14 +90,9 @@ def get_metrics_scores(metrics, train_labels, test_labels,
     return metrics_scores
 
 
-def execute(classifier, pred_train_labels,
-            pred_test_labels, DATASET,
-            classification_kwargs, classification_indices,
-            labels_dictionary, views, nb_cores, times,
-            name, k_folds,
-            hyper_param_search, n_iter, metric_list,
-            views_indices, random_state, labels, classifier_module,
-            directory):
+def execute(classifier, pred_train_labels, pred_test_labels,
+            classification_indices, labels_dictionary, views, name, k_folds,
+            metrics_list, labels, directory):
     """
 
     Parameters
@@ -106,50 +103,27 @@ def execute(classifier, pred_train_labels,
 
     pred_test_labels : labels of test
 
-    DATASET :
-
-    classification_kwargs
-
     classification_indices
 
     labels_dictionary
 
     views
 
-    nb_cores
-
-    times
-
     name
 
     k_folds
 
-    hyper_param_search
-
-    n_iter
-
-    metric_list
-
-    views_indices
-
-    random_state
+    metrics_list
 
     labels
 
-    classifier_module
-
     Returns
     -------
-    retuern tuple of (string_analysis, images_analysis, metricsScore)
+    return tuple of (string_analysis, images_analysis, metricsScore)
     """
     classifier_name = classifier.short_name
     learning_indices, validation_indices = classification_indices
-    metric_module = getattr(metrics, metric_list[0][0])
-    if metric_list[0][1] is not None:
-        metric_kwargs = dict((index, metricConfig) for index, metricConfig in
-                             enumerate(metric_list[0][1]))
-    else:
-        metric_kwargs = {}
+    metric_module, metric_kwargs = get_metric(metrics_list)
     score_on_train = metric_module.score(labels[learning_indices],
                                          pred_train_labels,
                                          **metric_kwargs)
@@ -157,7 +131,7 @@ def execute(classifier, pred_train_labels,
                                         pred_test_labels, **metric_kwargs)
 
     string_analysis = "\t\tResult for multiview classification with " + classifier_name + \
-                      "\n\n" + metric_list[0][0] + " :\n\t-On Train : " + str(
+                      "\n\n" + metrics_list[0][0] + " :\n\t-On Train : " + str(
         score_on_train) + "\n\t-On Test : " + str(
         score_on_test) + \
                       "\n\nDataset info :\n\t-Database name : " + name + "\n\t-Labels : " + \
@@ -167,11 +141,11 @@ def execute(classifier, pred_train_labels,
         k_folds.n_splits) + \
                       " folds\n\nClassification configuration : \n\t-Algorithm used : " + classifier_name + " with : " + classifier.get_config()
 
-    metrics_scores = get_metrics_scores(metric_list, pred_train_labels,
+    metrics_scores = get_metrics_scores(metrics_list, pred_train_labels,
                                         pred_test_labels,
                                         validation_indices, learning_indices,
                                         labels)
-    string_analysis += print_metric_score(metrics_scores, metric_list)
+    string_analysis += print_metric_score(metrics_scores, metrics_list)
     string_analysis += "\n\n Interpretation : \n\n" + classifier.get_interpretation(
         directory, labels)
     images_analysis = {}

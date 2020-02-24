@@ -3,7 +3,7 @@ from abc import abstractmethod
 import numpy as np
 
 from .. import monoview_classifiers
-from ..utils.base import BaseClassifier
+from ..utils.base import BaseClassifier, ResultAnalyser
 from ..utils.dataset import RAMDataset
 
 
@@ -162,3 +162,24 @@ class MultiviewResult(object):
             return multiview_classifier.short_name
         except:
             return self.classifier_name
+
+
+class MultiviewResultAnalyzer(ResultAnalyser):
+
+    def __init__(self, view_names, classifier, classification_indices, k_folds,
+                 hps_method, metrics_list, n_iter, class_label_names,
+                 train_pred, test_pred, directory, labels, database_name,
+                 nb_cores, duration):
+        ResultAnalyser.__init__(self, classifier, classification_indices, k_folds,
+                 hps_method, metrics_list, n_iter, class_label_names,
+                 train_pred, test_pred, directory, labels, database_name,
+                 nb_cores, duration)
+        self.classifier_name = classifier.short_name
+        self.view_names = view_names
+
+    def get_base_string(self, ):
+        return "Multiview classification on {}  with {}\n\n".format(self.database_name,
+                                                                self.classifier_name)
+
+    def get_view_specific_info(self):
+        return "\t-Views : " + ', '.join(self.view_names) + "\n"

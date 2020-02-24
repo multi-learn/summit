@@ -33,18 +33,16 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         BaseMultiviewClassifier.__init__(self, random_state=random_state)
         self.view_weights = view_weights
         self.monoview_classifier_name = monoview_classifier_name
-        self.short_name = "early fusion " + self.monoview_classifier_name
+        self.short_name = "early_fusion_" + self.monoview_classifier_name
         if monoview_classifier_name in monoview_classifier_config:
             self.monoview_classifier_config = monoview_classifier_config[
                 monoview_classifier_name]
         self.monoview_classifier_config = monoview_classifier_config
-        monoview_classifier_module = getattr(monoview_classifiers,
-                                             self.monoview_classifier_name)
-        monoview_classifier_class = getattr(monoview_classifier_module,
-                                            monoview_classifier_module.classifier_class_name)
-        self.monoview_classifier = monoview_classifier_class(
-            random_state=random_state,
-            **self.monoview_classifier_config)
+        # monoview_classifier_module = getattr(monoview_classifiers,
+        #                                      self.monoview_classifier_name)
+        # monoview_classifier_class = getattr(monoview_classifier_module,
+        #                                     monoview_classifier_module.classifier_class_name)
+        self.monoview_classifier = self.init_monoview_estimator(monoview_classifier_name, monoview_classifier_config)
         self.param_names = ["monoview_classifier_name",
                             "monoview_classifier_config"]
         self.distribs = [get_available_monoview_classifiers(),
@@ -59,7 +57,7 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
             monoview_classifier_name,
             monoview_classifier_config)
         self.monoview_classifier_config = self.monoview_classifier.get_params()
-        self.short_name = "early fusion " + self.monoview_classifier_name
+        self.short_name = "early_fusion_" + self.monoview_classifier_name
         return self
 
     def get_params(self, deep=True):
@@ -78,6 +76,7 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
                                                     multiview=False,
                                                     y=y[train_indices])
         self.monoview_classifier.fit(X, y[train_indices])
+        self.monoview_classifier_config = self.monoview_classifier.get_params()
         return self
 
     def predict(self, X, example_indices=None, view_indices=None):

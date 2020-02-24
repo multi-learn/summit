@@ -914,11 +914,12 @@ def exec_classif(arguments):
                                                                 "log_loss",
                                                                 "matthews_corrcoef",
                                                                 "roc_auc_score"]]
-                metrics = [[metricName] for metricName in metrics_names]
+                metrics = [[metricName, {}] for metricName in metrics_names]
             metrics = arange_metrics(metrics, args["metric_princ"])
+            # TODO : Metric args
             for metricIndex, metric in enumerate(metrics):
                 if len(metric) == 1:
-                    metrics[metricIndex] = [metric[0], None]
+                    metrics[metricIndex] = [metric[0], {}]
 
             benchmark = init_benchmark(cl_type, monoview_algos, multiview_algos,
                                        args)

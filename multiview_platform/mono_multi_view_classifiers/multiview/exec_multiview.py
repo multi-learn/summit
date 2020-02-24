@@ -7,8 +7,7 @@ import time
 import h5py
 import numpy as np
 
-from . import analyze_results
-from .multiview_utils import MultiviewResult
+from .multiview_utils import MultiviewResult, MultiviewResultAnalyzer
 from .. import multiview_classifiers
 from ..utils import hyper_parameter_search
 from ..utils.multiclass import get_mc_estim
@@ -68,10 +67,7 @@ def init_constants(kwargs, classification_indices, metrics,
            classifier_config, views, learning_rate, labels
 
 
-def save_results(classifier, labels_dictionary, string_analysis, views,
-                 classifier_module,
-                 classification_kargs, directory, learning_rate, name,
-                 images_analysis):
+def save_results(classifier, string_analysis, directory, name, images_analysis):
     """
     Save results in derectory
 
@@ -99,9 +95,7 @@ def save_results(classifier, labels_dictionary, string_analysis, views,
     images_analysis :
 
     """
-    labels_set = set(labels_dictionary.values())
     logging.info(string_analysis)
-    # views_string = "-".join(views)
     views_string = "mv"
     cl_type_string = classifier.short_name
     output_file_name = os.path.join(directory, cl_type_string,
@@ -122,7 +116,7 @@ def save_results(classifier, labels_dictionary, string_analysis, views,
                 for i in range(1, 20):
                     test_file_name = output_file_name + image_name + "-" + str(
                         i) + ".png"
-                    if not os.path.isfile(testFileName):
+                    if not os.path.isfile(test_file_name):
                         images_analysis[image_name].savefig(test_file_name,
                                                             transparent=True)
                         break
@@ -291,15 +285,15 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     logging.debug("Done:\t Fitting classifier")
 
     logging.debug("Start:\t Predicting")
-    pred_train_labels = classifier.predict(dataset_var,
+    train_pred = classifier.predict(dataset_var,
                                            example_indices=learning_indices,
                                            view_indices=views_indices)
-    pred_test_labels = classifier.predict(dataset_var,
+    test_pred = classifier.predict(dataset_var,
                                           example_indices=validation_indices,
                                           view_indices=views_indices)
     full_labels = np.zeros(dataset_var.get_labels().shape, dtype=int) - 100
-    full_labels[learning_indices] = pred_train_labels
-    full_labels[validation_indices] = pred_test_labels
+    full_labels[learning_indices] = train_pred
+    full_labels[validation_indices] = test_pred
     logging.info("Done:\t Pertidcting")
 
     classification_time = time.time() - t_start
@@ -310,125 +304,27 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
 
     logging.info("Start:\t Result Analysis for " + cl_type)
     times = (extraction_time, classification_time)
-    string_analysis, images_analysis, metrics_scores = analyze_results.execute(
-        classifier, pred_train_labels,
-        pred_test_labels, dataset_var,
-        classifier_config, classification_indices,
-        labels_dictionary, views, nb_cores, times,
-        name, k_folds,
-        hyper_param_search, n_iter, metrics,
-        views_indices, random_state, labels, classifier_module, directory)
+    result_analyzer = MultiviewResultAnalyzer(view_names=views,
+                                              classifier=classifier,
+                                              classification_indices=classification_indices,
+                                              k_folds=k_folds,
+                                              hps_method=hyper_param_search,
+                                              metrics_list=metrics,
+                                              n_iter=n_iter,
+                                              class_label_names=list(labels_dictionary.values()),
+                                              train_pred=train_pred,
+                                              test_pred=test_pred,
+                                              directory=directory,
+                                              labels=labels,
+                                              database_name=dataset_var.get_name(),
+                                              nb_cores=nb_cores,
+                                              duration=classification_time)
+    string_analysis, images_analysis, metrics_scores = result_analyzer.analyze()
     logging.info("Done:\t Result Analysis for " + cl_type)
 
     logging.debug("Start:\t Saving preds")
-    save_results(classifier, labels_dictionary, string_analysis, views,
-                 classifier_module,
-                 classifier_config, directory,
-                 learning_rate, name, images_analysis)
+    save_results(classifier, string_analysis, directory, name, images_analysis)
     logging.debug("Start:\t Saving preds")
 
     return MultiviewResult(cl_type, classifier_config, metrics_scores,
                            full_labels)
-    # return CL_type, classificationKWARGS, metricsScores, fullLabels, testLabelsMulticlass
-
-
-if __name__ == "__main__":
-
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        description='This methods is used to execute a multiclass classification with one single view. ',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
-    groupStandard = parser.add_argument_group('Standard arguments')
-    groupStandard.add_argument('-log', action='store_true',
-                               help='Use option to activate Logging to Console')
-    groupStandard.add_argument('--type', metavar='STRING', action='store',
-                               help='Type of dataset', default=".hdf5")
-    groupStandard.add_argument('--name', metavar='STRING', action='store',
-                               help='Name of Database (default: %(default)s)',
-                               default='DB')
-    groupStandard.add_argument('--view', metavar='STRING', action='store',
-                               help='Name of Feature for Classification (default: %(default)s)',
-                               default='View0')
-    groupStandard.add_argument('--pathF', metavar='STRING', action='store',
-                               help='Path to the views (default: %(default)s)',
-                               default='results-FeatExtr/')
-    groupStandard.add_argument('--directory', metavar='STRING', action='store',
-                               help='Path to the views (default: %(default)s)',
-                               default='results-FeatExtr/')
-    groupStandard.add_argument('--labels_dictionary', metavar='STRING',
-                               action='store', nargs='+',
-                               help='Name of classLabels CSV-file  (default: %(default)s)',
-                               default='classLabels.csv')
-    groupStandard.add_argument('--classificationIndices', metavar='STRING',
-                               action='store',
-                               help='Name of classLabels-Description CSV-file  (default: %(default)s)',
-                               default='classLabels-Description.csv')
-    groupStandard.add_argument('--nbCores', metavar='INT', action='store',
-                               help='Number of cores, -1 for all', type=int,
-                               default=1)
-    groupStandard.add_argument('--randomState', metavar='INT', action='store',
-                               help='Seed for the random state or pickable randomstate file',
-                               default=42)
-    groupStandard.add_argument('--hyper_param_search', metavar='STRING',
-                               action='store',
-                               help='The type of method used tosearch the best set of hyper parameters',
-                               default='randomizedSearch')
-    groupStandard.add_argument('--metrics', metavar='STRING', action='store',
-                               nargs="+",
-                               help='metrics used in the experimentation, the first will be the one used in CV',
-                               default=[''])
-    groupStandard.add_argument('--nIter', metavar='INT', action='store',
-                               help='Number of itetarion in hyper parameter search',
-                               type=int,
-                               default=10)
-
-    args = parser.parse_args()
-
-    directory = args.directory
-    name = args.name
-    labels_dictionary = args.labels_dictionary
-    classification_indices = args.classification_indices
-    k_folds = args.k_folds
-    nb_cores = args.nb_cores
-    databaseType = None
-    path = args.path_f
-    random_state = args.random_state
-    hyper_param_search = args.hyper_param_search
-    metrics = args.metrics
-    n_iter = args.n_iter
-    kwargs = args.kwargs
-
-    # Extract the data using MPI ?
-    dataset_var = None
-    labels = None  # (get from CSV ?)
-
-    logfilename = "gen a good logfilename"
-
-    logfile = os.path.join(directory, logfilename)
-    if os.path.isfile(logfile + ".log"):
-        for i in range(1, 20):
-            testFileName = logfilename + "-" + str(i) + ".log"
-            if not os.path.isfile(os.path.join(directory, testFileName)):
-                logfile = os.path.join(directory, testFileName)
-                break
-    else:
-        logfile += ".log"
-
-    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
-                        filename=logfile, level=logging.DEBUG,
-                        filemode='w')
-
-    if args.log:
-        logging.getLogger().addHandler(logging.StreamHandler())
-
-    res = exec_multiview(directory, dataset_var, name, classification_indices,
-                         k_folds,
-                         nb_cores, databaseType, path,
-                         labels_dictionary, random_state, labels,
-                         hyper_param_search=hyper_param_search, metrics=metrics,
-                         n_iter=n_iter, **kwargs)
-
-    # Pickle the res
-    # Go put your token

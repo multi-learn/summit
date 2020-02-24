@@ -41,13 +41,13 @@ class Test_initConstants(unittest.TestCase):
         X, \
         learningRate, \
         labelsString, \
-        outputFileName = exec_classif_mono_view.initConstants(cls.args,
-                                                              cls.X,
-                                                              cls.classification_indices,
-                                                              cls.labels_names,
-                                                              cls.name,
-                                                              cls.directory,
-                                                              cls.view_name)
+        outputFileName = exec_classif_mono_view.init_constants(cls.args,
+                                                               cls.X,
+                                                               cls.classification_indices,
+                                                               cls.labels_names,
+                                                               cls.name,
+                                                               cls.directory,
+                                                               cls.view_name)
         cls.assertEqual(kwargs, cls.args)
         cls.assertEqual(feat, "test_dataset")
         cls.assertEqual(CL_type, "test_clf")
@@ -128,19 +128,19 @@ class Test_getHPs(unittest.TestCase):
         os.rmdir(tmp_path)
 
     def test_simple(self):
-        kwargs = exec_classif_mono_view.getHPs(self.classifierModule,
-                                               self.hyper_param_search,
-                                               self.n_iter,
-                                               self.classifier_name,
-                                               self.classifier_class_name,
-                                               self.X,
-                                               self.y,
-                                               self.random_state,
-                                               self.output_file_name,
-                                               self.cv,
-                                               self.nb_cores,
-                                               self.metrics,
-                                               self.kwargs)
+        kwargs = exec_classif_mono_view.get_hyper_params(self.classifierModule,
+                                                         self.hyper_param_search,
+                                                         self.n_iter,
+                                                         self.classifier_name,
+                                                         self.classifier_class_name,
+                                                         self.X,
+                                                         self.y,
+                                                         self.random_state,
+                                                         self.output_file_name,
+                                                         self.cv,
+                                                         self.nb_cores,
+                                                         self.metrics,
+                                                         self.kwargs)
 
 # class Test_getKWARGS(unittest.TestCase):
 #

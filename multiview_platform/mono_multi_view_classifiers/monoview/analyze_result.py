@@ -1,6 +1,7 @@
 from datetime import timedelta as hms
 
 from .. import metrics
+from ..utils.base import get_metric
 
 
 def get_db_config_string(name, feat, classification_indices, shape,
@@ -73,8 +74,7 @@ def execute(name, learning_rate, k_folds, nb_cores, grid_search, metrics_list,
             feat, cl_type, cl_kwargs, class_labels_names,
             shape, y_train, y_train_pred, y_test, y_test_pred, time,
             random_state, classifier, output_file_name):
-    metrics_scores = {}
-    metric_module = getattr(metrics, metrics_list[0][0])
+    metric_module, metric_kwargs = get_metric(metrics_list)
     train_score = metric_module.score(y_train, y_train_pred)
     test_score = metric_module.score(y_test, y_test_pred)
     string_analysis = "Classification on " + name + " database for " + feat + " with " + cl_type + ".\n\n"
@@ -88,19 +88,13 @@ def execute(name, learning_rate, k_folds, nb_cores, grid_search, metrics_list,
         grid_search, nb_cores, n_iter, cl_kwargs, classifier, output_file_name,
         y_test)
     string_analysis += classifier_config_string
+    metrics_scores = {}
     for metric in metrics_list:
         metric_string, metric_score = get_metric_score(metric, y_train,
                                                        y_train_pred, y_test,
                                                        y_test_pred)
         string_analysis += metric_string
         metrics_scores[metric[0]] = metric_score
-        # string_analysis += getMetricScore(metric, y_train, y_train_pred, y_test, y_test_pred)
-        # if metric[1] is not None:
-        #     metricKWARGS = dict((index, metricConfig) for index, metricConfig in enumerate(metric[1]))
-        # else:
-        #     metricKWARGS = {}
-        # metrics_scores[metric[0]] = [getattr(metrics, metric[0]).score(y_train, y_train_pred),
-        #                             getattr(metrics, metric[0]).score(y_test, y_test_pred)]
     string_analysis += "\n\n Classification took " + str(hms(seconds=int(time)))
     string_analysis += "\n\n Classifier Interpretation : \n"
     string_analysis += classifier_intepret_string
