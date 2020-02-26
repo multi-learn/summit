@@ -7,6 +7,7 @@ from sklearn.tree import DecisionTreeClassifier
 from .. import metrics
 from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier, \
     get_accuracy_graph
+from ..utils.base import base_boosting_estimators
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -53,11 +54,11 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
     """
 
     def __init__(self, random_state=None, n_estimators=50,
-                 base_estimator=None, **kwargs):
+                 base_estimator=None, base_estimator_config=None, **kwargs):
 
-        if isinstance(base_estimator, str):
-            if base_estimator == "DecisionTreeClassifier":
-                base_estimator = DecisionTreeClassifier()
+        base_estimator = BaseMonoviewClassifier.get_base_estimator(self,
+                                                                   base_estimator,
+                                                  base_estimator_config)
         AdaBoostClassifier.__init__(self,
                                     random_state=random_state,
                                     n_estimators=n_estimators,
@@ -67,7 +68,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         self.param_names = ["n_estimators", "base_estimator"]
         self.classed_params = ["base_estimator"]
         self.distribs = [CustomRandint(low=1, high=500),
-                         [DecisionTreeClassifier(max_depth=1)]]
+                        base_boosting_estimators]
         self.weird_strings = {"base_estimator": "class_name"}
         self.plotted_metric = metrics.zero_one_loss
         self.plotted_metric_name = "zero_one_loss"

@@ -35,9 +35,10 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
                                             init=init,
                                             random_state=random_state
                                             )
-        self.param_names = ["n_estimators", ]
+        self.param_names = ["n_estimators", "max_depth"]
         self.classed_params = []
-        self.distribs = [CustomRandint(low=50, high=500), ]
+        self.distribs = [CustomRandint(low=50, high=500),
+                         CustomRandint(low=1, high=10),]
         self.weird_strings = {}
         self.plotted_metric = metrics.zero_one_loss
         self.plotted_metric_name = "zero_one_loss"

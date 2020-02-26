@@ -61,7 +61,7 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
                             "random_state"]
         self.classed_params = []
         self.distribs = [CustomRandint(low=1, high=300),
-                         CustomRandint(low=1, high=300),
+                         CustomRandint(low=1, high=10),
                          ["gini", "entropy"], [random_state]]
         self.weird_strings = {}
 

@@ -3,6 +3,9 @@ from sklearn.base import BaseEstimator
 from abc import abstractmethod
 from datetime import timedelta as hms
 
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
+
 from multiview_platform.mono_multi_view_classifiers import metrics
 
 
@@ -59,6 +62,24 @@ class BaseClassifier(BaseEstimator, ):
             return self.__class__.__name__ + " with " + self.params_to_string()
         else:
             return self.__class__.__name__ + "with no config."
+
+    def get_base_estimator(self, base_estimator, estimator_config):
+        if base_estimator is None:
+            return DecisionTreeClassifier(**estimator_config)
+        if isinstance(base_estimator, str):
+            if base_estimator == "DecisionTreeClassifier":
+                return DecisionTreeClassifier(**estimator_config)
+            elif base_estimator == "AdaboostClassifier":
+                return AdaBoostClassifier(**estimator_config)
+            elif base_estimator == "RandomForestClassifier":
+                return RandomForestClassifier(**estimator_config)
+            else:
+                raise ValueError('Base estimator string {} does not match an available classifier.'.format(base_estimator))
+        elif isinstance(base_estimator, BaseEstimator):
+            return base_estimator.set_params(**estimator_config)
+        else:
+            raise ValueError('base_estimator must be either a string or a BaseEstimator child class, it is {}'.format(type(base_estimator)))
+
 
     def to_str(self, param_name):
         """
@@ -317,3 +338,10 @@ class ResultAnalyser():
             self.labels[self.test_indices])
         image_analysis = {}
         return string_analysis, image_analysis, self.metric_scores
+
+
+base_boosting_estimators = [DecisionTreeClassifier(max_depth=1),
+                            DecisionTreeClassifier(max_depth=2),
+                            DecisionTreeClassifier(max_depth=3),
+                            DecisionTreeClassifier(max_depth=4),
+                            DecisionTreeClassifier(max_depth=5), ]
