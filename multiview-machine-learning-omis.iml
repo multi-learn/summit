@@ -4,11 +4,11 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="multiviewmetriclearning" />
     <orderEntry type="module" module-name="multiview_generator" />
     <orderEntry type="module" module-name="short_projects" />
     <orderEntry type="library" name="R User Library" level="project" />
     <orderEntry type="library" name="R Skeletons" level="application" />
     <orderEntry type="module" module-name="Datasets" />
+    <orderEntry type="module" module-name="scikit-multimodallearn" />
   </component>
 </module>
