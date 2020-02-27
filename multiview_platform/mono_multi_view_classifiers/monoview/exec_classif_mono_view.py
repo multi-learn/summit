@@ -88,12 +88,14 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
     logging.debug("Start:\t Generate classifier args")
     classifier_module = getattr(monoview_classifiers, classifier_name)
     classifier_class_name = classifier_module.classifier_class_name
+    hyper_param_beg = time.monotonic()
     cl_kwargs, test_folds_preds = get_hyper_params(classifier_module, hyper_param_search,
                                                    n_iter, classifier_name,
                                                    classifier_class_name,
                                                    X_train, y_train,
                                                    random_state, output_file_name,
                                                    k_folds, nb_cores, metrics, kwargs)
+    hyper_param_duration = time.monotonic() - hyper_param_beg
     logging.debug("Done:\t Generate classifier args")
 
     logging.debug("Start:\t Training")
@@ -103,13 +105,16 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
                               (random_state, **cl_kwargs),
                               random_state,
                               y=Y)
-
+    fit_beg = time.monotonic()
     classifier.fit(X_train, y_train)  # NB_CORES=nbCores,
+    fit_duration = time.monotonic() - fit_beg
     logging.debug("Done:\t Training")
 
     logging.debug("Start:\t Predicting")
     train_pred = classifier.predict(X_train)
+    pred_beg = time.monotonic()
     test_pred = classifier.predict(X_test)
+    pred_duration = time.monotonic() - pred_beg
 
     # Filling the full prediction in the right order
     full_pred = np.zeros(Y.shape, dtype=int) - 100
@@ -120,9 +125,9 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
 
     logging.debug("Done:\t Predicting")
 
-    duration = time.time() - t_start
+    whole_duration = time.monotonic() - t_start
     logging.debug(
-        "Info:\t Time for training and predicting: " + str(duration) + "[s]")
+        "Info:\t Duration for training and predicting: " + str(whole_duration) + "[s]")
 
     logging.debug("Start:\t Getting results")
     result_analyzer = MonoviewResultAnalyzer(view_name=view_name,
@@ -141,7 +146,7 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
                                              labels=Y,
                                              database_name=database_name,
                                              nb_cores=nb_cores,
-                                             duration=duration)
+                                             duration=whole_duration)
     string_analysis, images_analysis, metrics_scores = result_analyzer.analyze()
     logging.debug("Done:\t Getting results")
 
@@ -154,10 +159,9 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
     if test_folds_preds is None:
         test_folds_preds = train_pred
     return MonoviewResult(view_index, classifier_name, view_name,
-                                         metrics_scores,
-                                         full_pred, cl_kwargs,
-                                         test_folds_preds, classifier,
-                                         X_train.shape[1])
+                          metrics_scores, full_pred, cl_kwargs,
+                          test_folds_preds, classifier, X_train.shape[1],
+                          hyper_param_duration, fit_duration, pred_duration)
 
 
 def init_constants(args, X, classification_indices, labels_names,
@@ -166,7 +170,7 @@ def init_constants(args, X, classification_indices, labels_names,
         kwargs = args["args"]
     except KeyError:
         kwargs = args
-    t_start = time.time()
+    t_start = time.monotonic()
     cl_type = kwargs["classifier_name"]
     learning_rate = float(len(classification_indices[0])) / (
             len(classification_indices[0]) + len(classification_indices[1]))

@@ -258,6 +258,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     logging.debug("Done:\t Getting classifiers modules")
 
     logging.debug("Start:\t Optimizing hyperparameters")
+    hps_beg = time.monotonic()
     if hyper_param_search != "None":
         classifier_config = hyper_parameter_search.search_best_settings(
             dataset_var, dataset_var.get_labels(), classifier_module,
@@ -266,6 +267,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
             output_file_name, nb_cores=nb_cores, views_indices=views_indices,
             searching_tool=hyper_param_search, n_iter=n_iter,
             classifier_config=classifier_config)
+    hps_duration = time.monotonic() - hps_beg
     classifier = get_mc_estim(
         getattr(classifier_module, classifier_name)(random_state=random_state,
                                                     **classifier_config),
@@ -273,31 +275,35 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
         y=dataset_var.get_labels())
     logging.debug("Done:\t Optimizing hyperparameters")
     logging.debug("Start:\t Fitting classifier")
+    fit_beg = time.monotonic()
     classifier.fit(dataset_var, dataset_var.get_labels(),
                    train_indices=learning_indices,
                    view_indices=views_indices)
+    fit_duration = time.monotonic() - fit_beg
     logging.debug("Done:\t Fitting classifier")
 
     logging.debug("Start:\t Predicting")
     train_pred = classifier.predict(dataset_var,
                                            example_indices=learning_indices,
                                            view_indices=views_indices)
+    pred_beg = time.monotonic()
     test_pred = classifier.predict(dataset_var,
                                           example_indices=validation_indices,
                                           view_indices=views_indices)
+    pred_duration = time.monotonic() - pred_beg
     full_labels = np.zeros(dataset_var.get_labels().shape, dtype=int) - 100
     full_labels[learning_indices] = train_pred
     full_labels[validation_indices] = test_pred
     logging.info("Done:\t Pertidcting")
 
-    classification_time = time.time() - t_start
+    whole_duration = time.time() - t_start
     logging.info(
         "Info:\t Classification duration " + str(extraction_time) + "s")
 
     # TODO: get better cltype
 
     logging.info("Start:\t Result Analysis for " + cl_type)
-    times = (extraction_time, classification_time)
+    times = (extraction_time, whole_duration)
     result_analyzer = MultiviewResultAnalyzer(view_names=views,
                                               classifier=classifier,
                                               classification_indices=classification_indices,
@@ -312,7 +318,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
                                               labels=labels,
                                               database_name=dataset_var.get_name(),
                                               nb_cores=nb_cores,
-                                              duration=classification_time)
+                                              duration=whole_duration)
     string_analysis, images_analysis, metrics_scores = result_analyzer.analyze()
     logging.info("Done:\t Result Analysis for " + cl_type)
 
@@ -321,4 +327,5 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     logging.debug("Start:\t Saving preds")
 
     return MultiviewResult(cl_type, classifier_config, metrics_scores,
-                           full_labels)
+                           full_labels, hps_duration, fit_duration,
+                           pred_duration)

@@ -151,11 +151,15 @@ from .. import multiview_classifiers
 
 class MultiviewResult(object):
     def __init__(self, classifier_name, classifier_config,
-                 metrics_scores, full_labels):
+                 metrics_scores, full_labels, hps_duration, fit_duration,
+                 pred_duration):
         self.classifier_name = classifier_name
         self.classifier_config = classifier_config
         self.metrics_scores = metrics_scores
         self.full_labels_pred = full_labels
+        self.hps_duration = hps_duration
+        self.fit_duration = fit_duration
+        self.pred_duration = pred_duration
 
     def get_classifier_name(self):
         try:

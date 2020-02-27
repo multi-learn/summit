@@ -169,7 +169,7 @@ def plot_metric_scores(train_scores, test_scores, names, nb_results,
         ))
 
         fig.update_layout(
-            title=metric_name + "\n" + tag + " scores for each classifier")
+            title=metric_name + "<br>" + tag + " scores for each classifier")
         fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                           plot_bgcolor='rgba(0,0,0,0)')
         plotly.offline.plot(fig, filename=file_name + ".html", auto_open=False)
@@ -619,6 +619,48 @@ def publish_example_errors(example_errors, directory, databaseName,
     logging.debug("Done:\t Biclass Label analysis figures generation")
 
 
+def plot_durations(durations, directory, database_name, durations_stds=None):
+    file_name = os.path.join(directory, database_name + "-durations")
+
+    fig = plotly.graph_objs.Figure()
+    if durations_stds is None:
+        durations_stds = {}
+        for dur_key, dur_val in durations.items():
+            durations_stds[dur_key] = dict((key, 0)
+                                        for key, val in durations[dur_key].items())
+    fig.add_trace(plotly.graph_objs.Bar(name='Hyper-parameter Optimization',
+                                        x=list(durations['hps'].keys()),
+                                        y=list(durations['hps'].values()),
+                                        error_y=dict(type='data',
+                                                     array=list(durations_stds[
+                                                         "hps"].values())),
+                                        marker_color="grey"))
+    fig.add_trace(plotly.graph_objs.Bar(name='Fit (on train set)',
+                                        x=list(durations['fit'].keys()),
+                                        y=list(durations['fit'].values()),
+                                        error_y=dict(type='data',
+                                                     array=list(durations_stds[
+                                                         "fit"].values())),
+                                        marker_color="black"))
+    fig.add_trace(plotly.graph_objs.Bar(name='Prediction (on test set)',
+                                        x=list(durations['pred'].keys()),
+                                        y=list(durations['pred'].values()),
+                                        error_y=dict(type='data',
+                                                     array=list(durations_stds[
+                                                         "pred"].values())),
+                                        marker_color="lightgrey"))
+    fig.update_layout(title="Durations for each classfier")
+    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
+                      plot_bgcolor='rgba(0,0,0,0)')
+    plotly.offline.plot(fig, filename=file_name + ".html", auto_open=False)
+    index = durations["hps"].keys()
+    df = pd.DataFrame(index=index,
+                      columns=["hps", "fit", "pred"],)
+    for key, value in durations.items():
+        df[key] = [value[ind] for ind in index]
+    df.to_csv(file_name+"_dataframe.csv")
+
+
 def publish_feature_importances(feature_importances, directory, database_name,
                                 feature_stds=None):
     for view_name, feature_importance in feature_importances.items():
@@ -712,6 +754,19 @@ def get_feature_importances(result, feature_names=None):
     return feature_importances
 
 
+def get_duration(results):
+    durations = {"hps":{}, "fit":{}, "pred":{}}
+    for classifier_result in results:
+        durations["hps"][
+            classifier_result.get_classifier_name()] = classifier_result.hps_duration
+        durations["fit"][
+            classifier_result.get_classifier_name()] = classifier_result.fit_duration
+        durations["pred"][
+            classifier_result.get_classifier_name()] = classifier_result.pred_duration
+    return durations
+
+
+
 def publish_tracebacks(directory, database_name, labels_names, tracebacks,
                        iter_index):
     if tracebacks:
@@ -733,7 +788,7 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
     Parameters
     ----------
     results : list
-        The result list returned by the bencmark execution function. For each executed benchmark, contains
+        The result list returned by the benchmark execution function. For each executed benchmark, contains
         a flag & a result element.
         The flag is a way to identify to which benchmark the results belong, formatted this way :
         `flag = iter_index, [classifierPositive, classifierNegative]` with
@@ -756,7 +811,8 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
     logging.debug("Srart:\t Analzing all biclass resuls")
     iter_results = {"metrics_scores": [i for i in range(stats_iter)],
                     "example_errors": [i for i in range(stats_iter)],
-                    "feature_importances": [i for i in range(stats_iter)]}
+                    "feature_importances": [i for i in range(stats_iter)],
+                    "durations":[i for i in range(stats_iter)]}
     flagged_tracebacks_list = []
     fig_errors = []
     for iter_index, result, tracebacks in results:
@@ -765,6 +821,7 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
         metrics_scores = get_metrics_scores_biclass(metrics, result)
         example_errors = get_example_errors_biclass(labels, result)
         feature_importances = get_feature_importances(result)
+        durations = get_duration(result)
         directory = arguments["directory"]
 
         database_name = arguments["args"]["name"]
@@ -780,11 +837,13 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
                                labels_names, example_ids, labels)
         publish_feature_importances(feature_importances, directory,
                                     database_name)
+        plot_durations(durations, directory, database_name)
 
         iter_results["metrics_scores"][iter_index] = metrics_scores
         iter_results["example_errors"][iter_index] = example_errors
         iter_results["feature_importances"][iter_index] = feature_importances
         iter_results["labels"] = labels
+        iter_results["durations"][iter_index] = durations
 
     logging.debug("Done:\t Analzing all biclass resuls")
 
