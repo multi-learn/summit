@@ -27,6 +27,7 @@ class BaseJumboFusion(LateFusionClassifier):
         example_indices, view_indices = get_examples_views_indices(X,
                                                                    example_indices,
                                                                    view_indices)
+        self._check_views(view_indices)
         monoview_decisions = self.predict_monoview(X,
                                                    example_indices=example_indices,
                                                    view_indices=view_indices)
@@ -36,6 +37,7 @@ class BaseJumboFusion(LateFusionClassifier):
         train_indices, view_indices = get_examples_views_indices(X,
                                                                  train_indices,
                                                                  view_indices)
+        self.used_views = view_indices
         self.init_classifiers(len(view_indices),
                               nb_monoview_per_view=self.nb_monoview_per_view)
         self.fit_monoview_estimators(X, y, train_indices=train_indices,

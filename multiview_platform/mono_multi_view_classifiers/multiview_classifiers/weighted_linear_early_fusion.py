@@ -69,6 +69,7 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
     def fit(self, X, y, train_indices=None, view_indices=None):
         train_indices, X = self.transform_data_to_monoview(X, train_indices,
                                                            view_indices)
+        self.used_views = view_indices
         if np.unique(y[train_indices]).shape[0] > 2 and \
                 not (isinstance(self.monoview_classifier, MultiClassWrapper)):
             self.monoview_classifier = get_mc_estim(self.monoview_classifier,
@@ -81,6 +82,7 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
 
     def predict(self, X, example_indices=None, view_indices=None):
         _, X = self.transform_data_to_monoview(X, example_indices, view_indices)
+        self._check_views(self.view_indices)
         predicted_labels = self.monoview_classifier.predict(X)
         return predicted_labels
 

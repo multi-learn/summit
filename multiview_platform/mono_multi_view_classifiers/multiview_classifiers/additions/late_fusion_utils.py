@@ -97,6 +97,7 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
         train_indices, view_indices = get_examples_views_indices(X,
                                                                  train_indices,
                                                                  view_indices)
+        self.used_views = view_indices
         if np.unique(y).shape[0] > 2:
             multiclass = True
         else:

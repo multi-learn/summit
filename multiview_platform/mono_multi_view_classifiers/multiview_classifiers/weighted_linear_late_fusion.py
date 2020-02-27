@@ -17,11 +17,12 @@ class WeightedLinearLateFusion(LateFusionClassifier):
                                       nb_cores=nb_cores, weights=weights, rs=rs)
 
     def predict(self, X, example_indices=None, view_indices=None):
-        example_indices, views_indices = get_examples_views_indices(X,
+        example_indices, view_indices = get_examples_views_indices(X,
                                                                     example_indices,
                                                                     view_indices)
+        self._check_views(view_indices)
         view_scores = []
-        for index, viewIndex in enumerate(views_indices):
+        for index, viewIndex in enumerate(view_indices):
             view_scores.append(
                 np.array(self.monoview_estimators[index].predict_proba(
                     X.get_v(viewIndex, example_indices))) * self.weights[index])

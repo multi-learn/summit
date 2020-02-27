@@ -23,7 +23,7 @@ class BayesianInferenceClassifier(LateFusionClassifier):
         example_indices, view_indices = get_examples_views_indices(X,
                                                                    example_indices,
                                                                    view_indices)
-
+        self._check_views(view_indices)
         if sum(self.weights) != 1.0:
             self.weights = self.weights / sum(self.weights)
 

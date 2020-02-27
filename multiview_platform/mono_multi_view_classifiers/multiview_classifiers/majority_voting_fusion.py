@@ -23,16 +23,16 @@ class MajorityVoting(LateFusionClassifier):
                                       rs=rs)
 
     def predict(self, X, example_indices=None, view_indices=None):
-        examples_indices, views_indices = get_examples_views_indices(X,
+        examples_indices, view_indices = get_examples_views_indices(X,
                                                                      example_indices,
                                                                      view_indices)
-
+        self._check_views(view_indices)
         n_examples = len(examples_indices)
         votes = np.zeros((n_examples, X.get_nb_class(example_indices)),
                          dtype=float)
         monoview_decisions = np.zeros((len(examples_indices), X.nb_view),
                                       dtype=int)
-        for index, view_index in enumerate(views_indices):
+        for index, view_index in enumerate(view_indices):
             monoview_decisions[:, index] = self.monoview_estimators[
                 index].predict(
                 X.get_v(view_index, examples_indices))

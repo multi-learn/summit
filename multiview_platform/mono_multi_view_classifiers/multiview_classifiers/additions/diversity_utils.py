@@ -30,6 +30,7 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
         train_indices, view_indices = get_examples_views_indices(X,
                                                                  train_indices,
                                                                  view_indices)
+        self.used_views = view_indices
         # TODO : Finer analysis, may support a bit of mutliclass
         if np.unique(y[train_indices]).shape[0] > 2:
             raise ValueError(
@@ -56,6 +57,7 @@ class DiversityFusionClassifier(BaseMultiviewClassifier,
         example_indices, view_indices = get_examples_views_indices(X,
                                                                    example_indices,
                                                                    view_indices)
+        self._check_views(view_indices)
         nb_class = X.get_nb_class()
         if nb_class > 2:
             nb_class = 3

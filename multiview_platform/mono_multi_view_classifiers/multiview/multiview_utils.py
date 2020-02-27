@@ -4,7 +4,7 @@ import numpy as np
 
 from .. import monoview_classifiers
 from ..utils.base import BaseClassifier, ResultAnalyser
-from ..utils.dataset import RAMDataset
+from ..utils.dataset import RAMDataset, get_examples_views_indices
 
 
 class FakeEstimator():
@@ -29,6 +29,7 @@ class BaseMultiviewClassifier(BaseClassifier):
         self.random_state = random_state
         self.short_name = self.__module__.split(".")[-1]
         self.weird_strings = {}
+        self.used_views = None
 
     @abstractmethod
     def fit(self, X, y, train_indices=None, view_indices=None):
@@ -37,6 +38,10 @@ class BaseMultiviewClassifier(BaseClassifier):
     @abstractmethod
     def predict(self, X, example_indices=None, view_indices=None):
         pass
+
+    def _check_views(self, view_indices):
+        if self.used_views is not None and not np.array_equal(np.sort(self.used_views), np.sort(view_indices)):
+            raise ValueError('Used {} views to fit, and trying to predict on {}'.format(self.used_views, view_indices))
 
     def to_str(self, param_name):
         if param_name in self.weird_strings:
