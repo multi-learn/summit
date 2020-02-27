@@ -1,10 +1,10 @@
-import errno
 import os
 
 import h5py
 import numpy as np
 
-from ..utils.dataset import RAMDataset, HDF5Dataset
+from .dataset import RAMDataset, HDF5Dataset
+from .organization import secure_file_path
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -33,14 +33,7 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
                           noise_std=0.15, nb_view=3, nb_examples=100,
                           nb_features=10):
     """Used to generate a plausible dataset to test the algorithms"""
-
-    if not os.path.exists(
-            os.path.dirname(os.path.join(path, "plausible.hdf5"))):
-        try:
-            os.makedirs(os.path.dirname(os.path.join(path, "plausible.hdf5")))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
+    secure_file_path(os.path.join(path, "plausible.hdf5"))
     example_ids = ["exmaple_id_" + str(i) for i in range(nb_examples)]
     views = []
     view_names = []

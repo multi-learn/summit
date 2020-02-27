@@ -64,6 +64,8 @@ class BaseClassifier(BaseEstimator, ):
             return self.__class__.__name__ + "with no config."
 
     def get_base_estimator(self, base_estimator, estimator_config):
+        if estimator_config is None:
+            estimator_config = {}
         if base_estimator is None:
             return DecisionTreeClassifier(**estimator_config)
         if isinstance(base_estimator, str):

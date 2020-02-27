@@ -168,12 +168,12 @@ class MultiviewResultAnalyzer(ResultAnalyser):
 
     def __init__(self, view_names, classifier, classification_indices, k_folds,
                  hps_method, metrics_list, n_iter, class_label_names,
-                 train_pred, test_pred, directory, labels, database_name,
+                 train_pred, test_pred, output_file_name, labels, database_name,
                  nb_cores, duration):
         ResultAnalyser.__init__(self, classifier, classification_indices, k_folds,
-                 hps_method, metrics_list, n_iter, class_label_names,
-                 train_pred, test_pred, directory, labels, database_name,
-                 nb_cores, duration)
+                                hps_method, metrics_list, n_iter, class_label_names,
+                                train_pred, test_pred, output_file_name, labels, database_name,
+                                nb_cores, duration)
         self.classifier_name = classifier.short_name
         self.view_names = view_names
 

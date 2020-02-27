@@ -1,4 +1,3 @@
-import errno
 import itertools
 import logging
 import os
@@ -17,6 +16,7 @@ from .monoview.exec_classif_mono_view import exec_monoview
 from .multiview.exec_multiview import exec_multiview
 from .result_analysis import get_results, plot_results_noise, analyze_iterations
 from .utils import execution, dataset, configuration
+from .utils.organization import secure_file_path
 from .utils.dataset import delete_HDF5
 
 matplotlib.use(
@@ -513,14 +513,7 @@ def benchmark_init(directory, classification_indices, labels, labels_dictionary,
 
     """
     logging.debug("Start:\t Benchmark initialization")
-    if not os.path.exists(
-            os.path.dirname(os.path.join(directory, "train_labels.csv"))):
-        try:
-            os.makedirs(
-                os.path.dirname(os.path.join(directory, "train_labels.csv")))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
+    secure_file_path(os.path.join(directory, "train_labels.csv"))
     train_indices = classification_indices[0]
     train_labels = dataset_var.get_labels(example_indices=train_indices)
     np.savetxt(os.path.join(directory, "train_labels.csv"), train_labels,
@@ -534,12 +527,7 @@ def benchmark_init(directory, classification_indices, labels, labels_dictionary,
     for fold_index, (train_cv_indices, test_cv_indices) in enumerate(folds):
         file_name = os.path.join(directory, "folds", "test_labels_fold_" + str(
             fold_index) + ".csv")
-        if not os.path.exists(os.path.dirname(file_name)):
-            try:
-                os.makedirs(os.path.dirname(file_name))
-            except OSError as exc:
-                if exc.errno != errno.EEXIST:
-                    raise
+        secure_file_path(file_name)
         np.savetxt(file_name, train_labels[test_cv_indices[:min_fold_len]],
                    delimiter=",")
     labels_names = list(labels_dictionary.values())

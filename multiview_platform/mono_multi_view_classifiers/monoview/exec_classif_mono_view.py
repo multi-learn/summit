@@ -2,7 +2,6 @@
 
 """ Execution: Script to perform a MonoView classification """
 
-import errno
 import logging  # To create Log-Files
 # Import built-in modules
 import os  # to geth path of the running script
@@ -18,6 +17,7 @@ from .. import monoview_classifiers
 from ..utils import hyper_parameter_search
 from ..utils.dataset import extract_subset, HDF5Dataset
 from ..utils.multiclass import get_mc_estim
+from ..utils.organization import secure_file_path
 
 # Author-Info
 __author__ = "Nikolas Huelsmann, Baptiste BAUVIN"
@@ -175,12 +175,7 @@ def init_constants(args, X, classification_indices, labels_names,
     output_file_name = os.path.join(directory, cl_type_string, view_name,
                                     cl_type_string + '-' + name + "-" +
                                     view_name + "-")
-    if not os.path.exists(os.path.dirname(output_file_name)):
-        try:
-            os.makedirs(os.path.dirname(output_file_name))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
+    secure_file_path(output_file_name)
     return kwargs, t_start, view_name, cl_type, X, learning_rate, labels_string, output_file_name
 
 
@@ -203,7 +198,7 @@ def get_hyper_params(classifier_module, hyper_param_search, nIter, classifier_mo
                 nIter) + " iterations for " + classifier_module_name)
         classifier_hp_search = getattr(hyper_parameter_search,
                                        hyper_param_search.split("-")[0])
-        cl_kwargs, test_folds_preds = classifier_hp_search(X_train, y_train,
+        cl_kwargs, test_folds_preds, scores, params = classifier_hp_search(X_train, y_train,
                                                            "monoview",
                                                            random_state,
                                                            output_file_name,
@@ -216,6 +211,7 @@ def get_hyper_params(classifier_module, hyper_param_search, nIter, classifier_mo
                                                            classifier_kwargs=
                                                            kwargs[
                                                                classifier_module_name])
+        hyper_parameter_search.gen_report(params, scores, output_file_name)
         logging.debug("Done:\t " + hyper_param_search + " best settings")
     else:
         cl_kwargs = kwargs[classifier_module_name]

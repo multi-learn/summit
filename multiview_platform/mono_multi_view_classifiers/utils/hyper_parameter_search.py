@@ -8,6 +8,7 @@ from scipy.stats import randint, uniform
 from sklearn.model_selection import RandomizedSearchCV
 
 from .multiclass import get_mc_estim
+from .organization import secure_file_path
 from .. import metrics
 
 
@@ -26,12 +27,13 @@ def search_best_settings(dataset_var, labels, classifier_module,
     if searching_tool is not "None":
         searching_tool_method = getattr(thismodule,
                                         searching_tool.split("-")[0])
-        best_settings, test_folds_preds = searching_tool_method(
+        best_settings, test_folds_preds, scores, params = searching_tool_method(
             dataset_var, labels, "multiview", random_state, output_file_name,
             classifier_module, classifier_name, i_k_folds,
             nb_cores, metrics, n_iter, classifier_config,
             learning_indices=learning_indices, view_indices=views_indices,
             equivalent_draws=searching_tool.endswith("equiv"))
+        gen_report(params, scores, directory, )
     else:
         best_settings = classifier_config
     return best_settings  # or well set clasifier ?
@@ -159,17 +161,21 @@ def randomized_search(X, y, framework, random_state, output_file_name,
         if "random_state" in best_params:
             best_params.pop("random_state")
 
-        scoresArray = random_search.cv_results_['mean_test_score']
-        params = [(key[6:], value) for key, value in
-                  random_search.cv_results_.items() if key.startswith("param_")]
+        scores_array = random_search.cv_results_['mean_test_score']
+        sorted_indices = np.argsort(-scores_array)
+        params = [random_search.cv_results_["params"][score_index]
+                  for score_index in sorted_indices]
+        scores_array = scores_array[sorted_indices]
         # gen_heat_maps(params, scores_array, output_file_name)
         best_estimator = random_search.best_estimator_
     else:
         best_estimator = estimator
         best_params = {}
-    testFoldsPreds = get_test_folds_preds(X, y, folds, best_estimator,
+        scores_array = {}
+        params = {}
+    test_folds_preds = get_test_folds_preds(X, y, folds, best_estimator,
                                           framework, learning_indices)
-    return best_params, testFoldsPreds
+    return best_params, test_folds_preds, scores_array, params
 
 
 from sklearn.base import clone
@@ -222,6 +228,7 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
         self.cv_results_ = dict(("param_" + param_name, []) for param_name in
                                 candidate_params[0].keys())
         self.cv_results_["mean_test_score"] = []
+        self.cv_results_["params"]=[]
         n_failed = 0
         tracebacks = []
         for candidate_param_idx, candidate_param in enumerate(candidate_params):
@@ -243,13 +250,12 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
                         test_prediction,
                         **self.scoring._kwargs)
                     test_scores[fold_idx] = test_score
-                for param_name, param in candidate_param.items():
-                    self.cv_results_["param_" + param_name].append(param)
+                self.cv_results_['params'].append(current_estimator.get_params())
                 cross_validation_score = np.mean(test_scores)
                 self.cv_results_["mean_test_score"].append(
                     cross_validation_score)
                 results[candidate_param_idx] = cross_validation_score
-                if cross_validation_score <= min(results.values()):
+                if cross_validation_score >= min(results.values()):
                     self.best_params_ = candidate_params[candidate_param_idx]
                     self.best_score_ = cross_validation_score
             except:
@@ -262,7 +268,10 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
             raise ValueError(
                 'No fits were performed. All HP combination returned errors \n\n' + '\n'.join(
                     tracebacks))
-
+        self.cv_results_["mean_test_score"] = np.array(self.cv_results_["mean_test_score"])
+        # for key, value in self.cv_results_.items():
+        #     if key.startswith("param_"):
+        #         self.cv_results_[key] = np.ma.array(data=value, mask=[False for _ in value])
         if self.refit:
             self.best_estimator_ = clone(base_estimator).set_params(
                 **self.best_params_)
@@ -416,6 +425,18 @@ def gen_heat_maps(params, scores_array, output_file_name):
             output_file_name + "heat_map-" + param_name1 + "-" + param_name2 + ".png",
             transparent=True)
         plt.close()
+
+
+def gen_report(params, scores_array, output_file_name):
+    output_string = ""
+    for parameters, score in zip(params, scores_array):
+        if "random_state" in parameters:
+            parameters.pop("random_state")
+        output_string+="\n{}\t\t{}".format(parameters, score)
+    secure_file_path(output_file_name + "hps_report.txt")
+    with open(output_file_name+"hps_report.txt", "w") as output_file:
+        output_file.write(output_string)
+
 
 # nohup python ~/dev/git/spearmint/spearmint/main.py . &
 

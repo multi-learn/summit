@@ -1,10 +1,10 @@
 # The base configuration of the benchmark
-log: False
-name: ["plausible",]
+log: True
+name: ["digits",]
 label: "_"
 file_type: ".hdf5"
 views:
-pathf: "../data/"
+pathf: "/home/baptiste/Documents/Datasets/Digits/"
 nice: 0
 random_state: 42
 nb_cores: 1
@@ -28,7 +28,7 @@ stats_iter: 2
 metrics: ["accuracy_score", "f1_score"]
 metric_princ: "accuracy_score"
 hps_type: "randomized_search-equiv"
-hps_iter: 1
+hps_iter: 10
 
 
 ######################################

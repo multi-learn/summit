@@ -1,4 +1,3 @@
-import errno
 import logging
 import os
 import select
@@ -9,8 +8,7 @@ import h5py
 import numpy as np
 from scipy import sparse
 
-
-# from . import get_multiview_db as DB
+from .organization import secure_file_path
 
 class Dataset():
 
@@ -305,13 +303,7 @@ class HDF5Dataset(Dataset):
             self.dataset = hdf5_file
             self.init_attrs()
         else:
-            if not os.path.exists(
-                    os.path.dirname(os.path.join(path, file_name))):
-                try:
-                    os.makedirs(os.path.dirname(os.path.join(path, file_name)))
-                except OSError as exc:
-                    if exc.errno != errno.EEXIST:
-                        raise
+            secure_file_path(os.path.join(path, file_name))
             dataset_file = h5py.File(os.path.join(path, file_name), "w")
             if view_names is None:
                 view_names = ["View" + str(index) for index in

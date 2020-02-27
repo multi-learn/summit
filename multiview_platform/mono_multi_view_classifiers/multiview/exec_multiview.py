@@ -1,4 +1,3 @@
-import errno
 import logging
 import os
 import os.path
@@ -11,6 +10,7 @@ from .multiview_utils import MultiviewResult, MultiviewResultAnalyzer
 from .. import multiview_classifiers
 from ..utils import hyper_parameter_search
 from ..utils.multiclass import get_mc_estim
+from ..utils.organization import secure_file_path
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -19,7 +19,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 def init_constants(kwargs, classification_indices, metrics,
                    name, nb_cores, k_folds,
-                   dataset_var):
+                   dataset_var, directory):
     """
     Used to init the constants
     Parameters
@@ -63,11 +63,13 @@ def init_constants(kwargs, classification_indices, metrics,
         logging.info("Info:\t Shape of " + str(view_name) + " :" + str(
             dataset_var.get_shape()))
     labels = dataset_var.get_labels()
+    output_file_name = os.path.join(directory, classifier_name,
+                                    classifier_name+"-"+dataset_var.get_name()+"-")
     return classifier_name, t_start, views_indices, \
-           classifier_config, views, learning_rate, labels
+           classifier_config, views, learning_rate, labels, output_file_name
 
 
-def save_results(classifier, string_analysis, directory, name, images_analysis):
+def save_results(string_analysis, images_analysis, output_file_name):
     """
     Save results in derectory
 
@@ -96,16 +98,7 @@ def save_results(classifier, string_analysis, directory, name, images_analysis):
 
     """
     logging.info(string_analysis)
-    views_string = "mv"
-    cl_type_string = classifier.short_name
-    output_file_name = os.path.join(directory, cl_type_string,
-                                    cl_type_string + "-" + views_string + '-' + name)
-    if not os.path.exists(os.path.dirname(output_file_name)):
-        try:
-            os.makedirs(os.path.dirname(output_file_name))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
+    secure_file_path(output_file_name)
     output_text_file = open(output_file_name + 'summary.txt', 'w')
     output_text_file.write(string_analysis)
     output_text_file.close()
@@ -244,8 +237,9 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     classifier_config, \
     views, \
     learning_rate, \
-    labels = init_constants(kwargs, classification_indices, metrics, name,
-                            nb_cores, k_folds, dataset_var)
+    labels, \
+    output_file_name = init_constants(kwargs, classification_indices, metrics, name,
+                            nb_cores, k_folds, dataset_var, directory)
     logging.debug("Done:\t Initialize constants")
 
     extraction_time = time.time() - t_start
@@ -269,7 +263,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
             dataset_var, dataset_var.get_labels(), classifier_module,
             classifier_name,
             metrics[0], learning_indices, k_folds, random_state,
-            directory, nb_cores=nb_cores, views_indices=views_indices,
+            output_file_name, nb_cores=nb_cores, views_indices=views_indices,
             searching_tool=hyper_param_search, n_iter=n_iter,
             classifier_config=classifier_config)
     classifier = get_mc_estim(
@@ -314,7 +308,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
                                               class_label_names=list(labels_dictionary.values()),
                                               train_pred=train_pred,
                                               test_pred=test_pred,
-                                              directory=directory,
+                                              output_file_name=output_file_name,
                                               labels=labels,
                                               database_name=dataset_var.get_name(),
                                               nb_cores=nb_cores,
@@ -323,7 +317,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     logging.info("Done:\t Result Analysis for " + cl_type)
 
     logging.debug("Start:\t Saving preds")
-    save_results(classifier, string_analysis, directory, name, images_analysis)
+    save_results(string_analysis, images_analysis, output_file_name)
     logging.debug("Start:\t Saving preds")
 
     return MultiviewResult(cl_type, classifier_config, metrics_scores,

@@ -55,7 +55,7 @@ class Test_randomized_search(unittest.TestCase):
 
 
     def test_simple(self):
-        best_params, _ = hyper_parameter_search.randomized_search(
+        best_params, _, params, scores = hyper_parameter_search.randomized_search(
             self.dataset, self.labels[()], "multiview", self.random_state, tmp_path,
             weighted_linear_early_fusion, "WeightedLinearEarlyFusion", self.k_folds,
         1, ["accuracy_score", None], 2, {}, learning_indices=self.learning_indices)
@@ -80,10 +80,14 @@ class FakeEstimMV(BaseEstimator):
         self.param2 = param2
 
     def fit(self, X, y,train_indices=None, view_indices=None):
+        self.y = y
         return self
 
     def predict(self, X, example_indices=None, view_indices=None):
-        return np.zeros(example_indices.shape[0])
+        if self.param1=="return exact":
+            return self.y[example_indices]
+        else:
+            return np.zeros(example_indices.shape[0])
 
 from sklearn.metrics import accuracy_score, make_scorer
 from sklearn.model_selection import StratifiedKFold
@@ -101,12 +105,12 @@ class Test_MultiviewCompatibleRandomizedSearchCV(unittest.TestCase):
         cls.scoring = make_scorer(accuracy_score, )
         cls.cv = StratifiedKFold(n_splits=n_splits, )
         cls.random_state = np.random.RandomState(42)
-        cls.learning_indices = np.array([0,1,2])
+        cls.learning_indices = np.array([0,1,2, 3, 4,])
         cls.view_indices = None
         cls.framework = "monoview"
         cls.equivalent_draws = False
-        cls.X = cls.random_state.randint(0,100, (5,11))
-        cls.y = cls.random_state.randint(0,1, 5)
+        cls.X = cls.random_state.randint(0,100, (10,11))
+        cls.y = cls.random_state.randint(0,2, 10)
 
     def test_simple(self):
         hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV(
@@ -163,6 +167,22 @@ class Test_MultiviewCompatibleRandomizedSearchCV(unittest.TestCase):
         )
         RSCV.fit(test_dataset, self.y, )
         self.assertEqual(RSCV.n_iter, self.n_iter*test_dataset.nb_view)
+
+    def test_gets_good_params(self):
+        self.param_distributions["param1"].append('return exact')
+        self.n_iter=6
+        RSCV = hyper_parameter_search.MultiviewCompatibleRandomizedSearchCV(
+            FakeEstimMV(), self.param_distributions, n_iter=self.n_iter,
+            refit=self.refit, n_jobs=self.n_jobs, scoring=self.scoring,
+            cv=self.cv,
+            random_state=self.random_state,
+            learning_indices=self.learning_indices,
+            view_indices=self.view_indices,
+            framework="multiview",
+            equivalent_draws=False
+        )
+        RSCV.fit(test_dataset, self.y, )
+        self.assertEqual(RSCV.best_params_["param1"], "return exact")
 
 
 # if __name__ == '__main__':

@@ -1,5 +1,4 @@
 # Import built-in modules
-import errno
 import logging
 import os
 
@@ -13,6 +12,7 @@ from matplotlib.patches import Patch
 
 # Import own Modules
 from .monoview.monoview_utils import MonoviewResult
+from .utils.organization import secure_file_path
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -961,12 +961,7 @@ def publish_all_metrics_scores(iter_results, directory,
                                data_base_name, stats_iter,
                                min_size=10):
     results = []
-    if not os.path.exists(os.path.dirname(os.path.join(directory, "a"))):
-        try:
-            os.makedirs(os.path.dirname(os.path.join(directory, "a")))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
+    secure_file_path(os.path.join(directory, "a"))
 
     for metric_name, scores in iter_results.items():
         train = np.array(scores["mean"].loc["train"])
