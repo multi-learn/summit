@@ -30,8 +30,8 @@ class Test_get_metrics_scores_biclass(unittest.TestCase):
                                   {"accuracy_score":[0.9, 0.95],
                                    "f1_score":[0.91, 0.96]}
                                   , "", "", "", "", "",)]
-        metrics_scores = result_analysis.get_metrics_scores_biclass(metrics,
-                                                                    results)
+        metrics_scores = result_analysis.get_metrics_scores(metrics,
+                                                            results)
         self.assertIsInstance(metrics_scores, dict)
         self.assertIsInstance(metrics_scores["accuracy_score"], pd.DataFrame)
         np.testing.assert_array_equal(np.array(metrics_scores["accuracy_score"].loc["train"]), np.array([0.9]))
@@ -70,8 +70,8 @@ class Test_get_metrics_scores_biclass(unittest.TestCase):
                                   classifier="",
                                   n_features="")
                    ]
-        metrics_scores = result_analysis.get_metrics_scores_biclass(metrics,
-                                                                    results)
+        metrics_scores = result_analysis.get_metrics_scores(metrics,
+                                                            results)
         self.assertIsInstance(metrics_scores, dict)
         self.assertIsInstance(metrics_scores["accuracy_score"], pd.DataFrame)
         np.testing.assert_array_equal(
@@ -105,8 +105,8 @@ class Test_get_metrics_scores_biclass(unittest.TestCase):
                                   classifier="",
                                   n_features="")
                    ]
-        metrics_scores = result_analysis.get_metrics_scores_biclass(metrics,
-                                                                    results)
+        metrics_scores = result_analysis.get_metrics_scores(metrics,
+                                                            results)
         self.assertIsInstance(metrics_scores, dict)
         self.assertIsInstance(metrics_scores["accuracy_score"], pd.DataFrame)
         np.testing.assert_array_equal(
@@ -141,8 +141,8 @@ class Test_get_example_errors_biclass(unittest.TestCase):
                                   , np.array([0,0,1,1,0,0,1,1,0]), "", "",
                                   "", "",)
                    ]
-        example_errors = result_analysis.get_example_errors_biclass(ground_truth,
-                                                                    results)
+        example_errors = result_analysis.get_example_errors(ground_truth,
+                                                            results)
         self.assertIsInstance(example_errors, dict)
         np.testing.assert_array_equal(example_errors["mv"],
                                       np.array([1,0,1,0,0,1,0,1,-100]))
