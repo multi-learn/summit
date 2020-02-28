@@ -76,46 +76,64 @@ def init_benchmark(cl_type, monoview_algos, multiview_algos, args):
 
 
 def init_argument_dictionaries(benchmark, views_dictionary,
-                               nb_class, init_kwargs):
+                               nb_class, init_kwargs, hps_method, hps_kwargs):
     argument_dictionaries = {"monoview": [], "multiview": []}
     if benchmark["monoview"]:
         argument_dictionaries["monoview"] = init_monoview_exps(
             benchmark["monoview"],
             views_dictionary,
             nb_class,
-            init_kwargs["monoview"])
+            init_kwargs["monoview"], hps_method, hps_kwargs)
     if benchmark["multiview"]:
         argument_dictionaries["multiview"] = init_multiview_exps(
             benchmark["multiview"],
             views_dictionary,
             nb_class,
-            init_kwargs["multiview"])
+            init_kwargs["multiview"], hps_method, hps_kwargs)
     return argument_dictionaries
 
 
 def init_multiview_exps(classifier_names, views_dictionary, nb_class,
-                        kwargs_init):
+                        kwargs_init, hps_method, hps_kwargs):
     multiview_arguments = []
     for classifier_name in classifier_names:
-        if multiple_args(get_path_dict(kwargs_init[classifier_name])):
-            multiview_arguments += gen_multiple_args_dictionnaries(
-                nb_class,
-                kwargs_init,
-                classifier_name,
-                views_dictionary=views_dictionary,
-                framework="multiview")
-        else:
-            arguments = get_path_dict(kwargs_init[classifier_name])
+        arguments = get_path_dict(kwargs_init[classifier_name])
+        if hps_method == "Grid":
             multiview_arguments += [
                 gen_single_multiview_arg_dictionary(classifier_name,
                                                     arguments,
                                                     nb_class,
+                                                    {"param_grid":hps_kwargs[classifier_name]},
                                                     views_dictionary=views_dictionary)]
+        elif hps_method == "Random":
+            hps_kwargs = dict((key, value)
+                              for key, value in hps_kwargs.items()
+                              if key in ["n_iter", "equivalent_draws"])
+            multiview_arguments += [
+                gen_single_multiview_arg_dictionary(classifier_name,
+                                                    arguments,
+                                                    nb_class,
+                                                    hps_kwargs,
+                                                    views_dictionary=views_dictionary)]
+        elif hps_method == "None":
+            multiview_arguments += [
+                gen_single_multiview_arg_dictionary(classifier_name,
+                                                    arguments,
+                                                    nb_class,
+                                                    hps_kwargs,
+                                                    views_dictionary=views_dictionary)]
+        else:
+            raise ValueError('At the moment only "None",  "Random" or "Grid" '
+                             'are available as hyper-parameter search '
+                             'methods, sadly "{}" is not'.format(hps_method)
+                             )
+
     return multiview_arguments
 
 
 def init_monoview_exps(classifier_names,
-                       views_dictionary, nb_class, kwargs_init):
+                       views_dictionary, nb_class, kwargs_init, hps_method,
+                       hps_kwargs):
     r"""Used to add each monoview exeperience args to the list of monoview experiences args.
 
     First this function will check if the benchmark need mono- or/and multiview algorithms and adds to the right
@@ -141,25 +159,44 @@ def init_monoview_exps(classifier_names,
     """
     monoview_arguments = []
     for view_name, view_index in views_dictionary.items():
-        for classifier in classifier_names:
-            if multiple_args(kwargs_init[classifier]):
-                monoview_arguments += gen_multiple_args_dictionnaries(nb_class,
-                                                                      kwargs_init,
-                                                                      classifier,
-                                                                      view_name,
-                                                                      view_index)
-            else:
-                arguments = gen_single_monoview_arg_dictionary(classifier,
+        for classifier_name in classifier_names:
+            if hps_method == "Grid":
+                arguments = gen_single_monoview_arg_dictionary(classifier_name,
+                                                                         kwargs_init,
+                                                                         nb_class,
+                                                                         view_index,
+                                                                         view_name,
+                                                               {"param_grid":
+                                                                    hps_kwargs[classifier_name]})
+            elif hps_method == "Random":
+                hps_kwargs = dict((key, value)
+                                  for key, value in hps_kwargs.items()
+                                  if key in ["n_iter", "equivalent_draws"])
+                arguments = gen_single_monoview_arg_dictionary(classifier_name,
                                                                kwargs_init,
                                                                nb_class,
                                                                view_index,
-                                                               view_name)
-                monoview_arguments.append(arguments)
+                                                               view_name,
+                                                               hps_kwargs)
+            elif hps_method == "None":
+                arguments = gen_single_monoview_arg_dictionary(classifier_name,
+                                                               kwargs_init,
+                                                               nb_class,
+                                                               view_index,
+                                                               view_name,
+                                                               hps_kwargs)
+
+            else:
+                raise ValueError('At the moment only "None",  "Random" or "Grid" '
+                                 'are available as hyper-parameter search '
+                                 'methods, sadly "{}" is not'.format(hps_method)
+                                 )
+            monoview_arguments.append(arguments)
     return monoview_arguments
 
 
 def gen_single_monoview_arg_dictionary(classifier_name, arguments, nb_class,
-                                       view_index, view_name):
+                                       view_index, view_name, hps_kwargs):
     if classifier_name in arguments:
         classifier_config = dict((key, value[0]) for key, value in arguments[
             classifier_name].items())
@@ -169,16 +206,18 @@ def gen_single_monoview_arg_dictionary(classifier_name, arguments, nb_class,
             "view_name": view_name,
             "view_index": view_index,
             "classifier_name": classifier_name,
-            "nb_class": nb_class}
+            "nb_class": nb_class,
+            "hps_kwargs":hps_kwargs }
 
 
 def gen_single_multiview_arg_dictionary(classifier_name, arguments, nb_class,
-                                        views_dictionary=None):
+                                        hps_kwargs, views_dictionary=None):
     return {"classifier_name": classifier_name,
             "view_names": list(views_dictionary.keys()),
             'view_indices': list(views_dictionary.values()),
             "nb_class": nb_class,
             "labels_names": None,
+            "hps_kwargs": hps_kwargs,
             classifier_name: extract_dict(arguments)
             }
 
@@ -208,14 +247,14 @@ def set_element(dictionary, path, value):
     return dictionary
 
 
-def multiple_args(classifier_configuration):
-    """Checks if multiple values were provided for at least one arg"""
-    listed_args = [type(value) == list and len(value) > 1 for key, value in
-                   classifier_configuration.items()]
-    if True in listed_args:
-        return True
-    else:
-        return False
+# def multiple_args(classifier_configuration):
+#     """Checks if multiple values were provided for at least one arg"""
+#     listed_args = [type(value) == list and len(value) > 1 for key, value in
+#                    classifier_configuration.items()]
+#     if True in listed_args:
+#         return True
+#     else:
+#         return False
 
 
 def get_path_dict(multiview_classifier_args):
@@ -254,105 +293,105 @@ def is_dict_in(dictionary):
     return paths
 
 
-def gen_multiple_kwargs_combinations(cl_kwrags):
-    """
-    Generates all the possible combination of the asked args
+# def gen_multiple_kwargs_combinations(cl_kwrags):
+#     """
+#     Generates all the possible combination of the asked args
+#
+#     Parameters
+#     ----------
+#     cl_kwrags : dict
+#         The arguments, with one at least having multiple values
+#
+#     Returns
+#     -------
+#     kwargs_combination : list
+#         The list of all the combinations of arguments
+#
+#     reduced_kwargs_combination : list
+#         The reduced names and values of the arguments will be used in the naming
+#         process of the different classifiers
+#
+#     """
+#     values = list(cl_kwrags.values())
+#     listed_values = [[_] if type(_) is not list else _ for _ in values]
+#     values_cartesian_prod = [_ for _ in itertools.product(*listed_values)]
+#     keys = cl_kwrags.keys()
+#     kwargs_combination = [dict((key, value) for key, value in zip(keys, values))
+#                           for values in values_cartesian_prod]
+#
+#     reduce_dict = {DecisionTreeClassifier: "DT", }
+#     reduced_listed_values = [
+#         [_ if type(_) not in reduce_dict else reduce_dict[type(_)] for _ in
+#          list_] for list_ in listed_values]
+#     reduced_values_cartesian_prod = [_ for _ in
+#                                      itertools.product(*reduced_listed_values)]
+#     reduced_kwargs_combination = [
+#         dict((key, value) for key, value in zip(keys, values))
+#         for values in reduced_values_cartesian_prod]
+#     return kwargs_combination, reduced_kwargs_combination
 
-    Parameters
-    ----------
-    cl_kwrags : dict
-        The arguments, with one at least having multiple values
 
-    Returns
-    -------
-    kwargs_combination : list
-        The list of all the combinations of arguments
-
-    reduced_kwargs_combination : list
-        The reduced names and values of the arguments will be used in the naming
-        process of the different classifiers
-
-    """
-    values = list(cl_kwrags.values())
-    listed_values = [[_] if type(_) is not list else _ for _ in values]
-    values_cartesian_prod = [_ for _ in itertools.product(*listed_values)]
-    keys = cl_kwrags.keys()
-    kwargs_combination = [dict((key, value) for key, value in zip(keys, values))
-                          for values in values_cartesian_prod]
-
-    reduce_dict = {DecisionTreeClassifier: "DT", }
-    reduced_listed_values = [
-        [_ if type(_) not in reduce_dict else reduce_dict[type(_)] for _ in
-         list_] for list_ in listed_values]
-    reduced_values_cartesian_prod = [_ for _ in
-                                     itertools.product(*reduced_listed_values)]
-    reduced_kwargs_combination = [
-        dict((key, value) for key, value in zip(keys, values))
-        for values in reduced_values_cartesian_prod]
-    return kwargs_combination, reduced_kwargs_combination
-
-
-def gen_multiple_args_dictionnaries(nb_class, kwargs_init, classifier,
-                                    view_name=None, view_index=None,
-                                    views_dictionary=None,
-                                    framework="monoview"):
-    """
-    Used in the case of mutliple arguments asked in the config file.
-    Will combine the arguments to explore all the possibilities.
-
-    Parameters
-    ----------
-    nb_class : int,
-        The number of classes in the dataset
-
-    kwargs_init : dict
-        The arguments given in the config file
-
-    classifier : str
-        The name of the classifier for which multiple arguments have been asked
-
-    view_name : str
-        The name of the view in consideration.
-
-    view_index : int
-        The index of the view in consideration
-
-    views_dictionary : dict
-        The dictionary of all the views indices and their names
-
-    framework : str
-        Either monoview or multiview
-
-    Returns
-    -------
-    args_dictionaries : list
-        The list of all the possible combination of asked arguments
-
-    """
-    if framework == "multiview":
-        classifier_config = get_path_dict(kwargs_init[classifier])
-    else:
-        classifier_config = kwargs_init[classifier]
-    multiple_kwargs_list, reduced_multiple_kwargs_list = gen_multiple_kwargs_combinations(
-        classifier_config)
-    multiple_kwargs_dict = dict(
-        (classifier + "_" + "_".join(
-            map(str, list(reduced_dictionary.values()))), dictionary)
-        for reduced_dictionary, dictionary in
-        zip(reduced_multiple_kwargs_list, multiple_kwargs_list))
-    args_dictionnaries = [gen_single_monoview_arg_dictionary(classifier_name,
-                                                             arguments,
-                                                             nb_class,
-                                                             view_index=view_index,
-                                                             view_name=view_name)
-                          if framework == "monoview" else
-                          gen_single_multiview_arg_dictionary(classifier_name,
-                                                              arguments,
-                                                              nb_class,
-                                                              views_dictionary=views_dictionary)
-                          for classifier_name, arguments
-                          in multiple_kwargs_dict.items()]
-    return args_dictionnaries
+# def gen_multiple_args_dictionnaries(nb_class, kwargs_init, classifier,
+#                                     view_name=None, view_index=None,
+#                                     views_dictionary=None,
+#                                     framework="monoview"):
+#     """
+#     Used in the case of mutliple arguments asked in the config file.
+#     Will combine the arguments to explore all the possibilities.
+#
+#     Parameters
+#     ----------
+#     nb_class : int,
+#         The number of classes in the dataset
+#
+#     kwargs_init : dict
+#         The arguments given in the config file
+#
+#     classifier : str
+#         The name of the classifier for which multiple arguments have been asked
+#
+#     view_name : str
+#         The name of the view in consideration.
+#
+#     view_index : int
+#         The index of the view in consideration
+#
+#     views_dictionary : dict
+#         The dictionary of all the views indices and their names
+#
+#     framework : str
+#         Either monoview or multiview
+#
+#     Returns
+#     -------
+#     args_dictionaries : list
+#         The list of all the possible combination of asked arguments
+#
+#     """
+#     if framework == "multiview":
+#         classifier_config = get_path_dict(kwargs_init[classifier])
+#     else:
+#         classifier_config = kwargs_init[classifier]
+#     multiple_kwargs_list, reduced_multiple_kwargs_list = gen_multiple_kwargs_combinations(
+#         classifier_config)
+#     multiple_kwargs_dict = dict(
+#         (classifier + "_" + "_".join(
+#             map(str, list(reduced_dictionary.values()))), dictionary)
+#         for reduced_dictionary, dictionary in
+#         zip(reduced_multiple_kwargs_list, multiple_kwargs_list))
+#     args_dictionnaries = [gen_single_monoview_arg_dictionary(classifier_name,
+#                                                              arguments,
+#                                                              nb_class,
+#                                                              view_index=view_index,
+#                                                              view_name=view_name)
+#                           if framework == "monoview" else
+#                           gen_single_multiview_arg_dictionary(classifier_name,
+#                                                               arguments,
+#                                                               nb_class,
+#                                                               views_dictionary=views_dictionary)
+#                           for classifier_name, arguments
+#                           in multiple_kwargs_dict.items()]
+#     return args_dictionnaries
 
 
 def init_kwargs(args, classifiers_names, framework="monoview"):
@@ -672,7 +711,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                               1, args["file_type"], args["pathf"], random_state,
                               hyper_param_search=hyper_param_search,
                               metrics=metrics,
-                              n_iter=args["hps_iter"], **arguments)]
+                              **arguments)]
         except:
             if track_tracebacks:
                 traceback_outputs[
@@ -703,7 +742,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                                k_folds, 1, args["file_type"],
                                args["pathf"], labels_dictionary, random_state,
                                labels,
-                               hyper_param_search=hyper_param_search,
+                               hps_method=hyper_param_search,
                                metrics=metrics, n_iter=args["hps_iter"],
                                **arguments)]
         except:
@@ -829,7 +868,8 @@ def exec_classif(arguments):
     if nb_cores == 1:
         os.environ['OPENBLAS_NUM_THREADS'] = '1'
     stats_iter = args["stats_iter"]
-    hyper_param_search = args["hps_type"]
+    hps_method = args["hps_type"]
+    hps_kwargs = args["hps_args"]
     cl_type = args["type"]
     monoview_algos = args["algos_monoview"]
     multiview_algos = args["algos_multiview"]
@@ -915,17 +955,17 @@ def exec_classif(arguments):
             data_base_time = time.time() - start
             argument_dictionaries = init_argument_dictionaries(
                 benchmark, views_dictionary,
-                nb_class, init_kwargs)
+                nb_class, init_kwargs, hps_method, hps_kwargs)
             # argument_dictionaries = initMonoviewExps(benchmark, viewsDictionary,
             #                                         NB_CLASS, initKWARGS)
             directories = execution.gen_direcorties_names(directory, stats_iter)
             benchmark_argument_dictionaries = execution.gen_argument_dictionaries(
                 labels_dictionary, directories,
                 splits,
-                hyper_param_search, args, k_folds,
+                hps_method, args, k_folds,
                 stats_iter_random_states, metrics,
                 argument_dictionaries, benchmark,
-                views, views_indices, )
+                views, views_indices)
             results_mean_stds = exec_benchmark(
                 nb_cores, stats_iter,
                 benchmark_argument_dictionaries, directory, metrics,

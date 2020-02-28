@@ -346,7 +346,7 @@ def gen_argument_dictionaries(labels_dictionary, directories,
                               hyper_param_search, args, k_folds,
                               stats_iter_random_states, metrics,
                               argument_dictionaries,
-                              benchmark, views, views_indices):
+                              benchmark, views, views_indices,):
     r"""Used to generate a dictionary for each benchmark.
 
     One for each label combination (if multiclass), for each statistical iteration, generates an dictionary with

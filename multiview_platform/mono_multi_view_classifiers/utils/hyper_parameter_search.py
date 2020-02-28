@@ -1,14 +1,18 @@
 import itertools
 import sys
 import traceback
+from abc import abstractmethod
 
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import randint, uniform
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV, GridSearchCV, \
+    ParameterGrid, ParameterSampler
+from sklearn.base import clone
 
-from .multiclass import get_mc_estim
+from .multiclass import MultiClassWrapper
 from .organization import secure_file_path
+from .base import get_metric
 from .. import metrics
 
 
@@ -21,13 +25,13 @@ def search_best_settings(dataset_var, labels, classifier_module,
     """Used to select the right hyper-parameter optimization function
     to optimize hyper parameters"""
     if views_indices is None:
-        views_indices = range(dataset_var.get("Metadata").attrs["nbView"])
+        views_indices = list(range(dataset_var.get_nb_view))
     output_file_name = directory
     thismodule = sys.modules[__name__]
     if searching_tool is not "None":
         searching_tool_method = getattr(thismodule,
                                         searching_tool.split("-")[0])
-        best_settings, test_folds_preds, scores, params = searching_tool_method(
+        best_settings, scores, params = searching_tool_method(
             dataset_var, labels, "multiview", random_state, output_file_name,
             classifier_module, classifier_name, i_k_folds,
             nb_cores, metrics, n_iter, classifier_config,
@@ -39,28 +43,349 @@ def search_best_settings(dataset_var, labels, classifier_module,
     return best_settings  # or well set clasifier ?
 
 
-def grid_search(dataset, classifier_name, views_indices=None, k_folds=None,
-                n_iter=1,
-                **kwargs):
-    """Used to perfom gridsearch on the classifiers"""
+class HPSearch:
+
+    # def __init__(self, y, framework, random_state, output_file_name,
+    #                   classifier_module,
+    #                   classifier_name, folds=4, nb_cores=1,
+    #                   metric = [["accuracy_score", None]],
+    #                   classifier_kwargs={}, learning_indices=None,
+    #                   view_indices=None,
+    #                   track_tracebacks=True):
+    #     estimator = getattr(classifier_module, classifier_name)(
+    #         random_state=random_state,
+    #         **classifier_kwargs)
+    #     self.init_params()
+    #     self.estimator = get_mc_estim(estimator, random_state,
+    #                              multiview=(framework == "multiview"),
+    #                              y=y)
+    #     self.folds = folds
+    #     self.nb_cores = nb_cores
+    #     self.clasifier_kwargs = classifier_kwargs
+    #     self.learning_indices = learning_indices
+    #     self.view_indices = view_indices
+    #     self.output_file_name = output_file_name
+    #     metric_module, metric_kwargs = get_metric(metric)
+    #     self.scorer = metric_module.get_scorer(**metric_kwargs)
+    #     self.track_tracebacks = track_tracebacks
+
+    def get_scoring(self, metric):
+        if isinstance(metric, list):
+            metric_module, metric_kwargs = get_metric(metric)
+            return metric_module.get_scorer(**metric_kwargs)
+        else:
+            return metric
+
+    def fit_multiview(self, X, y, groups=None, **fit_params):
+        n_splits = self.cv.get_n_splits(self.available_indices,
+                                        y[self.available_indices])
+        folds = list(
+            self.cv.split(self.available_indices, y[self.available_indices]))
+        self.get_candidate_params(X)
+        base_estimator = clone(self.estimator)
+        results = {}
+        self.cv_results_ = dict(("param_" + param_name, []) for param_name in
+                                self.candidate_params[0].keys())
+        self.cv_results_["mean_test_score"] = []
+        self.cv_results_["params"] = []
+        n_failed = 0
+        tracebacks = []
+        for candidate_param_idx, candidate_param in enumerate(self.candidate_params):
+            test_scores = np.zeros(n_splits) + 1000
+            try:
+                for fold_idx, (train_indices, test_indices) in enumerate(folds):
+                    current_estimator = clone(base_estimator)
+                    current_estimator.set_params(**candidate_param)
+                    current_estimator.fit(X, y,
+                                          train_indices=self.available_indices[
+                                              train_indices],
+                                          view_indices=self.view_indices)
+                    test_prediction = current_estimator.predict(
+                        X,
+                        self.available_indices[test_indices],
+                        view_indices=self.view_indices)
+                    test_score = self.scoring._score_func(
+                        y[self.available_indices[test_indices]],
+                        test_prediction,
+                        **self.scoring._kwargs)
+                    test_scores[fold_idx] = test_score
+                self.cv_results_['params'].append(
+                    current_estimator.get_params())
+                cross_validation_score = np.mean(test_scores)
+                self.cv_results_["mean_test_score"].append(
+                    cross_validation_score)
+                results[candidate_param_idx] = cross_validation_score
+                if cross_validation_score >= max(results.values()):
+                    self.best_params_ = self.candidate_params[candidate_param_idx]
+                    self.best_score_ = cross_validation_score
+            except:
+                if self.track_tracebacks:
+                    n_failed += 1
+                    tracebacks.append(traceback.format_exc())
+                else:
+                    raise
+        if n_failed == self.n_iter:
+            raise ValueError(
+                'No fits were performed. All HP combination returned errors \n\n' + '\n'.join(
+                    tracebacks))
+        self.cv_results_["mean_test_score"] = np.array(
+            self.cv_results_["mean_test_score"])
+        if self.refit:
+            self.best_estimator_ = clone(base_estimator).set_params(
+                **self.best_params_)
+            self.best_estimator_.fit(X, y, **fit_params)
+        self.n_splits_ = n_splits
+        return self
+
+    @abstractmethod
+    def init_params(self):
+        self.params_dict = {}
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_candidate_params(self, X):
+        raise NotImplementedError
+
+    def get_best_params(self):
+        best_params = self.best_params_
+        if "random_state" in best_params:
+            best_params.pop("random_state")
+        return best_params
+
+    def gen_report(self, output_file_name):
+        scores_array = self.cv_results_['mean_test_score']
+        sorted_indices = np.argsort(-scores_array)
+        tested_params = [self.cv_results_["params"][score_index]
+                              for score_index in sorted_indices]
+        scores_array = scores_array[sorted_indices]
+        output_string = ""
+        for parameters, score in zip(tested_params, scores_array):
+            if "random_state" in parameters:
+                parameters.pop("random_state")
+            output_string += "\n{}\t\t{}".format(parameters, score)
+        secure_file_path(output_file_name + "hps_report.txt")
+        with open(output_file_name + "hps_report.txt", "w") as output_file:
+            output_file.write(output_string)
+
+
+class Random(RandomizedSearchCV, HPSearch):
+
+    def __init__(self, estimator, param_distributions=None, n_iter=10,
+                 refit=False, n_jobs=1, scoring=None, cv=None,
+                 random_state=None, learning_indices=None, view_indices=None,
+                 framework="monoview",
+                 equivalent_draws=True, track_tracebacks=True):
+        if param_distributions is None:
+            param_distributions = self.get_param_distribs(estimator)
+        scoring = HPSearch.get_scoring(self, scoring)
+        RandomizedSearchCV.__init__(self, estimator, n_iter=n_iter,
+                                    param_distributions=param_distributions,
+                                    refit=refit, n_jobs=n_jobs, scoring=scoring,
+                                    cv=cv, random_state=random_state)
+        self.framework = framework
+        self.available_indices = learning_indices
+        self.view_indices = view_indices
+        self.equivalent_draws = equivalent_draws
+        self.track_tracebacks = track_tracebacks
+
+    def get_param_distribs(self, estimator):
+        if isinstance(estimator, MultiClassWrapper):
+            return estimator.estimator.gen_distribs()
+        else:
+            return estimator.gen_distribs()
+
+    def fit(self, X, y=None, groups=None, **fit_params):
+        if self.framework == "monoview":
+            return RandomizedSearchCV.fit(self, X, y=y, groups=groups,
+                                          **fit_params)
+
+        elif self.framework == "multiview":
+            return HPSearch.fit_multiview(self, X, y=y, groups=groups,
+                                           **fit_params)
+
+    # def init_params(self,):
+    #     self.params_dict = self.estimator.gen_distribs()
+
+    def get_candidate_params(self, X):
+        if self.equivalent_draws:
+            self.n_iter = self.n_iter * X.nb_view
+        self.candidate_params = list(
+            ParameterSampler(self.param_distributions, self.n_iter,
+                             random_state=self.random_state))
+
+    # def fit_multiview(self, X, y=None, groups=None, track_tracebacks=True,
+    #                   **fit_params):
+    #     n_splits = self.cv.get_n_splits(self.available_indices,
+    #                                     y[self.available_indices])
+
+
+
+
+class Grid(GridSearchCV, HPSearch):
+
+    def __init__(self, estimator, param_grid={}, refit=True, n_jobs=1, scoring=None, cv=None,
+                 learning_indices=None, view_indices=None, framework="monoview",
+                 random_state=None, track_tracebacks=True):
+        scoring = HPSearch.get_scoring(self, scoring)
+        GridSearchCV.__init__(self, estimator, param_grid, scoring=scoring,
+                              n_jobs=n_jobs, iid='deprecated', refit=refit,
+                              cv=cv)
+        self.framework = framework
+        self.available_indices = learning_indices
+        self.view_indices = view_indices
+        self.track_tracebacks = track_tracebacks
+
+    def fit(self, X, y=None, groups=None, **fit_params):
+        if self.framework == "monoview":
+            return GridSearchCV.fit(self, X, y=y, groups=groups,
+                                          **fit_params)
+        elif self.framework == "multiview":
+            return HPSearch.fit_multiview(self, X, y=y, groups=groups,
+                                           **fit_params)
+
+    def get_candidate_params(self, X):
+        self.candidate_params = list(ParameterGrid(self.param_grid))
+        self.n_iter = len(self.candidate_params)
+
+
+
+
+
+#
+# def hps_search():
+#     pass
+#
+# def grid_search(X, y, framework, random_state, output_file_name,
+#                   classifier_module,
+#                   classifier_name, folds=4, nb_cores=1,
+#                   metric=["accuracy_score", None],
+#                   n_iter=30, classifier_kwargs={}, learning_indices=None,
+#                   view_indices=None,
+#                   equivalent_draws=True, grid_search_config=None):
+#     """Used to perfom gridsearch on the classifiers"""
+#     pass
+
+
+
+# class RS(HPSSearch):
+#
+#     def __init__(self, X, y, framework, random_state, output_file_name,
+#                       classifier_module,
+#                       classifier_name, folds=4, nb_cores=1,
+#                       metric=["accuracy_score", None],
+#                       n_iter=30, classifier_kwargs={}, learning_indices=None,
+#                       view_indices=None,
+#                       equivalent_draws=True):
+#         HPSSearch.__init__()
+
+
+
+# def randomized_search(X, y, framework, random_state, output_file_name,
+#                       classifier_module,
+#                       classifier_name, folds=4, nb_cores=1,
+#                       metric=["accuracy_score", None],
+#                       n_iter=30, classifier_kwargs={}, learning_indices=None,
+#                       view_indices=None,
+#                       equivalent_draws=True):
+#     estimator = getattr(classifier_module, classifier_name)(
+#         random_state=random_state,
+#         **classifier_kwargs)
+#     params_dict = estimator.gen_distribs()
+#     estimator = get_mc_estim(estimator, random_state,
+#                              multiview=(framework == "multiview"),
+#                              y=y)
+#     if params_dict:
+#         metric_module, metric_kwargs = get_metric(metric)
+#         scorer = metric_module.get_scorer(**metric_kwargs)
+#         # nb_possible_combinations = compute_possible_combinations(params_dict)
+#         # n_iter_real = min(n_iter, nb_possible_combinations)
+#
+#         random_search = MultiviewCompatibleRandomizedSearchCV(estimator,
+#                                                               n_iter=n_iter,
+#                                                               param_distributions=params_dict,
+#                                                               refit=True,
+#                                                               n_jobs=nb_cores,
+#                                                               scoring=scorer,
+#                                                               cv=folds,
+#                                                               random_state=random_state,
+#                                                               learning_indices=learning_indices,
+#                                                               view_indices=view_indices,
+#                                                               framework=framework,
+#                                                               equivalent_draws=equivalent_draws)
+#         random_search.fit(X, y)
+#         return random_search.transform_results()
+#     else:
+#         best_estimator = estimator
+#         best_params = {}
+#         scores_array = {}
+#         params = {}
+#         test_folds_preds = np.zeros(10)#get_test_folds_preds(X, y, folds, best_estimator,
+#                                           # framework, learning_indices)
+#         return best_params, scores_array, params
+
+
+
+
+
+
+
+
+
+
+def spear_mint(dataset, classifier_name, views_indices=None, k_folds=None,
+               n_iter=1,
+               **kwargs):
+    """Used to perform spearmint on the classifiers to optimize hyper parameters,
+    longer than randomsearch (can't be parallelized)"""
     pass
 
 
-class CustomUniform:
-    """Used as a distribution returning a float between loc and loc + scale..
-        It can be used with a multiplier agrument to be able to perform more complex generation
-        for example 10 e -(float)"""
-
-    def __init__(self, loc=0, state=1, multiplier=""):
-        self.uniform = uniform(loc, state)
-        self.multiplier = multiplier
-
-    def rvs(self, random_state=None):
-        unif = self.uniform.rvs(random_state=random_state)
-        if self.multiplier == 'e-':
-            return 10 ** -unif
+def gen_heat_maps(params, scores_array, output_file_name):
+    """Used to generate a heat map for each doublet of hyperparms
+    optimized on the previous function"""
+    nb_params = len(params)
+    if nb_params > 2:
+        combinations = itertools.combinations(range(nb_params), 2)
+    elif nb_params == 2:
+        combinations = [(0, 1)]
+    else:
+        combinations = [()]
+    for combination in combinations:
+        if combination:
+            param_name1, param_array1 = params[combination[0]]
+            param_name2, param_array2 = params[combination[1]]
         else:
-            return unif
+            param_name1, param_array1 = params[0]
+            param_name2, param_array2 = ("Control", np.array([0]))
+
+        param_array1_set = np.sort(np.array(list(set(param_array1))))
+        param_array2_set = np.sort(np.array(list(set(param_array2))))
+
+        scores_matrix = np.zeros(
+            (len(param_array2_set), len(param_array1_set))) - 0.1
+        for param1, param2, score in zip(param_array1, param_array2,
+                                         scores_array):
+            param1_index, = np.where(param_array1_set == param1)
+            param2_index, = np.where(param_array2_set == param2)
+            scores_matrix[int(param2_index), int(param1_index)] = score
+
+        plt.figure(figsize=(8, 6))
+        plt.subplots_adjust(left=.2, right=0.95, bottom=0.15, top=0.95)
+        plt.imshow(scores_matrix, interpolation='nearest', cmap=plt.cm.hot,
+                   )
+        plt.xlabel(param_name1)
+        plt.ylabel(param_name2)
+        plt.colorbar()
+        plt.xticks(np.arange(len(param_array1_set)), param_array1_set)
+        plt.yticks(np.arange(len(param_array2_set)), param_array2_set,
+                   rotation=45)
+        plt.title('Validation metric')
+        plt.savefig(
+            output_file_name + "heat_map-" + param_name1 + "-" + param_name2 + ".png",
+            transparent=True)
+        plt.close()
+
+
 
 
 class CustomRandint:
@@ -83,221 +408,22 @@ class CustomRandint:
         return self.randint.b - self.randint.a
 
 
-def compute_possible_combinations(params_dict):
-    n_possibs = np.ones(len(params_dict)) * np.inf
-    for value_index, value in enumerate(params_dict.values()):
-        if type(value) == list:
-            n_possibs[value_index] = len(value)
-        elif isinstance(value, CustomRandint):
-            n_possibs[value_index] = value.get_nb_possibilities()
-    return np.prod(n_possibs)
+class CustomUniform:
+    """Used as a distribution returning a float between loc and loc + scale..
+        It can be used with a multiplier agrument to be able to perform more complex generation
+        for example 10 e -(float)"""
 
+    def __init__(self, loc=0, state=1, multiplier=""):
+        self.uniform = uniform(loc, state)
+        self.multiplier = multiplier
 
-def get_test_folds_preds(X, y, cv, estimator, framework,
-                         available_indices=None):
-    test_folds_prediction = []
-    if framework == "monoview":
-        folds = cv.split(np.arange(len(y)), y)
-    if framework == "multiview":
-        folds = cv.split(available_indices, y[available_indices])
-    fold_lengths = np.zeros(cv.n_splits, dtype=int)
-    for fold_idx, (train_indices, test_indices) in enumerate(folds):
-        fold_lengths[fold_idx] = len(test_indices)
-        if framework == "monoview":
-            estimator.fit(X[train_indices], y[train_indices])
-            test_folds_prediction.append(estimator.predict(X[train_indices]))
-        if framework == "multiview":
-            estimator.fit(X, y, available_indices[train_indices])
-            test_folds_prediction.append(
-                estimator.predict(X, available_indices[test_indices]))
-    min_fold_length = fold_lengths.min()
-    test_folds_prediction = np.array(
-        [test_fold_prediction[:min_fold_length] for test_fold_prediction in
-         test_folds_prediction])
-    return test_folds_prediction
-
-
-def randomized_search(X, y, framework, random_state, output_file_name,
-                      classifier_module,
-                      classifier_name, folds=4, nb_cores=1,
-                      metric=["accuracy_score", None],
-                      n_iter=30, classifier_kwargs=None, learning_indices=None,
-                      view_indices=None,
-                      equivalent_draws=True):
-    estimator = getattr(classifier_module, classifier_name)(
-        random_state=random_state,
-        **classifier_kwargs)
-    params_dict = estimator.gen_distribs()
-    estimator = get_mc_estim(estimator, random_state,
-                             multiview=(framework == "multiview"),
-                             y=y)
-    if params_dict:
-        metric_module = getattr(metrics, metric[0])
-        if metric[1] is not None:
-            metric_kargs = dict((index, metricConfig) for index, metricConfig in
-                                enumerate(metric[1]))
+    def rvs(self, random_state=None):
+        unif = self.uniform.rvs(random_state=random_state)
+        if self.multiplier == 'e-':
+            return 10 ** -unif
         else:
-            metric_kargs = {}
+            return unif
 
-        scorer = metric_module.get_scorer(**metric_kargs)
-        nb_possible_combinations = compute_possible_combinations(params_dict)
-        n_iter_real = min(n_iter, nb_possible_combinations)
-
-        random_search = MultiviewCompatibleRandomizedSearchCV(estimator,
-                                                              n_iter=int(
-                                                                  n_iter_real),
-                                                              param_distributions=params_dict,
-                                                              refit=True,
-                                                              n_jobs=nb_cores,
-                                                              scoring=scorer,
-                                                              cv=folds,
-                                                              random_state=random_state,
-                                                              learning_indices=learning_indices,
-                                                              view_indices=view_indices,
-                                                              framework=framework,
-                                                              equivalent_draws=equivalent_draws)
-        random_search.fit(X, y)
-        best_params = random_search.best_params_
-        if "random_state" in best_params:
-            best_params.pop("random_state")
-
-        scores_array = random_search.cv_results_['mean_test_score']
-        sorted_indices = np.argsort(-scores_array)
-        params = [random_search.cv_results_["params"][score_index]
-                  for score_index in sorted_indices]
-        scores_array = scores_array[sorted_indices]
-        # gen_heat_maps(params, scores_array, output_file_name)
-        best_estimator = random_search.best_estimator_
-    else:
-        best_estimator = estimator
-        best_params = {}
-        scores_array = {}
-        params = {}
-    test_folds_preds = get_test_folds_preds(X, y, folds, best_estimator,
-                                          framework, learning_indices)
-    return best_params, test_folds_preds, scores_array, params
-
-
-from sklearn.base import clone
-
-
-class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
-
-    def __init__(self, estimator, param_distributions, n_iter=10,
-                 refit=True, n_jobs=1, scoring=None, cv=None,
-                 random_state=None, learning_indices=None, view_indices=None,
-                 framework="monoview",
-                 equivalent_draws=True):
-        super(MultiviewCompatibleRandomizedSearchCV, self).__init__(estimator,
-                                                                    n_iter=n_iter,
-                                                                    param_distributions=param_distributions,
-                                                                    refit=refit,
-                                                                    n_jobs=n_jobs,
-                                                                    scoring=scoring,
-                                                                    cv=cv,
-                                                                    random_state=random_state)
-        self.framework = framework
-        self.available_indices = learning_indices
-        self.view_indices = view_indices
-        self.equivalent_draws = equivalent_draws
-
-    def fit(self, X, y=None, groups=None, **fit_params):
-        if self.framework == "monoview":
-            return super(MultiviewCompatibleRandomizedSearchCV, self).fit(X,
-                                                                          y=y,
-                                                                          groups=groups,
-                                                                          **fit_params)
-        elif self.framework == "multiview":
-            return self.fit_multiview(X, y=y, groups=groups, **fit_params)
-
-    def fit_multiview(self, X, y=None, groups=None, track_tracebacks=True,
-                      **fit_params):
-        n_splits = self.cv.get_n_splits(self.available_indices,
-                                        y[self.available_indices])
-        folds = list(
-            self.cv.split(self.available_indices, y[self.available_indices]))
-        if self.equivalent_draws:
-            self.n_iter = self.n_iter * X.nb_view
-        # Fix to allow sklearn > 0.19
-        from sklearn.model_selection import ParameterSampler
-        candidate_params = list(
-            ParameterSampler(self.param_distributions, self.n_iter,
-                             random_state=self.random_state))
-        base_estimator = clone(self.estimator)
-        results = {}
-        self.cv_results_ = dict(("param_" + param_name, []) for param_name in
-                                candidate_params[0].keys())
-        self.cv_results_["mean_test_score"] = []
-        self.cv_results_["params"]=[]
-        n_failed = 0
-        tracebacks = []
-        for candidate_param_idx, candidate_param in enumerate(candidate_params):
-            test_scores = np.zeros(n_splits) + 1000
-            try:
-                for fold_idx, (train_indices, test_indices) in enumerate(folds):
-                    current_estimator = clone(base_estimator)
-                    current_estimator.set_params(**candidate_param)
-                    current_estimator.fit(X, y,
-                                          train_indices=self.available_indices[
-                                              train_indices],
-                                          view_indices=self.view_indices)
-                    test_prediction = current_estimator.predict(
-                        X,
-                        self.available_indices[test_indices],
-                        view_indices=self.view_indices)
-                    test_score = self.scoring._score_func(
-                        y[self.available_indices[test_indices]],
-                        test_prediction,
-                        **self.scoring._kwargs)
-                    test_scores[fold_idx] = test_score
-                self.cv_results_['params'].append(current_estimator.get_params())
-                cross_validation_score = np.mean(test_scores)
-                self.cv_results_["mean_test_score"].append(
-                    cross_validation_score)
-                results[candidate_param_idx] = cross_validation_score
-                if cross_validation_score >= max(results.values()):
-                    self.best_params_ = candidate_params[candidate_param_idx]
-                    self.best_score_ = cross_validation_score
-            except:
-                if track_tracebacks:
-                    n_failed += 1
-                    tracebacks.append(traceback.format_exc())
-                else:
-                    raise
-        if n_failed == self.n_iter:
-            raise ValueError(
-                'No fits were performed. All HP combination returned errors \n\n' + '\n'.join(
-                    tracebacks))
-        self.cv_results_["mean_test_score"] = np.array(self.cv_results_["mean_test_score"])
-        if self.refit:
-            self.best_estimator_ = clone(base_estimator).set_params(
-                **self.best_params_)
-            self.best_estimator_.fit(X, y, **fit_params)
-        self.n_splits_ = n_splits
-        return self
-
-    def get_test_folds_preds(self, X, y, estimator):
-        test_folds_prediction = []
-        if self.framework == "monoview":
-            folds = self.cv.split(np.arange(len(y)), y)
-        if self.framework == "multiview":
-            folds = self.cv.split(self.available_indices, y)
-        fold_lengths = np.zeros(self.cv.n_splits, dtype=int)
-        for fold_idx, (train_indices, test_indices) in enumerate(folds):
-            fold_lengths[fold_idx] = len(test_indices)
-            if self.framework == "monoview":
-                estimator.fit(X[train_indices], y[train_indices])
-                test_folds_prediction.append(
-                    estimator.predict(X[train_indices]))
-            if self.framework == "multiview":
-                estimator.fit(X, y, self.available_indices[train_indices])
-                test_folds_prediction.append(
-                    estimator.predict(X, self.available_indices[test_indices]))
-        min_fold_length = fold_lengths.min()
-        test_folds_prediction = np.array(
-            [test_fold_prediction[:min_fold_length] for test_fold_prediction in
-             test_folds_prediction])
-        return test_folds_prediction
 
 
 # def randomized_search_(dataset_var, labels, classifier_package, classifier_name,
@@ -369,70 +495,39 @@ class MultiviewCompatibleRandomizedSearchCV(RandomizedSearchCV):
 #
 #     return classifier
 
-
-def spear_mint(dataset, classifier_name, views_indices=None, k_folds=None,
-               n_iter=1,
-               **kwargs):
-    """Used to perform spearmint on the classifiers to optimize hyper parameters,
-    longer than randomsearch (can't be parallelized)"""
-    pass
-
-
-def gen_heat_maps(params, scores_array, output_file_name):
-    """Used to generate a heat map for each doublet of hyperparms
-    optimized on the previous function"""
-    nb_params = len(params)
-    if nb_params > 2:
-        combinations = itertools.combinations(range(nb_params), 2)
-    elif nb_params == 2:
-        combinations = [(0, 1)]
-    else:
-        combinations = [()]
-    for combination in combinations:
-        if combination:
-            param_name1, param_array1 = params[combination[0]]
-            param_name2, param_array2 = params[combination[1]]
-        else:
-            param_name1, param_array1 = params[0]
-            param_name2, param_array2 = ("Control", np.array([0]))
-
-        param_array1_set = np.sort(np.array(list(set(param_array1))))
-        param_array2_set = np.sort(np.array(list(set(param_array2))))
-
-        scores_matrix = np.zeros(
-            (len(param_array2_set), len(param_array1_set))) - 0.1
-        for param1, param2, score in zip(param_array1, param_array2,
-                                         scores_array):
-            param1_index, = np.where(param_array1_set == param1)
-            param2_index, = np.where(param_array2_set == param2)
-            scores_matrix[int(param2_index), int(param1_index)] = score
-
-        plt.figure(figsize=(8, 6))
-        plt.subplots_adjust(left=.2, right=0.95, bottom=0.15, top=0.95)
-        plt.imshow(scores_matrix, interpolation='nearest', cmap=plt.cm.hot,
-                   )
-        plt.xlabel(param_name1)
-        plt.ylabel(param_name2)
-        plt.colorbar()
-        plt.xticks(np.arange(len(param_array1_set)), param_array1_set)
-        plt.yticks(np.arange(len(param_array2_set)), param_array2_set,
-                   rotation=45)
-        plt.title('Validation metric')
-        plt.savefig(
-            output_file_name + "heat_map-" + param_name1 + "-" + param_name2 + ".png",
-            transparent=True)
-        plt.close()
+#
+# def compute_possible_combinations(params_dict):
+#     n_possibs = np.ones(len(params_dict)) * np.inf
+#     for value_index, value in enumerate(params_dict.values()):
+#         if type(value) == list:
+#             n_possibs[value_index] = len(value)
+#         elif isinstance(value, CustomRandint):
+#             n_possibs[value_index] = value.get_nb_possibilities()
+#     return np.prod(n_possibs)
 
 
-def gen_report(params, scores_array, output_file_name):
-    output_string = ""
-    for parameters, score in zip(params, scores_array):
-        if "random_state" in parameters:
-            parameters.pop("random_state")
-        output_string+="\n{}\t\t{}".format(parameters, score)
-    secure_file_path(output_file_name + "hps_report.txt")
-    with open(output_file_name+"hps_report.txt", "w") as output_file:
-        output_file.write(output_string)
+# def get_test_folds_preds(X, y, cv, estimator, framework,
+#                          available_indices=None):
+#     test_folds_prediction = []
+#     if framework == "monoview":
+#         folds = cv.split(np.arange(len(y)), y)
+#     if framework == "multiview":
+#         folds = cv.split(available_indices, y[available_indices])
+#     fold_lengths = np.zeros(cv.n_splits, dtype=int)
+#     for fold_idx, (train_indices, test_indices) in enumerate(folds):
+#         fold_lengths[fold_idx] = len(test_indices)
+#         if framework == "monoview":
+#             estimator.fit(X[train_indices], y[train_indices])
+#             test_folds_prediction.append(estimator.predict(X[train_indices]))
+#         if framework == "multiview":
+#             estimator.fit(X, y, available_indices[train_indices])
+#             test_folds_prediction.append(
+#                 estimator.predict(X, available_indices[test_indices]))
+#     min_fold_length = fold_lengths.min()
+#     test_folds_prediction = np.array(
+#         [test_fold_prediction[:min_fold_length] for test_fold_prediction in
+#          test_folds_prediction])
+#     return test_folds_prediction
 
 
 # nohup python ~/dev/git/spearmint/spearmint/main.py . &

@@ -54,7 +54,7 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
                   k_folds, nb_cores, databaseType, path,
                   random_state, hyper_param_search="randomized_search",
                   metrics=[["accuracy_score", None]], n_iter=30, view_name="",
-                  **args):
+                  hps_kwargs={}, **args):
     logging.debug("Start:\t Loading data")
     kwargs, \
     t_start, \
@@ -65,7 +65,7 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
     labelsString, \
     output_file_name = init_constants(args, X, classification_indices,
                                       labels_names,
-                                      database_name, directory, view_name)
+                                      database_name, directory, view_name, )
     logging.debug("Done:\t Loading data")
 
     logging.debug(
@@ -89,12 +89,13 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
     classifier_module = getattr(monoview_classifiers, classifier_name)
     classifier_class_name = classifier_module.classifier_class_name
     hyper_param_beg = time.monotonic()
-    cl_kwargs, test_folds_preds = get_hyper_params(classifier_module, hyper_param_search,
-                                                   n_iter, classifier_name,
+    cl_kwargs = get_hyper_params(classifier_module, hyper_param_search,
+                                                   classifier_name,
                                                    classifier_class_name,
                                                    X_train, y_train,
                                                    random_state, output_file_name,
-                                                   k_folds, nb_cores, metrics, kwargs)
+                                                   k_folds, nb_cores, metrics, kwargs,
+                                 **hps_kwargs)
     hyper_param_duration = time.monotonic() - hyper_param_beg
     logging.debug("Done:\t Generate classifier args")
 
@@ -156,11 +157,9 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
     logging.info("Done:\t Saving results")
 
     view_index = args["view_index"]
-    if test_folds_preds is None:
-        test_folds_preds = train_pred
     return MonoviewResult(view_index, classifier_name, view_name,
                           metrics_scores, full_pred, cl_kwargs,
-                          test_folds_preds, classifier, X_train.shape[1],
+                          classifier, X_train.shape[1],
                           hyper_param_duration, fit_duration, pred_duration)
 
 
@@ -192,35 +191,31 @@ def init_train_test(X, Y, classification_indices):
     return X_train, y_train, X_test, y_test
 
 
-def get_hyper_params(classifier_module, hyper_param_search, nIter, classifier_module_name,
+def get_hyper_params(classifier_module, search_method, classifier_module_name,
                      classifier_class_name, X_train, y_train,
                      random_state,
-                     output_file_name, k_folds, nb_cores, metrics, kwargs):
-    if hyper_param_search != "None":
+                     output_file_name, k_folds, nb_cores, metrics, kwargs,
+                     **hps_kwargs):
+    if search_method != "None":
         logging.debug(
-            "Start:\t " + hyper_param_search + " best settings with " + str(
-                nIter) + " iterations for " + classifier_module_name)
-        classifier_hp_search = getattr(hyper_parameter_search,
-                                       hyper_param_search.split("-")[0])
-        cl_kwargs, test_folds_preds, scores, params = classifier_hp_search(X_train, y_train,
-                                                           "monoview",
-                                                           random_state,
-                                                           output_file_name,
-                                                           classifier_module,
-                                                           classifier_class_name,
-                                                           folds=k_folds,
-                                                           nb_cores=nb_cores,
-                                                           metric=metrics[0],
-                                                           n_iter=nIter,
-                                                           classifier_kwargs=
-                                                           kwargs[
-                                                               classifier_module_name])
-        hyper_parameter_search.gen_report(params, scores, output_file_name)
-        logging.debug("Done:\t " + hyper_param_search + " best settings")
+            "Start:\t " + search_method + " best settings for " + classifier_module_name)
+        classifier_hp_search = getattr(hyper_parameter_search, search_method)
+        estimator = getattr(classifier_module, classifier_class_name)(
+                    random_state=random_state,
+                    **kwargs[classifier_module_name])
+        estimator = get_mc_estim(estimator, random_state,
+                                 multiview=False, y=y_train)
+        hps = classifier_hp_search(estimator, scoring=metrics, cv=k_folds,
+                                   random_state=random_state,
+                                   framework="monoview", n_jobs=nb_cores,
+                                   **hps_kwargs)
+        hps.fit(X_train, y_train, **kwargs[classifier_module_name])
+        cl_kwargs = hps.get_best_params()
+        hps.gen_report(output_file_name)
+        logging.debug("Done:\t " + search_method + " best settings")
     else:
         cl_kwargs = kwargs[classifier_module_name]
-        test_folds_preds = None
-    return cl_kwargs, test_folds_preds
+    return cl_kwargs
 
 
 def save_results(string_analysis, output_file_name, full_labels_pred,

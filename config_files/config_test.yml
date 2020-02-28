@@ -21,14 +21,28 @@ split: 0.49
 nb_folds: 2
 nb_class: 2
 classes:
-type: ["multiview","monoview"]
+type: ["multiview", "monoview"]
 algos_monoview: ["decision_tree" ]
 algos_multiview: ["weighted_linear_early_fusion",]
 stats_iter: 2
 metrics: ["accuracy_score", "f1_score"]
 metric_princ: "accuracy_score"
-hps_type: "randomized_search-equiv"
-hps_iter: 10
+hps_type: "Random"
+hps_args:
+  n_iter: 4
+  equivalent_draws: False
+  weighted_linear_early_fusion:
+    view_weights: [null]
+    monoview_classifier_name: ["decision_tree"]
+    monoview_classifier_config:
+      - decision_tree:
+          max_depth: 1
+          criterion: "gini"
+          splitter: "best"
+      - decision_tree:
+          max_depth: 2
+          criterion: "gini"
+          splitter: "best"
 
 
 ######################################

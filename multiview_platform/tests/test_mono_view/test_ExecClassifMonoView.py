@@ -105,8 +105,7 @@ class Test_getHPs(unittest.TestCase):
         rm_tmp()
         os.mkdir(tmp_path)
         cls.classifierModule = decision_tree
-        cls.hyper_param_search = "randomized_search"
-        cls.n_iter = 2
+        cls.hyper_param_search = "Random"
         cls.classifier_name = "decision_tree"
         cls.random_state = np.random.RandomState(42)
         cls.X = cls.random_state.randint(0,10,size=(10,5))
@@ -119,6 +118,7 @@ class Test_getHPs(unittest.TestCase):
                       "criterion": "gini",
                       "splitter": "best"}}
         cls.classifier_class_name = "DecisionTree"
+        cls.hps_kwargs = {"n_iter": 2}
 
     @classmethod
     def tearDownClass(cls):
@@ -130,7 +130,6 @@ class Test_getHPs(unittest.TestCase):
     def test_simple(self):
         kwargs = exec_classif_mono_view.get_hyper_params(self.classifierModule,
                                                          self.hyper_param_search,
-                                                         self.n_iter,
                                                          self.classifier_name,
                                                          self.classifier_class_name,
                                                          self.X,
@@ -140,7 +139,8 @@ class Test_getHPs(unittest.TestCase):
                                                          self.cv,
                                                          self.nb_cores,
                                                          self.metrics,
-                                                         self.kwargs)
+                                                         self.kwargs,
+                                                         **self.hps_kwargs)
 
 # class Test_getKWARGS(unittest.TestCase):
 #

@@ -36,7 +36,7 @@ def pass_default_config(log=True,
                         add_noise=False,
                         noise_std=0.0,
                         res_dir="../results/",
-                        track_tracebacks=False,
+                        track_tracebacks=True,
                         split=0.49,
                         nb_folds=5,
                         nb_class=None,
@@ -46,9 +46,11 @@ def pass_default_config(log=True,
                         algos_multiview=["svm_jumbo_fusion", ],
                         stats_iter=2,
                         metrics=["accuracy_score", "f1_score"],
-                        metric_princ="f1_score",
-                        hps_type="randomized_search",
-                        hps_iter=1, **kwargs):
+                        metric_princ="accuracy_score",
+                        hps_type="Random",
+                        hps_iter=1,
+                        hps_kwargs={'n_iter':10, "equivalent_draws":True},
+                        **kwargs):
     """
 
     :param log:
