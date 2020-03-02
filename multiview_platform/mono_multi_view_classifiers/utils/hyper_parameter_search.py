@@ -191,7 +191,7 @@ class Random(RandomizedSearchCV, HPSearch):
 
 class Grid(GridSearchCV, HPSearch):
 
-    def __init__(self, estimator, param_grid={}, refit=True, n_jobs=1, scoring=None, cv=None,
+    def __init__(self, estimator, param_grid={}, refit=False, n_jobs=1, scoring=None, cv=None,
                  learning_indices=None, view_indices=None, framework="monoview",
                  random_state=None, track_tracebacks=True):
         scoring = HPSearch.get_scoring(self, scoring)
