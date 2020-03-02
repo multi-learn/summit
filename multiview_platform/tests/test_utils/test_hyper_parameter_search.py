@@ -49,7 +49,7 @@ class FakeEstimMV(BaseEstimator):
 
 
 
-class Test_MultiviewCompatibleRandomizedSearchCV(unittest.TestCase):
+class Test_Random(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -140,6 +140,27 @@ class Test_MultiviewCompatibleRandomizedSearchCV(unittest.TestCase):
         )
         RSCV.fit(test_dataset, self.y, )
         self.assertEqual(RSCV.best_params_["param1"], "return exact")
+
+
+class Test_Grid(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.parameter_grid = {"param1":[5,6], "param2":[7,8]}
+        cls.estimator = FakeEstim()
+
+    def test_simple(self):
+        grid = hyper_parameter_search.Grid(self.estimator,
+                                           param_grid=self.parameter_grid)
+
+    def test_get_candidate_params(self):
+        grid = hyper_parameter_search.Grid(self.estimator,
+                                           param_grid=self.parameter_grid)
+        grid.get_candidate_params(None)
+        self.assertEqual(grid.candidate_params, [{"param1": 5, "param2": 7},
+                                                 {"param1": 5, "param2": 8},
+                                                 {"param1": 6, "param2": 7},
+                                                 {"param1": 6, "param2": 8}])
 
 
 # if __name__ == '__main__':
