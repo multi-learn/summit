@@ -137,11 +137,15 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
             nb_clfs = nb_monoview_per_view
         else:
             nb_clfs = nb_view
+
         if isinstance(self.classifiers_names, ClassifierDistribution):
             self.classifiers_names = self.classifiers_names.draw(nb_clfs,
                                                                  self.rs)
         elif self.classifiers_names is None:
             self.classifiers_names = ["decision_tree" for _ in range(nb_clfs)]
+        elif isinstance(self.classifiers_names, str):
+            self.classifiers_names = [self.classifiers_names
+                                      for _ in range(nb_clfs)]
 
         if isinstance(self.classifier_configs, ConfigDistribution):
             self.classifier_configs = self.classifier_configs.draw(nb_clfs,
