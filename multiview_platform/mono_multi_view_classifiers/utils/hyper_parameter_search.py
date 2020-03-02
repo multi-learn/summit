@@ -65,7 +65,8 @@ class HPSearch:
         self.cv_results_["mean_test_score"] = []
         self.cv_results_["params"] = []
         n_failed = 0
-        tracebacks = []
+        self.tracebacks = []
+        self.tracebacks_params = []
         for candidate_param_idx, candidate_param in enumerate(self.candidate_params):
             test_scores = np.zeros(n_splits) + 1000
             try:
@@ -97,13 +98,14 @@ class HPSearch:
             except:
                 if self.track_tracebacks:
                     n_failed += 1
-                    tracebacks.append(traceback.format_exc())
+                    self.tracebacks.append(traceback.format_exc())
+                    self.tracebacks_params.append(candidate_param)
                 else:
                     raise
         if n_failed == self.n_iter:
             raise ValueError(
                 'No fits were performed. All HP combination returned errors \n\n' + '\n'.join(
-                    tracebacks))
+                    self.tracebacks))
         self.cv_results_["mean_test_score"] = np.array(
             self.cv_results_["mean_test_score"])
         if self.refit:
@@ -134,6 +136,10 @@ class HPSearch:
             if "random_state" in parameters:
                 parameters.pop("random_state")
             output_string += "\n{}\t\t{}".format(parameters, score)
+        if self.tracebacks:
+            output_string += "Failed : \n\n\n"
+            for traceback, params in zip(self.tracebacks, self.tracebacks_params):
+                output_string+= '{}\n\n{}\n'.format(params, traceback)
         secure_file_path(output_file_name + "hps_report.txt")
         with open(output_file_name + "hps_report.txt", "w") as output_file:
             output_file.write(output_string)
