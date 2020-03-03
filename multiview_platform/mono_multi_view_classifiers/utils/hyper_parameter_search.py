@@ -222,6 +222,23 @@ class Grid(GridSearchCV, HPSearch):
         self.n_iter = len(self.candidate_params)
 
 
+# class ParameterSamplerGrid:
+#
+#     def __init__(self, param_distributions, n_iter):
+#         from math import floor
+#         n_points_per_param = int(n_iter **(1/len(param_distributions)))
+#         selected_params = dict((param_name, [])
+#                                for param_name in param_distributions.keys())
+#         for param_name, distribution in param_distributions.items():
+#             if isinstance(distribution, list):
+#                 if len(distribution)<n_points_per_param:
+#                     selected_params[param_name] = distribution
+#                 else:
+#                     index_step = floor(len(distribution)/n_points_per_param-2)
+#                     selected_params[param_name] = distribution[0]+[distribution[index*index_step+1]
+#                                                    for index
+#                                                    in range(n_points_per_param)]
+
 
 
 
