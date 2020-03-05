@@ -13,7 +13,7 @@ debug: True
 add_noise: False
 noise_std: 0.0
 res_dir: "../results/"
-track_tracebacks: False
+track_tracebacks: True
 
 # All the classification-realted configuration options
 multiclass_method: "oneVersusOne"

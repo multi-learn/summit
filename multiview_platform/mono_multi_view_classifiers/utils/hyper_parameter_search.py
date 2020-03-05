@@ -65,7 +65,6 @@ class HPSearch:
         self.cv_results_["mean_test_score"] = []
         self.cv_results_["params"] = []
         n_failed = 0
-        self.tracebacks = []
         self.tracebacks_params = []
         for candidate_param_idx, candidate_param in enumerate(self.candidate_params):
             test_scores = np.zeros(n_splits) + 1000
@@ -164,6 +163,7 @@ class Random(RandomizedSearchCV, HPSearch):
         self.view_indices = view_indices
         self.equivalent_draws = equivalent_draws
         self.track_tracebacks = track_tracebacks
+        self.tracebacks=[]
 
     def get_param_distribs(self, estimator):
         if isinstance(estimator, MultiClassWrapper):
@@ -208,6 +208,7 @@ class Grid(GridSearchCV, HPSearch):
         self.available_indices = learning_indices
         self.view_indices = view_indices
         self.track_tracebacks = track_tracebacks
+        self.tracebacks = []
 
     def fit(self, X, y=None, groups=None, **fit_params):
         if self.framework == "monoview":
