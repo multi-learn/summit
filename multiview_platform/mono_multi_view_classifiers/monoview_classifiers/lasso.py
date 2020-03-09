@@ -72,20 +72,3 @@ class Lasso(LassoSK, BaseMonoviewClassifier):
         signed = np.sign(prediction)
         signed[np.where(signed == -1)] = 0
         return signed
-
-    def get_interpretation(self, directory, y_test, multiclass=False):
-        """
-        return the interpreted string
-
-        Parameters
-        ----------
-        directory :
-
-        y_test : 
-
-        Returns
-        -------
-        interpreted string, str interpret_string
-        """
-        interpret_string = ""
-        return interpret_string

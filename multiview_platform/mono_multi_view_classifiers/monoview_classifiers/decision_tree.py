@@ -27,9 +27,10 @@ class DecisionTree(DecisionTreeClassifier, BaseMonoviewClassifier):
                          ["best", "random"], [random_state]]
         self.weird_strings = {}
 
-    def get_interpretation(self, directory, y_test):
+    def get_interpretation(self, directory, base_file_name, y_test,
+                           multiclass=False):
         interpretString = "First featrue : \n\t{} <= {}\n".format(
             self.tree_.feature[0],
             self.tree_.threshold[0])
-        interpretString += self.get_feature_importance(directory)
+        interpretString += self.get_feature_importance(directory, base_file_name)
         return interpretString

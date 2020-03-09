@@ -63,10 +63,12 @@ def init_constants(kwargs, classification_indices, metrics,
         logging.info("Info:\t Shape of " + str(view_name) + " :" + str(
             dataset_var.get_shape()))
     labels = dataset_var.get_labels()
-    output_file_name = os.path.join(directory, classifier_name,
-                                    classifier_name+"-"+dataset_var.get_name()+"-")
+    directory = os.path.join(directory, classifier_name)
+    base_file_name = classifier_name+"-"+dataset_var.get_name()+"-"
+    output_file_name = os.path.join(directory, base_file_name)
     return classifier_name, t_start, views_indices, \
-           classifier_config, views, learning_rate, labels, output_file_name
+           classifier_config, views, learning_rate, labels, output_file_name,\
+           directory, base_file_name
 
 
 def save_results(string_analysis, images_analysis, output_file_name):
@@ -239,7 +241,9 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     views, \
     learning_rate, \
     labels, \
-    output_file_name = init_constants(kwargs, classification_indices, metrics, name,
+    output_file_name,\
+    directory,\
+    base_file_name = init_constants(kwargs, classification_indices, metrics, name,
                             nb_cores, k_folds, dataset_var, directory)
     logging.debug("Done:\t Initialize constants")
 
@@ -330,7 +334,8 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
                                               class_label_names=list(labels_dictionary.values()),
                                               train_pred=train_pred,
                                               test_pred=test_pred,
-                                              output_file_name=output_file_name,
+                                              directory=directory,
+                                              base_file_name=base_file_name,
                                               labels=labels,
                                               database_name=dataset_var.get_name(),
                                               nb_cores=nb_cores,

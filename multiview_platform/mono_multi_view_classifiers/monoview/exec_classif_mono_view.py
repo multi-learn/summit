@@ -63,7 +63,9 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
     X, \
     learningRate, \
     labelsString, \
-    output_file_name = init_constants(args, X, classification_indices,
+    output_file_name,\
+    directory,\
+    base_file_name = init_constants(args, X, classification_indices,
                                       labels_names,
                                       database_name, directory, view_name, )
     logging.debug("Done:\t Loading data")
@@ -143,7 +145,8 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
                                              class_label_names=labels_names,
                                              train_pred=train_pred,
                                              test_pred=test_pred,
-                                             directory=output_file_name,
+                                             directory=directory,
+                                             base_file_name=base_file_name,
                                              labels=Y,
                                              database_name=database_name,
                                              nb_cores=nb_cores,
@@ -175,11 +178,11 @@ def init_constants(args, X, classification_indices, labels_names,
             len(classification_indices[0]) + len(classification_indices[1]))
     labels_string = "-".join(labels_names)
     cl_type_string = cl_type
-    output_file_name = os.path.join(directory, cl_type_string, view_name,
-                                    cl_type_string + '-' + name + "-" +
-                                    view_name + "-")
+    directory = os.path.join(directory, cl_type_string, view_name,)
+    base_file_name = cl_type_string + '-' + name + "-" + view_name + "-"
+    output_file_name = os.path.join(directory, base_file_name)
     secure_file_path(output_file_name)
-    return kwargs, t_start, view_name, cl_type, X, learning_rate, labels_string, output_file_name
+    return kwargs, t_start, view_name, cl_type, X, learning_rate, labels_string, output_file_name, directory, base_file_name
 
 
 def init_train_test(X, Y, classification_indices):

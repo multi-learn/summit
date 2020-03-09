@@ -1,4 +1,5 @@
 import time
+import os
 
 import numpy as np
 from sklearn.ensemble import AdaBoostClassifier
@@ -129,9 +130,9 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
                 [step_pred for step_pred in self.staged_predict(X)])
         return pred
 
-    def get_interpretation(self, directory, y_test, multi_class=False):
+    def get_interpretation(self, directory, base_file_name, y_test, multi_class=False):
         interpretString = ""
-        interpretString += self.get_feature_importance(directory)
+        interpretString += self.get_feature_importance(directory, base_file_name)
         interpretString += "\n\n Estimator error | Estimator weight\n"
         interpretString += "\n".join(
             [str(error) + " | " + str(weight / sum(self.estimator_weights_)) for
@@ -141,11 +142,13 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
             [self.plotted_metric.score(y_test, step_pred) for step_pred in
              self.step_predictions])
         get_accuracy_graph(step_test_metrics, "Adaboost",
-                           directory + "test_metrics.png",
+                           os.path.join(directory, base_file_name +"test_metrics.png"),
                            self.plotted_metric_name, set="test")
-        np.savetxt(directory + "test_metrics.csv", step_test_metrics,
+        np.savetxt(os.path.join(directory, base_file_name + "test_metrics.csv"),
+                   step_test_metrics,
                    delimiter=',')
-        np.savetxt(directory + "train_metrics.csv", self.metrics, delimiter=',')
-        np.savetxt(directory + "times.csv",
+        np.savetxt(os.path.join(directory, base_file_name + "train_metrics.csv"),
+                   self.metrics, delimiter=',')
+        np.savetxt(os.path.join(directory, base_file_name + "times.csv"),
                    np.array([self.train_time, self.pred_time]), delimiter=',')
         return interpretString

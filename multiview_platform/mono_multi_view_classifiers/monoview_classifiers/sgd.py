@@ -54,20 +54,3 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
                          ["l1", "l2", "elasticnet"],
                          CustomUniform(loc=0, state=1), [random_state]]
         self.weird_strings = {}
-
-    def get_interpretation(self, directory, y_test, multiclass=False):
-        """
-
-        Parameters
-        ----------
-        directory
-
-        y_test
-
-        Returns
-        -------
-        interpret_string str to interpreted
-        """
-        interpret_string = ""
-        # self.feature_importances_ = (self.coef_/np.sum(self.coef_)).reshape(self.coef_.shape[1])
-        return interpret_string

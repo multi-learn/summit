@@ -166,7 +166,7 @@ class MultiClassWrapper:
     def get_config(self):
         return self.estimator.get_config()
 
-    def get_interpretation(self, output_file_name=None, y_test=None):
+    def get_interpretation(self, directory, base_file_name, y_test=None):
         # return self.estimator.get_interpretation(output_file_name, y_test,
         #                                     multi_class=True)
         # TODO : Multiclass interpretation

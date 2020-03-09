@@ -41,6 +41,7 @@ class Test_ResultAnalyzer(unittest.TestCase):
         cls.test_pred = np.random.randint(0, cls.n_classes,
                                           size=cls.test_length)
         cls.directory = "fake_directory"
+        cls.base_file_name = "fake_file"
         cls.labels = np.random.randint(0, cls.n_classes,
                                            size=cls.n_examples)
         cls.database_name = "test_database"
@@ -60,8 +61,9 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                  self.k_folds, self.hps_method, self.metrics_list,
                                  self.n_iter, self.class_label_names,
                                  self.train_pred, self.test_pred, self.directory,
-                                 self.labels, self.database_name,
-                                 self.nb_cores, self.duration)
+                                 self.base_file_name, self.labels,
+                                 self.database_name, self.nb_cores,
+                                 self.duration)
 
     def test_get_metric_scores(self):
         RA = base.ResultAnalyser(self.classifier, self.classification_indices,
@@ -69,7 +71,7 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                  self.metrics_list,
                                  self.n_iter, self.class_label_names,
                                  self.train_pred, self.test_pred,
-                                 self.directory,
+                                 self.directory, self.base_file_name,
                                  self.labels, self.database_name,
                                  self.nb_cores, self.duration)
         train_score, test_score = RA.get_metric_scores("accuracy_score", {})
@@ -82,7 +84,7 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                  self.metrics_list,
                                  self.n_iter, self.class_label_names,
                                  self.train_pred, self.test_pred,
-                                 self.directory,
+                                 self.directory, self.base_file_name,
                                  self.labels, self.database_name,
                                  self.nb_cores, self.duration)
         RA.get_all_metrics_scores()

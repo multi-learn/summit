@@ -34,8 +34,3 @@ class SVMLinear(SVCClassifier, BaseMonoviewClassifier):
                                )
         self.param_names = ["C", "random_state"]
         self.distribs = [CustomUniform(loc=0, state=1), [random_state]]
-
-    def get_interpretation(self, directory, y_test):
-        interpret_string = ""
-        # self.feature_importances_ = (self.coef_/np.sum(self.coef_)).reshape((self.coef_.shape[1],))
-        return interpret_string

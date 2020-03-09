@@ -96,7 +96,8 @@ class BaseClassifier(BaseEstimator, ):
         else:
             return str(self.get_params()[param_name])
 
-    def get_interpretation(self, directory, y_test, multi_class=False):
+    def get_interpretation(self, directory, base_file_name, y_test,
+                           multi_class=False):
         """
         Base method that returns an empty string if there is not interpretation
         method in the classifier's module
@@ -160,8 +161,8 @@ class ResultAnalyser():
 
     def __init__(self, classifier, classification_indices, k_folds,
                  hps_method, metrics_list, n_iter, class_label_names,
-                 train_pred, test_pred, directory, labels, database_name,
-                 nb_cores, duration):
+                 train_pred, test_pred, directory, base_file_name, labels,
+                 database_name, nb_cores, duration):
         """
 
         Parameters
@@ -204,6 +205,7 @@ class ResultAnalyser():
         self.train_pred = train_pred
         self.test_pred = test_pred
         self.directory = directory
+        self.base_file_name = base_file_name
         self.labels = labels
         self.string_analysis = ""
         self.database_name = database_name
@@ -336,7 +338,7 @@ class ResultAnalyser():
         string_analysis += "\n\n Classification took {}".format(hms(seconds=int(self.duration)))
         string_analysis += "\n\n Classifier Interpretation : \n"
         string_analysis += self.classifier.get_interpretation(
-            self.directory,
+            self.directory, self.base_file_name,
             self.labels[self.test_indices])
         image_analysis = {}
         return string_analysis, image_analysis, self.metric_scores

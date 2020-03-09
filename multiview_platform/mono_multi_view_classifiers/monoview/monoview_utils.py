@@ -1,4 +1,5 @@
 import pickle
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import FuncFormatter
@@ -113,7 +114,7 @@ class CustomUniform:
 
 class BaseMonoviewClassifier(BaseClassifier):
 
-    def get_feature_importance(self, directory, nb_considered_feats=50):
+    def get_feature_importance(self, directory, base_file_name, nb_considered_feats=50):
         """Used to generate a graph and a pickle dictionary representing
         feature importances"""
         feature_importances = self.feature_importances_
@@ -127,7 +128,8 @@ class BaseMonoviewClassifier(BaseClassifier):
         ax.yaxis.set_major_formatter(formatter)
         plt.bar(x, feature_importances_sorted)
         plt.title("Importance depending on feature")
-        fig.savefig(directory + "feature_importances.png", transparent=True)
+        fig.savefig(os.path.join(directory, base_file_name + "feature_importances.png")
+                                 , transparent=True)
         plt.close()
         features_importances_dict = dict((featureIndex, featureImportance)
                                          for featureIndex, featureImportance in
@@ -207,12 +209,12 @@ class MonoviewResultAnalyzer(ResultAnalyser):
     def __init__(self, view_name, classifier_name, shape, classifier,
                  classification_indices, k_folds, hps_method, metrics_list,
                  n_iter, class_label_names, train_pred, test_pred,
-                 directory, labels, database_name, nb_cores, duration):
+                 directory, base_file_name, labels, database_name, nb_cores, duration):
         ResultAnalyser.__init__(self, classifier, classification_indices,
                                 k_folds, hps_method, metrics_list, n_iter,
                                 class_label_names, train_pred, test_pred,
-                                directory, labels, database_name, nb_cores,
-                                duration)
+                                directory, base_file_name, labels,
+                                database_name, nb_cores, duration)
         self.view_name = view_name
         self.classifier_name = classifier_name
         self.shape = shape

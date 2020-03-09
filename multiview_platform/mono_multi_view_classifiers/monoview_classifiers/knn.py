@@ -40,7 +40,3 @@ class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
                          [random_state]]
         self.weird_strings = {}
         self.random_state = random_state
-
-    def get_interpretation(self, directory, y_test, multiclass=False):
-        interpretString = ""
-        return interpretString

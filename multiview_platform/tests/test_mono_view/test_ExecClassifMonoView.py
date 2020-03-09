@@ -41,7 +41,9 @@ class Test_initConstants(unittest.TestCase):
         X, \
         learningRate, \
         labelsString, \
-        outputFileName = exec_classif_mono_view.init_constants(cls.args,
+        output_file_name,\
+        directory,\
+        base_file_name = exec_classif_mono_view.init_constants(cls.args,
                                                                cls.X,
                                                                cls.classification_indices,
                                                                cls.labels_names,
@@ -54,7 +56,7 @@ class Test_initConstants(unittest.TestCase):
         np.testing.assert_array_equal(X, cls.X_value)
         cls.assertEqual(learningRate, 0.5)
         cls.assertEqual(labelsString, "test_true-test_false")
-        # cls.assertEqual(outputFileName, "Code/tests/temp_tests/test_dir/test_clf/test_dataset/results-test_clf-test_true-test_false-learnRate0.5-test-test_dataset-")
+        # cls.assertEqual(output_file_name, "Code/tests/temp_tests/test_dir/test_clf/test_dataset/results-test_clf-test_true-test_false-learnRate0.5-test-test_dataset-")
 
     @classmethod
     def tearDownClass(cls):
