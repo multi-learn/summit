@@ -1,0 +1,340 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import pandas as pd
+import plotly
+import logging
+
+from ..utils.organization import secure_file_path
+
+def get_metrics_scores(metrics, results):
+    r"""Used to extract metrics scores in case of classification
+
+    Parameters
+    ----------
+    metrics : list of lists
+        The metrics names with configuration metrics[i][0] = name of metric i
+    results : list of MonoviewResult and MultiviewResults objects
+        A list containing all the results for all the monoview experimentations.
+
+    Returns
+    -------
+    metricsScores : dict of dict of list
+        Regroups all the scores for each metrics for each classifier and for
+        the train and test sets.
+        organized as :
+        -`metricScores[metric_name]["classifiers_names"]` is a list of all the
+        classifiers available for this metric,
+        -`metricScores[metric_name]["train_scores"]` is a list of all the
+        available classifiers scores on the train set,
+        -`metricScores[metric_name]["test_scores"]` is a list of all the
+        available classifiers scores on the test set.
+    """
+    classifier_names = []
+    classifier_names = [classifierResult.get_classifier_name()
+                        for classifierResult in results
+                        if classifierResult.get_classifier_name()
+                        not in classifier_names]
+    metrics_scores = dict((metric[0], pd.DataFrame(data=np.zeros((2,
+                                                                  len(
+                                                                      classifier_names))),
+                                                   index=["train", "test"],
+                                                   columns=classifier_names))
+                          for metric in metrics)
+
+    for metric in metrics:
+        for classifierResult in results:
+            metrics_scores[metric[0]].loc[
+                "train", classifierResult.get_classifier_name()] = \
+            classifierResult.metrics_scores[metric[0]][0]
+            metrics_scores[metric[0]].loc[
+                "test", classifierResult.get_classifier_name()] = \
+                classifierResult.metrics_scores[metric[0]][1]
+
+    return metrics_scores
+
+
+def publish_metrics_graphs(metrics_scores, directory, database_name,
+                           labels_names):
+    r"""Used to sort the results (names and both scores) in descending test
+    score order.
+
+    Parameters
+    ----------
+    metrics_scores : dict of dicts of lists or np.arrays
+        Keys : The names of the metrics.
+        Values : The scores and names of each classifier .
+    directory : str
+        The path to the directory where the figures will be saved.
+    database_name : str
+        The name of the database on which the experiments where conducted.
+    labels_names : list of strs
+        The name corresponding to each numerical label.
+
+    Returns
+    -------
+    results
+    """
+    results = []
+    for metric_name, metric_dataframe in metrics_scores.items():
+        logging.debug(
+            "Start:\t Biclass score graph generation for " + metric_name)
+        train_scores, test_scores, classifier_names, \
+        file_name, nb_results, results = init_plot(results, metric_name,
+                                                   metric_dataframe, directory,
+                                                   database_name, labels_names)
+
+        plot_metric_scores(train_scores, test_scores, classifier_names,
+                           nb_results, metric_name, file_name,
+                           tag=" " + " vs ".join(labels_names))
+        logging.debug(
+            "Done:\t Biclass score graph generation for " + metric_name)
+    return results
+
+
+def publish_all_metrics_scores(iter_results, directory,
+                               data_base_name, stats_iter,
+                               min_size=10):
+    results = []
+    secure_file_path(os.path.join(directory, "a"))
+
+    for metric_name, scores in iter_results.items():
+        train = np.array(scores["mean"].loc["train"])
+        test = np.array(scores["mean"].loc["test"])
+        names = np.array(scores["mean"].columns)
+        train_std = np.array(scores["std"].loc["train"])
+        test_std = np.array(scores["std"].loc["test"])
+
+        file_name = os.path.join(directory, data_base_name + "-Mean_on_" + str(
+            stats_iter) + "_iter-" + metric_name)
+        nbResults = names.shape[0]
+
+        plot_metric_scores(train, test, names, nbResults,
+                           metric_name, file_name, tag=" averaged",
+                           train_STDs=train_std, test_STDs=test_std)
+        results += [[classifier_name, metric_name, test_mean, test_std]
+                    for classifier_name, test_mean, test_std
+                    in zip(names, test, test_std)]
+    return results
+
+
+def init_plot(results, metric_name, metric_dataframe,
+              directory, database_name, labels_names):
+    train = np.array(metric_dataframe.loc["train"])
+    test = np.array(metric_dataframe.loc["test"])
+    classifier_names = np.array(metric_dataframe.columns)
+
+    nb_results = metric_dataframe.shape[1]
+
+    file_name = os.path.join(directory, database_name + "-" + "_vs_".join(
+        labels_names) + "-" + metric_name)
+
+    results += [[classifiers_name, metric_name, testMean, testSTD]
+                for classifiers_name, testMean, testSTD in
+                zip(classifier_names, test, np.zeros(len(test)))]
+    return train, test, classifier_names, file_name, nb_results, results
+
+
+def plot_metric_scores(train_scores, test_scores, names, nb_results,
+                       metric_name,
+                       file_name,
+                       tag="", train_STDs=None, test_STDs=None,
+                       use_plotly=True):
+    r"""Used to plot and save the score barplot for a specific metric.
+
+    Parameters
+    ----------
+    train_scores : list or np.array of floats
+        The scores of each classifier on the training set.
+    test_scores : list or np.array of floats
+        The scores of each classifier on the testing set.
+    names : list or np.array of strs
+        The names of all the classifiers.
+    nb_results: int
+        The number of classifiers to plot.
+    metric_name : str
+        The plotted metric's name
+    file_name : str
+        The name of the file where the figure will be saved.
+    tag : str
+        Some text to personalize the title, must start with a whitespace.
+    train_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the training set.
+    test_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the testing set.
+
+    Returns
+    -------
+    """
+
+    figKW, barWidth = get_fig_size(nb_results)
+
+    names, train_scores, test_scores, train_STDs, test_STDs = sort_by_test_score(
+        train_scores, test_scores, names,
+        train_STDs, test_STDs)
+
+    f, ax = plt.subplots(nrows=1, ncols=1, **figKW)
+    ax.set_title(metric_name + "\n" + tag + " scores for each classifier")
+
+    rects = ax.bar(range(nb_results), test_scores, barWidth, color="0.1",
+                   yerr=test_STDs)
+    rect2 = ax.bar(np.arange(nb_results) + barWidth, train_scores, barWidth,
+                   color="0.8", yerr=train_STDs)
+    autolabel(rects, ax, set=1, std=test_STDs)
+    autolabel(rect2, ax, set=2, std=train_STDs)
+    ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
+    ax.set_ylim(-0.1, 1.1)
+    ax.set_xticks(np.arange(nb_results) + barWidth / 2)
+    ax.set_xticklabels(names, rotation="vertical")
+
+    try:
+        plt.tight_layout()
+    except:
+        pass
+    f.savefig(file_name + '.png', transparent=True)
+    plt.close()
+    import pandas as pd
+    if train_STDs is None:
+        dataframe = pd.DataFrame(np.transpose(np.concatenate((
+            train_scores.reshape((train_scores.shape[0], 1)),
+            test_scores.reshape((train_scores.shape[0], 1))), axis=1)),
+            columns=names, index=["Train", "Test"])
+    else:
+        dataframe = pd.DataFrame(np.transpose(np.concatenate((
+            train_scores.reshape((train_scores.shape[0], 1)),
+            train_STDs.reshape((train_scores.shape[0], 1)),
+            test_scores.reshape((train_scores.shape[0], 1)),
+            test_STDs.reshape((train_scores.shape[0], 1))), axis=1)),
+            columns=names, index=["Train", "Train STD", "Test", "Test STD"])
+    dataframe.to_csv(file_name + ".csv")
+    if use_plotly:
+        fig = plotly.graph_objs.Figure()
+        fig.add_trace(plotly.graph_objs.Bar(
+            name='Train',
+            x=names, y=train_scores,
+            error_y=dict(type='data', array=train_STDs),
+            marker_color="lightgrey",
+        ))
+        fig.add_trace(plotly.graph_objs.Bar(
+            name='Test',
+            x=names, y=test_scores,
+            error_y=dict(type='data', array=test_STDs),
+            marker_color="black",
+        ))
+
+        fig.update_layout(
+            title=metric_name + "<br>" + tag + " scores for each classifier")
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
+                          plot_bgcolor='rgba(0,0,0,0)')
+        plotly.offline.plot(fig, filename=file_name + ".html", auto_open=False)
+        del fig
+
+
+def get_fig_size(nb_results, min_size=15, multiplier=1.0, bar_width=0.35):
+    r"""Used to get the image size to save the figure and the bar width, depending on the number of scores to plot.
+
+    Parameters
+    ----------
+    nb_results : int
+        The number of couple of bar to plot.
+    min_size : int
+        The minimum size of the image, if there are few classifiers to plot.
+    multiplier : float
+        The ratio between the image size and the number of classifiers.
+    bar_width : float
+        The width of the bars in the figure. Mainly here to centralize bar_width.
+
+    Returns
+    -------
+    fig_kwargs : dict of arguments
+        The argument restraining the size of the figure, usable directly in the `subplots` function of
+        `matplotlib.pyplot`.
+    bar_width : float
+        The width of the bars in the figure. Mainly here to centralize bar_width.
+    """
+    size = nb_results * multiplier
+    if size < min_size:
+        size = min_size
+    fig_kwargs = {"figsize": (size, size / 3)}
+    return fig_kwargs, bar_width
+
+
+def autolabel(rects, ax, set=1, std=None):
+    r"""Used to print the score below the bars.
+
+    Parameters
+    ----------
+    rects : pyplot bar object
+        THe bars.
+    ax : pyplot ax object
+        The ax.
+    set : integer
+        1 means the test scores, anything else means the train score
+    std: None or array
+        The standard deviations in the case of statsIter results.
+
+    Returns
+    -------
+    """
+    if set == 1:
+        text_height = -0.05
+        weight = "bold"
+    else:
+        text_height = -0.07
+        weight = "normal"
+    for rectIndex, rect in enumerate(rects):
+        height = rect.get_height()
+        if std is not None:
+            ax.text(rect.get_x() + rect.get_width() / 2., text_height,
+                    "%.2f" % height + u'\u00B1' + "%.2f" % std[rectIndex],
+                    weight=weight,
+                    ha='center', va='bottom', size="x-small")
+        else:
+            ax.text(rect.get_x() + rect.get_width() / 2., text_height,
+                    "%.2f" % height, weight=weight,
+                    ha='center', va='bottom', size="small")
+
+
+def sort_by_test_score(train_scores, test_scores, names, train_STDs=None,
+                       test_STDs=None):
+    r"""Used to sort the results (names and both scores) in descending test score order.
+
+    Parameters
+    ----------
+    train_scores : np.array of floats
+        The scores of each classifier on the training set.
+    test_scores : np.array of floats
+        The scores of each classifier on the testing set.
+    names : np.array of strs
+        The names of all the classifiers.
+    train_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the training set.
+    test_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the testing set.
+
+    Returns
+    -------
+    sorted_names : np.array of strs
+        The names of all the classifiers, sorted in descending test score order.
+    sorted_train_scores : np.array of floats
+        The scores of each classifier on the training set, sorted in descending test score order.
+    sorted_test_scores : np.array of floats
+        The scores of each classifier on the testing set, sorted in descending test score order.
+    sorted_train_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the training set,
+        sorted in descending test score order.
+    sorted_test_STDs : np.array of floats or None
+        The array containing the standard deviations for the averaged scores on the testing set,
+        sorted in descending test score order.
+    """
+    sorted_indices = np.argsort(test_scores)
+    sorted_test_scores = test_scores[sorted_indices]
+    sorted_train_scores = train_scores[sorted_indices]
+    sorted_names = names[sorted_indices]
+    if train_STDs is not None and test_STDs is not None:
+        sorted_train_STDs = train_STDs[sorted_indices]
+        sorted_test_STDs = test_STDs[sorted_indices]
+    else:
+        sorted_train_STDs = None
+        sorted_test_STDs = None
+    return sorted_names, sorted_train_scores, sorted_test_scores, sorted_train_STDs, sorted_test_STDs

@@ -265,7 +265,7 @@ class Test_execBenchmark(unittest.TestCase):
                                           # exec_one_benchmark=fakeBenchmarkExec,
                                           # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
                                           exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
-                                          get_results=fakegetResults,
+                                          analyze=fakegetResults,
                                           delete=fakeDelete,
                                           analyze_iterations=fake_analyze)
         cls.assertEqual(res, 3)
@@ -280,11 +280,11 @@ class Test_execBenchmark(unittest.TestCase):
                                           metrics=[[[1, 2], [3, 4, 5]]],
                                           dataset_var=cls.Dataset,
                                           track_tracebacks=6,
-                                         # exec_one_benchmark=fakeBenchmarkExec,
-                                         # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                         exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
-                                         get_results=fakegetResults,
-                                         delete=fakeDelete,
+                                          # exec_one_benchmark=fakeBenchmarkExec,
+                                          # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
+                                          analyze=fakegetResults,
+                                          delete=fakeDelete,
                                           analyze_iterations=fake_analyze)
         cls.assertEqual(res, 3)
 
@@ -300,11 +300,11 @@ class Test_execBenchmark(unittest.TestCase):
                                           metrics=[[[1, 2], [3, 4, 5]]],
                                           dataset_var=cls.Dataset,
                                           track_tracebacks=6,
-                                         # exec_one_benchmark=fakeBenchmarkExec,
-                                         # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                         exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
-                                         get_results=fakegetResults,
-                                         delete=fakeDelete,
+                                          # exec_one_benchmark=fakeBenchmarkExec,
+                                          # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
+                                          analyze=fakegetResults,
+                                          delete=fakeDelete,
                                           analyze_iterations=fake_analyze)
         cls.assertEqual(res, 3)
 
@@ -316,11 +316,11 @@ class Test_execBenchmark(unittest.TestCase):
                                           metrics=[[[1, 2], [3, 4, 5]]],
                                           dataset_var=cls.Dataset,
                                           track_tracebacks=6,
-                                         # exec_one_benchmark=fakeBenchmarkExec,
-                                         # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
-                                         exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
-                                         get_results=fakegetResults,
-                                         delete=fakeDelete,
+                                          # exec_one_benchmark=fakeBenchmarkExec,
+                                          # exec_one_benchmark_multicore=fakeBenchmarkExec_mutlicore,
+                                          exec_one_benchmark_mono_core=fakeBenchmarkExec_monocore,
+                                          analyze=fakegetResults,
+                                          delete=fakeDelete,
                                           analyze_iterations=fake_analyze)
         cls.assertEqual(res, 3)
 
