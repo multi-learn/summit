@@ -16,7 +16,7 @@ __status__ = "Prototype"  # Production, Development, Prototype
 classifier_class_name = "GradientBoosting"
 
 
-class CustomDecisionTree(DecisionTreeClassifier):
+class CustomDecisionTreeGB(DecisionTreeClassifier):
     def predict(self, X, check_input=True):
         y_pred = DecisionTreeClassifier.predict(self, X,
                                                 check_input=check_input)
@@ -27,7 +27,7 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, loss="exponential", max_depth=1.0,
                  n_estimators=100,
-                 init=CustomDecisionTree(max_depth=1),
+                 init=CustomDecisionTreeGB(max_depth=1),
                  **kwargs):
         GradientBoostingClassifier.__init__(self,
                                             loss=loss,

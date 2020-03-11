@@ -1,6 +1,7 @@
 import itertools
 import sys
 import traceback
+import yaml
 from abc import abstractmethod
 
 import matplotlib.pyplot as plt
@@ -8,7 +9,7 @@ import numpy as np
 from scipy.stats import randint, uniform
 from sklearn.model_selection import RandomizedSearchCV, GridSearchCV, \
     ParameterGrid, ParameterSampler
-from sklearn.base import clone
+from sklearn.base import clone, BaseEstimator
 
 from .multiclass import MultiClassWrapper
 from .organization import secure_file_path
@@ -132,9 +133,8 @@ class HPSearch:
         scores_array = scores_array[sorted_indices]
         output_string = ""
         for parameters, score in zip(tested_params, scores_array):
-            if "random_state" in parameters:
-                parameters.pop("random_state")
-            output_string += "\n{}\t\t{}".format(parameters, score)
+            formatted_params = format_params(parameters)
+            output_string += "\n{}\n\t\t{}".format(yaml.dump(formatted_params), score)
         if self.tracebacks:
             output_string += "Failed : \n\n\n"
             for traceback, params in zip(self.tracebacks, self.tracebacks_params):
@@ -416,6 +416,20 @@ class CustomUniform:
         else:
             return unif
 
+
+def format_params(params):
+    if isinstance(params, dict):
+        return dict((key, format_params(value))
+                    for key, value in params.items()
+                    if key!="random_state")
+    elif isinstance(params, BaseEstimator):
+        return params.__class__.__name__
+    elif isinstance(params, np.ndarray):
+        return [float(param) for param in params]
+    elif isinstance(params, np.float64):
+        return float(params)
+    else:
+        return params
 
 
 # def randomized_search_(dataset_var, labels, classifier_package, classifier_name,

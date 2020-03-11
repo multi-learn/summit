@@ -199,7 +199,7 @@ def init_monoview_exps(classifier_names,
 def gen_single_monoview_arg_dictionary(classifier_name, arguments, nb_class,
                                        view_index, view_name, hps_kwargs):
     if classifier_name in arguments:
-        classifier_config = dict((key, value[0]) for key, value in arguments[
+        classifier_config = dict((key, value) for key, value in arguments[
             classifier_name].items())
     else:
         classifier_config = {}
@@ -227,10 +227,7 @@ def extract_dict(classifier_config):
     """Reverse function of get_path_dict"""
     extracted_dict = {}
     for key, value in classifier_config.items():
-        if isinstance(value, list):
-            extracted_dict = set_element(extracted_dict, key, value[0])
-        else:
-            extracted_dict = set_element(extracted_dict, key, value)
+        extracted_dict = set_element(extracted_dict, key, value)
     return extracted_dict
 
 
