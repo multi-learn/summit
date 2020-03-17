@@ -31,9 +31,9 @@ def get_metrics_scores(metrics, results):
         available classifiers scores on the test set.
     """
     classifier_names = []
-    classifier_names = [classifierResult.get_classifier_name()
-                        for classifierResult in results
-                        if classifierResult.get_classifier_name()
+    classifier_names = [classifier_result.get_classifier_name()
+                        for classifier_result in results
+                        if classifier_result.get_classifier_name()
                         not in classifier_names]
     metrics_scores = dict((metric[0], pd.DataFrame(data=np.zeros((2,
                                                                   len(

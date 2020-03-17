@@ -167,7 +167,7 @@ class MultiviewResult(object):
                                                   self.classifier_name)
             multiview_classifier = getattr(multiview_classifier_module,
                                            multiview_classifier_module.classifier_class_name)(
-                42)
+                42, **self.classifier_config)
             return multiview_classifier.short_name
         except:
             return self.classifier_name
