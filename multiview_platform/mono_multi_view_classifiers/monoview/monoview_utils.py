@@ -159,7 +159,7 @@ class MonoviewResult(object):
     def __init__(self, view_index, classifier_name, view_name, metrics_scores,
                  full_labels_pred, classifier_config,
                  classifier, n_features, hps_duration, fit_duration,
-                 pred_duration):
+                 pred_duration, class_metric_scores):
         self.view_index = view_index
         self.classifier_name = classifier_name
         self.view_name = view_name
@@ -171,6 +171,7 @@ class MonoviewResult(object):
         self.hps_duration = hps_duration
         self.fit_duration = fit_duration
         self.pred_duration = pred_duration
+        self.class_metric_scores = class_metric_scores
 
     def get_classifier_name(self):
         return self.classifier_name + "-" + self.view_name
@@ -208,11 +209,11 @@ class MonoviewResultAnalyzer(ResultAnalyser):
 
     def __init__(self, view_name, classifier_name, shape, classifier,
                  classification_indices, k_folds, hps_method, metrics_list,
-                 n_iter, class_label_names, train_pred, test_pred,
+                 n_iter, class_label_names, pred,
                  directory, base_file_name, labels, database_name, nb_cores, duration):
         ResultAnalyser.__init__(self, classifier, classification_indices,
                                 k_folds, hps_method, metrics_list, n_iter,
-                                class_label_names, train_pred, test_pred,
+                                class_label_names, pred,
                                 directory, base_file_name, labels,
                                 database_name, nb_cores, duration)
         self.view_name = view_name

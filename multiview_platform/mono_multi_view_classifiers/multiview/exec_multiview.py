@@ -311,9 +311,9 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
                                           example_indices=validation_indices,
                                           view_indices=views_indices)
     pred_duration = time.monotonic() - pred_beg
-    full_labels = np.zeros(dataset_var.get_labels().shape, dtype=int) - 100
-    full_labels[learning_indices] = train_pred
-    full_labels[validation_indices] = test_pred
+    full_pred = np.zeros(dataset_var.get_labels().shape, dtype=int) - 100
+    full_pred[learning_indices] = train_pred
+    full_pred[validation_indices] = test_pred
     logging.info("Done:\t Pertidcting")
 
     whole_duration = time.time() - t_start
@@ -332,15 +332,14 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
                                               metrics_list=metrics,
                                               n_iter=n_iter,
                                               class_label_names=list(labels_dictionary.values()),
-                                              train_pred=train_pred,
-                                              test_pred=test_pred,
+                                              pred=full_pred,
                                               directory=directory,
                                               base_file_name=base_file_name,
                                               labels=labels,
                                               database_name=dataset_var.get_name(),
                                               nb_cores=nb_cores,
                                               duration=whole_duration)
-    string_analysis, images_analysis, metrics_scores = result_analyzer.analyze()
+    string_analysis, images_analysis, metrics_scores, class_metrics_scores = result_analyzer.analyze()
     logging.info("Done:\t Result Analysis for " + cl_type)
 
     logging.debug("Start:\t Saving preds")
@@ -348,5 +347,5 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     logging.debug("Start:\t Saving preds")
 
     return MultiviewResult(cl_type, classifier_config, metrics_scores,
-                           full_labels, hps_duration, fit_duration,
-                           pred_duration)
+                           full_pred, hps_duration, fit_duration,
+                           pred_duration, class_metrics_scores)

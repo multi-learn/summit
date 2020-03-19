@@ -143,15 +143,14 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
                                              metrics_list=metrics,
                                              n_iter=n_iter,
                                              class_label_names=labels_names,
-                                             train_pred=train_pred,
-                                             test_pred=test_pred,
+                                             pred=full_pred,
                                              directory=directory,
                                              base_file_name=base_file_name,
                                              labels=Y,
                                              database_name=database_name,
                                              nb_cores=nb_cores,
                                              duration=whole_duration)
-    string_analysis, images_analysis, metrics_scores = result_analyzer.analyze()
+    string_analysis, images_analysis, metrics_scores, class_metrics_scores = result_analyzer.analyze()
     logging.debug("Done:\t Getting results")
 
     logging.debug("Start:\t Saving preds")
@@ -163,7 +162,7 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
     return MonoviewResult(view_index, classifier_name, view_name,
                           metrics_scores, full_pred, cl_kwargs,
                           classifier, X_train.shape[1],
-                          hyper_param_duration, fit_duration, pred_duration)
+                          hyper_param_duration, fit_duration, pred_duration, class_metrics_scores)
 
 
 def init_constants(args, X, classification_indices, labels_names,

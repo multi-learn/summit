@@ -7,7 +7,7 @@ import logging
 
 from ..utils.organization import secure_file_path
 
-def get_metrics_scores(metrics, results):
+def get_metrics_scores(metrics, results, label_names):
     r"""Used to extract metrics scores in case of classification
 
     Parameters
@@ -43,19 +43,32 @@ def get_metrics_scores(metrics, results):
                           for metric in metrics)
 
     for metric in metrics:
-        for classifierResult in results:
+        for classifier_result in results:
             metrics_scores[metric[0]].loc[
-                "train", classifierResult.get_classifier_name()] = \
-            classifierResult.metrics_scores[metric[0]][0]
+                "train", classifier_result.get_classifier_name()] = \
+            classifier_result.metrics_scores[metric[0]][0]
             metrics_scores[metric[0]].loc[
-                "test", classifierResult.get_classifier_name()] = \
-                classifierResult.metrics_scores[metric[0]][1]
+                "test", classifier_result.get_classifier_name()] = \
+                classifier_result.metrics_scores[metric[0]][1]
 
-    return metrics_scores
+    class_metric_scores = dict((metric[0], pd.DataFrame(index=pd.MultiIndex.from_product([["train", "test"], label_names]),
+                                                   columns=classifier_names, dtype=float))
+                          for metric in metrics)
+    for metric in metrics:
+        for classifier_result in results:
+            for label_index, label_name in enumerate(label_names):
+                class_metric_scores[metric[0]].loc[(
+                    "train", label_name),classifier_result.get_classifier_name()] = \
+                classifier_result.class_metric_scores[metric[0]][0][label_index]
+                class_metric_scores[metric[0]].loc[(
+                    "test", label_name), classifier_result.get_classifier_name()] = \
+                    classifier_result.class_metric_scores[metric[0]][1][label_index]
+
+    return metrics_scores, class_metric_scores
 
 
 def publish_metrics_graphs(metrics_scores, directory, database_name,
-                           labels_names):
+                           labels_names, class_metric_scores):
     r"""Used to sort the results (names and both scores) in descending test
     score order.
 
@@ -76,24 +89,32 @@ def publish_metrics_graphs(metrics_scores, directory, database_name,
     results
     """
     results = []
-    for metric_name, metric_dataframe in metrics_scores.items():
+    for metric_name in metrics_scores.keys():
         logging.debug(
-            "Start:\t Biclass score graph generation for " + metric_name)
+            "Start:\t Score graph generation for " + metric_name)
         train_scores, test_scores, classifier_names, \
-        file_name, nb_results, results = init_plot(results, metric_name,
-                                                   metric_dataframe, directory,
-                                                   database_name, labels_names)
+        file_name, nb_results, results,\
+        class_test_scores = init_plot(results, metric_name,
+                                                   metrics_scores[metric_name],
+                                                   directory,
+                                                   database_name, labels_names,
+                                     class_metric_scores[metric_name])
 
         plot_metric_scores(train_scores, test_scores, classifier_names,
                            nb_results, metric_name, file_name,
                            tag=" " + " vs ".join(labels_names))
+
+        class_file_name = os.path.join(directory, database_name + "-"
+                             + metric_name+"-class")
+        plot_class_metric_scores(class_test_scores, class_file_name,
+                                 labels_names, classifier_names, metric_name)
         logging.debug(
-            "Done:\t Biclass score graph generation for " + metric_name)
+            "Done:\t Score graph generation for " + metric_name)
     return results
 
 
-def publish_all_metrics_scores(iter_results, directory,
-                               data_base_name, stats_iter,
+def publish_all_metrics_scores(iter_results, class_iter_results, directory,
+                               data_base_name, stats_iter, label_names,
                                min_size=10):
     results = []
     secure_file_path(os.path.join(directory, "a"))
@@ -101,27 +122,61 @@ def publish_all_metrics_scores(iter_results, directory,
     for metric_name, scores in iter_results.items():
         train = np.array(scores["mean"].loc["train"])
         test = np.array(scores["mean"].loc["test"])
-        names = np.array(scores["mean"].columns)
+        classifier_names = np.array(scores["mean"].columns)
         train_std = np.array(scores["std"].loc["train"])
         test_std = np.array(scores["std"].loc["test"])
 
-        file_name = os.path.join(directory, data_base_name + "-Mean_on_" + str(
+        file_name = os.path.join(directory, data_base_name + "-mean_on_" + str(
             stats_iter) + "_iter-" + metric_name)
-        nbResults = names.shape[0]
+        nb_results = classifier_names.shape[0]
 
-        plot_metric_scores(train, test, names, nbResults,
+        plot_metric_scores(train, test, classifier_names, nb_results,
                            metric_name, file_name, tag=" averaged",
                            train_STDs=train_std, test_STDs=test_std)
         results += [[classifier_name, metric_name, test_mean, test_std]
                     for classifier_name, test_mean, test_std
-                    in zip(names, test, test_std)]
+                    in zip(classifier_names, test, test_std)]
+
+    for metric_name, scores in class_iter_results.items():
+        test = np.array([np.array(scores["mean"].iloc[i, :]) for i in range(scores["mean"].shape[0]) if scores["mean"].iloc[i, :].name[0]=='test'])
+        classifier_names = np.array(scores["mean"].columns)
+        test_std = np.array([np.array(scores["std"].iloc[i, :]) for i in range(scores["std"].shape[0]) if scores["std"].iloc[i, :].name[0]=='test'])
+
+        file_name = os.path.join(directory, data_base_name + "-mean_on_" + str(
+            stats_iter) + "_iter-" + metric_name+"-class")
+
+        plot_class_metric_scores(test, file_name, label_names, classifier_names, metric_name, stds=test_std, tag="averaged")
     return results
+
+# def publish_all_class_metrics_scores(iter_results, directory,
+#                                data_base_name, stats_iter,
+#                                min_size=10):
+#     results = []
+#     secure_file_path(os.path.join(directory, "a"))
+#
+#     for metric_name, scores in iter_results.items():
+#         train = np.array(scores["mean"].loc["train"])
+#         test = np.array(scores["mean"].loc["test"])
+#         names = np.array(scores["mean"].columns)
+#         train_std = np.array(scores["std"].loc["train"])
+#         test_std = np.array(scores["std"].loc["test"])
+#
+#         file_name = os.path.join(directory, data_base_name + "-mean_on_" + str(
+#             stats_iter) + "_iter-" + metric_name+"-class")
+#
+#         plot_class_metric_scores(test, file_name, labels_names=names, file_name, tag=" averaged",
+#                            train_STDs=train_std, test_STDs=test_std)
+#         results += [[classifier_name, metric_name, test_mean, test_std]
+#                     for classifier_name, test_mean, test_std
+#                     in zip(names, test, test_std)]
+#     return results
 
 
 def init_plot(results, metric_name, metric_dataframe,
-              directory, database_name, labels_names):
+              directory, database_name, labels_names, class_metric_scores):
     train = np.array(metric_dataframe.loc["train"])
     test = np.array(metric_dataframe.loc["test"])
+    class_test = np.array(class_metric_scores.loc["test"])
     classifier_names = np.array(metric_dataframe.columns)
 
     nb_results = metric_dataframe.shape[1]
@@ -129,10 +184,12 @@ def init_plot(results, metric_name, metric_dataframe,
     file_name = os.path.join(directory, database_name + "-" + "_vs_".join(
         labels_names) + "-" + metric_name)
 
-    results += [[classifiers_name, metric_name, testMean, testSTD]
-                for classifiers_name, testMean, testSTD in
-                zip(classifier_names, test, np.zeros(len(test)))]
-    return train, test, classifier_names, file_name, nb_results, results
+    results += [[classifiers_name, metric_name, test_mean, test_std, class_mean]
+                for classifiers_name, test_mean, class_mean, test_std in
+                zip(classifier_names, test, np.transpose(class_test),
+                    np.zeros(len(test)))]
+    return train, test, classifier_names, file_name, nb_results, results, \
+           class_test
 
 
 def plot_metric_scores(train_scores, test_scores, names, nb_results,
@@ -228,6 +285,28 @@ def plot_metric_scores(train_scores, test_scores, names, nb_results,
                           plot_bgcolor='rgba(0,0,0,0)')
         plotly.offline.plot(fig, filename=file_name + ".html", auto_open=False)
         del fig
+
+
+def plot_class_metric_scores(class_test_scores, class_file_name,
+                             labels_names, classifier_names, metric_name,
+                             stds=None, tag=""):
+    fig = plotly.graph_objs.Figure()
+    for lab_index, scores in enumerate(class_test_scores):
+        if stds is None:
+            std = None
+        else:
+            std = stds[lab_index]
+        fig.add_trace(plotly.graph_objs.Bar(
+            name=labels_names[lab_index],
+            x=classifier_names, y=scores,
+            error_y=dict(type='data', array=std),
+            ))
+    fig.update_layout(
+        title=metric_name + "<br>" + tag + " scores for each classifier")
+    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
+                      plot_bgcolor='rgba(0,0,0,0)')
+    plotly.offline.plot(fig, filename=class_file_name + ".html", auto_open=False)
+    del fig
 
 
 def get_fig_size(nb_results, min_size=15, multiplier=1.0, bar_width=0.35):

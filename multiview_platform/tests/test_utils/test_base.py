@@ -74,7 +74,7 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                  self.directory, self.base_file_name,
                                  self.labels, self.database_name,
                                  self.nb_cores, self.duration)
-        train_score, test_score = RA.get_metric_scores("accuracy_score", {})
+        train_score, test_score = RA.get_metric_score("accuracy_score", {})
         self.assertEqual(train_score, self.train_accuracy)
         self.assertEqual(test_score, self.test_accuracy)
 

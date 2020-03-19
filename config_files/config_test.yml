@@ -1,14 +1,14 @@
 # The base configuration of the benchmark
 log: True
-name: ["digits",]
+name: ["generated_dset",]
 label: "_"
 file_type: ".hdf5"
 views:
-pathf: "/home/baptiste/Documents/Datasets/Digits/"
+pathf: "/home/baptiste/Documents/Gitwork/multiview_generator/generator/"
 nice: 0
 random_state: 42
 nb_cores: 1
-full: False
+full: True
 debug: True
 add_noise: False
 noise_std: 0.0
@@ -17,65 +17,45 @@ track_tracebacks: False
 
 # All the classification-realted configuration options
 multiclass_method: "oneVersusOne"
-split: 0.49
+split: 0.25
 nb_folds: 2
-nb_class: 2
+nb_class:
 classes:
-type: ["multiview"]
+type: ["monoview", "multiview"]
 algos_monoview: ["decision_tree" ]
-algos_multiview: ["weighted_linear_early_fusion",]
-stats_iter: 2
+algos_multiview: ["weighted_linear_early_fusion","weighted_linear_late_fusion"]
+stats_iter: 15
 metrics: ["accuracy_score", "f1_score"]
 metric_princ: "accuracy_score"
 hps_type: "None"
 hps_args:
   n_iter: 4
   equivalent_draws: False
-  weighted_linear_early_fusion:
-    view_weights: [null]
-    monoview_classifier_name: ["decision_tree"]
-    monoview_classifier_config:
-      - decision_tree:
-          max_depth: 1
-          criterion: "gini"
-          splitter: "best"
-      - decision_tree:
-          max_depth: 2
-          criterion: "gini"
-          splitter: "best"
+
+
+weighted_linear_early_fusion:
+  view_weights: null
+  monoview_classifier_name: "decision_tree"
+  monoview_classifier_config:
+    decision_tree:
+      max_depth: 12
+      criterion: "gini"
+      splitter: "best"
+weighted_linear_late_fusion:
+  weights: null
+  classifiers_names: "decision_tree"
+  classifier_configs:
+    decision_tree:
+      max_depth: 3
+      criterion: "gini"
+      splitter: "best"
+decision_tree:
+  max_depth: 3
 
 
 ######################################
 ## The Monoview Classifier arguments #
 ######################################
-weighted_linear_early_fusion:
-  monoview_classifier_config:
-    init: CustomDecisionTree
-    init__ccp_alpha: 0.0
-    init__class_weight: null
-    init__criterion: gini
-    init__max_depth: 1
-    init__max_features: null
-    init__max_leaf_nodes: null
-    init__min_impurity_decrease: 0.0
-    init__min_impurity_split: null
-    init__min_samples_leaf: 1
-    init__min_samples_split: 2
-    init__min_weight_fraction_leaf: 0.0
-    init__presort: deprecated
-    init__random_state: null
-    init__splitter: best
-    loss: exponential
-    max_depth: 5
-    n_estimators: 412
-  monoview_classifier_name: gradient_boosting
-  view_weights:
-  - 0.16666666666666669
-  - 0.16666666666666669
-  - 0.16666666666666669
-  - 0.16666666666666669
-  - 0.16666666666666669
-  - 0.16666666666666669
 #
 #random_forest:
 #  n_estimators: [25]
@@ -105,10 +85,6 @@ weighted_linear_early_fusion:
 #  n_iterations: [50]
 #  n_stumps: [1]
 #
-#decision_tree:
-#  max_depth: [2]
-#  criterion: ["gini"]
-#  splitter: ["best"]
 #
 #decision_tree_pregen:
 #  max_depth: [10]

@@ -12,7 +12,7 @@ def analyze(results, stats_iter, benchmark_argument_dictionaries,
     """Used to analyze the results of the previous benchmarks"""
     data_base_name = benchmark_argument_dictionaries[0]["args"]["name"]
 
-    results_means_std, iter_results, flagged_failed = analyze_iterations(
+    results_means_std, iter_results, flagged_failed, label_names = analyze_iterations(
         results, benchmark_argument_dictionaries,
         stats_iter, metrics, example_ids, labels)
     if flagged_failed:
@@ -21,7 +21,7 @@ def analyze(results, stats_iter, benchmark_argument_dictionaries,
     if stats_iter > 1:
         results_means_std = analyze_all(
             iter_results, stats_iter, directory,
-            data_base_name, example_ids)
+            data_base_name, example_ids, label_names)
     return results_means_std
 
 
@@ -62,6 +62,7 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
     """
     logging.debug("Start:\t Analyzing all results")
     iter_results = {"metrics_scores": [i for i in range(stats_iter)],
+                    "class_metrics_scores": [i for i in range(stats_iter)],
                     "example_errors": [i for i in range(stats_iter)],
                     "feature_importances": [i for i in range(stats_iter)],
                     "durations":[i for i in range(stats_iter)]}
@@ -69,22 +70,22 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
     fig_errors = []
     for iter_index, result, tracebacks in results:
         arguments = get_arguments(benchmark_argument_dictionaries, iter_index)
+        labels_names = list(arguments["labels_dictionary"].values())
 
-        metrics_scores = get_metrics_scores(metrics, result)
+        metrics_scores, class_metric_scores = get_metrics_scores(metrics, result, labels_names)
         example_errors = get_example_errors(labels, result)
         feature_importances = get_feature_importances(result)
         durations = get_duration(result)
         directory = arguments["directory"]
 
         database_name = arguments["args"]["name"]
-        labels_names = [arguments["labels_dictionary"][0],
-                        arguments["labels_dictionary"][1]]
+
 
         flagged_tracebacks_list += publish_tracebacks(directory, database_name,
                                                       labels_names, tracebacks,
                                                       iter_index)
         res = publish_metrics_graphs(metrics_scores, directory, database_name,
-                                     labels_names)
+                                     labels_names, class_metric_scores)
         publish_example_errors(example_errors, directory, database_name,
                                labels_names, example_ids, labels)
         publish_feature_importances(feature_importances, directory,
@@ -92,6 +93,7 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
         plot_durations(durations, directory, database_name)
 
         iter_results["metrics_scores"][iter_index] = metrics_scores
+        iter_results["class_metrics_scores"][iter_index] = class_metric_scores
         iter_results["example_errors"][iter_index] = example_errors
         iter_results["feature_importances"][iter_index] = feature_importances
         iter_results["labels"] = labels
@@ -99,19 +101,20 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
 
     logging.debug("Done:\t Analyzing all results")
 
-    return res, iter_results, flagged_tracebacks_list
+    return res, iter_results, flagged_tracebacks_list, labels_names
+
 
 def analyze_all(iter_results, stats_iter, directory, data_base_name,
-                example_ids):
+                example_ids, label_names):
     """Used to format the results in order to plot the mean results on
     the iterations"""
-    metrics_analysis, error_analysis, feature_importances, \
+    metrics_analysis, class_metrics_analysis, error_analysis, feature_importances, \
     feature_importances_stds, labels, duration_means, \
     duration_stds = format_previous_results(iter_results)
 
-    results = publish_all_metrics_scores(metrics_analysis,
+    results = publish_all_metrics_scores(metrics_analysis, class_metrics_analysis,
                                          directory,
-                                         data_base_name, stats_iter)
+                                         data_base_name, stats_iter, label_names)
     publish_all_example_errors(error_analysis, directory, stats_iter,
                                example_ids, labels)
     publish_feature_importances(feature_importances, directory,
@@ -166,6 +169,7 @@ def format_previous_results(iter_results_lists):
 
     """
     metrics_analysis = {}
+    class_metrics_analysis = {}
     feature_importances_analysis = {}
     feature_importances_stds = {}
 
@@ -184,6 +188,23 @@ def format_previous_results(iter_results_lists):
         metrics_analysis[metric_name][
             "mean"] = dataframe.groupby(dataframe.index).mean()
         metrics_analysis[metric_name][
+            "std"] = dataframe.groupby(dataframe.index).std(ddof=0)
+
+    class_metric_concat_dict = {}
+    for iter_index, class_metrics_score in enumerate(
+            iter_results_lists["class_metrics_scores"]):
+        for metric_name, dataframe in class_metrics_score.items():
+            if metric_name not in class_metric_concat_dict:
+                class_metric_concat_dict[metric_name] = dataframe
+            else:
+                class_metric_concat_dict[metric_name] = pd.concat(
+                    [class_metric_concat_dict[metric_name], dataframe])
+
+    for metric_name, dataframe in class_metric_concat_dict.items():
+        class_metrics_analysis[metric_name] = {}
+        class_metrics_analysis[metric_name][
+            "mean"] = dataframe.groupby(dataframe.index).mean()
+        class_metrics_analysis[metric_name][
             "std"] = dataframe.groupby(dataframe.index).std(ddof=0)
 
     durations_df_concat = pd.DataFrame(dtype=float)
@@ -220,6 +241,7 @@ def format_previous_results(iter_results_lists):
             else:
                 added_example_errors[classifier_name] += errors
     error_analysis = added_example_errors
-    return metrics_analysis, error_analysis, feature_importances_analysis, \
+    return metrics_analysis, class_metrics_analysis ,error_analysis, \
+           feature_importances_analysis, \
            feature_importances_stds, iter_results_lists["labels"], \
            duration_means, duration_stds

@@ -907,7 +907,6 @@ def exec_classif(arguments):
                 args["add_noise"],
                 noise_std)
             args["name"] = datasetname
-
             splits = execution.gen_splits(dataset_var.get_labels(),
                                           args["split"],
                                           stats_iter_random_states)
