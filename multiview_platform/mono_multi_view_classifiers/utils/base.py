@@ -286,7 +286,7 @@ class ResultAnalyser():
             metric_score_string += "\n\n"
         metric_score_string += "Test set confusion matrix : \n\n"
         self.confusion_matrix = confusion(y_true=self.labels[self.test_indices], y_pred=self.pred[self.test_indices])
-        formatted_conf = [[label_name]+list(row) for label_name, row in zip(self.class_label_names, confusion_matrix)]
+        formatted_conf = [[label_name]+list(row) for label_name, row in zip(self.class_label_names, self.confusion_matrix)]
         metric_score_string+=tabulate(formatted_conf, headers= ['']+self.class_label_names, tablefmt='fancy_grid')
         metric_score_string += "\n\n"
         return metric_score_string
