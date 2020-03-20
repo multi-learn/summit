@@ -124,10 +124,8 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         pred = AdaBoostClassifier.predict(self, X)
         end = time.time()
         self.pred_time = end - begin
-        # TODO : mauvaise verif
-        if X.shape != self.train_shape:
-            self.step_predictions = np.array(
-                [step_pred for step_pred in self.staged_predict(X)])
+        self.step_predictions = np.array(
+            [step_pred for step_pred in self.staged_predict(X)])
         return pred
 
     def get_interpretation(self, directory, base_file_name, y_test, multi_class=False):
