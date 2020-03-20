@@ -285,7 +285,7 @@ class ResultAnalyser():
             metric_score_string += "\n\t\t- Score on test : {}".format(self.metric_scores[metric][1])
             metric_score_string += "\n\n"
         metric_score_string += "Test set confusion matrix : \n\n"
-        confusion_matrix = confusion(y_true=self.labels[self.test_indices], y_pred=self.pred[self.test_indices])
+        self.confusion_matrix = confusion(y_true=self.labels[self.test_indices], y_pred=self.pred[self.test_indices])
         formatted_conf = [[label_name]+list(row) for label_name, row in zip(self.class_label_names, confusion_matrix)]
         metric_score_string+=tabulate(formatted_conf, headers= ['']+self.class_label_names, tablefmt='fancy_grid')
         metric_score_string += "\n\n"
@@ -361,7 +361,8 @@ class ResultAnalyser():
             self.directory, self.base_file_name,
             self.labels[self.test_indices])
         image_analysis = {}
-        return string_analysis, image_analysis, self.metric_scores, self.class_metric_scores
+        return string_analysis, image_analysis, self.metric_scores, \
+               self.class_metric_scores, self.confusion_matrix
 
 
 base_boosting_estimators = [DecisionTreeClassifier(max_depth=1),

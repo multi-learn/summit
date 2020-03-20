@@ -150,12 +150,13 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
                                              database_name=database_name,
                                              nb_cores=nb_cores,
                                              duration=whole_duration)
-    string_analysis, images_analysis, metrics_scores, class_metrics_scores = result_analyzer.analyze()
+    string_analysis, images_analysis, metrics_scores, class_metrics_scores, \
+    confusion_matrix = result_analyzer.analyze()
     logging.debug("Done:\t Getting results")
 
     logging.debug("Start:\t Saving preds")
     save_results(string_analysis, output_file_name, full_pred, train_pred,
-                 y_train, images_analysis, y_test)
+                 y_train, images_analysis, y_test, confusion_matrix)
     logging.info("Done:\t Saving results")
 
     view_index = args["view_index"]
@@ -222,11 +223,13 @@ def get_hyper_params(classifier_module, search_method, classifier_module_name,
 
 def save_results(string_analysis, output_file_name, full_labels_pred,
                  y_train_pred,
-                 y_train, images_analysis, y_test):
+                 y_train, images_analysis, y_test, confusion_matrix):
     logging.info(string_analysis)
     output_text_file = open(output_file_name + 'summary.txt', 'w')
     output_text_file.write(string_analysis)
     output_text_file.close()
+    np.savetxt(output_file_name+"confusion_matrix.csv", confusion_matrix,
+               delimiter=', ')
     np.savetxt(output_file_name + "full_pred.csv",
                full_labels_pred.astype(np.int16), delimiter=",")
     np.savetxt(output_file_name + "train_pred.csv",
