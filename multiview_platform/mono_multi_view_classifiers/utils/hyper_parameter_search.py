@@ -47,7 +47,7 @@ from .. import metrics
 class HPSearch:
 
     def get_scoring(self, metric):
-        if isinstance(metric, list):
+        if isinstance(metric, dict):
             metric_module, metric_kwargs = get_metric(metric)
             return metric_module.get_scorer(**metric_kwargs)
         else:

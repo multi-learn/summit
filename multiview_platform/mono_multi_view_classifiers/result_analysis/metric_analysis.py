@@ -13,7 +13,7 @@ def get_metrics_scores(metrics, results, label_names):
 
     Parameters
     ----------
-    metrics : list of lists
+    metrics : dict
         The metrics names with configuration metrics[i][0] = name of metric i
     results : list of MonoviewResult and MultiviewResults objects
         A list containing all the results for all the monoview experimentations.
@@ -36,32 +36,32 @@ def get_metrics_scores(metrics, results, label_names):
                         for classifier_result in results
                         if classifier_result.get_classifier_name()
                         not in classifier_names]
-    metrics_scores = dict((metric[0], pd.DataFrame(data=np.zeros((2,
+    metrics_scores = dict((metric, pd.DataFrame(data=np.zeros((2,
                                                                   len(
                                                                       classifier_names))),
                                                    index=["train", "test"],
                                                    columns=classifier_names))
-                          for metric in metrics)
-    class_metric_scores = dict((metric[0], pd.DataFrame(
+                          for metric in metrics.keys())
+    class_metric_scores = dict((metric, pd.DataFrame(
         index=pd.MultiIndex.from_product([["train", "test"], label_names]),
         columns=classifier_names, dtype=float))
                                for metric in metrics)
 
-    for metric in metrics:
+    for metric in metrics.keys():
         for classifier_result in results:
-            metrics_scores[metric[0]].loc[
+            metrics_scores[metric].loc[
                 "train", classifier_result.get_classifier_name()] = \
-            classifier_result.metrics_scores[metric[0]][0]
-            metrics_scores[metric[0]].loc[
+            classifier_result.metrics_scores[metric][0]
+            metrics_scores[metric].loc[
                 "test", classifier_result.get_classifier_name()] = \
-                classifier_result.metrics_scores[metric[0]][1]
+                classifier_result.metrics_scores[metric][1]
             for label_index, label_name in enumerate(label_names):
-                class_metric_scores[metric[0]].loc[(
+                class_metric_scores[metric].loc[(
                     "train", label_name),classifier_result.get_classifier_name()] = \
-                classifier_result.class_metric_scores[metric[0]][0][label_index]
-                class_metric_scores[metric[0]].loc[(
+                classifier_result.class_metric_scores[metric][0][label_index]
+                class_metric_scores[metric].loc[(
                     "test", label_name), classifier_result.get_classifier_name()] = \
-                    classifier_result.class_metric_scores[metric[0]][1][label_index]
+                    classifier_result.class_metric_scores[metric][1][label_index]
 
     return metrics_scores, class_metric_scores
 

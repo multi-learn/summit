@@ -177,13 +177,13 @@ class MultiviewResult(object):
 class MultiviewResultAnalyzer(ResultAnalyser):
 
     def __init__(self, view_names, classifier, classification_indices, k_folds,
-                 hps_method, metrics_list, n_iter, class_label_names,
+                 hps_method, metrics_dict, n_iter, class_label_names,
                  pred, directory, base_file_name, labels,
                  database_name, nb_cores, duration):
         if hps_method.endswith("equiv"):
             n_iter = n_iter*len(view_names)
         ResultAnalyser.__init__(self, classifier, classification_indices, k_folds,
-                                hps_method, metrics_list, n_iter, class_label_names,
+                                hps_method, metrics_dict, n_iter, class_label_names,
                                 pred, directory,
                                 base_file_name, labels, database_name,
                                 nb_cores, duration)

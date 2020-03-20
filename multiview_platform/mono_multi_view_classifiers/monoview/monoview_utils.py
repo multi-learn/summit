@@ -208,11 +208,11 @@ def get_accuracy_graph(plotted_data, classifier_name, file_name,
 class MonoviewResultAnalyzer(ResultAnalyser):
 
     def __init__(self, view_name, classifier_name, shape, classifier,
-                 classification_indices, k_folds, hps_method, metrics_list,
+                 classification_indices, k_folds, hps_method, metrics_dict,
                  n_iter, class_label_names, pred,
                  directory, base_file_name, labels, database_name, nb_cores, duration):
         ResultAnalyser.__init__(self, classifier, classification_indices,
-                                k_folds, hps_method, metrics_list, n_iter,
+                                k_folds, hps_method, metrics_dict, n_iter,
                                 class_label_names, pred,
                                 directory, base_file_name, labels,
                                 database_name, nb_cores, duration)

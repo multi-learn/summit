@@ -1,10 +1,10 @@
 # The base configuration of the benchmark
 log: True
-name: ["generated_dset",]
+name: ["digits",]
 label: "_"
 file_type: ".hdf5"
 views:
-pathf: "/home/baptiste/Documents/Gitwork/multiview_generator/demo/"
+pathf: "/home/baptiste/Documents/Datasets/Digits/"
 nice: 0
 random_state: 42
 nb_cores: 1
@@ -24,8 +24,10 @@ classes:
 type: ["monoview", "multiview"]
 algos_monoview: ["decision_tree" ]
 algos_multiview: ["weighted_linear_early_fusion","weighted_linear_late_fusion"]
-stats_iter: 15
-metrics: ["accuracy_score", "f1_score"]
+stats_iter: 3
+metrics:
+  accuracy_score: {}
+  f1_score: {}
 metric_princ: "accuracy_score"
 hps_type: "None"
 hps_args:

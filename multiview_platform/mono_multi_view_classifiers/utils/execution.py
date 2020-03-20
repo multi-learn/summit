@@ -119,7 +119,7 @@ def get_database_function(name, type_var):
 
 
 def init_log_file(name, views, cl_type, log, debug, label,
-                  result_directory, add_noise, noise_std, args):
+                  result_directory, args):
     r"""Used to init the directory where the preds will be stored and the log file.
 
     First this function will check if the result directory already exists (only one per minute is allowed).
@@ -153,16 +153,15 @@ def init_log_file(name, views, cl_type, log, debug, label,
     """
     if views is None:
         views = []
-    noise_string = "n_" + str(int(noise_std * 100))
     result_directory = os.path.join(os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.realpath(__file__)))),
                                     result_directory)
     if debug:
-        result_directory = os.path.join(result_directory, name, noise_string,
+        result_directory = os.path.join(result_directory, name,
                                         "debug_started_" + time.strftime(
                                             "%Y_%m_%d-%H_%M_%S") + "_" + label)
     else:
-        result_directory = os.path.join(result_directory, name, noise_string,
+        result_directory = os.path.join(result_directory, name,
                                         "started_" + time.strftime(
                                             "%Y_%m_%d-%H_%M") + "_" + label)
     log_file_name = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(

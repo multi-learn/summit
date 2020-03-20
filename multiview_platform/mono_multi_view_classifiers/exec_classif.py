@@ -501,7 +501,7 @@ def arange_metrics(metrics, metric_princ):
 
     Parameters
     ----------
-    metrics : list of lists
+    metrics : dict
         The metrics that will be used in the benchmark
 
     metric_princ : str
@@ -512,13 +512,11 @@ def arange_metrics(metrics, metric_princ):
     -------
     metrics : list of lists
         The metrics list, but arranged  so the first one is the principal one."""
-    if [metric_princ] in metrics:
-        metric_index = metrics.index([metric_princ])
-        first_metric = metrics[0]
-        metrics[0] = [metric_princ]
-        metrics[metric_index] = first_metric
+    if metric_princ in metrics:
+        metrics = dict((key, value) if not key==metric_princ else (key+"*", value) for key, value in metrics.items())
     else:
-        raise AttributeError(metric_princ + " not in metric pool")
+        raise AttributeError("{} not in metric pool ({})".format(metric_princ,
+                                                                 metrics))
     return metrics
 
 
@@ -874,100 +872,95 @@ def exec_classif(arguments):
     dataset_list = execution.find_dataset_names(args["pathf"],
                                                 args["file_type"],
                                                 args["name"])
-    if not args["add_noise"]:
-        args["noise_std"] = [0.0]
+    # if not args["add_noise"]:
+        # args["noise_std"] = [0.0]
     for dataset_name in dataset_list:
-        noise_results = []
-        for noise_std in args["noise_std"]:
+        # noise_results = []
+        # for noise_std in args["noise_std"]:
 
-            directory = execution.init_log_file(dataset_name, args["views"],
-                                                args["file_type"],
-                                                args["log"], args["debug"],
-                                                args["label"],
-                                                args["res_dir"],
-                                                args["add_noise"], noise_std,
-                                                args)
+        directory = execution.init_log_file(dataset_name, args["views"],
+                                            args["file_type"],
+                                            args["log"], args["debug"],
+                                            args["label"],
+                                            args["res_dir"],
+                                            args)
 
-            random_state = execution.init_random_state(args["random_state"],
-                                                       directory)
-            stats_iter_random_states = execution.init_stats_iter_random_states(
-                stats_iter,
-                random_state)
+        random_state = execution.init_random_state(args["random_state"],
+                                                   directory)
+        stats_iter_random_states = execution.init_stats_iter_random_states(
+            stats_iter,
+            random_state)
 
-            get_database = execution.get_database_function(dataset_name,
-                                                           args["file_type"])
+        get_database = execution.get_database_function(dataset_name,
+                                                       args["file_type"])
 
-            dataset_var, labels_dictionary, datasetname = get_database(
-                args["views"],
-                args["pathf"], dataset_name,
-                args["nb_class"],
-                args["classes"],
-                random_state,
-                args["full"],
-                args["add_noise"],
-                noise_std)
-            args["name"] = datasetname
-            splits = execution.gen_splits(dataset_var.get_labels(),
-                                          args["split"],
-                                          stats_iter_random_states)
+        dataset_var, labels_dictionary, datasetname = get_database(
+            args["views"],
+            args["pathf"], dataset_name,
+            args["nb_class"],
+            args["classes"],
+            random_state,
+            args["full"],
+            )
+        args["name"] = datasetname
+        splits = execution.gen_splits(dataset_var.get_labels(),
+                                      args["split"],
+                                      stats_iter_random_states)
 
-            # multiclass_labels, labels_combinations, indices_multiclass = multiclass.gen_multiclass_labels(
-            #     dataset_var.get_labels(), multiclass_method, splits)
+        # multiclass_labels, labels_combinations, indices_multiclass = multiclass.gen_multiclass_labels(
+        #     dataset_var.get_labels(), multiclass_method, splits)
 
-            k_folds = execution.gen_k_folds(stats_iter, args["nb_folds"],
-                                            stats_iter_random_states)
+        k_folds = execution.gen_k_folds(stats_iter, args["nb_folds"],
+                                        stats_iter_random_states)
 
-            dataset_files = dataset.init_multiple_datasets(args["pathf"],
-                                                           args["name"],
-                                                           nb_cores)
+        dataset_files = dataset.init_multiple_datasets(args["pathf"],
+                                                       args["name"],
+                                                       nb_cores)
 
-            views, views_indices, all_views = execution.init_views(dataset_var,
-                                                                   args[
-                                                                       "views"])
-            views_dictionary = dataset_var.get_view_dict()
-            nb_views = len(views)
-            nb_class = dataset_var.get_nb_class()
+        views, views_indices, all_views = execution.init_views(dataset_var,
+                                                               args[
+                                                                   "views"])
+        views_dictionary = dataset_var.get_view_dict()
+        nb_views = len(views)
+        nb_class = dataset_var.get_nb_class()
 
-            metrics = [metric.split(":") for metric in args["metrics"]]
-            if metrics == [["all"]]:
-                metrics_names = [name for _, name, isPackage
-                                 in pkgutil.iter_modules(
-                        [os.path.join(os.path.dirname(
-                            os.path.dirname(os.path.realpath(__file__))),
-                                      'metrics')]) if
-                                 not isPackage and name not in ["framework",
-                                                                "log_loss",
-                                                                "matthews_corrcoef",
-                                                                "roc_auc_score"]]
-                metrics = [[metricName, {}] for metricName in metrics_names]
-            metrics = arange_metrics(metrics, args["metric_princ"])
-            # TODO : Metric args
-            for metricIndex, metric in enumerate(metrics):
-                if len(metric) == 1:
-                    metrics[metricIndex] = [metric[0], {}]
+        metrics = args["metrics"]
+        if metrics == "all":
+            metrics_names = [name for _, name, isPackage
+                             in pkgutil.iter_modules(
+                    [os.path.join(os.path.dirname(
+                        os.path.dirname(os.path.realpath(__file__))),
+                                  'metrics')]) if
+                             not isPackage and name not in ["framework",
+                                                            "log_loss",
+                                                            "matthews_corrcoef",
+                                                            "roc_auc_score"]]
+            metrics = dict((metric_name, {})
+                           for metric_name in metrics_names)
+        metrics = arange_metrics(metrics, args["metric_princ"])
 
-            benchmark = init_benchmark(cl_type, monoview_algos, multiview_algos,
-                                       args)
-            init_kwargs = init_kwargs_func(args, benchmark)
-            data_base_time = time.time() - start
-            argument_dictionaries = init_argument_dictionaries(
-                benchmark, views_dictionary,
-                nb_class, init_kwargs, hps_method, hps_kwargs)
-            # argument_dictionaries = initMonoviewExps(benchmark, viewsDictionary,
-            #                                         NB_CLASS, initKWARGS)
-            directories = execution.gen_direcorties_names(directory, stats_iter)
-            benchmark_argument_dictionaries = execution.gen_argument_dictionaries(
-                labels_dictionary, directories,
-                splits,
-                hps_method, args, k_folds,
-                stats_iter_random_states, metrics,
-                argument_dictionaries, benchmark,
-                views, views_indices)
-            results_mean_stds = exec_benchmark(
-                nb_cores, stats_iter,
-                benchmark_argument_dictionaries, directory, metrics,
-                dataset_var,
-                args["track_tracebacks"])
-            noise_results.append([noise_std, results_mean_stds])
-            plot_results_noise(directory, noise_results, metrics[0][0],
-                               dataset_name)
+        benchmark = init_benchmark(cl_type, monoview_algos, multiview_algos,
+                                   args)
+        init_kwargs = init_kwargs_func(args, benchmark)
+        data_base_time = time.time() - start
+        argument_dictionaries = init_argument_dictionaries(
+            benchmark, views_dictionary,
+            nb_class, init_kwargs, hps_method, hps_kwargs)
+        # argument_dictionaries = initMonoviewExps(benchmark, viewsDictionary,
+        #                                         NB_CLASS, initKWARGS)
+        directories = execution.gen_direcorties_names(directory, stats_iter)
+        benchmark_argument_dictionaries = execution.gen_argument_dictionaries(
+            labels_dictionary, directories,
+            splits,
+            hps_method, args, k_folds,
+            stats_iter_random_states, metrics,
+            argument_dictionaries, benchmark,
+            views, views_indices)
+        results_mean_stds = exec_benchmark(
+            nb_cores, stats_iter,
+            benchmark_argument_dictionaries, directory, metrics,
+            dataset_var,
+            args["track_tracebacks"])
+            # noise_results.append([noise_std, results_mean_stds])
+            # plot_results_noise(directory, noise_results, metrics[0][0],
+            #                    dataset_name)

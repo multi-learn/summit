@@ -53,7 +53,7 @@ def exec_monoview_multicore(directory, name, labels_names,
 def exec_monoview(directory, X, Y, database_name, labels_names, classification_indices,
                   k_folds, nb_cores, databaseType, path,
                   random_state, hyper_param_search="randomized_search",
-                  metrics=[["accuracy_score", None]], n_iter=30, view_name="",
+                  metrics={"accuracy_score":{}}, n_iter=30, view_name="",
                   hps_kwargs={}, **args):
     logging.debug("Start:\t Loading data")
     kwargs, \
@@ -140,7 +140,7 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
                                              classification_indices=classification_indices,
                                              k_folds=k_folds,
                                              hps_method=hyper_param_search,
-                                             metrics_list=metrics,
+                                             metrics_dict=metrics,
                                              n_iter=n_iter,
                                              class_label_names=labels_names,
                                              pred=full_pred,
