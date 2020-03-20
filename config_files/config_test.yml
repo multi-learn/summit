@@ -4,7 +4,7 @@ name: ["generated_dset",]
 label: "_"
 file_type: ".hdf5"
 views:
-pathf: "/home/baptiste/Documents/Gitwork/multiview_generator/generator/"
+pathf: "/home/baptiste/Documents/Gitwork/multiview_generator/demo/"
 nice: 0
 random_state: 42
 nb_cores: 1

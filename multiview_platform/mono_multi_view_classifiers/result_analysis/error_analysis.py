@@ -50,8 +50,7 @@ def publish_example_errors(example_errors, directory, databaseName,
                            labels_names, example_ids, labels):
     logging.debug("Start:\t Biclass Label analysis figure generation")
 
-    base_file_name = os.path.join(directory, databaseName + "-" + "_vs_".join(
-        labels_names) + "-")
+    base_file_name = os.path.join(directory, databaseName + "-" )
 
     nb_classifiers, nb_examples, classifiers_names, \
     data_2d, error_on_examples = gen_error_data(example_errors)
