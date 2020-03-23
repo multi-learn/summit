@@ -14,6 +14,7 @@ doc:
         - docker
     only:
         - develop
+        - master
     script:
         - export LC_ALL=$(locale -a | grep en_US)
         - export LANG=$(locale -a | grep en_US)
