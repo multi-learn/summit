@@ -44,6 +44,6 @@ pages:
         - sphinx-build -b html . ../build
         - cd ../..
         - cp -r ./docs/build public
-   artifacts:
+    artifacts:
        paths:
          - public
