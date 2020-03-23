@@ -26,7 +26,7 @@ doc:
         - cp -r ./docs/build public
     artifacts:
         paths:           
-            public
+            - public
 
 # project public
 pages:
@@ -46,4 +46,4 @@ pages:
         - cp -r ./docs/build public
     artifacts:
        paths:
-         - public
+            - public
