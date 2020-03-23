@@ -25,8 +25,8 @@ doc:
         - cd ../..
         - cp -r ./docs/build public
     artifacts:
-         paths:           
-           - public
+        paths:           
+            public
 
 
 # TODO: Replace the task doc by the following task pages when making the
@@ -48,5 +48,5 @@ pages:
         - cd ../..
         - cp -r ./docs/build public
    artifacts:
-        paths:
-           - public
+       paths:
+         - public
