@@ -33,10 +33,10 @@ class Test_InitArgumentDictionaries(unittest.TestCase):
         cls.nb_class = 2
         cls.monoview_classifier_name = "fake_monoview_classifier"
         cls.monoview_classifier_arg_name = "fake_arg"
-        cls.monoview_classifier_arg_value = ["fake_value_1"]
+        cls.monoview_classifier_arg_value = "fake_value_1"
         cls.multiview_classifier_name = "fake_multiview_classifier"
         cls.multiview_classifier_arg_name = "fake_arg_mv"
-        cls.multiview_classifier_arg_value = ["fake_value_2"]
+        cls.multiview_classifier_arg_value = "fake_value_2"
         cls.init_kwargs = {
             'monoview':{
                 cls.monoview_classifier_name:
@@ -56,14 +56,14 @@ class Test_InitArgumentDictionaries(unittest.TestCase):
                                                             "None", {})
         expected_output = [{
                 self.monoview_classifier_name: {
-                    self.monoview_classifier_arg_name:self.monoview_classifier_arg_value[0]},
+                    self.monoview_classifier_arg_name:self.monoview_classifier_arg_value},
                 "view_name": "test_view_0",
                 'hps_kwargs': {},
                 "classifier_name": self.monoview_classifier_name,
                 "nb_class": self.nb_class,
                 "view_index": 0},
                 {self.monoview_classifier_name: {
-                    self.monoview_classifier_arg_name: self.monoview_classifier_arg_value[0]},
+                    self.monoview_classifier_arg_name: self.monoview_classifier_arg_value},
                 "view_name": "test_view",
                 'hps_kwargs': {},
                 "classifier_name": self.monoview_classifier_name,
@@ -89,7 +89,7 @@ class Test_InitArgumentDictionaries(unittest.TestCase):
                 "labels_names":None,
                 self.multiview_classifier_name: {
                     self.multiview_classifier_arg_name:
-                        self.multiview_classifier_arg_value[0]},
+                        self.multiview_classifier_arg_value},
         },]
         self.assertEqual(arguments["multiview"][0], expected_output[0])
 

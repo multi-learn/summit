@@ -115,7 +115,7 @@ class Test_getHPs(unittest.TestCase):
         cls.output_file_name = tmp_path
         cls.cv = StratifiedKFold(n_splits=2, random_state=cls.random_state, shuffle=True)
         cls.nb_cores = 1
-        cls.metrics = [["accuracy_score", None]]
+        cls.metrics = {"accuracy_score*": {}}
         cls.kwargs = {"decision_tree" : {"max_depth": 1,
                       "criterion": "gini",
                       "splitter": "best"}}

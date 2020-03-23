@@ -12,20 +12,20 @@ class Test_get_metrics_scores(unittest.TestCase):
 
 
     def test_simple(self):
-        metrics = [["accuracy_score"], ["f1_score"]]
+        metrics = {"accuracy_score*":{},"f1_score":{}}
         results = [MonoviewResult(0,
                                   "ada",
                                   "0",
-                                  {"accuracy_score":[0.9, 0.95],
+                                  {"accuracy_score*":[0.9, 0.95],
                                    "f1_score":[0.91, 0.96]}
-                                  , "", "", "", "", "",0,0)]
-        metrics_scores = get_metrics_scores(metrics,
-                                                            results)
+                                  , "", "", "", "", "",0,0,{})]
+        metrics_scores, class_met = get_metrics_scores(metrics,
+                                                            results, [])
         self.assertIsInstance(metrics_scores, dict)
-        self.assertIsInstance(metrics_scores["accuracy_score"], pd.DataFrame)
-        np.testing.assert_array_equal(np.array(metrics_scores["accuracy_score"].loc["train"]), np.array([0.9]))
+        self.assertIsInstance(metrics_scores["accuracy_score*"], pd.DataFrame)
+        np.testing.assert_array_equal(np.array(metrics_scores["accuracy_score*"].loc["train"]), np.array([0.9]))
         np.testing.assert_array_equal(
-            np.array(metrics_scores["accuracy_score"].loc["test"]),
+            np.array(metrics_scores["accuracy_score*"].loc["test"]),
             np.array([0.95]))
         np.testing.assert_array_equal(
             np.array(metrics_scores["f1_score"].loc["train"]),
@@ -37,11 +37,11 @@ class Test_get_metrics_scores(unittest.TestCase):
                                       np.array(["ada-0"]))
 
     def test_multiple_monoview_classifiers(self):
-        metrics = [["accuracy_score"], ["f1_score"]]
+        metrics = {"accuracy_score*":{},"f1_score":{}}
         results = [MonoviewResult(view_index=0,
                                   classifier_name="ada",
                                   view_name="0",
-                                  metrics_scores={"accuracy_score": [0.9, 0.95],
+                                  metrics_scores={"accuracy_score*": [0.9, 0.95],
                                    "f1_score": [0.91, 0.96]},
                                   full_labels_pred="",
                                   classifier_config="",
@@ -49,11 +49,12 @@ class Test_get_metrics_scores(unittest.TestCase):
                                   n_features="",
                                   hps_duration=0,
                                   fit_duration=0,
-                                  pred_duration=0),
+                                  pred_duration=0,
+                                  class_metric_scores={}),
                    MonoviewResult(view_index=0,
                                   classifier_name="dt",
                                   view_name="1",
-                                  metrics_scores={"accuracy_score": [0.8, 0.85],
+                                  metrics_scores={"accuracy_score*": [0.8, 0.85],
                                    "f1_score": [0.81, 0.86]},
                                   full_labels_pred="",
                                   classifier_config="",
@@ -61,17 +62,18 @@ class Test_get_metrics_scores(unittest.TestCase):
                                   n_features="",
                                   hps_duration=0,
                                   fit_duration=0,
-                                  pred_duration=0)
+                                  pred_duration=0,
+                                  class_metric_scores={})
                    ]
-        metrics_scores = get_metrics_scores(metrics,
-                                                            results)
+        metrics_scores, class_met = get_metrics_scores(metrics,
+                                                            results, [])
         self.assertIsInstance(metrics_scores, dict)
-        self.assertIsInstance(metrics_scores["accuracy_score"], pd.DataFrame)
+        self.assertIsInstance(metrics_scores["accuracy_score*"], pd.DataFrame)
         np.testing.assert_array_equal(
-            np.array(metrics_scores["accuracy_score"].loc["train"]),
+            np.array(metrics_scores["accuracy_score*"].loc["train"]),
             np.array([0.9, 0.8]))
         np.testing.assert_array_equal(
-            np.array(metrics_scores["accuracy_score"].loc["test"]),
+            np.array(metrics_scores["accuracy_score*"].loc["test"]),
             np.array([0.95, 0.85]))
         np.testing.assert_array_equal(
             np.array(metrics_scores["f1_score"].loc["train"]),
@@ -84,13 +86,13 @@ class Test_get_metrics_scores(unittest.TestCase):
             np.array(["ada-0", "dt-1"]))
 
     def test_mutiview_result(self):
-        metrics = [["accuracy_score"], ["f1_score"]]
-        results = [MultiviewResult("mv", "", {"accuracy_score": [0.7, 0.75],
-                                   "f1_score": [0.71, 0.76]}, "",0,0,0 ),
+        metrics = {"accuracy_score*":{},"f1_score":{}}
+        results = [MultiviewResult("mv", "", {"accuracy_score*": [0.7, 0.75],
+                                   "f1_score": [0.71, 0.76]}, "",0,0,0, {}),
                    MonoviewResult(view_index=0,
                                   classifier_name="dt",
                                   view_name="1",
-                                  metrics_scores={"accuracy_score": [0.8, 0.85],
+                                  metrics_scores={"accuracy_score*": [0.8, 0.85],
                                                   "f1_score": [0.81, 0.86]},
                                   full_labels_pred="",
                                   classifier_config="",
@@ -98,17 +100,18 @@ class Test_get_metrics_scores(unittest.TestCase):
                                   n_features="",
                                   hps_duration=0,
                                   fit_duration=0,
-                                  pred_duration=0)
+                                  pred_duration=0,
+                                  class_metric_scores={})
                    ]
-        metrics_scores = get_metrics_scores(metrics,
-                                                            results)
+        metrics_scores, class_met = get_metrics_scores(metrics,
+                                                            results, [])
         self.assertIsInstance(metrics_scores, dict)
-        self.assertIsInstance(metrics_scores["accuracy_score"], pd.DataFrame)
+        self.assertIsInstance(metrics_scores["accuracy_score*"], pd.DataFrame)
         np.testing.assert_array_equal(
-            np.array(metrics_scores["accuracy_score"].loc["train"]),
+            np.array(metrics_scores["accuracy_score*"].loc["train"]),
             np.array([0.7, 0.8]))
         np.testing.assert_array_equal(
-            np.array(metrics_scores["accuracy_score"].loc["test"]),
+            np.array(metrics_scores["accuracy_score*"].loc["test"]),
             np.array([0.75, 0.85]))
         np.testing.assert_array_equal(
             np.array(metrics_scores["f1_score"].loc["train"]),
@@ -132,17 +135,19 @@ class Test_init_plot(unittest.TestCase):
         directory = "dir"
         database_name = 'db'
         labels_names = ['lb1', "lb2"]
+        class_met = metric_dataframe = pd.DataFrame(index=["train", "test"],
+                                        columns=["dt-1", "mv"], data=data)
         train, test, classifier_names, \
-        file_name, nb_results, results = init_plot(results,
+        file_name, nb_results, results, class_test = init_plot(results,
                                                                    metric_name,
                                                                    metric_dataframe,
                                                                    directory,
                                                                    database_name,
-                                                                   labels_names)
-        self.assertEqual(file_name, os.path.join("dir", "db-lb1_vs_lb2-acc"))
+                                                                   class_met)
+        self.assertEqual(file_name, os.path.join("dir", "db-acc"))
         np.testing.assert_array_equal(train, data[0,:])
         np.testing.assert_array_equal(test, data[1, :])
         np.testing.assert_array_equal(classifier_names, np.array(["dt-1", "mv"]))
         self.assertEqual(nb_results, 2)
-        self.assertEqual(results, [["dt-1", "acc", data[1,0], 0],
-                                   ["mv", "acc", data[1,1], 0]])
+        self.assertEqual(results, [["dt-1", "acc", data[1,0], 0.0, data[1,0]],
+                                   ["mv", "acc", data[1,1], 0.0, data[1,1]]])

@@ -32,14 +32,12 @@ class Test_ResultAnalyzer(unittest.TestCase):
         cls.n_splits = 5
         cls.k_folds = StratifiedKFold(n_splits=cls.n_splits, )
         cls.hps_method = "randomized_search"
-        cls.metrics_list = [("accuracy_score", {}), ("f1_score", {})]
+        cls.metrics_list = {"accuracy_score": {}, "f1_score":{}}
         cls.n_iter = 6
         cls.class_label_names = ["class{}".format(ind+1)
                                   for ind in range(cls.n_classes)]
-        cls.train_pred = np.random.randint(0, cls.n_classes,
-                                           size=cls.train_length)
-        cls.test_pred = np.random.randint(0, cls.n_classes,
-                                          size=cls.test_length)
+        cls.pred = np.random.randint(0, cls.n_classes,
+                                          size=cls.n_examples)
         cls.directory = "fake_directory"
         cls.base_file_name = "fake_file"
         cls.labels = np.random.randint(0, cls.n_classes,
@@ -48,19 +46,19 @@ class Test_ResultAnalyzer(unittest.TestCase):
         cls.nb_cores = 0.5
         cls.duration = -4
         cls.train_accuracy = accuracy_score(cls.labels[cls.train_indices],
-                                            cls.train_pred)
+                                            cls.pred[cls.train_indices])
         cls.test_accuracy = accuracy_score(cls.labels[cls.test_indices],
-                                            cls.test_pred)
+                                            cls.pred[cls.test_indices])
         cls.train_f1 = f1_score(cls.labels[cls.train_indices],
-                                            cls.train_pred, average='micro')
+                                cls.pred[cls.train_indices], average='micro')
         cls.test_f1 = f1_score(cls.labels[cls.test_indices],
-                                           cls.test_pred, average='micro')
+                               cls.pred[cls.test_indices], average='micro')
 
     def test_simple(self):
         RA = base.ResultAnalyser(self.classifier, self.classification_indices,
                                  self.k_folds, self.hps_method, self.metrics_list,
                                  self.n_iter, self.class_label_names,
-                                 self.train_pred, self.test_pred, self.directory,
+                                 self.pred, self.directory,
                                  self.base_file_name, self.labels,
                                  self.database_name, self.nb_cores,
                                  self.duration)
@@ -70,20 +68,20 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                  self.k_folds, self.hps_method,
                                  self.metrics_list,
                                  self.n_iter, self.class_label_names,
-                                 self.train_pred, self.test_pred,
+                                 self.pred,
                                  self.directory, self.base_file_name,
                                  self.labels, self.database_name,
                                  self.nb_cores, self.duration)
-        train_score, test_score = RA.get_metric_score("accuracy_score", {})
-        self.assertEqual(train_score, self.train_accuracy)
-        self.assertEqual(test_score, self.test_accuracy)
+        cl_train, cl_test,train_score, test_score = RA.get_metric_score("accuracy_score", {})
+        np.testing.assert_array_equal(train_score, self.train_accuracy)
+        np.testing.assert_array_equal(test_score, self.test_accuracy)
 
     def test_get_all_metrics_scores(self):
         RA = base.ResultAnalyser(self.classifier, self.classification_indices,
                                  self.k_folds, self.hps_method,
                                  self.metrics_list,
                                  self.n_iter, self.class_label_names,
-                                 self.train_pred, self.test_pred,
+                                 self.pred,
                                  self.directory, self.base_file_name,
                                  self.labels, self.database_name,
                                  self.nb_cores, self.duration)

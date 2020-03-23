@@ -10,7 +10,7 @@ from multiview_platform.mono_multi_view_classifiers.result_analysis.execution im
 class Test_format_previous_results(unittest.TestCase):
 
     def test_simple(self):
-        iter_results = {"metrics_scores":[], "example_errors":[], "feature_importances":[], "labels":[], "durations":[]}
+        iter_results = {"metrics_scores":[], "example_errors":[], "feature_importances":[], "labels":[], "durations":[], "class_metrics_scores":[]}
         random_state = np.random.RandomState(42)
 
         # Gen metrics data
@@ -46,7 +46,7 @@ class Test_format_previous_results(unittest.TestCase):
                                                          data=np.ones((2, 2))))
 
         # Running the function
-        metric_analysis, error_analysis, \
+        metric_analysis, class_met, error_analysis, \
         feature_importances, feature_stds, \
         labels, durations_mean, duration_std = format_previous_results(iter_results)
         mean_df = pd.DataFrame(data=np.mean(np.array([metrics_1_data,
