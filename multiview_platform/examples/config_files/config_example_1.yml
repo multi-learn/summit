@@ -5,7 +5,7 @@ log: True
 # The name of each dataset in the directory on which the benchmark should be run
 name: ["plausible"]
 # A label for the resul directory
-label: "_"
+label: ""
 # The type of dataset, currently supported ".hdf5", and ".csv"
 file_type: ".hdf5"
 # The views to use in the banchmark, an empty value will result in using all the views
@@ -34,9 +34,7 @@ track_tracebacks: True
 
 # All the classification-realted configuration options
 
-# If the dataset is multiclass, will use this multiclass-to-biclass method
-multiclass_method: "oneVersusOne"
-# The ratio number of test exmaples/number of train examples
+# The ratio of test examples/number of train examples
 split: 0.8
 # The nubmer of folds in the cross validation process when hyper-paramter optimization is performed
 nb_folds: 2
@@ -54,17 +52,13 @@ algos_multiview: ["all"]
 # split, to have more statistically significant results
 stats_iter: 1
 # The metrics that will be use din the result analysis
-metrics: ["accuracy_score", "f1_score"]
+metrics:
+  accuracy_score: {}
+  f1_score:
+    average: "binary"
 # The metric that will be used in the hyper-parameter optimization process
 metric_princ: "accuracy_score"
 # The type of hyper-parameter optimization method
-hps_type: None
+hps_type: "None"
 # The number of iteration in the hyper-parameter optimization process
-hps_iter: 2
-
-
-# The following arguments are classifier-specific, and are documented in each
-# of the corresponding modules.
-
-# In order to run multiple sets of parameters, use multiple values in the
-# following lists, and set hps_type to None.
+hps_args: {}

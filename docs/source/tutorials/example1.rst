@@ -10,7 +10,7 @@ Context
 This platform aims at running multiple state-of-the-art classifiers on a multiview dataset in a classification context.
 It has been developed in order to get a baseline on common algorithms for any classification task.
 
-Adding a new classifier (monoview and/or multiview) as been made as simple as possible in order for users to be able to
+Adding a new classifier (monoview and/or multiview) to the benchmark as been made as simple as possible in order for users to be able to
 customize the set of classifiers and test their performances in a controlled environment.
 
 
@@ -43,8 +43,8 @@ We will decrypt the main arguments :
 
     - ``log: True`` allows to print the log in the terminal,
     - ``name: ["plausible"]`` uses the plausible simulated dataset,
-    - ``random_state: 42`` fixes the random state of this benchmark, it is useful for reproductibility,
-    - ``full: True`` the benchmark will used the full dataset,
+    - ``random_state: 42`` fixes the seed of random state for this benchmark, it is useful for reproductibility,
+    - ``full: True`` the benchmark will use the full dataset,
     - ``res_dir: "examples/results/example_1/"`` the results will be saved in ``multiview-machine-learning-omis/multiview_platform/examples/results/example_1``
 
 + Then the classification-related arguments :
@@ -52,9 +52,14 @@ We will decrypt the main arguments :
     - ``split: 0.8`` means that 80% of the dataset will be used to test the different classifiers and 20% to train them
     - ``type: ["monoview", "multiview"]`` allows for monoview and multiview algorithms to be used in the benchmark
     - ``algos_monoview: ["all"]`` runs on all the available monoview algorithms (same for ``algos_muliview``)
-    - ``metrics: ["accuracy_score", "f1_score"]`` means that the benchmark will evaluate the performance of each algortihms on these two metrics.
+    - The metrics configuration ::
 
-+ Then, the two following categories are algorithm-related and contain all the default values for the hyper-parameters.
+                        metrics:
+                          accuracy_score:{}
+                          f1_score:
+                            average:"binary"
+
+      means that the benchmark will evaluate the performance of each algorithms on accuracy, and f1-score with a binary average.
 
 **Start the benchmark**
 
@@ -69,7 +74,7 @@ The execution should take less than five minutes. We will first analyze the resu
 
 **Understanding the results**
 
-The result structure can be startling at first, but as the platform provides a lot of information, it has to be organized.
+The result structure can be startling at first, but, as the platform provides a lot of information, it has to be organized.
 
 The results are stored in ``multiview_platform/examples/results/example_1/``. Here, you will find a directory with the name of the database used for the benchmark, here : ``plausible/``
 Then, a directory with the amount of noise in the experiments, we didn't add any, so ``n_0/`` finally, a directory with
@@ -108,13 +113,18 @@ From here the result directory has the structure that follows  :
     | └── train_indices.csv
     | ├── 1560_12_25-15_42-*-LOG.log
     | ├── config_file.yml
-    | ├── *-accuracy_score.png
-    | ├── *-accuracy_score.csv
+    | ├── *-accuracy_score*.png
+    | ├── *-accuracy_score*.html
+    | ├── *-accuracy_score*-class.html
+    | ├── *-accuracy_score*.csv
     | ├── *-f1_score.png
+    | ├── *-f1_score.html
+    | ├── *-f1_score-class.html
     | ├── *-f1_score.csv
     | ├── *-error_analysis_2D.png
     | ├── *-error_analysis_2D.html
     | ├── *-error_analysis_bar.png
+    | ├── *-error_analysis_bar.html
     | ├── feature_importances
     | | ├── *-ViewNumber0-feature_importance.html
     | | ├── *-ViewNumber0-feature_importance_dataframe.csv
@@ -127,15 +137,15 @@ From here the result directory has the structure that follows  :
     | └── random_state.pickle
 
 
-The structure can seem complex, but it priovides a lot of information, from the most general to the most precise.
+The structure can seem complex, but it provides a lot of information, from the most general to the most precise.
 
 Let's comment each file :
 
-``*-accuracy_score.png`` and ``*-accuracy_score.csv``
+``*-accuracy_score*.html``, ``*-accuracy_score*.png`` and ``*-accuracy_score*.csv``
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 These files contain the scores of each classifier for the accuracy metric, ordered with le best ones on the right and
-the worst ones on the left, as an image or as as csv matrix.
+the worst ones on the left, as an interactive html page, an image or a csv matrix. The star after ``accuracy_score*`` means that it is the principal metric.
 The image version is as follows :
 
 .. figure:: ./images/accuracy.png
@@ -147,7 +157,7 @@ The image version is as follows :
 
 The csv file is a matrix with the score on train stored in the first row and the score on test stored in the second one. Each classifier is presented in a row. It is loadable with pandas.
 
-Similar files have been generated for the f1 metric (``*-f1_score.png`` and ``*-f1_score.csv``).
+Similar files have been generated for the f1 metric.
 
 
 ``*-error_analysis_2D.png`` and ``*-error_analysis_2D.html``
@@ -187,8 +197,8 @@ and then, display a black half-column.
 
 The data used to generate those matrices is available in ``*-2D_plot_data.csv``
 
-``*-error_analysis_bar.png``
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+``*-error_analysis_bar.png`` and ``*-error_analysis_bar.html``
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 This file is a different way to visualize the same information as the two previous ones. Indeed, it is a bar plot,
 with a bar for each example, counting the number of classifiers that failed to classify this particular example.
@@ -223,5 +233,5 @@ For each classifier, at least one file is generated, called ``*-summary.txt``.
 .. include:: ./images/summary.txt
     :literal:
 
-This regroups the useful information on the classifiers configuration and it's performance. An interpretation section is
+This regroups the useful information on the classifier's configuration and it's performance. An interpretation section is
 available for classifiers that present some interpretation-related information (as feature importance).
