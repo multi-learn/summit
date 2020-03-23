@@ -62,7 +62,7 @@ class BaseMultiviewClassifier(BaseClassifier):
                             n_classes=3, n_views=2):
         if int(n_samples / n_classes) < 1:
             raise ValueError(
-                "n_samples ({}) / n_classe ({}) must be over 1".format(
+                "n_samples ({}) / n_classes ({}) must be over 1".format(
                     n_samples,
                     n_classes))
         fake_mc_X = RAMDataset(
