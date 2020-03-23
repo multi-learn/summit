@@ -144,7 +144,7 @@ def get_metric(metrics_dict):
     """
     Fetches the metric module in the metrics package
     """
-    for metric_name, metric_kwargs in metrics_dict:
+    for metric_name, metric_kwargs in metrics_dict.items():
         if metric_name.endswith("*"):
             princ_metric_name = metric_name[:-1]
             princ_metric_kwargs = metric_kwargs
