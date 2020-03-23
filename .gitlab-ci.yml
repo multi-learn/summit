@@ -39,7 +39,7 @@ pages:
     only:
         - master
     script:
-#       - export LC_ALL=$(locale -a | grep en_US)
+        - export LC_ALL=$(locale -a | grep en_US)
         - export LANG=$(locale -a | grep en_US)
         - pip3 install -e . --no-deps
         - sphinx-apidoc -o docs/source multiview_platform
