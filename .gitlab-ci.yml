@@ -13,8 +13,8 @@ doc:
     tags:
         - docker
     only:
-        - develop
         - master
+        - develop
     script:
         - export LC_ALL=$(locale -a | grep en_US)
         - export LANG=$(locale -a | grep en_US)
@@ -28,10 +28,7 @@ doc:
         paths:           
             public
 
-
-# TODO: Replace the task doc by the following task pages when making the
 # project public
-
 pages:
     image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/multiview-machine-learning-omis/ubuntu:18.04
     tags:
