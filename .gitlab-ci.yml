@@ -13,6 +13,7 @@ doc:
     tags:
         - docker
     only:
+        - master
         - develop
     script:
         - export LC_ALL=$(locale -a | grep en_US)
@@ -24,24 +25,25 @@ doc:
         - cd ../..
         - cp -r ./docs/build public
     artifacts:
-         paths:           
-           - public
+        paths:
+            - public
 
-
-# TODO: Replace the task doc by the following task pages when making the
 # project public
-#
-#pages:
-#    image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/multiview-machine-learning-omis/ubuntu:18.04
-#    tags:
-#        - docker
-#    only:
-#        - master
-#    script:
-#        - export LC_ALL=$(locale -a | grep en_US)
-#        - export LANG=$(locale -a | grep en_US)
-#        - python3 setup.py build_sphinx
-#        - cp -r build/sphinx/html public
-#    artifacts:
-#        paths:
-#            - public
+pages:
+    image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/multiview-machine-learning-omis/ubuntu:18.04
+    tags:
+        - docker
+    only:
+        - master
+    script:
+        - export LC_ALL=$(locale -a | grep en_US)
+        - export LANG=$(locale -a | grep en_US)
+        - pip3 install -e . --no-deps
+        - sphinx-apidoc -o docs/source multiview_platform
+        - cd docs/source
+        - sphinx-build -b html . ../build
+        - cd ../..
+        - cp -r ./docs/build public
+    artifacts:
+       paths:
+            - public
