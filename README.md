@@ -25,18 +25,18 @@ And the following python modules :
 * [m2r](https://pypi.org/project/m2r/) - Used to generate documentation from the readme,
 * [docutils](https://pypi.org/project/docutils/) - Used to generate documentation,
 * [pyyaml](https://pypi.org/project/PyYAML/) - Used to read the config files,
-* [plotly](https://plot.ly/) - Used to generate interactive HTML visuals.
+* [plotly](https://plot.ly/) - Used to generate interactive HTML visuals,
+* [tabulate](https://pypi.org/project/tabulate/) - Used to generated the confusion matrix.
 
-They are all tested in  `multiview-machine-mearning-omis/multiview_platform/MonoMutliViewClassifiers/Versions.py` which is automatically checked each time you run the `execute` script
 
 ### Installing
 
-Once you cloned the project from this repository, you just have to use :  
+Once you cloned the project from the [gitlab repository](https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/), you just have to use :  
 
 ```
 pip install -e .
 ```
-In the `multiview_machine-learning-omis` directory.
+In the `multiview_machine-learning-omis` directory to install SuMMIT and its dependencies.
 
 ### Running on simulated data
 
@@ -45,16 +45,16 @@ In order to run it you'll need to try on **simulated** data with the command
 from multiview_platform.execute import execute
 execute()
 ```
-This will run the first example. For more information about the examples, see the documentation 
+This will run the first example. For more information about the examples, see the [documentation](http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/) 
 Results will be stored in the results directory of the installation path : 
 `path/to/install/multiview-machine-learning-omis/multiview_platform/examples/results`.
-The documentations proposes a detailed interpretation of the results. 
+The documentation proposes a detailed interpretation of the results. 
 
 ### Discovering the arguments
 
 All the arguments of the platform are stored in a YAML config file. Some config files are given as examples. 
 The file stored in `multiview-machine-learning-omis/config_files/config.yml` is documented and it is highly recommended
- to read it carefully before playing around with the parameters.   
+to read it carefully before playing around with the parameters.   
 
 You can create your own configuration file. In order to run the platform with it, run : 
 ```python
@@ -62,23 +62,24 @@ from multiview_platform.execute import execute
 execute(config_path="/absolute/path/to/your/config/file")
 ```
 
-For further information about classifier-specific arguments, see the documentation. 
+For further information about classifier-specific arguments, see the [documentation](http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/). 
  
 
 ### Dataset compatibility
 
-In order to start a benchmark on your dataset, you need to format it so the script can use it. 
-You can have either a directory containing `.csv` files or a HDF5 file. 
+In order to start a benchmark on your own dataset, you need to format it so SuMMIT can use it. 
 
-##### If you have multiple `.csv` files, you must organize them as : 
+[comment]: <> (You can have either a directory containing `.csv` files or a HDF5 file.) 
+
+[comment]: <> (#### If you have multiple `.csv` files, you must organize them as : 
 * `top_directory/database_name-labels.csv`
 * `top_directory/database_name-labels-names.csv`
-* `top_directory/Views/view_name.csv` or `top_directory/Views/view_name-s.csv` if the view is sparse
+* `top_directory/Views/view_name.csv` or `top_directory/Views/view_name-s.csv` if the view is sparse)
 
-With `top_directory` being the last directory in the `pathF` argument
+[comment]: <> (With `top_directory` being the last directory in the `pathF` argument)
  
 ##### If you already have an HDF5 dataset file it must be formatted as : 
-One dataset for each view called `ViewX` with `X` being the view index with 2 attribures : 
+One dataset for each view called `ViewI` with `I` being the view index with 2 attribures : 
 * `attrs["name"]` a string for the name of the view
 * `attrs["sparse"]` a boolean specifying whether the view is sparse or not
 * `attrs["ranges"]` a `np.array` containing the ranges of each attribute in the view (for ex. : for a pixel the range will be 255, for a real attribute in [-1,1], the range will be 2).
@@ -93,28 +94,20 @@ One group for the additional data called `Metadata` containing at least 3 attrib
 * `attrs["nbClass"]` an int counting the total number of different labels in the dataset
 * `attrs["datasetLength"]` an int counting the total number of examples in the dataset
 
+The `format_dataset.py` file is documented and can be used to format a multiview dataset in a SuMMIT-compatible HDF5 file.
 
 ### Running on your dataset 
 
-In order to run the script on your dataset you need to use : 
-```
-cd multiview-machine-learning-omis/multiview_platform
-python execute.py -log --name <your_dataset_name> --type <.cvs_or_.hdf5> --pathF <path_to_your_dataset>
+Once you have formatted your dataset, to run SuMMIT on it you need to modify the config file as  
+```yaml
+name: ["your_file_name"]
+*
+pathf: "path/to/your/dataset"
 ```
 This will run a full benchmark on your dataset using all available views and labels.
  
-You may configure the `--CL_statsiter`, `--CL_split`, `--CL_nbFolds`, `--CL_GS_iter` arguments to start a meaningful benchmark
+It is highly recommended to follow the documentation's [tutorials](http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/tutorials/index.html) to learn the use of each parameter. 
  
-
-## Running the tests
-
-**/!\ still in development, test sucess is not meaningful ATM /!\\**
-
-In order to run it you'll need to try on simulated data with the command
-```
-cd multiview-machine-learning-omis/
-python -m unittest discover
-```
 
 ## Author
 
@@ -122,6 +115,4 @@ python -m unittest discover
 
 ### Contributors
 
-* **Mazid Osseni**
-* **Alexandre Drouin**
-* **Nikolas Huelsmann**
+* **Dominique Benielli**
