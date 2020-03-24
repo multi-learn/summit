@@ -5,7 +5,7 @@ Taking control : Use your own dataset
 .. role:: python(code)
     :language: python
 
-While developping this platform, the goal has been to bea able to use it relatively easily on different datasets.
+While developping this platform, the goal has been to be able to use it relatively easily on different datasets.
 In order to do so, a fixed input format is used, and we choosed HDF5 as it allows to store a multiview dataset and its metadata in a single file, while being able to load it partially.
 
 The bare necessities

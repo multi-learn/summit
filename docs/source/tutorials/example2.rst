@@ -2,25 +2,31 @@
 Example 2 : Understanding the hyper-parameter optimization
 ==========================================================
 
-Intuitive explanation on hyper-parameters
+Hyper-parameters intuition
 -----------------------------------------
 
-Hyper-parameters are parameters of a classifier (monoview or multiview) that are task-dependant and have a huge part in the performance of the algorithm for a given task.
+Hyper-parameters are parameters of a classifier (monoview or multiview) that are
+task-dependant and have a huge part in the performance of the algorithm for a given task.
 
-The simplest example is the decision tree. One of it's hyper-parameter is the depth of the tree. The deeper the tree is,
-the most it will fit on the learning data. However a tree too deep will most likely overfit and won't have any relevance on
+The simplest example is the decision tree. One of it's hyper-parameter is the
+depth of the tree. The deeper the tree is,
+the most it will fit on the learning data. However, a tree too deep will most
+likely overfit and won't have any relevance on
 unseen testing data.
 
-This platform proposes a randomized search and a grid search to optimize hyper-parameters. In this example,
-we first will analyze the theory and then how to use it.
+This platform proposes a randomized search and a grid search to optimize
+hyper-parameters. In this example, we first will analyze the theory and
+then how to use it.
 
 
 Understanding train/test split
 ------------------------------
 
-In order to provide robust results, this platform splits the dataset in a training set, that will be used by the
-classifier to optimize their hyper-parameter and learn a relevant model, and a testing set that will take no part in
-the learning process and serve as unseen data to estimate each model's generalization capacity.
+In order to provide robust results, this platform splits the dataset in a
+training set, that will be used by the classifier to optimize their
+hyper-parameter and learn a relevant model, and a testing set that will take
+no part in the learning process and serve as unseen data to estimate each
+model's generalization capacity.
 
 This split ratio is controlled by the config file's argument ``split:``. It uses a float to pass the ratio between the size of the testing set and the training set  :
 :math:`\text{split} = \frac{\text{test size}}{\text{dataset size}}`. In order to be as fair as possible, this split is made by keeping the ratio between each class in the training set and in the testing set.
@@ -213,10 +219,10 @@ TODO COMMENT
 
 **Conclusion**
 
-THe impact of split ratio : dataset related.
+The impact of split ratio : dataset related.
 
-Example 2.2 : Usage of hyper-parameter optimization :
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+Example 2.2 : Usage of randomized hyper-parameter optimization :
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 In the previous example, we have seen that the split ratio has an impact on the computational time.
 But the most time-consuming task is optimizing the hyper parameters.
@@ -227,7 +233,8 @@ However, most of the time, they are unknown to the user, and then have to be opt
 In this example, we will use the hyper-parameter optimization method implemented in the platform, to do so we will use three lines of the config file :
 
 - ``hps_type:``, controlling the type of hyper-parameter search,
-- ``hps_iter:``, controlling the number of random draws during the hyper-parameter search,
+- ``n_iter:``, controlling the number of random draws during the hyper-parameter search,
+- ``equivalent_draws``, controlling the number fo draws for multiview algorithms,
 - ``nb_folds:``, controlling the number of folds in the cross-validation process.
 
 So if you run ``example 2.2.1`` with :
@@ -237,16 +244,12 @@ So if you run ``example 2.2.1`` with :
    >>> from multiview_platform.execute import execute
    >>> execute("example2.2.1")
 
-The ``hps_type`` argument is set to ``"randomised_search"``, which is at the moment the only hyper-parameter optimization method implemented in the platform.
-The ``hps_iter`` argument is set to ``5``,
+The ``hps_type`` argument is set to ``"Random"``, which is at the moment the only hyper-parameter optimization method implemented in the platform.
+The ``n_iter`` argument is set to ``5``,
+The ``equivalent_draws`` argument  is set to ``True``,
 The ``nb_folds`` argument is set o ``5``.
 
-**WARNING : The "csv-table" directive's ":file:" and ":url:" options represent a potential security holes. They can be disabled with the "file_insertion_enabled" runtime setting.**
-
-.. csv-table::
-    :file: ./images/result_default_hp_high_train.csv
-
-Here, we used ``split: 0.2`` and the results are far better than with the preset of hyper paramters, as the classifiers are able to fit the task.
+Here, we used ``split: 0.2`` and the results are far better than with the preset of hyper parameters, as the classifiers are able to fit the task.
 
 
 The computing time should be longer than the previous examples. Let's see the pseudo code of the benchmark, while using the hyper-parameter optimization::
@@ -272,32 +275,61 @@ The computing time should be longer than the previous examples. Let's see the ps
         └
         learn on the whole training set
 
-The instructions inside the brackets are the one that the HP optimization adds. So for the monoview algorithms,
+The instructions inside the brackets are the one that the hyper-parameter
+optimization adds. So for the monoview algorithms,
 the computational impact of the HPO is bigger than for the multiview algorithms.
 
-The choice made here is to allow the same amount of draws for each HPO. However, as many of the multiview algorithms
+The choice made here is to allow the same amount of draws for each HPO. However,
+as many of the multiview algorithms
 are more complex and have bigger HP spaces, allowing them more draws, can be a defendable idea.
 
-However, for most of the tasks, using the HPO is a necessity to be able to get the most of each classifier in terms
-of performance.
+However, for most of the tasks, using the HPO is a necessity to be able to
+get the most of each classifier in terms of performance.
 
-The HPO is a matter of tradeoff between precision and computational demand. For most algorithms the more draws you
-allow, the closer to ideal the outputted HP will be, however, many draws mean much longer computational time.
+The HPO is a matter of trade-off between precision and computational demand.
+For most algorithms the more draws you allow, the closer to ideal the outputted
+HP will be, however, many draws mean much longer computational time.
 
-Similarly, the number of folds has a great importance in estimating the performance of a specific Hp combination,
-and the more folds the but more folds take also more time, as one has to train more times and on bigger parts of the
+Similarly, the number of folds has a great importance in estimating the
+performance of a specific HP combination, and the more folds the but more folds
+take also more time, as one has to train more times and on bigger parts of the
 dataset.
 
-The figure below represents the duration of the execution on a personal computer with different fold/draws settings :
+The figure below represents the duration of the execution on a personal computer
+with different fold/draws settings :
 
 .. raw:: html
     :file: ./images/durations.html
 
-The duration is in seconds, and we used 2,5,10,15,20 as values for ``nb_folds`` and 2,5,10,20,30,50,100 for ``hps_iter`` with two monoview classifiers and one multiview classifier on simulated data.
+The duration is in seconds, and we used 2,5,10,15,20 as values for ``nb_folds``
+and 2,5,10,20,30,50,100 for ``n_iter`` with two monoview classifiers and one
+multiview classifier on simulated data.
 
 .. note::
-    In order to compensate the fact that the multiview classifiers have more complex problems to solve, it is possible to use ``"randomized_search-equiv"`` as the HPS optimization method to allow
-    ``hps_iter`` draws for the monoview classifiers and ``hps_iter * nb_view`` draws for the ones that are multiview.
+    The hyper-parameter optimization process generates a report for each
+    classifier, providing each set of parameters and its cross-validation score,
+    to be able to extract the relevant parameters for a future benchmark on the
+    same dataset.
 
 
+Example 2.3 : Usage of grid search :
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+In SuMMIT, it is possible to use a grid search if one has several possible
+hyper-parameter values in mind to test.
+
+In order to set up the grid search one has to provide in the ``hps_args:``
+argument the names, parameters and values to test. Let us say we want to try
+several depths for a decision tree, and several ``C`` values for a
+linear `SVM <ttps://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_:
+
+.. code-block:: yaml
+
+    hps_type: "Grid"
+    hps_args:
+      decision_tree:
+        max_depth: [1,2,3,4,5]
+      svm_linear:
+        C: [0.1,0.2,0.3,0.4,0.5]
+
+TODO : a more complex example
