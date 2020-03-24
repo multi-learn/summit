@@ -28,9 +28,6 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="example2.html" title="Example 2 : Understanding the hyper-parameter optimization"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -52,7 +49,7 @@
 <h2>Context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h2>
 <p>This platform aims at running multiple state-of-the-art classifiers on a multiview dataset in a classification context.
 It has been developed in order to get a baseline on common algorithms for any classification task.</p>
-<p>Adding a new classifier (monoview and/or multiview) as been made as simple as possible in order for users to be able to
+<p>Adding a new classifier (monoview and/or multiview) to the benchmark as been made as simple as possible in order for users to be able to
 customize the set of classifiers and test their performances in a controlled environment.</p>
 </div>
 <div class="section" id="introduction-to-this-tutorial">
@@ -70,110 +67,118 @@ customize the set of classifiers and test their performances in a controlled env
 <p>The config file that will be used in this example is located in <code class="docutils literal notranslate"><span class="pre">multiview-machine-learning-omis/multiview_platform/examples/config_files/config_exmaple_1.yml</span></code></p>
 <p>We will decrypt the main arguments :</p>
 <ul>
-<li><p class="first">The first part of the arguments are the basic ones :</p>
+<li><p class="first">The first part regroups the basics :</p>
 <blockquote>
 <div><ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">log:</span> <span class="pre">True</span></code> allows to print the log in the terminal,</li>
 <li><code class="docutils literal notranslate"><span class="pre">name:</span> <span class="pre">[&quot;plausible&quot;]</span></code> uses the plausible simulated dataset,</li>
-<li><code class="docutils literal notranslate"><span class="pre">random_state:</span> <span class="pre">42</span></code> fixes the random state of this benchmark, it is useful for reproductibility,</li>
-<li><code class="docutils literal notranslate"><span class="pre">full:</span> <span class="pre">True</span></code> the benchmark will used the full dataset,</li>
-<li><code class="docutils literal notranslate"><span class="pre">res_dir:</span> <span class="pre">&quot;examples/results/example_1/&quot;</span></code> the results will be saved in <code class="docutils literal notranslate"><span class="pre">multiview-machine-learning-omis/multiview_platform/examples/results/example_1</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">random_state:</span> <span class="pre">42</span></code> fixes the seed of the random state for this benchmark, it is useful for reproductibility,</li>
+<li><code class="docutils literal notranslate"><span class="pre">full:</span> <span class="pre">True</span></code> means the benchmark will use the full dataset,</li>
+<li><code class="docutils literal notranslate"><span class="pre">res_dir:</span> <span class="pre">&quot;examples/results/example_1/&quot;</span></code> saves the results in <code class="docutils literal notranslate"><span class="pre">multiview-machine-learning-omis/multiview_platform/examples/results/example_1</span></code></li>
 </ul>
 </div></blockquote>
 </li>
 <li><p class="first">Then the classification-related arguments :</p>
 <blockquote>
-<div><ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">split:</span> <span class="pre">0.8</span></code> means that 80% of the dataset will be used to test the different classifiers and 20% to train them</li>
-<li><code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">[&quot;monoview&quot;,</span> <span class="pre">&quot;multiview&quot;]</span></code> allows for monoview and multiview algorithms to be used in the benchmark</li>
-<li><code class="docutils literal notranslate"><span class="pre">algos_monoview:</span> <span class="pre">[&quot;all&quot;]</span></code> runs on all the available monoview algorithms (same for <code class="docutils literal notranslate"><span class="pre">algos_muliview</span></code>)</li>
-<li><code class="docutils literal notranslate"><span class="pre">metrics:</span> <span class="pre">[&quot;accuracy_score&quot;,</span> <span class="pre">&quot;f1_score&quot;]</span></code> means that the benchmark will evaluate the performance of each algortihms on these two metrics.</li>
+<div><ul>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">split:</span> <span class="pre">0.8</span></code> means that 80% of the dataset will be used to test the different classifiers and 20% to train them,</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">[&quot;monoview&quot;,</span> <span class="pre">&quot;multiview&quot;]</span></code> allows for monoview and multiview algorithms to be used in the benchmark,</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">algos_monoview:</span> <span class="pre">[&quot;all&quot;]</span></code> runs on all the available monoview algorithms (same for <code class="docutils literal notranslate"><span class="pre">algos_muliview</span></code>)</p>
+</li>
+<li><p class="first">The metrics configuration</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metrics</span><span class="p">:</span>
+  <span class="n">accuracy_score</span><span class="p">:{}</span>
+  <span class="n">f1_score</span><span class="p">:</span>
+    <span class="n">average</span><span class="p">:</span><span class="s2">&quot;binary&quot;</span>
+</pre></div>
+</div>
+<p>means that the benchmark will evaluate the performance of each algorithms on accuracy, and f1-score with a binary average.</p>
+</li>
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first">Then, the two following categories are algorithm-related and contain all the default values for the hyper-parameters.</p>
-</li>
 </ul>
 <p><strong>Start the benchmark</strong></p>
-<p>During the whole benchmark, the log file will be printed in the terminal. To start the benchmark run :</p>
+<p>During the whole benchmark, the log file will be printed in the terminal. To start the benchmark, run :</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The execution should take less than five minutes. We will first analyze the results and parse through the information the platform output.</p>
 <p><strong>Understanding the results</strong></p>
-<p>The result structure can be startling at first, but as the platform provides a lot of information, it has to be organized.</p>
+<p>The result structure can be startling at first, but, as the platform provides a lot of information, it has to be organized.</p>
 <p>The results are stored in <code class="docutils literal notranslate"><span class="pre">multiview_platform/examples/results/example_1/</span></code>. Here, you will find a directory with the name of the database used for the benchmark, here : <code class="docutils literal notranslate"><span class="pre">plausible/</span></code>
 Then, a directory with the amount of noise in the experiments, we didn’t add any, so <code class="docutils literal notranslate"><span class="pre">n_0/</span></code> finally, a directory with
 the date and time of the beginning of the experiment. Let’s say you started the benchmark on the 25th of December 1560,
 at 03:42 PM, the directory’s name should be <code class="docutils literal notranslate"><span class="pre">started_1560_12_25-15_42/</span></code>.</p>
 <p>From here the result directory has the structure that follows  :</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="p">|</span> started_1560_12_25-15_42
-<span class="p">|</span> ├── No-vs-Yes
-<span class="p">|</span> <span class="p">|</span> ├── adaboost
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   ├── ViewNumber0
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── 1560_12_25-15_42-*-summary.txt
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── &lt;other classifier dependant files&gt;
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   ├── ViewNumber1
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── 1560_12_25-15_42-*-summary.txt
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── &lt;other classifier dependant files&gt;
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   ├── ViewNumber2
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── 1560_12_25-15_42-*-summary.txt
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── &lt;other classifier dependant files&gt;
-<span class="p">|</span> <span class="p">|</span> ├── decision_tree
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   ├── ViewNumber0
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>  ├── &lt;summary <span class="p">&amp;</span> classifier dependant files&gt;
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   ├── ViewNumber1
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>  ├── &lt;summary <span class="p">&amp;</span> classifier dependant files&gt;
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   ├── ViewNumber2
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>  ├── &lt;summary <span class="p">&amp;</span> classifier dependant files&gt;
-<span class="p">|</span> <span class="p">|</span> ├── <span class="o">[</span>..
-<span class="p">|</span> <span class="p">|</span> ├── ..<span class="o">]</span>
-<span class="p">|</span> <span class="p">|</span> ├── weighted_linear_late_fusion
-<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   ├── &lt;summary <span class="p">&amp;</span> classifier dependant files&gt;
-<span class="p">|</span> <span class="p">|</span> ├── <span class="o">[</span>..
-<span class="p">|</span> <span class="p">|</span> ├── ..<span class="o">]</span>
-<span class="p">|</span> <span class="p">|</span> ├── train_labels.csv
-<span class="p">|</span> │ └── train_indices.csv
+<span class="p">|</span> ├── adaboost
+<span class="p">|</span> <span class="p">|</span>   ├── ViewNumber0
+<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── *-summary.txt
+<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── &lt;other classifier dependant files&gt;
+<span class="p">|</span> <span class="p">|</span>   ├── ViewNumber1
+<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── *-summary.txt
+<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── &lt;other classifier dependant files&gt;
+<span class="p">|</span> <span class="p">|</span>   ├── ViewNumber2
+<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── *-summary.txt
+<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── &lt;other classifier dependant files&gt;
+<span class="p">|</span> ├── decision_tree
+<span class="p">|</span> <span class="p">|</span>   ├── ViewNumber0
+<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>  ├── &lt;summary <span class="p">&amp;</span> classifier dependant files&gt;
+<span class="p">|</span> <span class="p">|</span>   ├── ViewNumber1
+<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>  ├── &lt;summary <span class="p">&amp;</span> classifier dependant files&gt;
+<span class="p">|</span> <span class="p">|</span>   ├── ViewNumber2
+<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>  ├── &lt;summary <span class="p">&amp;</span> classifier dependant files&gt;
+<span class="p">|</span> ├── <span class="o">[</span>..
+<span class="p">|</span> ├── ..<span class="o">]</span>
+<span class="p">|</span> ├── weighted_linear_late_fusion
+<span class="p">|</span> <span class="p">|</span>   ├── &lt;summary <span class="p">&amp;</span> classifier dependant files&gt;
+<span class="p">|</span> ├── <span class="o">[</span>..
+<span class="p">|</span> ├── ..<span class="o">]</span>
+<span class="p">|</span> ├── train_labels.csv
+<span class="p">|</span> └── train_indices.csv
 <span class="p">|</span> ├── 1560_12_25-15_42-*-LOG.log
 <span class="p">|</span> ├── config_file.yml
-<span class="p">|</span> ├── 1560_12_25-15_42-*-accuracy_score.png
-<span class="p">|</span> ├── 1560_12_25-15_42-*-accuracy_score.csv
-<span class="p">|</span> ├── 1560_12_25-15_42-*-f1_score.png
-<span class="p">|</span> ├── 1560_12_25-15_42-*-f1_score.csv
-<span class="p">|</span> ├── 1560_12_25-15_42-*-error_analysis_2D.png
-<span class="p">|</span> ├── 1560_12_25-15_42-*-error_analysis_2D.html
-<span class="p">|</span> ├── 1560_12_25-15_42-*-error_analysis_bar.png
-<span class="p">|</span> ├── 1560_12_25-15_42-*-ViewNumber0-feature_importance.html
-<span class="p">|</span> ├── 1560_12_25-15_42-*-ViewNumber0-feature_importance_dataframe.csv
-<span class="p">|</span> ├── 1560_12_25-15_42-*-ViewNumber1-feature_importance.html
-<span class="p">|</span> ├── 1560_12_25-15_42-*-ViewNumber1-feature_importance_dataframe.csv
-<span class="p">|</span> ├── 1560_12_25-15_42-*-ViewNumber2-feature_importance.html
-<span class="p">|</span> ├── 1560_12_25-15_42-*-ViewNumber2-feature_importance_dataframe.csv
-<span class="p">|</span> ├── 1560_12_25-15_42-*-bar_plot_data.csv
-<span class="p">|</span> ├── 1560_12_25-15_42-*-2D_plot_data.csv
+<span class="p">|</span> ├── *-accuracy_score*.png
+<span class="p">|</span> ├── *-accuracy_score*.html
+<span class="p">|</span> ├── *-accuracy_score*-class.html
+<span class="p">|</span> ├── *-accuracy_score*.csv
+<span class="p">|</span> ├── *-f1_score.png
+<span class="p">|</span> ├── *-f1_score.html
+<span class="p">|</span> ├── *-f1_score-class.html
+<span class="p">|</span> ├── *-f1_score.csv
+<span class="p">|</span> ├── *-error_analysis_2D.png
+<span class="p">|</span> ├── *-error_analysis_2D.html
+<span class="p">|</span> ├── *-error_analysis_bar.png
+<span class="p">|</span> ├── *-error_analysis_bar.html
+<span class="p">|</span> ├── feature_importances
+<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber0-feature_importance.html
+<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber0-feature_importance_dataframe.csv
+<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber1-feature_importance.html
+<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber1-feature_importance_dataframe.csv
+<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber2-feature_importance.html
+<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber2-feature_importance_dataframe.csv
+<span class="p">|</span> ├── *-bar_plot_data.csv
+<span class="p">|</span> ├── *-2D_plot_data.csv
 <span class="p">|</span> └── random_state.pickle
 </pre></div>
 </div>
-<p>The structure can seem complex, but it priovides a lot of information, from the most general to the most precise.</p>
+<p>The structure can seem complex, but it provides a lot of information, from the most general to the most precise.</p>
 <p>Let’s comment each file :</p>
-<div class="section" id="accuracy-score-png-and-1560-12-25-15-42-accuracy-score-csv">
-<h3><code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-accuracy_score.png</span></code> and <code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-accuracy_score.csv</span></code><a class="headerlink" href="#accuracy-score-png-and-1560-12-25-15-42-accuracy-score-csv" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="accuracy-score-html-accuracy-score-png-and-accuracy-score-csv">
+<h3><code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.html</span></code>, <code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.csv</span></code><a class="headerlink" href="#accuracy-score-html-accuracy-score-png-and-accuracy-score-csv" title="Permalink to this headline">¶</a></h3>
 <p>These files contain the scores of each classifier for the accuracy metric, ordered with le best ones on the right and
-the worst ones on the left, as an image or as as csv matrix.
+the worst ones on the left, as an interactive html page, an image or a csv matrix. The star after <code class="docutils literal notranslate"><span class="pre">accuracy_score*</span></code> means that it is the principal metric.
 The image version is as follows :</p>
-<div class="figure" id="id1">
-<a class="reference internal image-reference" href="../_images/accuracy.png"><img alt="../_images/accuracy.png" src="../_images/accuracy.png" style="width: 950.0px; height: 316.5px;" /></a>
-<p class="caption"><span class="caption-text">This is a bar plot showing the score on the training set (light gray), and testing set (dark gray). For each
-monoview classifier, on each view and or each multiview classifier, the scores are printed over the name, under each bar.
-It is highly recommended to click on the image to be able to zoom.</span></p>
-</div>
 <p>The csv file is a matrix with the score on train stored in the first row and the score on test stored in the second one. Each classifier is presented in a row. It is loadable with pandas.</p>
-<p>Similar files have been generated for the f1 metric (<code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-f1_score.png</span></code> and <code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-f1_score.csv</span></code>).</p>
+<p>Similar files have been generated for the f1 metric.</p>
 </div>
-<div class="section" id="error-analysis-2d-png-and-1560-12-25-15-42-error-analysis-2d-html">
-<h3><code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-error_analysis_2D.png</span></code> and <code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-error_analysis_2D.html</span></code><a class="headerlink" href="#error-analysis-2d-png-and-1560-12-25-15-42-error-analysis-2d-html" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="error-analysis-2d-png-and-error-analysis-2d-html">
+<h3><code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.html</span></code><a class="headerlink" href="#error-analysis-2d-png-and-error-analysis-2d-html" title="Permalink to this headline">¶</a></h3>
 <p>In these files, one can visualize the success or failure of each classifier on each example.</p>
-<p>Below, <code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-error_analysis_2D.html</span></code> is displayed.</p>
+<p>Below, <code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.html</span></code> is displayed.</p>
 <p>It is the representation of a matrix, where the rows are the examples, and the columns are the classifiers.</p>
 <p>If a classifier (Lasso on the first view for example) missclassified an example (example number 75 for examples),
 a black rectangle is printed in the row corresponding to example 75 and the column corresponding to Lasso-ViewNumber0,
@@ -220,17 +225,17 @@ It could mean that the example is incorrectly labeled in the dataset or is very 
 It is an understandable behaviour as the Plausible dataset’s view are generated and noised independently.
 Morever, as confirmed by the accuracy graph, four monoview classifiers classified all the example to the same class,
 and then, display a black half-column.</p>
-<p>The data used to generate those matrices is available in <code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-2D_plot_data.csv</span></code></p>
+<p>The data used to generate those matrices is available in <code class="docutils literal notranslate"><span class="pre">*-2D_plot_data.csv</span></code></p>
 </div>
-<div class="section" id="error-analysis-bar-png">
-<h3><code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-error_analysis_bar.png</span></code><a class="headerlink" href="#error-analysis-bar-png" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="error-analysis-bar-png-and-error-analysis-bar-html">
+<h3><code class="docutils literal notranslate"><span class="pre">*-error_analysis_bar.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-error_analysis_bar.html</span></code><a class="headerlink" href="#error-analysis-bar-png-and-error-analysis-bar-html" title="Permalink to this headline">¶</a></h3>
 <p>This file is a different way to visualize the same information as the two previous ones. Indeed, it is a bar plot,
 with a bar for each example, counting the number of classifiers that failed to classify this particular example.</p>
-<div class="figure" id="id2">
+<div class="figure" id="id1">
 <a class="reference internal image-reference" href="../_images/bar_error.png"><img alt="../_images/bar_error.png" src="../_images/bar_error.png" style="width: 160.0px; height: 120.0px;" /></a>
 <p class="caption"><span class="caption-text">The bar plot showing for each example how many classifiers failed on it.</span></p>
 </div>
-<p>The data used to generate this graph is available in <code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-bar_plot_data.csv</span></code></p>
+<p>The data used to generate this graph is available in <code class="docutils literal notranslate"><span class="pre">*-bar_plot_data.csv</span></code></p>
 </div>
 <div class="section" id="config-file-yml">
 <h3><code class="docutils literal notranslate"><span class="pre">config_file.yml</span></code><a class="headerlink" href="#config-file-yml" title="Permalink to this headline">¶</a></h3>
@@ -246,7 +251,7 @@ with a bar for each example, counting the number of classifiers that failed to c
 </div>
 <div class="section" id="classifier-dependant-files">
 <h3>Classifier-dependant files<a class="headerlink" href="#classifier-dependant-files" title="Permalink to this headline">¶</a></h3>
-<p>For each classifier, at least one file is generated, called <code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-summary.txt</span></code>.</p>
+<p>For each classifier, at least one file is generated, called <code class="docutils literal notranslate"><span class="pre">*-summary.txt</span></code>.</p>
 <pre class="literal-block">
 Classification on plausible database for ViewNumber0 with svm_linear.
 
@@ -279,7 +284,7 @@ Classifier configuration :
  Classifier Interpretation : 
 
 </pre>
-<p>This regroups the useful information on the classifiers configuration and it’s performance. An interpretation section is
+<p>This regroups the useful information on the classifier’s configuration and it’s performance. An interpretation section is
 available for classifiers that present some interpretation-related information (as feature importance).</p>
 </div>
 </div>
@@ -297,9 +302,9 @@ available for classifiers that present some interpretation-related information (
 <li><a class="reference internal" href="#context">Context</a></li>
 <li><a class="reference internal" href="#introduction-to-this-tutorial">Introduction to this tutorial</a></li>
 <li><a class="reference internal" href="#getting-started">Getting started</a><ul>
-<li><a class="reference internal" href="#accuracy-score-png-and-1560-12-25-15-42-accuracy-score-csv"><code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-accuracy_score.png</span></code> and <code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-accuracy_score.csv</span></code></a></li>
-<li><a class="reference internal" href="#error-analysis-2d-png-and-1560-12-25-15-42-error-analysis-2d-html"><code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-error_analysis_2D.png</span></code> and <code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-error_analysis_2D.html</span></code></a></li>
-<li><a class="reference internal" href="#error-analysis-bar-png"><code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-error_analysis_bar.png</span></code></a></li>
+<li><a class="reference internal" href="#accuracy-score-html-accuracy-score-png-and-accuracy-score-csv"><code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.html</span></code>, <code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.csv</span></code></a></li>
+<li><a class="reference internal" href="#error-analysis-2d-png-and-error-analysis-2d-html"><code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.html</span></code></a></li>
+<li><a class="reference internal" href="#error-analysis-bar-png-and-error-analysis-bar-html"><code class="docutils literal notranslate"><span class="pre">*-error_analysis_bar.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-error_analysis_bar.html</span></code></a></li>
 <li><a class="reference internal" href="#config-file-yml"><code class="docutils literal notranslate"><span class="pre">config_file.yml</span></code></a></li>
 <li><a class="reference internal" href="#random-state-pickle"><code class="docutils literal notranslate"><span class="pre">random_state.pickle</span></code></a></li>
 <li><a class="reference internal" href="#log-log"><code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-LOG.log</span></code></a></li>
@@ -345,9 +350,6 @@ available for classifiers that present some interpretation-related information (
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li class="right" >
           <a href="example2.html" title="Example 2 : Understanding the hyper-parameter optimization"
              >next</a> |</li>

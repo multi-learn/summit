@@ -148,7 +148,7 @@ Then as long as the IDs order corresponds to the example order in the lines of t
 
 .. code-block:: python
 
-  # Let us suppose that the examples have string ids, available in a csv file,
+    # Let us suppose that the examples have string ids, available in a csv file,
     # they can be stored in the HDF5 and will be used in the result analysis.
     example_ids = np.genfromtxt(example_ids_path, delimiter=',')
 

@@ -28,9 +28,6 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="example3.html" title="Example 3 : Understanding the statistical iterations"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -48,51 +45,81 @@
             
   <div class="section" id="example-2-understanding-the-hyper-parameter-optimization">
 <h1>Example 2 : Understanding the hyper-parameter optimization<a class="headerlink" href="#example-2-understanding-the-hyper-parameter-optimization" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="intuitive-explanation-on-hyper-parameters">
-<h2>Intuitive explanation on hyper-parameters<a class="headerlink" href="#intuitive-explanation-on-hyper-parameters" title="Permalink to this headline">¶</a></h2>
-<p>Hyper-parameters are parameters of a classifier (monoview or multiview) that are task-dependant and have a huge part in the performance of the algorithm for a given task.</p>
-<p>The simplest example is the decision tree. One of it’s hyper-parameter is the depth of the tree. The deeper the tree is,
-the most it will fit on the learning data. However a tree too deep will most likely overfit and won’t have any value on
+<div class="section" id="hyper-parameters-intuition">
+<h2>Hyper-parameters intuition<a class="headerlink" href="#hyper-parameters-intuition" title="Permalink to this headline">¶</a></h2>
+<p>Hyper-parameters are parameters of a classifier (monoview or multiview) that are
+task-dependant and have a huge part in the performance of the algorithm for a given task.</p>
+<p>The simplest example is the decision tree. One of it’s hyper-parameter is the
+depth of the tree. The deeper the tree is,
+the most it will fit on the learning data. However, a tree too deep will most
+likely overfit and won’t have any relevance on
 unseen testing data.</p>
-<p>This platform proposes a randomized search for optimizing hyperparamter on the given task. In this example,
-we first will analyze how it works and then how to use it.</p>
+<p>This platform proposes a randomized search and a grid search to optimize
+hyper-parameters. In this example, we first will analyze the theory and
+then how to use it.</p>
 </div>
 <div class="section" id="understanding-train-test-split">
 <h2>Understanding train/test split<a class="headerlink" href="#understanding-train-test-split" title="Permalink to this headline">¶</a></h2>
-<p>In order to provide robust results, this platform splits the dataset in a training set, tha will be used by the
-classifier to optimize their hyper-parameter and learn a relevant model, and a testing set that will take no part in
-the learning process and serve as unseen data to estimate each model’s generalization capacity.</p>
-<p>This split is controlled by the config file’s argument <code class="docutils literal notranslate"><span class="pre">split:</span></code>. It uses a float to pass the ratio between the size of the testing set and the training set  :
-<img class="math" src="../_images/math/db7e01742f2503f433edf60a93d678b26b5c756b.png" alt="\text{split} = \frac{\text{test size}}{\text{train size}}"/>. In order to be as fare as possible, this split is made by keeping the ratio btween each class in the training set and in the testing set.</p>
+<p>In order to provide robust results, this platform splits the dataset in a
+training set, that will be used by the classifier to optimize their
+hyper-parameter and learn a relevant model, and a testing set that will take
+no part in the learning process and serve as unseen data to estimate each
+model’s generalization capacity.</p>
+<p>This split ratio is controlled by the config file’s argument <code class="docutils literal notranslate"><span class="pre">split:</span></code>. It uses a float to pass the ratio between the size of the testing set and the training set  :
+<img class="math" src="../_images/math/6d5e78587eeb09a4cdc8542b46dfcabdaa51f335.png" alt="\text{split} = \frac{\text{test size}}{\text{dataset size}}"/>. In order to be as fair as possible, this split is made by keeping the ratio between each class in the training set and in the testing set.</p>
 <p>So if a dataset has 100 examples with 60% of them in class A, and 40% of them in class B, using <code class="docutils literal notranslate"><span class="pre">split:</span> <span class="pre">0.2</span></code>
 will generate a training set with 48 examples of class A and 32 examples of class B and a testing set
 with 12 examples of class A and 8 examples of class B.</p>
-<p>Ths process uses sklearn’s <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedShuffleSplit.html">StratifiedShuffleSplit</a> to split the dataset at random while being reproductilbe thanks to the random state.</p>
+<p>Ths process uses sklearn’s <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedShuffleSplit.html">StratifiedShuffleSplit</a> to split the dataset at random while being reproductible thanks to the random_state.</p>
 </div>
 <div class="section" id="understanding-hyper-parameter-optimization">
 <h2>Understanding hyper-parameter optimization<a class="headerlink" href="#understanding-hyper-parameter-optimization" title="Permalink to this headline">¶</a></h2>
-<p>As hyper-paramters are task dependant, there are two ways in the platform to set their value :</p>
+<p>As hyper-parameters are task dependant, there are three ways in the platform to set their value :</p>
 <ul class="simple">
-<li>If you know the value (or a set of values), specify them at the end of the config file for each algorithm you want to test, and use <code class="docutils literal notranslate"><span class="pre">hps_type:</span> <span class="pre">None</span></code> in the classifiaction section of the config file. This will set the Hyper Parameter Search to None, and bypass the optimization process to run the algorithm on the specified values.</li>
-<li>If you don’t know the value, the platform proposes a random search for hyper-parameter optimization.</li>
+<li>If you know the value (or a set of values), specify them at the end of the config file for each algorithm you want to test, and use <code class="docutils literal notranslate"><span class="pre">hps_type:</span> <span class="pre">None</span></code> in the classifiaction section of the config file. This will bypass the optimization process to run the algorithm on the specified values.</li>
+<li>If you have several possible values in mind, specify them in the config file and use <code class="docutils literal notranslate"><span class="pre">hps_type:</span> <span class="pre">'Grid'</span></code> to run a grid search on the possible values.</li>
+<li>If you have no ideas on the values, the platform proposes a random search for hyper-parameter optimization.</li>
 </ul>
+<div class="section" id="grid-search">
+<h3>Grid search<a class="headerlink" href="#grid-search" title="Permalink to this headline">¶</a></h3>
+<p>The grid search is useful when one has several possible sets of hyper-parameters to test, as it is faster thant random-search but requires a relevant prior on the classification task.</p>
+<p>In order to use grid search in SuMMIT, one has to specify <code class="docutils literal notranslate"><span class="pre">hps_type:</span> <span class="pre">&quot;Grid&quot;</span></code> in the config file and provide the values for each parameter of each algorithm in <code class="docutils literal notranslate"><span class="pre">hps_args:</span></code>.
+For example, let us suppose that one wants to run a decision tree but wants to try several depth values (1,5,10), then one has to specify in the config file :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">hps_type</span><span class="p">:</span> <span class="s">&quot;Grid&quot;</span>
+<span class="nt">hps_args</span><span class="p">:</span>
+  <span class="nt">decision_tree</span><span class="p">:</span>
+    <span class="nt">max_depth</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="nv">10</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>For more complex classifiers this process can be quite long, but it allows a shorter computational time.</p>
+</div>
 <div class="section" id="random-search">
 <h3>Random search<a class="headerlink" href="#random-search" title="Permalink to this headline">¶</a></h3>
-<p>The random search is one of the most efficient while fairest method to optimize hyper-parameter.
-Thus, for each algorithm in the platform, each of its hyper-paramter is provided with distribution of possible values,
+<p>The random search is one of the most efficient while fairest method to optimize hyper-parameter without any prior knowledge on the dataset.
+Thus, for each algorithm in the platform, each of its hyper-parameter is provided with a distribution of possible values,
 (for example, the decision tree’s max depth parameter is provided with a uniform distribution between 1 and 300).
 The random search method will randomly select hyper-parameters within this distribution and evaluate the performance of
 the classifier with this configuration. It will repeat that process with different randomly selected sets of
 hyper-parameter and keep the best configuration performance-wise.</p>
-<p>In the config file, to enable random search, set the <code class="docutils literal notranslate"><span class="pre">hps_type:</span></code> line to <code class="docutils literal notranslate"><span class="pre">hps_type:</span> <span class="pre">&quot;randomized_search&quot;</span></code> and to
-control the number of draws, use the <code class="docutils literal notranslate"><span class="pre">hps_iter:</span></code> line.</p>
+<p>In the config file, to enable random search, set the <code class="docutils literal notranslate"><span class="pre">hps_type:</span></code> line to <code class="docutils literal notranslate"><span class="pre">hps_type:</span> <span class="pre">&quot;Random&quot;</span></code>.
+The the randomized search can be configured with two arguments :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">hps_type</span><span class="p">:</span> <span class="s">&quot;Random&quot;</span>
+<span class="nt">hps_args</span><span class="p">:</span>
+  <span class="nt">n_iter</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+  <span class="nt">equivalent_draws</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">True</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">n_iter</span></code> parameter controls the number of random draws for each classifier
+and if <code class="docutils literal notranslate"><span class="pre">equivalent_draws</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the multiview classifiers
+will be allowed <img class="math" src="../_images/math/a41d9126a6756c30058d2933450d07fdaf813e69.png" alt="\text{n\_iter} \times \text{n\_views}"/> iterations,
+to compensate the fact that they have to solve a musch more complex problem than the monoview ones.</p>
 </div>
 <div class="section" id="k-folds-cross-validation">
 <h3>K-folds cross-validation<a class="headerlink" href="#k-folds-cross-validation" title="Permalink to this headline">¶</a></h3>
-<p>During the process of optimizing the hyper-parameter, the random serach has to estimate the perofmance of the classifier.</p>
-<p>In order to do so, the platform uses k-folds cross-validation. This method consists in splitting the training set in
-<img class="math" src="../_images/math/0b7c1e16a3a8a849bb8ffdcdbf86f65fd1f30438.png" alt="k"/> equal sub-sets, training the classifier (with the randomly chose hyper-parameters) on <img class="math" src="../_images/math/61e28425012ff04c501a81720cdd9f9b5afb962e.png" alt="k-1"/> subsets an
-testing it on the last one, evaluating it’s predictive performance.</p>
+<p>During the process of optimizing the hyper-parameters, the random search has to estimate the performance of each classifier.</p>
+<p>To do so, the platform uses k-folds cross-validation. This method consists in splitting the training set in
+<img class="math" src="../_images/math/0b7c1e16a3a8a849bb8ffdcdbf86f65fd1f30438.png" alt="k"/> equal sub-sets, training the classifier (with the hyper-parameters to evaluate) on <img class="math" src="../_images/math/61e28425012ff04c501a81720cdd9f9b5afb962e.png" alt="k-1"/> subsets an
+testing it on the last one, evaluating it’s predictive performance on unseen data.</p>
 <p>This learning-and-testing process is repeated <img class="math" src="../_images/math/0b7c1e16a3a8a849bb8ffdcdbf86f65fd1f30438.png" alt="k"/> times and the estimated performance is the mean of the
 performance on each testing set.</p>
 <p>In the platform, the training set (the 48 examples of class A and 32 examples of class B from last example) will be
@@ -116,7 +143,7 @@ thanks to the <code class="docutils literal notranslate"><span class="pre">metri
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">split:</span></code>, controlling the ration of size between the testing set and the training set,</li>
 <li><code class="docutils literal notranslate"><span class="pre">hps_type:</span></code>, controlling the type of hyper-parameter search,</li>
-<li><code class="docutils literal notranslate"><span class="pre">hps_iter:</span></code>, controlling the number of random draws during the hyper-parameter search,</li>
+<li><code class="docutils literal notranslate"><span class="pre">hps_args:</span></code>, controlling the parameters of the hyper-parameters search method,</li>
 <li><code class="docutils literal notranslate"><span class="pre">nb_folds:</span></code>, controlling the number of folds in the cross-validation process.</li>
 </ul>
 <div class="section" id="example-2-1-no-hyper-parameter-optimization-impact-of-split-size">
@@ -129,32 +156,32 @@ three lines in the configuration file are useful :</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">type:</span></code> in which one has to specify which type of algorithms are needed, here we used  <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">[&quot;monoview&quot;,&quot;multiview&quot;]</span></code>,</li>
 <li><code class="docutils literal notranslate"><span class="pre">algos_monoview:</span></code> in which one specifies the names of the monoview algorithms to run, here we used : <code class="docutils literal notranslate"><span class="pre">algos_monoview:</span> <span class="pre">[&quot;decision_tree&quot;,</span> <span class="pre">&quot;adaboost&quot;,</span> <span class="pre">]</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">algos_multiview:</span></code> is the same but with multiview algorithms, here we used : `` algos_multiview: [“majority_voting_fusion”, ]``</li>
+<li><code class="docutils literal notranslate"><span class="pre">algos_multiview:</span></code> is the same but with multiview algorithms, here we used : <code class="docutils literal notranslate"><span class="pre">algos_multiview:</span> <span class="pre">[&quot;majority_voting_fusion&quot;,</span> <span class="pre">]</span></code></li>
 </ul>
-<p>In order for the platofrm to understand the names, the user has to give the name of the python module in which the classifier is implemented in the platform.</p>
+<p>In order for the platform to understand the names, the user has to give the name of the python module in which the classifier is implemented in the platform.</p>
 <p>In the config file, the default values for adaboost’s hyper-parameters are :</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">adaboost</span><span class="p">:</span>
-    <span class="nt">n_estimators</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">50</span><span class="p p-Indicator">]</span>
-    <span class="nt">base_estimator</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;DecisionTreeClassifier&quot;</span><span class="p p-Indicator">]</span>
+  <span class="nt">n_estimators</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">50</span>
+  <span class="nt">base_estimator</span><span class="p">:</span> <span class="s">&quot;DecisionTreeClassifier&quot;</span>
 </pre></div>
 </div>
 <p>(see <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier">adaboost’s sklearn’s page</a> for more information)</p>
 <p>For decision_tree :</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">decision_tree</span><span class="p">:</span>
-    <span class="nt">max_depth</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">10</span><span class="p p-Indicator">]</span>
-    <span class="nt">criterion</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;gini&quot;</span><span class="p p-Indicator">]</span>
-    <span class="nt">splitter</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;best&quot;</span><span class="p p-Indicator">]</span>
+  <span class="nt">max_depth</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+  <span class="nt">criterion</span><span class="p">:</span> <span class="s">&quot;gini&quot;</span>
+  <span class="nt">splitter</span><span class="p">:</span> <span class="s">&quot;best&quot;</span>
 </pre></div>
 </div>
 <p>(<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html">sklearn’s decision tree</a>)</p>
 <p>And for the late fusion majority vote :</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">majority_voting_fusion</span><span class="p">:</span>
-    <span class="nt">classifier_names</span><span class="p">:</span> <span class="p p-Indicator">[[</span><span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span> <span class="p p-Indicator">]]</span>
+    <span class="nt">classifier_names</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span> <span class="p p-Indicator">]</span>
     <span class="nt">classifier_configs</span><span class="p">:</span>
         <span class="nt">decision_tree</span><span class="p">:</span>
-            <span class="nt">max_depth</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
-            <span class="nt">criterion</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;gini&quot;</span><span class="p p-Indicator">]</span>
-            <span class="nt">splitter</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;best&quot;</span><span class="p p-Indicator">]</span>
+            <span class="nt">max_depth</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+            <span class="nt">criterion</span><span class="p">:</span> <span class="s">&quot;gini&quot;</span>
+            <span class="nt">splitter</span><span class="p">:</span> <span class="s">&quot;best&quot;</span>
 </pre></div>
 </div>
 <p>(It will build a vote with one decision tree on each view, with the specified configuration for the decision trees)</p>
@@ -266,10 +293,10 @@ In the config file called <code class="docutils literal notranslate"><span class
 <p>The first difference between these two examples is the time to run the benchmrak, as in the first on more examples are given to learn the algorithms, it is longer. However, the right amount of training examples depends on the available dataset and the task’s complexity.</p>
 <p>TODO COMMENT</p>
 <p><strong>Conclusion</strong></p>
-<p>THe impact of split ratio : dataset related.</p>
+<p>The impact of split ratio : dataset related.</p>
 </div>
-<div class="section" id="example-2-2-usage-of-hyper-parameter-optimization">
-<h3>Example 2.2 : Usage of hyper-parameter optimization :<a class="headerlink" href="#example-2-2-usage-of-hyper-parameter-optimization" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="example-2-2-usage-of-randomized-hyper-parameter-optimization">
+<h3>Example 2.2 : Usage of randomized hyper-parameter optimization :<a class="headerlink" href="#example-2-2-usage-of-randomized-hyper-parameter-optimization" title="Permalink to this headline">¶</a></h3>
 <p>In the previous example, we have seen that the split ratio has an impact on the computational time.
 But the most time-consuming task is optimizing the hyper parameters.
 Up to now, the platform used the hyper-parameters values given in the config file.
@@ -278,7 +305,8 @@ However, most of the time, they are unknown to the user, and then have to be opt
 <p>In this example, we will use the hyper-parameter optimization method implemented in the platform, to do so we will use three lines of the config file :</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">hps_type:</span></code>, controlling the type of hyper-parameter search,</li>
-<li><code class="docutils literal notranslate"><span class="pre">hps_iter:</span></code>, controlling the number of random draws during the hyper-parameter search,</li>
+<li><code class="docutils literal notranslate"><span class="pre">n_iter:</span></code>, controlling the number of random draws during the hyper-parameter search,</li>
+<li><code class="docutils literal notranslate"><span class="pre">equivalent_draws</span></code>, controlling the number fo draws for multiview algorithms,</li>
 <li><code class="docutils literal notranslate"><span class="pre">nb_folds:</span></code>, controlling the number of folds in the cross-validation process.</li>
 </ul>
 <p>So if you run <code class="docutils literal notranslate"><span class="pre">example</span> <span class="pre">2.2.1</span></code> with :</p>
@@ -286,56 +314,11 @@ However, most of the time, they are unknown to the user, and then have to be opt
 <span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example2.2.1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">hps_type</span></code> argument is set to <code class="docutils literal notranslate"><span class="pre">&quot;randomised_search&quot;</span></code>, which is at the moment the only hyper-parameter optimization method implemented in the platform.
-The <code class="docutils literal notranslate"><span class="pre">hps_iter</span></code> argument is set to <code class="docutils literal notranslate"><span class="pre">5</span></code>,
+<p>The <code class="docutils literal notranslate"><span class="pre">hps_type</span></code> argument is set to <code class="docutils literal notranslate"><span class="pre">&quot;Random&quot;</span></code>, which is at the moment the only hyper-parameter optimization method implemented in the platform.
+The <code class="docutils literal notranslate"><span class="pre">n_iter</span></code> argument is set to <code class="docutils literal notranslate"><span class="pre">5</span></code>,
+The <code class="docutils literal notranslate"><span class="pre">equivalent_draws</span></code> argument  is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>,
 The <code class="docutils literal notranslate"><span class="pre">nb_folds</span></code> argument is set o <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p>
-<p><strong>WARNING : The “csv-table” directive’s “:file:” and “:url:” options represent a potential security holes. They can be disabled with the “file_insertion_enabled” runtime setting.</strong></p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="11%" />
-<col width="11%" />
-<col width="11%" />
-<col width="11%" />
-<col width="11%" />
-<col width="11%" />
-<col width="11%" />
-<col width="11%" />
-<col width="11%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>&#160;</td>
-<td>double_fault_fusion</td>
-<td>difficulty_fusion</td>
-<td>lasso-ViewNumber1</td>
-<td>sgd-ViewNumber0</td>
-<td>svm_poly-ViewNumber1</td>
-<td>svm_poly-ViewNumber2</td>
-<td>svm_poly-ViewNumber0</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>0</td>
-<td>0.5</td>
-<td>0.5</td>
-<td>0.5</td>
-<td>0.5</td>
-<td>0.7</td>
-<td>0.7</td>
-<td>0.65</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>1</td>
-<td>0.5</td>
-<td>0.5</td>
-<td>0.5</td>
-<td>0.5</td>
-<td>0.7125</td>
-<td>0.7125</td>
-<td>0.8</td>
-<td>&#160;</td>
-</tr>
-</tbody>
-</table>
-<p>Here, we used <code class="docutils literal notranslate"><span class="pre">split:</span> <span class="pre">0.2</span></code> and the results are far better than with the preset of hyper paramters, as the classifiers are able to fit the task.</p>
+<p>Here, we used <code class="docutils literal notranslate"><span class="pre">split:</span> <span class="pre">0.2</span></code> and the results are far better than with the preset of hyper parameters, as the classifiers are able to fit the task.</p>
 <p>The computing time should be longer than the previous examples. Let’s see the pseudo code of the benchmark, while using the hyper-parameter optimization:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>for each monoview classifier:
     for each view:
@@ -359,18 +342,23 @@ for each multiview classifier:
     learn on the whole training set
 </pre></div>
 </div>
-<p>The instructions inside the brackets are the one that the HP optimization adds. So for the monoview algorithms,
+<p>The instructions inside the brackets are the one that the hyper-parameter
+optimization adds. So for the monoview algorithms,
 the computational impact of the HPO is bigger than for the multiview algorithms.</p>
-<p>The choice made here is to allow the same amount of draws for each HPO. However, as many of the multiview algorithms
+<p>The choice made here is to allow the same amount of draws for each HPO. However,
+as many of the multiview algorithms
 are more complex and have bigger HP spaces, allowing them more draws, can be a defendable idea.</p>
-<p>However, for most of the tasks, using the HPO is a necessity to be able to get the most of each classifier in terms
-of performance.</p>
-<p>The HPO is a matter of tradeoff between precision and computational demand. For most algorithms the more draws you
-allow, the closer to ideal the outputted HP will be, however, many draws mean much longer computational time.</p>
-<p>Similarly, the number of folds has a great importance in estimating the performance of a specific Hp combination,
-and the more folds the but more folds take also more time, as one has to train more times and on bigger parts of the
+<p>However, for most of the tasks, using the HPO is a necessity to be able to
+get the most of each classifier in terms of performance.</p>
+<p>The HPO is a matter of trade-off between precision and computational demand.
+For most algorithms the more draws you allow, the closer to ideal the outputted
+HP will be, however, many draws mean much longer computational time.</p>
+<p>Similarly, the number of folds has a great importance in estimating the
+performance of a specific HP combination, and the more folds the but more folds
+take also more time, as one has to train more times and on bigger parts of the
 dataset.</p>
-<p>The figure below represents the duration of the execution on a personal computer with different fold/draws settings :</p>
+<p>The figure below represents the duration of the execution on a personal computer
+with different fold/draws settings :</p>
 <html>
 <head><meta charset="utf-8" /></head>
 <body>
@@ -393,7 +381,7 @@ dataset.</p>
                     Plotly.newPlot(
                         'a34ab35c-7722-424b-b26f-05ce9018d050',
                         [{"contours": {"z": {"highlightcolor": "limegreen", "project": {"z": true}, "show": true, "usecolormap": true}}, "type": "surface", "x": [2, 5, 10, 20, 30, 50, 100], "y": [2, 5, 10, 15, 20], "z": [[12.30792236328125, 14.539308309555054, 25.204104900360107, 40.63256311416626, 57.830570936203, 94.06869697570801, 177.3781054019928], [23.060000896453857, 38.69007134437561, 55.38164758682251, 112.99745631217957, 154.44376754760742, 249.8409869670868, 444.60806703567505], [31.165709257125854, 75.43783736228943, 112.19536924362183, 184.5037076473236, 290.94096207618713, 461.04882979393005, 932.619647026062], [73.37707662582397, 100.57551407814026, 183.70872330665588, 331.44516921043396, 433.04977560043335, 637.6133468151093, 1335.7918057441711], [79.04550528526306, 153.53510761260986, 199.00436758995056, 341.0050745010376, 608.0813648700714, 918.9630422592163, 1716.7227251529694]]}],
-                        {"scene": {"xaxis": {"title": {"text": "x : Number of draws"}}, "yaxis": {"title": {"text": "y : Number of folds"}}, "zaxis": {"title": {"text": "z : Benchmark duration (s)"}}}, "template": {"data": {"bar": [{"error_x": {"color": "#2a3f5f"}, "error_y": {"color": "#2a3f5f"}, "marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "bar"}], "barpolar": [{"marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "barpolar"}], "carpet": [{"aaxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "baxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "type": "carpet"}], "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}], "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "contour"}], "contourcarpet": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "contourcarpet"}], "heatmap": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmap"}], "heatmapgl": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmapgl"}], "histogram": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "histogram"}], "histogram2d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2d"}], "histogram2dcontour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2dcontour"}], "mesh3d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "mesh3d"}], "parcoords": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "parcoords"}], "scatter": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter"}], "scatter3d": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter3d"}], "scattercarpet": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattercarpet"}], "scattergeo": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergeo"}], "scattergl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergl"}], "scattermapbox": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermapbox"}], "scatterpolar": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolar"}], "scatterpolargl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolargl"}], "scatterternary": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterternary"}], "surface": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "surface"}], "table": [{"cells": {"fill": {"color": "#EBF0F8"}, "line": {"color": "white"}}, "header": {"fill": {"color": "#C8D4E3"}, "line": {"color": "white"}}, "type": "table"}]}, "layout": {"annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1}, "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "sequentialminus": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]]}, "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"], "font": {"color": "#2a3f5f"}, "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"}, "hoverlabel": {"align": "left"}, "hovermode": "closest", "mapbox": {"style": "light"}, "paper_bgcolor": "white", "plot_bgcolor": "#E5ECF6", "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}}, "shapedefaults": {"line": {"color": "#2a3f5f"}}, "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "title": {"x": 0.05}, "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}, "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}}}, "title": {"text": "Benchmark durations for multiple HPO settings"}},
+                        {"scene": {"xaxis": {"title": {"text": "n_draws"}}, "yaxis": {"title": {"text": "n_folds"}}, "zaxis": {"title": {"text": "Duration (s)"}}}, "template": {"data": {"bar": [{"error_x": {"color": "#2a3f5f"}, "error_y": {"color": "#2a3f5f"}, "marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "bar"}], "barpolar": [{"marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "barpolar"}], "carpet": [{"aaxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "baxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "type": "carpet"}], "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}], "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "contour"}], "contourcarpet": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "contourcarpet"}], "heatmap": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmap"}], "heatmapgl": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmapgl"}], "histogram": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "histogram"}], "histogram2d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2d"}], "histogram2dcontour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2dcontour"}], "mesh3d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "mesh3d"}], "parcoords": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "parcoords"}], "scatter": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter"}], "scatter3d": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter3d"}], "scattercarpet": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattercarpet"}], "scattergeo": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergeo"}], "scattergl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergl"}], "scattermapbox": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermapbox"}], "scatterpolar": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolar"}], "scatterpolargl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolargl"}], "scatterternary": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterternary"}], "surface": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "surface"}], "table": [{"cells": {"fill": {"color": "#EBF0F8"}, "line": {"color": "white"}}, "header": {"fill": {"color": "#C8D4E3"}, "line": {"color": "white"}}, "type": "table"}]}, "layout": {"annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1}, "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "sequentialminus": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]]}, "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"], "font": {"color": "#2a3f5f"}, "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"}, "hoverlabel": {"align": "left"}, "hovermode": "closest", "mapbox": {"style": "light"}, "paper_bgcolor": "white", "plot_bgcolor": "#E5ECF6", "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}}, "shapedefaults": {"line": {"color": "#2a3f5f"}}, "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "title": {"x": 0.05}, "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}, "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}}}, "title": {"text": "Benchmark durations for multiple HPO settings"}},
                         {"responsive": true}
                     )
                 };
@@ -401,12 +389,34 @@ dataset.</p>
             </script>
         </div>
 </body>
-</html><p>The duration is in seconds, and we used 2,5,10,15,20 as values for <code class="docutils literal notranslate"><span class="pre">nb_folds</span></code> and 2,5,10,20,30,50,100 for <code class="docutils literal notranslate"><span class="pre">hps_iter</span></code> with two monoview classifiers and one multiview classifier on simulated data.</p>
+</html><p>The duration is in seconds, and we used 2,5,10,15,20 as values for <code class="docutils literal notranslate"><span class="pre">nb_folds</span></code>
+and 2,5,10,20,30,50,100 for <code class="docutils literal notranslate"><span class="pre">n_iter</span></code> with two monoview classifiers and one
+multiview classifier on simulated data.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">In order to compensate the fact that the multiview classifiers have more complex problems to solve, it is possible to use <code class="docutils literal notranslate"><span class="pre">&quot;randomized_search-equiv&quot;</span></code> as the HPS optimization method to allow
-<code class="docutils literal notranslate"><span class="pre">hps_iter</span></code> draws for the monoview classifiers and <code class="docutils literal notranslate"><span class="pre">hps_iter</span> <span class="pre">*</span> <span class="pre">nb_view</span></code> draws for the ones that are multiview.</p>
+<p class="last">The hyper-parameter optimization process generates a report for each
+classifier, providing each set of parameters and its cross-validation score,
+to be able to extract the relevant parameters for a future benchmark on the
+same dataset.</p>
 </div>
+</div>
+<div class="section" id="example-2-3-usage-of-grid-search">
+<h3>Example 2.3 : Usage of grid search :<a class="headerlink" href="#example-2-3-usage-of-grid-search" title="Permalink to this headline">¶</a></h3>
+<p>In SuMMIT, it is possible to use a grid search if one has several possible
+hyper-parameter values in mind to test.</p>
+<p>In order to set up the grid search one has to provide in the <code class="docutils literal notranslate"><span class="pre">hps_args:</span></code>
+argument the names, parameters and values to test. Let us say we want to try
+several depths for a decision tree, and several <code class="docutils literal notranslate"><span class="pre">C</span></code> values for a
+linear <a class="reference external" href="ttps://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">SVM</a>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">hps_type</span><span class="p">:</span> <span class="s">&quot;Grid&quot;</span>
+<span class="nt">hps_args</span><span class="p">:</span>
+  <span class="nt">decision_tree</span><span class="p">:</span>
+    <span class="nt">max_depth</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="nv">5</span><span class="p p-Indicator">]</span>
+  <span class="nt">svm_linear</span><span class="p">:</span>
+    <span class="nt">C</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0.1</span><span class="p p-Indicator">,</span><span class="nv">0.2</span><span class="p p-Indicator">,</span><span class="nv">0.3</span><span class="p p-Indicator">,</span><span class="nv">0.4</span><span class="p p-Indicator">,</span><span class="nv">0.5</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>TODO : a more complex example</p>
 </div>
 </div>
 </div>
@@ -420,9 +430,10 @@ dataset.</p>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Example 2 : Understanding the hyper-parameter optimization</a><ul>
-<li><a class="reference internal" href="#intuitive-explanation-on-hyper-parameters">Intuitive explanation on hyper-parameters</a></li>
+<li><a class="reference internal" href="#hyper-parameters-intuition">Hyper-parameters intuition</a></li>
 <li><a class="reference internal" href="#understanding-train-test-split">Understanding train/test split</a></li>
 <li><a class="reference internal" href="#understanding-hyper-parameter-optimization">Understanding hyper-parameter optimization</a><ul>
+<li><a class="reference internal" href="#grid-search">Grid search</a></li>
 <li><a class="reference internal" href="#random-search">Random search</a></li>
 <li><a class="reference internal" href="#k-folds-cross-validation">K-folds cross-validation</a></li>
 <li><a class="reference internal" href="#metric-choice">Metric choice</a></li>
@@ -430,7 +441,8 @@ dataset.</p>
 </li>
 <li><a class="reference internal" href="#hands-on-experience">Hands-on experience</a><ul>
 <li><a class="reference internal" href="#example-2-1-no-hyper-parameter-optimization-impact-of-split-size">Example 2.1 : No hyper-parameter optimization, impact of split size</a></li>
-<li><a class="reference internal" href="#example-2-2-usage-of-hyper-parameter-optimization">Example 2.2 : Usage of hyper-parameter optimization :</a></li>
+<li><a class="reference internal" href="#example-2-2-usage-of-randomized-hyper-parameter-optimization">Example 2.2 : Usage of randomized hyper-parameter optimization :</a></li>
+<li><a class="reference internal" href="#example-2-3-usage-of-grid-search">Example 2.3 : Usage of grid search :</a></li>
 </ul>
 </li>
 </ul>
@@ -472,9 +484,6 @@ dataset.</p>
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li class="right" >
           <a href="example3.html" title="Example 3 : Understanding the statistical iterations"
              >next</a> |</li>
