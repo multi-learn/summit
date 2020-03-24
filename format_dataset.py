@@ -2,19 +2,20 @@
 This file is provided as an example of dataset formatting, using a csv-stored
 mutliview dataset to build a SuMMIT-compatible hdf5 file.
 Please see http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/tutorials/example4.html
-for complementary information.
+for complementary information the example given here is fully described in the
+documentation.
 """
 
 import numpy as np
 import h5py
 
 
-# The following variables are defined as an example, you should modify them to fite your dataset files.
-view_names = ["view_name_1", "view_name_2", "view_name_3", ]
-data_file_paths = ["path/to/view_1.csv", "path/to/view_1.csv", "path/to/view_1.csv",]
+# The following variables are defined as an example, you should modify them to fit your dataset files.
+view_names = ["sound", "image", "commentary", ]
+data_file_paths = ["path/to/sound.csv", "path/to/image.csv", "path/to/commentary.csv",]
 labels_file_path = "path/to/labels/file.csv"
 example_ids_path = "path/to/example_ids/file.csv"
-labels_names = ["Label_1", "Label_2", "Label_3"]
+labels_names = ["Human", "Animal", "Object"]
 
 
 # HDF5 dataset initialization :
@@ -42,7 +43,7 @@ for view_index, (file_path, view_name) in enumerate(zip(data_file_paths, view_na
 labels_data = np.genfromtxt(labels_file_path, delimiter=',')
 
 # Here, we supposed that the labels file contained numerical labels (0,1,2)
-# that reffer to the label names of label_names.
+# that refer to the label names of label_names.
 # The Labels HDF5 dataset must contain only integers that represent the
 # different classes, the names of each class are saved in an attribute
 
