@@ -93,7 +93,7 @@ An example of method can be :
 
     def get_interpretation(self, directory, base_file_name, y_test,
                            multiclass=False):
-        interpret_string = "Algo is a very relevant algorithm that used all the features to classifiy"
+        interpret_string = "Algo is a very relevant algorithm that used all the features to classify"
         # Save a figure in os.path.join(directory, base_file_name+figure_name.png")
         return interpretString
 
