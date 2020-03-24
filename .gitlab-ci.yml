@@ -25,7 +25,7 @@ doc:
         - cd ../..
         - cp -r ./docs/build public
     artifacts:
-        paths:           
+        paths:
             - public
 
 # project public
