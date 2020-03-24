@@ -39,18 +39,18 @@ The config file that will be used in this example is located in ``multiview-mach
 
 We will decrypt the main arguments :
 
-+ The first part of the arguments are the basic ones :
++ The first part regroups the basics :
 
     - ``log: True`` allows to print the log in the terminal,
     - ``name: ["plausible"]`` uses the plausible simulated dataset,
-    - ``random_state: 42`` fixes the seed of random state for this benchmark, it is useful for reproductibility,
-    - ``full: True`` the benchmark will use the full dataset,
-    - ``res_dir: "examples/results/example_1/"`` the results will be saved in ``multiview-machine-learning-omis/multiview_platform/examples/results/example_1``
+    - ``random_state: 42`` fixes the seed of the random state for this benchmark, it is useful for reproductibility,
+    - ``full: True`` means the benchmark will use the full dataset,
+    - ``res_dir: "examples/results/example_1/"`` saves the results in ``multiview-machine-learning-omis/multiview_platform/examples/results/example_1``
 
 + Then the classification-related arguments :
 
-    - ``split: 0.8`` means that 80% of the dataset will be used to test the different classifiers and 20% to train them
-    - ``type: ["monoview", "multiview"]`` allows for monoview and multiview algorithms to be used in the benchmark
+    - ``split: 0.8`` means that 80% of the dataset will be used to test the different classifiers and 20% to train them,
+    - ``type: ["monoview", "multiview"]`` allows for monoview and multiview algorithms to be used in the benchmark,
     - ``algos_monoview: ["all"]`` runs on all the available monoview algorithms (same for ``algos_muliview``)
     - The metrics configuration ::
 
@@ -63,7 +63,7 @@ We will decrypt the main arguments :
 
 **Start the benchmark**
 
-During the whole benchmark, the log file will be printed in the terminal. To start the benchmark run :
+During the whole benchmark, the log file will be printed in the terminal. To start the benchmark, run :
 
 .. code-block:: python
 
@@ -148,8 +148,8 @@ These files contain the scores of each classifier for the accuracy metric, order
 the worst ones on the left, as an interactive html page, an image or a csv matrix. The star after ``accuracy_score*`` means that it is the principal metric.
 The image version is as follows :
 
-.. figure:: ./images/accuracy.png
-    :scale: 25
+.. raw:: html
+    :file: ./images/accuracy_score.html
 
     This is a bar plot showing the score on the training set (light gray), and testing set (dark gray). For each
     monoview classifier, on each view and or each multiview classifier, the scores are printed over the name, under each bar.
