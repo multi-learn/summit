@@ -78,7 +78,7 @@ You can have either a directory containing `.csv` files or a HDF5 file.
 With `top_directory` being the last directory in the `pathF` argument
  
 ##### If you already have an HDF5 dataset file it must be formatted as : 
-One dataset for each view called `ViewX` with `X` being the view index with 2 attribures : 
+One dataset for each view called `ViewX` with `X` being the view index with 2 attributes : 
 * `attrs["name"]` a string for the name of the view
 * `attrs["sparse"]` a boolean specifying whether the view is sparse or not
 * `attrs["ranges"]` a `np.array` containing the ranges of each attribute in the view (for ex. : for a pixel the range will be 255, for a real attribute in [-1,1], the range will be 2).
@@ -86,7 +86,7 @@ One dataset for each view called `ViewX` with `X` being the view index with 2 at
  
 
 One dataset for the labels called `Labels` with one attribute : 
-* `attrs["names"]` a list of strings encoded in utf-8 namig the labels in the right order
+* `attrs["names"]` a list of strings encoded in utf-8 naming the labels in the right order
 
 One group for the additional data called `Metadata` containing at least 3 attributes : 
 * `attrs["nbView"]` an int counting the total number of views in the dataset
