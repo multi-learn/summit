@@ -14,4 +14,8 @@ build*
 dist*
 multiview_platform/.idea/*
 .gitignore
-multiview_platform/examples/results*
+multiview_platform/examples/results/example_1/*
+multiview_platform/examples/results/example_2/*
+multiview_platform/examples/results/example_3/*
+multiview_platform/examples/results/example_4/*
+multiview_platform/examples/results/example_5/*

@@ -1,14 +1,14 @@
 # The base configuration of the benchmark
 log: True
-name: ["digits",]
+name: ["doc_summit",]
 label: "_"
 file_type: ".hdf5"
 views:
-pathf: "/home/baptiste/Documents/Datasets/Digits/"
+pathf: "/home/baptiste/Documents/Gitwork/multiview_generator/demo/"
 nice: 0
 random_state: 42
 nb_cores: 1
-full: True
+full: False
 debug: True
 add_noise: False
 noise_std: 0.0
@@ -17,10 +17,10 @@ track_tracebacks: False
 
 # All the classification-realted configuration options
 multiclass_method: "oneVersusOne"
-split: 0.25
+split: 0.5
 nb_folds: 2
-nb_class:
-classes:
+nb_class: 2
+classes: ["label_1", "label_6"]
 type: ["monoview", "multiview"]
 algos_monoview: ["decision_tree" ]
 algos_multiview: ["weighted_linear_early_fusion","weighted_linear_late_fusion"]

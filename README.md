@@ -79,20 +79,20 @@ In order to start a benchmark on your own dataset, you need to format it so SuMM
 [comment]: <> (With `top_directory` being the last directory in the `pathF` argument)
  
 ##### If you already have an HDF5 dataset file it must be formatted as : 
-One dataset for each view called `ViewI` with `I` being the view index with 2 attribures : 
-* `attrs["name"]` a string for the name of the view
-* `attrs["sparse"]` a boolean specifying whether the view is sparse or not
-* `attrs["ranges"]` a `np.array` containing the ranges of each attribute in the view (for ex. : for a pixel the range will be 255, for a real attribute in [-1,1], the range will be 2).
-* `attrs["limits"]` a `np.array` containing all the limits of the attributes int he view. (for ex. : for a pixel the limits will be `[0, 255]`, for a real attribute in [-1,1], the limits will be `[-1,1]`).
+* One dataset for each view called `ViewI` with `I` being the view index with 2 attribures : 
+    * `attrs["name"]` a string for the name of the view
+    * `attrs["sparse"]` a boolean specifying whether the view is sparse or not (WIP)
  
 
-One dataset for the labels called `Labels` with one attribute : 
-* `attrs["names"]` a list of strings encoded in utf-8 namig the labels in the right order
+* One dataset for the labels called `Labels` with one attribute : 
+    * `attrs["names"]` a list of strings encoded in utf-8 naming the labels in the right order
 
-One group for the additional data called `Metadata` containing at least 3 attributes : 
-* `attrs["nbView"]` an int counting the total number of views in the dataset
-* `attrs["nbClass"]` an int counting the total number of different labels in the dataset
-* `attrs["datasetLength"]` an int counting the total number of examples in the dataset
+* One group for the additional data called `Metadata` containing at least 1 dataset :
+    * `"example_ids"`, a numpy array of type `S100`, with the ids of the examples in the right order
+* And three attributes : 
+    * `attrs["nbView"]` an int counting the total number of views in the dataset
+    * `attrs["nbClass"]` an int counting the total number of different labels in the dataset
+    * `attrs["datasetLength"]` an int counting the total number of examples in the dataset
 
 The `format_dataset.py` file is documented and can be used to format a multiview dataset in a SuMMIT-compatible HDF5 file.
 
@@ -115,4 +115,5 @@ It is highly recommended to follow the documentation's [tutorials](http://baptis
 
 ### Contributors
 
-* **Dominique Benielli**
+* **Dominique BENIELLI**
+* **Alexis PROD'HOMME**
