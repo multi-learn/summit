@@ -513,7 +513,7 @@ def arange_metrics(metrics, metric_princ):
     metrics : list of lists
         The metrics list, but arranged  so the first one is the principal one."""
     if metric_princ in metrics:
-        metrics = dict((key, value) if not key==metric_princ else (key+"*", value) for key, value in metrics.items())
+        metrics = dict((key, value) if not key == metric_princ else (key+"*", value) for key, value in metrics.items())
     else:
         raise AttributeError("{} not in metric pool ({})".format(metric_princ,
                                                                  metrics))

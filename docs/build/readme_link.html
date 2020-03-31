@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Multiview Platform Tutorials" href="tutorials/index.html" />
-    <link rel="prev" title="Welcome to SuMMIT’s documentation!" href="index.html" /> 
+    <link rel="prev" title="Welcome to Supervised MultiModal Integration Tool’s documentation !" href="index.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -31,7 +31,7 @@
           <a href="tutorials/index.html" title="Multiview Platform Tutorials"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to SuMMIT’s documentation!"
+          <a href="index.html" title="Welcome to Supervised MultiModal Integration Tool’s documentation !"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">MultiviewPlatform 0 documentation</a> &#187;</li> 
       </ul>
@@ -118,22 +118,26 @@ to read it carefully before playing around with the parameters.</p>
 </ul>
 <div class="section" id="if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as">
 <h4>If you already have an HDF5 dataset file it must be formatted as :<a class="headerlink" href="#if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as" title="Permalink to this headline">¶</a></h4>
-<p>One dataset for each view called <code class="docutils literal notranslate"><span class="pre">ViewI</span></code> with <code class="docutils literal notranslate"><span class="pre">I</span></code> being the view index with 2 attribures :</p>
 <ul class="simple">
+<li>One dataset for each view called <code class="docutils literal notranslate"><span class="pre">ViewI</span></code> with <code class="docutils literal notranslate"><span class="pre">I</span></code> being the view index with 2 attribures :<ul>
 <li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;name&quot;]</span></code> a string for the name of the view</li>
-<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;sparse&quot;]</span></code> a boolean specifying whether the view is sparse or not</li>
-<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;ranges&quot;]</span></code> a <code class="docutils literal notranslate"><span class="pre">np.array</span></code> containing the ranges of each attribute in the view (for ex. : for a pixel the range will be 255, for a real attribute in [-1,1], the range will be 2).</li>
-<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;limits&quot;]</span></code> a <code class="docutils literal notranslate"><span class="pre">np.array</span></code> containing all the limits of the attributes int he view. (for ex. : for a pixel the limits will be <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">255]</span></code>, for a real attribute in [-1,1], the limits will be <code class="docutils literal notranslate"><span class="pre">[-1,1]</span></code>).</li>
+<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;sparse&quot;]</span></code> a boolean specifying whether the view is sparse or not (WIP)</li>
 </ul>
-<p>One dataset for the labels called <code class="docutils literal notranslate"><span class="pre">Labels</span></code> with one attribute :</p>
-<ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;names&quot;]</span></code> a list of strings encoded in utf-8 namig the labels in the right order</li>
+</li>
+<li>One dataset for the labels called <code class="docutils literal notranslate"><span class="pre">Labels</span></code> with one attribute :<ul>
+<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;names&quot;]</span></code> a list of strings encoded in utf-8 naming the labels in the right order</li>
 </ul>
-<p>One group for the additional data called <code class="docutils literal notranslate"><span class="pre">Metadata</span></code> containing at least 3 attributes :</p>
-<ul class="simple">
+</li>
+<li>One group for the additional data called <code class="docutils literal notranslate"><span class="pre">Metadata</span></code> containing at least 1 dataset :<ul>
+<li><code class="docutils literal notranslate"><span class="pre">&quot;example_ids&quot;</span></code>, a numpy array of type <code class="docutils literal notranslate"><span class="pre">S100</span></code>, with the ids of the examples in the right order</li>
+</ul>
+</li>
+<li>And three attributes :<ul>
 <li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;nbView&quot;]</span></code> an int counting the total number of views in the dataset</li>
 <li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;nbClass&quot;]</span></code> an int counting the total number of different labels in the dataset</li>
 <li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;datasetLength&quot;]</span></code> an int counting the total number of examples in the dataset</li>
+</ul>
+</li>
 </ul>
 <p>The <code class="docutils literal notranslate"><span class="pre">format_dataset.py</span></code> file is documented and can be used to format a multiview dataset in a SuMMIT-compatible HDF5 file.</p>
 </div>
@@ -158,7 +162,8 @@ pathf: &quot;path/to/your/dataset&quot;
 <div class="section" id="contributors">
 <h3>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>Dominique Benielli</strong></li>
+<li><strong>Dominique BENIELLI</strong></li>
+<li><strong>Alexis PROD’HOMME</strong></li>
 </ul>
 </div>
 </div>
@@ -196,7 +201,7 @@ pathf: &quot;path/to/your/dataset&quot;
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to SuMMIT’s documentation!</a></p>
+                        title="previous chapter">Welcome to Supervised MultiModal Integration Tool’s documentation !</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="tutorials/index.html"
                         title="next chapter">Multiview Platform Tutorials</a></p>
@@ -233,7 +238,7 @@ pathf: &quot;path/to/your/dataset&quot;
           <a href="tutorials/index.html" title="Multiview Platform Tutorials"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to SuMMIT’s documentation!"
+          <a href="index.html" title="Welcome to Supervised MultiModal Integration Tool’s documentation !"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">MultiviewPlatform 0 documentation</a> &#187;</li> 
       </ul>

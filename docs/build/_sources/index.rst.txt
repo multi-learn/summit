@@ -1,18 +1,18 @@
-MultiviewPlatform documentation master file, created by
-sphinx-quickstart on Mon Jan 29 17:13:09 2018.
-You can adapt this file completely to your liking, but it should at least
-contain the root `toctree` directive.
+Welcome to Supervised MultiModal Integration Tool's documentation !
+===================================================================
 
-Welcome to SuMMIT's documentation!
-=============================================
-
-This package ha been designed as an easy-to-use platform to estimate different mono- and multi-view classifiers' performances on a multiview dataset.
+This package has been designed as an easy-to-use platform to estimate different mono- and multi-view classifiers' performances on a multiview dataset.
 
 The main advantage of the platform is that it allows to add and remove a classifier without modifying its core code (the procedure is described thoroughly in this documentation).
 
+This documentation consists in a short read me, with instructions to install and get started with SuMMIT, then several use cases to discover the features, and all the documented sources.
+
+.. note::
+    The documentation, the platform and the tests are constantly being updated.
+    All the content labelled WIP is Work In Progress
+
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
 
    readme_link
    tutorials/index

@@ -1,3 +1,6 @@
+.. role :: yaml(code)
+    :language: yaml
+
 ==========================================================
 Example 2 : Understanding the hyper-parameter optimization
 ==========================================================
@@ -9,9 +12,7 @@ Hyper-parameters are parameters of a classifier (monoview or multiview) that are
 task-dependant and have a huge part in the performance of the algorithm for a given task.
 
 The simplest example is the decision tree. One of it's hyper-parameter is the
-depth of the tree. The deeper the tree is,
-the most it will fit on the learning data. However, a tree too deep will most
-likely overfit and won't have any relevance on
+depth of the tree. The deeper the tree is, the most it will fit on the learning data. However, a tree too deep will most likely overfit and won't have any relevance on
 unseen testing data.
 
 This platform proposes a randomized search and a grid search to optimize
@@ -44,7 +45,7 @@ Understanding hyper-parameter optimization
 
 As hyper-parameters are task dependant, there are three ways in the platform to set their value :
 
-- If you know the value (or a set of values), specify them at the end of the config file for each algorithm you want to test, and use ``hps_type: None`` in the classifiaction section of the config file. This will bypass the optimization process to run the algorithm on the specified values.
+- If you know the value (or a set of values), specify them at the end of the config file for each algorithm you want to test, and use :yaml:`hps_type: 'None'` in the `config file <./config_files/config_example_2_1_1.yml>`_. This will bypass the optimization process to run the algorithm on the specified values.
 - If you have several possible values in mind, specify them in the config file and use ``hps_type: 'Grid'`` to run a grid search on the possible values.
 - If you have no ideas on the values, the platform proposes a random search for hyper-parameter optimization.
 
