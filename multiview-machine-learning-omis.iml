@@ -10,5 +10,6 @@
     <orderEntry type="library" name="R Skeletons" level="application" />
     <orderEntry type="module" module-name="Datasets" />
     <orderEntry type="module" module-name="scikit-multimodallearn" />
+    <orderEntry type="module" module-name="lives_dataset" />
   </component>
 </module>

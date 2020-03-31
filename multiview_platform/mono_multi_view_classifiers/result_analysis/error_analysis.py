@@ -253,12 +253,14 @@ def plot_errors_bar(error_on_examples, nb_examples, file_name,
     """
     fig, ax = plt.subplots()
     x = np.arange(nb_examples)
-    plt.bar(x, error_on_examples)
+    plt.bar(x, 1-error_on_examples)
     plt.title("Number of classifiers that failed to classify each example")
     fig.savefig(file_name + "error_analysis_bar.png", transparent=True)
     plt.close()
     if use_plotly:
-        fig = plotly.graph_objs.Figure([plotly.graph_objs.Bar(x=example_ids, y=error_on_examples)])
+        fig = plotly.graph_objs.Figure([plotly.graph_objs.Bar(x=example_ids, y=1-error_on_examples)])
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
+                          plot_bgcolor='rgba(0,0,0,0)')
         plotly.offline.plot(fig, filename=file_name + "error_analysis_bar.html",
                             auto_open=False)
 

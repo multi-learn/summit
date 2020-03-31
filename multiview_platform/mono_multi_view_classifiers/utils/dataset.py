@@ -529,15 +529,15 @@ class HDF5Dataset(Dataset):
                                                                      self.example_ids)[
                                                                      example_indices].astype(
                                                                      np.dtype(
-                                                                         "S10")))
+                                                                         "S100")))
         else:
             new_dataset_file["Metadata"].create_dataset("example_ids",
                                                         (
                                                         len(self.example_ids),),
                                                         data=np.array(
                                                             self.example_ids).astype(
-                                                            np.dtype("S10")),
-                                                        dtype=np.dtype("S10"))
+                                                            np.dtype("S100")),
+                                                        dtype=np.dtype("S100"))
         new_dataset_file["Metadata"].attrs["datasetLength"] = len(
             example_indices)
         new_dataset_file["Metadata"].attrs["nbClass"] = np.unique(labels)

@@ -12,7 +12,7 @@ To sum up what you need to run the platform :
 
 Launching the setup tool
 ------------------------
-Run in a terminal the following command, in the multiview-machine-learning-omis directory
+Run in a terminal the following command, in the ``multiview-machine-learning-omis`` directory
 
 .. code-block:: shell
 

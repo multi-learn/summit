@@ -1,0 +1,26 @@
+
+criterion: gini
+max_depth: 202
+splitter: random
+
+		0.28787878787878785
+criterion: gini
+max_depth: 217
+splitter: best
+
+		0.23939393939393935
+criterion: entropy
+max_depth: 292
+splitter: random
+
+		0.21818181818181817
+criterion: entropy
+max_depth: 275
+splitter: best
+
+		0.20454545454545453
+criterion: entropy
+max_depth: 182
+splitter: best
+
+		0.20454545454545453

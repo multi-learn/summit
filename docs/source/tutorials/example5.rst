@@ -1,4 +1,5 @@
 .. |algo| replace:: name_me
+
 ========================================
 Taking control : Use your own algorithms
 ========================================
@@ -6,27 +7,34 @@ Taking control : Use your own algorithms
 .. role:: python(code)
     :language: python
 
-One of the main goals of this platform is to be able to add a classifier to it without modifying the code.
+One of the main goals of this platform is to be able to add a classifier to it without modifying the main code.
 
 Simple task : Adding a monoview classifier
 ------------------------------------------
 
-Let's say we want to add a monoview classifier called "algo" to the platform in order to compare it to the other available ones.
-Let's suppose that we have a python module ``algo_module.py`` in which algo is defined in the class :python:`Algo` with the guidelines of ``sklearn``.
+Make it work
+<<<<<<<<<<<<
 
-To add algo to the platform, let's create a file called ``algo.py`` in ``multiview_platform/mono_multi_view_classifiers/monoview_classifiers/``
+Let's say we want to add a monoview classifier called "algo" to the platform in order to compare it to the other available ones.
+Let's suppose that we have a python module ``algo_module.py`` in which algo is defined in the class :python:`Algo` following ``scikit-learn``'s `guidelines <https://scikit-learn.org/stable/developers/index.html>`_ .
+
+To add "algo" to the platform, let's create a file called ``algo.py`` in ``multiview_platform/mono_multi_view_classifiers/monoview_classifiers/``
 
 In this file let's define the class :python:`AlgoClassifier`, inheriting from :python:`Algo` and :python:`BaseMonoviewClassifier` that contains the required methods for the platfrom.
+
+Moreover, one has to add a variable called :python:`classifier_class_name` that contains the class name (here ``'AlgoClassifier'``)
 
 .. code-block:: python
 
     import Algo
     from ..monoview.monoview_utils import BaseMonoviewClassifier
 
+    classifier_class_name = "AlgoClassifier"
+
     class AlgoClassifier(Algo, BaseMonoviewClassifier):
 
 
-To be able to use the hyper-parameter optimization of the platform, we need to provide some information in the :python:`__init__()` method.
+To be able to use the randomized hyper-parameter optimization, we need to provide some information in the :python:`__init__()` method.
 Indeed, all the algorithms included in the platform must provide two hyper-parameter-related attributes :
 
 - :python:`self.param_names` that contain the name of the hyper-parameters that have to be optimized (they must correspond to the name of the attributes of the class :python:`Algo`)
@@ -61,53 +69,93 @@ Then, the :python:`__init__()` method of the :python:`AlgoClassifier` class wil 
                              ["l1", "l2"],
                              CustomRandint()]
 
-In this method, we added the needed attributes. See REF TO DOC OF DISTRIBS for the dicumentation on the used distributions.
+In this method, we added the needed attributes. See REF TO DOC OF DISTRIBS for the documentation on the used distributions.
 
 If "algo" is implemented in a sklearn fashion, it is now usable in the platform.
 
-TODO interpretation
+Interpretation
+<<<<<<<<<<<<<<
+
+It is possible to provide some information about the decision process of the algorithm in the :python:`get_interpretation` method.
+
+It inputs four arguments :
+
+* :python:`directory`, a string containing the directory where figures should be sotred
+* :python:`base_file_name`, a string containing the file name prefix that shoul be used to sotre figures
+* :python:`y_test`, an array containing the labels of the test set
+* :python:`multiclass` a boolean that is True if the target is multiclass
+
+This method must return a string that will be appended to the summary file.
+
+An example of method can be :
+
+.. code-block:: python
+
+    def get_interpretation(self, directory, base_file_name, y_test,
+                           multiclass=False):
+        interpret_string = "Algo is a very relevant algorithm that used all the features to classify"
+        # Save a figure in os.path.join(directory, base_file_name+figure_name.png")
+        return interpretString
+
 
 More complex task : Adding a multiview classifier
 -------------------------------------------------
+
+This part is a bit more complex as to the best of our knowledge, there is no consensus regarding a multiview input for a classifier.
+
+The first step of the integration of a multiview classifier is very similar to the monoview one let us suppose one wants to add "new mv algo", that is implemented in the class `NewMVAlgo`. To do so, create a "new_mv_algo.py" file in ``multiview_platform/mono_multi_view_classifiers/multiview_classifiers/``.
+
+In this file let's define the class :python:`NewMVAlgoClassifier`, inheriting from :python:`NewMVAlgo` and :python:`BaseMultiviewClassifier` that contains the required methods for the platform.
+
+Moreover, one has to add a variable called :python:`classifier_class_name` that contains the class name (here ``'NewMVAlgoClassifier'``)
+
+.. code-block:: python
+
+    from new_mv_algo_module import NewMVAlgo
+    from ..multiview.multiview_utils import BaseMultiviewClassifier
+
+    from ..utils.hyper_parameter_search import CustomRandint
+
+    classifier_class_name = "NewMVAlgoClassifier"
+
+    class NewMVAlgoClassifier(BaseMultiviewClassifier, NewMVAlgo):
+
+        def __init__(self, param_1=50,
+                         random_state=None,
+                         param_2="edge"):
+                BaseMultiviewClassifier.__init__(self, random_state)
+                NewMVAlgo.__init__(self, param_1=param_1,
+                                            random_state=random_state,
+                                            param_2=param_2)
+                self.param_names = ["param_1", "random_state", "param_2"]
+                self.distribs = [CustomRandint(5,200), [random_state], ["val_1", "val_2"]]
+
+In SuMMIT the input of the :python:`fit()` method is `X`, a dataset object that provide access to each view with a method : :python:`dataset_var.get_v(view_index, example_indices)`,
+so in order to add a mutliview classifier to SuMMIT, one will probably have to add a data-transformation step before using the class's :python:`fit()` method.
+
+Moreover, to get restrain the examples and descriptors used in the method, SuMMIT provides two supplementary arguments :
+
+- ``train_indices`` is an array of examples indices that compose the training set,
+- ``view_indices`` is an array of view indices to restrain the number of views on which the algorithm will train.
+
+These two arguments are useful to reduce memory usage. Indeed, `X`, the dataset object is just a wrapper for an HDF5 file object, so the data will only be loaded once the `get_v` method is called, so the train and test set are not loaded at the same time.
 
 
 
 .. code-block:: python
 
-    from mimbo import MimboClassifier
-    from ..multiview.multiview_utils import BaseMultiviewClassifier, \
-                                            get_examples_views_indices
-    from ..utils.hyper_parameter_search import CustomRandint
+    def fit(self, X, y, train_indices=None, view_indices=None):
+        train_indices, view_indices = get_examples_views_indices(X,
+                                                                 train_indices,
+                                                                 view_indices)
+        needed_input = transform_data_if_needed(X, train_indices, view_indices)
+        return NewMVAlgo.fit(self, needed_input, y[train_indices])
 
-    classifier_class_name = "Mimbo"
+    def predict(self, X, example_indices=None, view_indices=None):
+        example_indices, view_indices = get_examples_views_indices(X,
+                                                                 example_indices,
+                                                                 view_indices)
+        needed_input = transform_data_if_needed(X, example_indices, view_indices)
+        return NewMVAlgo.predict(self, needed_input)
 
-    class Mimbo(BaseMultiviewClassifier, MimboClassifier):
-
-        def __init__(self, n_estimators=50,
-                     random_state=None,
-                     best_view_mode="edge"):
-            super().__init__(random_state)
-            super(BaseMultiviewClassifier, self).__init__(n_estimators=n_estimators,
-                                        random_state=random_state,
-                                        best_view_mode=best_view_mode)
-            self.param_names = ["n_estimators", "random_state", "best_view_mode"]
-            self.distribs = [CustomRandint(5,200), [random_state], ["edge", "error"]]
-
-        def fit(self, X, y, train_indices=None, view_indices=None):
-            train_indices, view_indices = get_examples_views_indices(X,
-                                                                     train_indices,
-                                                                     view_indices)
-            numpy_X, view_limits = X.to_numpy_array(example_indices=train_indices,
-                                                    view_indices=view_indices)
-            return super(Mimbo, self).fit(numpy_X, y[train_indices],
-                                                    view_limits)
-
-        def predict(self, X, example_indices=None, view_indices=None):
-            example_indices, view_indices = get_examples_views_indices(X,
-                                                                     example_indices,
-                                                                     view_indices)
-            numpy_X, view_limits = X.to_numpy_array(example_indices=example_indices,
-                                                    view_indices=view_indices)
-            return super(Mimbo, self).predict(numpy_X)
-
-
+Similarly to monoview algorithms, it is possible to add an interpretation method.
