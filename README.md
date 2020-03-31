@@ -79,6 +79,7 @@ In order to start a benchmark on your own dataset, you need to format it so SuMM
 [comment]: <> (With `top_directory` being the last directory in the `pathF` argument)
  
 ##### If you already have an HDF5 dataset file it must be formatted as : 
+
 * One dataset for each view called `ViewI` with `I` being the view index with 2 attribures : 
     * `attrs["name"]` a string for the name of the view
     * `attrs["sparse"]` a boolean specifying whether the view is sparse or not (WIP)
@@ -86,6 +87,7 @@ In order to start a benchmark on your own dataset, you need to format it so SuMM
 
 * One dataset for the labels called `Labels` with one attribute : 
     * `attrs["names"]` a list of strings encoded in utf-8 naming the labels in the right order
+
 
 * One group for the additional data called `Metadata` containing at least 1 dataset :
     * `"example_ids"`, a numpy array of type `S100`, with the ids of the examples in the right order
