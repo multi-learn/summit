@@ -1,0 +1,78 @@
+# The base configuration of the benchmark
+
+# Enable logging
+log: True
+# The name of each dataset in the directory on which the benchmark should be run
+name: ["digits"]
+# A label for the resul directory
+label: "example_0"
+# The type of dataset, currently supported ".hdf5", and ".csv"
+file_type: ".hdf5"
+# The views to use in the banchmark, an empty value will result in using all the views
+views:
+# The path to the directory where the datasets are stored, an absolute path is advised
+pathf: "examples/data/"
+# The niceness of the processes, useful to lower their priority
+nice: 0
+# The random state of the benchmark, useful for reproducibility
+random_state: 42
+# The number of parallel computing threads
+nb_cores: 1
+# Used to run the benchmark on the full dataset
+full: True
+# Used to be able to run more than one benchmark per minute
+debug: False
+# The directory in which the results will be stored, an absolute path is advised
+res_dir: "examples/results/example_0/"
+# If an error occurs in a classifier, if track_tracebacks is set to True, the
+# benchmark saves the traceback and continues, if it is set to False, it will
+# stop the benchmark and raise the error
+track_tracebacks: True
+
+# All the classification-realted configuration options
+
+# The ratio of test examples/number of train examples
+split: 0.25
+# The nubmer of folds in the cross validation process when hyper-paramter optimization is performed
+nb_folds: 2
+# The number of classes to select in the dataset
+nb_class:
+# The name of the classes to select in the dataset
+classes:
+# The type of algorithms to run during the benchmark (monoview and/or multiview)
+type: ["monoview","multiview"]
+# The name of the monoview algorithms to run, ["all"] to run all the available classifiers
+algos_monoview: ["decision_tree"]
+# The names of the multiview algorithms to run, ["all"] to run all the available classifiers
+algos_multiview: ["weighted_linear_early_fusion", "weighted_linear_late_fusion",]
+# The number of times the benchamrk is repeated with different train/test
+# split, to have more statistically significant results
+stats_iter: 1
+# The metrics that will be use din the result analysis
+metrics:
+  accuracy_score: {}
+  f1_score:
+    average: "micro"
+# The metric that will be used in the hyper-parameter optimization process
+metric_princ: "accuracy_score"
+# The type of hyper-parameter optimization method
+hps_type: "None"
+# The number of iteration in the hyper-parameter optimization process
+hps_args: {}
+
+### Configuring the hyper-parameters for the classifiers
+
+decision_tree:
+  max_depth: 3
+
+weighted_linear_early_fusion:
+  monoview_classifier_name: "decision_tree"
+  monoview_classifier_config:
+    decision_tree:
+      max_depth: 6
+
+weighted_linear_late_fusion:
+  classifiers_names: "decision_tree"
+  classifier_configs:
+    decision_tree:
+      max_depth: 3
