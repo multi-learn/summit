@@ -32,7 +32,7 @@ nice: 0
 noise_std: 0.0
 pathf: examples/data/
 random_state: 42
-res_dir: examples/results/example_1/
+res_dir: examples/results/example_0/
 split: 0.25
 stats_iter: 1
 track_tracebacks: true

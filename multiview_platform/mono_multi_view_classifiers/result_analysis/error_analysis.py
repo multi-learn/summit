@@ -48,7 +48,7 @@ def get_example_errors(groud_truth, results):
 
 def publish_example_errors(example_errors, directory, databaseName,
                            labels_names, example_ids, labels):
-    logging.debug("Start:\t Biclass Label analysis figure generation")
+    logging.debug("Start:\t Label analysis figure generation")
 
     base_file_name = os.path.join(directory, databaseName + "-" )
 
@@ -65,7 +65,7 @@ def publish_example_errors(example_errors, directory, databaseName,
     plot_errors_bar(error_on_examples, nb_examples,
                     base_file_name, example_ids=example_ids)
 
-    logging.debug("Done:\t Biclass Label analysis figures generation")
+    logging.debug("Done:\t Label analysis figures generation")
 
 
 def publish_all_example_errors(iter_results, directory,

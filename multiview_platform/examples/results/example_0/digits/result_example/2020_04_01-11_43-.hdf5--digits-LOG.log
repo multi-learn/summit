@@ -1,29 +1,29 @@
-2020-04-01 11:15:32,678 DEBUG: Start:	 Initializing monoview classifiers arguments
-2020-04-01 11:15:32,679 DEBUG: Done:	 Initializing monoview classifiers arguments
-2020-04-01 11:15:32,679 DEBUG: Start:	 Initializing monoview classifiers arguments
-2020-04-01 11:15:32,679 DEBUG: Done:	 Initializing monoview classifiers arguments
-2020-04-01 11:15:32,679 DEBUG: Start:	 Executing all the needed biclass benchmarks
-2020-04-01 11:15:32,679 DEBUG: Start:	 Benchmark initialization
-2020-04-01 11:15:32,688 DEBUG: Done:	 Benchmark initialization
-2020-04-01 11:15:32,688 DEBUG: Start:	 monoview benchmark
-2020-04-01 11:15:32,690 DEBUG: Start:	 Loading data
-2020-04-01 11:15:32,691 DEBUG: Done:	 Loading data
-2020-04-01 11:15:32,691 DEBUG: Info:	 Classification - Database:digits View:digit_col_grad_0 train ratio:0.7495826377295493, CrossValidation k-folds: 2, cores:1, algorithm : decision_tree
-2020-04-01 11:15:32,691 DEBUG: Start:	 Determine Train/Test split
-2020-04-01 11:15:32,691 DEBUG: Info:	 Shape X_train:(1347, 64), Length of y_train:1347
-2020-04-01 11:15:32,691 DEBUG: Info:	 Shape X_test:(450, 64), Length of y_test:450
-2020-04-01 11:15:32,691 DEBUG: Done:	 Determine Train/Test split
-2020-04-01 11:15:32,691 DEBUG: Start:	 Generate classifier args
-2020-04-01 11:15:32,691 DEBUG: Done:	 Generate classifier args
-2020-04-01 11:15:32,691 DEBUG: Start:	 Training
-2020-04-01 11:15:32,700 DEBUG: Done:	 Training
-2020-04-01 11:15:32,700 DEBUG: Start:	 Predicting
-2020-04-01 11:15:32,701 DEBUG: Done:	 Predicting
-2020-04-01 11:15:32,701 DEBUG: Info:	 Duration for training and predicting: 0.010984459999235696[s]
-2020-04-01 11:15:32,702 DEBUG: Start:	 Getting results
-2020-04-01 11:15:32,857 DEBUG: Done:	 Getting results
-2020-04-01 11:15:32,857 DEBUG: Start:	 Saving preds
-2020-04-01 11:15:32,857 INFO: Classification on digits for digit_col_grad_0 with decision_tree.
+2020-04-01 11:43:24,588 DEBUG: Start:	 Initializing monoview classifiers arguments
+2020-04-01 11:43:24,588 DEBUG: Done:	 Initializing monoview classifiers arguments
+2020-04-01 11:43:24,588 DEBUG: Start:	 Initializing monoview classifiers arguments
+2020-04-01 11:43:24,588 DEBUG: Done:	 Initializing monoview classifiers arguments
+2020-04-01 11:43:24,588 DEBUG: Start:	 Executing all the needed benchmarks
+2020-04-01 11:43:24,588 DEBUG: Start:	 Benchmark initialization
+2020-04-01 11:43:24,595 DEBUG: Done:	 Benchmark initialization
+2020-04-01 11:43:24,596 DEBUG: Start:	 monoview benchmark
+2020-04-01 11:43:24,597 DEBUG: Start:	 Loading data
+2020-04-01 11:43:24,597 DEBUG: Done:	 Loading data
+2020-04-01 11:43:24,598 DEBUG: Info:	 Classification - Database:digits View:digit_col_grad_0 train ratio:0.7495826377295493, CrossValidation k-folds: 2, cores:1, algorithm : decision_tree
+2020-04-01 11:43:24,598 DEBUG: Start:	 Determine Train/Test split
+2020-04-01 11:43:24,598 DEBUG: Info:	 Shape X_train:(1347, 64), Length of y_train:1347
+2020-04-01 11:43:24,598 DEBUG: Info:	 Shape X_test:(450, 64), Length of y_test:450
+2020-04-01 11:43:24,598 DEBUG: Done:	 Determine Train/Test split
+2020-04-01 11:43:24,598 DEBUG: Start:	 Generate classifier args
+2020-04-01 11:43:24,598 DEBUG: Done:	 Generate classifier args
+2020-04-01 11:43:24,598 DEBUG: Start:	 Training
+2020-04-01 11:43:24,605 DEBUG: Done:	 Training
+2020-04-01 11:43:24,605 DEBUG: Start:	 Predicting
+2020-04-01 11:43:24,607 DEBUG: Done:	 Predicting
+2020-04-01 11:43:24,607 DEBUG: Info:	 Duration for training and predicting: 0.00920685399978538[s]
+2020-04-01 11:43:24,607 DEBUG: Start:	 Getting results
+2020-04-01 11:43:24,755 DEBUG: Done:	 Getting results
+2020-04-01 11:43:24,755 DEBUG: Start:	 Saving preds
+2020-04-01 11:43:24,755 INFO: Classification on digits for digit_col_grad_0 with decision_tree.
 
 Database configuration : 
 	- Database name : digits
@@ -85,25 +85,25 @@ Feature importances :
 - Feature index : 60, feature importance : 0.17511746004319367
 - Feature index : 28, feature importance : 0.13393307647589495
 
-2020-04-01 11:15:32,865 INFO: Done:	 Saving results
-2020-04-01 11:15:32,867 DEBUG: Start:	 Loading data
-2020-04-01 11:15:32,867 DEBUG: Done:	 Loading data
-2020-04-01 11:15:32,867 DEBUG: Info:	 Classification - Database:digits View:digit_col_grad_1 train ratio:0.7495826377295493, CrossValidation k-folds: 2, cores:1, algorithm : decision_tree
-2020-04-01 11:15:32,867 DEBUG: Start:	 Determine Train/Test split
-2020-04-01 11:15:32,868 DEBUG: Info:	 Shape X_train:(1347, 64), Length of y_train:1347
-2020-04-01 11:15:32,868 DEBUG: Info:	 Shape X_test:(450, 64), Length of y_test:450
-2020-04-01 11:15:32,868 DEBUG: Done:	 Determine Train/Test split
-2020-04-01 11:15:32,868 DEBUG: Start:	 Generate classifier args
-2020-04-01 11:15:32,868 DEBUG: Done:	 Generate classifier args
-2020-04-01 11:15:32,868 DEBUG: Start:	 Training
-2020-04-01 11:15:32,877 DEBUG: Done:	 Training
-2020-04-01 11:15:32,877 DEBUG: Start:	 Predicting
-2020-04-01 11:15:32,879 DEBUG: Done:	 Predicting
-2020-04-01 11:15:32,879 DEBUG: Info:	 Duration for training and predicting: 0.01160801799960609[s]
-2020-04-01 11:15:32,879 DEBUG: Start:	 Getting results
-2020-04-01 11:15:33,000 DEBUG: Done:	 Getting results
-2020-04-01 11:15:33,000 DEBUG: Start:	 Saving preds
-2020-04-01 11:15:33,000 INFO: Classification on digits for digit_col_grad_1 with decision_tree.
+2020-04-01 11:43:24,762 INFO: Done:	 Saving results
+2020-04-01 11:43:24,764 DEBUG: Start:	 Loading data
+2020-04-01 11:43:24,764 DEBUG: Done:	 Loading data
+2020-04-01 11:43:24,764 DEBUG: Info:	 Classification - Database:digits View:digit_col_grad_1 train ratio:0.7495826377295493, CrossValidation k-folds: 2, cores:1, algorithm : decision_tree
+2020-04-01 11:43:24,764 DEBUG: Start:	 Determine Train/Test split
+2020-04-01 11:43:24,765 DEBUG: Info:	 Shape X_train:(1347, 64), Length of y_train:1347
+2020-04-01 11:43:24,765 DEBUG: Info:	 Shape X_test:(450, 64), Length of y_test:450
+2020-04-01 11:43:24,765 DEBUG: Done:	 Determine Train/Test split
+2020-04-01 11:43:24,765 DEBUG: Start:	 Generate classifier args
+2020-04-01 11:43:24,765 DEBUG: Done:	 Generate classifier args
+2020-04-01 11:43:24,765 DEBUG: Start:	 Training
+2020-04-01 11:43:24,775 DEBUG: Done:	 Training
+2020-04-01 11:43:24,775 DEBUG: Start:	 Predicting
+2020-04-01 11:43:24,776 DEBUG: Done:	 Predicting
+2020-04-01 11:43:24,776 DEBUG: Info:	 Duration for training and predicting: 0.011629749998974148[s]
+2020-04-01 11:43:24,776 DEBUG: Start:	 Getting results
+2020-04-01 11:43:24,888 DEBUG: Done:	 Getting results
+2020-04-01 11:43:24,888 DEBUG: Start:	 Saving preds
+2020-04-01 11:43:24,888 INFO: Classification on digits for digit_col_grad_1 with decision_tree.
 
 Database configuration : 
 	- Database name : digits
@@ -166,25 +166,25 @@ Feature importances :
 - Feature index : 36, feature importance : 0.12766430531260284
 - Feature index : 50, feature importance : 0.027090802440752286
 
-2020-04-01 11:15:33,007 INFO: Done:	 Saving results
-2020-04-01 11:15:33,009 DEBUG: Start:	 Loading data
-2020-04-01 11:15:33,010 DEBUG: Done:	 Loading data
-2020-04-01 11:15:33,010 DEBUG: Info:	 Classification - Database:digits View:digit_col_grad_2 train ratio:0.7495826377295493, CrossValidation k-folds: 2, cores:1, algorithm : decision_tree
-2020-04-01 11:15:33,010 DEBUG: Start:	 Determine Train/Test split
-2020-04-01 11:15:33,010 DEBUG: Info:	 Shape X_train:(1347, 64), Length of y_train:1347
-2020-04-01 11:15:33,010 DEBUG: Info:	 Shape X_test:(450, 64), Length of y_test:450
-2020-04-01 11:15:33,010 DEBUG: Done:	 Determine Train/Test split
-2020-04-01 11:15:33,010 DEBUG: Start:	 Generate classifier args
-2020-04-01 11:15:33,011 DEBUG: Done:	 Generate classifier args
-2020-04-01 11:15:33,011 DEBUG: Start:	 Training
-2020-04-01 11:15:33,023 DEBUG: Done:	 Training
-2020-04-01 11:15:33,023 DEBUG: Start:	 Predicting
-2020-04-01 11:15:33,024 DEBUG: Done:	 Predicting
-2020-04-01 11:15:33,024 DEBUG: Info:	 Duration for training and predicting: 0.01500083800056018[s]
-2020-04-01 11:15:33,025 DEBUG: Start:	 Getting results
-2020-04-01 11:15:33,139 DEBUG: Done:	 Getting results
-2020-04-01 11:15:33,140 DEBUG: Start:	 Saving preds
-2020-04-01 11:15:33,140 INFO: Classification on digits for digit_col_grad_2 with decision_tree.
+2020-04-01 11:43:24,895 INFO: Done:	 Saving results
+2020-04-01 11:43:24,897 DEBUG: Start:	 Loading data
+2020-04-01 11:43:24,897 DEBUG: Done:	 Loading data
+2020-04-01 11:43:24,897 DEBUG: Info:	 Classification - Database:digits View:digit_col_grad_2 train ratio:0.7495826377295493, CrossValidation k-folds: 2, cores:1, algorithm : decision_tree
+2020-04-01 11:43:24,897 DEBUG: Start:	 Determine Train/Test split
+2020-04-01 11:43:24,898 DEBUG: Info:	 Shape X_train:(1347, 64), Length of y_train:1347
+2020-04-01 11:43:24,898 DEBUG: Info:	 Shape X_test:(450, 64), Length of y_test:450
+2020-04-01 11:43:24,898 DEBUG: Done:	 Determine Train/Test split
+2020-04-01 11:43:24,898 DEBUG: Start:	 Generate classifier args
+2020-04-01 11:43:24,898 DEBUG: Done:	 Generate classifier args
+2020-04-01 11:43:24,898 DEBUG: Start:	 Training
+2020-04-01 11:43:24,906 DEBUG: Done:	 Training
+2020-04-01 11:43:24,906 DEBUG: Start:	 Predicting
+2020-04-01 11:43:24,908 DEBUG: Done:	 Predicting
+2020-04-01 11:43:24,908 DEBUG: Info:	 Duration for training and predicting: 0.01043212199874688[s]
+2020-04-01 11:43:24,908 DEBUG: Start:	 Getting results
+2020-04-01 11:43:25,019 DEBUG: Done:	 Getting results
+2020-04-01 11:43:25,019 DEBUG: Start:	 Saving preds
+2020-04-01 11:43:25,019 INFO: Classification on digits for digit_col_grad_2 with decision_tree.
 
 Database configuration : 
 	- Database name : digits
@@ -248,33 +248,33 @@ Feature importances :
 - Feature index : 35, feature importance : 0.041528264543039574
 - Feature index : 7, feature importance : 0.01725193874628402
 
-2020-04-01 11:15:33,147 INFO: Done:	 Saving results
-2020-04-01 11:15:33,147 DEBUG: Done:	 monoview benchmark
-2020-04-01 11:15:33,148 DEBUG: Start:	 multiview arguments initialization
-2020-04-01 11:15:33,148 DEBUG: Done:	 multiview arguments initialization
-2020-04-01 11:15:33,148 DEBUG: Start:	 multiview benchmark
-2020-04-01 11:15:33,148 DEBUG: Start:	 Initialize constants
-2020-04-01 11:15:33,148 INFO: Info	: Classification - Database : digits ; Views : digit_col_grad_0, digit_col_grad_1, digit_col_grad_2 ; Algorithm : weighted_linear_early_fusion ; Cores : 1, Train ratio : 0.7495826377295493, CV on 2 folds
-2020-04-01 11:15:33,149 INFO: Info:	 Shape of digit_col_grad_0 :(1797, 64)
-2020-04-01 11:15:33,151 INFO: Info:	 Shape of digit_col_grad_1 :(1797, 64)
-2020-04-01 11:15:33,153 INFO: Info:	 Shape of digit_col_grad_2 :(1797, 64)
-2020-04-01 11:15:33,154 DEBUG: Done:	 Initialize constants
-2020-04-01 11:15:33,154 INFO: Info:	 Extraction duration 0.006641864776611328s
-2020-04-01 11:15:33,154 DEBUG: Start:	 Getting train/test split
-2020-04-01 11:15:33,154 DEBUG: Done:	 Getting train/test split
-2020-04-01 11:15:33,155 DEBUG: Start:	 Getting classifiers modules
-2020-04-01 11:15:33,155 DEBUG: Done:	 Getting classifiers modules
-2020-04-01 11:15:33,155 DEBUG: Start:	 Optimizing hyperparameters
-2020-04-01 11:15:33,188 DEBUG: Done:	 Optimizing hyperparameters
-2020-04-01 11:15:33,188 DEBUG: Start:	 Fitting classifier
-2020-04-01 11:15:33,228 DEBUG: Done:	 Fitting classifier
-2020-04-01 11:15:33,228 DEBUG: Start:	 Predicting
-2020-04-01 11:15:33,235 INFO: Done:	 Pertidcting
-2020-04-01 11:15:33,235 INFO: Info:	 Classification duration 0.006641864776611328s
-2020-04-01 11:15:33,235 INFO: Start:	 Result Analysis for weighted_linear_early_fusion
-2020-04-01 11:15:33,254 INFO: Done:	 Result Analysis for weighted_linear_early_fusion
-2020-04-01 11:15:33,255 DEBUG: Start:	 Saving preds
-2020-04-01 11:15:33,255 INFO: Multiview classification on digits  with early_fusion
+2020-04-01 11:43:25,026 INFO: Done:	 Saving results
+2020-04-01 11:43:25,027 DEBUG: Done:	 monoview benchmark
+2020-04-01 11:43:25,027 DEBUG: Start:	 multiview arguments initialization
+2020-04-01 11:43:25,027 DEBUG: Done:	 multiview arguments initialization
+2020-04-01 11:43:25,027 DEBUG: Start:	 multiview benchmark
+2020-04-01 11:43:25,027 DEBUG: Start:	 Initialize constants
+2020-04-01 11:43:25,027 INFO: Info	: Classification - Database : digits ; Views : digit_col_grad_0, digit_col_grad_1, digit_col_grad_2 ; Algorithm : weighted_linear_early_fusion ; Cores : 1, Train ratio : 0.7495826377295493, CV on 2 folds
+2020-04-01 11:43:25,028 INFO: Info:	 Shape of digit_col_grad_0 :(1797, 64)
+2020-04-01 11:43:25,029 INFO: Info:	 Shape of digit_col_grad_1 :(1797, 64)
+2020-04-01 11:43:25,031 INFO: Info:	 Shape of digit_col_grad_2 :(1797, 64)
+2020-04-01 11:43:25,031 DEBUG: Done:	 Initialize constants
+2020-04-01 11:43:25,031 INFO: Info:	 Extraction duration 0.004614114761352539s
+2020-04-01 11:43:25,031 DEBUG: Start:	 Getting train/test split
+2020-04-01 11:43:25,032 DEBUG: Done:	 Getting train/test split
+2020-04-01 11:43:25,032 DEBUG: Start:	 Getting classifiers modules
+2020-04-01 11:43:25,032 DEBUG: Done:	 Getting classifiers modules
+2020-04-01 11:43:25,032 DEBUG: Start:	 Optimizing hyperparameters
+2020-04-01 11:43:25,064 DEBUG: Done:	 Optimizing hyperparameters
+2020-04-01 11:43:25,064 DEBUG: Start:	 Fitting classifier
+2020-04-01 11:43:25,103 DEBUG: Done:	 Fitting classifier
+2020-04-01 11:43:25,103 DEBUG: Start:	 Predicting
+2020-04-01 11:43:25,108 INFO: Done:	 Pertidcting
+2020-04-01 11:43:25,108 INFO: Info:	 Classification duration 0.004614114761352539s
+2020-04-01 11:43:25,108 INFO: Start:	 Result Analysis for weighted_linear_early_fusion
+2020-04-01 11:43:25,127 INFO: Done:	 Result Analysis for weighted_linear_early_fusion
+2020-04-01 11:43:25,127 DEBUG: Start:	 Saving preds
+2020-04-01 11:43:25,127 INFO: Multiview classification on digits  with early_fusion
 
 Database configuration : 
 	- Database name : digits
@@ -284,7 +284,7 @@ Database configuration :
 	- Number of cross validation folds : 2
 
 Classifier configuration : 
-	- WeightedLinearEarlyFusion with monoview_classifier_name : decision_tree, monoview_classifier_config : {'criterion': 'gini', 'max_depth': 6, 'random_state': RandomState(MT19937) at 0x7F9F8BF4B258, 'splitter': 'best'}
+	- WeightedLinearEarlyFusion with monoview_classifier_name : decision_tree, monoview_classifier_config : {'criterion': 'gini', 'max_depth': 6, 'random_state': RandomState(MT19937) at 0x7FE2227B8258, 'splitter': 'best'}
 	- Executed on 1 core(s) 
 
 
@@ -328,29 +328,29 @@ Test set confusion matrix :
 
  Classifier Interpretation : 
 
-2020-04-01 11:15:33,255 DEBUG: Start:	 Saving preds
-2020-04-01 11:15:33,255 DEBUG: Start:	 Initialize constants
-2020-04-01 11:15:33,256 INFO: Info	: Classification - Database : digits ; Views : digit_col_grad_0, digit_col_grad_1, digit_col_grad_2 ; Algorithm : weighted_linear_late_fusion ; Cores : 1, Train ratio : 0.7495826377295493, CV on 2 folds
-2020-04-01 11:15:33,257 INFO: Info:	 Shape of digit_col_grad_0 :(1797, 64)
-2020-04-01 11:15:33,258 INFO: Info:	 Shape of digit_col_grad_1 :(1797, 64)
-2020-04-01 11:15:33,259 INFO: Info:	 Shape of digit_col_grad_2 :(1797, 64)
-2020-04-01 11:15:33,260 DEBUG: Done:	 Initialize constants
-2020-04-01 11:15:33,260 INFO: Info:	 Extraction duration 0.0041353702545166016s
-2020-04-01 11:15:33,260 DEBUG: Start:	 Getting train/test split
-2020-04-01 11:15:33,260 DEBUG: Done:	 Getting train/test split
-2020-04-01 11:15:33,260 DEBUG: Start:	 Getting classifiers modules
-2020-04-01 11:15:33,260 DEBUG: Done:	 Getting classifiers modules
-2020-04-01 11:15:33,260 DEBUG: Start:	 Optimizing hyperparameters
-2020-04-01 11:15:33,280 DEBUG: Done:	 Optimizing hyperparameters
-2020-04-01 11:15:33,280 DEBUG: Start:	 Fitting classifier
-2020-04-01 11:15:34,076 DEBUG: Done:	 Fitting classifier
-2020-04-01 11:15:34,076 DEBUG: Start:	 Predicting
-2020-04-01 11:15:34,295 INFO: Done:	 Pertidcting
-2020-04-01 11:15:34,295 INFO: Info:	 Classification duration 0.0041353702545166016s
-2020-04-01 11:15:34,295 INFO: Start:	 Result Analysis for weighted_linear_late_fusion
-2020-04-01 11:15:34,313 INFO: Done:	 Result Analysis for weighted_linear_late_fusion
-2020-04-01 11:15:34,313 DEBUG: Start:	 Saving preds
-2020-04-01 11:15:34,313 INFO: Multiview classification on digits  with weighted_linear_late_fusion
+2020-04-01 11:43:25,127 DEBUG: Start:	 Saving preds
+2020-04-01 11:43:25,127 DEBUG: Start:	 Initialize constants
+2020-04-01 11:43:25,128 INFO: Info	: Classification - Database : digits ; Views : digit_col_grad_0, digit_col_grad_1, digit_col_grad_2 ; Algorithm : weighted_linear_late_fusion ; Cores : 1, Train ratio : 0.7495826377295493, CV on 2 folds
+2020-04-01 11:43:25,129 INFO: Info:	 Shape of digit_col_grad_0 :(1797, 64)
+2020-04-01 11:43:25,130 INFO: Info:	 Shape of digit_col_grad_1 :(1797, 64)
+2020-04-01 11:43:25,131 INFO: Info:	 Shape of digit_col_grad_2 :(1797, 64)
+2020-04-01 11:43:25,132 DEBUG: Done:	 Initialize constants
+2020-04-01 11:43:25,132 INFO: Info:	 Extraction duration 0.004459857940673828s
+2020-04-01 11:43:25,132 DEBUG: Start:	 Getting train/test split
+2020-04-01 11:43:25,132 DEBUG: Done:	 Getting train/test split
+2020-04-01 11:43:25,132 DEBUG: Start:	 Getting classifiers modules
+2020-04-01 11:43:25,132 DEBUG: Done:	 Getting classifiers modules
+2020-04-01 11:43:25,132 DEBUG: Start:	 Optimizing hyperparameters
+2020-04-01 11:43:25,152 DEBUG: Done:	 Optimizing hyperparameters
+2020-04-01 11:43:25,152 DEBUG: Start:	 Fitting classifier
+2020-04-01 11:43:25,876 DEBUG: Done:	 Fitting classifier
+2020-04-01 11:43:25,876 DEBUG: Start:	 Predicting
+2020-04-01 11:43:26,083 INFO: Done:	 Pertidcting
+2020-04-01 11:43:26,083 INFO: Info:	 Classification duration 0.004459857940673828s
+2020-04-01 11:43:26,083 INFO: Start:	 Result Analysis for weighted_linear_late_fusion
+2020-04-01 11:43:26,101 INFO: Done:	 Result Analysis for weighted_linear_late_fusion
+2020-04-01 11:43:26,101 DEBUG: Start:	 Saving preds
+2020-04-01 11:43:26,101 INFO: Multiview classification on digits  with weighted_linear_late_fusion
 
 Database configuration : 
 	- Database name : digits
@@ -400,34 +400,34 @@ Test set confusion matrix :
 
 
 
- Classification took 0:00:01
+ Classification took 0:00:00
 
  Classifier Interpretation : 
 Multiclass wrapper is not interpretable yet
-2020-04-01 11:15:34,313 DEBUG: Start:	 Saving preds
-2020-04-01 11:15:34,314 DEBUG: Done:	 multiview benchmark
-2020-04-01 11:15:34,314 DEBUG: Start:	 Analyzing all results
-2020-04-01 11:15:35,376 DEBUG: Start:	 Score graph generation for accuracy_score*
-2020-04-01 11:15:36,538 DEBUG: Done:	 Score graph generation for accuracy_score*
-2020-04-01 11:15:36,539 DEBUG: Start:	 Score graph generation for f1_score
-2020-04-01 11:15:37,327 DEBUG: Done:	 Score graph generation for f1_score
-2020-04-01 11:15:37,327 DEBUG: Start:	 Biclass Label analysis figure generation
-2020-04-01 11:15:37,363 DEBUG: locator: <matplotlib.ticker.FixedLocator object at 0x7f9f86534c18>
-2020-04-01 11:15:37,364 DEBUG: Using fixed locator on colorbar
-2020-04-01 11:15:37,365 DEBUG: Setting pcolormesh
-2020-04-01 11:15:39,621 DEBUG: Done:	 Biclass Label analysis figures generation
-2020-04-01 11:15:40,937 DEBUG: Done:	 Analyzing all results
-2020-04-01 11:15:40,937 DEBUG: Done:	 Executing all the needed biclass benchmarks
-2020-04-01 11:15:40,937 DEBUG: Start:	 Analyzing predictions
-2020-04-01 11:15:40,938 DEBUG: Start:	 Analyzing all results
-2020-04-01 11:15:42,158 DEBUG: Start:	 Score graph generation for accuracy_score*
-2020-04-01 11:15:42,916 DEBUG: Done:	 Score graph generation for accuracy_score*
-2020-04-01 11:15:42,916 DEBUG: Start:	 Score graph generation for f1_score
-2020-04-01 11:15:43,695 DEBUG: Done:	 Score graph generation for f1_score
-2020-04-01 11:15:43,696 DEBUG: Start:	 Biclass Label analysis figure generation
-2020-04-01 11:15:43,730 DEBUG: locator: <matplotlib.ticker.FixedLocator object at 0x7f9f86eb5710>
-2020-04-01 11:15:43,730 DEBUG: Using fixed locator on colorbar
-2020-04-01 11:15:43,732 DEBUG: Setting pcolormesh
-2020-04-01 11:15:45,952 DEBUG: Done:	 Biclass Label analysis figures generation
-2020-04-01 11:15:47,134 DEBUG: Done:	 Analyzing all results
-2020-04-01 11:15:47,134 DEBUG: Done:	 Analyzing predictions
+2020-04-01 11:43:26,102 DEBUG: Start:	 Saving preds
+2020-04-01 11:43:26,103 DEBUG: Done:	 multiview benchmark
+2020-04-01 11:43:26,104 DEBUG: Start:	 Analyzing all results
+2020-04-01 11:43:27,023 DEBUG: Start:	 Score graph generation for accuracy_score*
+2020-04-01 11:43:28,095 DEBUG: Done:	 Score graph generation for accuracy_score*
+2020-04-01 11:43:28,095 DEBUG: Start:	 Score graph generation for f1_score
+2020-04-01 11:43:28,748 DEBUG: Done:	 Score graph generation for f1_score
+2020-04-01 11:43:28,748 DEBUG: Start:	 Label analysis figure generation
+2020-04-01 11:43:28,782 DEBUG: locator: <matplotlib.ticker.FixedLocator object at 0x7fe21cda6eb8>
+2020-04-01 11:43:28,782 DEBUG: Using fixed locator on colorbar
+2020-04-01 11:43:28,783 DEBUG: Setting pcolormesh
+2020-04-01 11:43:30,769 DEBUG: Done:	 Label analysis figures generation
+2020-04-01 11:43:31,815 DEBUG: Done:	 Analyzing all results
+2020-04-01 11:43:31,815 DEBUG: Done:	 Executing all the needed benchmarks
+2020-04-01 11:43:31,815 DEBUG: Start:	 Analyzing predictions
+2020-04-01 11:43:31,816 DEBUG: Start:	 Analyzing all results
+2020-04-01 11:43:32,779 DEBUG: Start:	 Score graph generation for accuracy_score*
+2020-04-01 11:43:33,467 DEBUG: Done:	 Score graph generation for accuracy_score*
+2020-04-01 11:43:33,467 DEBUG: Start:	 Score graph generation for f1_score
+2020-04-01 11:43:34,128 DEBUG: Done:	 Score graph generation for f1_score
+2020-04-01 11:43:34,128 DEBUG: Start:	 Label analysis figure generation
+2020-04-01 11:43:34,160 DEBUG: locator: <matplotlib.ticker.FixedLocator object at 0x7fe21d1099b0>
+2020-04-01 11:43:34,160 DEBUG: Using fixed locator on colorbar
+2020-04-01 11:43:34,161 DEBUG: Setting pcolormesh
+2020-04-01 11:43:36,292 DEBUG: Done:	 Label analysis figures generation
+2020-04-01 11:43:37,385 DEBUG: Done:	 Analyzing all results
+2020-04-01 11:43:37,386 DEBUG: Done:	 Analyzing predictions

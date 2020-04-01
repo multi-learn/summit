@@ -391,7 +391,7 @@ class HDF5Dataset(Dataset):
                                 for example_id in
                                 self.dataset["Metadata"]["example_ids"]]
         else:
-            self.example_ids = [str(i) for i in
+            self.example_ids = ["ID_"+str(i) for i in
                                 range(self.dataset["Labels"].shape[0])]
 
     def get_nb_examples(self):

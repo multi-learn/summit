@@ -798,7 +798,7 @@ def exec_benchmark(nb_cores, stats_iter,
     results : list of lists
         The results of the benchmark.
     """
-    logging.debug("Start:\t Executing all the needed biclass benchmarks")
+    logging.debug("Start:\t Executing all the needed benchmarks")
     results = []
     # if nb_cores > 1:
     #     if stats_iter > 1 or nb_multiclass > 1:
@@ -826,7 +826,7 @@ def exec_benchmark(nb_cores, stats_iter,
                            metrics, example_ids=dataset_var.example_ids,
                            labels=dataset_var.get_labels())
         results += [benchmark_results]
-    logging.debug("Done:\t Executing all the needed biclass benchmarks")
+    logging.debug("Done:\t Executing all the needed benchmarks")
 
     # Do everything with flagging
     logging.debug("Start:\t Analyzing predictions")
