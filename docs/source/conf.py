@@ -41,6 +41,7 @@ add_module_names = False
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.extlinks',
 #              'sphinx.ext.doctest',
 #              'sphinx.ext.intersphinx',
 #              'sphinx.ext.todo',
@@ -183,3 +184,16 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 #             'auto_toc_tree_section': 'Contents',
 #             }, True)
 #     app.add_transform(AutoStructify)
+rst_prolog = """
+.. role:: python(code)
+    :language: python
+
+.. role :: yaml(code)
+    :language: yaml
+    
+.. |platf| replace:: SuMMIT
+"""
+
+
+extlinks = {'base_source': ('https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/-/tree/master/', "base_source"),
+            'base_doc': ('http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/', 'base_doc')}
