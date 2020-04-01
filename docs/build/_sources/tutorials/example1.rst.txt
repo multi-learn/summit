@@ -1,9 +1,3 @@
-.. role:: python(code)
-    :language: python
-
-.. role :: yaml(code)
-    :language: yaml
-
 ===============================================
 Example 1 : First steps with SuMMIT
 ===============================================

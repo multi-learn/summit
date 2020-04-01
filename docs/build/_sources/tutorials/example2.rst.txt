@@ -19,6 +19,8 @@ This platform proposes a randomized search and a grid search to optimize
 hyper-parameters. In this example, we first will analyze the theory and
 then how to use it.
 
+The following two sections describe the hyper-parameter optimization of the platform, for hand-on experience, go to `Hands-on experience`_
+
 
 Understanding train/test split
 ------------------------------
@@ -45,7 +47,7 @@ Understanding hyper-parameter optimization
 
 As hyper-parameters are task dependant, there are three ways in the platform to set their value :
 
-- If you know the value (or a set of values), specify them at the end of the config file for each algorithm you want to test, and use :yaml:`hps_type: 'None'` in the `config file <./config_files/config_example_2_1_1.yml>`_. This will bypass the optimization process to run the algorithm on the specified values.
+- If you know the value (or a set of values), specify them at the end of the config file for each algorithm you want to test, and use :yaml:`hps_type: 'None'` in the `config file <https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/-/blob/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L61>`_. This will bypass the optimization process to run the algorithm on the specified values.
 - If you have several possible values in mind, specify them in the config file and use ``hps_type: 'Grid'`` to run a grid search on the possible values.
 - If you have no ideas on the values, the platform proposes a random search for hyper-parameter optimization.
 
@@ -108,7 +110,7 @@ In the platform, the training set (the 48 examples of class A and 32 examples of
 divided in k folds for the cross-validation process and the testing set (the 12 examples of class A and 8 examples of
 class B for last examples) will in no way be involved in the training process of the classifier.
 
-The cross-validation process can be controled with the ``nb_folds:`` line of the configuration file in which the number
+The cross-validation process can be controlled with the ``nb_folds:`` line of the configuration file in which the number
 of folds is specified.
 
 Metric choice
@@ -164,7 +166,7 @@ For decision_tree :
 .. code-block:: yaml
 
     decision_tree:
-      max_depth: 10
+      max_depth: 3
       criterion: "gini"
       splitter: "best"
 
@@ -175,10 +177,10 @@ And for the late fusion majority vote :
 .. code-block:: yaml
 
     majority_voting_fusion:
-        classifier_names: ["decision_tree", "decision_tree", "decision_tree", ]
+        classifier_names: ["decision_tree", ]
         classifier_configs:
             decision_tree:
-                max_depth: 1
+                max_depth: 3
                 criterion: "gini"
                 splitter: "best"
 
@@ -193,8 +195,8 @@ To run this example,
 
 The results for accuracy metric are stored in ``multiview_platform/examples/results/example_2_1/plausible/n_0/started_1560_04_01-12_42__/1560_04_01-12_42_-plausible-No_vs_Yes-accuracy_score.csv``
 
-.. csv-table::
-    :file: ./images/result_default_hp.csv
+.. raw:: html
+    :file: ./images/example_2/2_1/low_train_acc.html
 
 These results were generated learning with 20% of the dataset and testing on 80%.
 In the config file called ``config_example_2_1_1.yml``, the line controlling the split ratio is ``split: 0.8``.
@@ -209,34 +211,41 @@ Now, if you run :
 
 You should obtain these scores in ``multiview_platform/examples/results/example_2_1/plausible/n_0/started_1560_04_01-12_42__/1560_04_01-12_42_-plausible-No_vs_Yes-accuracy_score.csv`` :
 
-.. csv-table::
-    :file: ./images/result_default_hp_high_train.csv
+.. raw:: html
+    :file: ./images/example_2/2_1/high_train_accs.html
+
 
 Here we learned on 80% of the dataset and tested on 20%, so the line in the config file has become ``split: 0.2``.
 
-The first difference between these two examples is the time to run the benchmrak, as in the first on more examples are given to learn the algorithms, it is longer. However, the right amount of training examples depends on the available dataset and the task's complexity.
+The first difference between these two examples is the time to run the benchmark, as in the first on more examples are given to learn the algorithms, it is longer. However, the right amount of training examples depends on the available dataset and the task's complexity. However, on low-dimensionality datasets like the one we use, the time difference is slight (but still noticeable).
 
-TODO COMMENT
+
+.. csv-table::
+    :header: "Algorithm", "Train Duration Delta (ms)", "Test Duration Delta (ms)"
+    :file: ./images/example_2/2_1/durations.csv
 
 **Conclusion**
 
-The impact of split ratio : dataset related.
+The split ratio has two consequences :
+- Increasing the test set size decreases the information available in the triain set size so either it helps to avoid overfitting or it can hide useful information to the classifier and therefor decrease its performance
+- The second consequence is that decreasinf test size will increase the benchmark duration as the classifier will have to learn  on more examples, this duration modification is higher if the dataste has high dimensionality.
 
 Example 2.2 : Usage of randomized hyper-parameter optimization :
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-In the previous example, we have seen that the split ratio has an impact on the computational time.
-But the most time-consuming task is optimizing the hyper parameters.
+In the previous example, we have seen that the split ratio has an impact on the train duration and performance of the algorithms.
+But the most time-consuming task is optimizing their hyper parameters.
 Up to now, the platform used the hyper-parameters values given in the config file.
-This happens only if one knows the optimal combination of hyper-parameter for the given task.
+This is only useful only if one knows the optimal combination of hyper-parameter for the given task.
 However, most of the time, they are unknown to the user, and then have to be optimized by the platform.
 
-In this example, we will use the hyper-parameter optimization method implemented in the platform, to do so we will use three lines of the config file :
+In this example, we will use the hyper-parameter optimization methods implemented in the platform, to do so we will use three lines of the config file :
 
 - ``hps_type:``, controlling the type of hyper-parameter search,
 - ``n_iter:``, controlling the number of random draws during the hyper-parameter search,
 - ``equivalent_draws``, controlling the number fo draws for multiview algorithms,
-- ``nb_folds:``, controlling the number of folds in the cross-validation process.
+- ``nb_folds:``, controlling the number of folds in the cross-validation process,
+- ``metric_princ:``, controlling which metric will be used in the cross-validation.
 
 So if you run ``example 2.2.1`` with :
 
@@ -245,15 +254,32 @@ So if you run ``example 2.2.1`` with :
    >>> from multiview_platform.execute import execute
    >>> execute("example2.2.1")
 
-The ``hps_type`` argument is set to ``"Random"``, which is at the moment the only hyper-parameter optimization method implemented in the platform.
-The ``n_iter`` argument is set to ``5``,
-The ``equivalent_draws`` argument  is set to ``True``,
-The ``nb_folds`` argument is set o ``5``.
+you run SuMMIT with this combination of arguments :
 
-Here, we used ``split: 0.2`` and the results are far better than with the preset of hyper parameters, as the classifiers are able to fit the task.
+.. code-block:: yaml
+
+    metric_princ: 'accuracy_score'
+    nb_folds: 5
+    hps_type: 'Random'
+    hps_args:
+      n_iter: 5
+      equivalent_draws: True
+
+This means that it will use a modded multiview-compatible version of sklearn's  `RandomisedSearchCV <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html>`_  with 5 draws and 5 folds of cross validation to optimize the hyper-parameters, according to the accuracy.
+
+Moreover, the :yaml:`equivalent_draws: True` argument means that the multiview classifiers will be granted ``n_iter`` x ``n_views`` so, here :math:`5 \times 4 = 20` draws, to compensate the fact that they have a much more complex problem to solve.
+
+.. note::
+
+    The mutliview algorithm used here is late fusion, which means it learns a monoview classifier on each view and then build a naive majority vote. in terms of hyper parameter, the late fusion classifier has to choose one monoview classifier and its HP by view. This is why the :yaml:`equivalent_draws:` parameter is implemented, as with only 5 draws, the late fusion classifier is not remotely able to run through its hyper-parameter space.
+
+Here, we used ``split: 0.8`` and the results are far better than with the preset of hyper parameters, as the classifiers are able to fit the task (the multiview classifier improved its accuracy from 0.46 in example 2.1.1 to 0.59).
 
 
-The computing time should be longer than the previous examples. Let's see the pseudo code of the benchmark, while using the hyper-parameter optimization::
+.. raw:: html
+    :file: ./images/example_2/2_2/acc_random_search.html
+
+The computing time should be longer than the previous examples (approximately 10 mins). While SuMMIT computes, let's see the pseudo code of the benchmark, while using the hyper-parameter optimization::
 
     for each monoview classifier:
         for each view:
@@ -261,56 +287,53 @@ The computing time should be longer than the previous examples. Let's see the ps
             |for each draw (here 5):
             |    for each fold (here 5):
             |        learn the classifier on 4 folds and test it on 1
-            |    get the mean performance
+            |    get the mean metric_princ
             |get the best hyper-parameter set
             └
             learn on the whole training set
     and
     for each multiview classifier:
         ┌
-        |for each draw (here 5):
+        |for each draw (here 5*4):
         |    for each fold (here 5):
         |        learn the classifier on 4 folds and test it on 1
-        |    get the mean performance
+        |    get the mean metric_princ
         |get the best hyper-parameter set
         └
         learn on the whole training set
 
 The instructions inside the brackets are the one that the hyper-parameter
-optimization adds. So for the monoview algorithms,
-the computational impact of the HPO is bigger than for the multiview algorithms.
+optimization (HPO) adds.
 
-The choice made here is to allow the same amount of draws for each HPO. However,
-as many of the multiview algorithms
-are more complex and have bigger HP spaces, allowing them more draws, can be a defendable idea.
+.. note::
 
-However, for most of the tasks, using the HPO is a necessity to be able to
-get the most of each classifier in terms of performance.
+    As the randomized search has independent steps, it profits a lot from multi-threading, however, it is not available at the moment, but is one of our priorities.
 
-The HPO is a matter of trade-off between precision and computational demand.
+The choice made here is to allow a different amount of draws for mono and multiview classifiers. However, allowing the same number of draws to both is also available by setting :yaml:`equivalent_draws: False`.
+
+Even if it adds a lot of computing, for most of the tasks, using the HPO is a necessity to be able to get the most of each classifier in terms of performance.
+
+The HPO is a matter of trade-off between classifier performance and computational demand.
 For most algorithms the more draws you allow, the closer to ideal the outputted
-HP will be, however, many draws mean much longer computational time.
+hyper-parameter (HP) set one will be, however, many draws mean much longer computational time.
 
 Similarly, the number of folds has a great importance in estimating the
-performance of a specific HP combination, and the more folds the but more folds
-take also more time, as one has to train more times and on bigger parts of the
-dataset.
+performance of a specific HP set, but more folds take also more time, as one has to train more times and on bigger parts of the dataset.
 
 The figure below represents the duration of the execution on a personal computer
 with different fold/draws settings :
 
+
+
 .. raw:: html
     :file: ./images/durations.html
 
-The duration is in seconds, and we used 2,5,10,15,20 as values for ``nb_folds``
-and 2,5,10,20,30,50,100 for ``n_iter`` with two monoview classifiers and one
-multiview classifier on simulated data.
-
 .. note::
-    The hyper-parameter optimization process generates a report for each
-    classifier, providing each set of parameters and its cross-validation score,
-    to be able to extract the relevant parameters for a future benchmark on the
-    same dataset.
+
+    The durations are for reference only as they depend on the hardware.
+
+
+
 
 
 Example 2.3 : Usage of grid search :
@@ -320,9 +343,8 @@ In SuMMIT, it is possible to use a grid search if one has several possible
 hyper-parameter values in mind to test.
 
 In order to set up the grid search one has to provide in the ``hps_args:``
-argument the names, parameters and values to test. Let us say we want to try
-several depths for a decision tree, and several ``C`` values for a
-linear `SVM <ttps://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_:
+argument the names, parameters and values to test. If one wants to try
+several depths for a decision tree, and several ``n_estimators`` values for adaboost,
 
 .. code-block:: yaml
 
@@ -330,7 +352,26 @@ linear `SVM <ttps://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.ht
     hps_args:
       decision_tree:
         max_depth: [1,2,3,4,5]
-      svm_linear:
-        C: [0.1,0.2,0.3,0.4,0.5]
+      adaboost:
+        n_estimators: [10,15,20,25]
+
+Moreover, for the multiview algorithms, we would like to try two configurations for the late fusion classifier :
+
+.. code-block:: yaml
+
+      weighted_linear_late_fusion:
+
 
 TODO : a more complex example
+
+
+Hyper-parameter report
+<<<<<<<<<<<<<<<<<<<<<<
+
+The hyper-parameter optimization process generates a report for each
+classifier, providing each set of parameters and its cross-validation score,
+to be able to extract the relevant parameters for a future benchmark on the
+same dataset.
+
+For most of the algorithms, it is possible to paste the report in the config fie,
+for example for the decision tree the ``hps_report`` file

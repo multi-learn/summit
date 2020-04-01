@@ -16,4 +16,4 @@ To run SuMMIT on digits, one has to run
    >>> from multiview_platform.execute import execute
    >>> execute("example 0")
 
-This will start a benchmark with the config file located in `plif <base_source/multiview_platform/examples/config_files>`_
+This will start a benchmark with this :base_source:`config file <multiview_platform/examples/config_files/config_example_0.yml>` ,

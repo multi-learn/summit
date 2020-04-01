@@ -41,7 +41,7 @@ add_module_names = False
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
-              'sphinx.ext.extlinks'
+              'sphinx.ext.extlinks',
 #              'sphinx.ext.doctest',
 #              'sphinx.ext.intersphinx',
 #              'sphinx.ext.todo',
@@ -191,7 +191,7 @@ rst_prolog = """
 .. role :: yaml(code)
     :language: yaml
     
-... |platf| replace:: replacement SuMMIT
+.. |platf| replace:: SuMMIT
 """
 
 
