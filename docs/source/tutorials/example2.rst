@@ -227,7 +227,7 @@ The first difference between these two examples is the time to run the benchmark
 **Conclusion**
 
 The split ratio has two consequences :
-- Increasing the test set size decreases the information available in the triain set size so either it helps to avoid overfitting or it can hide useful information to the classifier and therefor decrease its performance
+- Increasing the test set size decreases the information available in the triain set size so either it helps to vaoid overfitting or it can hide useful information to the classifier and therefor decrease its performance
 - The second consequence is that decreasinf test size will increase the benchmark duration as the classifier will have to learn  on more examples, this duration modification is higher if the dataste has high dimensionality.
 
 Example 2.2 : Usage of randomized hyper-parameter optimization :
@@ -328,12 +328,18 @@ with different fold/draws settings :
 .. raw:: html
     :file: ./images/durations.html
 
-.. note::
+The duration is in seconds, and we used 2,5,10,15,20 as values for ``nb_folds``
+and 2,5,10,20,30,50,100 for ``n_iter`` with two monoview classifiers and one
+multiview classifier on simulated data.
 
-    The durations are for reference only as they depend on the hardware.
 
+The hyper-parameter optimization process generates a report for each
+classifier, providing each set of parameters and its cross-validation score,
+to be able to extract the relevant parameters for a future benchmark on the
+same dataset.
 
-
+For most of the algorithms, it is possible to paste the report in the config fie,
+for example for the decision tree the ``hps_report`` file
 
 
 Example 2.3 : Usage of grid search :
@@ -343,8 +349,9 @@ In SuMMIT, it is possible to use a grid search if one has several possible
 hyper-parameter values in mind to test.
 
 In order to set up the grid search one has to provide in the ``hps_args:``
-argument the names, parameters and values to test. If one wants to try
-several depths for a decision tree, and several ``n_estimators`` values for adaboost,
+argument the names, parameters and values to test. Let us say we want to try
+several depths for a decision tree, and several ``C`` values for a
+linear `SVM <ttps://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_:
 
 .. code-block:: yaml
 
@@ -352,26 +359,7 @@ several depths for a decision tree, and several ``n_estimators`` values for adab
     hps_args:
       decision_tree:
         max_depth: [1,2,3,4,5]
-      adaboost:
-        n_estimators: [10,15,20,25]
-
-Moreover, for the multiview algorithms, we would like to try two configurations for the late fusion classifier :
-
-.. code-block:: yaml
-
-      weighted_linear_late_fusion:
-
+      svm_linear:
+        C: [0.1,0.2,0.3,0.4,0.5]
 
 TODO : a more complex example
-
-
-Hyper-parameter report
-<<<<<<<<<<<<<<<<<<<<<<
-
-The hyper-parameter optimization process generates a report for each
-classifier, providing each set of parameters and its cross-validation score,
-to be able to extract the relevant parameters for a future benchmark on the
-same dataset.
-
-For most of the algorithms, it is possible to paste the report in the config fie,
-for example for the decision tree the ``hps_report`` file
