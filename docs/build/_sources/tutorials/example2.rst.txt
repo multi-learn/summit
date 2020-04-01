@@ -56,7 +56,7 @@ Grid search
 
 The grid search is useful when one has several possible sets of hyper-parameters to test, as it is faster thant random-search but requires a relevant prior on the classification task.
 
-In order to use grid search in SuMMIT, one has to specify ``hps_type: "Grid"`` in the config file and provide the values for each parameter of each algorithm in ``hps_args:``.
+In order to use grid search in |platf|, one has to specify ``hps_type: "Grid"`` in the config file and provide the values for each parameter of each algorithm in ``hps_args:``.
 For example, let us suppose that one wants to run a decision tree but wants to try several depth values (1,5,10), then one has to specify in the config file :
 
 .. code-block:: yaml
@@ -254,7 +254,7 @@ So if you run ``example 2.2.1`` with :
    >>> from multiview_platform.execute import execute
    >>> execute("example2.2.1")
 
-you run SuMMIT with this combination of arguments :
+you run |platf| with this combination of arguments :
 
 .. code-block:: yaml
 
@@ -279,7 +279,7 @@ Here, we used ``split: 0.8`` and the results are far better than with the preset
 .. raw:: html
     :file: ./images/example_2/2_2/acc_random_search.html
 
-The computing time should be longer than the previous examples (approximately 10 mins). While SuMMIT computes, let's see the pseudo code of the benchmark, while using the hyper-parameter optimization::
+The computing time should be longer than the previous examples (approximately 10 mins). While |platf| computes, let's see the pseudo code of the benchmark, while using the hyper-parameter optimization::
 
     for each monoview classifier:
         for each view:
@@ -339,7 +339,7 @@ with different fold/draws settings :
 Example 2.3 : Usage of grid search :
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-In SuMMIT, it is possible to use a grid search if one has several possible
+In |platf|, it is possible to use a grid search if one has several possible
 hyper-parameter values in mind to test.
 
 In order to set up the grid search one has to provide in the ``hps_args:``

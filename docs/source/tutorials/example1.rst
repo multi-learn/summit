@@ -1,5 +1,5 @@
 ===============================================
-Example 1 : First steps with SuMMIT
+Example 1 : First steps with |platf|
 ===============================================
 
 Context

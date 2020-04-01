@@ -130,10 +130,10 @@ Moreover, one has to add a variable called :python:`classifier_class_name` that 
                 self.param_names = ["param_1", "random_state", "param_2"]
                 self.distribs = [CustomRandint(5,200), [random_state], ["val_1", "val_2"]]
 
-In SuMMIT the input of the :python:`fit()` method is `X`, a dataset object that provide access to each view with a method : :python:`dataset_var.get_v(view_index, example_indices)`,
-so in order to add a mutliview classifier to SuMMIT, one will probably have to add a data-transformation step before using the class's :python:`fit()` method.
+In |platf| the input of the :python:`fit()` method is `X`, a dataset object that provide access to each view with a method : :python:`dataset_var.get_v(view_index, example_indices)`,
+so in order to add a mutliview classifier to |platf|, one will probably have to add a data-transformation step before using the class's :python:`fit()` method.
 
-Moreover, to get restrain the examples and descriptors used in the method, SuMMIT provides two supplementary arguments :
+Moreover, to get restrain the examples and descriptors used in the method, |platf| provides two supplementary arguments :
 
 - ``train_indices`` is an array of examples indices that compose the training set,
 - ``view_indices`` is an array of view indices to restrain the number of views on which the algorithm will train.
