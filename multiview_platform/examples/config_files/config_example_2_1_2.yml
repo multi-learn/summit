@@ -34,7 +34,7 @@ track_tracebacks: True
 # If the dataset is multiclass, will use this multiclass-to-biclass method
 multiclass_method: "oneVersusOne"
 # The ratio number of test exmaples/number of train examples
-split: 0.8
+split: 0.2
 # The nubmer of folds in the cross validation process when hyper-paramter optimization is performed
 nb_folds: 2
 # The number of classes to select in the dataset

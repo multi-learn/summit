@@ -1,31 +1,20 @@
-===============================================
-Example 1 : First steps with |platf|
-===============================================
-
-Context
---------------------
-
-
-This platform aims at running multiple state-of-the-art classifiers on a multiview dataset in a classification context.
-It has been developed in order to get a baseline on common algorithms for any classification task.
-
-Adding a new classifier (monoview and/or multiview) to the benchmark as been made as simple as possible in order for users to be able to
-customize the set of classifiers and test their performances in a controlled environment.
-
+=======================================
+Example 1 : First big step with |platf|
+=======================================
 
 Introduction to this tutorial
 -----------------------------
 
 This tutorial will show you how to use the platform on simulated data, for the simplest problem : vanilla multiclass classification.
 
-The data is naively generated with a soon-to-be published multiview generator that allows to control redundancy, mutual error and complementarity among the views.
+The data is generated with a soon-to-be published multiview generator that allows to control redundancy, mutual error and complementarity among the views.
 
-For all the tutorials, we will use the same dataset.
+For all the following tutorials, we will use the same dataset.
 
 A generated dataset to rule them all
 ------------------------------------
 
-The dataset that will be used in the examples consists in
+The :base_source:`dataset <multiview_platform/examples/data/doc_summit.hdf5>` that will be used in the examples consists in
 
 + 500 examples that are either
     + mis-described by all the views (labelled ``Mutual_error_*``),
@@ -71,25 +60,23 @@ Getting started
 
 **Understanding the config file**
 
-The config file that will be used in this example is located in ``multiview-machine-learning-omis/multiview_platform/examples/config_files/config_exmaple_1.yml``
-
-We will decrypt the main arguments :
+The config file that will be used in this example is available :base_source:`here <multiview_platform/examples/config_files/config_example_1.yml>`, let us decrypt the main arguments :
 
 + The first part regroups the basics :
 
-    - :yaml:`log: True` allows to print the log in the terminal,
-    - :yaml:`name: ["summit_doc"]` uses the plausible simulated dataset,
-    - :yaml:`random_state: 42` fixes the seed of the random state for this benchmark, it is useful for reproductibility,
-    - :yaml:`full: True` means the benchmark will use the full dataset,
-    - :yaml:`res_dir: "examples/results/example_1/"` saves the results in ``multiview-machine-learning-omis/multiview_platform/examples/results/example_1``
+    - :yaml:`log: True` (:base_source:`l4 <multiview_platform/examples/config_files/config_example_1.yml#L4>`) allows to print the log in the terminal,
+    - :yaml:`name: ["summit_doc"]` (:base_source:`l6 <multiview_platform/examples/config_files/config_example_1.yml#L6>`) uses the plausible simulated dataset,
+    - :yaml:`random_state: 42` (:base_source:`l18 <multiview_platform/examples/config_files/config_example_1.yml#L18>`) fixes the seed of the random state for this benchmark, it is useful for reproductibility,
+    - :yaml:`full: True`  (:base_source:`l22 <multiview_platform/examples/config_files/config_example_1.yml#L22>`) means the benchmark will use the full dataset,
+    - :yaml:`res_dir: "examples/results/example_1/"` (:base_source:`l26 <multiview_platform/examples/config_files/config_example_1.yml#L26>`) saves the results in ``multiview-machine-learning-omis/multiview_platform/examples/results/example_1``
 
 + Then the classification-related arguments :
 
-    - :yaml:`split: 0.25` means that 80% of the dataset will be used to test the different classifiers and 20% to train them,
-    - :yaml:`type: ["monoview", "multiview"]` allows for monoview and multiview algorithms to be used in the benchmark,
-    - :yaml:`algos_monoview: ["decision_tree"]` runs a Decision tree on each view,
-    - :yaml:`algos_monoview: ["weighted_linear_early_fusion", "weighted_linear_late_fusion"]` runs a late and an early fusion,
-    - The metrics configuration ::
+    - :yaml:`split: 0.25` (:base_source:`l35 <multiview_platform/examples/config_files/config_example_1.yml#L35>`) means that 80% of the dataset will be used to test the different classifiers and 20% to train them,
+    - :yaml:`type: ["monoview", "multiview"]` (:base_source:`l43 <multiview_platform/examples/config_files/config_example_1.yml#L43>`) allows for monoview and multiview algorithms to be used in the benchmark,
+    - :yaml:`algos_monoview: ["decision_tree"]` (:base_source:`l45 <multiview_platform/examples/config_files/config_example_1.yml#L45>`) runs a Decision tree on each view,
+    - :yaml:`algos_monoview: ["weighted_linear_early_fusion", "weighted_linear_late_fusion"]` (:base_source:`l47 <multiview_platform/examples/config_files/config_example_1.yml#L47>`) runs a late and an early fusion,
+    - The metrics configuration (:base_source:`l52-55 <multiview_platform/examples/config_files/config_example_1.yml#L52>`) ::
 
                         metrics:
                           accuracy_score:{}
@@ -104,7 +91,7 @@ During the whole benchmark, the log file will be printed in the terminal. To sta
 
 .. code-block:: python
 
-   >>> execute()
+   >>> execute('example 1')
 
 The execution should take less than five minutes. We will first analyze the results and parse through the information the platform output.
 
@@ -113,9 +100,8 @@ The execution should take less than five minutes. We will first analyze the resu
 
 The result structure can be startling at first, but, as the platform provides a lot of information, it has to be organized.
 
-The results are stored in ``multiview_platform/examples/results/example_1/``. Here, you will find a directory with the name of the database used for the benchmark, here : ``summit_doc/``
-Finally, a directory with the date and time of the beginning of the experiment. Let's say you started the benchmark on the 25th of December 1560,
-at 03:42 PM, the directory's name should be ``started_1560_12_25-15_42/``.
+The results are stored in :base_source:`a directory <multiview_platform/examples/results/example_1/>`. Here, you will find a directory with the name of the database used for the benchmark, here : ``summit_doc/``
+Finally, a directory with the date and time of the beginning of the experiment. Let's say you started the benchmark on the 25th of December 1560, at 03:42 PM, the directory's name should be ``started_1560_12_25-15_42/``.
 
 From here the result directory has the structure that follows  :
 

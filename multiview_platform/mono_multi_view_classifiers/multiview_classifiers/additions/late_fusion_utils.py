@@ -148,8 +148,8 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
                                       for _ in range(nb_clfs)]
 
         if isinstance(self.classifier_configs, ConfigDistribution):
-            self.classifier_configs = self.classifier_configs.draw(nb_clfs,
-                                                                   self.rs)
+            self.classifier_configs = [{classifier_name : config[classifier_name]} for config, classifier_name in zip(self.classifier_configs.draw(nb_clfs,
+                                                                   self.rs), self.classifiers_names)]
         elif isinstance(self.classifier_configs, dict):
             self.classifier_configs = [
                 {classifier_name: self.classifier_configs[classifier_name]} for

@@ -23,7 +23,7 @@ full: True
 # Used to be able to run more than one benchmark per minute
 debug: True
 # The directory in which the results will be stored, an absolute path is advised
-res_dir: "examples/results/example_2_1_2/"
+res_dir: "examples/results/example_2_1_1/"
 # If an error occurs in a classifier, if track_tracebacks is set to True, the
 # benchmark saves the traceback and continues, if it is set to False, it will
 # stop the benchmark and raise the error
@@ -34,7 +34,7 @@ track_tracebacks: True
 # If the dataset is multiclass, will use this multiclass-to-biclass method
 multiclass_method: "oneVersusOne"
 # The ratio number of test exmaples/number of train examples
-split: 0.2
+split: 0.8
 # The nubmer of folds in the cross validation process when hyper-paramter optimization is performed
 nb_folds: 2
 # The number of classes to select in the dataset

@@ -417,17 +417,29 @@ class CustomUniform:
             return unif
 
 
-def format_params(params):
+def format_params(params, pref=""):
     if isinstance(params, dict):
-        return dict((key, format_params(value))
-                    for key, value in params.items()
-                    if key!="random_state")
-    elif isinstance(params, BaseEstimator):
-        return params.__class__.__name__
+        dictionary = {}
+        for key, value in params.items():
+            if isinstance(value, np.random.RandomState):
+                pass
+            elif isinstance(value, BaseEstimator):
+                dictionary[key] = value.__class__.__name__
+                for second_key, second_value in format_params(value.get_params()).items():
+                    dictionary[str(key)+"__"+second_key] = second_value
+            else:
+                dictionary[str(key)] = format_params(value)
+        return dictionary
     elif isinstance(params, np.ndarray):
-        return [float(param) for param in params]
+        return [format_params(param) for param in params]
     elif isinstance(params, np.float64):
         return float(params)
+    elif isinstance(params, np.int64):
+        return int(params)
+    elif isinstance(params, list):
+        return [format_params(param) for param in params]
+    elif isinstance(params, np.str_):
+        return str(params)
     else:
         return params
 

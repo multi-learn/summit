@@ -1,0 +1,87 @@
+# The base configuration of the benchmark
+
+# Enable logging
+log: True
+# The name of each dataset in the directory on which the benchmark should be run
+name: ["doc_summit"]
+# A label for the result directory
+label: "_"
+# The type of dataset, currently supported ".hdf5", and ".csv"
+file_type: ".hdf5"
+# The views to use in the banchmark, an empty value will result in using all the views
+views:
+# The path to the directory where the datasets are stored, an absolute path is advised
+pathf: "examples/data/"
+# The niceness of the processes, useful to lower their priority
+nice: 0
+# The random state of the benchmark, useful for reproducibility
+random_state: 42
+# The number of parallel computing threads
+nb_cores: 1
+# Used to run the benchmark on the full dataset
+full: True
+# Used to be able to run more than one benchmark per minute
+debug: True
+# The directory in which the results will be stored, an absolute path is advised
+res_dir: "examples/results/example_2_3/"
+# If an error occurs in a classifier, if track_tracebacks is set to True, the
+# benchmark saves the traceback and continues, if it is set to False, it will
+# stop the benchmark and raise the error
+track_tracebacks: True
+
+# All the classification-realted configuration options
+
+# If the dataset is multiclass, will use this multiclass-to-biclass method
+multiclass_method: "oneVersusOne"
+# The ratio number of test exmaples/number of train examples
+split: 0.8
+# The nubmer of folds in the cross validation process when hyper-paramter optimization is performed
+nb_folds: 5
+# The number of classes to select in the dataset
+nb_class: 2
+# The name of the classes to select in the dataset
+classes:
+# The type of algorithms to run during the benchmark (monoview and/or multiview)
+type: ["monoview","multiview"]
+# The name of the monoview algorithms to run, ["all"] to run all the available classifiers
+algos_monoview: ["decision_tree", "adaboost", ]
+# The names of the multiview algorithms to run, ["all"] to run all the available classifiers
+algos_multiview: ["weighted_linear_late_fusion", ]
+# The number of times the benchamrk is repeated with different train/test
+# split, to have more statistically significant results
+stats_iter: 1
+# The metrics that will be use din the result analysis
+metrics:
+  accuracy_score: {}
+  f1_score:
+    average: "micro"
+# The metric that will be used in the hyper-parameter optimization process
+metric_princ: "accuracy_score"
+# The type of hyper-parameter optimization method
+hps_type: 'Grid'
+# The number of iteration in the hyper-parameter optimization process
+hps_args:
+  decision_tree:
+    max_depth: [1,2,3,4,5]
+
+  adaboost:
+    n_estimators: [10,15,20,25]
+
+  weighted_linear_late_fusion:
+    classifiers_names:
+      - ["decision_tree", "decision_tree", "decision_tree", "decision_tree"]
+      - ["adaboost", "adaboost", "adaboost", "adaboost",]
+
+    classifier_configs:
+      - decision_tree:
+          max_depth: 3
+        adaboost:
+          n_estimators: 10
+
+
+
+# The following arguments are classifier-specific, and are documented in each
+# of the corresponding modules.
+
+# In order to run multiple sets of parameters, use multiple values in the
+# following lists, and set hps_type to None.
