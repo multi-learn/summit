@@ -85,7 +85,8 @@ To run this example run,
 The results for accuracy metric are stored in ``multiview_platform/examples/results/example_2_1_1/doc_summit/``
 
 .. raw:: html
-    :file: ./images/example_2/2_1/low_train_acc.html
+    .. :file: ./images/example_2/2_1/low_train_acc.html
+    :file: images/fake.html
 
 These results were generated learning on 20% of the dataset and testing on 80% (see the :base_source:`config file <multiview_platform/examples/config_files/config_example_2_1_1.yml#L37>`).
 
@@ -104,7 +105,8 @@ Now, if you run :
 You should obtain these scores in ``multiview_platform/examples/results/example_2_1/doc_summit/`` :
 
 .. raw:: html
-    :file: ./images/example_2/2_1/high_train_accs.html
+    .. :file: ./images/example_2/2_1/high_train_accs.html
+    :file: images/fake.html
 
 
 Here we learned on 80% of the dataset and tested on 20%, so the line in the  :base_source:`config file <multiview_platform/examples/config_files/config_example_2_1_2.yml#L37>` has become ``split: 0.2``.
@@ -199,7 +201,8 @@ Here, we used :yaml:`split: 0.8` and the results are far better than :base_doc:`
 
 
 .. raw:: html
-    :file: ./images/example_2/2_2/acc_random_search.html
+    .. :file: ./images/example_2/2_2/acc_random_search.html
+    :file: images/fake.html
 
 
 
@@ -227,7 +230,8 @@ with different fold/draws settings :
 
 
 .. raw:: html
-    :file: ./images/durations.html
+    .. :file: ./images/durations.html
+    :file: images/fake.html
 
 .. note::
 
