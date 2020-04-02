@@ -1,13 +1,13 @@
-=============================
-Example 0 : |platf| on digits
-=============================
+==================================================
+Example 0 : Getting started with |platf| on digits
+==================================================
 
 In the example, we will run |platf| on a famous dataset : `digits <https://scikit-learn.org/stable/auto_examples/datasets/plot_digits_last_image.html>`_, available, already formatted :base_source:`in the project <multiview_platform/examples/data/>` .
 
 TODO.
 
-Running |platf|
----------------
+Running |platf| on digits
+-------------------------
 
 To run |platf| on digits, one has to run :
 
@@ -26,8 +26,8 @@ By running |platf| with this configuration, one runs :
 
 
 
-The results
------------
+First discovery of the main results
+-----------------------------------
 
 The results will be saved in :base_source:`this directory <multiview_platform/examples/results/example_0/digits/>`.
 

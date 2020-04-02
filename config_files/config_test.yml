@@ -1,14 +1,14 @@
 # The base configuration of the benchmark
 log: True
-name: ["digits",]
+name: ["doc_summit",]
 label: "_"
 file_type: ".hdf5"
 views:
-pathf: "/home/baptiste/Documents/Datasets/Digits/"
+pathf: "examples/data/"
 nice: 0
 random_state: 42
 nb_cores: 1
-full: True
+full: False
 debug: True
 add_noise: False
 noise_std: 0.0
@@ -19,9 +19,9 @@ track_tracebacks: False
 multiclass_method: "oneVersusOne"
 split: 0.8
 nb_folds: 2
-nb_class: 2
+nb_class: 3
 classes:
-type: ["monoview", "multiview"]
+type: [ "multiview"]
 algos_monoview: ["decision_tree", "adaboost", ]
 algos_multiview: ["weighted_linear_late_fusion"]
 stats_iter: 3
@@ -29,7 +29,7 @@ metrics:
   accuracy_score: {}
   f1_score: {}
 metric_princ: "accuracy_score"
-hps_type: "None"
+hps_type: "Random"
 hps_args:
   n_iter: 4
   equivalent_draws: False
@@ -44,15 +44,55 @@ weighted_linear_early_fusion:
       criterion: "gini"
       splitter: "best"
 weighted_linear_late_fusion:
-  weights: null
-  classifiers_names: "decision_tree"
   classifier_configs:
-    decision_tree:
-      max_depth: 3
-      criterion: "gini"
-      splitter: "best"
-decision_tree:
-  max_depth: 3
+    - svm_linear:
+        C: 0.9534901260357467
+    - adaboost:
+        base_estimator: DecisionTreeClassifier
+        base_estimator__ccp_alpha: 0.0
+        base_estimator__class_weight: null
+        base_estimator__criterion: gini
+        base_estimator__max_depth: 4
+        base_estimator__max_features: null
+        base_estimator__max_leaf_nodes: null
+        base_estimator__min_impurity_decrease: 0.0
+        base_estimator__min_impurity_split: null
+        base_estimator__min_samples_leaf: 1
+        base_estimator__min_samples_split: 2
+        base_estimator__min_weight_fraction_leaf: 0.0
+        base_estimator__presort: deprecated
+        base_estimator__splitter: best
+        n_estimators: 317
+    - gradient_boosting:
+        max_depth: 5
+        n_estimators: 378
+    - adaboost:
+        base_estimator: DecisionTreeClassifier
+        base_estimator__ccp_alpha: 0.0
+        base_estimator__class_weight: null
+        base_estimator__criterion: gini
+        base_estimator__max_depth: 3
+        base_estimator__max_features: null
+        base_estimator__max_leaf_nodes: null
+        base_estimator__min_impurity_decrease: 0.0
+        base_estimator__min_impurity_split: null
+        base_estimator__min_samples_leaf: 1
+        base_estimator__min_samples_split: 2
+        base_estimator__min_weight_fraction_leaf: 0.0
+        base_estimator__presort: deprecated
+        base_estimator__random_state: null
+        base_estimator__splitter: best
+        n_estimators: 498
+  classifiers_names:
+  - svm_linear
+  - adaboost
+  - gradient_boosting
+  - adaboost
+  weights:
+  - 0.5488135039273248
+  - 0.7151893663724195
+  - 0.6027633760716439
+  - 0.5448831829968969
 
 adaboost:
   base_estimator: "DecisionTreeClassifier"

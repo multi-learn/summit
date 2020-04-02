@@ -164,7 +164,19 @@ class MultiClassWrapper:
         return self
 
     def get_config(self):
-        return self.estimator.get_config()
+        return "multiclass_adaptation : "+self.__class__.__name__+ ", " +self.estimator.get_config()
+
+    def format_params(self, params, deep=True):
+        if hasattr(self, 'estimators_'):
+            estim_params = self.estimators_[0].get_params(deep=deep)
+            for key, value in params.items():
+                if key.startswith("estimator__"):
+                    estim_param_key = '__'.join(key.split('__')[1:])
+                    params[key] = estim_params[estim_param_key]
+            params.pop("estimator")
+        return params
+
+
 
     def get_interpretation(self, directory, base_file_name, y_test=None):
         # return self.estimator.get_interpretation(output_file_name, y_test,
@@ -178,7 +190,10 @@ class MonoviewWrapper(MultiClassWrapper):
 
 
 class OVRWrapper(MonoviewWrapper, OneVsRestClassifier):
-    pass
+
+    def get_params(self, deep=True):
+        return self.format_params(
+            OneVsRestClassifier.get_params(self, deep=deep), deep=deep)
 
 
 class OVOWrapper(MonoviewWrapper, OneVsOneClassifier):
@@ -199,6 +214,10 @@ class OVOWrapper(MonoviewWrapper, OneVsOneClassifier):
         if self.n_classes_ == 2:
             return Y[:, 1]
         return Y
+
+    def get_params(self, deep=True):
+        return self.format_params(
+            OneVsOneClassifier.get_params(self, deep=deep), deep=deep)
 
 
 # The following code is a mutliview adaptation of sklearns multiclass package
@@ -250,7 +269,6 @@ class MultiviewOVRWrapper(MultiviewWrapper, OneVsRestClassifier):
             view_indices=view_indices)
             for i, column in
             enumerate(columns)]
-
         return self
 
     def predict(self, X, example_indices=None, view_indices=None):
@@ -283,10 +301,15 @@ class MultiviewOVRWrapper(MultiviewWrapper, OneVsRestClassifier):
                                                        view_indices) > thresh)[
                         0])
                 indptr.append(len(indices))
+
             data = np.ones(len(indices), dtype=int)
             indicator = sp.csc_matrix((data, indices, indptr),
                                       shape=(n_samples, len(self.estimators_)))
             return self.label_binarizer_.inverse_transform(indicator)
+
+    def get_params(self, deep=True):
+        return self.format_params(
+            OneVsRestClassifier.get_params(self, deep=deep), deep=deep)
 
 
 def _multiview_fit_ovo_binary(estimator, X, y, i, j, train_indices,
@@ -392,3 +415,7 @@ class MultiviewOVOWrapper(MultiviewWrapper, OneVsOneClassifier):
         if self.n_classes_ == 2:
             return Y[:, 1]
         return Y
+
+    def get_params(self, deep=True):
+        return self.format_params(
+            OneVsOneClassifier.get_params(self, deep=deep), deep=deep)
