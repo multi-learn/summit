@@ -1,6 +1,6 @@
 
 =======================================
-Install Multiview Platform
+Install |platf|
 =======================================
 
 Multiview Platform is a package developped for Python3.x.
@@ -12,7 +12,8 @@ To sum up what you need to run the platform :
 
 Launching the setup tool
 ------------------------
-Run in a terminal the following command, in the ``multiview-machine-learning-omis`` directory
+
+To install |platf|, it is recommended to use a virtual environment. Then, run in a terminal the following command, in the ``multiview-machine-learning-omis`` directory
 
 .. code-block:: shell
 

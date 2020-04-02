@@ -41,13 +41,27 @@ class Dataset():
             return example_indices
 
     def get_shape(self, view_index=0, example_indices=None):
-        """Gets the shape of the needed view"""
+        """
+        Gets the shape of the needed view on the asked examples
+
+        Parameters
+        ----------
+        view_index : int
+            The index of the view to extract
+        example_indices : numpy.ndarray
+            The array containing the indices of the examples to extract.
+
+        Returns
+        -------
+        Tuple containing the shape
+
+        """
         return self.get_v(view_index, example_indices=example_indices).shape
 
     def to_numpy_array(self, example_indices=None, view_indices=None):
         """
-        To concanteant the needed views in one big numpy array while saving the
-        limits of each view in a list, to be bale to retrieve them later.
+        To concatenate the needed views in one big numpy array while saving the
+        limits of each view in a list, to be able to retrieve them later.
 
         Parameters
         ----------
@@ -245,7 +259,7 @@ class HDF5Dataset(Dataset):
     """
     Class of Dataset
 
-    This class is used to encapsulate the multiview dataset
+    This class is used to encapsulate the multiview dataset while keeping it stored on the disk instead of in RAM.
 
 
     Parameters
@@ -343,108 +357,10 @@ class HDF5Dataset(Dataset):
                 self.example_ids = ["ID_" + str(i)
                                     for i in range(labels.shape[0])]
 
-    def rm(self):
-        """
-        Method used to delete the dataset file on the disk if the dataset is
-        temporary.
-
-        Returns
-        -------
-
-        """
-        filename = self.dataset.filename
-        self.dataset.close()
-        if self.is_temp:
-            os.remove(filename)
-
-    def get_view_name(self, view_idx):
-        """
-        Method to get a view's name for it's index.
-
-        Parameters
-        ----------
-        view_idx : int
-            The index of the view in the dataset
-
-        Returns
-        -------
-            The view's name.
-
-        """
-        return self.dataset["View" + str(view_idx)].attrs["name"]
-
-    def init_attrs(self):
-        """
-        Used to init the two attributes that are modified when self.dataset
-        changes
-
-        Returns
-        -------
-
-        """
-        self.nb_view = self.dataset["Metadata"].attrs["nbView"]
-        self.view_dict = self.get_view_dict()
-        if "example_ids" in self.dataset["Metadata"].keys():
-            self.example_ids = [example_id.decode()
-                                if not is_just_number(example_id.decode())
-                                else "ID_" + example_id.decode()
-                                for example_id in
-                                self.dataset["Metadata"]["example_ids"]]
-        else:
-            self.example_ids = ["ID_"+str(i) for i in
-                                range(self.dataset["Labels"].shape[0])]
-
-    def get_nb_examples(self):
-        """
-        Used to get the number of examples available
-        Returns
-        -------
-
-        """
-        return self.dataset["Metadata"].attrs["datasetLength"]
-
-    def get_view_dict(self):
-        """
-        Returns the dictionary with view indices as keys and the corresponding
-        names as values
-        """
-        view_dict = {}
-        for view_index in range(self.nb_view):
-            view_dict[self.dataset["View" + str(view_index)].attrs[
-                "name"]] = view_index
-        return view_dict
-
-    def get_label_names(self, decode=True, example_indices=None):
-        """
-        Used to get the list of the label names for the give set of examples
-
-        Parameters
-        ----------
-        decode : bool
-            If True, will decode the label names before lsiting them
-
-        example_indices : numpy.ndarray
-            The array containig the indices of the needed examples
-
-        Returns
-        -------
-
-        """
-        selected_labels = self.get_labels(example_indices)
-        if decode:
-            return [label_name.decode("utf-8")
-                    for label, label_name in
-                    enumerate(self.dataset["Labels"].attrs["names"])
-                    if label in selected_labels]
-        else:
-            return [label_name
-                    for label, label_name in
-                    enumerate(self.dataset["Labels"].attrs["names"])
-                    if label in selected_labels]
-
     def get_v(self, view_index, example_indices=None):
-        """
-        Selects the view to extract
+        r""" Extract the view and returns a numpy.ndarray containing the description
+        of the examples specified in example_indices
+
         Parameters
         ----------
         view_index : int
@@ -468,29 +384,140 @@ class HDF5Dataset(Dataset):
                 return self.dataset["View" + str(view_index)][()][
                        example_indices, :]  # [np.argsort(sorted_indices), :]
             else:
-                sparse_mat = sparse.csr_matrix(
-                    (self.dataset["View" + str(view_index)]["data"][()],
-                     self.dataset["View" + str(view_index)]["indices"][()],
-                     self.dataset["View" + str(view_index)]["indptr"][()]),
-                    shape=self.dataset["View" + str(view_index)].attrs[
-                        "shape"])[
-                             example_indices, :][
-                             np.argsort(sorted_indices), :]
+                # Work in progress
+                pass
 
-                return sparse_mat
+    def get_view_name(self, view_idx):
+        """
+        Method to get a view's name from its index.
 
-    def get_shape(self, view_index=0, example_indices=None):
-        """Gets the shape of the needed view"""
-        return self.get_v(view_index, example_indices=example_indices).shape
+        Parameters
+        ----------
+        view_idx : int
+            The index of the view in the dataset
+
+        Returns
+        -------
+            The view's name.
+
+        """
+        return self.dataset["View" + str(view_idx)].attrs["name"]
+
+    def init_attrs(self):
+        """
+        Used to init the attributes that are modified when self.dataset
+        changes
+
+        Returns
+        -------
+
+        """
+        self.nb_view = self.dataset["Metadata"].attrs["nbView"]
+        self.view_dict = self.get_view_dict()
+        if "example_ids" in self.dataset["Metadata"].keys():
+            self.example_ids = [example_id.decode()
+                                if not is_just_number(example_id.decode())
+                                else "ID_" + example_id.decode()
+                                for example_id in
+                                self.dataset["Metadata"]["example_ids"]]
+        else:
+            self.example_ids = ["ID_"+str(i) for i in
+                                range(self.dataset["Labels"].shape[0])]
+
+    def get_nb_examples(self):
+        """
+        Used to get the number of examples available in hte dataset
+
+        Returns
+        -------
+
+        """
+        return self.dataset["Metadata"].attrs["datasetLength"]
+
+    def get_view_dict(self):
+        """
+        Returns the dictionary with view indices as keys and their corresponding
+        names as values
+        """
+        view_dict = {}
+        for view_index in range(self.nb_view):
+            view_dict[self.dataset["View" + str(view_index)].attrs[
+                "name"]] = view_index
+        return view_dict
+
+    def get_label_names(self, decode=True, example_indices=None):
+        """
+        Used to get the list of the label names for the given set of examples
+
+        Parameters
+        ----------
+        decode : bool
+            If True, will decode the label names before listing them
+
+        example_indices : numpy.ndarray
+            The array containing the indices of the needed examples
+
+        Returns
+        -------
+
+        """
+        selected_labels = self.get_labels(example_indices)
+        if decode:
+            return [label_name.decode("utf-8")
+                    for label, label_name in
+                    enumerate(self.dataset["Labels"].attrs["names"])
+                    if label in selected_labels]
+        else:
+            return [label_name
+                    for label, label_name in
+                    enumerate(self.dataset["Labels"].attrs["names"])
+                    if label in selected_labels]
 
     def get_nb_class(self, example_indices=None):
-        """Gets the number of class of the dataset"""
+        """
+        Gets the number of classes of the dataset for the asked examples
+
+         Parameters
+        ----------
+        example_indices : numpy.ndarray
+            The array containing the indices of the examples to extract.
+
+        Returns
+        -------
+        int : The number of classes
+
+        """
         example_indices = self.init_example_indces(example_indices)
         return len(np.unique(self.dataset["Labels"][()][example_indices]))
 
     def get_labels(self, example_indices=None):
+        """Gets the label array for the asked examples
+
+         Parameters
+        ----------
+        example_indices : numpy.ndarray
+            The array containing the indices of the examples to extract.
+
+        Returns
+        -------
+        numpy.ndarray containing the labels of the asked examples"""
         example_indices = self.init_example_indces(example_indices)
         return self.dataset["Labels"][()][example_indices]
+
+    def rm(self):
+        """
+        Method used to delete the dataset file on the disk if the dataset is
+        temporary.
+
+        Returns
+        -------
+
+        """
+        filename = self.dataset.filename
+        self.dataset.close()
+        if self.is_temp:
+            os.remove(filename)
+
 
     def copy_view(self, target_dataset=None, source_view_name=None,
                   target_view_index=None, example_indices=None):
