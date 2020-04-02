@@ -16,7 +16,15 @@ How to use it
 This feature is controlled by a single argument : ``stats_iter:`` in the config file.
 Modifying this argument and setting more than one ``stats_iter`` will slightly modify the result directory's structure.
 Indeed, as the platform will perform a benchmark on multiple train/test split, the result directory will be larger in order to keep all the individual results.
-In terms of pseudo-code, if one uses HPO, it adds a for loop on the pseudo code displayed in example 2 ::
+
+To run |platf| on several train/test splits, run :
+
+.. code-block:: python
+
+   >>> from multiview_platform.execute import execute
+   >>> execute("example 3")
+
+While |platf| computes, let us explore the new pseudo-code ::
 
 
     for each statistical iteration :
@@ -45,106 +53,98 @@ The result directory will be structured as :
 
     | started_1560_12_25-15_42
     | ├── iter_1
-    | | ├── train_labels.csv
-    | | └── train_indices.csv
-    | | ├── 1560_12_25-15_42-*-LOG.log
-    | | ├── config_file.yml
-    | | ├── *-accuracy_score.
-    | | ├── *-accuracy_score-class.html
-    | | ├── *-accuracy_score.html
-    | | ├── *-accuracy_score.csv
-    | | ├── *-f1_score.png
-    | | ├── *-f1_score.csv
-    | | ├── *-f1_score-class.html
-    | | ├── *-f1_score.html
-    | | ├── *-error_analysis_2D.png
-    | | ├── *-error_analysis_2D.html
-    | | ├── *-error_analysis_bar.png
-    | | ├── *-error_analysis_bar.HTML
-    | | ├── *-bar_plot_data.csv
-    | | ├── *-2D_plot_data.csv
-    | | ├── feature_importances
-    | | ├── [..
-    | | ├── ..]
-    | | ├── adaboost
-    | | |   ├── ViewNumber0
-    | | |   |   ├── *-summary.txt
-    | | |   |   ├── <other classifier dependant files>
-    | | |   ├── ViewNumber1
-    | | |   |   ├── *-summary.txt
-    | | |   |   ├── <other classifier dependant files>
-    | | |   ├── ViewNumber2
-    | | |   |   ├── *-summary.txt
-    | | |   |   ├── <other classifier dependant files>
     | | ├── decision_tree
-    | | |   ├── ViewNumber0
-    | | |   |  ├── <summary & classifier dependant files>
-    | | |   ├── ViewNumber1
-    | | |   |  ├── <summary & classifier dependant files>
-    | | |   ├── ViewNumber2
-    | | |   |  ├── <summary & classifier dependant files>
+    | | | ├── generated_view_1
+    | | | |   ├── *-summary.txt
+    | | | |   ├── <other classifier dependant files>
+    | | | ├── generated_view_2
+    | | | |   ├── *-summary.txt
+    | | | |   ├── <other classifier dependant files>
     | | ├── [..
     | | ├── ..]
     | | ├── weighted_linear_late_fusion
     | | |   ├── <summary & classifier dependant files>
     | | ├── [..
     | | ├── ..]
+    | | ├── *-accuracy_score*.png
+    | | ├── *-accuracy_score*.html
+    | | ├── *-accuracy_score*-class.html
+    | | ├── *-accuracy_score*.csv
+    | | ├── *-f1_score.png
+    | | ├── *-f1_score.html
+    | | ├── *-f1_score-class.html
+    | | ├── *-f1_score.csv
+    | | ├── *-error_analysis_2D.png
+    | | ├── *-error_analysis_2D.html
+    | | ├── *-error_analysis_bar.png
+    | | ├── *-error_analysis_bar.html
+    | | ├── feature_importances
+    | | | ├── [..
+    | | | ├── ..]
+    | | ├── train_labels.csv
+    | | └── train_indices.csv
     | ├── iter_2
-    | | ├── [..
-    | | ├── ..]
-    | ├── [..
-    | ├── ..]
-    | ├── train_labels.csv
-    | └── train_indices.csv
-    | ├── 1560_12_25-15_42-*-LOG.log
-    | ├── config_file.yml
-    | ├── *-accuracy_score.png
-    | ├── *-accuracy_score.csv
-    | ├── *-accuracy_score.html
-    | ├── *-accuracy_score-class.html
+    | | ├── [...
+    | | ├── ...
+    | | ├── ...]
+    | ├── *-accuracy_score*.png
+    | ├── *-accuracy_score*.html
+    | ├── *-accuracy_score*-class.html
+    | ├── *-accuracy_score*.csv
     | ├── *-f1_score.png
-    | ├── *-f1_score.csv
     | ├── *-f1_score.html
     | ├── *-f1_score-class.html
+    | ├── *-f1_score.csv
     | ├── *-error_analysis_2D.png
     | ├── *-error_analysis_2D.html
     | ├── *-error_analysis_bar.png
     | ├── *-error_analysis_bar.html
+    | ├── feature_importances
+    | | ├── [..
+    | | ├── ..]
     | ├── *-bar_plot_data.csv
     | ├── *-2D_plot_data.csv
-    | ├── feature_importances
-    | | ├── *-ViewNumber0-feature_importance.html
-    | | ├── *-ViewNumber0-feature_importance_dataframe.csv
-    | | ├── *-ViewNumber1-feature_importance.html
-    | | ├── *-ViewNumber1-feature_importance_dataframe.csv
-    | | ├── *-ViewNumber2-feature_importance.html
-    | | ├── *-ViewNumber2-feature_importance_dataframe.csv
+    | ├── config_file.yml
+    | ├── 1560_12_25-15_42-*-LOG.log
     | └── random_state.pickle
 
-If you look closely, nearly all the files from Example 1 are in each ``iter_`` directory, and some files have appeared, in which the main figures are saved.
-So, the files stored in ``started_1560_12_25-15_42/`` are the one that show the mean results on all the statistical iterations.
-For example, ``started_1560_12_25-15_42/*-accuracy_score.png`` looks like :
+If you look closely, nearly all the files from :base_doc:`Example 1 <tutorials/example1.html>` are in each ``iter_`` directories, and some files have appeared, in which the main figures are saved.
+Indeed, the files stored in ``started_1560_12_25-15_42/`` are the ones that show the mean results on all the statistical iterations.
+For example, ``started_1560_12_25-15_42/*-accuracy_score.html`` looks like :
 
 .. raw:: html
-    ./image/fake.html
-    .. ./images/accuracy_mean.html
+    .. :file: ./images/example_3/mean_acc.html
+    :file: ./image/fake.html
+
+Similarly for the f1-score :
+
+.. raw:: html
+    .. :file: ./images/example_3/f1.html
+    :file: ./image/fake.html
 
 
+The main difference between this plot an the one from :base_doc:`Example 1 <tutorials/example1.html>` is that here, the scores are means over all the statistical iterations, and the standard deviations are plotted as vertical lines on top of the bars and printed after each score under the bars as "± <std>".
+
+This has also an impact on the error analysis of :base_doc:`Example 1 <tutorials/example1.html>`. Indeed, now it has multiple shades of gray depending on the number of iterations that succeeded or failed on the example :
+
+.. raw:: html
+    .. :file: ./images/example_3/err.html
+    :file: ./image/fake.html
 
 
-    The main difference between this plot an the one from Example 1 is that here, the scores are means over all the statistical iterations, and the standard deviations are plotted as vertical lines on top of the bars and printed after each score under the bars as "± <std>".
+Indeed, if we zoom in, we can distinguish them better :
 
-Then, each iteration's directory regroups all the results, structured as in Example 1.
-
-
-
-Example
-<<<<<<<
-
+.. image:: images/example_3/gray.png
+    :scale: 100
+    :align: center
 
 Duration
 <<<<<<<<
 
-Increasing the number of statistical iterations can be costly in terms of computational resources
+Increasing the number of statistical iterations can be costly in terms of computational resources, indeed it is nearly a straight multiplication of the computation time .
+
+.. note::
+
+    Parallelizing |platf|'s statistical iteration can improve its efficiency when using multiple iterations, it is currently work in progress
 
 

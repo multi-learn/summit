@@ -2,11 +2,8 @@
 Taking control : Use your own dataset
 =====================================
 
-.. role:: python(code)
-    :language: python
-
-While developping this platform, the goal has been to be able to use it relatively easily on different datasets.
-In order to do so, a fixed input format is used, and we choosed HDF5 as it allows to store a multiview dataset and its metadata in a single file, while being able to load it partially.
+While developing this platform, the goal has been to be able to use it relatively easily on different datasets.
+In order to do so, a fixed input format is used, and we chose HDF5 as it allows to store a multiview dataset and its metadata in a single file, while being able to load it partially.
 
 The bare necessities
 --------------------
@@ -37,7 +34,7 @@ In order to run a benchmark on this dataset, one has to format it using HDF5.
 HDF5 conversion
 ---------------
 
-We will use here a python script, provided with the platform (``./format_dataset.py``) to convert the dataset in the right format :
+We will use here a :base_source:`python script <format_dataset.py>`, provided with the platform to convert the dataset in the right format :
 
 .. code-block:: python
 
