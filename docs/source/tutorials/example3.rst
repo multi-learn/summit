@@ -126,7 +126,11 @@ So, the files stored in ``started_1560_12_25-15_42/`` are the one that show the 
 For example, ``started_1560_12_25-15_42/*-accuracy_score.png`` looks like :
 
 .. raw:: html
-    ./images/accuracy_mean.html
+    ./image/fake.html
+    .. ./images/accuracy_mean.html
+
+
+
 
     The main difference between this plot an the one from Example 1 is that here, the scores are means over all the statistical iterations, and the standard deviations are plotted as vertical lines on top of the bars and printed after each score under the bars as "± <std>".
 
