@@ -27,7 +27,7 @@ The :base_source:`dataset <multiview_platform/examples/data/doc_summit.hdf5>` th
 + 4 views named ``'generated_view_1'``, ..., ``'generated_view_4'``,
     + each view consisting in 3 features.
 
-It has been parametrized with the following error matrix :
+It has been parametrized with the following error matrix that encapsulates the quantity of information available in each view for each label :
 
 +---------+--------+--------+--------+--------+
 |         | View 1 | View 2 | View 3 | View 4 |
@@ -49,7 +49,7 @@ It has been parametrized with the following error matrix :
 | label_7 |  0.40  |  0.40  |  0.40  |  0.40  |
 +---------+--------+--------+--------+--------+
 
-So this means that the view 1 should make at least 40% error on label 1 and 65% on label 2.
+So this means that the View 1 should make at least 40% error on label 1 and 65% on label 2.
 
 Getting started
 ---------------
@@ -108,48 +108,9 @@ Finally, a directory with the date and time of the beginning of the experiment. 
 
 From here the result directory has the structure that follows  :
 
-.. code-block:: bash
+.. raw:: html
+    :file: ./images/example_1/folder_description.html
 
-    | started_1560_12_25-15_42
-    | ├── decision_tree
-    | |   ├── generated_view_1
-    | |   |   ├── *-summary.txt
-    | |   |   ├── <other classifier dependant files>
-    | |   ├── generated_view_2
-    | |   |   ├── *-summary.txt
-    | |   |   ├── <other classifier dependant files>
-    | ├── [..
-    | ├── ..]
-    | ├── weighted_linear_late_fusion
-    | |   ├── <summary & classifier dependant files>
-    | ├── [..
-    | ├── ..]
-    | ├── train_labels.csv
-    | └── train_indices.csv
-    | ├── 1560_12_25-15_42-*-LOG.log
-    | ├── config_file.yml
-    | ├── *-accuracy_score*.png
-    | ├── *-accuracy_score*.html
-    | ├── *-accuracy_score*-class.html
-    | ├── *-accuracy_score*.csv
-    | ├── *-f1_score.png
-    | ├── *-f1_score.html
-    | ├── *-f1_score-class.html
-    | ├── *-f1_score.csv
-    | ├── *-error_analysis_2D.png
-    | ├── *-error_analysis_2D.html
-    | ├── *-error_analysis_bar.png
-    | ├── *-error_analysis_bar.html
-    | ├── feature_importances
-    | | ├── *-ViewNumber0-feature_importance.html
-    | | ├── *-ViewNumber0-feature_importance_dataframe.csv
-    | | ├── *-ViewNumber1-feature_importance.html
-    | | ├── *-ViewNumber1-feature_importance_dataframe.csv
-    | | ├── *-ViewNumber2-feature_importance.html
-    | | ├── *-ViewNumber2-feature_importance_dataframe.csv
-    | ├── *-bar_plot_data.csv
-    | ├── *-2D_plot_data.csv
-    | └── random_state.pickle
 
 
 The structure may seem complex, but it provides a lot of information, from the most general to the most precise.

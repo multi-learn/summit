@@ -1,0 +1,751 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+#myUL {
+  list-style-type: none;
+}
+
+#myUL {
+  margin: 0;
+  padding: 0;
+}
+
+.caret {
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none;
+}
+
+.caret::before {
+  content: " ";
+  background-image: url("../_static/colsed_fold.svg");
+  width: 15px;
+  height: 15px;
+  /*color: black;*/
+  display: inline-block;
+  /*margin-right: 6px;*/
+}
+
+.file_img::before {
+  content: " ";
+  background-image: url("../_static/img.svg");
+  width: 15px;
+  height: 15px;
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.file_img {
+    font: "Courier New";
+}
+
+.caret-down::before {
+  content: " ";
+  background-image: url("../_static/open_folder.svg");
+  width: 15px;
+  height: 15px;
+  /*-ms-transform: rotate(90deg); !* IE 9 *!*/
+  /*-webkit-transform: rotate(90deg); !* Safari *!'*/
+  /*transform: rotate(90deg);*/
+}
+
+.nested {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+</style>
+</head>
+<body>
+<ul id="myUL">
+    <li><span class='caret'>feature_importances</span>
+    <ul class='nested'><li><span class='file_img'>doc_summit-generated_view_1-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_1-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_1-feature_importances_dataframe_stds.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances_dataframe_stds.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances_dataframe_stds.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances_dataframe_stds.csv</span></li></ul></li>
+    <li><span class='caret'>iter_1</span>
+    <ul class='nested'><li><span class='caret'>adaboost</span>
+    <ul class='nested'><li><span class='caret'>generated_view_1</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_1-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_2</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_2-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_3</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_3-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_4</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_4-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_pred.csv</span></li></ul></li>
+    <li><span class='file_img'>generated_view_1feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_2feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_3feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_4feature_importances.pickle</span></li></ul></li>
+    <li><span class='caret'>decision_tree</span>
+    <ul class='nested'><li><span class='caret'>generated_view_1</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_1-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_2</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_2-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_3</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_3-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_4</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_4-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_pred.csv</span></li></ul></li>
+    <li><span class='file_img'>generated_view_1feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_2feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_3feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_4feature_importances.pickle</span></li></ul></li>
+    <li><span class='caret'>feature_importances</span>
+    <ul class='nested'><li><span class='file_img'>doc_summit-generated_view_1-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_1-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances_dataframe.csv</span></li></ul></li>
+    <li><span class='caret'>folds</span>
+    <ul class='nested'><li><span class='file_img'>test_labels_fold_0.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_1.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_2.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_3.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_4.csv</span></li></ul></li>
+    <li><span class='caret'>weighted_linear_late_fusion</span>
+    <ul class='nested'><li><span class='file_img'>weighted_linear_late_fusion-doc_summit-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>weighted_linear_late_fusion-doc_summit-summary.txt</span></li></ul></li>
+    <li><span class='file_img'>doc_summit-2D_plot_data.csv</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*-class.html</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.csv</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.html</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.png</span></li>
+    <li><span class='file_img'>doc_summit-bar_plot_data.csv</span></li>
+    <li><span class='file_img'>doc_summit-durations.html</span></li>
+    <li><span class='file_img'>doc_summit-durations_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_2D.html</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_2D.png</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_bar.html</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_bar.png</span></li>
+    <li><span class='file_img'>doc_summit-f1_score-class.html</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.csv</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.html</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.png</span></li>
+    <li><span class='file_img'>train_indices.csv</span></li>
+    <li><span class='file_img'>train_labels.csv</span></li></ul></li>
+    <li><span class='caret'>iter_2</span>
+    <ul class='nested'><li><span class='caret'>adaboost</span>
+    <ul class='nested'><li><span class='caret'>generated_view_1</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_1-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_2</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_2-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_3</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_3-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_4</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_4-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_pred.csv</span></li></ul></li>
+    <li><span class='file_img'>generated_view_1feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_2feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_3feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_4feature_importances.pickle</span></li></ul></li>
+    <li><span class='caret'>decision_tree</span>
+    <ul class='nested'><li><span class='caret'>generated_view_1</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_1-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_2</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_2-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_3</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_3-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_4</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_4-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_pred.csv</span></li></ul></li>
+    <li><span class='file_img'>generated_view_1feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_2feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_3feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_4feature_importances.pickle</span></li></ul></li>
+    <li><span class='caret'>feature_importances</span>
+    <ul class='nested'><li><span class='file_img'>doc_summit-generated_view_1-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_1-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances_dataframe.csv</span></li></ul></li>
+    <li><span class='caret'>folds</span>
+    <ul class='nested'><li><span class='file_img'>test_labels_fold_0.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_1.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_2.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_3.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_4.csv</span></li></ul></li>
+    <li><span class='caret'>weighted_linear_late_fusion</span>
+    <ul class='nested'><li><span class='file_img'>weighted_linear_late_fusion-doc_summit-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>weighted_linear_late_fusion-doc_summit-summary.txt</span></li></ul></li>
+    <li><span class='file_img'>doc_summit-2D_plot_data.csv</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*-class.html</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.csv</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.html</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.png</span></li>
+    <li><span class='file_img'>doc_summit-bar_plot_data.csv</span></li>
+    <li><span class='file_img'>doc_summit-durations.html</span></li>
+    <li><span class='file_img'>doc_summit-durations_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_2D.html</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_2D.png</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_bar.html</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_bar.png</span></li>
+    <li><span class='file_img'>doc_summit-f1_score-class.html</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.csv</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.html</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.png</span></li>
+    <li><span class='file_img'>train_indices.csv</span></li>
+    <li><span class='file_img'>train_labels.csv</span></li></ul></li>
+    <li><span class='caret'>iter_3</span>
+    <ul class='nested'><li><span class='caret'>adaboost</span>
+    <ul class='nested'><li><span class='caret'>generated_view_1</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_1-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_2</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_2-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_3</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_3-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_4</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_4-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_pred.csv</span></li></ul></li>
+    <li><span class='file_img'>generated_view_1feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_2feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_3feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_4feature_importances.pickle</span></li></ul></li>
+    <li><span class='caret'>decision_tree</span>
+    <ul class='nested'><li><span class='caret'>generated_view_1</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_1-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_2</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_2-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_3</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_3-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_4</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_4-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_pred.csv</span></li></ul></li>
+    <li><span class='file_img'>generated_view_1feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_2feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_3feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_4feature_importances.pickle</span></li></ul></li>
+    <li><span class='caret'>feature_importances</span>
+    <ul class='nested'><li><span class='file_img'>doc_summit-generated_view_1-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_1-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances_dataframe.csv</span></li></ul></li>
+    <li><span class='caret'>folds</span>
+    <ul class='nested'><li><span class='file_img'>test_labels_fold_0.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_1.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_2.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_3.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_4.csv</span></li></ul></li>
+    <li><span class='caret'>weighted_linear_late_fusion</span>
+    <ul class='nested'><li><span class='file_img'>weighted_linear_late_fusion-doc_summit-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>weighted_linear_late_fusion-doc_summit-summary.txt</span></li></ul></li>
+    <li><span class='file_img'>doc_summit-2D_plot_data.csv</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*-class.html</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.csv</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.html</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.png</span></li>
+    <li><span class='file_img'>doc_summit-bar_plot_data.csv</span></li>
+    <li><span class='file_img'>doc_summit-durations.html</span></li>
+    <li><span class='file_img'>doc_summit-durations_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_2D.html</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_2D.png</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_bar.html</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_bar.png</span></li>
+    <li><span class='file_img'>doc_summit-f1_score-class.html</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.csv</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.html</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.png</span></li>
+    <li><span class='file_img'>train_indices.csv</span></li>
+    <li><span class='file_img'>train_labels.csv</span></li></ul></li>
+    <li><span class='caret'>iter_4</span>
+    <ul class='nested'><li><span class='caret'>adaboost</span>
+    <ul class='nested'><li><span class='caret'>generated_view_1</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_1-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_2</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_2-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_3</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_3-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_4</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_4-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_pred.csv</span></li></ul></li>
+    <li><span class='file_img'>generated_view_1feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_2feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_3feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_4feature_importances.pickle</span></li></ul></li>
+    <li><span class='caret'>decision_tree</span>
+    <ul class='nested'><li><span class='caret'>generated_view_1</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_1-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_2</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_2-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_3</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_3-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_4</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_4-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_pred.csv</span></li></ul></li>
+    <li><span class='file_img'>generated_view_1feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_2feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_3feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_4feature_importances.pickle</span></li></ul></li>
+    <li><span class='caret'>feature_importances</span>
+    <ul class='nested'><li><span class='file_img'>doc_summit-generated_view_1-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_1-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances_dataframe.csv</span></li></ul></li>
+    <li><span class='caret'>folds</span>
+    <ul class='nested'><li><span class='file_img'>test_labels_fold_0.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_1.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_2.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_3.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_4.csv</span></li></ul></li>
+    <li><span class='caret'>weighted_linear_late_fusion</span>
+    <ul class='nested'><li><span class='file_img'>weighted_linear_late_fusion-doc_summit-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>weighted_linear_late_fusion-doc_summit-summary.txt</span></li></ul></li>
+    <li><span class='file_img'>doc_summit-2D_plot_data.csv</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*-class.html</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.csv</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.html</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.png</span></li>
+    <li><span class='file_img'>doc_summit-bar_plot_data.csv</span></li>
+    <li><span class='file_img'>doc_summit-durations.html</span></li>
+    <li><span class='file_img'>doc_summit-durations_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_2D.html</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_2D.png</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_bar.html</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_bar.png</span></li>
+    <li><span class='file_img'>doc_summit-f1_score-class.html</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.csv</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.html</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.png</span></li>
+    <li><span class='file_img'>train_indices.csv</span></li>
+    <li><span class='file_img'>train_labels.csv</span></li></ul></li>
+    <li><span class='caret'>iter_5</span>
+    <ul class='nested'><li><span class='caret'>adaboost</span>
+    <ul class='nested'><li><span class='caret'>generated_view_1</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_1-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_1-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_2</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_2-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_2-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_3</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_3-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_3-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_4</span>
+    <ul class='nested'><li><span class='file_img'>adaboost-doc_summit-generated_view_4-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-feature_importances.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-full_pred.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-summary.txt</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-test_metrics.png</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-times.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_labels.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_metrics.csv</span></li>
+    <li><span class='file_img'>adaboost-doc_summit-generated_view_4-train_pred.csv</span></li></ul></li>
+    <li><span class='file_img'>generated_view_1feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_2feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_3feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_4feature_importances.pickle</span></li></ul></li>
+    <li><span class='caret'>decision_tree</span>
+    <ul class='nested'><li><span class='caret'>generated_view_1</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_1-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_2</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_2-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_3</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_3-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_pred.csv</span></li></ul></li>
+    <li><span class='caret'>generated_view_4</span>
+    <ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_4-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-feature_importances.png</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-full_pred.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-summary.txt</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-test_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_labels.csv</span></li>
+    <li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_pred.csv</span></li></ul></li>
+    <li><span class='file_img'>generated_view_1feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_2feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_3feature_importances.pickle</span></li>
+    <li><span class='file_img'>generated_view_4feature_importances.pickle</span></li></ul></li>
+    <li><span class='caret'>feature_importances</span>
+    <ul class='nested'><li><span class='file_img'>doc_summit-generated_view_1-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_1-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_2-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_3-feature_importances_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances.html</span></li>
+    <li><span class='file_img'>doc_summit-generated_view_4-feature_importances_dataframe.csv</span></li></ul></li>
+    <li><span class='caret'>folds</span>
+    <ul class='nested'><li><span class='file_img'>test_labels_fold_0.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_1.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_2.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_3.csv</span></li>
+    <li><span class='file_img'>test_labels_fold_4.csv</span></li></ul></li>
+    <li><span class='caret'>weighted_linear_late_fusion</span>
+    <ul class='nested'><li><span class='file_img'>weighted_linear_late_fusion-doc_summit-confusion_matrix.csv</span></li>
+    <li><span class='file_img'>weighted_linear_late_fusion-doc_summit-summary.txt</span></li></ul></li>
+    <li><span class='file_img'>doc_summit-2D_plot_data.csv</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*-class.html</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.csv</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.html</span></li>
+    <li><span class='file_img'>doc_summit-accuracy_score*.png</span></li>
+    <li><span class='file_img'>doc_summit-bar_plot_data.csv</span></li>
+    <li><span class='file_img'>doc_summit-durations.html</span></li>
+    <li><span class='file_img'>doc_summit-durations_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_2D.html</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_2D.png</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_bar.html</span></li>
+    <li><span class='file_img'>doc_summit-error_analysis_bar.png</span></li>
+    <li><span class='file_img'>doc_summit-f1_score-class.html</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.csv</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.html</span></li>
+    <li><span class='file_img'>doc_summit-f1_score.png</span></li>
+    <li><span class='file_img'>train_indices.csv</span></li>
+    <li><span class='file_img'>train_labels.csv</span></li></ul></li>
+    <li><span class='file_img'>2020_04_02-14_12-.hdf5--doc_summit-LOG.log</span></li>
+    <li><span class='file_img'>clf_errors.csv</span></li>
+    <li><span class='file_img'>config_file.yml</span></li>
+    <li><span class='file_img'>doc_summit-durations.html</span></li>
+    <li><span class='file_img'>doc_summit-durations_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-durations_stds_dataframe.csv</span></li>
+    <li><span class='file_img'>doc_summit-mean_on_5_iter-accuracy_score*-class.html</span></li>
+    <li><span class='file_img'>doc_summit-mean_on_5_iter-accuracy_score*.csv</span></li>
+    <li><span class='file_img'>doc_summit-mean_on_5_iter-accuracy_score*.html</span></li>
+    <li><span class='file_img'>doc_summit-mean_on_5_iter-accuracy_score*.png</span></li>
+    <li><span class='file_img'>doc_summit-mean_on_5_iter-f1_score-class.html</span></li>
+    <li><span class='file_img'>doc_summit-mean_on_5_iter-f1_score.csv</span></li>
+    <li><span class='file_img'>doc_summit-mean_on_5_iter-f1_score.html</span></li>
+    <li><span class='file_img'>doc_summit-mean_on_5_iter-f1_score.png</span></li>
+    <li><span class='file_img'>error_analysis_2D.html</span></li>
+    <li><span class='file_img'>error_analysis_2D.png</span></li>
+    <li><span class='file_img'>error_analysis_bar.html</span></li>
+    <li><span class='file_img'>error_analysis_bar.png</span></li>
+    <li><span class='file_img'>example_errors.csv</span></li>
+    <li><span class='file_img'>random_state.pickle</span></li>
+</li>
+</ul>
+
+<script>
+var toggler = document.getElementsByClassName("caret");
+var i;
+
+for (i = 0; i < toggler.length; i++) {
+  toggler[i].addEventListener("click", function() {
+    this.parentElement.querySelector(".nested").classList.toggle("active");
+    this.classList.toggle("caret-down");
+  });
+}
+</script>
+
+</body>
+</html>

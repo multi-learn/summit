@@ -215,49 +215,168 @@
 <p>The results are stored in <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/results/example_1/">a directory</a>. Here, you will find a directory with the name of the database used for the benchmark, here : <code class="docutils literal"><span class="pre">summit_doc/</span></code></p>
 <p>Finally, a directory with the date and time of the beginning of the experiment. Let&#8217;s say you started the benchmark on the 25th of December 1560, at 03:42 PM, the directory&#8217;s name should be <code class="docutils literal"><span class="pre">started_1560_12_25-15_42/</span></code>.</p>
 <p>From here the result directory has the structure that follows  :</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="p">|</span> started_1560_12_25-15_42
-<span class="p">|</span> ├── decision_tree
-<span class="p">|</span> <span class="p">|</span>   ├── generated_view_1
-<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── *-summary.txt
-<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── &lt;other classifier dependant files&gt;
-<span class="p">|</span> <span class="p">|</span>   ├── generated_view_2
-<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── *-summary.txt
-<span class="p">|</span> <span class="p">|</span>   <span class="p">|</span>   ├── &lt;other classifier dependant files&gt;
-<span class="p">|</span> ├── <span class="o">[</span>..
-<span class="p">|</span> ├── ..<span class="o">]</span>
-<span class="p">|</span> ├── weighted_linear_late_fusion
-<span class="p">|</span> <span class="p">|</span>   ├── &lt;summary <span class="p">&amp;</span> classifier dependant files&gt;
-<span class="p">|</span> ├── <span class="o">[</span>..
-<span class="p">|</span> ├── ..<span class="o">]</span>
-<span class="p">|</span> ├── train_labels.csv
-<span class="p">|</span> └── train_indices.csv
-<span class="p">|</span> ├── 1560_12_25-15_42-*-LOG.log
-<span class="p">|</span> ├── config_file.yml
-<span class="p">|</span> ├── *-accuracy_score*.png
-<span class="p">|</span> ├── *-accuracy_score*.html
-<span class="p">|</span> ├── *-accuracy_score*-class.html
-<span class="p">|</span> ├── *-accuracy_score*.csv
-<span class="p">|</span> ├── *-f1_score.png
-<span class="p">|</span> ├── *-f1_score.html
-<span class="p">|</span> ├── *-f1_score-class.html
-<span class="p">|</span> ├── *-f1_score.csv
-<span class="p">|</span> ├── *-error_analysis_2D.png
-<span class="p">|</span> ├── *-error_analysis_2D.html
-<span class="p">|</span> ├── *-error_analysis_bar.png
-<span class="p">|</span> ├── *-error_analysis_bar.html
-<span class="p">|</span> ├── feature_importances
-<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber0-feature_importance.html
-<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber0-feature_importance_dataframe.csv
-<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber1-feature_importance.html
-<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber1-feature_importance_dataframe.csv
-<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber2-feature_importance.html
-<span class="p">|</span> <span class="p">|</span> ├── *-ViewNumber2-feature_importance_dataframe.csv
-<span class="p">|</span> ├── *-bar_plot_data.csv
-<span class="p">|</span> ├── *-2D_plot_data.csv
-<span class="p">|</span> └── random_state.pickle
-</pre></div>
-</div>
-<p>The structure may seem complex, but it provides a lot of information, from the most general to the most precise.</p>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+#myUL {
+  list-style-type: none;
+}
+
+#myUL {
+  margin: 0;
+  padding: 0;
+}
+
+.caret {
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none;
+}
+
+.caret::before {
+  content: " ";
+  background-image: url("../_static/open_folder.svg");
+  width: 15px;
+  height: 15px;
+  /*color: black;*/
+  display: inline-block;
+  /*margin-right: 6px;*/
+}
+
+.file_img::before {
+  content: " ";
+  background-image: url("../_static/img.svg");
+  width: 15px;
+  height: 15px;
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.file_img {
+    font: "Courier New";
+}
+
+.caret-down::before {
+  content: " ";
+  background-image: url("../_static/colsed_fold.svg");
+  width: 15px;
+  height: 15px;
+  /*-ms-transform: rotate(90deg); !* IE 9 *!*/
+  /*-webkit-transform: rotate(90deg); !* Safari *!'*/
+  /*transform: rotate(90deg);*/
+}
+
+.nested {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+
+.plif {
+    display: block;
+}
+</style>
+</head>
+<body>
+<ul id="myUL">
+<li><span class='caret'>decision_tree</span></span>
+<ul class='nested'><li><span class='caret'>generated_view_1</span>
+<ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_1-confusion_matrix.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_1-feature_importances.png</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_1-full_pred.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_1-summary.txt</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_1-test_labels.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_labels.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_1-train_pred.csv</span></li></ul></li>
+<li><span class='caret'>generated_view_2</span>
+<ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_2-confusion_matrix.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_2-feature_importances.png</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_2-full_pred.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_2-summary.txt</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_2-test_labels.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_labels.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_2-train_pred.csv</span></li></ul></li>
+<li><span class='caret'>generated_view_3</span>
+<ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_3-confusion_matrix.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_3-feature_importances.png</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_3-full_pred.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_3-summary.txt</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_3-test_labels.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_labels.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_3-train_pred.csv</span></li></ul></li>
+<li><span class='caret'>generated_view_4</span>
+<ul class='nested'><li><span class='file_img'>decision_tree-doc_summit-generated_view_4-confusion_matrix.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_4-feature_importances.png</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_4-full_pred.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_4-summary.txt</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_4-test_labels.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_labels.csv</span></li>
+<li><span class='file_img'>decision_tree-doc_summit-generated_view_4-train_pred.csv</span></li></ul></li>
+<li><span class='file_img'>generated_view_1feature_importances.pickle</span></li>
+<li><span class='file_img'>generated_view_2feature_importances.pickle</span></li>
+<li><span class='file_img'>generated_view_3feature_importances.pickle</span></li>
+<li><span class='file_img'>generated_view_4feature_importances.pickle</span></li></ul></li>
+<li><span class='caret'>feature_importances</span>
+<ul class='nested'><li><span class='file_img'>doc_summit-generated_view_1-feature_importances.html</span></li>
+<li><span class='file_img'>doc_summit-generated_view_1-feature_importances_dataframe.csv</span></li>
+<li><span class='file_img'>doc_summit-generated_view_2-feature_importances.html</span></li>
+<li><span class='file_img'>doc_summit-generated_view_2-feature_importances_dataframe.csv</span></li>
+<li><span class='file_img'>doc_summit-generated_view_3-feature_importances.html</span></li>
+<li><span class='file_img'>doc_summit-generated_view_3-feature_importances_dataframe.csv</span></li>
+<li><span class='file_img'>doc_summit-generated_view_4-feature_importances.html</span></li>
+<li><span class='file_img'>doc_summit-generated_view_4-feature_importances_dataframe.csv</span></li></ul></li>
+<li><span class='caret'>folds</span>
+<ul class='nested'><li><span class='file_img'>test_labels_fold_0.csv</span></li>
+<li><span class='file_img'>test_labels_fold_1.csv</span></li></ul></li>
+<li><span class='caret'>weighted_linear_early_fusion</span>
+<ul class='nested'><li><span class='file_img'>weighted_linear_early_fusion-doc_summit-confusion_matrix.csv</span></li>
+<li><span class='file_img'>weighted_linear_early_fusion-doc_summit-summary.txt</span></li></ul></li>
+<li><span class='caret'>weighted_linear_late_fusion</span>
+<ul class='nested'><li><span class='file_img'>weighted_linear_late_fusion-doc_summit-confusion_matrix.csv</span></li>
+<li><span class='file_img'>weighted_linear_late_fusion-doc_summit-summary.txt</span></li></ul></li>
+<li><span class='file_img'>2020_03_30-11_46-.hdf5--doc_summit-LOG.log</span></li>
+<li><span class='file_img'>config_file.yml</span></li>
+<li><span class='file_img'>doc_summit-2D_plot_data.csv</span></li>
+<li><span class='file_img'>doc_summit-accuracy_score*-class.html</span></li>
+<li><span class='file_img'>doc_summit-accuracy_score*.csv</span></li>
+<li><span class='file_img'>doc_summit-accuracy_score*.html</span></li>
+<li><span class='file_img'>doc_summit-accuracy_score*.png</span></li>
+<li><span class='file_img'>doc_summit-bar_plot_data.csv</span></li>
+<li><span class='file_img'>doc_summit-durations.html</span></li>
+<li><span class='file_img'>doc_summit-durations_dataframe.csv</span></li>
+<li><span class='file_img'>doc_summit-error_analysis_2D.html</span></li>
+<li><span class='file_img'>doc_summit-error_analysis_2D.png</span></li>
+<li><span class='file_img'>doc_summit-error_analysis_bar.html</span></li>
+<li><span class='file_img'>doc_summit-error_analysis_bar.png</span></li>
+<li><span class='file_img'>doc_summit-f1_score-class.html</span></li>
+<li><span class='file_img'>doc_summit-f1_score.csv</span></li>
+<li><span class='file_img'>doc_summit-f1_score.html</span></li>
+<li><span class='file_img'>doc_summit-f1_score.png</span></li>
+<li><span class='file_img'>random_state.pickle</span></li>
+<li><span class='file_img'>train_indices.csv</span></li>
+<li><span class='file_img'>train_labels.csv</span></li></li>
+</ul>
+
+<script>
+var toggler = document.getElementsByClassName("caret");
+var i;
+
+for (i = 0; i < toggler.length; i++) {
+  toggler[i].addEventListener("click", function() {
+    this.parentElement.querySelector(".nested").classList.toggle("active");
+    this.classList.toggle("caret-down");
+  });
+}
+</script>
+
+</body>
+</html><p>The structure may seem complex, but it provides a lot of information, from the most general to the most precise.</p>
 <p>Let&#8217;s comment each file :</p>
 <div class="section" id="accuracy-score-html-accuracy-score-png-and-accuracy-score-csv">
 <h3><code class="docutils literal"><span class="pre">*-accuracy_score*.html</span></code>, <code class="docutils literal"><span class="pre">*-accuracy_score*.png</span></code> and <code class="docutils literal"><span class="pre">*-accuracy_score*.csv</span></code><a class="headerlink" href="#accuracy-score-html-accuracy-score-png-and-accuracy-score-csv" title="Permalink to this headline">¶</a></h3>

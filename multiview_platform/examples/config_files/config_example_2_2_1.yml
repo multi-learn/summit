@@ -5,7 +5,7 @@ log: True
 # The name of each dataset in the directory on which the benchmark should be run
 name: ["doc_summit"]
 # A label for the result directory
-label: "_"
+label: "example_2_2_1"
 # The type of dataset, currently supported ".hdf5", and ".csv"
 file_type: ".hdf5"
 # The views to use in the banchmark, an empty value will result in using all the views
@@ -21,7 +21,7 @@ nb_cores: 1
 # Used to run the benchmark on the full dataset
 full: True
 # Used to be able to run more than one benchmark per minute
-debug: True
+debug: False
 # The directory in which the results will be stored, an absolute path is advised
 res_dir: "examples/results/example_2_2_1/"
 # If an error occurs in a classifier, if track_tracebacks is set to True, the
