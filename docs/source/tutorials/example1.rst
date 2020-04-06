@@ -46,6 +46,8 @@ It has been parametrized with the following error matrix :
 +---------+--------+--------+--------+--------+
 | label_7 |  0.40  |  0.40  |  0.40  |  0.40  |
 +---------+--------+--------+--------+--------+
+| label_7 |  0.40  |  0.40  |  0.40  |  0.40  |
++---------+--------+--------+--------+--------+
 
 So this means that the view 1 should make at least 40% error on label 1 and 65% on label 2.
 
@@ -72,10 +74,10 @@ The config file that will be used in this example is available :base_source:`her
 
 + Then the classification-related arguments :
 
-    - :yaml:`split: 0.25` (:base_source:`l35 <multiview_platform/examples/config_files/config_example_1.yml#L35>`) means that 80% of the dataset will be used to test the different classifiers and 20% to train them,
+    - :yaml:`split: 0.25` (:base_source:`l35 <multiview_platform/examples/config_files/config_example_1.yml#L35>`) means that 75% of the dataset will be used to test the different classifiers and 25% to train them,
     - :yaml:`type: ["monoview", "multiview"]` (:base_source:`l43 <multiview_platform/examples/config_files/config_example_1.yml#L43>`) allows for monoview and multiview algorithms to be used in the benchmark,
     - :yaml:`algos_monoview: ["decision_tree"]` (:base_source:`l45 <multiview_platform/examples/config_files/config_example_1.yml#L45>`) runs a Decision tree on each view,
-    - :yaml:`algos_monoview: ["weighted_linear_early_fusion", "weighted_linear_late_fusion"]` (:base_source:`l47 <multiview_platform/examples/config_files/config_example_1.yml#L47>`) runs a late and an early fusion,
+    - :yaml:`algos_multiview: ["weighted_linear_early_fusion", "weighted_linear_late_fusion"]` (:base_source:`l47 <multiview_platform/examples/config_files/config_example_1.yml#L47>`) runs a late and an early fusion,
     - The metrics configuration (:base_source:`l52-55 <multiview_platform/examples/config_files/config_example_1.yml#L52>`) ::
 
                         metrics:
@@ -101,6 +103,7 @@ The execution should take less than five minutes. We will first analyze the resu
 The result structure can be startling at first, but, as the platform provides a lot of information, it has to be organized.
 
 The results are stored in :base_source:`a directory <multiview_platform/examples/results/example_1/>`. Here, you will find a directory with the name of the database used for the benchmark, here : ``summit_doc/``
+
 Finally, a directory with the date and time of the beginning of the experiment. Let's say you started the benchmark on the 25th of December 1560, at 03:42 PM, the directory's name should be ``started_1560_12_25-15_42/``.
 
 From here the result directory has the structure that follows  :
@@ -156,7 +159,7 @@ Let's comment each file :
 ``*-accuracy_score*.html``, ``*-accuracy_score*.png`` and ``*-accuracy_score*.csv``
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-These files contain the scores of each classifier for the accuracy metric, ordered with the best ones on the right and the worst ones on the left, as an interactive html page, an image or a csv matrix. The star after ``accuracy_score*`` means that it was the principal metric (the usefulness of the principal metric will be explained later).
+These files contain the scores of each classifier for the accuracy metric, ordered with the worst ones on the left and the best ones on the right, as an interactive html page, an image or a csv matrix. The star after ``accuracy_score*`` means that it was the principal metric (the usefulness of the principal metric will be explained later).
 The html version is as follows :
 
 .. raw:: html
@@ -167,7 +170,7 @@ This is a bar plot showing the score on the training set (light gray), and testi
 
 Here, the generated dataset is build to introduce some complementarity amongst the views. As a consequence, the two multiview algorithms, even if they are naive, have a better score than the decision trees.
 
-The ``.csv`` file is a matrix with the score on train stored in the first row and the score on test stored in the second one. Each classifier is presented in a row. It is loadable with pandas.
+The ``.csv`` file is a matrix with the score on train stored in the first row and the score on test stored in the second one. Each classifier is presented in a column. It is loadable with pandas.
 
 A similar graph ``*-accuracy_score*-class.html``, reports the error of each classifier on each class.
 
@@ -175,7 +178,7 @@ A similar graph ``*-accuracy_score*-class.html``, reports the error of each clas
     .. :file: ./images/example_1/accuracy_class.html
     :file: images/fake.html
 
-Here, for each classifier, 8 bars are plotted, one foe each class. It is clear that fore the monoview algorithms, in views 2 and 3, the third class is difficult, as showed in the error matrix.
+Here, for each classifier, 8 bars are plotted, one for each class. It is clear that for the monoview algorithms, in views 2 and 3, the third class is difficult, as showed in the error matrix.
 
 
 ``*-error_analysis_2D.png`` and ``*-error_analysis_2D.html``
@@ -210,9 +213,9 @@ In terms of information, this is useful to detect possible outlier examples in t
 For example, a mainly black horizontal line for an example means that it has been missclassified by most of the classifiers.
 It could mean that the example is incorrectly labeled in the dataset or is very hard to classify.
 
-Symmetrically, a mainly-black column means that a classifier spectacularly failed on the asked task.
+Symmetrically, a mainly-black column means that a classifier spectacularly failed.
 
-The data used to generate those matrices is available in ``*-2D_plot_data.csv``
+The data used to generate this matrix is available in ``*-2D_plot_data.csv``
 
 ``*-error_analysis_bar.png`` and ``*-error_analysis_bar.html``
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

@@ -6,7 +6,7 @@ This project aims to be an easy-to-use solution to run a prior benchmark on a da
 
 ## Getting Started
 
-### Prerequisites
+### Prerequisites (will be automatically installed)
 
 To be able to use this project, you'll need :
 
@@ -45,7 +45,7 @@ In order to run it you'll need to try on **simulated** data with the command
 from multiview_platform.execute import execute
 execute()
 ```
-This will run the first example. For more information about the examples, see the [documentation](http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/) 
+This will run the first example. For more information about the examples, see the [documentation](http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/).
 Results will be stored in the results directory of the installation path : 
 `path/to/install/multiview-machine-learning-omis/multiview_platform/examples/results`.
 The documentation proposes a detailed interpretation of the results. 
