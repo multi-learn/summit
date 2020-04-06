@@ -1,26 +1,35 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>Readme &#8212; MultiviewPlatform 0 documentation</title>
+    
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Multiview Platform Tutorials" href="tutorials/index.html" />
-    <link rel="prev" title="Welcome to Supervised MultiModal Integration Tool’s documentation !" href="index.html" /> 
-  </head><body>
+    <link rel="top" title="MultiviewPlatform 0 documentation" href="index.html" />
+    <link rel="next" title="SuMMIT Tutorials" href="tutorials/index.html" />
+    <link rel="prev" title="Welcome to Supervised MultiModal Integration Tool’s documentation" href="index.html" /> 
+  </head>
+  <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -28,10 +37,13 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="tutorials/index.html" title="Multiview Platform Tutorials"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorials/index.html" title="SuMMIT Tutorials"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to Supervised MultiModal Integration Tool’s documentation !"
+          <a href="index.html" title="Welcome to Supervised MultiModal Integration Tool’s documentation"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">MultiviewPlatform 0 documentation</a> &#187;</li> 
       </ul>
@@ -52,9 +64,9 @@
 <p>This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- &amp; multi-view algorithms capacity to classify it correctly.</p>
 <div class="section" id="getting-started">
 <h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h3>
-<p>To be able to use this project, you’ll need :</p>
+<div class="section" id="prerequisites-will-be-automatically-installed">
+<h3>Prerequisites (will be automatically installed)<a class="headerlink" href="#prerequisites-will-be-automatically-installed" title="Permalink to this headline">¶</a></h3>
+<p>To be able to use this project, you&#8217;ll need :</p>
 <ul class="simple">
 <li><a class="reference external" href="https://docs.python.org/3/">Python 3.6</a></li>
 </ul>
@@ -78,30 +90,30 @@
 <div class="section" id="installing">
 <h3>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h3>
 <p>Once you cloned the project from the <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/">gitlab repository</a>, you just have to use :</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>pip install -e .
+<div class="highlight-guess"><div class="highlight"><pre><span></span><span class="err">pip install -e .</span>
 </pre></div>
 </div>
-<p>In the <code class="docutils literal notranslate"><span class="pre">multiview_machine-learning-omis</span></code> directory to install SuMMIT and its dependencies.</p>
+<p>In the <code class="docutils literal"><span class="pre">multiview_machine-learning-omis</span></code> directory to install SuMMIT and its dependencies.</p>
 </div>
 <div class="section" id="running-on-simulated-data">
 <h3>Running on simulated data<a class="headerlink" href="#running-on-simulated-data" title="Permalink to this headline">¶</a></h3>
-<p>In order to run it you’ll need to try on <strong>simulated</strong> data with the command</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<p>In order to run it you&#8217;ll need to try on <strong>simulated</strong> data with the command</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
 <span class="n">execute</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>This will run the first example. For more information about the examples, see the <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/">documentation</a>
+<p>This will run the first example. For more information about the examples, see the <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/">documentation</a>.
 Results will be stored in the results directory of the installation path :
-<code class="docutils literal notranslate"><span class="pre">path/to/install/multiview-machine-learning-omis/multiview_platform/examples/results</span></code>.
+<code class="docutils literal"><span class="pre">path/to/install/multiview-machine-learning-omis/multiview_platform/examples/results</span></code>.
 The documentation proposes a detailed interpretation of the results.</p>
 </div>
 <div class="section" id="discovering-the-arguments">
 <h3>Discovering the arguments<a class="headerlink" href="#discovering-the-arguments" title="Permalink to this headline">¶</a></h3>
 <p>All the arguments of the platform are stored in a YAML config file. Some config files are given as examples.
-The file stored in <code class="docutils literal notranslate"><span class="pre">multiview-machine-learning-omis/config_files/config.yml</span></code> is documented and it is highly recommended
+The file stored in <code class="docutils literal"><span class="pre">multiview-machine-learning-omis/config_files/config.yml</span></code> is documented and it is highly recommended
 to read it carefully before playing around with the parameters.</p>
 <p>You can create your own configuration file. In order to run the platform with it, run :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
 <span class="n">execute</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="s2">&quot;/absolute/path/to/your/config/file&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -110,48 +122,48 @@ to read it carefully before playing around with the parameters.</p>
 <div class="section" id="dataset-compatibility">
 <h3>Dataset compatibility<a class="headerlink" href="#dataset-compatibility" title="Permalink to this headline">¶</a></h3>
 <p>In order to start a benchmark on your own dataset, you need to format it so SuMMIT can use it.</p>
-<p><span class="raw-html-m2r"><a href="<" title="With `top_directory</span> being the last directory in the <cite>pathF</cite> argument”&gt;comment&lt;/a&gt;`: &lt;&gt; (#### If you have multiple <code class="docutils literal notranslate"><span class="pre">.csv</span></code> files, you must organize them as :</p>
+<p><span class="raw-html-m2r"><a href="<" title="With `top_directory</span> being the last directory in the <cite>pathF</cite> argument&#8221;&gt;comment&lt;/a&gt;`: &lt;&gt; (#### If you have multiple <code class="docutils literal"><span class="pre">.csv</span></code> files, you must organize them as :</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">top_directory/database_name-labels.csv</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">top_directory/database_name-labels-names.csv</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">top_directory/Views/view_name.csv</span></code> or <code class="docutils literal notranslate"><span class="pre">top_directory/Views/view_name-s.csv</span></code> if the view is sparse)</li>
+<li><code class="docutils literal"><span class="pre">top_directory/database_name-labels.csv</span></code></li>
+<li><code class="docutils literal"><span class="pre">top_directory/database_name-labels-names.csv</span></code></li>
+<li><code class="docutils literal"><span class="pre">top_directory/Views/view_name.csv</span></code> or <code class="docutils literal"><span class="pre">top_directory/Views/view_name-s.csv</span></code> if the view is sparse)</li>
 </ul>
 <div class="section" id="if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as">
 <h4>If you already have an HDF5 dataset file it must be formatted as :<a class="headerlink" href="#if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
-<li>One dataset for each view called <code class="docutils literal notranslate"><span class="pre">ViewI</span></code> with <code class="docutils literal notranslate"><span class="pre">I</span></code> being the view index with 2 attribures :<ul>
-<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;name&quot;]</span></code> a string for the name of the view</li>
-<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;sparse&quot;]</span></code> a boolean specifying whether the view is sparse or not (WIP)</li>
+<li>One dataset for each view called <code class="docutils literal"><span class="pre">ViewI</span></code> with <code class="docutils literal"><span class="pre">I</span></code> being the view index with 2 attribures :<ul>
+<li><code class="docutils literal"><span class="pre">attrs[&quot;name&quot;]</span></code> a string for the name of the view</li>
+<li><code class="docutils literal"><span class="pre">attrs[&quot;sparse&quot;]</span></code> a boolean specifying whether the view is sparse or not (WIP)</li>
 </ul>
 </li>
-<li>One dataset for the labels called <code class="docutils literal notranslate"><span class="pre">Labels</span></code> with one attribute :<ul>
-<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;names&quot;]</span></code> a list of strings encoded in utf-8 naming the labels in the right order</li>
+<li>One dataset for the labels called <code class="docutils literal"><span class="pre">Labels</span></code> with one attribute :<ul>
+<li><code class="docutils literal"><span class="pre">attrs[&quot;names&quot;]</span></code> a list of strings encoded in utf-8 naming the labels in the right order</li>
 </ul>
 </li>
-<li>One group for the additional data called <code class="docutils literal notranslate"><span class="pre">Metadata</span></code> containing at least 1 dataset :<ul>
-<li><code class="docutils literal notranslate"><span class="pre">&quot;example_ids&quot;</span></code>, a numpy array of type <code class="docutils literal notranslate"><span class="pre">S100</span></code>, with the ids of the examples in the right order</li>
+<li>One group for the additional data called <code class="docutils literal"><span class="pre">Metadata</span></code> containing at least 1 dataset :<ul>
+<li><code class="docutils literal"><span class="pre">&quot;example_ids&quot;</span></code>, a numpy array of type <code class="docutils literal"><span class="pre">S100</span></code>, with the ids of the examples in the right order</li>
 </ul>
 </li>
 <li>And three attributes :<ul>
-<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;nbView&quot;]</span></code> an int counting the total number of views in the dataset</li>
-<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;nbClass&quot;]</span></code> an int counting the total number of different labels in the dataset</li>
-<li><code class="docutils literal notranslate"><span class="pre">attrs[&quot;datasetLength&quot;]</span></code> an int counting the total number of examples in the dataset</li>
+<li><code class="docutils literal"><span class="pre">attrs[&quot;nbView&quot;]</span></code> an int counting the total number of views in the dataset</li>
+<li><code class="docutils literal"><span class="pre">attrs[&quot;nbClass&quot;]</span></code> an int counting the total number of different labels in the dataset</li>
+<li><code class="docutils literal"><span class="pre">attrs[&quot;datasetLength&quot;]</span></code> an int counting the total number of examples in the dataset</li>
 </ul>
 </li>
 </ul>
-<p>The <code class="docutils literal notranslate"><span class="pre">format_dataset.py</span></code> file is documented and can be used to format a multiview dataset in a SuMMIT-compatible HDF5 file.</p>
+<p>The <code class="docutils literal"><span class="pre">format_dataset.py</span></code> file is documented and can be used to format a multiview dataset in a SuMMIT-compatible HDF5 file.</p>
 </div>
 </div>
 <div class="section" id="running-on-your-dataset">
 <h3>Running on your dataset<a class="headerlink" href="#running-on-your-dataset" title="Permalink to this headline">¶</a></h3>
 <p>Once you have formatted your dataset, to run SuMMIT on it you need to modify the config file as</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>name: [&quot;your_file_name&quot;]
+<div class="highlight-yaml"><div class="highlight"><pre><span></span>name: [&quot;your_file_name&quot;]
 *
 pathf: &quot;path/to/your/dataset&quot;
 </pre></div>
 </div>
 <p>This will run a full benchmark on your dataset using all available views and labels.</p>
-<p>It is highly recommended to follow the documentation’s <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/tutorials/index.html">tutorials</a> to learn the use of each parameter.</p>
+<p>It is highly recommended to follow the documentation&#8217;s <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/tutorials/index.html">tutorials</a> to learn the use of each parameter.</p>
 </div>
 </div>
 <div class="section" id="author">
@@ -163,7 +175,7 @@ pathf: &quot;path/to/your/dataset&quot;
 <h3>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><strong>Dominique BENIELLI</strong></li>
-<li><strong>Alexis PROD’HOMME</strong></li>
+<li><strong>Alexis PROD&#8217;HOMME</strong></li>
 </ul>
 </div>
 </div>
@@ -175,12 +187,12 @@ pathf: &quot;path/to/your/dataset&quot;
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
+  <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Readme</a></li>
 <li><a class="reference internal" href="#mono-and-multi-view-classification-benchmark">Mono- and Multi-view classification benchmark</a><ul>
 <li><a class="reference internal" href="#getting-started">Getting Started</a><ul>
-<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#prerequisites-will-be-automatically-installed">Prerequisites (will be automatically installed)</a></li>
 <li><a class="reference internal" href="#installing">Installing</a></li>
 <li><a class="reference internal" href="#running-on-simulated-data">Running on simulated data</a></li>
 <li><a class="reference internal" href="#discovering-the-arguments">Discovering the arguments</a></li>
@@ -201,27 +213,25 @@ pathf: &quot;path/to/your/dataset&quot;
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to Supervised MultiModal Integration Tool’s documentation !</a></p>
+                        title="previous chapter">Welcome to Supervised MultiModal Integration Tool&#8217;s documentation</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="tutorials/index.html"
-                        title="next chapter">Multiview Platform Tutorials</a></p>
+                        title="next chapter">SuMMIT Tutorials</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/readme_link.rst.txt"
+      <li><a href="_sources/readme_link.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
-    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -235,17 +245,20 @@ pathf: &quot;path/to/your/dataset&quot;
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="tutorials/index.html" title="Multiview Platform Tutorials"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorials/index.html" title="SuMMIT Tutorials"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to Supervised MultiModal Integration Tool’s documentation !"
+          <a href="index.html" title="Welcome to Supervised MultiModal Integration Tool’s documentation"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">MultiviewPlatform 0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Baptiste BAUVIN.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.
     </div>
   </body>
 </html>

@@ -1,6 +1,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 [![Build Status](https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/badges/develop/pipeline.svg)](https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/badges/develop/pipeline.svg)
-# Mono- and Multi-view classification benchmark
+# Supervised MultiModal Integration Tool
 
 This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- & multi-view algorithms capacity to classify it correctly.
 
@@ -34,9 +34,10 @@ And the following python modules :
 Once you cloned the project from the [gitlab repository](https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/), you just have to use :  
 
 ```
+cd path/to/multiview-machine-learning-omis/
 pip install -e .
 ```
-In the `multiview_machine-learning-omis` directory to install SuMMIT and its dependencies.
+In the `multiview-machine-learning-omis` directory to install SuMMIT and its dependencies.
 
 ### Running on simulated data
 

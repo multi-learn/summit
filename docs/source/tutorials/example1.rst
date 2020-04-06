@@ -163,8 +163,8 @@ These files contain the scores of each classifier for the accuracy metric, order
 The html version is as follows :
 
 .. raw:: html
-    .. :file: ./images/example_1/accuracy.html
-    :file: images/fake.html
+    .. :file: images/fake.html
+    :file: ./images/example_1/accuracy.html
 
 This is a bar plot showing the score on the training set (light gray), and testing set (black) for each monoview classifier on each view and or each multiview classifier.
 
@@ -175,8 +175,8 @@ The ``.csv`` file is a matrix with the score on train stored in the first row an
 A similar graph ``*-accuracy_score*-class.html``, reports the error of each classifier on each class.
 
 .. raw:: html
-    .. :file: ./images/example_1/accuracy_class.html
-    :file: images/fake.html
+    .. :file: images/fake.html
+    :file: ./images/example_1/accuracy_class.html
 
 Here, for each classifier, 8 bars are plotted, one for each class. It is clear that for the monoview algorithms, in views 2 and 3, the third class is difficult, as showed in the error matrix.
 
