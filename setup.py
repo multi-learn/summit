@@ -13,7 +13,7 @@ def setup_package():
     setup(
 
     # le nom de votre bibliothèque, tel qu'il apparaitre sur pypi
-    name='multiview_platform',
+    name='summit',
 
     # la version du code
     version=0.0,
@@ -34,7 +34,7 @@ def setup_package():
     author_email="baptiste.bauvin@lis-lab.fr",
 
     # Une description courte
-    description="Plateforme de test d'algorithmes multivues et monovue",
+    description="Supervised MultiModal Integration Tool",
 
     # Une description longue, sera affichée pour présenter la lib
     # Généralement on dump le README ici
@@ -54,7 +54,7 @@ def setup_package():
     include_package_data=True,
     # dependency_links=['https://github.com/aldro61/pyscm.git#egg=pyscm'],
     # Une url qui pointe vers la page officielle de votre lib
-    url='http://github.com/babau1/multiview-machine-learning-omis/',
+    url='http://gitlab.lis-lab.fr/baptiste.bauvin/summit/',
     install_requires=requirements,
     # install_requires=['numpy>=1.16', 'scipy>=0.16','scikit-learn==0.19',
     #                   'matplotlib', 'h5py', 'joblib',
