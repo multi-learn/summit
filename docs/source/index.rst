@@ -1,5 +1,5 @@
-Welcome to Supervised MultiModal Integration Tool's documentation !
-===================================================================
+Welcome to Supervised MultiModal Integration Tool's documentation
+=================================================================
 
 This package has been designed as an easy-to-use platform to estimate different mono- and multi-view classifiers' performances on a multiview dataset.
 

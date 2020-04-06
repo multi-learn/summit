@@ -3,7 +3,7 @@
 Install |platf|
 =======================================
 
-Multiview Platform is a package developped for Python3.x.
+|platf| is a package developped for Python3.x.
 
 To sum up what you need to run the platform :
 

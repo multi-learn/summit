@@ -37,7 +37,7 @@ Indeed, all the algorithms included in the platform must provide two hyper-param
 - :python:`self.param_names` that contain the name of the hyper-parameters that have to be optimized (they must correspond to the name of the attributes of the class :python:`Algo`)
 - :python:`self.distribs` that contain the distributions for each of these hyper-parameters.
 
-For example, let's suppose that algo need three hyper-parameters and a random state parameter allowing reproducibility :
+For example, let's suppose that |algo| need three hyper-parameters and a random state parameter allowing reproducibility :
 
 - :python:`trade_off` that is a float between 0 and 1,
 - :python:`norm_type` that is a string in :python:`["l1", "l2"]`,
@@ -78,7 +78,7 @@ It is possible to provide some information about the decision process of the alg
 It inputs four arguments :
 
 * :python:`directory`, a string containing the directory where figures should be sotred
-* :python:`base_file_name`, a string containing the file name prefix that shoul be used to sotre figures
+* :python:`base_file_name`, a string containing the file name prefix that should be used to store figures
 * :python:`y_test`, an array containing the labels of the test set
 * :python:`multiclass` a boolean that is True if the target is multiclass
 
@@ -127,8 +127,8 @@ Moreover, one has to add a variable called :python:`classifier_class_name` that 
                 self.param_names = ["param_1", "random_state", "param_2"]
                 self.distribs = [CustomRandint(5,200), [random_state], ["val_1", "val_2"]]
 
-In |platf| the input of the :python:`fit()` method is `X`, a dataset object that provide access to each view with a method : :python:`dataset_var.get_v(view_index, example_indices)`,
-so in order to add a mutliview classifier to |platf|, one will probably have to add a data-transformation step before using the class's :python:`fit()` method.
+In |platf| the input of the :python:`fit()` method is `X`, a dataset object that provide access to each view with a method : :python:`dataset_var.get_v(view_index, example_indices)`.
+So in order to add a mutliview classifier to |platf|, one will probably have to add a data-transformation step before using the class's :python:`fit()` method.
 
 Moreover, to get restrain the examples and descriptors used in the method, |platf| provides two supplementary arguments :
 

@@ -5,7 +5,7 @@
 Example 2 : Understanding the hyper-parameter optimization
 ==========================================================
 
-If you are not familir with hyper-parameter optimization, see :base_doc:`Hyper-parameters 101 <tutorials/hps_theory.html>`
+If you are not familiar with hyper-parameter optimization, see :base_doc:`Hyper-parameters 101 <tutorials/hps_theory.html>`
 
 Hands-on experience
 -------------------
@@ -118,21 +118,22 @@ Conclusion
 >>>>>>>>>>
 
 The split ratio has two consequences :
+
 - Increasing the test set size decreases the information available in the train set size so either it helps to avoid overfitting (Adaboost) or it can hide useful information to the classifier and therefor decrease its performance (decision tree),
-- The second consequence is that decreasing test size will increase the benchmark duration as the classifier will have to learn  on more examples, this duration modification is higher if the dataset has high dimensionality and if the algorithm is algorithmically complex.
+- The second consequence is that increasing train size will increase the benchmark duration as the classifier will have to learn  on more examples, this duration modification is higher if the dataset has high dimensionality and if the algorithm is algorithmically complex.
 
 .. _random:
 Example 2.2 : Usage of randomized hyper-parameter optimization :
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-In the previous example, we have seen that the split ratio has an impact on the train duration and performance of the algorithms, b the most time-consuming task is optimizing their hyper parameters.
+In the previous example, we have seen that the split ratio has an impact on the train duration and performance of the algorithms, but the most time-consuming task is optimizing their hyper parameters.
 
 For all the previous examples, the platform used the hyper-parameters values given in the config file.
 This is only useful if one knows the optimal combination of hyper-parameter for the given task.
 
 However, most of the time, they are unknown to the user, and then have to be optimized by the platform.
 
-In this example, we will use an randomized search, one of the two hyper-parameter optimization methods implemented in |platf|, to do so we will go through five lines of the config file :
+In this example, we will use an randomized search, one of the two hyper-parameter optimization methods implemented in |platf|. To do so we will go through five lines of the config file :
 
 - :yaml:`hps_type:`, controlling the type of hyper-parameter search,
 - :yaml:`n_iter:`, controlling the number of random draws during the hyper-parameter search,
@@ -206,7 +207,7 @@ Here, we used :yaml:`split: 0.8` and the results are far better than :base_doc:`
 
 
 
-The choice made here is to allow a different amount of draws for mono and multiview classifiers. However, allowing the same number of draws to both is also available by setting :yaml:` equivalent_draws: False`.
+The choice made here is to allow a different amount of draws for mono and multiview classifiers. However, allowing the same number of draws to both is also available by setting :yaml:`equivalent_draws: False`.
 
 .. note::
 

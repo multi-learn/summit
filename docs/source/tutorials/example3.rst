@@ -6,8 +6,10 @@ Context
 -------
 
 In the previous example, we have seen that in order to output meaningful results, the platform splits the input dataset in a training set and a testing set.
+
 However, even if the split is done at random, one can draw a lucky (or unlucky) split and have great (or poor) performance on this specific split.
-To settle this issue, the platform can run on multiple splits and return the mean.
+
+To settle this issue, the platform can run on multiple splits and return the mean scores.
 
 
 How to use it

@@ -66,7 +66,7 @@ This is possible with another result analysis, available in :base_source:`png <m
     .. :file: images/example_0/err.html
     :file: images/fake.html
 
-This figure represents a matrix, with the examples in rows and classifiers in columns, with a white rectangle on row i, column j if classifier j failed to classify example i.
+This figure represents a matrix, with the examples in rows and classifiers in columns, with a white rectangle on row i, column j if classifier j succeerecded to classify example i.
 
 A quick analysis of it shows that a decision tree (DT) on the view ``digit_col_grad_0`` is unable to classify any example of labels 1, 2, 3 or 4. That both the other DTs have a similar behavior with other labels.
 Concerning the fusions, if you zoom in on the examples labelled "2"", you may see that some errors made by the early fusion classifier are on examples that were mis-classified by the three DTs :
