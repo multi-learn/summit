@@ -95,7 +95,7 @@ During the whole benchmark, the log file will be printed in the terminal. To sta
 
    >>> execute('example 1')
 
-The execution should take less than five minutes. We will first analyze the results and parse through the information the platform output.
+The execution should take less than one minute. We will first analyze the results and parse through the information the platform outputs.
 
 
 **Understanding the results**

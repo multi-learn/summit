@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Readme &#8212; MultiviewPlatform 0 documentation</title>
+    <title>Supervised MultiModal Integration Tool’s Readme &#8212; MultiviewPlatform 0 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -54,13 +54,10 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="readme">
-<h1>Readme<a class="headerlink" href="#readme" title="Permalink to this headline">¶</a></h1>
-<a class="reference external image-reference" href="http://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" /></a>
+  <a class="reference external image-reference" href="http://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" /></a>
 <a class="reference external image-reference" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/develop/pipeline.svg"><img alt="Build Status" src="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/develop/pipeline.svg" /></a>
-</div>
-<div class="section" id="supervised-multimodal-integration-tool">
-<h1>Supervised MultiModal Integration Tool<a class="headerlink" href="#supervised-multimodal-integration-tool" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="supervised-multimodal-integration-tool-s-readme">
+<h1>Supervised MultiModal Integration Tool&#8217;s Readme<a class="headerlink" href="#supervised-multimodal-integration-tool-s-readme" title="Permalink to this headline">¶</a></h1>
 <p>This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- &amp; multi-view algorithms capacity to classify it correctly.</p>
 <div class="section" id="getting-started">
 <h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
@@ -103,10 +100,11 @@
 <span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example 1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This will run the first example. For more information about the examples, see the <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/">documentation</a>.
+<p>This will run the first example.</p>
+<p>For more information about the examples, see the <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/">documentation</a>.
 Results will be stored in the results directory of the installation path :
-<code class="docutils literal"><span class="pre">path/to/summit/multiview_platform/examples/results</span></code>.
-The documentation proposes a detailed interpretation of the results through 6 <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/">tutorials</a>.</p>
+<code class="docutils literal"><span class="pre">path/to/summit/multiview_platform/examples/results</span></code>.</p>
+<p>The documentation proposes a detailed interpretation of the results through <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/">6 tutorials</a>.</p>
 </div>
 <div class="section" id="discovering-the-arguments">
 <h3>Discovering the arguments<a class="headerlink" href="#discovering-the-arguments" title="Permalink to this headline">¶</a></h3>
@@ -122,32 +120,8 @@ to read it carefully before playing around with the parameters.</p>
 </div>
 <div class="section" id="dataset-compatibility">
 <h3>Dataset compatibility<a class="headerlink" href="#dataset-compatibility" title="Permalink to this headline">¶</a></h3>
-<p>In order to start a benchmark on your own dataset, you need to format it so SuMMIT can use it.</p>
-<div class="section" id="if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as">
-<h4>If you already have an HDF5 dataset file it must be formatted as :<a class="headerlink" href="#if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as" title="Permalink to this headline">¶</a></h4>
-<ul class="simple">
-<li>One dataset for each view called <code class="docutils literal"><span class="pre">ViewI</span></code> with <code class="docutils literal"><span class="pre">I</span></code> being the view index with 2 attribures :<ul>
-<li><code class="docutils literal"><span class="pre">attrs[&quot;name&quot;]</span></code> a string for the name of the view</li>
-<li><code class="docutils literal"><span class="pre">attrs[&quot;sparse&quot;]</span></code> a boolean specifying whether the view is sparse or not (WIP)</li>
-</ul>
-</li>
-<li>One dataset for the labels called <code class="docutils literal"><span class="pre">Labels</span></code> with one attribute :<ul>
-<li><code class="docutils literal"><span class="pre">attrs[&quot;names&quot;]</span></code> a list of strings encoded in utf-8 naming the labels in the right order</li>
-</ul>
-</li>
-<li>One group for the additional data called <code class="docutils literal"><span class="pre">Metadata</span></code> containing at least 1 dataset :<ul>
-<li><code class="docutils literal"><span class="pre">&quot;example_ids&quot;</span></code>, a numpy array of type <code class="docutils literal"><span class="pre">S100</span></code>, with the ids of the examples in the right order</li>
-</ul>
-</li>
-<li>And three attributes :<ul>
-<li><code class="docutils literal"><span class="pre">attrs[&quot;nbView&quot;]</span></code> an int counting the total number of views in the dataset</li>
-<li><code class="docutils literal"><span class="pre">attrs[&quot;nbClass&quot;]</span></code> an int counting the total number of different labels in the dataset</li>
-<li><code class="docutils literal"><span class="pre">attrs[&quot;datasetLength&quot;]</span></code> an int counting the total number of examples in the dataset</li>
-</ul>
-</li>
-</ul>
-<p>The <code class="docutils literal"><span class="pre">format_dataset.py</span></code> file is documented and can be used to format a multiview dataset in a SuMMIT-compatible HDF5 file.</p>
-</div>
+<p>In order to start a benchmark on your own dataset, you need to format it so SuMMIT can use it. To do so, a <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/blob/master/format_dataset.py">python script</a> is provided.</p>
+<p>For more information, see <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/example4.html">Example 6</a></p>
 </div>
 <div class="section" id="running-on-your-dataset">
 <h3>Running on your dataset<a class="headerlink" href="#running-on-your-dataset" title="Permalink to this headline">¶</a></h3>
@@ -184,17 +158,13 @@ pathf: &quot;path/to/your/dataset&quot;
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Readme</a></li>
-<li><a class="reference internal" href="#supervised-multimodal-integration-tool">Supervised MultiModal Integration Tool</a><ul>
+<li><a class="reference internal" href="#">Supervised MultiModal Integration Tool&#8217;s Readme</a><ul>
 <li><a class="reference internal" href="#getting-started">Getting Started</a><ul>
 <li><a class="reference internal" href="#prerequisites-will-be-automatically-installed">Prerequisites (will be automatically installed)</a></li>
 <li><a class="reference internal" href="#installing">Installing</a></li>
 <li><a class="reference internal" href="#running-on-simulated-data">Running on simulated data</a></li>
 <li><a class="reference internal" href="#discovering-the-arguments">Discovering the arguments</a></li>
-<li><a class="reference internal" href="#dataset-compatibility">Dataset compatibility</a><ul>
-<li><a class="reference internal" href="#if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as">If you already have an HDF5 dataset file it must be formatted as :</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#dataset-compatibility">Dataset compatibility</a></li>
 <li><a class="reference internal" href="#running-on-your-dataset">Running on your dataset</a></li>
 </ul>
 </li>

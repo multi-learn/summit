@@ -14,7 +14,7 @@ In order to understand the process and it's usefulness, let's run some configura
 
 This example will focus only on some lines of the configuration file :
 
-- :yaml:`split:`, controlling the ration of size between the testing set and the training set,
+- :yaml:`split:`, controlling the ratio between the testing set and the training set,
 - :yaml:`hps_type:`, controlling the type of hyper-parameter search,
 - :yaml:`hps_args:`, controlling the parameters of the hyper-parameters search method,
 - :yaml:`nb_folds:`, controlling the number of folds in the cross-validation process.
@@ -23,19 +23,19 @@ Example 2.1 : No hyper-parameter optimization, impact of split size
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
-For this example, we only used a subset of the available classifiers in |platf|, to reduce the computation time and the complexity of the results.
+For this example, we only used a subset of the available classifiers in |platf|, to reduce the computation time and the complexity of the results. Here, we will learn how to define the train/test ratio and its impact on the benchmark.
 
-Each classifier will first be learned on the default hyper-parameters (as in :base_doc:`Example 1 <tutorials/example1.html>`)
+The monoview classifiers used are `Adaboost <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier>`_ and a `decision tree <https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html>`_,
+and the multivew classifier is a late fusion majority vote.
 
-The monoview classifiers that will be used are `Adaboost <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier>`_ and a `decision tree <https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html>`_,
-and the multivew classifier is a late fusion majority vote. In order to use only a subset of the available classifiers,
-three lines in the configuration file are useful :
+In order to use only a subset of the available classifiers, three lines in the configuration file are useful :
 
 - :yaml:`type:` (:base_source:`l45 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L45>`) in which one has to specify which type of algorithms are needed, here we used  ``type: ["monoview","multiview"]``,
 - :yaml:`algos_monoview:` (:base_source:`l47 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L45>`) in which one specifies the names of the monoview algorithms to run, here we used : :yaml:`algos_monoview: ["decision_tree", "adaboost", ]`
 - :yaml:`algos_multiview:` (:base_source:`l49 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L45>`) is the same but with multiview algorithms, here we used : :yaml:`algos_multiview: ["majority_voting_fusion", ]`
 
-In order for the platform to understand the names, the user has to give the **name of the python module** in which the classifier is implemented in the platform.
+.. note::
+    For the platform to understand the names, the user has to give the **name of the python module** in which the classifier is implemented in the platform.
 
 In the config file, the default values for Adaboost's hyper-parameters are :
 
@@ -75,7 +75,12 @@ And for the late fusion majority vote :
 Learning on a few examples
 >>>>>>>>>>>>>>>>>>>>>>>>>>
 
-To run this example run,
+This example focuses on one line of the config file :
+
+* :yaml:`split: 0.80`(:base_source:`l37 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L37>`).
+
+
+To run the first part of this example, run :
 
 .. code-block:: python
 
@@ -109,7 +114,7 @@ You should obtain these scores in ``multiview_platform/examples/results/example_
     :file: ./images/example_2/2_1/high_train_accs.html
 
 
-Here we learned on 80% of the dataset and tested on 20%, so the line in the  :base_source:`config file <multiview_platform/examples/config_files/config_example_2_1_2.yml#L37>` has become ``split: 0.2``.
+Here we learned on 80% of the dataset and tested on 20%, so the line in the  :base_source:`config file <multiview_platform/examples/config_files/config_example_2_1_2.yml#L37>` has become :yaml:`split: 0.2`.
 
 The difference between these two examples is noticeable as even if, while learning on more examples, the performance of the decision trees and the late fusion improved, the performance of Adaboost did not improve as it was already over-fitting on the small train set.
 
@@ -120,7 +125,7 @@ Conclusion
 The split ratio has two consequences :
 
 - Increasing the test set size decreases the information available in the train set size so either it helps to avoid overfitting (Adaboost) or it can hide useful information to the classifier and therefor decrease its performance (decision tree),
-- The second consequence is that increasing train size will increase the benchmark duration as the classifier will have to learn  on more examples, this duration modification is higher if the dataset has high dimensionality and if the algorithm is algorithmically complex.
+- The second consequence is that increasing train size will increase the benchmark duration as the classifiers will have to learn  on more examples, this duration modification is higher if the dataset has high dimensionality and if the algorithms are complex.
 
 .. _random:
 Example 2.2 : Usage of randomized hyper-parameter optimization :
@@ -133,7 +138,9 @@ This is only useful if one knows the optimal combination of hyper-parameter for 
 
 However, most of the time, they are unknown to the user, and then have to be optimized by the platform.
 
-In this example, we will use an randomized search, one of the two hyper-parameter optimization methods implemented in |platf|. To do so we will go through five lines of the config file :
+In this example, we will use a randomized search, one of the two hyper-parameter optimization methods implemented in |platf|.
+
+To do so we will go through five lines of the config file :
 
 - :yaml:`hps_type:`, controlling the type of hyper-parameter search,
 - :yaml:`n_iter:`, controlling the number of random draws during the hyper-parameter search,
@@ -187,7 +194,7 @@ The computing time of this run should be longer than the previous examples (appr
         learn on the whole training set
 
 The instructions inside the brackets are the one that the hyper-parameter
-optimization (HPO) adds.
+optimization adds.
 
 .. note::
 
@@ -198,7 +205,7 @@ optimization (HPO) adds.
 The results
 >>>>>>>>>>>
 
-Here, we used :yaml:`split: 0.8` and the results are far better than :base_doc:`earlier <tutorials/example2.html#learning-on-more-examples>`, as the classifiers are able to fit the task (the multiview classifier improved its accuracy from 0.46 in example 2.1.1 to 0.59).
+Here, we used :yaml:`split: 0.8` and the results are far better than :base_doc:`earlier <tutorials/example2.html#learning-on-more-examples>`, as the classifiers are able to fit the task (the multiview classifier improved its accuracy from 0.46 in Example 2.1.1 to 0.59).
 
 
 .. raw:: html
@@ -210,16 +217,16 @@ The choice made here is to allow a different amount of draws for mono and multiv
 
 .. note::
 
-    The mutliview algorithm used here is late fusion, which means it learns a monoview classifier on each view and then build a naive majority vote. In terms of hyper parameters, the late fusion classifier has to choose one monoview classifier and its HP **for each view**. This is why the :yaml:`equivalent_draws:` parameter is implemented, as with only 5 draws, the late fusion classifier is not able to remotely cover its hyper-parameter space, while the monoview algorithms have a much smaller problem to solve.
+    The mutliview algorithm used here is late fusion, which means it learns a monoview classifier on each view and then build a naive majority vote. In terms of hyper parameters, the late fusion classifier has to choose one monoview classifier and its HP **for each view**. This is why the :yaml:`equivalent_draws:` parameter is implemented, as with only 5 draws, the late fusion classifier is not able to remotely cover its hyper-parameter space, while the monoview algorithms have a much easier problem to solve.
 
 Conclusion
 >>>>>>>>>>
 
-Even if it adds a lot of computing, for most of the tasks, using the HPO is a necessity to be able to get the most of each classifier in terms of performance.
+Even if it adds a lot of computing, for most of the tasks, using the |HPO| is a necessity to be able to get the most of each classifier in terms of performance.
 
-The HPO is a matter of trade-off between classifier performance and computational demand.
+The |HPO| is a matter of trade-off between classifier performance and computational demand.
 For most algorithms the more draws you allow, the closer to ideal the outputted
-hyper-parameter (HP) set one will be, however, many draws mean much longer computational time.
+hyper-parameter set one will be, however, many draws mean much longer computational time.
 
 Similarly, the number of folds has a great importance in estimating the
 performance of a specific HP set, but more folds take also more time, as one has to train more times and on bigger parts of the dataset.
@@ -234,20 +241,20 @@ with different fold/draws settings :
 
 .. note::
 
-    The durations are for reference only as they highly depend on the hardware.
+    The durations are for reference only as they highly depend on hardware.
 
 
 
 
 
-Example 2.3 : Usage of grid search :
+Example 2.3 : Usage of grid search :v
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 In |platf|, it is possible to use a grid search if one has several possible
 hyper-parameter values in mind to test.
 
-In order to set up the grid search one has to provide in the :yaml:`hps_args:`
-argument the names, parameters and values to test. If one wants to try
+In order to set up the grid search we have to provide the
+arguments names and values to test in in the :yaml:`hps_args:` argument. If we want to try
 several depths for a decision tree, and several :yaml:`n_estimators` values for Adaboost,
 
 .. code-block:: yaml
@@ -280,6 +287,15 @@ This will try to run the late fusion classifier with either
 - one decision tree per view, with a maximum depth of 3,
 - one Adaboost per view with 10 base estimators.
 
+To run a grid search with this configuration, run :
+
+.. code-block:: python
+
+   >>> from multiview_platform.execute import execute
+   >>> execute("example 2.3")
+
+It will use :base_source:`this config file <multiview_platform/examples/config_files/config_example_2_3.yml>`.
+
 
 Hyper-parameter report
 <<<<<<<<<<<<<<<<<<<<<<
@@ -308,8 +324,8 @@ So to run a decision tree with these exact parameters, one just has to follow th
 .. code-block:: yaml
 
     hps_type: "None"
-    hps_args:
-        decision_tree:
-            criterion: gini
-            max_depth: 202
-            splitter: random
+    hps_args: {}
+    decision_tree:
+        criterion: gini
+        max_depth: 202
+        splitter: random

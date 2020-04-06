@@ -10,7 +10,7 @@ The bare necessities
 
 At the moment, in order for the platform to work, the dataset must satisfy the following minimum requirements :
 
-- Each example must be described in each view, with no missing data (you can use external tools to fill the gaps, or use only the fully-described examples of you dataset)
+- Each example must be described in each view, with no missing data (you can use external tools to fill the gaps, or use only the fully-described examples of your dataset)
 
 The dataset structure
 ---------------------

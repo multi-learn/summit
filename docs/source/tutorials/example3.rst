@@ -5,7 +5,7 @@ Example 3 : Understanding the statistical iterations
 Context
 -------
 
-In the previous example, we have seen that in order to output meaningful results, the platform splits the input dataset in a training set and a testing set.
+In the previous example, we have seen that in order to output meaningful results, the platform splits the input dataset in a training and a testing set.
 
 However, even if the split is done at random, one can draw a lucky (or unlucky) split and have great (or poor) performance on this specific split.
 
@@ -15,7 +15,7 @@ To settle this issue, the platform can run on multiple splits and return the mea
 How to use it
 -------------
 
-This feature is controlled by a single argument : ``stats_iter:`` in the config file.
+This feature is controlled by a single argument : :yaml:`stats_iter:` in the config file.
 Modifying this argument and setting more than one ``stats_iter`` will slightly modify the result directory's structure.
 Indeed, as the platform will perform a benchmark on multiple train/test split, the result directory will be larger in order to keep all the individual results.
 
@@ -70,7 +70,7 @@ Similarly for the f1-score :
 
 The main difference between this plot an the one from :base_doc:`Example 1 <tutorials/example1.html>` is that here, the scores are means over all the statistical iterations, and the standard deviations are plotted as vertical lines on top of the bars and printed after each score under the bars as "± <std>".
 
-This has also an impact on the error analysis of :base_doc:`Example 1 <tutorials/example1.html>`. Indeed, now it has multiple shades of gray depending on the number of iterations that succeeded or failed on the example :
+This has also an impact on the display of error analysis. Indeed, now it has multiple shades of gray depending on the number of iterations that succeeded or failed on the example :
 
 .. raw:: html
     :file: ./images/example_3/err.html
@@ -89,6 +89,6 @@ Increasing the number of statistical iterations can be costly in terms of comput
 
 .. note::
 
-    Parallelizing |platf|'s statistical iteration can improve its efficiency when using multiple iterations, it is currently work in progress
+    Parallelizing |platf|'s statistical iterations can improve its efficiency when using multiple iterations, it is currently work in progress.
 
 
