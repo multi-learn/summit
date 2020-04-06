@@ -13,7 +13,7 @@ To sum up what you need to run the platform :
 Launching the setup tool
 ------------------------
 
-To install |platf|, it is recommended to use a virtual environment. Then, run in a terminal the following command, in the ``multiview-machine-learning-omis`` directory
+To install |platf|, it is recommended to use a virtual environment. Then, run in a terminal the following command, in the ``summit`` directory
 
 .. code-block:: shell
 

@@ -70,7 +70,7 @@ The config file that will be used in this example is available :base_source:`her
     - :yaml:`name: ["summit_doc"]` (:base_source:`l6 <multiview_platform/examples/config_files/config_example_1.yml#L6>`) uses the plausible simulated dataset,
     - :yaml:`random_state: 42` (:base_source:`l18 <multiview_platform/examples/config_files/config_example_1.yml#L18>`) fixes the seed of the random state for this benchmark, it is useful for reproductibility,
     - :yaml:`full: True`  (:base_source:`l22 <multiview_platform/examples/config_files/config_example_1.yml#L22>`) means the benchmark will use the full dataset,
-    - :yaml:`res_dir: "examples/results/example_1/"` (:base_source:`l26 <multiview_platform/examples/config_files/config_example_1.yml#L26>`) saves the results in ``multiview-machine-learning-omis/multiview_platform/examples/results/example_1``
+    - :yaml:`res_dir: "examples/results/example_1/"` (:base_source:`l26 <multiview_platform/examples/config_files/config_example_1.yml#L26>`) saves the results in ``summit/multiview_platform/examples/results/example_1``
 
 + Then the classification-related arguments :
 

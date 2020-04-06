@@ -195,5 +195,5 @@ rst_prolog = """
 """
 
 
-extlinks = {'base_source': ('https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/-/tree/master/', "base_source"),
-            'base_doc': ('http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/', 'base_doc')}
+extlinks = {'base_source': ('https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/', "base_source"),
+            'base_doc': ('http://baptiste.bauvin.pages.lis-lab.fr/summit/', 'base_doc')}
