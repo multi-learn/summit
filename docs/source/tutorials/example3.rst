@@ -115,14 +115,12 @@ Indeed, the files stored in ``started_1560_12_25-15_42/`` are the ones that show
 For example, ``started_1560_12_25-15_42/*-accuracy_score.html`` looks like :
 
 .. raw:: html
-    .. :file: ./images/example_3/mean_acc.html
-    :file: ./image/fake.html
+    :file: ./images/example_3/mean_acc.html
 
 Similarly for the f1-score :
 
 .. raw:: html
-    .. :file: ./images/example_3/f1.html
-    :file: ./image/fake.html
+    :file: ./images/example_3/f1.html
 
 
 The main difference between this plot an the one from :base_doc:`Example 1 <tutorials/example1.html>` is that here, the scores are means over all the statistical iterations, and the standard deviations are plotted as vertical lines on top of the bars and printed after each score under the bars as "± <std>".
@@ -130,8 +128,7 @@ The main difference between this plot an the one from :base_doc:`Example 1 <tuto
 This has also an impact on the error analysis of :base_doc:`Example 1 <tutorials/example1.html>`. Indeed, now it has multiple shades of gray depending on the number of iterations that succeeded or failed on the example :
 
 .. raw:: html
-    .. :file: ./images/example_3/err.html
-    :file: ./image/fake.html
+    :file: ./images/example_3/err.html
 
 
 Indeed, if we zoom in, we can distinguish them better :

@@ -57,10 +57,10 @@
   <div class="section" id="readme">
 <h1>Readme<a class="headerlink" href="#readme" title="Permalink to this headline">¶</a></h1>
 <a class="reference external image-reference" href="http://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" /></a>
-<a class="reference external image-reference" href="https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/badges/develop/pipeline.svg"><img alt="Build Status" src="https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/badges/develop/pipeline.svg" /></a>
+<a class="reference external image-reference" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/develop/pipeline.svg"><img alt="Build Status" src="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/develop/pipeline.svg" /></a>
 </div>
-<div class="section" id="mono-and-multi-view-classification-benchmark">
-<h1>Mono- and Multi-view classification benchmark<a class="headerlink" href="#mono-and-multi-view-classification-benchmark" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="supervised-multimodal-integration-tool">
+<h1>Supervised MultiModal Integration Tool<a class="headerlink" href="#supervised-multimodal-integration-tool" title="Permalink to this headline">¶</a></h1>
 <p>This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- &amp; multi-view algorithms capacity to classify it correctly.</p>
 <div class="section" id="getting-started">
 <h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
@@ -89,45 +89,40 @@
 </div>
 <div class="section" id="installing">
 <h3>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h3>
-<p>Once you cloned the project from the <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/">gitlab repository</a>, you just have to use :</p>
-<div class="highlight-guess"><div class="highlight"><pre><span></span><span class="err">pip install -e .</span>
+<p>Once you cloned the project from the <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/">gitlab repository</a>, you just have to use :</p>
+<div class="highlight-guess"><div class="highlight"><pre><span></span><span class="err">cd path/to/summit/</span>
+<span class="err">pip install -e .</span>
 </pre></div>
 </div>
-<p>In the <code class="docutils literal"><span class="pre">multiview_machine-learning-omis</span></code> directory to install SuMMIT and its dependencies.</p>
+<p>In the <code class="docutils literal"><span class="pre">summit</span></code> directory to install SuMMIT and its dependencies.</p>
 </div>
 <div class="section" id="running-on-simulated-data">
 <h3>Running on simulated data<a class="headerlink" href="#running-on-simulated-data" title="Permalink to this headline">¶</a></h3>
 <p>In order to run it you&#8217;ll need to try on <strong>simulated</strong> data with the command</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
-<span class="n">execute</span><span class="p">()</span>
+<span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example 1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This will run the first example. For more information about the examples, see the <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/">documentation</a>.
+<p>This will run the first example. For more information about the examples, see the <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/">documentation</a>.
 Results will be stored in the results directory of the installation path :
-<code class="docutils literal"><span class="pre">path/to/install/multiview-machine-learning-omis/multiview_platform/examples/results</span></code>.
-The documentation proposes a detailed interpretation of the results.</p>
+<code class="docutils literal"><span class="pre">path/to/summit/multiview_platform/examples/results</span></code>.
+The documentation proposes a detailed interpretation of the results through 6 <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/">tutorials</a>.</p>
 </div>
 <div class="section" id="discovering-the-arguments">
 <h3>Discovering the arguments<a class="headerlink" href="#discovering-the-arguments" title="Permalink to this headline">¶</a></h3>
 <p>All the arguments of the platform are stored in a YAML config file. Some config files are given as examples.
-The file stored in <code class="docutils literal"><span class="pre">multiview-machine-learning-omis/config_files/config.yml</span></code> is documented and it is highly recommended
+The file stored in <code class="docutils literal"><span class="pre">summit/config_files/config.yml</span></code> is documented and it is highly recommended
 to read it carefully before playing around with the parameters.</p>
 <p>You can create your own configuration file. In order to run the platform with it, run :</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
 <span class="n">execute</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="s2">&quot;/absolute/path/to/your/config/file&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For further information about classifier-specific arguments, see the <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/">documentation</a>.</p>
+<p>For further information about classifier-specific arguments, see the <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/">documentation</a>.</p>
 </div>
 <div class="section" id="dataset-compatibility">
 <h3>Dataset compatibility<a class="headerlink" href="#dataset-compatibility" title="Permalink to this headline">¶</a></h3>
 <p>In order to start a benchmark on your own dataset, you need to format it so SuMMIT can use it.</p>
-<p><span class="raw-html-m2r"><a href="<" title="With `top_directory</span> being the last directory in the <cite>pathF</cite> argument&#8221;&gt;comment&lt;/a&gt;`: &lt;&gt; (#### If you have multiple <code class="docutils literal"><span class="pre">.csv</span></code> files, you must organize them as :</p>
-<ul class="simple">
-<li><code class="docutils literal"><span class="pre">top_directory/database_name-labels.csv</span></code></li>
-<li><code class="docutils literal"><span class="pre">top_directory/database_name-labels-names.csv</span></code></li>
-<li><code class="docutils literal"><span class="pre">top_directory/Views/view_name.csv</span></code> or <code class="docutils literal"><span class="pre">top_directory/Views/view_name-s.csv</span></code> if the view is sparse)</li>
-</ul>
 <div class="section" id="if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as">
 <h4>If you already have an HDF5 dataset file it must be formatted as :<a class="headerlink" href="#if-you-already-have-an-hdf5-dataset-file-it-must-be-formatted-as" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
@@ -163,7 +158,7 @@ pathf: &quot;path/to/your/dataset&quot;
 </pre></div>
 </div>
 <p>This will run a full benchmark on your dataset using all available views and labels.</p>
-<p>It is highly recommended to follow the documentation&#8217;s <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/tutorials/index.html">tutorials</a> to learn the use of each parameter.</p>
+<p>It is highly recommended to follow the documentation&#8217;s <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/index.html">tutorials</a> to learn the use of each parameter.</p>
 </div>
 </div>
 <div class="section" id="author">
@@ -190,7 +185,7 @@ pathf: &quot;path/to/your/dataset&quot;
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Readme</a></li>
-<li><a class="reference internal" href="#mono-and-multi-view-classification-benchmark">Mono- and Multi-view classification benchmark</a><ul>
+<li><a class="reference internal" href="#supervised-multimodal-integration-tool">Supervised MultiModal Integration Tool</a><ul>
 <li><a class="reference internal" href="#getting-started">Getting Started</a><ul>
 <li><a class="reference internal" href="#prerequisites-will-be-automatically-installed">Prerequisites (will be automatically installed)</a></li>
 <li><a class="reference internal" href="#installing">Installing</a></li>
