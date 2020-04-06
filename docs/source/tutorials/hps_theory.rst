@@ -43,7 +43,7 @@ Understanding hyper-parameter optimization
 
 As hyper-parameters are task dependant, there are three ways in the platform to set their value :
 
-- If you know the value (or a set of values), specify them at the end of the config file for each algorithm you want to test, and use :yaml:`hps_type: 'None'` in the `config file <https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/-/blob/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L61>`_. This will bypass the optimization process to run the algorithm on the specified values.
+- If you know the value (or a set of values), specify them at the end of the config file for each algorithm you want to test, and use :yaml:`hps_type: 'None'` in the :base_source:`config file <multiview_platform/examples/config_files/config_example_2_1_1.yml#L61>`. This will bypass the optimization process to run the algorithm on the specified values.
 - If you have several possible values in mind, specify them in the config file and use ``hps_type: 'Grid'`` to run a grid search on the possible values.
 - If you have no ideas on the values, the platform proposes a random search for hyper-parameter optimization.
 

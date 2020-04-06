@@ -1,5 +1,5 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
-[![Build Status](https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/badges/develop/pipeline.svg)](https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/badges/develop/pipeline.svg)
+[![Build Status](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/develop/pipeline.svg)](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/develop/pipeline.svg)
 # Supervised MultiModal Integration Tool
 
 This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- & multi-view algorithms capacity to classify it correctly.
@@ -31,13 +31,13 @@ And the following python modules :
 
 ### Installing
 
-Once you cloned the project from the [gitlab repository](https://gitlab.lis-lab.fr/baptiste.bauvin/multiview-machine-learning-omis/), you just have to use :  
+Once you cloned the project from the [gitlab repository](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/), you just have to use :  
 
 ```
-cd path/to/multiview-machine-learning-omis/
+cd path/to/summit/
 pip install -e .
 ```
-In the `multiview-machine-learning-omis` directory to install SuMMIT and its dependencies.
+In the `summit` directory to install SuMMIT and its dependencies.
 
 ### Running on simulated data
 
@@ -46,15 +46,15 @@ In order to run it you'll need to try on **simulated** data with the command
 from multiview_platform.execute import execute
 execute()
 ```
-This will run the first example. For more information about the examples, see the [documentation](http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/).
+This will run the first example. For more information about the examples, see the [documentation](http://baptiste.bauvin.pages.lis-lab.fr/summit/).
 Results will be stored in the results directory of the installation path : 
-`path/to/install/multiview-machine-learning-omis/multiview_platform/examples/results`.
+`path/to/install/summit/multiview_platform/examples/results`.
 The documentation proposes a detailed interpretation of the results. 
 
 ### Discovering the arguments
 
 All the arguments of the platform are stored in a YAML config file. Some config files are given as examples. 
-The file stored in `multiview-machine-learning-omis/config_files/config.yml` is documented and it is highly recommended
+The file stored in `summit/config_files/config.yml` is documented and it is highly recommended
 to read it carefully before playing around with the parameters.   
 
 You can create your own configuration file. In order to run the platform with it, run : 
@@ -63,7 +63,7 @@ from multiview_platform.execute import execute
 execute(config_path="/absolute/path/to/your/config/file")
 ```
 
-For further information about classifier-specific arguments, see the [documentation](http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/). 
+For further information about classifier-specific arguments, see the [documentation](http://baptiste.bauvin.pages.lis-lab.fr/summit/). 
  
 
 ### Dataset compatibility
@@ -109,7 +109,7 @@ pathf: "path/to/your/dataset"
 ```
 This will run a full benchmark on your dataset using all available views and labels.
  
-It is highly recommended to follow the documentation's [tutorials](http://baptiste.bauvin.pages.lis-lab.fr/multiview-machine-learning-omis/tutorials/index.html) to learn the use of each parameter. 
+It is highly recommended to follow the documentation's [tutorials](http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/index.html) to learn the use of each parameter. 
  
 
 ## Author
