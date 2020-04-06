@@ -63,8 +63,8 @@ Once one has the scores of each classifier, an interesting analysis could be to 
 This is possible with another result analysis, available in :base_source:`png <multiview_platform/examples/results/example_0/digits/result_example/digits-error_analysis_2D.png>`, :base_source:`csv <multiview_platform/examples/results/example_0/digits/result_example/digits_2D_plot_data.csv>` and :base_source:`html <multiview_platform/examples/results/example_0/digits/result_example/digits-error_analysis_2D.html>` :
 
 .. raw:: html
-    .. :file: images/example_0/err.html
     :file: images/fake.html
+    .. :file: images/example_0/err.html
 
 This figure represents a matrix, with the examples in rows and classifiers in columns, with a white rectangle on row i, column j if classifier j succeerecded to classify example i.
 
