@@ -1,6 +1,6 @@
 # run the test suite
 tests:
-    image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/multiview-machine-learning-omis/ubuntu:18.04
+    image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/summit/ubuntu:18.04
     tags:
         - docker
     script:
@@ -9,7 +9,7 @@ tests:
 
 # generate the documentation
 doc:
-    image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/multiview-machine-learning-omis/ubuntu:18.04
+    image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/summit/ubuntu:18.04
     tags:
         - docker
     only:
@@ -30,7 +30,7 @@ doc:
 
 # project public
 pages:
-    image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/multiview-machine-learning-omis/ubuntu:18.04
+    image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/summit/ubuntu:18.04
     tags:
         - docker
     only:
