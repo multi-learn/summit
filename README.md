@@ -1,6 +1,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 [![Build Status](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/develop/pipeline.svg)](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/develop/pipeline.svg)
-# Supervised MultiModal Integration Tool
+# Supervised MultiModal Integration Tool's Readme
 
 This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- & multi-view algorithms capacity to classify it correctly.
 
@@ -46,10 +46,13 @@ In order to run it you'll need to try on **simulated** data with the command
 from multiview_platform.execute import execute
 execute("example 1")
 ```
-This will run the first example. For more information about the examples, see the [documentation](http://baptiste.bauvin.pages.lis-lab.fr/summit/).
+This will run the first example. 
+
+For more information about the examples, see the [documentation](http://baptiste.bauvin.pages.lis-lab.fr/summit/).
 Results will be stored in the results directory of the installation path : 
 `path/to/summit/multiview_platform/examples/results`.
-The documentation proposes a detailed interpretation of the results through 6 [tutorials](http://baptiste.bauvin.pages.lis-lab.fr/summit/). 
+
+The documentation proposes a detailed interpretation of the results through [6 tutorials](http://baptiste.bauvin.pages.lis-lab.fr/summit/). 
 
 ### Discovering the arguments
 
@@ -68,27 +71,9 @@ For further information about classifier-specific arguments, see the [documentat
 
 ### Dataset compatibility
 
-In order to start a benchmark on your own dataset, you need to format it so SuMMIT can use it. 
+In order to start a benchmark on your own dataset, you need to format it so SuMMIT can use it. To do so, a [python script](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/blob/master/format_dataset.py) is provided.
 
-##### If you already have an HDF5 dataset file it must be formatted as : 
-
-* One dataset for each view called `ViewI` with `I` being the view index with 2 attribures : 
-    * `attrs["name"]` a string for the name of the view
-    * `attrs["sparse"]` a boolean specifying whether the view is sparse or not (WIP)
- 
-
-* One dataset for the labels called `Labels` with one attribute : 
-    * `attrs["names"]` a list of strings encoded in utf-8 naming the labels in the right order
-
-
-* One group for the additional data called `Metadata` containing at least 1 dataset :
-    * `"example_ids"`, a numpy array of type `S100`, with the ids of the examples in the right order
-* And three attributes : 
-    * `attrs["nbView"]` an int counting the total number of views in the dataset
-    * `attrs["nbClass"]` an int counting the total number of different labels in the dataset
-    * `attrs["datasetLength"]` an int counting the total number of examples in the dataset
-
-The `format_dataset.py` file is documented and can be used to format a multiview dataset in a SuMMIT-compatible HDF5 file.
+For more information, see [Example 6](http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/example4.html)
 
 ### Running on your dataset 
 
