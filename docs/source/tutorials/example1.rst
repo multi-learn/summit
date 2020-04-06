@@ -163,7 +163,6 @@ These files contain the scores of each classifier for the accuracy metric, order
 The html version is as follows :
 
 .. raw:: html
-    .. :file: images/fake.html
     :file: ./images/example_1/accuracy.html
 
 This is a bar plot showing the score on the training set (light gray), and testing set (black) for each monoview classifier on each view and or each multiview classifier.
@@ -175,7 +174,6 @@ The ``.csv`` file is a matrix with the score on train stored in the first row an
 A similar graph ``*-accuracy_score*-class.html``, reports the error of each classifier on each class.
 
 .. raw:: html
-    .. :file: images/fake.html
     :file: ./images/example_1/accuracy_class.html
 
 Here, for each classifier, 8 bars are plotted, one for each class. It is clear that for the monoview algorithms, in views 2 and 3, the third class is difficult, as showed in the error matrix.
@@ -196,8 +194,7 @@ The examples labelled as ``Mutual_error_*`` are mis-classified by most of the al
     It is highly recommended to zoom in the html figure to see each row.
 
 .. raw:: html
-    .. :file: ./images/example_1/error_2d.html
-    :file: images/fake.html
+    :file: ./images/example_1/error_2d.html
 
 
 
@@ -223,8 +220,7 @@ The data used to generate this matrix is available in ``*-2D_plot_data.csv``
 This file is a different way to visualize the same information as the two previous ones. Indeed, it is a bar plot, with a bar for each example, counting the ratio of classifiers that failed to classify this particular example.
 
 .. raw:: html
-    .. :file: ./images/example_1/bar.html
-    :file: images/fake.html
+    :file: ./images/example_1/bar.html
 
 All the spikes are the mutual error examples, the complementary ones are the 0.33 bars and the redundant are the empty spaces.
 

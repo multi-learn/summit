@@ -203,7 +203,6 @@ Here, we used :yaml:`split: 0.8` and the results are far better than :base_doc:`
 
 .. raw:: html
     :file: ./images/example_2/2_2/acc_random_search.html
-    .. :file: images/fake.html
 
 
 
@@ -231,8 +230,7 @@ with different fold/draws settings :
 
 
 .. raw:: html
-    .. :file: ./images/durations.html
-    :file: images/fake.html
+    :file: ./images/durations.html
 
 .. note::
 

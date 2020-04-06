@@ -44,12 +44,12 @@ In the `summit` directory to install SuMMIT and its dependencies.
 In order to run it you'll need to try on **simulated** data with the command
 ```python 
 from multiview_platform.execute import execute
-execute()
+execute("example 1")
 ```
 This will run the first example. For more information about the examples, see the [documentation](http://baptiste.bauvin.pages.lis-lab.fr/summit/).
 Results will be stored in the results directory of the installation path : 
-`path/to/install/summit/multiview_platform/examples/results`.
-The documentation proposes a detailed interpretation of the results. 
+`path/to/summit/multiview_platform/examples/results`.
+The documentation proposes a detailed interpretation of the results through 6 [tutorials](http://baptiste.bauvin.pages.lis-lab.fr/summit/). 
 
 ### Discovering the arguments
 
@@ -70,15 +70,6 @@ For further information about classifier-specific arguments, see the [documentat
 
 In order to start a benchmark on your own dataset, you need to format it so SuMMIT can use it. 
 
-[comment]: <> (You can have either a directory containing `.csv` files or a HDF5 file.) 
-
-[comment]: <> (#### If you have multiple `.csv` files, you must organize them as : 
-* `top_directory/database_name-labels.csv`
-* `top_directory/database_name-labels-names.csv`
-* `top_directory/Views/view_name.csv` or `top_directory/Views/view_name-s.csv` if the view is sparse)
-
-[comment]: <> (With `top_directory` being the last directory in the `pathF` argument)
- 
 ##### If you already have an HDF5 dataset file it must be formatted as : 
 * One dataset for each view called `ViewI` with `I` being the view index with 2 attribures : 
     * `attrs["name"]` a string for the name of the view
