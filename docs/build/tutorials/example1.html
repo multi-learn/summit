@@ -209,7 +209,7 @@
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;example 1&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The execution should take less than five minutes. We will first analyze the results and parse through the information the platform output.</p>
+<p>The execution should take less than one minute. We will first analyze the results and parse through the information the platform outputs.</p>
 <p><strong>Understanding the results</strong></p>
 <p>The result structure can be startling at first, but, as the platform provides a lot of information, it has to be organized.</p>
 <p>The results are stored in <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/results/example_1/">a directory</a>. Here, you will find a directory with the name of the database used for the benchmark, here : <code class="docutils literal"><span class="pre">summit_doc/</span></code></p>
@@ -226,6 +226,10 @@
 #myUL {
   margin: 0;
   padding: 0;
+}
+
+#allUls {
+
 }
 
 .caret {
@@ -272,10 +276,12 @@
 
 .nested {
   display: none;
+  list-style-type: none;
 }
 
 .active {
   display: block;
+  list-style-type: none;
 }
 
 .plif {

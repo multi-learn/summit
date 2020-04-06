@@ -192,6 +192,10 @@ rst_prolog = """
     :language: yaml
     
 .. |platf| replace:: SuMMIT
+
+.. |HP| replace:: hyper-parameter
+
+.. |HPO| replace hyper-parameters optimization
 """
 
 
