@@ -4,19 +4,11 @@ Example 0 : Getting started with |platf| on digits
 
 In the example, we will run |platf| on a famous dataset : `digits <https://scikit-learn.org/stable/auto_examples/datasets/plot_digits_last_image.html>`_, available, already formatted :base_source:`in the project <multiview_platform/examples/data/>` .
 
-<<<<<<< HEAD
-This dataset contains available :base_source:`hdf5 <multiview_platform/examples/data/digit.hdf5>` 3 views:
-
-- view 0: (1797 samples, 64 features) with colors values
-- view 1: (1797 samples, 64 features) with gradiant on axis 0
-- view 2: (1797 samples, 64 features) with gradiant on axis 1
-=======
 This dataset consists in 3 views:
 
 - view 0: (1797 samples, 64 features) with colors values,
 - view 1: (1797 samples, 64 features) with gradiant on axis 0,
 - view 2: (1797 samples, 64 features) with gradiant on axis 1.
->>>>>>> develop
 
 
 Running |platf| on digits
