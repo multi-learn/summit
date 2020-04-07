@@ -21,7 +21,7 @@ nb_cores: 1
 # Used to run the benchmark on the full dataset
 full: True
 # Used to be able to run more than one benchmark per minute
-debug: False
+debug: True
 # The directory in which the results will be stored, an absolute path is advised
 res_dir: "examples/results/example_1/"
 # If an error occurs in a classifier, if track_tracebacks is set to True, the
@@ -32,7 +32,7 @@ track_tracebacks: True
 # All the classification-realted configuration options
 
 # The ratio of test examples/number of train examples
-split: 0.25
+split: 0.85
 # The nubmer of folds in the cross validation process when hyper-paramter optimization is performed
 nb_folds: 2
 # The number of classes to select in the dataset
@@ -69,7 +69,7 @@ weighted_linear_early_fusion:
   monoview_classifier_name: "decision_tree"
   monoview_classifier_config:
     decision_tree:
-      max_depth: 6
+      max_depth: 3
 
 weighted_linear_late_fusion:
   classifiers_names: "decision_tree"
