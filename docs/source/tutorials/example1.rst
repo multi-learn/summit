@@ -77,7 +77,7 @@ The config file that will be used in this example is available :base_source:`her
     - :yaml:`split: 0.25` (:base_source:`l35 <multiview_platform/examples/config_files/config_example_1.yml#L35>`) means that 75% of the dataset will be used to test the different classifiers and 25% to train them,
     - :yaml:`type: ["monoview", "multiview"]` (:base_source:`l43 <multiview_platform/examples/config_files/config_example_1.yml#L43>`) allows for monoview and multiview algorithms to be used in the benchmark,
     - :yaml:`algos_monoview: ["decision_tree"]` (:base_source:`l45 <multiview_platform/examples/config_files/config_example_1.yml#L45>`) runs a Decision tree on each view,
-    - :yaml:`algos_multiview: ["weighted_linear_early_fusion", "weighted_linear_late_fusion"]` (:base_source:`l47 <multiview_platform/examples/config_files/config_example_1.yml#L47>`) runs a late and an early fusion,
+    - :yaml:`algos_multiview: ["weighted_linear_late_fusion"]` (:base_source:`l47 <multiview_platform/examples/config_files/config_example_1.yml#L47>`) runs a late fusion,
     - The metrics configuration (:base_source:`l52-55 <multiview_platform/examples/config_files/config_example_1.yml#L52>`) ::
 
                         metrics:
@@ -128,7 +128,7 @@ The html version is as follows :
 
 This is a bar plot showing the score on the training set (light gray), and testing set (black) for each monoview classifier on each view and or each multiview classifier.
 
-Here, the generated dataset is build to introduce some complementarity amongst the views. As a consequence, the two multiview algorithms, even if they are naive, have a better score than the decision trees.
+Here, the generated dataset is build to introduce some complementarity amongst the views. As a consequence, the multiview algorithm has better performance than the monoview ones, but the difference is not that clear, which means that the hyper-parameters are maybe not optimal.
 
 The ``.csv`` file is a matrix with the score on train stored in the first row and the score on test stored in the second one. Each classifier is presented in a column. It is loadable with pandas.
 
@@ -137,7 +137,7 @@ A similar graph ``*-accuracy_score*-class.html``, reports the error of each clas
 .. raw:: html
     :file: ./images/example_1/accuracy_class.html
 
-Here, for each classifier, 8 bars are plotted, one for each class. It is clear that for the monoview algorithms, in views 2 and 3, the third class is difficult, as showed in the error matrix.
+Here, for each classifier, 8 bars are plotted, one for each class. It is clear that for the monoview algorithms, in view 2, the third class is difficult, as showed in the error matrix. However, the results show some difference with the error matrix. This sould be due to a specific train-test split. We will see alter how to avoid this issue.
 
 
 ``*-error_analysis_2D.png`` and ``*-error_analysis_2D.html``

@@ -195,7 +195,7 @@ rst_prolog = """
 
 .. |HP| replace:: hyper-parameter
 
-.. |HPO| replace hyper-parameters optimization
+.. |HPO| replace:: hyper-parameters optimization
 """
 
 

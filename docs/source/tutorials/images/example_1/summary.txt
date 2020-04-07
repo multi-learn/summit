@@ -3,53 +3,53 @@ Classification on doc_summit for generated_view_1 with decision_tree.
 Database configuration : 
 	- Database name : doc_summit
 	- View name : generated_view_1	 View shape : (296, 3)
-	- Learning Rate : 0.75
+	- Learning Rate : 0.6486486486486487
 	- Labels used : label_1, label_2, label_3, label_4, label_5, label_6, label_7, label_8
 	- Number of cross validation folds : 2
 
-Classifier configuration : 
-	- DecisionTree with max_depth : 3, criterion : gini, splitter : best, random_state : RandomState(MT19937)
-	- Executed on 1 core(s) 
+Classifier configuration :
+	- DecisionTree with max_depth : 3, criterion : gini, splitter : best, random_state : <mtrand.RandomState object at 0x7f01ddfc24c8>
+	- Executed on 1 core(s)
 
 
-	For Accuracy score using {}, (higher is better) : 
-		- Score on train : 0.5765765765765766
-		- Score on test : 0.5540540540540541
+	For Accuracy score using {}, (higher is better) :
+		- Score on train : 0.5729166666666666
+		- Score on test : 0.47115384615384615
 
-	For F1 score using average: micro, {} (higher is better) : 
-		- Score on train : 0.5765765765765766
-		- Score on test : 0.5540540540540541
+	For F1 score using average: micro, {} (higher is better) :
+		- Score on train : 0.5729166666666666
+		- Score on test : 0.47115384615384615
 
-Test set confusion matrix : 
+Test set confusion matrix :
 
 ╒═════════╤═══════════╤═══════════╤═══════════╤═══════════╤═══════════╤═══════════╤═══════════╤═══════════╕
 │         │   label_1 │   label_2 │   label_3 │   label_4 │   label_5 │   label_6 │   label_7 │   label_8 │
 ╞═════════╪═══════════╪═══════════╪═══════════╪═══════════╪═══════════╪═══════════╪═══════════╪═══════════╡
-│ label_1 │         5 │         0 │         2 │         0 │         1 │         1 │         0 │         0 │
+│ label_1 │         7 │         0 │         1 │         1 │         1 │         2 │         1 │         0 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_2 │         1 │         3 │         1 │         0 │         1 │         1 │         1 │         1 │
+│ label_2 │         3 │         4 │         0 │         0 │         1 │         3 │         1 │         1 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_3 │         0 │         1 │         4 │         2 │         1 │         1 │         0 │         0 │
+│ label_3 │         3 │         2 │         3 │         0 │         2 │         1 │         0 │         2 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_4 │         2 │         0 │         1 │         5 │         1 │         1 │         0 │         0 │
+│ label_4 │         3 │         0 │         0 │         7 │         1 │         2 │         0 │         0 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_5 │         0 │         0 │         0 │         1 │         7 │         0 │         0 │         1 │
+│ label_5 │         0 │         0 │         0 │         1 │        10 │         1 │         0 │         1 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_6 │         0 │         0 │         0 │         1 │         1 │         7 │         0 │         0 │
+│ label_6 │         1 │         1 │         0 │         2 │         1 │         8 │         0 │         0 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_7 │         1 │         1 │         0 │         0 │         2 │         1 │         4 │         1 │
+│ label_7 │         1 │         2 │         2 │         0 │         4 │         0 │         3 │         1 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_8 │         0 │         0 │         2 │         0 │         0 │         0 │         1 │         6 │
+│ label_8 │         1 │         1 │         1 │         0 │         1 │         1 │         1 │         7 │
 ╘═════════╧═══════════╧═══════════╧═══════════╧═══════════╧═══════════╧═══════════╧═══════════╧═══════════╛
 
 
 
  Classification took 0:00:00
 
- Classifier Interpretation : 
-First featrue : 
+ Classifier Interpretation :
+First featrue :
 	2 <= 8.439512252807617
-Feature importances : 
-- Feature index : 0, feature importance : 0.4223852373262582
-- Feature index : 1, feature importance : 0.4039223639779588
-- Feature index : 2, feature importance : 0.17369239869578307
+Feature importances :
+- Feature index : 0, feature importance : 0.42752552366689905
+- Feature index : 1, feature importance : 0.4031352121725926
+- Feature index : 2, feature importance : 0.1693392641605082
