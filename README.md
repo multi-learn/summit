@@ -92,8 +92,6 @@ It is highly recommended to follow the documentation's [tutorials](http://baptis
 ## Author
 
 * **Baptiste BAUVIN**
-
-### Contributors
-
 * **Dominique BENIELLI**
 * **Alexis PROD'HOMME**
+

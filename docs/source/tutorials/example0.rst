@@ -14,7 +14,7 @@ This dataset consists in 3 views:
 Running |platf| on digits
 -------------------------
 
-To run |platf| on digits, one has to run :
+To run |platf| on digits, we have to run :
 
 .. code-block:: python
 
@@ -25,9 +25,9 @@ This will start a benchmark with this :base_source:`config file <multiview_platf
 
 By running |platf| with this configuration, one runs :
 
-- One decision tree on each view,
-- One early fusion multiview classifier that learns on the concatenation of all the views,
-- One late fusion classifier that learn one monoview lassifier by view and aggregates their decisions in a majority vote.
+- one decision tree on each view,
+- one early fusion multiview classifier that learns on the concatenation of all the views,
+- one late fusion classifier that learn one monoview lassifier by view and aggregates their decisions in a majority vote.
 
 
 
