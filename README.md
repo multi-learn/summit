@@ -88,11 +88,11 @@ This will run a full benchmark on your dataset using all available views and lab
 It is highly recommended to follow the documentation's [tutorials](http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/index.html) to learn the use of each parameter. 
  
 
-## Author
+## Authors
 
 * **Baptiste BAUVIN**
-
-### Contributors
-
 * **Dominique BENIELLI**
+
+## Restless beta-tester
+
 * **Alexis PROD'HOMME**
