@@ -32,7 +32,7 @@ In order to use only a subset of the available classifiers, three lines in the c
 
 - :yaml:`type:` (:base_source:`l45 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L45>`) in which one has to specify which type of algorithms are needed, here we used  ``type: ["monoview","multiview"]``,
 - :yaml:`algos_monoview:` (:base_source:`l47 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L45>`) in which one specifies the names of the monoview algorithms to run, here we used : :yaml:`algos_monoview: ["decision_tree", "adaboost", ]`
-- :yaml:`algos_multiview:` (:base_source:`l49 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L45>`) is the same but with multiview algorithms, here we used : :yaml:`algos_multiview: ["majority_voting_fusion", ]`
+- :yaml:`algos_multiview:` (:base_source:`l49 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L45>`) is the same but with multiview algorithms, here we used : :yaml:`algos_multiview: ["weighted_linear_late_fusion", ]`
 
 .. note::
     For the platform to understand the names, the user has to give the **name of the python module** in which the classifier is implemented in the platform.
@@ -58,11 +58,11 @@ For the decision tree :
 
 (`sklearn's decision tree <https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html>`_)
 
-And for the late fusion majority vote :
+And for the late fusion :
 
 .. code-block:: yaml
 
-    majority_voting_fusion:
+    weighted_linear_late_fusion:
         classifier_names: ["decision_tree", ]
         classifier_configs:
             decision_tree:
@@ -77,7 +77,7 @@ Learning on a few examples
 
 This example focuses on one line of the config file :
 
-* :yaml:`split: 0.80`(:base_source:`l37 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L37>`).
+* :yaml:`split: 0.80` (:base_source:`l37 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L37>`).
 
 
 To run the first part of this example, run :
