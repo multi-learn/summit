@@ -1,36 +1,25 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Example 1 : First big step with SuMMIT &#8212; MultiviewPlatform 0 documentation</title>
-    
+    <meta charset="utf-8" />
+    <title>Example 1 : First big step with SuMMIT &#8212; SuMMIT 0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/plotly_js.js"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="MultiviewPlatform 0 documentation" href="../index.html" />
-    <link rel="up" title="SuMMIT Tutorials" href="index.html" />
     <link rel="next" title="Example 2 : Understanding the hyper-parameter optimization" href="example2.html" />
     <link rel="prev" title="Example 0 : Getting started with SuMMIT on digits" href="example0.html" /> 
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -46,7 +35,7 @@
         <li class="right" >
           <a href="example0.html" title="Example 0 : Getting started with SuMMIT on digits"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">MultiviewPlatform 0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SuMMIT 0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">SuMMIT Tutorials</a> &#187;</li> 
       </ul>
     </div>  
@@ -67,94 +56,91 @@
 <div class="section" id="a-generated-dataset-to-rule-them-all">
 <h2>A generated dataset to rule them all<a class="headerlink" href="#a-generated-dataset-to-rule-them-all" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/data/doc_summit.hdf5">dataset</a> that will be used in the examples consists in</p>
-<ul>
-<li><dl class="first docutils">
-<dt>500 examples that are either</dt>
-<dd><ul class="first last simple">
-<li>mis-described by all the views (labelled <code class="docutils literal"><span class="pre">Mutual_error_*</span></code>),</li>
-<li>well-described by all the views (labelled <code class="docutils literal"><span class="pre">Redundant_*</span></code>),</li>
-<li>well-described by the majority of the views (labelled <code class="docutils literal"><span class="pre">Complementary_*</span></code>),</li>
-<li>randomly well- or mis-described by the views (labelled <code class="docutils literal"><span class="pre">example_*</span></code>).</li>
+<ul class="simple">
+<li><dl class="simple">
+<dt>500 examples that are either</dt><dd><ul>
+<li><p>mis-described by all the views (labelled <code class="docutils literal notranslate"><span class="pre">Mutual_error_*</span></code>),</p></li>
+<li><p>well-described by all the views (labelled <code class="docutils literal notranslate"><span class="pre">Redundant_*</span></code>),</p></li>
+<li><p>well-described by the majority of the views (labelled <code class="docutils literal notranslate"><span class="pre">Complementary_*</span></code>),</p></li>
+<li><p>randomly well- or mis-described by the views (labelled <code class="docutils literal notranslate"><span class="pre">example_*</span></code>).</p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><p class="first">8 balanced classes named <code class="docutils literal"><span class="pre">'label_1'</span></code>, ..., <code class="docutils literal"><span class="pre">'label_8'</span></code>,</p>
-</li>
-<li><dl class="first docutils">
-<dt>4 views named <code class="docutils literal"><span class="pre">'generated_view_1'</span></code>, ..., <code class="docutils literal"><span class="pre">'generated_view_4'</span></code>,</dt>
-<dd><ul class="first last simple">
-<li>each view consisting in 3 features.</li>
+<li><p>8 balanced classes named <code class="docutils literal notranslate"><span class="pre">'label_1'</span></code>, …, <code class="docutils literal notranslate"><span class="pre">'label_8'</span></code>,</p></li>
+<li><dl class="simple">
+<dt>4 views named <code class="docutils literal notranslate"><span class="pre">'generated_view_1'</span></code>, …, <code class="docutils literal notranslate"><span class="pre">'generated_view_4'</span></code>,</dt><dd><ul>
+<li><p>each view consisting in 3 features.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
 <p>It has been parametrized with the following error matrix that encapsulates the quantity of information available in each view for each label :</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="22%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
+<col style="width: 22%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">&nbsp;</th>
-<th class="head">View 1</th>
-<th class="head">View 2</th>
-<th class="head">View 3</th>
-<th class="head">View 4</th>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>View 1</p></th>
+<th class="head"><p>View 2</p></th>
+<th class="head"><p>View 3</p></th>
+<th class="head"><p>View 4</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>label_1</td>
-<td>0.40</td>
-<td>0.40</td>
-<td>0.40</td>
-<td>0.40</td>
+<tbody>
+<tr class="row-even"><td><p>label_1</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
 </tr>
-<tr class="row-odd"><td>label_2</td>
-<td>0.55</td>
-<td>0.40</td>
-<td>0.40</td>
-<td>0.40</td>
+<tr class="row-odd"><td><p>label_2</p></td>
+<td><p>0.55</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
 </tr>
-<tr class="row-even"><td>label_3</td>
-<td>0.40</td>
-<td>0.50</td>
-<td>0.60</td>
-<td>0.55</td>
+<tr class="row-even"><td><p>label_3</p></td>
+<td><p>0.40</p></td>
+<td><p>0.50</p></td>
+<td><p>0.60</p></td>
+<td><p>0.55</p></td>
 </tr>
-<tr class="row-odd"><td>label_4</td>
-<td>0.40</td>
-<td>0.50</td>
-<td>0.50</td>
-<td>0.40</td>
+<tr class="row-odd"><td><p>label_4</p></td>
+<td><p>0.40</p></td>
+<td><p>0.50</p></td>
+<td><p>0.50</p></td>
+<td><p>0.40</p></td>
 </tr>
-<tr class="row-even"><td>label_5</td>
-<td>0.40</td>
-<td>0.40</td>
-<td>0.40</td>
-<td>0.40</td>
+<tr class="row-even"><td><p>label_5</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
 </tr>
-<tr class="row-odd"><td>label_6</td>
-<td>0.40</td>
-<td>0.40</td>
-<td>0.40</td>
-<td>0.40</td>
+<tr class="row-odd"><td><p>label_6</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
 </tr>
-<tr class="row-even"><td>label_7</td>
-<td>0.40</td>
-<td>0.40</td>
-<td>0.40</td>
-<td>0.40</td>
+<tr class="row-even"><td><p>label_7</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
 </tr>
-<tr class="row-odd"><td>label_7</td>
-<td>0.40</td>
-<td>0.40</td>
-<td>0.40</td>
-<td>0.40</td>
+<tr class="row-odd"><td><p>label_7</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
+<td><p>0.40</p></td>
 </tr>
 </tbody>
 </table>
@@ -162,37 +148,33 @@
 </div>
 <div class="section" id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
-<p><strong>Importing the platform&#8217;s execution function</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<p><strong>Importing the platform’s execution function</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
 </pre></div>
 </div>
 <p><strong>Understanding the config file</strong></p>
 <p>The config file that will be used in this example is available <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml">here</a>, let us decrypt the main arguments :</p>
 <ul>
-<li><p class="first">The first part regroups the basics :</p>
+<li><p>The first part regroups the basics :</p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="code yaml docutils literal"><span class="name tag"><span class="pre">log</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L4">l4</a>) allows to print the log in the terminal,</li>
-<li><code class="code yaml docutils literal"><span class="name tag"><span class="pre">name</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">&quot;summit_doc&quot;</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L6">l6</a>) uses the plausible simulated dataset,</li>
-<li><code class="code yaml docutils literal"><span class="name tag"><span class="pre">random_state</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">42</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L18">l18</a>) fixes the seed of the random state for this benchmark, it is useful for reproductibility,</li>
-<li><code class="code yaml docutils literal"><span class="name tag"><span class="pre">full</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code>  (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L22">l22</a>) means the benchmark will use the full dataset,</li>
-<li><code class="code yaml docutils literal"><span class="name tag"><span class="pre">res_dir</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal string"><span class="pre">&quot;examples/results/example_1/&quot;</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L26">l26</a>) saves the results in <code class="docutils literal"><span class="pre">summit/multiview_platform/examples/results/example_1</span></code></li>
+<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">log</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L4">l4</a>) allows to print the log in the terminal,</p></li>
+<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">name</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“summit_doc”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L6">l6</a>) uses the plausible simulated dataset,</p></li>
+<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">random_state</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">42</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L18">l18</a>) fixes the seed of the random state for this benchmark, it is useful for reproductibility,</p></li>
+<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">full</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code>  (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L22">l22</a>) means the benchmark will use the full dataset,</p></li>
+<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">res_dir</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal string"><span class="pre">“examples/results/example_1/”</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L26">l26</a>) saves the results in <code class="docutils literal notranslate"><span class="pre">summit/multiview_platform/examples/results/example_1</span></code></p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first">Then the classification-related arguments :</p>
+<li><p>Then the classification-related arguments :</p>
 <blockquote>
 <div><ul>
-<li><p class="first"><code class="code yaml docutils literal"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.25</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L35">l35</a>) means that 75% of the dataset will be used to test the different classifiers and 25% to train them,</p>
-</li>
-<li><p class="first"><code class="code yaml docutils literal"><span class="name tag"><span class="pre">type</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">&quot;monoview&quot;</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="literal string"><span class="pre">&quot;multiview&quot;</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L43">l43</a>) allows for monoview and multiview algorithms to be used in the benchmark,</p>
-</li>
-<li><p class="first"><code class="code yaml docutils literal"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">&quot;decision_tree&quot;</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L45">l45</a>) runs a Decision tree on each view,</p>
-</li>
-<li><p class="first"><code class="code yaml docutils literal"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">&quot;weighted_linear_early_fusion&quot;</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="literal string"><span class="pre">&quot;weighted_linear_late_fusion&quot;</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L47">l47</a>) runs a late and an early fusion,</p>
-</li>
-<li><p class="first">The metrics configuration (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L52">l52-55</a>)</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">metrics</span><span class="p">:</span>
+<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.25</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L35">l35</a>) means that 75% of the dataset will be used to test the different classifiers and 25% to train them,</p></li>
+<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">type</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“monoview”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="literal string"><span class="pre">“multiview”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L43">l43</a>) allows for monoview and multiview algorithms to be used in the benchmark,</p></li>
+<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“decision_tree”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L45">l45</a>) runs a Decision tree on each view,</p></li>
+<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“weighted_linear_late_fusion”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L47">l47</a>) runs a late fusion,</p></li>
+<li><p>The metrics configuration (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L52">l52-55</a>)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metrics</span><span class="p">:</span>
   <span class="n">accuracy_score</span><span class="p">:{}</span>
   <span class="n">f1_score</span><span class="p">:</span>
     <span class="n">average</span><span class="p">:</span><span class="s2">&quot;micro&quot;</span>
@@ -206,14 +188,14 @@
 </ul>
 <p><strong>Start the benchmark</strong></p>
 <p>During the whole benchmark, the log file will be printed in the terminal. To start the benchmark, run :</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;example 1&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;example 1&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The execution should take less than one minute. We will first analyze the results and parse through the information the platform outputs.</p>
 <p><strong>Understanding the results</strong></p>
 <p>The result structure can be startling at first, but, as the platform provides a lot of information, it has to be organized.</p>
-<p>The results are stored in <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/results/example_1/">a directory</a>. Here, you will find a directory with the name of the database used for the benchmark, here : <code class="docutils literal"><span class="pre">summit_doc/</span></code></p>
-<p>Finally, a directory with the date and time of the beginning of the experiment. Let&#8217;s say you started the benchmark on the 25th of December 1560, at 03:42 PM, the directory&#8217;s name should be <code class="docutils literal"><span class="pre">started_1560_12_25-15_42/</span></code>.</p>
+<p>The results are stored in <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/results/example_1/">a directory</a>. Here, you will find a directory with the name of the database used for the benchmark, here : <code class="docutils literal notranslate"><span class="pre">summit_doc/</span></code></p>
+<p>Finally, a directory with the date and time of the beginning of the experiment. Let’s say you started the benchmark on the 25th of December 1560, at 03:42 PM, the directory’s name should be <code class="docutils literal notranslate"><span class="pre">started_1560_12_25-15_42/</span></code>.</p>
 <p>From here the result directory has the structure that follows  :</p>
 <html>
 <head>
@@ -340,9 +322,6 @@
 <li><span class='caret'>folds</span>
 <ul class='nested'><li><span class='file_img'>test_labels_fold_0.csv</span></li>
 <li><span class='file_img'>test_labels_fold_1.csv</span></li></ul></li>
-<li><span class='caret'>weighted_linear_early_fusion</span>
-<ul class='nested'><li><span class='file_img'>weighted_linear_early_fusion-doc_summit-confusion_matrix.csv</span></li>
-<li><span class='file_img'>weighted_linear_early_fusion-doc_summit-summary.txt</span></li></ul></li>
 <li><span class='caret'>weighted_linear_late_fusion</span>
 <ul class='nested'><li><span class='file_img'>weighted_linear_late_fusion-doc_summit-confusion_matrix.csv</span></li>
 <li><span class='file_img'>weighted_linear_late_fusion-doc_summit-summary.txt</span></li></ul></li>
@@ -383,10 +362,10 @@ for (i = 0; i < toggler.length; i++) {
 
 </body>
 </html><p>The structure may seem complex, but it provides a lot of information, from the most general to the most precise.</p>
-<p>Let&#8217;s comment each file :</p>
+<p>Let’s comment each file :</p>
 <div class="section" id="accuracy-score-html-accuracy-score-png-and-accuracy-score-csv">
-<h3><code class="docutils literal"><span class="pre">*-accuracy_score*.html</span></code>, <code class="docutils literal"><span class="pre">*-accuracy_score*.png</span></code> and <code class="docutils literal"><span class="pre">*-accuracy_score*.csv</span></code><a class="headerlink" href="#accuracy-score-html-accuracy-score-png-and-accuracy-score-csv" title="Permalink to this headline">¶</a></h3>
-<p>These files contain the scores of each classifier for the accuracy metric, ordered with the worst ones on the left and the best ones on the right, as an interactive html page, an image or a csv matrix. The star after <code class="docutils literal"><span class="pre">accuracy_score*</span></code> means that it was the principal metric (the usefulness of the principal metric will be explained later).
+<h3><code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.html</span></code>, <code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.csv</span></code><a class="headerlink" href="#accuracy-score-html-accuracy-score-png-and-accuracy-score-csv" title="Permalink to this headline">¶</a></h3>
+<p>These files contain the scores of each classifier for the accuracy metric, ordered with the worst ones on the left and the best ones on the right, as an interactive html page, an image or a csv matrix. The star after <code class="docutils literal notranslate"><span class="pre">accuracy_score*</span></code> means that it was the principal metric (the usefulness of the principal metric will be explained later).
 The html version is as follows :</p>
 <html>
 <head><meta charset="utf-8" /></head>
@@ -413,9 +392,9 @@ The html version is as follows :</p>
         </div>
 </body>
 </html><p>This is a bar plot showing the score on the training set (light gray), and testing set (black) for each monoview classifier on each view and or each multiview classifier.</p>
-<p>Here, the generated dataset is build to introduce some complementarity amongst the views. As a consequence, one of the two multiview algorithm has better performance than the monoview ones, but the other does not seem to have the best hyper-parameters. We will see later how to optimize them.</p>
-<p>The <code class="docutils literal"><span class="pre">.csv</span></code> file is a matrix with the score on train stored in the first row and the score on test stored in the second one. Each classifier is presented in a column. It is loadable with pandas.</p>
-<p>A similar graph <code class="docutils literal"><span class="pre">*-accuracy_score*-class.html</span></code>, reports the error of each classifier on each class.</p>
+<p>Here, the generated dataset is build to introduce some complementarity amongst the views. As a consequence, the multiview algorithm has better performance than the monoview ones, but the difference is not that clear, which means that the hyper-parameters are maybe not optimal.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file is a matrix with the score on train stored in the first row and the score on test stored in the second one. Each classifier is presented in a column. It is loadable with pandas.</p>
+<p>A similar graph <code class="docutils literal notranslate"><span class="pre">*-accuracy_score*-class.html</span></code>, reports the error of each classifier on each class.</p>
 <html>
 <head><meta charset="utf-8" /></head>
 <body>
@@ -440,17 +419,17 @@ The html version is as follows :</p>
             </script>
         </div>
 </body>
-</html><p>Here, for each classifier, 8 bars are plotted, one for each class. It is clear that for the monoview algorithms, in views 2 and 3, the third class is difficult, as showed in the error matrix.</p>
+</html><p>Here, for each classifier, 8 bars are plotted, one for each class. It is clear that for the monoview algorithms, in view 2, the third class is difficult, as showed in the error matrix. However, the results show some difference with the error matrix. This sould be due to a specific train-test split. We will see alter how to avoid this issue.</p>
 </div>
 <div class="section" id="error-analysis-2d-png-and-error-analysis-2d-html">
-<h3><code class="docutils literal"><span class="pre">*-error_analysis_2D.png</span></code> and <code class="docutils literal"><span class="pre">*-error_analysis_2D.html</span></code><a class="headerlink" href="#error-analysis-2d-png-and-error-analysis-2d-html" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.html</span></code><a class="headerlink" href="#error-analysis-2d-png-and-error-analysis-2d-html" title="Permalink to this headline">¶</a></h3>
 <p>In these files, one can visualize the success or failure of each classifier on each example.</p>
-<p>Below, <code class="docutils literal"><span class="pre">*-error_analysis_2D.html</span></code> is displayed.</p>
+<p>Below, <code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.html</span></code> is displayed.</p>
 <p>It is the representation of a matrix, where the rows are the examples, and the columns are the classifiers.</p>
-<p>The examples labelled as <code class="docutils literal"><span class="pre">Mutual_error_*</span></code> are mis-classified by most of the algorithms, the redundant ones are well-classified, and the complementary ones are mixly classified.</p>
+<p>The examples labelled as <code class="docutils literal notranslate"><span class="pre">Mutual_error_*</span></code> are mis-classified by most of the algorithms, the redundant ones are well-classified, and the complementary ones are mixly classified.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">It is highly recommended to zoom in the html figure to see each row.</p>
+<p class="admonition-title">Note</p>
+<p>It is highly recommended to zoom in the html figure to see each row.</p>
 </div>
 <html>
 <head><meta charset="utf-8" /></head>
@@ -476,18 +455,18 @@ The html version is as follows :</p>
             </script>
         </div>
 </body>
-</html><p>This figure is the html version of the classifiers errors&#8217; visualization. It is interactive, so, by hovering it, the information on
+</html><p>This figure is the html version of the classifiers errors’ visualization. It is interactive, so, by hovering it, the information on
 each classifier and example is printed. The classifiers are ordered as follows:</p>
-<p>From left to right : all the monoview classifiers on the first view, all the ones on the second one, ..., then at the far right, the multiview classifiers</p>
-<p>This html image is also available in <code class="docutils literal"><span class="pre">.png</span></code> format, but is then not interactive, so harder to analyze.</p>
+<p>From left to right : all the monoview classifiers on the first view, all the ones on the second one, …, then at the far right, the multiview classifiers</p>
+<p>This html image is also available in <code class="docutils literal notranslate"><span class="pre">.png</span></code> format, but is then not interactive, so harder to analyze.</p>
 <p>In terms of information, this is useful to detect possible outlier examples in the dataset and failing classifers.</p>
 <p>For example, a mainly black horizontal line for an example means that it has been missclassified by most of the classifiers.
 It could mean that the example is incorrectly labeled in the dataset or is very hard to classify.</p>
 <p>Symmetrically, a mainly-black column means that a classifier spectacularly failed.</p>
-<p>The data used to generate this matrix is available in <code class="docutils literal"><span class="pre">*-2D_plot_data.csv</span></code></p>
+<p>The data used to generate this matrix is available in <code class="docutils literal notranslate"><span class="pre">*-2D_plot_data.csv</span></code></p>
 </div>
 <div class="section" id="error-analysis-bar-png-and-error-analysis-bar-html">
-<h3><code class="docutils literal"><span class="pre">*-error_analysis_bar.png</span></code> and <code class="docutils literal"><span class="pre">*-error_analysis_bar.html</span></code><a class="headerlink" href="#error-analysis-bar-png-and-error-analysis-bar-html" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">*-error_analysis_bar.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-error_analysis_bar.html</span></code><a class="headerlink" href="#error-analysis-bar-png-and-error-analysis-bar-html" title="Permalink to this headline">¶</a></h3>
 <p>This file is a different way to visualize the same information as the two previous ones. Indeed, it is a bar plot, with a bar for each example, counting the ratio of classifiers that failed to classify this particular example.</p>
 <html>
 <head><meta charset="utf-8" /></head>
@@ -514,82 +493,80 @@ It could mean that the example is incorrectly labeled in the dataset or is very 
         </div>
 </body>
 </html><p>All the spikes are the mutual error examples, the complementary ones are the 0.33 bars and the redundant are the empty spaces.</p>
-<p>The data used to generate this graph is available in <code class="docutils literal"><span class="pre">*-bar_plot_data.csv</span></code></p>
+<p>The data used to generate this graph is available in <code class="docutils literal notranslate"><span class="pre">*-bar_plot_data.csv</span></code></p>
 </div>
 <div class="section" id="config-file-yml">
-<h3><code class="docutils literal"><span class="pre">config_file.yml</span></code><a class="headerlink" href="#config-file-yml" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">config_file.yml</span></code><a class="headerlink" href="#config-file-yml" title="Permalink to this headline">¶</a></h3>
 <p>This is a copy of the configuration file used to run the experiment.</p>
 </div>
 <div class="section" id="random-state-pickle">
-<h3><code class="docutils literal"><span class="pre">random_state.pickle</span></code><a class="headerlink" href="#random-state-pickle" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">random_state.pickle</span></code><a class="headerlink" href="#random-state-pickle" title="Permalink to this headline">¶</a></h3>
 <p>A save of the numpy random state that was used for the experiment, it is mainly useful if no seed is specified in the config file.</p>
 </div>
 <div class="section" id="log-log">
-<h3><code class="docutils literal"><span class="pre">1560_12_25-15_42-*-LOG.log</span></code><a class="headerlink" href="#log-log" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-LOG.log</span></code><a class="headerlink" href="#log-log" title="Permalink to this headline">¶</a></h3>
 <p>The log file</p>
 </div>
 <div class="section" id="classifier-dependant-files">
 <h3>Classifier-dependant files<a class="headerlink" href="#classifier-dependant-files" title="Permalink to this headline">¶</a></h3>
-<p>For each classifier, at least one file is generated, called <code class="docutils literal"><span class="pre">*-summary.txt</span></code>.</p>
-<pre class="literal-block">
-Classification on doc_summit for generated_view_1 with decision_tree.
+<p>For each classifier, at least one file is generated, called <code class="docutils literal notranslate"><span class="pre">*-summary.txt</span></code>.</p>
+<pre class="literal-block">Classification on doc_summit for generated_view_1 with decision_tree.
 
 Database configuration : 
         - Database name : doc_summit
         - View name : generated_view_1   View shape : (296, 3)
-        - Learning Rate : 0.75
+        - Learning Rate : 0.6486486486486487
         - Labels used : label_1, label_2, label_3, label_4, label_5, label_6, label_7, label_8
         - Number of cross validation folds : 2
 
-Classifier configuration : 
-        - DecisionTree with max_depth : 3, criterion : gini, splitter : best, random_state : RandomState(MT19937)
-        - Executed on 1 core(s) 
+Classifier configuration :
+        - DecisionTree with max_depth : 3, criterion : gini, splitter : best, random_state : &lt;mtrand.RandomState object at 0x7f01ddfc24c8&gt;
+        - Executed on 1 core(s)
 
 
-        For Accuracy score using {}, (higher is better) : 
-                - Score on train : 0.5765765765765766
-                - Score on test : 0.5540540540540541
+        For Accuracy score using {}, (higher is better) :
+                - Score on train : 0.5729166666666666
+                - Score on test : 0.47115384615384615
 
-        For F1 score using average: micro, {} (higher is better) : 
-                - Score on train : 0.5765765765765766
-                - Score on test : 0.5540540540540541
+        For F1 score using average: micro, {} (higher is better) :
+                - Score on train : 0.5729166666666666
+                - Score on test : 0.47115384615384615
 
-Test set confusion matrix : 
+Test set confusion matrix :
 
 ╒═════════╤═══════════╤═══════════╤═══════════╤═══════════╤═══════════╤═══════════╤═══════════╤═══════════╕
 │         │   label_1 │   label_2 │   label_3 │   label_4 │   label_5 │   label_6 │   label_7 │   label_8 │
 ╞═════════╪═══════════╪═══════════╪═══════════╪═══════════╪═══════════╪═══════════╪═══════════╪═══════════╡
-│ label_1 │         5 │         0 │         2 │         0 │         1 │         1 │         0 │         0 │
+│ label_1 │         7 │         0 │         1 │         1 │         1 │         2 │         1 │         0 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_2 │         1 │         3 │         1 │         0 │         1 │         1 │         1 │         1 │
+│ label_2 │         3 │         4 │         0 │         0 │         1 │         3 │         1 │         1 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_3 │         0 │         1 │         4 │         2 │         1 │         1 │         0 │         0 │
+│ label_3 │         3 │         2 │         3 │         0 │         2 │         1 │         0 │         2 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_4 │         2 │         0 │         1 │         5 │         1 │         1 │         0 │         0 │
+│ label_4 │         3 │         0 │         0 │         7 │         1 │         2 │         0 │         0 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_5 │         0 │         0 │         0 │         1 │         7 │         0 │         0 │         1 │
+│ label_5 │         0 │         0 │         0 │         1 │        10 │         1 │         0 │         1 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_6 │         0 │         0 │         0 │         1 │         1 │         7 │         0 │         0 │
+│ label_6 │         1 │         1 │         0 │         2 │         1 │         8 │         0 │         0 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_7 │         1 │         1 │         0 │         0 │         2 │         1 │         4 │         1 │
+│ label_7 │         1 │         2 │         2 │         0 │         4 │         0 │         3 │         1 │
 ├─────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┼───────────┤
-│ label_8 │         0 │         0 │         2 │         0 │         0 │         0 │         1 │         6 │
+│ label_8 │         1 │         1 │         1 │         0 │         1 │         1 │         1 │         7 │
 ╘═════════╧═══════════╧═══════════╧═══════════╧═══════════╧═══════════╧═══════════╧═══════════╧═══════════╛
 
 
 
  Classification took 0:00:00
 
- Classifier Interpretation : 
-First featrue : 
+ Classifier Interpretation :
+First featrue :
         2 &lt;= 8.439512252807617
-Feature importances : 
-- Feature index : 0, feature importance : 0.4223852373262582
-- Feature index : 1, feature importance : 0.4039223639779588
-- Feature index : 2, feature importance : 0.17369239869578307
-
+Feature importances :
+- Feature index : 0, feature importance : 0.42752552366689905
+- Feature index : 1, feature importance : 0.4031352121725926
+- Feature index : 2, feature importance : 0.1693392641605082
 </pre>
-<p>This regroups the useful information on the classifier&#8217;s configuration and it&#8217;s performance. An interpretation section is available for classifiers that present some interpretation-related information (as feature importance).</p>
+<p>This regroups the useful information on the classifier’s configuration and it’s performance. An interpretation section is available for classifiers that present some interpretation-related information (as feature importance).</p>
 </div>
 </div>
 </div>
@@ -600,18 +577,18 @@ Feature importances :
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Example 1 : First big step with SuMMIT</a><ul>
 <li><a class="reference internal" href="#introduction-to-this-tutorial">Introduction to this tutorial</a></li>
 <li><a class="reference internal" href="#a-generated-dataset-to-rule-them-all">A generated dataset to rule them all</a></li>
 <li><a class="reference internal" href="#getting-started">Getting started</a><ul>
-<li><a class="reference internal" href="#accuracy-score-html-accuracy-score-png-and-accuracy-score-csv"><code class="docutils literal"><span class="pre">*-accuracy_score*.html</span></code>, <code class="docutils literal"><span class="pre">*-accuracy_score*.png</span></code> and <code class="docutils literal"><span class="pre">*-accuracy_score*.csv</span></code></a></li>
-<li><a class="reference internal" href="#error-analysis-2d-png-and-error-analysis-2d-html"><code class="docutils literal"><span class="pre">*-error_analysis_2D.png</span></code> and <code class="docutils literal"><span class="pre">*-error_analysis_2D.html</span></code></a></li>
-<li><a class="reference internal" href="#error-analysis-bar-png-and-error-analysis-bar-html"><code class="docutils literal"><span class="pre">*-error_analysis_bar.png</span></code> and <code class="docutils literal"><span class="pre">*-error_analysis_bar.html</span></code></a></li>
-<li><a class="reference internal" href="#config-file-yml"><code class="docutils literal"><span class="pre">config_file.yml</span></code></a></li>
-<li><a class="reference internal" href="#random-state-pickle"><code class="docutils literal"><span class="pre">random_state.pickle</span></code></a></li>
-<li><a class="reference internal" href="#log-log"><code class="docutils literal"><span class="pre">1560_12_25-15_42-*-LOG.log</span></code></a></li>
+<li><a class="reference internal" href="#accuracy-score-html-accuracy-score-png-and-accuracy-score-csv"><code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.html</span></code>, <code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-accuracy_score*.csv</span></code></a></li>
+<li><a class="reference internal" href="#error-analysis-2d-png-and-error-analysis-2d-html"><code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.html</span></code></a></li>
+<li><a class="reference internal" href="#error-analysis-bar-png-and-error-analysis-bar-html"><code class="docutils literal notranslate"><span class="pre">*-error_analysis_bar.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-error_analysis_bar.html</span></code></a></li>
+<li><a class="reference internal" href="#config-file-yml"><code class="docutils literal notranslate"><span class="pre">config_file.yml</span></code></a></li>
+<li><a class="reference internal" href="#random-state-pickle"><code class="docutils literal notranslate"><span class="pre">random_state.pickle</span></code></a></li>
+<li><a class="reference internal" href="#log-log"><code class="docutils literal notranslate"><span class="pre">1560_12_25-15_42-*-LOG.log</span></code></a></li>
 <li><a class="reference internal" href="#classifier-dependant-files">Classifier-dependant files</a></li>
 </ul>
 </li>
@@ -628,20 +605,20 @@ Feature importances :
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/tutorials/example1.txt"
+      <li><a href="../_sources/tutorials/example1.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -661,13 +638,13 @@ Feature importances :
         <li class="right" >
           <a href="example0.html" title="Example 0 : Getting started with SuMMIT on digits"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">MultiviewPlatform 0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SuMMIT 0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >SuMMIT Tutorials</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Baptiste BAUVIN.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.2.
     </div>
   </body>
 </html>

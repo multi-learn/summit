@@ -14,7 +14,6 @@ This documentation consists in a short read me, with instructions to install and
 .. toctree::
    :maxdepth: 1
 
-   readme_link
    tutorials/index
    references/multiview_platform
 

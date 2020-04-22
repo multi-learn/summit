@@ -319,14 +319,26 @@ def gen_direcorties_names(directory, stats_iter):
 def find_dataset_names(path, type, names):
     """This function goal is to browse the dataset directory and extrats all
      the needed dataset names."""
-    module_path = os.path.dirname(
+    package_path = os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+    if os.path.isdir(path):
+        pass
+    elif os.path.isdir(os.path.join(package_path, path)):
+        path = os.path.join(package_path, path)
+    else:
+        raise ValueError("The provided pathf does not exist ({}) SuMMIT checks "
+                         "the prefix from where you are running your script ({}) "
+                         "and the multiview_platform package prefix ({}). "
+                         "You may want to try with an absolute path in the "
+                         "config file".format(path, os.getcwd(), package_path))
     available_file_names = [file_name.strip().split(".")[0]
                             for file_name in
-                            os.listdir(os.path.join(module_path, path))
+                            os.listdir(path)
                             if file_name.endswith(type)]
     if names == ["all"]:
-        return available_file_names
+        return path, available_file_names
+    elif isinstance(names, str):
+        return path, [used_name for used_name in available_file_names if names == used_name]
     elif len(names) > 1:
         selected_names = [used_name for used_name in available_file_names if
                           used_name in names]
@@ -334,10 +346,10 @@ def find_dataset_names(path, type, names):
             raise ValueError(
                 "None of the provided dataset names are available. Available datasets are {}".format(
                     available_file_names))
-        return [used_name for used_name in available_file_names if
+        return path, [used_name for used_name in available_file_names if
                 used_name in names]
     else:
-        return names
+        return path, names
 
 
 def gen_argument_dictionaries(labels_dictionary, directories,
