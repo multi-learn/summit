@@ -2,6 +2,7 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
+    <orderEntry type="jdk" jdkName="Python 3.6 (develop)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="multiview_generator" />
     <orderEntry type="module" module-name="short_projects" />

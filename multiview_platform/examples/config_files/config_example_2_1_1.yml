@@ -3,7 +3,7 @@
 # Enable logging
 log: True
 # The name of each dataset in the directory on which the benchmark should be run
-name: ["doc_summit"]
+name: "doc_summit"
 # A label for the resul directory
 label: "example_2_1_1"
 # The type of dataset, currently supported ".hdf5", and ".csv"

@@ -869,11 +869,10 @@ def exec_classif(arguments):
     cl_type = args["type"]
     monoview_algos = args["algos_monoview"]
     multiview_algos = args["algos_multiview"]
-    dataset_list = execution.find_dataset_names(args["pathf"],
+    path, dataset_list = execution.find_dataset_names(args["pathf"],
                                                 args["file_type"],
                                                 args["name"])
-    # if not args["add_noise"]:
-        # args["noise_std"] = [0.0]
+    args["pathf"] = path
     for dataset_name in dataset_list:
         # noise_results = []
         # for noise_std in args["noise_std"]:
