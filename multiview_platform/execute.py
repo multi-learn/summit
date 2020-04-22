@@ -2,13 +2,13 @@
 
 import os
 
-def execute(config_path=os.path.join(os.path.dirname(os.path.realpath(__file__)), "examples", "config_files", "config_example_1.yml")):
+def execute(config_path=None):
     from multiview_platform import versions as vs
     vs.test_versions()
     import sys
 
     from multiview_platform.mono_multi_view_classifiers import exec_classif
-    if sys.argv[1:]:
+    if config_path is None:
         exec_classif.exec_classif(sys.argv[1:])
     else:
         if config_path == "example 0":

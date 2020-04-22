@@ -15,7 +15,7 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
     Parameters
     ----------
     random_state : int seed, RandomState instance, or None (default=None)
-        The seed of the pseudo random number generator to use when
+        The seed of the pseudo random number multiview_generator to use when
         shuffling the data.
 
     n_estimators : int (default : 10) number of estimators
