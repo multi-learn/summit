@@ -152,7 +152,7 @@ def exec_multiview_multicore(directory, core_index, name, learning_rate,
     labels_dictionary
 
     random_state : int seed, RandomState instance, or None (default=None)
-        The seed of the pseudo random number generator to use when
+        The seed of the pseudo random number multiview_generator to use when
         shuffling the data.
 
     labels :
@@ -217,7 +217,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     labels_dictionary : dict dictionary of labels
 
     random_state : int seed, RandomState instance, or None (default=None)
-        The seed of the pseudo random number generator to use when
+        The seed of the pseudo random number multiview_generator to use when
         shuffling the data.
 
     labels

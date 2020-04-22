@@ -153,9 +153,9 @@ def init_log_file(name, views, cl_type, log, debug, label,
     """
     if views is None:
         views = []
-    result_directory = os.path.join(os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.realpath(__file__)))),
-                                    result_directory)
+    # result_directory = os.path.join(os.path.dirname(
+    #     os.path.dirname(os.path.dirname(os.path.realpath(__file__)))),
+    #                                 result_directory)
     if debug:
         result_directory = os.path.join(result_directory, name,
                                         "debug_started_" + time.strftime(

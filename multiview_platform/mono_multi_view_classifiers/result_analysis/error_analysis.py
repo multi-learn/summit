@@ -226,7 +226,7 @@ def plot_2d(data, classifiers_names, nb_classifiers, file_name, labels=None,
         fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                           plot_bgcolor='rgba(0,0,0,0)')
         fig.update_xaxes(showticklabels=True, )
-        plotly.offline.plot(fig, filename=file_name + "err.html",
+        plotly.offline.plot(fig, filename=file_name + "error_analysis_2D.html",
                             auto_open=False)
         del fig
 
