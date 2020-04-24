@@ -1,6 +1,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
-[![Build Status](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/develop/pipeline.svg)](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/develop/pipeline.svg)
-[![Coverage Report](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/coverage.svg)](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master)
+[![Build Status](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/pipeline.svg)](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/pipeline.svg)
+[![Coverage Report](https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/coverage.svg)](http://baptiste.bauvin.pages.lis-lab.fr/summit/coverage/index.html)
 # Supervised MultiModal Integration Tool's Readme
 
 This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- & multi-view algorithms capacity to classify it correctly.

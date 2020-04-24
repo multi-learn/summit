@@ -48,6 +48,8 @@ pages:
         - sphinx-build -b html . ../build
         - cd ../..
         - cp -r ./docs/build public
+        - mv htmlcov/index.html public/coverage/
+        - mv htmlcov/style.css public/coverage/
     artifacts:
        paths:
             - public
