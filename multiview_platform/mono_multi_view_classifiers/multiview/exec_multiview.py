@@ -102,7 +102,7 @@ def save_results(string_analysis, images_analysis, output_file_name,
     """
     logging.info(string_analysis)
     secure_file_path(output_file_name)
-    output_text_file = open(output_file_name + 'summary.txt', 'w')
+    output_text_file = open(output_file_name + 'summary.txt', 'w', encoding="utf-8")
     output_text_file.write(string_analysis)
     output_text_file.close()
     np.savetxt(output_file_name+"confusion_matrix.csv", confusion_matrix,

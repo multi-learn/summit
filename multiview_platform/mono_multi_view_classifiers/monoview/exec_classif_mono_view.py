@@ -225,7 +225,7 @@ def save_results(string_analysis, output_file_name, full_labels_pred,
                  y_train_pred,
                  y_train, images_analysis, y_test, confusion_matrix): # pragma: no cover
     logging.info(string_analysis)
-    output_text_file = open(output_file_name + 'summary.txt', 'w')
+    output_text_file = open(output_file_name + 'summary.txt', 'w', encoding="utf-8")
     output_text_file.write(string_analysis)
     output_text_file.close()
     np.savetxt(output_file_name+"confusion_matrix.csv", confusion_matrix,
