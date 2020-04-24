@@ -17,33 +17,6 @@ from .base import get_metric
 from .. import metrics
 
 
-# def search_best_settings(dataset_var, labels, classifier_module,
-#                          classifier_name,
-#                          metrics, learning_indices, i_k_folds, random_state,
-#                          directory, views_indices=None, nb_cores=1,
-#                          searching_tool="randomized_search-equiv", n_iter=1,
-#                          classifier_config=None):
-#     """Used to select the right hyper-parameter optimization function
-#     to optimize hyper parameters"""
-#     if views_indices is None:
-#         views_indices = list(range(dataset_var.get_nb_view))
-#     output_file_name = directory
-#     thismodule = sys.modules[__name__]
-#     if searching_tool is not "None":
-#         searching_tool_method = getattr(thismodule,
-#                                         searching_tool.split("-")[0])
-#         best_settings, scores, params = searching_tool_method(
-#             dataset_var, labels, "multiview", random_state, output_file_name,
-#             classifier_module, classifier_name, i_k_folds,
-#             nb_cores, metrics, n_iter, classifier_config,
-#             learning_indices=learning_indices, view_indices=views_indices,
-#             equivalent_draws=searching_tool.endswith("equiv"))
-#         gen_report(params, scores, directory, )
-#     else:
-#         best_settings = classifier_config
-#     return best_settings  # or well set clasifier ?
-
-
 class HPSearch:
 
     def get_scoring(self, metric):
@@ -116,7 +89,7 @@ class HPSearch:
         return self
 
     @abstractmethod
-    def get_candidate_params(self, X):
+    def get_candidate_params(self, X): # pragma: no cover
         raise NotImplementedError
 
     def get_best_params(self):
@@ -171,7 +144,7 @@ class Random(RandomizedSearchCV, HPSearch):
         else:
             return estimator.gen_distribs()
 
-    def fit(self, X, y=None, groups=None, **fit_params):
+    def fit(self, X, y=None, groups=None, **fit_params): # pragma: no cover
         if self.framework == "monoview":
             return RandomizedSearchCV.fit(self, X, y=y, groups=groups,
                                           **fit_params)
@@ -323,60 +296,60 @@ class Grid(GridSearchCV, HPSearch):
 
 
 
-
-def spear_mint(dataset, classifier_name, views_indices=None, k_folds=None,
-               n_iter=1,
-               **kwargs):
-    """Used to perform spearmint on the classifiers to optimize hyper parameters,
-    longer than randomsearch (can't be parallelized)"""
-    pass
-
-
-def gen_heat_maps(params, scores_array, output_file_name):
-    """Used to generate a heat map for each doublet of hyperparms
-    optimized on the previous function"""
-    nb_params = len(params)
-    if nb_params > 2:
-        combinations = itertools.combinations(range(nb_params), 2)
-    elif nb_params == 2:
-        combinations = [(0, 1)]
-    else:
-        combinations = [()]
-    for combination in combinations:
-        if combination:
-            param_name1, param_array1 = params[combination[0]]
-            param_name2, param_array2 = params[combination[1]]
-        else:
-            param_name1, param_array1 = params[0]
-            param_name2, param_array2 = ("Control", np.array([0]))
-
-        param_array1_set = np.sort(np.array(list(set(param_array1))))
-        param_array2_set = np.sort(np.array(list(set(param_array2))))
-
-        scores_matrix = np.zeros(
-            (len(param_array2_set), len(param_array1_set))) - 0.1
-        for param1, param2, score in zip(param_array1, param_array2,
-                                         scores_array):
-            param1_index, = np.where(param_array1_set == param1)
-            param2_index, = np.where(param_array2_set == param2)
-            scores_matrix[int(param2_index), int(param1_index)] = score
-
-        plt.figure(figsize=(8, 6))
-        plt.subplots_adjust(left=.2, right=0.95, bottom=0.15, top=0.95)
-        plt.imshow(scores_matrix, interpolation='nearest', cmap=plt.cm.hot,
-                   )
-        plt.xlabel(param_name1)
-        plt.ylabel(param_name2)
-        plt.colorbar()
-        plt.xticks(np.arange(len(param_array1_set)), param_array1_set)
-        plt.yticks(np.arange(len(param_array2_set)), param_array2_set,
-                   rotation=45)
-        plt.title('Validation metric')
-        plt.savefig(
-            output_file_name + "heat_map-" + param_name1 + "-" + param_name2 + ".png",
-            transparent=True)
-        plt.close()
-
+#
+# def spear_mint(dataset, classifier_name, views_indices=None, k_folds=None,
+#                n_iter=1,
+#                **kwargs):
+#     """Used to perform spearmint on the classifiers to optimize hyper parameters,
+#     longer than randomsearch (can't be parallelized)"""
+#     pass
+#
+#
+# def gen_heat_maps(params, scores_array, output_file_name):
+#     """Used to generate a heat map for each doublet of hyperparms
+#     optimized on the previous function"""
+#     nb_params = len(params)
+#     if nb_params > 2:
+#         combinations = itertools.combinations(range(nb_params), 2)
+#     elif nb_params == 2:
+#         combinations = [(0, 1)]
+#     else:
+#         combinations = [()]
+#     for combination in combinations:
+#         if combination:
+#             param_name1, param_array1 = params[combination[0]]
+#             param_name2, param_array2 = params[combination[1]]
+#         else:
+#             param_name1, param_array1 = params[0]
+#             param_name2, param_array2 = ("Control", np.array([0]))
+#
+#         param_array1_set = np.sort(np.array(list(set(param_array1))))
+#         param_array2_set = np.sort(np.array(list(set(param_array2))))
+#
+#         scores_matrix = np.zeros(
+#             (len(param_array2_set), len(param_array1_set))) - 0.1
+#         for param1, param2, score in zip(param_array1, param_array2,
+#                                          scores_array):
+#             param1_index, = np.where(param_array1_set == param1)
+#             param2_index, = np.where(param_array2_set == param2)
+#             scores_matrix[int(param2_index), int(param1_index)] = score
+#
+#         plt.figure(figsize=(8, 6))
+#         plt.subplots_adjust(left=.2, right=0.95, bottom=0.15, top=0.95)
+#         plt.imshow(scores_matrix, interpolation='nearest', cmap=plt.cm.hot,
+#                    )
+#         plt.xlabel(param_name1)
+#         plt.ylabel(param_name2)
+#         plt.colorbar()
+#         plt.xticks(np.arange(len(param_array1_set)), param_array1_set)
+#         plt.yticks(np.arange(len(param_array2_set)), param_array2_set,
+#                    rotation=45)
+#         plt.title('Validation metric')
+#         plt.savefig(
+#             output_file_name + "heat_map-" + param_name1 + "-" + param_name2 + ".png",
+#             transparent=True)
+#         plt.close()
+#
 
 
 
@@ -387,6 +360,8 @@ class CustomRandint:
 
     def __init__(self, low=0, high=0, multiplier=""):
         self.randint = randint(low, high)
+        self.low=low
+        self.high=high
         self.multiplier = multiplier
 
     def rvs(self, random_state=None):
@@ -397,7 +372,10 @@ class CustomRandint:
             return randinteger
 
     def get_nb_possibilities(self):
-        return self.randint.b - self.randint.a
+        if self.multiplier == "e-":
+            return abs(10 ** -self.low - 10 ** -self.high)
+        else:
+            return self.high - self.low
 
 
 class CustomUniform:

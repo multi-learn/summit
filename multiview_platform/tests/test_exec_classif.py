@@ -9,19 +9,97 @@ from multiview_platform.tests.utils import rm_tmp, tmp_path, test_dataset
 from multiview_platform.mono_multi_view_classifiers import exec_classif
 
 
+class Test_execute(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        os.mkdir(tmp_path)
+
+    def test_exec_simple(self):
+        exec_classif.exec_classif(["--config_path", os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_config_simple.yml")])
+
+    def test_exec_iter(self):
+        exec_classif.exec_classif(["--config_path", os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_config_iter.yml")])
+
+    def test_exec_hps(self):
+        exec_classif.exec_classif(["--config_path", os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_config_hps.yml")])
+
+    @classmethod
+    def tearDown(self):
+        rm_tmp()
+
 class Test_initBenchmark(unittest.TestCase):
 
     def test_benchmark_wanted(self):
-        # benchmark_output = ExecClassif.init_benchmark(self.args)
-        self.assertEqual(1, 1)
+        benchmark_output = exec_classif.init_benchmark(cl_type=["monoview", "multiview"], monoview_algos=["decision_tree"], multiview_algos=["weighted_linear_late_fusion"])
+        self.assertEqual(benchmark_output , {'monoview': ['decision_tree'], 'multiview': ['weighted_linear_late_fusion']})
+        benchmark_output = exec_classif.init_benchmark(
+            cl_type=["monoview", "multiview"], monoview_algos=["all"],
+            multiview_algos=["all"])
+        self.assertEqual(benchmark_output, {'monoview': ['adaboost',
+              'decision_tree',
+              'gradient_boosting',
+              'knn',
+              'lasso',
+              'random_forest',
+              'sgd',
+              'svm_linear',
+              'svm_poly',
+              'svm_rbf'],
+ 'multiview': ['bayesian_inference_fusion',
+               'difficulty_fusion',
+               'disagree_fusion',
+               'double_fault_fusion',
+               'entropy_fusion',
+               'majority_voting_fusion',
+               'svm_jumbo_fusion',
+               'weighted_linear_early_fusion',
+               'weighted_linear_late_fusion']})
 
 
-class Test_initKWARGS(unittest.TestCase):
+class Test_Functs(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        os.mkdir(tmp_path)
+
+    @classmethod
+    def tearDownClass(cls):
+        rm_tmp()
 
     def test_initKWARGSFunc_no_monoview(self):
         benchmark = {"monoview": {}, "multiview": {}}
         args = exec_classif.init_kwargs_func({}, benchmark)
         self.assertEqual(args, {"monoview": {}, "multiview": {}})
+
+    def test_init_kwargs(self):
+        kwargs = exec_classif.init_kwargs({"decision_tree":""},["decision_tree"])
+        self.assertEqual(kwargs, {"decision_tree":""})
+        kwargs = exec_classif.init_kwargs({"weighted_linear_late_fusion": ""},
+                                          ["weighted_linear_late_fusion"], framework="multiview")
+        self.assertEqual(kwargs, {"weighted_linear_late_fusion": ""})
+        kwargs = exec_classif.init_kwargs({}, ["decision_tree"],)
+        self.assertEqual(kwargs, {"decision_tree":{}})
+        self.assertRaises(AttributeError, exec_classif.init_kwargs, {}, ["test"])
+
+    def test_arange_metrics(self):
+        metrics = exec_classif.arange_metrics({"accuracy_score":{}}, "accuracy_score")
+        self.assertEqual(metrics, {"accuracy_score*":{}})
+        self.assertRaises(ValueError, exec_classif.arange_metrics, {"test1":{}}, "test")
+
+    def test_banchmark_init(self):
+        from sklearn.model_selection import StratifiedKFold
+        folds = StratifiedKFold(n_splits=2)
+        res, lab_names = exec_classif.benchmark_init(directory=tmp_path,
+                                                     classification_indices=[np.array([0,1,2,3]), np.array([4])],
+                                                     labels=test_dataset.get_labels(),
+                                                     labels_dictionary={"yes":0, "no":1},
+                                                     k_folds=folds,
+                                                     dataset_var=test_dataset)
+        self.assertEqual(res, [])
+        self.assertEqual(lab_names, [0, 1])
+
+
 
 
 class Test_InitArgumentDictionaries(unittest.TestCase):
@@ -93,50 +171,6 @@ class Test_InitArgumentDictionaries(unittest.TestCase):
         },]
         self.assertEqual(arguments["multiview"][0], expected_output[0])
 
-    # def test_init_argument_dictionaries_multiview_multiple(self):
-    #     self.multiview_classifier_arg_value = ["fake_value_2", "fake_arg_value_3"]
-    #     self.init_kwargs = {
-    #         'monoview': {
-    #             self.monoview_classifier_name:
-    #                 {
-    #                     self.monoview_classifier_arg_name: self.monoview_classifier_arg_value}
-    #         },
-    #         "multiview": {
-    #             self.multiview_classifier_name: {
-    #                 self.multiview_classifier_arg_name: self.multiview_classifier_arg_value}
-    #         }
-    #     }
-    #     self.benchmark["multiview"] = ["fake_multiview_classifier"]
-    #     self.benchmark["monoview"] = {}
-    #     arguments = exec_classif.init_argument_dictionaries(self.benchmark,
-    #                                                         self.views_dictionnary,
-    #                                                         self.nb_class,
-    #                                                         self.init_kwargs,
-    #                                                         "None", {})
-    #     expected_output = [{
-    #             "classifier_name": self.multiview_classifier_name+"_fake_value_2",
-    #             "view_indices": [0,1],
-    #             "view_names": ["test_view_0", "test_view"],
-    #             "nb_class": self.nb_class,
-    #             'hps_kwargs': {},
-    #             "labels_names":None,
-    #             self.multiview_classifier_name + "_fake_value_2": {
-    #                 self.multiview_classifier_arg_name:
-    #                     self.multiview_classifier_arg_value[0]},
-    #     },
-    #         {
-    #             "classifier_name": self.multiview_classifier_name+"_fake_arg_value_3",
-    #             "view_indices": [0, 1],
-    #             "view_names": ["test_view_0", "test_view"],
-    #             "nb_class": self.nb_class,
-    #             'hps_kwargs': {},
-    #             "labels_names": None,
-    #             self.multiview_classifier_name+"_fake_arg_value_3": {
-    #                 self.multiview_classifier_arg_name:
-    #                     self.multiview_classifier_arg_value[1]},
-    #         }
-    #     ]
-    #     self.assertEqual(arguments["multiview"][0], expected_output[0])
 
     def test_init_argument_dictionaries_multiview_complex(self):
         self.multiview_classifier_arg_value = {"fake_value_2":"plif", "plaf":"plouf"}
@@ -170,51 +204,6 @@ class Test_InitArgumentDictionaries(unittest.TestCase):
                         self.multiview_classifier_arg_value},
         }]
         self.assertEqual(arguments["multiview"][0], expected_output[0])
-
-    # def test_init_argument_dictionaries_multiview_multiple_complex(self):
-    #     self.multiview_classifier_arg_value = {"fake_value_2":["plif", "pluf"], "plaf":"plouf"}
-    #     self.init_kwargs = {
-    #         'monoview': {
-    #             self.monoview_classifier_name:
-    #                 {
-    #                     self.monoview_classifier_arg_name: self.monoview_classifier_arg_value}
-    #         },
-    #         "multiview": {
-    #             self.multiview_classifier_name: {
-    #                 self.multiview_classifier_arg_name: self.multiview_classifier_arg_value}
-    #         }
-    #     }
-    #     self.benchmark["multiview"] = ["fake_multiview_classifier"]
-    #     self.benchmark["monoview"] = {}
-    #     arguments = exec_classif.init_argument_dictionaries(self.benchmark,
-    #                                                         self.views_dictionnary,
-    #                                                         self.nb_class,
-    #                                                         self.init_kwargs,
-    #                                                         "None", {})
-    #     expected_output = [{
-    #             "classifier_name": self.multiview_classifier_name+"_plif_plouf",
-    #             "view_indices": [0,1],
-    #             "view_names": ["test_view_0", "test_view"],
-    #             "nb_class": self.nb_class,
-    #             "labels_names":None,
-    #             'hps_kwargs': {},
-    #             self.multiview_classifier_name + "_plif_plouf": {
-    #                 self.multiview_classifier_arg_name:
-    #                     {"fake_value_2": "plif", "plaf": "plouf"}},
-    #     },
-    #         {
-    #             "classifier_name": self.multiview_classifier_name+"_pluf_plouf",
-    #             "view_indices": [0, 1],
-    #             "view_names": ["test_view_0", "test_view"],
-    #             "nb_class": self.nb_class,
-    #             "labels_names": None,
-    #             'hps_kwargs': {},
-    #             self.multiview_classifier_name+"_pluf_plouf": {
-    #                 self.multiview_classifier_arg_name:
-    #                     {"fake_value_2":"pluf", "plaf":"plouf"}},
-    #         }
-    #     ]
-    #     self.assertEqual(arguments["multiview"][0], expected_output[0])
 
 
 def fakeBenchmarkExec(core_index=-1, a=7, args=1):
@@ -355,131 +344,6 @@ class FakeKfold():
 
     def split(self, X, Y):
         return [([X[0], X[1]], [X[2], X[3]]), (([X[2], X[3]], [X[0], X[1]]))]
-
-
-# class Test_execOneBenchmark(unittest.TestCase):
-#
-#     @classmethod
-#     def setUp(cls):
-#         rm_tmp()
-#         os.mkdir(tmp_path)
-#         cls.args = {
-#             "Base": {"name": "chicken_is_heaven", "type": "type",
-#                      "pathf": "pathF"},
-#             "Classification": {"hps_iter": 1}}
-#
-#     def test_simple(cls):
-#         flag, results = exec_classif.exec_one_benchmark(core_index=10,
-#                                                       labels_dictionary={
-#                                                                    0: "a",
-#                                                                    1: "b"},
-#                                                       directory=tmp_path,
-#                                                       classification_indices=(
-#                                                                [1, 2, 3, 4],
-#                                                                [0, 5, 6, 7, 8]),
-#                                                                args=cls.args,
-#                                                                k_folds=FakeKfold(),
-#                                                                random_state="try",
-#                                                                hyper_param_search="try",
-#                                                                metrics="try",
-#                                                                argument_dictionaries={
-#                                                                    "Monoview": [
-#                                                                        {
-#                                                                            "try": 0},
-#                                                                        {
-#                                                                            "try2": 100}],
-#                                                                    "multiview":[{
-#                                                                            "try3": 5},
-#                                                                        {
-#                                                                            "try4": 10}]},
-#                                                       benchmark="try",
-#                                                       views="try",
-#                                                       views_indices="try",
-#                                                       flag=None,
-#                                                       labels=np.array(
-#                                                                    [0, 1, 2, 1,
-#                                                                     2, 2, 2, 12,
-#                                                                     1, 2, 1, 1,
-#                                                                     2, 1, 21]),
-#                                                       exec_monoview_multicore=fakeExecMono,
-#                                                       exec_multiview_multicore=fakeExecMulti,)
-#
-#         cls.assertEqual(flag, None)
-#         cls.assertEqual(results ,
-#                         [['Mono', {'try': 0}], ['Mono', {'try2': 100}],
-#                          ['Multi', {'try3': 5}], ['Multi', {'try4': 10}]])
-#
-#     @classmethod
-#     def tearDown(cls):
-#         path = tmp_path
-#         for file_name in os.listdir(path):
-#             dir_path = os.path.join(path, file_name)
-#             if os.path.isdir(dir_path):
-#                 for file_name in os.listdir(dir_path):
-#                     os.remove(os.path.join(dir_path, file_name))
-#                 os.rmdir(dir_path)
-#             else:
-#                 os.remove(os.path.join(path, file_name))
-#         os.rmdir(path)
-#
-#
-# class Test_execOneBenchmark_multicore(unittest.TestCase):
-#
-#     @classmethod
-#     def setUpClass(cls):
-#         rm_tmp()
-#         os.mkdir(tmp_path)
-#         cls.args = {
-#             "Base": {"name": "chicken_is_heaven", "type": "type",
-#                      "pathf": "pathF"},
-#             "Classification": {"hps_iter": 1}}
-#
-#     def test_simple(cls):
-#         flag, results = exec_classif.exec_one_benchmark_multicore(
-#             nb_cores=2,
-#             labels_dictionary={0: "a", 1: "b"},
-#             directory=tmp_path,
-#             classification_indices=([1, 2, 3, 4], [0, 10, 20, 30, 40]),
-#             args=cls.args,
-#             k_folds=FakeKfold(),
-#             random_state="try",
-#             hyper_param_search="try",
-#             metrics="try",
-#             argument_dictionaries={
-#                                                                    "monoview": [
-#                                                                        {
-#                                                                            "try": 0},
-#                                                                        {
-#                                                                            "try2": 100}],
-#                                                                    "multiview":[{
-#                                                                            "try3": 5},
-#                                                                        {
-#                                                                            "try4": 10}]},
-#             benchmark="try",
-#             views="try",
-#             views_indices="try",
-#             flag=None,
-#             labels=np.array([0, 1, 2, 3, 4, 2, 2, 12, 1, 2, 1, 1, 2, 1, 21]),
-#             exec_monoview_multicore=fakeExecMono,
-#             exec_multiview_multicore=fakeExecMulti,)
-#
-#         cls.assertEqual(flag, None)
-#         cls.assertEqual(results ,
-#                         [['Mono', {'try': 0}], ['Mono', {'try2': 100}],
-#                          ['Multi', {'try3': 5}], ['Multi', {'try4': 10}]])
-#
-#     @classmethod
-#     def tearDown(cls):
-#         path = tmp_path
-#         for file_name in os.listdir(path):
-#             dir_path = os.path.join(path, file_name)
-#             if os.path.isdir(dir_path):
-#                 for file_name in os.listdir(dir_path):
-#                     os.remove(os.path.join(dir_path, file_name))
-#                 os.rmdir(dir_path)
-#             else:
-#                 os.remove(os.path.join(path, file_name))
-#         os.rmdir(path)
 
 
 class Test_set_element(unittest.TestCase):

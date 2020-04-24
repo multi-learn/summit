@@ -22,3 +22,5 @@ multiview_platform/examples/results/example_2_3/*
 multiview_platform/examples/results/example_3/*
 multiview_platform/examples/results/example_4/*
 multiview_platform/examples/results/example_5/*
+multiview_platform/html_cov/
+multiview_platform/.coverage*

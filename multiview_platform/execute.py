@@ -2,7 +2,8 @@
 
 import os
 
-def execute(config_path=None):
+
+def execute(config_path=None):  # pragma: no cover
     from multiview_platform import versions as vs
     vs.test_versions()
     import sys

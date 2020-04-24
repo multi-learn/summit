@@ -7,10 +7,10 @@ from ..utils.base import BaseClassifier, ResultAnalyser
 from ..utils.dataset import RAMDataset, get_examples_views_indices
 
 
-class FakeEstimator():
-
-    def predict(self, X, example_indices=None, view_indices=None):
-        return np.zeros(example_indices.shape[0])
+# class FakeEstimator():
+#
+#     def predict(self, X, example_indices=None, view_indices=None):
+#         return np.zeros(example_indices.shape[0])
 
 
 class BaseMultiviewClassifier(BaseClassifier):
@@ -32,31 +32,31 @@ class BaseMultiviewClassifier(BaseClassifier):
         self.used_views = None
 
     @abstractmethod
-    def fit(self, X, y, train_indices=None, view_indices=None):
+    def fit(self, X, y, train_indices=None, view_indices=None): # pragma: no cover
         pass
 
     @abstractmethod
-    def predict(self, X, example_indices=None, view_indices=None):
+    def predict(self, X, example_indices=None, view_indices=None): # pragma: no cover
         pass
 
-    def _check_views(self, view_indices):
+    def _check_views(self, view_indices): # pragma: no cover
         if self.used_views is not None and not np.array_equal(np.sort(self.used_views), np.sort(view_indices)):
             raise ValueError('Used {} views to fit, and trying to predict on {}'.format(self.used_views, view_indices))
 
-    def to_str(self, param_name):
-        if param_name in self.weird_strings:
-            string = ""
-            if "class_name" in self.weird_strings[param_name]:
-                string += self.get_params()[param_name].__class__.__name__
-            if "config" in self.weird_strings[param_name]:
-                string += "( with " + self.get_params()[
-                    param_name].params_to_string() + ")"
-            else:
-                string += self.weird_strings[param_name](
-                    self.get_params()[param_name])
-            return string
-        else:
-            return str(self.get_params()[param_name])
+    # def to_str(self, param_name):
+    #     if param_name in self.weird_strings:
+    #         string = ""
+    #         if "class_name" in self.weird_strings[param_name]:
+    #             string += self.get_params()[param_name].__class__.__name__
+    #         if "config" in self.weird_strings[param_name]:
+    #             string += "( with " + self.get_params()[
+    #                 param_name].params_to_string() + ")"
+    #         else:
+    #             string += self.weird_strings[param_name](
+    #                 self.get_params()[param_name])
+    #         return string
+    #     else:
+    #         return str(self.get_params()[param_name])
 
     def accepts_multi_class(self, random_state, n_samples=10, dim=2,
                             n_classes=3, n_views=2):
@@ -66,7 +66,7 @@ class BaseMultiviewClassifier(BaseClassifier):
                     n_samples,
                     n_classes))
         fake_mc_X = RAMDataset(
-            views=[random_state.random_integers(low=0, high=100,
+            views=[random_state.randint(low=0, high=101,
                                                 size=(n_samples, dim))
                    for i in range(n_views)],
             labels=[class_index
@@ -85,7 +85,6 @@ class BaseMultiviewClassifier(BaseClassifier):
         fake_mc_y = np.asarray(fake_mc_y)
         try:
             self.fit(fake_mc_X, fake_mc_y)
-            self.predict(fake_mc_X)
             return True
         except ValueError:
             return False

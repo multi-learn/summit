@@ -14,7 +14,7 @@ def get_duration(results):
               "pred"] = classifier_result.pred_duration
     return df
 
-def plot_durations(durations, directory, database_name, durations_stds=None):
+def plot_durations(durations, directory, database_name, durations_stds=None): # pragma: no cover
     file_name = os.path.join(directory, database_name + "-durations")
     durations.to_csv(file_name+"_dataframe.csv")
     fig = plotly.graph_objs.Figure()

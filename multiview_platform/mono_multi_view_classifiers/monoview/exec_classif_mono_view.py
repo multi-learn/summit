@@ -33,7 +33,7 @@ def exec_monoview_multicore(directory, name, labels_names,
                             path, random_state, labels,
                             hyper_param_search="randomized_search",
                             metrics=[["accuracy_score", None]], n_iter=30,
-                            **args):
+                            **args): # pragma: no cover
     dataset_var = HDF5Dataset(
         hdf5_file=h5py.File(path + name + str(dataset_file_index) + ".hdf5",
                             "r"))
@@ -52,8 +52,8 @@ def exec_monoview_multicore(directory, name, labels_names,
 
 def exec_monoview(directory, X, Y, database_name, labels_names, classification_indices,
                   k_folds, nb_cores, databaseType, path,
-                  random_state, hyper_param_search="randomized_search",
-                  metrics={"accuracy_score":{}}, n_iter=30, view_name="",
+                  random_state, hyper_param_search="Random",
+                  metrics={"accuracy_score*":{}}, n_iter=30, view_name="",
                   hps_kwargs={}, **args):
     logging.debug("Start:\t Loading data")
     kwargs, \
@@ -223,7 +223,7 @@ def get_hyper_params(classifier_module, search_method, classifier_module_name,
 
 def save_results(string_analysis, output_file_name, full_labels_pred,
                  y_train_pred,
-                 y_train, images_analysis, y_test, confusion_matrix):
+                 y_train, images_analysis, y_test, confusion_matrix): # pragma: no cover
     logging.info(string_analysis)
     output_text_file = open(output_file_name + 'summary.txt', 'w')
     output_text_file.write(string_analysis)

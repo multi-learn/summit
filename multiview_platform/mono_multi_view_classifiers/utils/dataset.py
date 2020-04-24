@@ -13,27 +13,27 @@ from .organization import secure_file_path
 class Dataset():
 
     @abstractmethod
-    def get_nb_examples(self):
+    def get_nb_examples(self): # pragma: no cover
         pass
 
     @abstractmethod
-    def get_v(self, view_index, example_indices=None):
+    def get_v(self, view_index, example_indices=None): # pragma: no cover
         pass
 
     @abstractmethod
-    def get_label_names(self, example_indices=None):
+    def get_label_names(self, example_indices=None): # pragma: no cover
         pass
 
     @abstractmethod
-    def get_labels(self, example_indices=None):
+    def get_labels(self, example_indices=None): # pragma: no cover
         pass
 
     @abstractmethod
     def filter(self, labels, label_names, example_indices, view_names,
-               path=None):
+               path=None): # pragma: no cover
         pass
 
-    def init_example_indces(self, example_indices=None):
+    def init_example_indices(self, example_indices=None):
         """If no example indices are provided, selects all the examples."""
         if example_indices is None:
             return range(self.get_nb_examples())
@@ -106,7 +106,7 @@ class Dataset():
     def select_views_and_labels(self, nb_labels=None,
                                 selected_label_names=None, random_state=None,
                                 view_names=None, path_for_new="../data/"):
-        if view_names is None and selected_label_names is None and nb_labels is None:
+        if view_names is None and selected_label_names is None and nb_labels is None: # pragma: no cover
             pass
         else:
             selected_label_names = self.check_selected_label_names(nb_labels,
@@ -159,7 +159,7 @@ class RAMDataset(Dataset):
         self.saved_on_disk = False
         self.views = views
         self.labels = np.asarray(labels)
-        if isinstance(are_sparse, bool):
+        if isinstance(are_sparse, bool): # pragma: no cover
             self.are_sparse = [are_sparse for _ in range(len(views))]
         else:
             self.are_sparse = are_sparse
@@ -205,11 +205,11 @@ class RAMDataset(Dataset):
                     if label in selected_labels]
 
     def get_labels(self, example_indices=None):
-        example_indices = self.init_example_indces(example_indices)
+        example_indices = self.init_example_indices(example_indices)
         return self.labels[example_indices]
 
     def get_v(self, view_index, example_indices=None):
-        example_indices = self.init_example_indces(example_indices)
+        example_indices = self.init_example_indices(example_indices)
         if type(example_indices) is int:
             return self.views[view_index][example_indices, :]
         else:
@@ -219,13 +219,13 @@ class RAMDataset(Dataset):
             if not self.are_sparse[view_index]:
                 return self.views[view_index][
                        example_indices, :]
-            else:
+            else: # pragma: no cover
                 # TODO Sparse support
                 pass
 
     def get_nb_class(self, example_indices=None):
         """Gets the number of class of the dataset"""
-        example_indices = self.init_example_indces(example_indices)
+        example_indices = self.init_example_indices(example_indices)
         return len(np.unique(self.labels[example_indices]))
 
     def filter(self, labels, label_names, example_indices, view_names,
@@ -233,7 +233,9 @@ class RAMDataset(Dataset):
         if self.example_ids is not None:
             self.example_ids = self.example_ids[example_indices]
         self.labels = self.labels[example_indices]
-        self.labels_names = self.labels_names[np.unique(self.labels)]
+        self.labels_names = [name for lab_index, name
+                             in enumerate(self.labels_names)
+                             if lab_index in np.unique(self.labels)]
         self.labels = np.array(
             [np.where(label == np.unique(self.labels))[0] for label in
              self.labels])
@@ -322,7 +324,7 @@ class HDF5Dataset(Dataset):
             if view_names is None:
                 view_names = ["View" + str(index) for index in
                               range(len(views))]
-            if isinstance(are_sparse, bool):
+            if isinstance(are_sparse, bool): # pragma: no cover
                 are_sparse = [are_sparse for _ in views]
             for view_index, (view_name, view, is_sparse) in enumerate(
                     zip(view_names, views, are_sparse)):
@@ -372,7 +374,7 @@ class HDF5Dataset(Dataset):
         -------
         A numpy.ndarray containing the view data for the needed examples
         """
-        example_indices = self.init_example_indces(example_indices)
+        example_indices = self.init_example_indices(example_indices)
         if type(example_indices) is int:
             return self.dataset["View" + str(view_index)][example_indices, :]
         else:
@@ -383,7 +385,7 @@ class HDF5Dataset(Dataset):
             if not self.dataset["View" + str(view_index)].attrs["sparse"]:
                 return self.dataset["View" + str(view_index)][()][
                        example_indices, :]  # [np.argsort(sorted_indices), :]
-            else:
+            else: # pragma: no cover
                 # Work in progress
                 pass
 
@@ -487,7 +489,7 @@ class HDF5Dataset(Dataset):
         int : The number of classes
 
         """
-        example_indices = self.init_example_indces(example_indices)
+        example_indices = self.init_example_indices(example_indices)
         return len(np.unique(self.dataset["Labels"][()][example_indices]))
 
     def get_labels(self, example_indices=None):
@@ -501,10 +503,10 @@ class HDF5Dataset(Dataset):
         Returns
         -------
         numpy.ndarray containing the labels of the asked examples"""
-        example_indices = self.init_example_indces(example_indices)
+        example_indices = self.init_example_indices(example_indices)
         return self.dataset["Labels"][()][example_indices]
 
-    def rm(self):
+    def rm(self): # pragma: no cover
         """
         Method used to delete the dataset file on the disk if the dataset is
         temporary.
@@ -521,7 +523,7 @@ class HDF5Dataset(Dataset):
 
     def copy_view(self, target_dataset=None, source_view_name=None,
                   target_view_index=None, example_indices=None):
-        example_indices = self.init_example_indces(example_indices)
+        example_indices = self.init_example_indices(example_indices)
         new_d_set = target_dataset.create_dataset(
             "View" + str(target_view_index),
             data=self.get_v(self.view_dict[source_view_name],
@@ -602,12 +604,8 @@ class HDF5Dataset(Dataset):
         for view_index in range(noisy_dataset["Metadata"].attrs["nbView"]):
             view_key = "View" + str(view_index)
             view_dset = noisy_dataset[view_key]
-            try:
-                view_limits = self.dataset[
+            view_limits = self.dataset[
                     "Metadata/View" + str(view_index) + "_limits"][()]
-            except:
-                import pdb;
-                pdb.set_trace()
             view_ranges = view_limits[:, 1] - view_limits[:, 0]
             normal_dist = random_state.normal(0, noise_std, view_dset[()].shape)
             noise = normal_dist * view_ranges
@@ -640,38 +638,37 @@ def datasets_already_exist(pathF, name, nbCores):
     """Used to check if it's necessary to copy datasets"""
     allDatasetExist = True
     for coreIndex in range(nbCores):
-        import os.path
-        allDatasetExist *= os.path.isfile(
-            pathF + name + str(coreIndex) + ".hdf5")
+        allDatasetExist *= os.path.isfile(os.path.join(
+            pathF, name + str(coreIndex) + ".hdf5"))
     return allDatasetExist
 
 
 def extract_subset(matrix, used_indices):
-    """Used to extract a subset of a matrix even if it's sparse"""
-    if sparse.issparse(matrix):
-        new_indptr = np.zeros(len(used_indices) + 1, dtype=int)
-        oldindptr = matrix.indptr
-        for exampleIndexIndex, exampleIndex in enumerate(used_indices):
-            new_indptr[exampleIndexIndex + 1] = new_indptr[
-                                                    exampleIndexIndex] + (
-                                                        oldindptr[
-                                                            exampleIndex + 1] -
-                                                        oldindptr[exampleIndex])
-        new_data = np.ones(new_indptr[-1], dtype=bool)
-        new_indices = np.zeros(new_indptr[-1], dtype=int)
-        old_indices = matrix.indices
-        for exampleIndexIndex, exampleIndex in enumerate(used_indices):
-            new_indices[new_indptr[exampleIndexIndex]:new_indptr[
-                exampleIndexIndex + 1]] = old_indices[
-                                          oldindptr[exampleIndex]:
-                                          oldindptr[exampleIndex + 1]]
-        return sparse.csr_matrix((new_data, new_indices, new_indptr),
-                                 shape=(len(used_indices), matrix.shape[1]))
-    else:
-        return matrix[used_indices]
+    """Used to extract a subset of a matrix even if it's sparse WIP"""
+    # if sparse.issparse(matrix):
+    #     new_indptr = np.zeros(len(used_indices) + 1, dtype=int)
+    #     oldindptr = matrix.indptr
+    #     for exampleIndexIndex, exampleIndex in enumerate(used_indices):
+    #         new_indptr[exampleIndexIndex + 1] = new_indptr[
+    #                                                 exampleIndexIndex] + (
+    #                                                     oldindptr[
+    #                                                         exampleIndex + 1] -
+    #                                                     oldindptr[exampleIndex])
+    #     new_data = np.ones(new_indptr[-1], dtype=bool)
+    #     new_indices = np.zeros(new_indptr[-1], dtype=int)
+    #     old_indices = matrix.indices
+    #     for exampleIndexIndex, exampleIndex in enumerate(used_indices):
+    #         new_indices[new_indptr[exampleIndexIndex]:new_indptr[
+    #             exampleIndexIndex + 1]] = old_indices[
+    #                                       oldindptr[exampleIndex]:
+    #                                       oldindptr[exampleIndex + 1]]
+    #     return sparse.csr_matrix((new_data, new_indices, new_indptr),
+    #                              shape=(len(used_indices), matrix.shape[1]))
+    # else:
+    return matrix[used_indices]
 
 
-def init_multiple_datasets(path_f, name, nb_cores):
+def init_multiple_datasets(path_f, name, nb_cores): # pragma: no cover
     r"""Used to create copies of the dataset if multicore computation is used.
 
     This is a temporary solution to fix the sharing memory issue with HDF5 datasets.
@@ -696,19 +693,23 @@ def init_multiple_datasets(path_f, name, nb_cores):
                 "Info:\t Enough copies of the dataset are already available")
             pass
         else:
-            logging.debug("Start:\t Creating " + str(
-                nb_cores) + " temporary datasets for multiprocessing")
-            logging.warning(
-                " WARNING : /!\ This may use a lot of HDD storage space : " +
-                str(os.path.getsize(path_f + name + ".hdf5") * nb_cores / float(
-                    1024) / 1000 / 1000) + " Gbytes /!\ ")
-            confirmation = confirm()
-            if not confirmation:
-                sys.exit(0)
+            if os.path.getsize(os.path.join(path_f, name + ".hdf5")) * nb_cores / float(1024) / 1000 / 1000 > 0.1:
+                logging.debug("Start:\t Creating " + str(
+                    nb_cores) + " temporary datasets for multiprocessing")
+                logging.warning(
+                    " WARNING : /!\ This may use a lot of HDD storage space : " +
+                    str(os.path.getsize(os.path.join(path_f, name + ".hdf5")) * nb_cores / float(
+                        1024) / 1000 / 1000) + " Gbytes /!\ ")
+                confirmation = confirm()
+                if not confirmation:
+                    sys.exit(0)
+                else:
+                    pass
             else:
-                dataset_files = copy_hdf5(path_f, name, nb_cores)
-                logging.debug("Start:\t Creating datasets for multiprocessing")
-                return dataset_files
+                pass
+            dataset_files = copy_hdf5(path_f, name, nb_cores)
+            logging.debug("Start:\t Creating datasets for multiprocessing")
+            return dataset_files
 
 
 def copy_hdf5(pathF, name, nbCores):
@@ -735,7 +736,7 @@ def delete_HDF5(benchmarkArgumentsDictionaries, nbCores, dataset):
         dataset.rm()
 
 
-def confirm(resp=True, timeout=15):
+def confirm(resp=True, timeout=15): # pragma: no cover
     """Used to process answer"""
     ans = input_(timeout)
     if not ans:
@@ -748,7 +749,7 @@ def confirm(resp=True, timeout=15):
         return False
 
 
-def input_(timeout=15):
+def input_(timeout=15): # pragma: no cover
     """used as a UI to stop if too much HDD space will be used"""
     logging.warning("You have " + str(
         timeout) + " seconds to stop the dataset copy by typing n")

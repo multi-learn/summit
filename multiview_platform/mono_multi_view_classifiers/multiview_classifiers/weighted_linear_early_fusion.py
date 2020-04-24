@@ -50,8 +50,8 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         self.classed_params = []
         self.weird_strings = {}
 
-    def set_params(self, monoview_classifier_name=None,
-                   monoview_classifier_config=None, **params):
+    def set_params(self, monoview_classifier_name="decision_tree",
+                   monoview_classifier_config={}, **params):
         self.monoview_classifier_name = monoview_classifier_name
         self.monoview_classifier = self.init_monoview_estimator(
             monoview_classifier_name,

@@ -150,7 +150,7 @@ class Test_get_plausible_db_hdf5(unittest.TestCase):
             "", self.path, "", nb_class=self.nb_class, random_state=self.rs,
             nb_view=3, nb_examples=self.nb_examples,
             nb_features=self.nb_features)
-        self.assertEqual(dataset.init_example_indces(), range(5))
+        self.assertEqual(dataset.init_example_indices(), range(5))
         self.assertEqual(dataset.get_nb_class(), self.nb_class)
 
     def test_two_class(self):
@@ -158,7 +158,7 @@ class Test_get_plausible_db_hdf5(unittest.TestCase):
             "", self.path, "", nb_class=2, random_state=self.rs,
             nb_view=3, nb_examples=self.nb_examples,
             nb_features=self.nb_features)
-        self.assertEqual(dataset.init_example_indces(), range(5))
+        self.assertEqual(dataset.init_example_indices(), range(5))
         self.assertEqual(dataset.get_nb_class(), 2)
 
 

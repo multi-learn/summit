@@ -157,7 +157,7 @@ def gen_error_data_glob(iter_results, stats_iter):
 
 
 def plot_2d(data, classifiers_names, nb_classifiers, file_name, labels=None,
-            stats_iter=1, use_plotly=True, example_ids=None):
+            stats_iter=1, use_plotly=True, example_ids=None): # pragma: no cover
     r"""Used to generate a 2D plot of the errors.
 
     Parameters
@@ -232,7 +232,7 @@ def plot_2d(data, classifiers_names, nb_classifiers, file_name, labels=None,
 
 
 def plot_errors_bar(error_on_examples, nb_examples, file_name,
-                    use_plotly=True, example_ids=None):
+                    use_plotly=True, example_ids=None): # pragma: no cover
     r"""Used to generate a barplot of the muber of classifiers that failed to classify each examples
 
     Parameters
