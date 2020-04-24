@@ -6,6 +6,10 @@ tests:
     script:
         - pip3 install -e . --no-deps
         - pytest-3
+    coverage: '/^TOTAL.+?(\d+\%)$/'
+    artifacts:
+        paths:
+            - htmlcov/
 
 # generate the documentation
 doc:

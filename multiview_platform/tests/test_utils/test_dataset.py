@@ -47,6 +47,29 @@ class Test_Dataset(unittest.TestCase):
     def tearDownClass(cls):
         cls.dataset_file.close()
 
+    def test_get_shape(self):
+        dataset_object = dataset.HDF5Dataset(views=self.views,
+                                             labels=self.labels,
+                                             are_sparse=self.are_sparse,
+                                             file_name="from_scratch" + self.file_name,
+                                             view_names=self.view_names,
+                                             path=tmp_path,
+                                             labels_names=self.labels_names)
+        shape = dataset_object.get_shape(0)
+        self.assertEqual(shape, (5,7))
+
+    def test_to_numpy_array(self):
+        dataset_object = dataset.HDF5Dataset(views=self.views,
+                                             labels=self.labels,
+                                             are_sparse=self.are_sparse,
+                                             file_name="from_scratch" + self.file_name,
+                                             view_names=self.view_names,
+                                             path=tmp_path,
+                                             labels_names=self.labels_names)
+        array, limits = dataset_object.to_numpy_array(view_indices=[0,1,2])
+
+        self.assertEqual(array.shape, (5, 21))
+
     def test_filter(self):
         """Had to create a new dataset to aviod playing with the class one"""
         file_name = "test_filter.hdf5"
@@ -90,15 +113,17 @@ class Test_Dataset(unittest.TestCase):
                                              labels_names=self.labels_names)
         nb_class = dataset_object.get_nb_class()
         self.assertEqual(nb_class, self.nb_class)
-        example_indices = dataset_object.init_example_indces()
+        example_indices = dataset_object.init_example_indices()
         self.assertEqual(example_indices, range(self.nb_examples))
         view = dataset_object.get_v(0)
         np.testing.assert_array_equal(view, self.views[0])
 
     def test_init_example_indices(self):
-        example_indices = dataset.HDF5Dataset(hdf5_file=self.dataset_file).init_example_indces()
+        example_indices = dataset.HDF5Dataset(
+            hdf5_file=self.dataset_file).init_example_indices()
         self.assertEqual(example_indices, range(self.nb_examples))
-        example_indices = dataset.HDF5Dataset(hdf5_file=self.dataset_file).init_example_indces([0,1,2])
+        example_indices = dataset.HDF5Dataset(
+            hdf5_file=self.dataset_file).init_example_indices([0, 1, 2])
         self.assertEqual(example_indices, [0,1,2])
 
     def test_get_v(self):
@@ -234,6 +259,164 @@ class Test_Dataset(unittest.TestCase):
         dataset_object.dataset.close()
         os.remove(os.path.join(tmp_path, "test_noise_noised.hdf5"))
         os.remove(os.path.join(tmp_path, "test_noise.hdf5"))
+
+class TestRAMDataset(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rs = np.random.RandomState(42)
+        cls.nb_view = 3
+        cls.file_name = "test.hdf5"
+        cls.nb_examples = 5
+        cls.nb_attr = 7
+        cls.nb_class = 3
+        cls.views = [cls.rs.randint(0, 10, size=(cls.nb_examples, cls.nb_attr))
+                     for _ in range(cls.nb_view)]
+        cls.labels = cls.rs.randint(0, cls.nb_class, cls.nb_examples)
+        cls.view_names = ["ViewN" + str(index) for index in
+                          range(len(cls.views))]
+        cls.are_sparse = [False for _ in cls.views]
+        cls.labels_names = [str(index) for index in np.unique(cls.labels)]
+
+    def test_get_view_name(self):
+        dataset_object = dataset.RAMDataset(views=self.views,
+                                             labels=self.labels,
+                                             are_sparse=self.are_sparse,
+                                             view_names=self.view_names,
+                                             labels_names=self.labels_names)
+        self.assertEqual(dataset_object.get_view_name(0),
+                         "ViewN0")
+
+    def test_init_attrs(self):
+        dataset_object = dataset.RAMDataset(views=self.views,
+                                            labels=self.labels,
+                                            are_sparse=self.are_sparse,
+                                            view_names=self.view_names,
+                                            labels_names=self.labels_names)
+
+
+        dataset_object.init_attrs()
+        self.assertEqual(dataset_object.nb_view, 3)
+
+    def test_get_label_names(self):
+        dataset_object = dataset.RAMDataset(views=self.views,
+                                             labels=self.labels,
+                                             are_sparse=self.are_sparse,
+                                             view_names=self.view_names,
+                                             labels_names=self.labels_names)
+        shape = dataset_object.get_label_names()
+        self.assertEqual(shape, ['0'.encode('utf-8'),
+                                 '1'.encode('utf-8'),
+                                 '2'.encode('utf-8')])
+        shape = dataset_object.get_label_names(decode=False)
+        self.assertEqual(shape, ['0'.encode('utf-8'),
+                                 '1'.encode('utf-8'),
+                                 '2'.encode('utf-8')])
+
+    def test_get_v(self):
+        dataset_object = dataset.RAMDataset(views=self.views,
+                                            labels=self.labels,
+                                            are_sparse=self.are_sparse,
+                                            view_names=self.view_names,
+                                            labels_names=self.labels_names)
+        data = dataset_object.get_v(0, 1)
+        np.testing.assert_array_equal(data, np.array([6, 7, 4, 3, 7, 7, 2]))
+        data = dataset_object.get_v(0, None)
+        np.testing.assert_array_equal(data, np.array([[6, 3, 7, 4, 6, 9, 2],
+                                                     [6, 7, 4, 3, 7, 7, 2],
+                                                     [5, 4, 1, 7, 5, 1, 4],
+                                                     [0, 9, 5, 8, 0, 9, 2],
+                                                     [6, 3, 8, 2, 4, 2, 6]]))
+
+    def test_filter(self):
+        dataset_object = dataset.RAMDataset(views=self.views,
+                                            labels=self.labels,
+                                            are_sparse=self.are_sparse,
+                                            view_names=self.view_names,
+                                            labels_names=self.labels_names)
+        dataset_object.filter("", "", np.array([1,2]), ["ViewN0", "ViewN1"],
+               path=None)
+        self.assertEqual(dataset_object.nb_view, 2)
+        self.assertEqual(dataset_object.labels.shape, (2,1))
+
+    def test_get_view_dict(self):
+        dataset_object = dataset.RAMDataset(views=self.views,
+                                            labels=self.labels,
+                                            are_sparse=self.are_sparse,
+                                            view_names=self.view_names,
+                                            labels_names=self.labels_names)
+        d = dataset_object.get_view_dict()
+        self.assertEqual(d, {'ViewN0': 0, 'ViewN1': 1, 'ViewN2': 2})
+
+    def test_get_name(self):
+        dataset_object = dataset.RAMDataset(views=self.views,
+                                            labels=self.labels,
+                                            are_sparse=self.are_sparse,
+                                            view_names=self.view_names,
+                                            labels_names=self.labels_names)
+        n = dataset_object.get_name()
+        self.assertEqual(n, None)
+
+class Test_Functions(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        rm_tmp()
+        os.mkdir(tmp_path)
+        cls.rs = np.random.RandomState(42)
+        cls.nb_view = 3
+        cls.file_name = "test0.hdf5"
+        cls.nb_examples = 5
+        cls.nb_attr = 7
+        cls.nb_class = 3
+        cls.views = [cls.rs.randint(0, 10, size=(cls.nb_examples, cls.nb_attr))
+                     for _ in range(cls.nb_view)]
+        cls.labels = cls.rs.randint(0, cls.nb_class, cls.nb_examples)
+        cls.dataset_file = h5py.File(os.path.join(tmp_path, cls.file_name), "w")
+        cls.view_names = ["ViewN" + str(index) for index in
+                          range(len(cls.views))]
+        cls.are_sparse = [False for _ in cls.views]
+        for view_index, (view_name, view, is_sparse) in enumerate(
+                zip(cls.view_names, cls.views, cls.are_sparse)):
+            view_dataset = cls.dataset_file.create_dataset(
+                "View" + str(view_index),
+                view.shape,
+                data=view)
+            view_dataset.attrs["name"] = view_name
+            view_dataset.attrs["sparse"] = is_sparse
+        labels_dataset = cls.dataset_file.create_dataset("Labels",
+                                                         shape=cls.labels.shape,
+                                                         data=cls.labels)
+        cls.labels_names = [str(index) for index in np.unique(cls.labels)]
+        labels_dataset.attrs["names"] = [label_name.encode()
+                                         for label_name in cls.labels_names]
+        meta_data_grp = cls.dataset_file.create_group("Metadata")
+        meta_data_grp.attrs["nbView"] = len(cls.views)
+        meta_data_grp.attrs["nbClass"] = len(np.unique(cls.labels))
+        meta_data_grp.attrs["datasetLength"] = len(cls.labels)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.dataset_file.close()
+        rm_tmp()
+
+    def test_datasets_already_exist(self):
+        self.assertEqual(True, dataset.datasets_already_exist(tmp_path, "test", 1))
+
+    def test_init_multiple_datasets(self):
+        dataset.init_multiple_datasets(tmp_path, "test0", 2)
+        self.assertTrue(os.path.isfile(os.path.join(tmp_path,'test00.hdf5')))
+        dataset.delete_HDF5([{"args":{"pathf":tmp_path, "name":"test0"}}],
+                            2, dataset.HDF5Dataset(hdf5_file=self.dataset_file))
+        self.assertFalse(os.path.isfile(os.path.join(tmp_path,'test00.hdf5')))
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':

@@ -15,11 +15,3 @@ class SVCClassifier(SVC):
         )
         self.classed_params = []
         self.weird_strings = {}
-
-    def canProbas(self):
-        """Used to know if the classifier can return label probabilities"""
-        return True
-
-    def getInterpret(self, directory, y_test):
-        interpretString = ""
-        return interpretString

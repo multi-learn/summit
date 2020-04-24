@@ -170,7 +170,7 @@ def plot_metric_scores(train_scores, test_scores, names, nb_results,
                        metric_name,
                        file_name,
                        tag="", train_STDs=None, test_STDs=None,
-                       use_plotly=True):
+                       use_plotly=True): # pragma: no cover
     r"""Used to plot and save the score barplot for a specific metric.
 
     Parameters
@@ -263,7 +263,7 @@ def plot_metric_scores(train_scores, test_scores, names, nb_results,
 
 def plot_class_metric_scores(class_test_scores, class_file_name,
                              labels_names, classifier_names, metric_name,
-                             stds=None, tag=""):
+                             stds=None, tag=""): # pragma: no cover
     fig = plotly.graph_objs.Figure()
     for lab_index, scores in enumerate(class_test_scores):
         if stds is None:
@@ -312,7 +312,7 @@ def get_fig_size(nb_results, min_size=15, multiplier=1.0, bar_width=0.35):
     return fig_kwargs, bar_width
 
 
-def autolabel(rects, ax, set=1, std=None):
+def autolabel(rects, ax, set=1, std=None): # pragma: no cover
     r"""Used to print the score below the bars.
 
     Parameters

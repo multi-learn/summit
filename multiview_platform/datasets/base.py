@@ -1,9 +1,9 @@
+from __future__ import print_function
 import pickle
 import numpy as np
 import numpy.ma as ma
 from multiview_platform.datasets.data_sample import DataSample
 from six.moves import cPickle as pickle #for performance
-from __future__ import print_function
 import numpy as np
 
 

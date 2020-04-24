@@ -46,8 +46,8 @@ def init_constants(kwargs, classification_indices, metrics,
     """
     views = kwargs["view_names"]
     views_indices = kwargs["view_indices"]
-    if not metrics:
-        metrics = [["f1_score", None]]
+    if metrics is None:
+        metrics = {"f1_score*":{}}
     classifier_name = kwargs["classifier_name"]
     classifier_config = kwargs[classifier_name]
     learning_rate = len(classification_indices[0]) / float(
@@ -68,11 +68,11 @@ def init_constants(kwargs, classification_indices, metrics,
     output_file_name = os.path.join(directory, base_file_name)
     return classifier_name, t_start, views_indices, \
            classifier_config, views, learning_rate, labels, output_file_name,\
-           directory, base_file_name
+           directory, base_file_name, metrics
 
 
 def save_results(string_analysis, images_analysis, output_file_name,
-                 confusion_matrix):
+                 confusion_matrix): # pragma: no cover
     """
     Save results in derectory
 
@@ -128,7 +128,7 @@ def exec_multiview_multicore(directory, core_index, name, learning_rate,
                              database_type, path, labels_dictionary,
                              random_state, labels,
                              hyper_param_search=False, nb_cores=1, metrics=None,
-                             n_iter=30, **arguments):
+                             n_iter=30, **arguments): # pragma: no cover
     """
     execute multiview process on
 
@@ -246,7 +246,8 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     labels, \
     output_file_name,\
     directory,\
-    base_file_name = init_constants(kwargs, classification_indices, metrics, name,
+    base_file_name, \
+    metrics = init_constants(kwargs, classification_indices, metrics, name,
                             nb_cores, k_folds, dataset_var, directory)
     logging.debug("Done:\t Initialize constants")
 

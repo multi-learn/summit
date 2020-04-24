@@ -62,14 +62,14 @@ class BaseClassifier(BaseEstimator, ):
         if self.param_names:
             return self.__class__.__name__ + " with " + self.params_to_string()
         else:
-            return self.__class__.__name__ + "with no config."
+            return self.__class__.__name__ + " with no config."
 
     def get_base_estimator(self, base_estimator, estimator_config):
         if estimator_config is None:
             estimator_config = {}
         if base_estimator is None:
             return DecisionTreeClassifier(**estimator_config)
-        if isinstance(base_estimator, str):
+        if isinstance(base_estimator, str):  # pragma: no cover
             if base_estimator == "DecisionTreeClassifier":
                 return DecisionTreeClassifier(**estimator_config)
             elif base_estimator == "AdaboostClassifier":
@@ -89,11 +89,12 @@ class BaseClassifier(BaseEstimator, ):
         Formats a parameter into a string
         """
         if param_name in self.weird_strings:
-            if self.weird_strings[param_name] == "class_name":
-                return self.get_params()[param_name].__class__.__name__
-            else:
-                return self.weird_strings[param_name](
-                    self.get_params()[param_name])
+            string = ""
+            if "class_name" in self.weird_strings[param_name]:
+                string += self.get_params()[param_name].__class__.__name__
+            if "config" in self.weird_strings[param_name]:
+                string += "( with " + self.get_params()[
+                    param_name].params_to_string() + ")"
         else:
             return str(self.get_params()[param_name])
 
@@ -118,22 +119,21 @@ class BaseClassifier(BaseEstimator, ):
                 "n_samples ({}) / n_class ({}) must be over 1".format(
                     n_samples,
                     n_classes))
-        if hasattr(self, "accepts_mutli_class"):
-            return self.accepts_multi_class
-        else:
-            fake_mc_X = random_state.random_integers(low=0, high=100,
-                                                     size=(n_samples, dim))
-            fake_mc_y = [class_index
-                         for _ in range(int(n_samples / n_classes))
-                         for class_index in range(n_classes)]
-            fake_mc_y += [0 for _ in range(n_samples % n_classes)]
-            fake_mc_y = np.asarray(fake_mc_y)
-            try:
-                self.fit(fake_mc_X, fake_mc_y)
-                self.predict(fake_mc_X)
-                return True
-            except ValueError:
-                return False
+        # if hasattr(self, "accepts_mutli_class"):
+        #     return self.accepts_multi_class
+        fake_mc_X = random_state.randint(low=0, high=101,
+                                                 size=(n_samples, dim))
+        fake_mc_y = [class_index
+                     for _ in range(int(n_samples / n_classes))
+                     for class_index in range(n_classes)]
+        fake_mc_y += [0 for _ in range(n_samples % n_classes)]
+        fake_mc_y = np.asarray(fake_mc_y)
+        try:
+            self.fit(fake_mc_X, fake_mc_y)
+            # self.predict(fake_mc_X)
+            return True
+        except ValueError:
+            return False
 
 
 def get_names(classed_list):
@@ -297,11 +297,11 @@ class ResultAnalyser():
         return metric_score_string
 
     @abstractmethod
-    def get_view_specific_info(self):
+    def get_view_specific_info(self): # pragma: no cover
         pass
 
     @abstractmethod
-    def get_base_string(self):
+    def get_base_string(self): # pragma: no cover
         pass
 
     def get_db_config_string(self,):

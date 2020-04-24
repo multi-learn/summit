@@ -6,6 +6,7 @@ from matplotlib.ticker import FuncFormatter
 from scipy.stats import uniform, randint
 
 from ..utils.base import BaseClassifier, ResultAnalyser
+from ..utils.hyper_parameter_search import CustomRandint, CustomUniform
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -75,41 +76,41 @@ def gen_test_folds_preds(X_train, y_train, KFolds, estimator):
     return test_folds_preds
 
 
-class CustomRandint:
-    """Used as a distribution returning a integer between low and high-1.
-    It can be used with a multiplier agrument to be able to perform more complex generation
-    for example 10 e -(randint)"""
-
-    def __init__(self, low=0, high=0, multiplier=""):
-        self.randint = randint(low, high)
-        self.multiplier = multiplier
-
-    def rvs(self, random_state=None):
-        randinteger = self.randint.rvs(random_state=random_state)
-        if self.multiplier == "e-":
-            return 10 ** -randinteger
-        else:
-            return randinteger
-
-    def get_nb_possibilities(self):
-        return self.randint.b - self.randint.a
-
-
-class CustomUniform:
-    """Used as a distribution returning a float between loc and loc + scale..
-        It can be used with a multiplier agrument to be able to perform more complex generation
-        for example 10 e -(float)"""
-
-    def __init__(self, loc=0, state=1, multiplier=""):
-        self.uniform = uniform(loc, state)
-        self.multiplier = multiplier
-
-    def rvs(self, random_state=None):
-        unif = self.uniform.rvs(random_state=random_state)
-        if self.multiplier == 'e-':
-            return 10 ** -unif
-        else:
-            return unif
+# class CustomRandint:
+#     """Used as a distribution returning a integer between low and high-1.
+#     It can be used with a multiplier agrument to be able to perform more complex generation
+#     for example 10 e -(randint)"""
+#
+#     def __init__(self, low=0, high=0, multiplier=""):
+#         self.randint = randint(low, high)
+#         self.multiplier = multiplier
+#
+#     def rvs(self, random_state=None):
+#         randinteger = self.randint.rvs(random_state=random_state)
+#         if self.multiplier == "e-":
+#             return 10 ** -randinteger
+#         else:
+#             return randinteger
+#
+#     def get_nb_possibilities(self):
+#         return self.randint.b - self.randint.a
+#
+#
+# class CustomUniform:
+#     """Used as a distribution returning a float between loc and loc + scale..
+#         It can be used with a multiplier agrument to be able to perform more complex generation
+#         for example 10 e -(float)"""
+#
+#     def __init__(self, loc=0, state=1, multiplier=""):
+#         self.uniform = uniform(loc, state)
+#         self.multiplier = multiplier
+#
+#     def rvs(self, random_state=None):
+#         unif = self.uniform.rvs(random_state=random_state)
+#         if self.multiplier == 'e-':
+#             return 10 ** -unif
+#         else:
+#             return unif
 
 
 class BaseMonoviewClassifier(BaseClassifier):
@@ -179,7 +180,7 @@ class MonoviewResult(object):
 
 def get_accuracy_graph(plotted_data, classifier_name, file_name,
                        name="Accuracies", bounds=None, bound_name=None,
-                       boosting_bound=None, set="train", zero_to_one=True):
+                       boosting_bound=None, set="train", zero_to_one=True): # pragma: no cover
     if type(name) is not str:
         name = " ".join(name.getConfig().strip().split(" ")[:2])
     f, ax = plt.subplots(nrows=1, ncols=1)

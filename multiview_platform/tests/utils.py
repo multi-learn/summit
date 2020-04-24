@@ -9,11 +9,14 @@ tmp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tmp_tests/"
 # TODO Convert to ram dataset
 test_dataset = HDF5Dataset(hdf5_file=h5py.File(os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_database.hdf5"), "r"))
 
-def rm_tmp():
+def rm_tmp(path=tmp_path):
     try:
-        for file_name in os.listdir(tmp_path):
-            os.remove(os.path.join(tmp_path, file_name))
-        os.rmdir(tmp_path)
+        for file_name in os.listdir(path):
+            if os.path.isdir(os.path.join(path, file_name)):
+                rm_tmp(os.path.join(path, file_name))
+            else:
+                os.remove(os.path.join(path, file_name))
+        os.rmdir(path)
     except:
         pass
 
