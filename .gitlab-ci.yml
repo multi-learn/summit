@@ -50,8 +50,8 @@ pages:
         - sphinx-build -b html . ../build
         - cd ../..
         - cp -r ./docs/build public
-        - mv multiview_platform/htmlcov/index.html public/coverage/
-        - mv multiview_platform/htmlcov/style.css public/coverage/
+        - mv htmlcov/index.html public/coverage/
+        - mv htmlcov/style.css public/coverage/
     artifacts:
        paths:
             - public
