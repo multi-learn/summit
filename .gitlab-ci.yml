@@ -31,6 +31,7 @@ doc:
     artifacts:
         paths:
             - public
+            - htmlcov
 
 # project public
 pages:
