@@ -1,11 +1,26 @@
 import unittest
 import numpy as np
 import pandas as pd
+import os
 
 from multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils import MonoviewResult
 from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import MultiviewResult
 
-from multiview_platform.mono_multi_view_classifiers.result_analysis.execution import format_previous_results, get_arguments
+from multiview_platform.mono_multi_view_classifiers.result_analysis.execution import format_previous_results, get_arguments, analyze_iterations
+from multiview_platform.tests.utils import rm_tmp, tmp_path, test_dataset
+
+
+class FakeClassifierResult:
+
+    def __init__(self, i=1):
+        self.classifier_name='test'+str(i)
+        self.full_labels_pred = np.array([0,1,1,2,1])
+        self.hps_duration=i
+        self.fit_duration=i
+        self.pred_duration=i
+
+    def get_classifier_name(self):
+        return self.classifier_name
 
 class Test_format_previous_results(unittest.TestCase):
 
@@ -82,3 +97,43 @@ class Test_get_arguments(unittest.TestCase):
     def test_benchmark_wanted(self):
         argument_dict = get_arguments(self.benchamrk_argument_dictionaries, "good_flag")
         self.assertTrue(argument_dict["valid"])
+
+
+class Test_analyze_iterations(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        os.mkdir(tmp_path)
+        cls.results = [[0, [FakeClassifierResult(), FakeClassifierResult(i=2)], []], [1, [FakeClassifierResult(), FakeClassifierResult(i=2)], []]]
+        cls.benchmark_argument_dictionaries = [{"labels_dictionary":{0:"zero",1:"one",2:"two"}, "flag":0, "directory":tmp_path, "args":{"name":"test_dataset"}},{"labels_dictionary":{0:"zero",1:"one",2:"two"}, "flag":1, "directory":tmp_path, "args":{"name":"test_dataset"}} ]
+        cls.stats_iter = 2
+        cls.metrics = {}
+        cls.example_ids = ['ex1', 'ex5','ex4','ex3','ex2',]
+        cls.labels = np.array([0,1,2,1,1])
+
+
+    @classmethod
+    def tearDownClass(cls):
+        rm_tmp()
+
+    def test_simple(self):
+        analysis = analyze_iterations(self.results,
+                                      self.benchmark_argument_dictionaries,
+                                      self.stats_iter,
+                                      self.metrics,
+                                      self.example_ids,
+                                      self.labels)
+        res, iter_res, tracebacks, labels_names = analysis
+        self.assertEqual(labels_names, ['zero', 'one', 'two'])
+
+        self.assertEqual(iter_res['class_metrics_scores'], [{}, {}])
+
+        pd.testing.assert_frame_equal(iter_res['durations'][0], pd.DataFrame(index=['test1','test2'],
+                                 columns=['hps', 'fit', 'pred'],
+                            data=np.array([1,1,1,2,2,2]).reshape((2,3)), dtype=object))
+        np.testing.assert_array_equal(iter_res['example_errors'][0]['test1'], np.array([1, 1, 0, 0, 1]))
+        self.assertEqual(iter_res["feature_importances"], [{},{}])
+        np.testing.assert_array_equal(iter_res['labels'], np.array([0, 1, 2, 1, 1]))
+        self.assertEqual(iter_res['metrics_scores'], [{},{}])
+
+

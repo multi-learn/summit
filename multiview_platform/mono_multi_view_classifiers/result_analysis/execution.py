@@ -8,7 +8,7 @@ from .error_analysis import get_example_errors, publish_example_errors, publish_
 from .feature_importances import get_feature_importances, publish_feature_importances
 
 def analyze(results, stats_iter, benchmark_argument_dictionaries,
-                metrics, directory, example_ids, labels):
+                metrics, directory, example_ids, labels): # pragma: no cover
     """Used to analyze the results of the previous benchmarks"""
     data_base_name = benchmark_argument_dictionaries[0]["args"]["name"]
 
@@ -105,7 +105,7 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
 
 
 def analyze_all(iter_results, stats_iter, directory, data_base_name,
-                example_ids, label_names):
+                example_ids, label_names): # pragma: no cover
     """Used to format the results in order to plot the mean results on
     the iterations"""
     metrics_analysis, class_metrics_analysis, error_analysis, feature_importances, \

@@ -47,7 +47,7 @@ def get_example_errors(groud_truth, results):
 
 
 def publish_example_errors(example_errors, directory, databaseName,
-                           labels_names, example_ids, labels):
+                           labels_names, example_ids, labels): # pragma: no cover
     logging.debug("Start:\t Label analysis figure generation")
 
     base_file_name = os.path.join(directory, databaseName + "-" )
@@ -70,7 +70,7 @@ def publish_example_errors(example_errors, directory, databaseName,
 
 def publish_all_example_errors(iter_results, directory,
                                stats_iter,
-                               example_ids, labels):
+                               example_ids, labels): # pragma: no cover
     logging.debug(
         "Start:\t Global label analysis figure generation")
 
@@ -132,11 +132,7 @@ def gen_error_data(example_errors):
     data_2d = np.zeros((nb_examples, nb_classifiers))
     for classifierIndex, (classifier_name, error_on_examples) in enumerate(
             example_errors.items()):
-        try:
-            data_2d[:, classifierIndex] = error_on_examples
-        except:
-            import pdb;
-            pdb.set_trace()
+        data_2d[:, classifierIndex] = error_on_examples
     error_on_examples = np.sum(data_2d, axis=1) / nb_classifiers
     return nb_classifiers, nb_examples, classifiers_names, data_2d, error_on_examples
 
@@ -267,7 +263,7 @@ def plot_errors_bar(error_on_examples, nb_examples, file_name,
 
 
 
-def iter_cmap(statsIter):
+def iter_cmap(statsIter): # pragma: no cover
     r"""Used to generate a colormap that will have a tick for each iteration : the whiter the better.
 
     Parameters

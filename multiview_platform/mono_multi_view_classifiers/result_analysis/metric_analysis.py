@@ -67,7 +67,7 @@ def get_metrics_scores(metrics, results, label_names):
 
 
 def publish_metrics_graphs(metrics_scores, directory, database_name,
-                           labels_names, class_metric_scores):
+                           labels_names, class_metric_scores):  # pragma: no cover
     r"""Used to sort the results (names and both scores) in descending test
     score order.
 
@@ -114,7 +114,7 @@ def publish_metrics_graphs(metrics_scores, directory, database_name,
 
 def publish_all_metrics_scores(iter_results, class_iter_results, directory,
                                data_base_name, stats_iter, label_names,
-                               min_size=10):
+                               min_size=10): # pragma: no cover
     results = []
     secure_file_path(os.path.join(directory, "a"))
 
