@@ -3,7 +3,7 @@ import unittest
 
 import numpy as np
 
-from multiview_platform.tests.utils import rm_tmp, tmp_path
+from multiview_platform.tests.utils import rm_tmp, tmp_path, test_dataset
 
 from multiview_platform.mono_multi_view_classifiers.utils import execution
 
@@ -15,7 +15,138 @@ class Test_parseTheArgs(unittest.TestCase):
 
     def test_empty_args(self):
         args = execution.parse_the_args([])
-        # print args
+
+class Test_init_log_file(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        os.mkdir(tmp_path)
+
+    @classmethod
+    def tearDownClass(cls):
+        rm_tmp()
+
+    def test_simple(self):
+        res_dir = execution.init_log_file(name="test_dataset",
+                                          views=["V1", "V2", "V3"],
+                                          cl_type="",
+                                          log=True,
+                                          debug=False,
+                                          label="No",
+                                          result_directory=tmp_path,
+                                          args={})
+        self.assertTrue(res_dir.startswith(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))),"tmp_tests", "test_dataset", "started" )))
+
+    def test_no_log(self):
+        res_dir = execution.init_log_file(name="test_dataset",
+                                          views=["V1", "V2", "V3"],
+                                          cl_type="",
+                                          log=False,
+                                          debug=False,
+                                          label="No1",
+                                          result_directory=tmp_path,
+                                          args={})
+        self.assertTrue(res_dir.startswith(os.path.join(
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+            "tmp_tests", "test_dataset", "started")))
+
+    def test_debug(self):
+        res_dir = execution.init_log_file(name="test_dataset",
+                                          views=["V1", "V2", "V3"],
+                                          cl_type="",
+                                          log=True,
+                                          debug=True,
+                                          label="No",
+                                          result_directory=tmp_path,
+                                          args={})
+        self.assertTrue(res_dir.startswith(os.path.join(
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+            "tmp_tests", "test_dataset", "debug_started")))
+
+class Test_gen_k_folds(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.random_state = np.random.RandomState(42)
+        cls.statsIter = 1
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def test_simple(self):
+        folds_list = execution.gen_k_folds(stats_iter=1,
+                                           nb_folds=4,
+                                           stats_iter_random_states=np.random.RandomState(42))
+        self.assertEqual(folds_list[0].n_splits, 4)
+        self.assertEqual(len(folds_list), 1)
+
+    def test_multple_iters(self):
+        folds_list = execution.gen_k_folds(stats_iter=2,
+                                           nb_folds=4,
+                                           stats_iter_random_states=[np.random.RandomState(42), np.random.RandomState(43)])
+        self.assertEqual(folds_list[0].n_splits, 4)
+        self.assertEqual(len(folds_list), 2)
+
+    def test_list_rs(self):
+        folds_list = execution.gen_k_folds(stats_iter=1,
+                                           nb_folds=4,
+                                           stats_iter_random_states=[np.random.RandomState(42)])
+        self.assertEqual(folds_list[0].n_splits, 4)
+        self.assertEqual(len(folds_list), 1)
+
+
+class Test_init_views(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.random_state = np.random.RandomState(42)
+        cls.statsIter = 1
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def test_simple(self):
+        views, views_indices, all_views = execution.init_views(test_dataset, ["ViewN1", "ViewN2"])
+        self.assertEqual(views,  ["ViewN1", "ViewN2"])
+        self.assertEqual(views_indices, [1,2])
+        self.assertEqual(all_views, ["ViewN0", "ViewN1", "ViewN2"])
+
+        views, views_indices, all_views = execution.init_views(test_dataset,None)
+        self.assertEqual(views, ["ViewN0", "ViewN1", "ViewN2"])
+        self.assertEqual(views_indices, range(3))
+        self.assertEqual(all_views, ["ViewN0", "ViewN1", "ViewN2"])
+
+
+class Test_find_dataset_names(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        os.mkdir(tmp_path)
+        with open(os.path.join(tmp_path, "test.txt"), "w") as file_stream:
+            file_stream.write("test")
+        with open(os.path.join(tmp_path, "test1.txt"), "w") as file_stream:
+            file_stream.write("test")
+
+
+
+    @classmethod
+    def tearDownClass(cls):
+        rm_tmp()
+
+    def test_simple(self):
+        path, names = execution.find_dataset_names(tmp_path, ".txt", ["test"])
+        self.assertEqual(path, tmp_path)
+        self.assertEqual(names, ["test"])
+        path, names = execution.find_dataset_names(tmp_path, ".txt", ["test", 'test1'])
+        self.assertEqual(path, tmp_path)
+        self.assertEqual(names, ["test1", 'test'])
+        path, names = execution.find_dataset_names("examples/data", ".hdf5", ["all"])
+        self.assertEqual(names, ["doc_summit", "digits_doc"])
+        self.assertRaises(ValueError, execution.find_dataset_names, tmp_path+"test", ".txt",
+                                                   ["test"])
+        self.assertRaises(ValueError, execution.find_dataset_names, tmp_path, ".txt", ["ah"])
 
 
 class Test_initStatsIterRandomStates(unittest.TestCase):

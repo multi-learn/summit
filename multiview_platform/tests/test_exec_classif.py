@@ -28,6 +28,21 @@ class Test_execute(unittest.TestCase):
     def tearDown(self):
         rm_tmp()
 
+class Test_gen_single_monoview_arg_dictionary(unittest.TestCase):
+
+    def test_no_config(self):
+        conf = exec_classif.gen_single_monoview_arg_dictionary("classifier_name1",
+                                                               {}, "nb_class",
+                                                               "view_index",
+                                                               "view_name",
+                                                               "hps_kwargs")
+        self.assertEqual(conf, {"classifier_name1": {},
+            "view_name": "view_name",
+            "view_index": "view_index",
+            "classifier_name": "classifier_name1",
+            "nb_class": "nb_class",
+            "hps_kwargs":"hps_kwargs" } )
+
 class Test_initBenchmark(unittest.TestCase):
 
     def test_benchmark_wanted(self):
