@@ -141,7 +141,7 @@ class Test_find_dataset_names(unittest.TestCase):
         self.assertEqual(names, ["test"])
         path, names = execution.find_dataset_names(tmp_path, ".txt", ["test", 'test1'])
         self.assertEqual(path, tmp_path)
-        self.assertEqual(names, ["test1", 'test'])
+        self.assertIn("test1", names)
         path, names = execution.find_dataset_names("examples/data", ".hdf5", ["all"])
         self.assertEqual(names, ["doc_summit", "digits_doc"])
         self.assertRaises(ValueError, execution.find_dataset_names, tmp_path+"test", ".txt",
