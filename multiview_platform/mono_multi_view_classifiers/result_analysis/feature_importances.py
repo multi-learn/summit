@@ -38,7 +38,7 @@ def get_feature_importances(result, feature_names=None):
     return feature_importances
 
 def publish_feature_importances(feature_importances, directory, database_name,
-                                feature_stds=None):
+                                feature_stds=None):  # pragma: no cover
     for view_name, feature_importance in feature_importances.items():
         if not os.path.exists(os.path.join(directory, "feature_importances")):
             os.mkdir(os.path.join(directory, "feature_importances"))

@@ -6,7 +6,7 @@ import os
 from multiview_platform.mono_multi_view_classifiers.monoview.monoview_utils import MonoviewResult
 from multiview_platform.mono_multi_view_classifiers.multiview.multiview_utils import MultiviewResult
 
-from multiview_platform.mono_multi_view_classifiers.result_analysis.metric_analysis import get_metrics_scores, init_plot
+from multiview_platform.mono_multi_view_classifiers.result_analysis.metric_analysis import get_metrics_scores, init_plot, get_fig_size, sort_by_test_score
 
 class Test_get_metrics_scores(unittest.TestCase):
 
@@ -151,3 +151,30 @@ class Test_init_plot(unittest.TestCase):
         self.assertEqual(nb_results, 2)
         self.assertEqual(results, [["dt-1", "acc", data[1,0], 0.0, data[1,0]],
                                    ["mv", "acc", data[1,1], 0.0, data[1,1]]])
+
+
+class Test_small_func(unittest.TestCase):
+
+    def test_fig_size(self):
+        kw, width = get_fig_size(5)
+        self.assertEqual(kw, {"figsize":(15,5)})
+        self.assertEqual(width, 0.35)
+        kw, width = get_fig_size(100)
+        self.assertEqual(kw, {"figsize": (100, 100/3)})
+        self.assertEqual(width, 0.35)
+
+    def test_sort_by_test_scores(self):
+        train_scores = np.array([1,2,3,4])
+        test_scores = np.array([4, 3, 2, 1])
+        train_STDs = np.array([1, 2, 3, 4])
+        test_STDs = np.array([1, 2, 3, 4])
+        names = np.array(['1', '2', '3', '4'])
+        sorted_names, sorted_train_scores, \
+        sorted_test_scores, sorted_train_STDs, \
+        sorted_test_STDs = sort_by_test_score(train_scores, test_scores,
+                                              names, train_STDs, test_STDs)
+        np.testing.assert_array_equal(sorted_names, np.array(['4', '3', '2', '1']))
+        np.testing.assert_array_equal(sorted_test_scores, [1, 2, 3, 4])
+        np.testing.assert_array_equal(sorted_test_STDs, [4, 3, 2, 1])
+        np.testing.assert_array_equal(sorted_train_scores, [4, 3, 2, 1])
+        np.testing.assert_array_equal(sorted_train_STDs, [4, 3, 2, 1])
