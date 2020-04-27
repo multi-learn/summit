@@ -14,7 +14,6 @@ from . import monoview_classifiers
 from . import multiview_classifiers
 from .monoview.exec_classif_mono_view import exec_monoview
 from .multiview.exec_multiview import exec_multiview
-from .result_analysis.noise_analysis import plot_results_noise
 from .result_analysis.execution import analyze_iterations, analyze
 from .utils import execution, dataset, configuration
 from .utils.organization import secure_file_path

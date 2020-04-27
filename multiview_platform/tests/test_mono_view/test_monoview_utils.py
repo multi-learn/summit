@@ -37,3 +37,15 @@ class TestFunctions(unittest.TestCase):
     def test_compute_possible_combinations(self):
         n_possib = monoview_utils.compute_possible_combinations({"a":[1, 2], "b":{"c":[2,3]}, "d":CustomRandint(0,10)})
         np.testing.assert_array_equal(n_possib, np.array([2, np.inf, 10]))
+
+class FakeClf(monoview_utils.BaseMonoviewClassifier):
+
+    def __init__(self):
+        pass
+
+
+class TestBaseMonoviewClassifier(unittest.TestCase):
+
+    def test_simple(self):
+        name = FakeClf().get_name_for_fusion()
+        self.assertEqual(name, 'Fake')

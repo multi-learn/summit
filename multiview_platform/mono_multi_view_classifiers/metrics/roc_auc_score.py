@@ -12,11 +12,6 @@ __status__ = "Prototype"  # Production, Development, Prototype
 
 
 def score(y_true, y_pred, multiclass=False, **kwargs):
-    if multiclass:
-        mlb = MultiLabelBinarizer()
-        y_true = mlb.fit_transform([(label) for label in y_true])
-        y_pred = mlb.fit_transform([(label) for label in y_pred])
-
     score = metric(y_true, y_pred, **kwargs)
     return score
 

@@ -166,7 +166,7 @@ def init_log_file(name, views, cl_type, log, debug, label,
                                             "%Y_%m_%d-%H_%M") + "_" + label)
     log_file_name = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(
         cl_type) + "-" + "_".join(views) + "-" + name + "-LOG.log"
-    if os.path.exists(result_directory):
+    if os.path.exists(result_directory): # pragma: no cover
         raise NameError("The result dir already exists, wait 1 min and retry")
     log_file_path = os.path.join(result_directory, log_file_name)
     os.makedirs(os.path.dirname(log_file_path))
@@ -348,8 +348,10 @@ def find_dataset_names(path, type, names):
                     available_file_names))
         return path, [used_name for used_name in available_file_names if
                 used_name in names]
-    else:
+    elif names[0] in available_file_names:
         return path, names
+    else:
+        raise ValueError("The asked dataset ({}) is not available in {}. \n The available ones are {}".format(names[0], path, available_file_names))
 
 
 def gen_argument_dictionaries(labels_dictionary, directories,
