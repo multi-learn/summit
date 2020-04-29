@@ -85,7 +85,7 @@ def setup_package():
     # La syntaxe est "nom-de-commande-a-creer = package.module:fonction".
     entry_points={
         'console_scripts': [
-            'exec_multiview = multiview_platform.execute:exec',
+            'exec_multiview = summit.execute:exec',
         ],
     },
 
@@ -96,7 +96,7 @@ def setup_package():
     # Il y a encore une chiée de paramètres possibles, mais avec ça vous
     # couvrez 90% des besoins
     # ext_modules=cythonize(
-    #     "multiview_platform/mono_multi_view_classifiers/monoview/additions/_custom_criterion.pyx"),
+    #     "summit/mono_multi_view_classifiers/monoview/additions/_custom_criterion.pyx"),
 )
 
 if __name__ == "__main__":
