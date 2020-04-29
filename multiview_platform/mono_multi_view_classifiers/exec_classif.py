@@ -788,8 +788,7 @@ def exec_classif(arguments):  # pragma: no cover
                            for metric_name in metrics_names)
         metrics = arange_metrics(metrics, args["metric_princ"])
 
-        benchmark = init_benchmark(cl_type, monoview_algos, multiview_algos,
-                                   args)
+        benchmark = init_benchmark(cl_type, monoview_algos, multiview_algos,)
         init_kwargs = init_kwargs_func(args, benchmark)
         data_base_time = time.time() - start
         argument_dictionaries = init_argument_dictionaries(

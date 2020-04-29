@@ -40,6 +40,14 @@ pip install -e .
 ```
 In the `summit` directory to install SuMMIT and its dependencies.
 
+### Running the tests
+
+To run the test suite of SuMMIT, run :
+```
+cd path/to/summit
+pytest
+```
+
 ### Running on simulated data
 
 In order to run it you'll need to try on **simulated** data with the command

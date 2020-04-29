@@ -1,12 +1,8 @@
 TODO
 *.pyc
-.idea/**
-ipynb/.ipynb_checkpoints/**
-docs/source/monomulti/.ipynb_checkpoints/**
 results/*
 data/*
 Data/*
-multiview_platform/MonoMultiviewClassifiers/Results/*
 multiview_platform/tests/temp_tests/**
 multiview-machine-learning-omis.iml
 multiview_platform.egg-inf*
@@ -26,3 +22,8 @@ multiview_platform/html_cov/
 multiview_platform/.coverage*
 .coverage*
 htmlcov/
+.gitignore
+.cache/
+.pytest_cache/
+multiview_platform/.xml
+summit.egg-info/
