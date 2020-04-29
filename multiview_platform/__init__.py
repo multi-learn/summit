@@ -2,4 +2,4 @@
 
 __version__ = "0.0.0.0"
 
-from . import mono_multi_view_classifiers, execute, versions
+from . import mono_multi_view_classifiers, execute
