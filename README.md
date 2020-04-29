@@ -71,7 +71,7 @@ to read it carefully before playing around with the parameters.
 
 You can create your own configuration file. In order to run the platform with it, run : 
 ```python
-from multiview_platform.execute import execute
+from summit.execute import execute
 execute(config_path="/absolute/path/to/your/config/file")
 ```
 

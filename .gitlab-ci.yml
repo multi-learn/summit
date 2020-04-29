@@ -23,7 +23,7 @@ doc:
         - export LC_ALL=$(locale -a | grep en_US)
         - export LANG=$(locale -a | grep en_US)
         - pip3 install -e . --no-deps
-        - sphinx-apidoc -o docs/source multiview_platform
+        - sphinx-apidoc -o docs/source summit
         - cd docs/source
         - sphinx-build -b html . ../build
         - cd ../..
@@ -45,7 +45,7 @@ pages:
         - export LANG=$(locale -a | grep en_US)
         - pip3 install -e . --no-deps
         - pytest-3
-        - sphinx-apidoc -o docs/source multiview_platform
+        - sphinx-apidoc -o docs/source summit
         - cd docs/source
         - sphinx-build -b html . ../build
         - cd ../..

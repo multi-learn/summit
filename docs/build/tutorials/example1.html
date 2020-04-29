@@ -1,9 +1,11 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Example 1 : First big step with SuMMIT &#8212; SuMMIT 0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -56,91 +58,92 @@
 <div class="section" id="a-generated-dataset-to-rule-them-all">
 <h2>A generated dataset to rule them all<a class="headerlink" href="#a-generated-dataset-to-rule-them-all" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/data/doc_summit.hdf5">dataset</a> that will be used in the examples consists in</p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>500 examples that are either</dt><dd><ul>
-<li><p>mis-described by all the views (labelled <code class="docutils literal notranslate"><span class="pre">Mutual_error_*</span></code>),</p></li>
-<li><p>well-described by all the views (labelled <code class="docutils literal notranslate"><span class="pre">Redundant_*</span></code>),</p></li>
-<li><p>well-described by the majority of the views (labelled <code class="docutils literal notranslate"><span class="pre">Complementary_*</span></code>),</p></li>
-<li><p>randomly well- or mis-described by the views (labelled <code class="docutils literal notranslate"><span class="pre">example_*</span></code>).</p></li>
+<ul>
+<li><dl class="first docutils">
+<dt>500 examples that are either</dt><dd><ul class="simple">
+<li>mis-described by all the views (labelled <code class="docutils literal notranslate"><span class="pre">Mutual_error_*</span></code>),</li>
+<li>well-described by all the views (labelled <code class="docutils literal notranslate"><span class="pre">Redundant_*</span></code>),</li>
+<li>well-described by the majority of the views (labelled <code class="docutils literal notranslate"><span class="pre">Complementary_*</span></code>),</li>
+<li>randomly well- or mis-described by the views (labelled <code class="docutils literal notranslate"><span class="pre">example_*</span></code>).</li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><p>8 balanced classes named <code class="docutils literal notranslate"><span class="pre">'label_1'</span></code>, …, <code class="docutils literal notranslate"><span class="pre">'label_8'</span></code>,</p></li>
-<li><dl class="simple">
-<dt>4 views named <code class="docutils literal notranslate"><span class="pre">'generated_view_1'</span></code>, …, <code class="docutils literal notranslate"><span class="pre">'generated_view_4'</span></code>,</dt><dd><ul>
-<li><p>each view consisting in 3 features.</p></li>
+<li><p class="first">8 balanced classes named <code class="docutils literal notranslate"><span class="pre">'label_1'</span></code>, …, <code class="docutils literal notranslate"><span class="pre">'label_8'</span></code>,</p>
+</li>
+<li><dl class="first docutils">
+<dt>4 views named <code class="docutils literal notranslate"><span class="pre">'generated_view_1'</span></code>, …, <code class="docutils literal notranslate"><span class="pre">'generated_view_4'</span></code>,</dt><dd><ul class="simple">
+<li>each view consisting in 3 features.</li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
 <p>It has been parametrized with the following error matrix that encapsulates the quantity of information available in each view for each label :</p>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 22%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
+<col width="22%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"></th>
-<th class="head"><p>View 1</p></th>
-<th class="head"><p>View 2</p></th>
-<th class="head"><p>View 3</p></th>
-<th class="head"><p>View 4</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&#160;</th>
+<th class="head">View 1</th>
+<th class="head">View 2</th>
+<th class="head">View 3</th>
+<th class="head">View 4</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>label_1</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>label_1</td>
+<td>0.40</td>
+<td>0.40</td>
+<td>0.40</td>
+<td>0.40</td>
 </tr>
-<tr class="row-odd"><td><p>label_2</p></td>
-<td><p>0.55</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
+<tr class="row-odd"><td>label_2</td>
+<td>0.55</td>
+<td>0.40</td>
+<td>0.40</td>
+<td>0.40</td>
 </tr>
-<tr class="row-even"><td><p>label_3</p></td>
-<td><p>0.40</p></td>
-<td><p>0.50</p></td>
-<td><p>0.60</p></td>
-<td><p>0.55</p></td>
+<tr class="row-even"><td>label_3</td>
+<td>0.40</td>
+<td>0.50</td>
+<td>0.60</td>
+<td>0.55</td>
 </tr>
-<tr class="row-odd"><td><p>label_4</p></td>
-<td><p>0.40</p></td>
-<td><p>0.50</p></td>
-<td><p>0.50</p></td>
-<td><p>0.40</p></td>
+<tr class="row-odd"><td>label_4</td>
+<td>0.40</td>
+<td>0.50</td>
+<td>0.50</td>
+<td>0.40</td>
 </tr>
-<tr class="row-even"><td><p>label_5</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
+<tr class="row-even"><td>label_5</td>
+<td>0.40</td>
+<td>0.40</td>
+<td>0.40</td>
+<td>0.40</td>
 </tr>
-<tr class="row-odd"><td><p>label_6</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
+<tr class="row-odd"><td>label_6</td>
+<td>0.40</td>
+<td>0.40</td>
+<td>0.40</td>
+<td>0.40</td>
 </tr>
-<tr class="row-even"><td><p>label_7</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
+<tr class="row-even"><td>label_7</td>
+<td>0.40</td>
+<td>0.40</td>
+<td>0.40</td>
+<td>0.40</td>
 </tr>
-<tr class="row-odd"><td><p>label_7</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
-<td><p>0.40</p></td>
+<tr class="row-odd"><td>label_7</td>
+<td>0.40</td>
+<td>0.40</td>
+<td>0.40</td>
+<td>0.40</td>
 </tr>
 </tbody>
 </table>
@@ -155,25 +158,29 @@
 <p><strong>Understanding the config file</strong></p>
 <p>The config file that will be used in this example is available <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml">here</a>, let us decrypt the main arguments :</p>
 <ul>
-<li><p>The first part regroups the basics :</p>
+<li><p class="first">The first part regroups the basics :</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">log</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L4">l4</a>) allows to print the log in the terminal,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">name</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“summit_doc”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L6">l6</a>) uses the plausible simulated dataset,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">random_state</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">42</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L18">l18</a>) fixes the seed of the random state for this benchmark, it is useful for reproductibility,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">full</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code>  (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L22">l22</a>) means the benchmark will use the full dataset,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">res_dir</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal string"><span class="pre">“examples/results/example_1/”</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L26">l26</a>) saves the results in <code class="docutils literal notranslate"><span class="pre">summit/multiview_platform/examples/results/example_1</span></code></p></li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">log</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L4">l4</a>) allows to print the log in the terminal,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">name</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“summit_doc”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L6">l6</a>) uses the plausible simulated dataset,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">random_state</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">42</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L18">l18</a>) fixes the seed of the random state for this benchmark, it is useful for reproductibility,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">full</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code>  (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L22">l22</a>) means the benchmark will use the full dataset,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">res_dir</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal string"><span class="pre">“examples/results/example_1/”</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L26">l26</a>) saves the results in <code class="docutils literal notranslate"><span class="pre">summit/multiview_platform/examples/results/example_1</span></code></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p>Then the classification-related arguments :</p>
+<li><p class="first">Then the classification-related arguments :</p>
 <blockquote>
 <div><ul>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.25</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L35">l35</a>) means that 75% of the dataset will be used to test the different classifiers and 25% to train them,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">type</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“monoview”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="literal string"><span class="pre">“multiview”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L43">l43</a>) allows for monoview and multiview algorithms to be used in the benchmark,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“decision_tree”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L45">l45</a>) runs a Decision tree on each view,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“weighted_linear_late_fusion”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L47">l47</a>) runs a late fusion,</p></li>
-<li><p>The metrics configuration (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L52">l52-55</a>)</p>
+<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.25</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L35">l35</a>) means that 75% of the dataset will be used to test the different classifiers and 25% to train them,</p>
+</li>
+<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">type</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“monoview”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="literal string"><span class="pre">“multiview”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L43">l43</a>) allows for monoview and multiview algorithms to be used in the benchmark,</p>
+</li>
+<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“decision_tree”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L45">l45</a>) runs a Decision tree on each view,</p>
+</li>
+<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“weighted_linear_late_fusion”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L47">l47</a>) runs a late fusion,</p>
+</li>
+<li><p class="first">The metrics configuration (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L52">l52-55</a>)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metrics</span><span class="p">:</span>
   <span class="n">accuracy_score</span><span class="p">:{}</span>
   <span class="n">f1_score</span><span class="p">:</span>
@@ -428,8 +435,8 @@ The html version is as follows :</p>
 <p>It is the representation of a matrix, where the rows are the examples, and the columns are the classifiers.</p>
 <p>The examples labelled as <code class="docutils literal notranslate"><span class="pre">Mutual_error_*</span></code> are mis-classified by most of the algorithms, the redundant ones are well-classified, and the complementary ones are mixly classified.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>It is highly recommended to zoom in the html figure to see each row.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">It is highly recommended to zoom in the html figure to see each row.</p>
 </div>
 <html>
 <head><meta charset="utf-8" /></head>
@@ -510,7 +517,8 @@ It could mean that the example is incorrectly labeled in the dataset or is very 
 <div class="section" id="classifier-dependant-files">
 <h3>Classifier-dependant files<a class="headerlink" href="#classifier-dependant-files" title="Permalink to this headline">¶</a></h3>
 <p>For each classifier, at least one file is generated, called <code class="docutils literal notranslate"><span class="pre">*-summary.txt</span></code>.</p>
-<pre class="literal-block">Classification on doc_summit for generated_view_1 with decision_tree.
+<pre class="literal-block">
+Classification on doc_summit for generated_view_1 with decision_tree.
 
 Database configuration : 
         - Database name : doc_summit
@@ -565,6 +573,7 @@ Feature importances :
 - Feature index : 0, feature importance : 0.42752552366689905
 - Feature index : 1, feature importance : 0.4031352121725926
 - Feature index : 2, feature importance : 0.1693392641605082
+
 </pre>
 <p>This regroups the useful information on the classifier’s configuration and it’s performance. An interpretation section is available for classifiers that present some interpretation-related information (as feature importance).</p>
 </div>

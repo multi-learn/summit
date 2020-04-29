@@ -1,9 +1,11 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Example 2 : Understanding the hyper-parameter optimization &#8212; SuMMIT 0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -53,10 +55,10 @@
 <p>In order to understand the process and it’s usefulness, let’s run some configurations and analyze the results.</p>
 <p>This example will focus only on some lines of the configuration file :</p>
 <ul class="simple">
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the ratio between the testing set and the training set,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">hps_type</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the type of hyper-parameter search,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">hps_args</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the parameters of the hyper-parameters search method,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">nb_folds</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the number of folds in the cross-validation process.</p></li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the ratio between the testing set and the training set,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">hps_type</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the type of hyper-parameter search,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">hps_args</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the parameters of the hyper-parameters search method,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">nb_folds</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the number of folds in the cross-validation process.</li>
 </ul>
 <div class="section" id="example-2-1-no-hyper-parameter-optimization-impact-of-split-size">
 <h3>Example 2.1 : No hyper-parameter optimization, impact of split size<a class="headerlink" href="#example-2-1-no-hyper-parameter-optimization-impact-of-split-size" title="Permalink to this headline">¶</a></h3>
@@ -65,13 +67,13 @@
 and the multivew classifier is a late fusion majority vote.</p>
 <p>In order to use only a subset of the available classifiers, three lines in the configuration file are useful :</p>
 <ul class="simple">
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">type</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L45">l45</a>) in which one has to specify which type of algorithms are needed, here we used  <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">[&quot;monoview&quot;,&quot;multiview&quot;]</span></code>,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L45">l47</a>) in which one specifies the names of the monoview algorithms to run, here we used : <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“decision_tree”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="literal string"><span class="pre">“adaboost”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="punctuation indicator"><span class="pre">]</span></span></code></p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L45">l49</a>) is the same but with multiview algorithms, here we used : <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“weighted_linear_late_fusion”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="punctuation indicator"><span class="pre">]</span></span></code></p></li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">type</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L45">l45</a>) in which one has to specify which type of algorithms are needed, here we used  <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">[&quot;monoview&quot;,&quot;multiview&quot;]</span></code>,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L45">l47</a>) in which one specifies the names of the monoview algorithms to run, here we used : <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“decision_tree”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="literal string"><span class="pre">“adaboost”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="punctuation indicator"><span class="pre">]</span></span></code></li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L45">l49</a>) is the same but with multiview algorithms, here we used : <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“weighted_linear_late_fusion”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="punctuation indicator"><span class="pre">]</span></span></code></li>
 </ul>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For the platform to understand the names, the user has to give the <strong>name of the python module</strong> in which the classifier is implemented in the platform.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">For the platform to understand the names, the user has to give the <strong>name of the python module</strong> in which the classifier is implemented in the platform.</p>
 </div>
 <p>In the config file, the default values for Adaboost’s hyper-parameters are :</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">adaboost</span><span class="p">:</span>
@@ -103,7 +105,7 @@ and the multivew classifier is a late fusion majority vote.</p>
 <h4>Learning on a few examples<a class="headerlink" href="#learning-on-a-few-examples" title="Permalink to this headline">¶</a></h4>
 <p>This example focuses on one line of the config file :</p>
 <ul class="simple">
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.80</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L37">l37</a>).</p></li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.80</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L37">l37</a>).</li>
 </ul>
 <p>To run the first part of this example, run :</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
@@ -176,8 +178,8 @@ and the multivew classifier is a late fusion majority vote.</p>
 <h4>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h4>
 <p>The split ratio has two consequences :</p>
 <ul class="simple">
-<li><p>Increasing the test set size decreases the information available in the train set size so either it helps to avoid overfitting (Adaboost) or it can hide useful information to the classifier and therefor decrease its performance (decision tree),</p></li>
-<li><p>The second consequence is that increasing train size will increase the benchmark duration as the classifiers will have to learn  on more examples, this duration modification is higher if the dataset has high dimensionality and if the algorithms are complex.</p></li>
+<li>Increasing the test set size decreases the information available in the train set size so either it helps to avoid overfitting (Adaboost) or it can hide useful information to the classifier and therefor decrease its performance (decision tree),</li>
+<li>The second consequence is that increasing train size will increase the benchmark duration as the classifiers will have to learn  on more examples, this duration modification is higher if the dataset has high dimensionality and if the algorithms are complex.</li>
 </ul>
 </div>
 </div>
@@ -190,11 +192,11 @@ This is only useful if one knows the optimal combination of hyper-parameter for 
 <p>In this example, we will use a randomized search, one of the two hyper-parameter optimization methods implemented in SuMMIT.</p>
 <p>To do so we will go through five lines of the config file :</p>
 <ul class="simple">
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">hps_type</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the type of hyper-parameter search,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">n_iter</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the number of random draws during the hyper-parameter search,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">equivalent_draws</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the number fo draws for multiview algorithms,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">nb_folds</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the number of folds in the cross-validation process,</p></li>
-<li><p><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">metric_princ</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling which metric will be used in the cross-validation.</p></li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">hps_type</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the type of hyper-parameter search,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">n_iter</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the number of random draws during the hyper-parameter search,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">equivalent_draws</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the number fo draws for multiview algorithms,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">nb_folds</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling the number of folds in the cross-validation process,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">metric_princ</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling which metric will be used in the cross-validation.</li>
 </ul>
 <p>So if you run SuMMIT with :</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
@@ -238,8 +240,8 @@ for each multiview classifier:
 <p>The instructions inside the brackets are the one that the hyper-parameter
 optimization adds.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>As the randomized search has independent steps, it profits a lot from multi-threading, however, it is not available at the moment, but is one of our priorities.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">As the randomized search has independent steps, it profits a lot from multi-threading, however, it is not available at the moment, but is one of our priorities.</p>
 </div>
 <div class="section" id="the-results">
 <h4>The results<a class="headerlink" href="#the-results" title="Permalink to this headline">¶</a></h4>
@@ -270,8 +272,8 @@ optimization adds.</p>
 </body>
 </html><p>The choice made here is to allow a different amount of draws for mono and multiview classifiers. However, allowing the same number of draws to both is also available by setting <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">equivalent_draws</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">False</span></span></code>.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The mutliview algorithm used here is late fusion, which means it learns a monoview classifier on each view and then build a naive majority vote. In terms of hyper parameters, the late fusion classifier has to choose one monoview classifier and its hyper-parameter <strong>for each view</strong>. This is why the <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">equivalent_draws</span></span><span class="punctuation"><span class="pre">:</span></span></code> parameter is implemented, as with only 5 draws, the late fusion classifier is not able to remotely cover its hyper-parameter space, while the monoview algorithms have a much easier problem to solve.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">The mutliview algorithm used here is late fusion, which means it learns a monoview classifier on each view and then build a naive majority vote. In terms of hyper parameters, the late fusion classifier has to choose one monoview classifier and its hyper-parameter <strong>for each view</strong>. This is why the <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">equivalent_draws</span></span><span class="punctuation"><span class="pre">:</span></span></code> parameter is implemented, as with only 5 draws, the late fusion classifier is not able to remotely cover its hyper-parameter space, while the monoview algorithms have a much easier problem to solve.</p>
 </div>
 </div>
 <div class="section" id="id2">
@@ -309,8 +311,8 @@ with different fold/draws settings :</p>
         </div>
 </body>
 </html><div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The durations are for reference only as they highly depend on hardware.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">The durations are for reference only as they highly depend on hardware.</p>
 </div>
 </div>
 </div>
@@ -344,8 +346,8 @@ several depths for a decision tree, and several <code class="code yaml docutils 
 </div>
 <p>This will run the late fusion classifier with either</p>
 <ul class="simple">
-<li><p>one decision tree per view, with a maximum depth of 3,</p></li>
-<li><p>one Adaboost per view with 10 base estimators.</p></li>
+<li>one decision tree per view, with a maximum depth of 3,</li>
+<li>one Adaboost per view with 10 base estimators.</li>
 </ul>
 <p>To run a grid search with this configuration, run :</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
@@ -363,6 +365,7 @@ same dataset.</p>
 <p>For most of the algorithms, it is possible to paste the report in the config fie,
 for example for the decision tree on the first view the <code class="docutils literal notranslate"><span class="pre">*-hps_report.txt</span></code> file generated by the randomized search of <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/example2.html#example-2-2-usage-of-randomized-hyper-parameter-optimization">example 2.2</a> looks like :</p>
 <pre class="literal-block">
+
 criterion: gini
 max_depth: 202
 splitter: random
@@ -387,7 +390,8 @@ criterion: entropy
 max_depth: 182
 splitter: best
 
-                0.20454545454545453</pre>
+                0.20454545454545453
+</pre>
 <p>Meaning that the cross validation score of the decision tree on the first view when using the following hyper-parameters is 0.2879.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">criterion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gini</span>
 <span class="nt">max_depth</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">202</span>
