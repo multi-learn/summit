@@ -1,8 +1,5 @@
 TODO
 *.pyc
-.idea/**
-ipynb/.ipynb_checkpoints/**
-docs/source/monomulti/.ipynb_checkpoints/**
 results/*
 data/*
 Data/*
