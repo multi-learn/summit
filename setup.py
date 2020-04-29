@@ -96,7 +96,7 @@ def setup_package():
     # Il y a encore une chiée de paramètres possibles, mais avec ça vous
     # couvrez 90% des besoins
     # ext_modules=cythonize(
-    #     "summit/mono_multi_view_classifiers/monoview/additions/_custom_criterion.pyx"),
+    #     "summit/multiview_platform/monoview/additions/_custom_criterion.pyx"),
 )
 
 if __name__ == "__main__":
