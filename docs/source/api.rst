@@ -1,9 +1,13 @@
 API Documentation
 =================
 
-Multiview dataset management module
------------------------------------
 
-.. automodule:: summit.multiview_platform.utils.dataset
-   :members:
-   :inherited-members:
+
+.. toctree::
+    :maxdepth: 3
+
+    api_files/dataset
+    autoapi/summit/multiview_platform/monoview_classifiers/index
+    autoapi/summit/multiview_platform/multiview_classifiers/index
+
+

@@ -1,9 +1,9 @@
+.. |pipeline| image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/pipeline.svg
+    :alt: Pipeline status
+
 .. image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg
     :target: http://www.gnu.org/licenses/gpl-3.0
     :alt: License: GPL v3
-
-.. |pipeline| image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/pipeline.svg
-    :alt: Pipeline status
 
 |pipeline|
 
@@ -20,12 +20,7 @@ This project aims to be an easy-to-use solution to run a prior benchmark on a da
 Getting Started
 ---------------
 
-Prerequisites (will be automatically installed)
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
 SuMMIT has been designed and uses continuous integration for Linux platforms (ubuntu 18.04), but we try to keep it as compatible as possible with Mac and Windows.
-
-Last tests on each platform :
 
 +----------+-------------------+
 | Platform | Last positive test|
@@ -38,11 +33,14 @@ Last tests on each platform :
 +----------+-------------------+
 
 
+Prerequisites
+<<<<<<<<<<<<<
+
 To be able to use this project, you'll need :
 
 * `Python 3 <https://docs.python.org/3/>`_
 
-And the following python modules :
+And the following python modules will be automatically installed  :
 
 * `numpy <http://www.numpy.org/>`_, `scipy <https://scipy.org/>`_,
 * `matplotlib <http://matplotlib.org/>`_ - Used to plot results,
@@ -82,6 +80,7 @@ To run the test suite of SuMMIT, run :
     cd path/to/summit
     pytest
 
+The coverage report is automatically generated and stored in the ``htmlcov/`` directory
 
 Running on simulated data
 <<<<<<<<<<<<<<<<<<<<<<<<<

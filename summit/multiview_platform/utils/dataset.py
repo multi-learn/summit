@@ -75,7 +75,7 @@ class Dataset():
 
     def to_numpy_array(self, sample_indices=None, view_indices=None):
         """
-        To concatenate the needed views in one big numpy array while saving the
+        Concatenates the needed views in one big numpy array while saving the
         limits of each view in a list, to be able to retrieve them later.
 
         Parameters
@@ -192,15 +192,6 @@ class RAMDataset(Dataset):
         return self.view_names[view_idx]
 
     def init_attrs(self):
-        """
-        Used to init the two attributes that are modified when self.dataset
-        changes
-
-        Returns
-        -------
-
-        """
-
         self.nb_view = len(self.views)
         self.view_dict = dict((view_ind, self.view_names[view_ind])
                               for view_ind in range(self.nb_view))
@@ -239,10 +230,6 @@ class RAMDataset(Dataset):
                 pass
 
     def get_nb_class(self, sample_indices=None):
-        """
-        Gets the number of class of the dataset
-
-        """
         sample_indices = self.init_sample_indices(sample_indices)
         return len(np.unique(self.labels[sample_indices]))
 
@@ -277,9 +264,9 @@ class RAMDataset(Dataset):
 
 class HDF5Dataset(Dataset):
     """
-    Class of Dataset
+    Dataset class
 
-    This class is used to encapsulate the multiview dataset while keeping it stored on the disk instead of in RAM.
+    This is used to encapsulate the multiview dataset while keeping it stored on the disk instead of in RAM.
 
 
     Parameters
@@ -311,7 +298,7 @@ class HDF5Dataset(Dataset):
         The name for each unique value of the labels given in labels.
 
     is_temp : bool
-        Used if a temporary dataset has to be used by the benchmark.
+        Used if a temporary dataset has to be stored by the benchmark.
 
     Attributes
     ----------
@@ -327,7 +314,7 @@ class HDF5Dataset(Dataset):
 
     """
 
-    # The following methods use hdf5
+    # The following methods use h5py
 
     def __init__(self, views=None, labels=None, are_sparse=False,
                  file_name="dataset.hdf5", view_names=None, path="",
@@ -379,7 +366,7 @@ class HDF5Dataset(Dataset):
                                    for i in range(labels.shape[0])]
 
     def get_v(self, view_index, sample_indices=None):
-        r""" Extract the view and returns a numpy.ndarray containing the description
+        """ Extract the view and returns a numpy.ndarray containing the description
         of the samples specified in sample_indices
 
         Parameters
@@ -452,14 +439,14 @@ class HDF5Dataset(Dataset):
 
         Returns
         -------
-
+            int
         """
         return self.dataset["Metadata"].attrs["datasetLength"]
 
     def get_view_dict(self):
         """
-        Returns the dictionary with view indices as keys and their corresponding
-        names as values
+        Returns the dictionary containing view indices as keys and their
+        corresponding names as values
         """
         view_dict = {}
         for view_index in range(self.nb_view):
@@ -481,7 +468,8 @@ class HDF5Dataset(Dataset):
 
         Returns
         -------
-
+            list
+            seleted labels' names
         """
         selected_labels = self.get_labels(sample_indices)
         if decode:
@@ -609,11 +597,6 @@ class HDF5Dataset(Dataset):
 
     def add_gaussian_noise(self, random_state, path,
                            noise_std=0.15):
-        """In this function, we add a guaussian noise centered in 0 with specified
-        std to each view, according to it's range (the noise will be
-        mutliplied by this range) and we crop the noisy signal according to the
-        view's attributes limits.
-        This is done by creating a new dataset, to keep clean data."""
         noisy_dataset = h5py.File(path + self.get_name() + "_noised.hdf5", "w")
         self.dataset.copy("Metadata", noisy_dataset)
         self.dataset.copy("Labels", noisy_dataset)
@@ -643,7 +626,7 @@ class HDF5Dataset(Dataset):
     # The following methods are hdf5 free
 
     def get_name(self):
-        """Ony works if there are not multiple dots in the files name"""
+        """Gets the name of the dataset hdf5 file"""
         return os.path.split(self.dataset.filename)[-1].split('.')[0]
 
 
