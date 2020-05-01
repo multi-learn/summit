@@ -204,10 +204,10 @@ class Test_Dataset(unittest.TestCase):
     def test_check_selected_label_names(self):
         dataset_object = dataset.HDF5Dataset(hdf5_file=self.dataset_file)
         names = dataset_object.check_selected_label_names(
-            nb_labels=2, random_state=self.rs)
-        self.assertEqual(names, ["1", "0"])
+            nb_labels=2, random_state=np.random.RandomState(42))
+        self.assertEqual(names, ["0", "1"])
         names = dataset_object.check_selected_label_names(selected_label_names=['0', '2'],
-                                                          random_state=self.rs)
+                                                          random_state=np.random.RandomState(42))
         self.assertEqual(names, ["0", "2"])
 
     def test_select_views_and_labels(self):
@@ -234,9 +234,9 @@ class Test_Dataset(unittest.TestCase):
         names = dataset_object.select_views_and_labels(
             nb_labels=2,
             view_names=["ViewN0"],
-            random_state=self.rs,
+            random_state=np.random.RandomState(42),
             path_for_new=tmp_path)
-        self.assertEqual(names, {0: '2', 1: '1'})
+        self.assertEqual(names, {0: '0', 1: '1'})
         self.assertEqual(dataset_object.nb_view, 1)
         dataset_object.dataset.close()
         os.remove(os.path.join(tmp_path, "test_filter_temp_filter.hdf5"))
