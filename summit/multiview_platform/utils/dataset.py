@@ -644,7 +644,7 @@ class HDF5Dataset(Dataset):
 
     def get_name(self):
         """Ony works if there are not multiple dots in the files name"""
-        return self.dataset.filename.split('/')[-1].split('.')[0]
+        return os.path.split(self.dataset.filename)[-1].split('.')[0]
 
 
 def is_just_number(string):
