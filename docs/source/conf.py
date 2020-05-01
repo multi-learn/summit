@@ -54,11 +54,20 @@ extensions = ['sphinx.ext.autodoc',
 #              'sphinx.ext.ifconfig',
 #              'sphinx.ext.viewcode',
 #              'sphinx.ext.githubpages',
-               'sphinx.ext.napoleon',]
+               'sphinx.ext.napoleon',
+                'autoapi.extension'
+              ]
 
-
+autoapi_type = 'python'
+autoapi_dirs = [os.path.join(repo_path, "summit", "multiview_platform", "monoview_classifiers", ""),
+                os.path.join(repo_path, "summit", "multiview_platform", "multiview_classifiers", "")]
+autoapi_options = ["members", "show-module-summary", 'undoc-members']
+autoapi_ignore = ["*additions*"]
+autoapi_keep_files = False
+auto_api_add_toctree_entry = False
+autoapi_template_dir = os.path.join(repo_path, "docs", "source", "templates_autoapi")
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ['_templates', 'templates_autoapi']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -190,8 +199,11 @@ rst_prolog = """
 .. role:: python(code)
     :language: python
 
-.. role :: yaml(code)
+.. role:: yaml(code)
     :language: yaml
+    
+.. role:: mod(code)
+    :language: python
     
 .. |platf| replace:: SuMMIT
 

@@ -12,11 +12,18 @@ This documentation consists in a short read me, with instructions to install and
     All the content labelled WIP is Work In Progress
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    tutorials/index
+
+.. toctree::
+   :maxdepth: 3
+
    api
 
+
+Read me
+=========
 
 .. include:: readme_link.rst
 
