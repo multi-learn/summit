@@ -279,7 +279,6 @@ class TestRAMDataset(unittest.TestCase):
     def setUpClass(cls):
         cls.rs = np.random.RandomState(42)
         cls.nb_view = 3
-        cls.file_name = "test.hdf5"
         cls.nb_samples = 5
         cls.nb_attr = 7
         cls.nb_class = 3

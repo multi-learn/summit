@@ -60,6 +60,7 @@ class Test_initConstants(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        cls.datasetFile.close()
         rm_tmp()
 
 
