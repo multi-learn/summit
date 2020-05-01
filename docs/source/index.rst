@@ -15,11 +15,12 @@ This documentation consists in a short read me, with instructions to install and
    :maxdepth: 2
 
    tutorials/index
+   api
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
 
-   api
+   classifiers
 
 
 Read me
