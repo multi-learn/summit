@@ -20,9 +20,24 @@ Getting Started
 Prerequisites (will be automatically installed)
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+SuMMIT has been designed and uses continuous integration for Linux platforms (ubuntu 18.04), but we try to keep it as compatible as possible with Mac and Windows.
+
+Last tests on each platform :
+
++----------+-------------------+
+| Platform | Last positive test|
++==========+===================+
+|   Linux  |  Continuous       |
++----------+-------------------+
+| Mac      | 1st of May, 2020  |
++----------+-------------------+
+| Windows  | 1st of May, 2020  |
++----------+-------------------+
+
+
 To be able to use this project, you'll need :
 
-* `Python 3.6 <https://docs.python.org/3/>`_
+* `Python 3 <https://docs.python.org/3/>`_
 
 And the following python modules :
 
