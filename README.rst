@@ -1,8 +1,10 @@
 .. image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0
     :alt: License: GPL v3
 
-.. image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/pipeline.svg
+.. |pipeline| image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/pipeline.svg
     :alt: Pipeline status
+
+|pipeline|
 
 .. image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/coverage.svg
     :target: http://baptiste.bauvin.pages.lis-lab.fr/summit/coverage/index.html
@@ -20,9 +22,24 @@ Getting Started
 Prerequisites (will be automatically installed)
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+SuMMIT has been designed and uses continuous integration for Linux platforms (ubuntu 18.04), but we try to keep it as compatible as possible with Mac and Windows.
+
+Last tests on each platform :
+
++----------+-------------------+
+| Platform | Last positive test|
++==========+===================+
+|   Linux  |  |pipeline|       |
++----------+-------------------+
+| Mac      | 1st of May, 2020  |
++----------+-------------------+
+| Windows  | 1st of May, 2020  |
++----------+-------------------+
+
+
 To be able to use this project, you'll need :
 
-* `Python 3.6 <https://docs.python.org/3/>`_
+* `Python 3 <https://docs.python.org/3/>`_
 
 And the following python modules :
 
