@@ -74,6 +74,7 @@ class Test_get_classic_db_hdf5(unittest.TestCase):
         self.assertEqual(dataset.dataset, self.dataset_file)
 
     def tearDown(self):
+        self.dataset_file.close()
         rm_tmp()
 
 
