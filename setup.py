@@ -56,7 +56,7 @@ def setup_package():
     # Une url qui pointe vers la page officielle de votre lib
     url='http://gitlab.lis-lab.fr/baptiste.bauvin/summit/',
     install_requires=requirements,
-    extras_requires={
+    extras_require={
             'dev': ['pytest', 'pytest-cov'],
             'doc': ['sphinx', 'numpydoc', 'docutils', 'sphinx-autoapi']},
 
