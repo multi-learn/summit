@@ -1,8 +1,10 @@
 .. image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0
     :alt: License: GPL v3
 
-.. image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/pipeline.svg
+.. |pipeline| image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/pipeline.svg
     :alt: Pipeline status
+
+|pipeline|
 
 .. image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/coverage.svg
     :target: http://baptiste.bauvin.pages.lis-lab.fr/summit/coverage/index.html
@@ -27,7 +29,7 @@ Last tests on each platform :
 +----------+-------------------+
 | Platform | Last positive test|
 +==========+===================+
-|   Linux  |  Continuous       |
+|   Linux  |  |pipeline|       |
 +----------+-------------------+
 | Mac      | 1st of May, 2020  |
 +----------+-------------------+
