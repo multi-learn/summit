@@ -16,9 +16,10 @@ This documentation consists in a short read me, with instructions to install and
 
    tutorials/index
    api
-   readme_link
 
-.. examples
+
+.. include:: readme_link.rst
+
 
 
 Indices and tables
