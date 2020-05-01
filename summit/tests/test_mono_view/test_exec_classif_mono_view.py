@@ -31,7 +31,7 @@ class Test_initConstants(unittest.TestCase):
                                       np.array([1, 3, 5, 7, 9])]
         cls.labels_names = ["test_true", "test_false"]
         cls.name = "test"
-        cls.directory = os.path.join(tmp_path, "test_dir/")
+        cls.directory = os.path.join(tmp_path, "test_dir", "")
 
     def test_simple(cls):
         kwargs, \
@@ -60,12 +60,7 @@ class Test_initConstants(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.remove(tmp_path + "test.hdf5")
-        os.rmdir(
-            tmp_path + "test_dir/test_clf/test_dataset")
-        os.rmdir(tmp_path + "test_dir/test_clf")
-        os.rmdir(tmp_path + "test_dir")
-        os.rmdir(tmp_path)
+        rm_tmp()
 
 
 class Test_initTrainTest(unittest.TestCase):

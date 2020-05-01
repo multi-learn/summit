@@ -98,7 +98,7 @@ class Test_get_classic_db_csv(unittest.TestCase):
         self.datas = []
         for i in range(4):
             data = self.random_state.randint(0, 100, (10, 20))
-            np.savetxt(self.pathF + "Views/test_view_" + str(i) + ".csv",
+            np.savetxt(os.path.join(self.pathF +"Views","test_view_" + str(i) + ".csv"),
                        data, delimiter=",")
             self.datas.append(data)
 
@@ -118,18 +118,7 @@ class Test_get_classic_db_csv(unittest.TestCase):
 
     @classmethod
     def tearDown(self):
-        for i in range(4):
-            os.remove(
-                tmp_path + "Views/test_view_" + str(
-                    i) + ".csv")
-        os.rmdir(tmp_path + "Views")
-        os.remove(
-            tmp_path + "test_dataset-labels-names.csv")
-        os.remove(tmp_path + "test_dataset-labels.csv")
-        os.remove(tmp_path + "test_dataset.hdf5")
-        os.remove(
-            tmp_path + "test_dataset_temp_filter.hdf5")
-        os.rmdir(tmp_path)
+        rm_tmp()
 
 
 class Test_get_plausible_db_hdf5(unittest.TestCase):

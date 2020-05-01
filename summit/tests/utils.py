@@ -8,7 +8,7 @@ from ..multiview_platform.utils.dataset import HDF5Dataset
 tmp_path = os.path.join(
     os.path.dirname(
         os.path.abspath(__file__)),
-    "tmp_tests/")
+    "tmp_tests", "")
 # TODO Convert to ram dataset
 test_dataset = HDF5Dataset(
     hdf5_file=h5py.File(

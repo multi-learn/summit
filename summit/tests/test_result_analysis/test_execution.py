@@ -113,6 +113,7 @@ class Test_analyze_iterations(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir(tmp_path)
         cls.results = [[0, [FakeClassifierResult(), FakeClassifierResult(i=2)], []], [
             1, [FakeClassifierResult(), FakeClassifierResult(i=2)], []]]

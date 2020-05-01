@@ -27,6 +27,7 @@ class TestBaseMultiviewClassifier(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir(tmp_path)
 
     @classmethod
@@ -62,6 +63,7 @@ class TestFunctions(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir(tmp_path)
         cls.rs = np.random.RandomState(42)
 
