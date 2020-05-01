@@ -109,8 +109,7 @@ def publish_metrics_graphs(metrics_scores, directory, database_name,
                            nb_results, metric_name, file_name,
                            tag=" " + " vs ".join(labels_names))
 
-        class_file_name = os.path.join(directory, database_name + "-"
-                                       + metric_name + "-class")
+        class_file_name = file_name+"-class"
         plot_class_metric_scores(class_test_scores, class_file_name,
                                  labels_names, classifier_names, metric_name)
         logging.debug(
@@ -125,6 +124,8 @@ def publish_all_metrics_scores(iter_results, class_iter_results, directory,
     secure_file_path(os.path.join(directory, "a"))
 
     for metric_name, scores in iter_results.items():
+        if metric_name.endswith("*"):
+            metric_name = metric_name[:-1]+"_p"
         train = np.array(scores["mean"].loc["train"])
         test = np.array(scores["mean"].loc["test"])
         classifier_names = np.array(scores["mean"].columns)
@@ -168,7 +169,12 @@ def init_plot(results, metric_name, metric_dataframe,
 
     nb_results = metric_dataframe.shape[1]
 
-    file_name = os.path.join(directory, database_name + "-" + metric_name)
+    if metric_name.endswith("*"):
+        formatted_metric_name = metric_name[:-1]+"_p"
+    else:
+        formatted_metric_name = metric_name
+
+    file_name = os.path.join(directory, database_name + "-" + formatted_metric_name)
 
     results += [[classifiers_name, metric_name, test_mean, test_std, class_mean]
                 for classifiers_name, test_mean, class_mean, test_std in
