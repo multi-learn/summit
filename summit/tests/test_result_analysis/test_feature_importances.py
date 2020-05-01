@@ -35,4 +35,4 @@ class Test_get_duration(unittest.TestCase):
                                       pd.DataFrame(index=None, columns=['test1'],
                                                    data=np.array(
                                                        [1, 2]).reshape((2, 1)),
-                                                   ))
+                                                   ), check_dtype=False)
