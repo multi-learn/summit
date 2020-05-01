@@ -16,6 +16,7 @@ class Test_parseTheArgs(unittest.TestCase):
     def test_empty_args(self):
         args = execution.parse_the_args([])
 
+
 class Test_init_log_file(unittest.TestCase):
 
     @classmethod
@@ -35,7 +36,15 @@ class Test_init_log_file(unittest.TestCase):
                                           label="No",
                                           result_directory=tmp_path,
                                           args={})
-        self.assertTrue(res_dir.startswith(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))),"tmp_tests", "test_dataset", "started" )))
+        self.assertTrue(
+            res_dir.startswith(
+                os.path.join(
+                    os.path.dirname(
+                        os.path.dirname(
+                            os.path.realpath(__file__))),
+                    "tmp_tests",
+                    "test_dataset",
+                    "started")))
 
     def test_no_log(self):
         res_dir = execution.init_log_file(name="test_dataset",
@@ -62,6 +71,7 @@ class Test_init_log_file(unittest.TestCase):
         self.assertTrue(res_dir.startswith(os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
             "tmp_tests", "test_dataset", "debug_started")))
+
 
 class Test_gen_k_folds(unittest.TestCase):
 
@@ -108,12 +118,14 @@ class Test_init_views(unittest.TestCase):
         pass
 
     def test_simple(self):
-        views, views_indices, all_views = execution.init_views(test_dataset, ["ViewN1", "ViewN2"])
-        self.assertEqual(views,  ["ViewN1", "ViewN2"])
-        self.assertEqual(views_indices, [1,2])
+        views, views_indices, all_views = execution.init_views(
+            test_dataset, ["ViewN1", "ViewN2"])
+        self.assertEqual(views, ["ViewN1", "ViewN2"])
+        self.assertEqual(views_indices, [1, 2])
         self.assertEqual(all_views, ["ViewN0", "ViewN1", "ViewN2"])
 
-        views, views_indices, all_views = execution.init_views(test_dataset,None)
+        views, views_indices, all_views = execution.init_views(
+            test_dataset, None)
         self.assertEqual(views, ["ViewN0", "ViewN1", "ViewN2"])
         self.assertEqual(views_indices, range(3))
         self.assertEqual(all_views, ["ViewN0", "ViewN1", "ViewN2"])
@@ -129,8 +141,6 @@ class Test_find_dataset_names(unittest.TestCase):
         with open(os.path.join(tmp_path, "test1.txt"), "w") as file_stream:
             file_stream.write("test")
 
-
-
     @classmethod
     def tearDownClass(cls):
         rm_tmp()
@@ -139,14 +149,21 @@ class Test_find_dataset_names(unittest.TestCase):
         path, names = execution.find_dataset_names(tmp_path, ".txt", ["test"])
         self.assertEqual(path, tmp_path)
         self.assertEqual(names, ["test"])
-        path, names = execution.find_dataset_names(tmp_path, ".txt", ["test", 'test1'])
+        path, names = execution.find_dataset_names(
+            tmp_path, ".txt", ["test", 'test1'])
         self.assertEqual(path, tmp_path)
         self.assertIn("test1", names)
-        path, names = execution.find_dataset_names("examples/data", ".hdf5", ["all"])
+        path, names = execution.find_dataset_names(
+            "examples/data", ".hdf5", ["all"])
         self.assertIn("doc_summit", names)
-        self.assertRaises(ValueError, execution.find_dataset_names, tmp_path+"test", ".txt",
-                                                   ["test"])
-        self.assertRaises(ValueError, execution.find_dataset_names, tmp_path, ".txt", ["ah"])
+        self.assertRaises(ValueError, execution.find_dataset_names, tmp_path + "test", ".txt",
+                          ["test"])
+        self.assertRaises(
+            ValueError,
+            execution.find_dataset_names,
+            tmp_path,
+            ".txt",
+            ["ah"])
 
 
 class Test_initStatsIterRandomStates(unittest.TestCase):
@@ -219,18 +236,18 @@ class Test_initRandomState(unittest.TestCase):
     def test_random_state_42(self):
         randomState_42 = np.random.RandomState(42)
         randomState = execution.init_random_state("42",
-                                                tmp_path)
-        os.remove(tmp_path+"random_state.pickle")
+                                                  tmp_path)
+        os.remove(tmp_path + "random_state.pickle")
         np.testing.assert_array_equal(randomState.beta(1, 100, 100),
                                       randomState_42.beta(1, 100, 100))
 
     def test_random_state_pickle(self):
         randomState_to_pickle = execution.init_random_state(None,
-                                                          tmp_path)
+                                                            tmp_path)
         pickled_randomState = execution.init_random_state(
-            tmp_path+"random_state.pickle",
+            tmp_path + "random_state.pickle",
             tmp_path)
-        os.remove(tmp_path+"random_state.pickle")
+        os.remove(tmp_path + "random_state.pickle")
 
         np.testing.assert_array_equal(randomState_to_pickle.beta(1, 100, 100),
                                       pickled_randomState.beta(1, 100, 100))
@@ -282,7 +299,7 @@ class Test_genSplits(unittest.TestCase):
 
     def test_simple(self):
         splits = execution.gen_splits(self.labels, self.splitRatio,
-                                     self.statsIterRandomStates)
+                                      self.statsIterRandomStates)
         self.assertEqual(len(splits), 3)
         self.assertEqual(len(splits[1]), 2)
         self.assertEqual(type(splits[1][0]), np.ndarray)
@@ -297,7 +314,7 @@ class Test_genSplits(unittest.TestCase):
 
     def test_genSplits_no_iter(self):
         splits = execution.gen_splits(self.labels, self.splitRatio,
-                                     self.statsIterRandomStates)
+                                      self.statsIterRandomStates)
         self.assertEqual(len(splits), 3)
         self.assertEqual(len(splits[0]), 2)
         self.assertEqual(type(splits[0][0]), np.ndarray)
@@ -332,7 +349,7 @@ class Test_genDirecortiesNames(unittest.TestCase):
 
     def test_simple_ovo(cls):
         directories = execution.gen_direcorties_names(cls.directory,
-                                                    cls.stats_iter)
+                                                      cls.stats_iter)
         cls.assertEqual(len(directories), 5)
         cls.assertEqual(directories[0], os.path.join(tmp_path, "iter_1"))
         cls.assertEqual(directories[-1], os.path.join(tmp_path, "iter_5"))
@@ -340,7 +357,7 @@ class Test_genDirecortiesNames(unittest.TestCase):
     def test_ovo_no_iter(cls):
         cls.stats_iter = 1
         directories = execution.gen_direcorties_names(cls.directory,
-                                                    cls.stats_iter)
+                                                      cls.stats_iter)
         cls.assertEqual(len(directories), 1)
         cls.assertEqual(directories[0], tmp_path)
 
@@ -356,6 +373,7 @@ class Test_genArgumentDictionaries(unittest.TestCase):
                                 np.array([0, 1, -100, 0, 1])]
         cls.labelsCombinations = [[0, 1], [0, 2], [1, 2]]
         cls.indicesMulticlass = [[[[], []], [[], []], [[], []]], [[], [], []]]
+
 
 if __name__ == '__main__':
     unittest.main()

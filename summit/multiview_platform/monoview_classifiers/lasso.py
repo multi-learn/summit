@@ -1,8 +1,8 @@
 import numpy as np
 from sklearn.linear_model import Lasso as LassoSK
 
-from ..monoview.monoview_utils import CustomRandint, CustomUniform, \
-    BaseMonoviewClassifier
+from ..monoview.monoview_utils import BaseMonoviewClassifier
+from summit.multiview_platform.utils.hyper_parameter_search import CustomUniform, CustomRandint
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

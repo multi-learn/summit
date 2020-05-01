@@ -2,7 +2,7 @@ import numpy as np
 
 from ..multiview_classifiers.additions.late_fusion_utils import \
     LateFusionClassifier
-from ..utils.dataset import get_examples_views_indices
+from ..utils.dataset import get_samples_views_indices
 
 classifier_class_name = "MajorityVoting"
 
@@ -22,27 +22,27 @@ class MajorityVoting(LateFusionClassifier):
                                       weights=weights,
                                       rs=rs)
 
-    def predict(self, X, example_indices=None, view_indices=None):
-        examples_indices, view_indices = get_examples_views_indices(X,
-                                                                     example_indices,
-                                                                     view_indices)
+    def predict(self, X, sample_indices=None, view_indices=None):
+        samples_indices, view_indices = get_samples_views_indices(X,
+                                                                  sample_indices,
+                                                                  view_indices)
         self._check_views(view_indices)
-        n_examples = len(examples_indices)
-        votes = np.zeros((n_examples, X.get_nb_class(example_indices)),
+        n_samples = len(samples_indices)
+        votes = np.zeros((n_samples, X.get_nb_class(sample_indices)),
                          dtype=float)
-        monoview_decisions = np.zeros((len(examples_indices), X.nb_view),
+        monoview_decisions = np.zeros((len(samples_indices), X.nb_view),
                                       dtype=int)
         for index, view_index in enumerate(view_indices):
             monoview_decisions[:, index] = self.monoview_estimators[
                 index].predict(
-                X.get_v(view_index, examples_indices))
-        for example_index in range(n_examples):
+                X.get_v(view_index, samples_indices))
+        for sample_index in range(n_samples):
             for view_index, feature_classification in enumerate(
-                    monoview_decisions[example_index, :]):
-                votes[example_index, feature_classification] += self.weights[
+                    monoview_decisions[sample_index, :]):
+                votes[sample_index, feature_classification] += self.weights[
                     view_index]
             nb_maximum = len(
-                np.where(votes[example_index] == max(votes[example_index]))[0])
+                np.where(votes[sample_index] == max(votes[sample_index]))[0])
             if nb_maximum == X.nb_view:
                 raise VotingIndecision(
                     "Majority voting can't decide, each classifier has voted for a different class")

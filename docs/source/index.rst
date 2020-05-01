@@ -15,10 +15,10 @@ This documentation consists in a short read me, with instructions to install and
    :maxdepth: 1
 
    tutorials/index
-   references/multiview_platform
+   api
+   readme_link
 
 .. examples
-
 
 
 Indices and tables

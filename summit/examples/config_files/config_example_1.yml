@@ -31,7 +31,7 @@ track_tracebacks: True
 
 # All the classification-realted configuration options
 
-# The ratio of test examples/number of train examples
+# The ratio of test samples/number of train samples
 split: 0.35
 # The nubmer of folds in the cross validation process when hyper-paramter optimization is performed
 nb_folds: 2

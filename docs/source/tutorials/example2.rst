@@ -72,7 +72,7 @@ And for the late fusion :
 
 (It will build a vote with one decision tree on each view, with the specified configuration for the decision trees)
 
-Learning on a few examples
+Learning on a few samples
 >>>>>>>>>>>>>>>>>>>>>>>>>>
 
 This example focuses on one line of the config file :
@@ -95,9 +95,10 @@ The results for accuracy metric are stored in ``multiview_platform/examples/resu
 
 These results were generated learning on 20% of the dataset and testing on 80% (see the :base_source:`config file <multiview_platform/examples/config_files/config_example_2_1_1.yml#L37>`).
 
-.. _learning-on-more-examples:
-Learning on more examples
->>>>>>>>>>>>>>>>>>>>>>>>>
+.. _learning-on-more-samples:
+
+Learning on more samples
+>>>>>>>>>>>>>>>>>>>>>>>>
 
 Now, if you run :
 
@@ -128,6 +129,7 @@ The split ratio has two consequences :
 - The second consequence is that increasing train size will increase the benchmark duration as the classifiers will have to learn  on more examples, this duration modification is higher if the dataset has high dimensionality and if the algorithms are complex.
 
 .. _random:
+
 Example 2.2 : Usage of randomized hyper-parameter optimization :
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 

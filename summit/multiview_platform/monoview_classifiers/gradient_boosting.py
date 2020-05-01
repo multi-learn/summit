@@ -1,13 +1,13 @@
-import time
 import os
+import time
 
 import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.tree import DecisionTreeClassifier
 
 from .. import metrics
-from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier, \
-    get_accuracy_graph
+from ..monoview.monoview_utils import BaseMonoviewClassifier, get_accuracy_graph
+from summit.multiview_platform.utils.hyper_parameter_search import CustomRandint
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -39,7 +39,7 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
         self.param_names = ["n_estimators", "max_depth"]
         self.classed_params = []
         self.distribs = [CustomRandint(low=50, high=500),
-                         CustomRandint(low=1, high=10),]
+                         CustomRandint(low=1, high=10), ]
         self.weird_strings = {}
         self.plotted_metric = metrics.zero_one_loss
         self.plotted_metric_name = "zero_one_loss"
@@ -71,12 +71,14 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
                 [step_pred for step_pred in self.staged_predict(X)])
         return pred
 
-    def get_interpretation(self, directory, base_file_name, y_test, multi_class=False):
+    def get_interpretation(self, directory, base_file_name, y_test,
+                           multi_class=False):
         interpretString = ""
         if multi_class:
             return interpretString
         else:
-            interpretString += self.get_feature_importance(directory, base_file_name)
+            interpretString += self.get_feature_importance(directory,
+                                                           base_file_name)
             step_test_metrics = np.array(
                 [self.plotted_metric.score(y_test, step_pred) for step_pred in
                  self.step_predictions])
@@ -86,10 +88,14 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
             get_accuracy_graph(self.metrics, "AdaboostClassic",
                                directory + "metrics.png",
                                self.plotted_metric_name)
-            np.savetxt(os.path.join(directory, base_file_name + "test_metrics.csv"), step_test_metrics,
-                       delimiter=',')
-            np.savetxt(os.path.join(directory, base_file_name + "train_metrics.csv"), self.metrics,
-                       delimiter=',')
+            np.savetxt(
+                os.path.join(directory, base_file_name + "test_metrics.csv"),
+                step_test_metrics,
+                delimiter=',')
+            np.savetxt(
+                os.path.join(directory, base_file_name + "train_metrics.csv"),
+                self.metrics,
+                delimiter=',')
             np.savetxt(os.path.join(directory, base_file_name + "times.csv"),
                        np.array([self.train_time, self.pred_time]),
                        delimiter=',')

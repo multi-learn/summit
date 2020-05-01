@@ -3,7 +3,7 @@ import numpy as np
 from .fusion_utils import BaseFusionClassifier
 from ...multiview.multiview_utils import BaseMultiviewClassifier, \
     get_available_monoview_classifiers, ConfigGenerator
-from ...utils.dataset import get_examples_views_indices
+from ...utils.dataset import get_samples_views_indices
 
 
 class ClassifierDistribution:
@@ -94,9 +94,9 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
                          np.arange(1000)]
 
     def fit(self, X, y, train_indices=None, view_indices=None):
-        train_indices, view_indices = get_examples_views_indices(X,
-                                                                 train_indices,
-                                                                 view_indices)
+        train_indices, view_indices = get_samples_views_indices(X,
+                                                                train_indices,
+                                                                view_indices)
         self.used_views = view_indices
         if np.unique(y).shape[0] > 2:
             multiclass = True
@@ -148,8 +148,12 @@ class LateFusionClassifier(BaseMultiviewClassifier, BaseFusionClassifier):
                                       for _ in range(nb_clfs)]
 
         if isinstance(self.classifier_configs, ConfigDistribution):
-            self.classifier_configs = [{classifier_name : config[classifier_name]} for config, classifier_name in zip(self.classifier_configs.draw(nb_clfs,
-                                                                   self.rs), self.classifiers_names)]
+            self.classifier_configs = [
+                {classifier_name: config[classifier_name]} for
+                config, classifier_name in
+                zip(self.classifier_configs.draw(nb_clfs,
+                                                 self.rs),
+                    self.classifiers_names)]
         elif isinstance(self.classifier_configs, dict):
             self.classifier_configs = [
                 {classifier_name: self.classifier_configs[classifier_name]} for

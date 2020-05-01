@@ -45,43 +45,12 @@ def pass_default_config(log=True,
                         algos_monoview=["all"],
                         algos_multiview=["svm_jumbo_fusion", ],
                         stats_iter=2,
-                        metrics={"accuracy_score":{}, "f1_score":{}},
+                        metrics={"accuracy_score": {}, "f1_score": {}},
                         metric_princ="accuracy_score",
                         hps_type="Random",
                         hps_iter=1,
-                        hps_kwargs={'n_iter':10, "equivalent_draws":True},
+                        hps_kwargs={'n_iter': 10, "equivalent_draws": True},
                         **kwargs):
-    """
-
-    :param log:
-    :param name:
-    :param label:
-    :param file_type:
-    :param views:
-    :param pathf:
-    :param nice:
-    :param random_state:
-    :param nb_cores:
-    :param full:
-    :param debug:
-    :param add_noise:
-    :param noise_std:
-    :param res_dir:
-    :param track_tracebacks:
-    :param split:
-    :param nb_folds:
-    :param nb_class:
-    :param classes:
-    :param type:
-    :param algos_monoview:
-    :param algos_multiview:
-    :param stats_iter:
-    :param metrics:
-    :param metric_princ:
-    :param hps_type:
-    :param hps_iter:
-    :return:
-    """
     args = dict(
         (key, value) for key, value in locals().items() if key != "kwargs")
     args = dict(args, **kwargs)

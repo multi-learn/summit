@@ -16,12 +16,13 @@ class Test_get_classic_db_hdf5(unittest.TestCase):
         self.rs = np.random.RandomState(42)
         self.nb_view = 3
         self.file_name = "test.hdf5"
-        self.nb_examples = 5
+        self.nb_samples = 5
         self.nb_class = 3
-        self.views = [self.rs.randint(0, 10, size=(self.nb_examples, 7))
+        self.views = [self.rs.randint(0, 10, size=(self.nb_samples, 7))
                       for _ in range(self.nb_view)]
-        self.labels = self.rs.randint(0, self.nb_class, self.nb_examples)
-        self.dataset_file = h5py.File(os.path.join(tmp_path, self.file_name), 'w')
+        self.labels = self.rs.randint(0, self.nb_class, self.nb_samples)
+        self.dataset_file = h5py.File(
+            os.path.join(tmp_path, self.file_name), 'w')
         self.view_names = ["ViewN" + str(index) for index in
                            range(len(self.views))]
         self.are_sparse = [False for _ in self.views]
@@ -45,16 +46,15 @@ class Test_get_classic_db_hdf5(unittest.TestCase):
         meta_data_grp.attrs["datasetLength"] = len(self.labels)
 
     def test_simple(self):
-        dataset , labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(
+        dataset, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(
             ["ViewN2"], tmp_path, self.file_name.split(".")[0],
             self.nb_class, ["0", "2"],
             self.rs, path_for_new=tmp_path)
         self.assertEqual(dataset.nb_view, 1)
         self.assertEqual(labels_dictionary,
-                         {0: "0", 1: "2", 2:"1"})
-        self.assertEqual(dataset.get_nb_examples(), 5)
+                         {0: "0", 1: "2", 2: "1"})
+        self.assertEqual(dataset.get_nb_samples(), 5)
         self.assertEqual(len(np.unique(dataset.get_labels())), 3)
-
 
     def test_all_views_asked(self):
         dataset, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(
@@ -62,7 +62,9 @@ class Test_get_classic_db_hdf5(unittest.TestCase):
             self.nb_class, ["0", "2"],
             self.rs, path_for_new=tmp_path)
         self.assertEqual(dataset.nb_view, 3)
-        self.assertEqual(dataset.get_view_dict(), {'ViewN0': 0, 'ViewN1': 1, 'ViewN2': 2})
+        self.assertEqual(
+            dataset.get_view_dict(), {
+                'ViewN0': 0, 'ViewN1': 1, 'ViewN2': 2})
 
     def test_asked_the_whole_dataset(self):
         dataset, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_hdf5(
@@ -100,34 +102,35 @@ class Test_get_classic_db_csv(unittest.TestCase):
                        data, delimiter=",")
             self.datas.append(data)
 
-
     def test_simple(self):
         dataset, labels_dictionary, dataset_name = get_multiview_db.get_classic_db_csv(
             self.views, self.pathF, self.nameDB,
             self.NB_CLASS, self.askedLabelsNames,
             self.random_state, delimiter=",", path_for_new=tmp_path)
         self.assertEqual(dataset.nb_view, 2)
-        self.assertEqual(dataset.get_view_dict(), {'test_view_1': 0, 'test_view_3': 1})
+        self.assertEqual(
+            dataset.get_view_dict(), {
+                'test_view_1': 0, 'test_view_3': 1})
         self.assertEqual(labels_dictionary,
                          {0: "test_label_1", 1: "test_label_3"})
-        self.assertEqual(dataset.get_nb_examples(), 3)
+        self.assertEqual(dataset.get_nb_samples(), 3)
         self.assertEqual(dataset.get_nb_class(), 2)
-
 
     @classmethod
     def tearDown(self):
         for i in range(4):
             os.remove(
-                tmp_path+"Views/test_view_" + str(
+                tmp_path + "Views/test_view_" + str(
                     i) + ".csv")
-        os.rmdir(tmp_path+"Views")
+        os.rmdir(tmp_path + "Views")
         os.remove(
-            tmp_path+"test_dataset-labels-names.csv")
-        os.remove(tmp_path+"test_dataset-labels.csv")
-        os.remove(tmp_path+"test_dataset.hdf5")
+            tmp_path + "test_dataset-labels-names.csv")
+        os.remove(tmp_path + "test_dataset-labels.csv")
+        os.remove(tmp_path + "test_dataset.hdf5")
         os.remove(
-            tmp_path+"test_dataset_temp_filter.hdf5")
+            tmp_path + "test_dataset_temp_filter.hdf5")
         os.rmdir(tmp_path)
+
 
 class Test_get_plausible_db_hdf5(unittest.TestCase):
 
@@ -135,10 +138,10 @@ class Test_get_plausible_db_hdf5(unittest.TestCase):
     def setUpClass(cls):
         rm_tmp()
         cls.path = tmp_path
-        cls.nb_class=3
+        cls.nb_class = 3
         cls.rs = np.random.RandomState(42)
-        cls.nb_view=3
-        cls.nb_examples = 5
+        cls.nb_view = 3
+        cls.nb_samples = 5
         cls.nb_features = 4
 
     @classmethod
@@ -148,17 +151,17 @@ class Test_get_plausible_db_hdf5(unittest.TestCase):
     def test_simple(self):
         dataset, labels_dict, name = get_multiview_db.get_plausible_db_hdf5(
             "", self.path, "", nb_class=self.nb_class, random_state=self.rs,
-            nb_view=3, nb_examples=self.nb_examples,
+            nb_view=3, nb_samples=self.nb_samples,
             nb_features=self.nb_features)
-        self.assertEqual(dataset.init_example_indices(), range(5))
+        self.assertEqual(dataset.init_sample_indices(), range(5))
         self.assertEqual(dataset.get_nb_class(), self.nb_class)
 
     def test_two_class(self):
         dataset, labels_dict, name = get_multiview_db.get_plausible_db_hdf5(
             "", self.path, "", nb_class=2, random_state=self.rs,
-            nb_view=3, nb_examples=self.nb_examples,
+            nb_view=3, nb_samples=self.nb_samples,
             nb_features=self.nb_features)
-        self.assertEqual(dataset.init_example_indices(), range(5))
+        self.assertEqual(dataset.init_sample_indices(), range(5))
         self.assertEqual(dataset.get_nb_class(), 2)
 
 

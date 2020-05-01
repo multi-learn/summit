@@ -30,31 +30,31 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
                           label_names=["No".encode(), "Yes".encode(),
                                        "Maybe".encode()],
                           random_state=None, full=True, add_noise=False,
-                          noise_std=0.15, nb_view=3, nb_examples=100,
+                          noise_std=0.15, nb_view=3, nb_samples=100,
                           nb_features=10):
     """Used to generate a plausible dataset to test the algorithms"""
     secure_file_path(os.path.join(path, "plausible.hdf5"))
-    example_ids = ["exmaple_id_" + str(i) for i in range(nb_examples)]
+    sample_ids = ["exmaple_id_" + str(i) for i in range(nb_samples)]
     views = []
     view_names = []
     are_sparse = []
     if nb_class == 2:
         labels = np.array(
-            [0 for _ in range(int(nb_examples / 2))] + [1 for _ in range(
-                nb_examples - int(nb_examples / 2))])
+            [0 for _ in range(int(nb_samples / 2))] + [1 for _ in range(
+                nb_samples - int(nb_samples / 2))])
         label_names = ["No".encode(), "Yes".encode()]
         for view_index in range(nb_view):
             view_data = np.array(
-                [np.zeros(nb_features) for _ in range(int(nb_examples / 2))] +
+                [np.zeros(nb_features) for _ in range(int(nb_samples / 2))] +
                 [np.ones(nb_features) for _ in
-                 range(nb_examples - int(nb_examples / 2))])
-            fake_one_indices = random_state.randint(0, int(nb_examples / 2),
-                                                    int(nb_examples / 12))
-            fake_zero_indices = random_state.randint(int(nb_examples / 2),
-                                                     nb_examples,
-                                                     int(nb_examples / 12))
+                 range(nb_samples - int(nb_samples / 2))])
+            fake_one_indices = random_state.randint(0, int(nb_samples / 2),
+                                                    int(nb_samples / 12))
+            fake_zero_indices = random_state.randint(int(nb_samples / 2),
+                                                     nb_samples,
+                                                     int(nb_samples / 12))
             for index in np.concatenate((fake_one_indices, fake_zero_indices)):
-                example_ids[index] += "noised"
+                sample_ids[index] += "noised"
 
             view_data[fake_one_indices] = np.ones(
                 (len(fake_one_indices), nb_features))
@@ -67,15 +67,15 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
 
         dataset = RAMDataset(views=views, labels=labels,
                              labels_names=label_names, view_names=view_names,
-                             are_sparse=are_sparse, example_ids=example_ids,
+                             are_sparse=are_sparse, sample_ids=sample_ids,
                              name='plausible')
         labels_dictionary = {0: "No", 1: "Yes"}
         return dataset, labels_dictionary, "plausible"
     elif nb_class >= 3:
-        firstBound = int(nb_examples / 3)
-        rest = nb_examples - 2 * int(nb_examples / 3)
-        scndBound = 2 * int(nb_examples / 3)
-        thrdBound = nb_examples
+        firstBound = int(nb_samples / 3)
+        rest = nb_samples - 2 * int(nb_samples / 3)
+        scndBound = 2 * int(nb_samples / 3)
+        thrdBound = nb_samples
         labels = np.array(
             [0 for _ in range(firstBound)] +
             [1 for _ in range(firstBound)] +
@@ -87,11 +87,11 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
                 [np.ones(nb_features) for _ in range(firstBound)] +
                 [np.ones(nb_features) + 1 for _ in range(rest)])
             fake_one_indices = random_state.randint(0, firstBound,
-                                                    int(nb_examples / 12))
+                                                    int(nb_samples / 12))
             fakeTwoIndices = random_state.randint(firstBound, scndBound,
-                                                  int(nb_examples / 12))
+                                                  int(nb_samples / 12))
             fake_zero_indices = random_state.randint(scndBound, thrdBound,
-                                                     int(nb_examples / 12))
+                                                     int(nb_samples / 12))
 
             view_data[fake_one_indices] = np.ones(
                 (len(fake_one_indices), nb_features))
@@ -107,7 +107,7 @@ def get_plausible_db_hdf5(features, path, file_name, nb_class=3,
                              labels_names=label_names, view_names=view_names,
                              are_sparse=are_sparse,
                              name="plausible",
-                             example_ids=example_ids)
+                             sample_ids=sample_ids)
         labels_dictionary = {0: "No", 1: "Yes", 2: "Maybe"}
         return dataset, labels_dictionary, "plausible"
 
@@ -156,7 +156,8 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
                                  dtype='str', delimiter=delimiter)
     datasetFile = h5py.File(pathF + nameDB + ".hdf5", "w")
     labels = np.genfromtxt(pathF + nameDB + "-labels.csv", delimiter=delimiter)
-    labelsDset = datasetFile.create_dataset("Labels", labels.shape, data=labels)
+    labelsDset = datasetFile.create_dataset(
+        "Labels", labels.shape, data=labels)
     labelsDset.attrs["names"] = [labelName.encode() for labelName in
                                  labels_names]
     viewFileNames = [viewFileName for viewFileName in
@@ -309,7 +310,7 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #
 # def copyhdf5_dataset(source_data_file, destination_data_file, source_dataset_name,
 #                      destination_dataset_name, used_indices):
-#     """Used to copy a view in a new dataset file using only the examples of
+#     """Used to copy a view in a new dataset file using only the samples of
 #     usedIndices, and copying the args"""
 #     new_d_set = destination_data_file.create_dataset(destination_dataset_name,
 #                                                  data=source_data_file.get(
@@ -361,10 +362,11 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 
 
 # def getLabelSupports(CLASS_LABELS):
-#     """Used to get the number of example for each label"""
+#     """Used to get the number of sample for each label"""
 #     labels = set(CLASS_LABELS)
 #     supports = [CLASS_LABELS.tolist().count(label) for label in labels]
-#     return supports, dict((label, index) for label, index in zip(labels, range(len(labels))))
+# return supports, dict((label, index) for label, index in zip(labels,
+# range(len(labels))))
 
 
 # def isUseful(labelSupports, index, CLASS_LABELS, labelDict):
@@ -714,13 +716,13 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     Methyl = methylData
 #     sortedMethylGeneIndices = np.zeros(methylData.shape, dtype=int)
 #     MethylRanking = np.zeros(methylData.shape, dtype=int)
-#     for exampleIndex, exampleArray in enumerate(Methyl):
-#         sortedMethylDictionary = dict((index, value) for index, value in enumerate(exampleArray))
+#     for sampleIndex, sampleArray in enumerate(Methyl):
+#         sortedMethylDictionary = dict((index, value) for index, value in enumerate(sampleArray))
 #         sortedMethylIndicesDict = sorted(sortedMethylDictionary.items(), key=operator.itemgetter(1))
 #         sortedMethylIndicesArray = np.array([index for (index, value) in sortedMethylIndicesDict], dtype=int)
-#         sortedMethylGeneIndices[exampleIndex] = sortedMethylIndicesArray
+#         sortedMethylGeneIndices[sampleIndex] = sortedMethylIndicesArray
 #         for geneIndex in range(Methyl.shape[1]):
-#             MethylRanking[exampleIndex, sortedMethylIndicesArray[geneIndex]] = geneIndex
+#             MethylRanking[sampleIndex, sortedMethylIndicesArray[geneIndex]] = geneIndex
 #     logging.debug("Done:\t Getting Sorted Methyl data")
 #
 #     logging.debug("Start:\t Getting Binarized Methyl data")
@@ -847,13 +849,13 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     Methyl = datasetFile["View0"][...]
 #     sortedMethylGeneIndices = np.zeros(datasetFile.get("View0").shape, dtype=int)
 #     MethylRanking = np.zeros(datasetFile.get("View0").shape, dtype=int)
-#     for exampleIndex, exampleArray in enumerate(Methyl):
-#         sortedMethylDictionary = dict((index, value) for index, value in enumerate(exampleArray))
+#     for sampleIndex, sampleArray in enumerate(Methyl):
+#         sortedMethylDictionary = dict((index, value) for index, value in enumerate(sampleArray))
 #         sortedMethylIndicesDict = sorted(sortedMethylDictionary.items(), key=operator.itemgetter(1))
 #         sortedMethylIndicesArray = np.array([index for (index, value) in sortedMethylIndicesDict], dtype=int)
-#         sortedMethylGeneIndices[exampleIndex] = sortedMethylIndicesArray
+#         sortedMethylGeneIndices[sampleIndex] = sortedMethylIndicesArray
 #         for geneIndex in range(Methyl.shape[1]):
-#             MethylRanking[exampleIndex, sortedMethylIndicesArray[geneIndex]] = geneIndex
+#             MethylRanking[sampleIndex, sortedMethylIndicesArray[geneIndex]] = geneIndex
 #     mMethylDset = datasetFile.create_dataset("View10", sortedMethylGeneIndices.shape, data=sortedMethylGeneIndices)
 #     mMethylDset.attrs["name"] = "SMethyl"
 #     mMethylDset.attrs["sparse"] = False
@@ -915,13 +917,13 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     MiRNA = datasetFile["View1"][...]
 #     sortedMiRNAGeneIndices = np.zeros(datasetFile.get("View1").shape, dtype=int)
 #     MiRNARanking = np.zeros(datasetFile.get("View1").shape, dtype=int)
-#     for exampleIndex, exampleArray in enumerate(MiRNA):
-#         sortedMiRNADictionary = dict((index, value) for index, value in enumerate(exampleArray))
+#     for sampleIndex, sampleArray in enumerate(MiRNA):
+#         sortedMiRNADictionary = dict((index, value) for index, value in enumerate(sampleArray))
 #         sortedMiRNAIndicesDict = sorted(sortedMiRNADictionary.items(), key=operator.itemgetter(1))
 #         sortedMiRNAIndicesArray = np.array([index for (index, value) in sortedMiRNAIndicesDict], dtype=int)
-#         sortedMiRNAGeneIndices[exampleIndex] = sortedMiRNAIndicesArray
+#         sortedMiRNAGeneIndices[sampleIndex] = sortedMiRNAIndicesArray
 #         for geneIndex in range(MiRNA.shape[1]):
-#             MiRNARanking[exampleIndex, sortedMiRNAIndicesArray[geneIndex]] = geneIndex
+#             MiRNARanking[sampleIndex, sortedMiRNAIndicesArray[geneIndex]] = geneIndex
 #     mmirnaDset = datasetFile.create_dataset("View7", sortedMiRNAGeneIndices.shape, data=sortedMiRNAGeneIndices)
 #     mmirnaDset.attrs["name"] = "SMiRNA_"
 #     mmirnaDset.attrs["sparse"] = False
@@ -988,13 +990,13 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #     RNASeq = datasetFile["View2"][...]
 #     sortedRNASeqGeneIndices = np.zeros(datasetFile.get("View2").shape, dtype=int)
 #     RNASeqRanking = np.zeros(datasetFile.get("View2").shape, dtype=int)
-#     for exampleIndex, exampleArray in enumerate(RNASeq):
-#         sortedRNASeqDictionary = dict((index, value) for index, value in enumerate(exampleArray))
+#     for sampleIndex, sampleArray in enumerate(RNASeq):
+#         sortedRNASeqDictionary = dict((index, value) for index, value in enumerate(sampleArray))
 #         sortedRNASeqIndicesDict = sorted(sortedRNASeqDictionary.items(), key=operator.itemgetter(1))
 #         sortedRNASeqIndicesArray = np.array([index for (index, value) in sortedRNASeqIndicesDict], dtype=int)
-#         sortedRNASeqGeneIndices[exampleIndex] = sortedRNASeqIndicesArray
+#         sortedRNASeqGeneIndices[sampleIndex] = sortedRNASeqIndicesArray
 #         for geneIndex in range(RNASeq.shape[1]):
-#             RNASeqRanking[exampleIndex, sortedRNASeqIndicesArray[geneIndex]] = geneIndex
+#             RNASeqRanking[sampleIndex, sortedRNASeqIndicesArray[geneIndex]] = geneIndex
 #     mrnaseqDset = datasetFile.create_dataset("View4", sortedRNASeqGeneIndices.shape, data=sortedRNASeqGeneIndices)
 #     mrnaseqDset.attrs["name"] = "SRNASeq"
 #     mrnaseqDset.attrs["sparse"] = False
@@ -1170,16 +1172,16 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 # #         for labelIndex in np.arange(nbLabels):
 # #             pathToExamples = pathToAwa + 'Animals_with_Attributes/Features/' + viewDictionary[view] + '/' + \
 # #                              labelDictionary[labelIndex] + '/'
-# #             examples = os.listdir(pathToExamples)
+# #             samples = os.listdir(pathToExamples)
 # #             if view == 0:
-# #                 nbExample += len(examples)
-# #             for example in examples:
+# #                 nbExample += len(samples)
+# #             for sample in samples:
 # #                 if viewDictionary[view]=='decaf':
-# #                     exampleFile = open(pathToExamples + example)
-# #                     viewData.append([float(line.strip()) for line in exampleFile])
+# #                     sampleFile = open(pathToExamples + sample)
+# #                     viewData.append([float(line.strip()) for line in sampleFile])
 # #                 else:
-# #                     exampleFile = open(pathToExamples + example)
-# #                     viewData.append([[float(coordinate) for coordinate in raw.split()] for raw in exampleFile][0])
+# #                     sampleFile = open(pathToExamples + sample)
+# #                     viewData.append([[float(coordinate) for coordinate in raw.split()] for raw in sampleFile][0])
 # #                 if view == 0:
 # #                     labels.append(labelIndex)
 # #
@@ -1225,25 +1227,25 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
 #
 # # def makeArrayFromTriangular(pseudoRNASeqMatrix):
 # #     matrixShape = len(pseudoRNASeqMatrix[0,:])
-# #     exampleArray = np.array(((matrixShape-1)*matrixShape)/2)
+# #     sampleArray = np.array(((matrixShape-1)*matrixShape)/2)
 # #     arrayIndex = 0
 # #     for i in range(matrixShape-1):
 # #         for j in range(i+1, matrixShape):
-# #             exampleArray[arrayIndex]=pseudoRNASeqMatrix[i,j]
+# #             sampleArray[arrayIndex]=pseudoRNASeqMatrix[i,j]
 # #             arrayIndex += 1
-# #     return exampleArray
+# #     return sampleArray
 #
 #
 # # def getPseudoRNASeq(dataset):
 # #     nbGenes = len(dataset["/View2/matrix"][0, :])
 # #     pseudoRNASeq = np.zeros((dataset["/datasetlength"][...], ((nbGenes - 1) * nbGenes) / 2), dtype=bool_)
-# #     for exampleIndex in xrange(dataset["/datasetlength"][...]):
+# #     for sampleIndex in xrange(dataset["/datasetlength"][...]):
 # #         arrayIndex = 0
 # #         for i in xrange(nbGenes):
 # #             for j in xrange(nbGenes):
 # #                 if i > j:
-# #                     pseudoRNASeq[exampleIndex, arrayIndex] =
-# # dataset["/View2/matrix"][exampleIndex, j] < dataset["/View2/matrix"][exampleIndex, i]
+# #                     pseudoRNASeq[sampleIndex, arrayIndex] =
+# # dataset["/View2/matrix"][sampleIndex, j] < dataset["/View2/matrix"][sampleIndex, i]
 # #                     arrayIndex += 1
 # #     dataset["/View4/matrix"] = pseudoRNASeq
 # #     dataset["/View4/name"] = "pseudoRNASeq"

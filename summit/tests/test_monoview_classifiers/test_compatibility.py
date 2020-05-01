@@ -2,7 +2,8 @@
 # import unittest
 #
 
-# Actuellement problématique a cause de la pep8isation du code. A voir plus tard
+# Actuellement problématique a cause de la pep8isation du code. A voir
+# plus tard
 
 
 # import numpy as np

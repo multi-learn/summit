@@ -4,15 +4,17 @@ import numpy as np
 from sklearn.base import BaseEstimator
 
 from summit.multiview_platform.utils.multiclass import get_mc_estim, \
-OVRWrapper, OVOWrapper, MultiviewOVOWrapper, MultiviewOVRWrapper
+    OVRWrapper, OVOWrapper, MultiviewOVOWrapper, MultiviewOVRWrapper
+
 
 class FakeMCEstim(BaseEstimator):
 
     def __init__(self):
-        self.short_name="short_name"
+        self.short_name = "short_name"
 
     def accepts_multi_class(self, random_state):
         return False
+
 
 class FakeEstimNative(FakeMCEstim):
 
@@ -38,24 +40,27 @@ class Test_get_mc_estim(unittest.TestCase):
         cls.y = cls.random_state.randint(0, 3, 10)
 
     def test_biclass(self):
-        y = self.random_state.randint(0,2,10)
-        estimator="Test"
+        y = self.random_state.randint(0, 2, 10)
+        estimator = "Test"
         returned_estimator = get_mc_estim(estimator, self.random_state, y=y)
         self.assertEqual(returned_estimator, estimator)
 
     def test_multiclass_native(self):
         estimator = FakeEstimNative()
-        returned_estimator = get_mc_estim(estimator, self.random_state, y=self.y)
+        returned_estimator = get_mc_estim(
+            estimator, self.random_state, y=self.y)
         self.assertIsInstance(returned_estimator, FakeEstimNative)
 
     def test_multiclass_ovo(self):
         estimator = FakeNonProbaEstim()
-        returned_estimator = get_mc_estim(estimator, self.random_state, y=self.y)
+        returned_estimator = get_mc_estim(
+            estimator, self.random_state, y=self.y)
         self.assertIsInstance(returned_estimator, OVOWrapper)
 
     def test_multiclass_ovr(self):
         estimator = FakeProbaEstim()
-        returned_estimator = get_mc_estim(estimator, self.random_state, y=self.y)
+        returned_estimator = get_mc_estim(
+            estimator, self.random_state, y=self.y)
         self.assertIsInstance(returned_estimator, OVRWrapper)
 
     def test_multiclass_ovo_multiview(self):
@@ -70,6 +75,7 @@ class Test_get_mc_estim(unittest.TestCase):
                                           multiview=True, y=self.y,)
         self.assertIsInstance(returned_estimator, MultiviewOVRWrapper)
 
+
 class FakeMVClassifier(BaseEstimator):
 
     def __init__(self, short_name="None"):
@@ -79,17 +85,19 @@ class FakeMVClassifier(BaseEstimator):
         self.n_classes = np.unique(y[train_indices]).shape[0]
         self.views_indices = view_indices
 
-    def predict(self, X, example_indices=None, view_indices=None):
-        self.example_indices = example_indices
+    def predict(self, X, sample_indices=None, view_indices=None):
+        self.sample_indices = sample_indices
         self.views_indices = view_indices
-        return np.zeros((example_indices.shape[0]))
+        return np.zeros((sample_indices.shape[0]))
+
 
 class FakeMVClassifierProb(FakeMVClassifier):
 
-    def predict_proba(self, X, example_indices=None, view_indices=None):
-        self.example_indices = example_indices
+    def predict_proba(self, X, sample_indices=None, view_indices=None):
+        self.sample_indices = sample_indices
         self.views_indices = view_indices
-        return np.zeros((example_indices.shape[0], 2))
+        return np.zeros((sample_indices.shape[0], 2))
+
 
 class Test_MultiviewOVRWrapper_fit(unittest.TestCase):
 
@@ -97,67 +105,69 @@ class Test_MultiviewOVRWrapper_fit(unittest.TestCase):
     def setUpClass(cls):
         cls.random_state = np.random.RandomState(42)
         cls.X = "dataset"
-        cls.n_classes=3
-        cls.y = cls.random_state.randint(0,cls.n_classes,50)
+        cls.n_classes = 3
+        cls.y = cls.random_state.randint(0, cls.n_classes, 50)
         cls.train_indices = np.arange(25)
-        cls.example_indices = np.arange(25)+25
-        cls.view_indices="None"
+        cls.sample_indices = np.arange(25) + 25
+        cls.view_indices = "None"
         cls.wrapper = MultiviewOVRWrapper(FakeMVClassifierProb(), )
 
     def test_fit(self):
         fitted = self.wrapper.fit(self.X, self.y, train_indices=self.train_indices,
                                   view_indices=self.view_indices)
         for estimator in fitted.estimators_:
-            self.assertEqual(estimator.n_classes,2)
+            self.assertEqual(estimator.n_classes, 2)
             self.assertEqual(estimator.views_indices, "None")
 
     def test_predict(self):
         fitted = self.wrapper.fit(self.X, self.y, train_indices=self.train_indices,
                                   view_indices=self.view_indices)
-        pred = fitted.predict(self.X, example_indices=self.example_indices,
-                       view_indices=self.view_indices)
+        pred = fitted.predict(self.X, sample_indices=self.sample_indices,
+                              view_indices=self.view_indices)
         for estimator in fitted.estimators_:
-            np.testing.assert_array_equal(estimator.example_indices,
-                                          self.example_indices)
+            np.testing.assert_array_equal(estimator.sample_indices,
+                                          self.sample_indices)
 
 
 class FakeDset:
 
-    def __init__(self, n_examples):
-        self.n_examples = n_examples
+    def __init__(self, n_samples):
+        self.n_samples = n_samples
 
-    def get_nb_examples(self):
-        return self.n_examples
+    def get_nb_samples(self):
+        return self.n_samples
+
 
 class Test_MultiviewOVOWrapper_fit(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         cls.random_state = np.random.RandomState(42)
-        cls.n_examples=50
-        cls.X = FakeDset(n_examples=cls.n_examples)
-        cls.n_classes=3
-        cls.y = cls.random_state.randint(0,cls.n_classes,cls.n_examples)
-        cls.train_indices = np.arange(int(cls.n_examples/2))
-        cls.example_indices = np.arange(int(cls.n_examples/2))+int(cls.n_examples/2)
-        cls.view_indices="None"
+        cls.n_samples = 50
+        cls.X = FakeDset(n_samples=cls.n_samples)
+        cls.n_classes = 3
+        cls.y = cls.random_state.randint(0, cls.n_classes, cls.n_samples)
+        cls.train_indices = np.arange(int(cls.n_samples / 2))
+        cls.sample_indices = np.arange(
+            int(cls.n_samples / 2)) + int(cls.n_samples / 2)
+        cls.view_indices = "None"
         cls.wrapper = MultiviewOVOWrapper(FakeMVClassifier(), )
 
     def test_fit(self):
         fitted = self.wrapper.fit(self.X, self.y, train_indices=self.train_indices,
                                   view_indices=self.view_indices)
         for estimator in fitted.estimators_:
-            self.assertEqual(estimator.n_classes,2)
+            self.assertEqual(estimator.n_classes, 2)
             self.assertEqual(estimator.views_indices, "None")
 
     def test_predict(self):
         fitted = self.wrapper.fit(self.X, self.y, train_indices=self.train_indices,
                                   view_indices=self.view_indices)
-        pred = fitted.predict(self.X, example_indices=self.example_indices,
-                       view_indices=self.view_indices)
+        pred = fitted.predict(self.X, sample_indices=self.sample_indices,
+                              view_indices=self.view_indices)
         for estimator in fitted.estimators_:
-            np.testing.assert_array_equal(estimator.example_indices,
-                                          self.example_indices)
+            np.testing.assert_array_equal(estimator.sample_indices,
+                                          self.sample_indices)
 
 
 if __name__ == '__main__':

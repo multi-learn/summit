@@ -7,6 +7,7 @@ from sklearn.tree import DecisionTreeClassifier
 from summit.multiview_platform.monoview import monoview_utils
 from summit.multiview_platform.utils.hyper_parameter_search import CustomRandint
 
+
 class TestFunctions(unittest.TestCase):
 
     def test_gen_test_folds_preds(self):
@@ -24,19 +25,21 @@ class TestFunctions(unittest.TestCase):
                                                              self.estimator)
         self.assertEqual(testFoldsPreds.shape, (3, 10))
         np.testing.assert_array_equal(testFoldsPreds[0], np.array(
-            [ 1,  1, -1, -1,  1,  1, -1,  1, -1,  1]))
+            [1, 1, -1, -1, 1, 1, -1, 1, -1, 1]))
 
     def test_change_label_to_minus(self):
-        lab = monoview_utils.change_label_to_minus(np.array([0,1,0]))
-        np.testing.assert_array_equal(lab, np.array([-1,1,-1]))
+        lab = monoview_utils.change_label_to_minus(np.array([0, 1, 0]))
+        np.testing.assert_array_equal(lab, np.array([-1, 1, -1]))
 
     def test_change_label_to_zero(self):
-        lab = monoview_utils.change_label_to_zero(np.array([-1,1,-1]))
-        np.testing.assert_array_equal(lab, np.array([0,1,0]))
+        lab = monoview_utils.change_label_to_zero(np.array([-1, 1, -1]))
+        np.testing.assert_array_equal(lab, np.array([0, 1, 0]))
 
     def test_compute_possible_combinations(self):
-        n_possib = monoview_utils.compute_possible_combinations({"a":[1, 2], "b":{"c":[2,3]}, "d":CustomRandint(0,10)})
+        n_possib = monoview_utils.compute_possible_combinations(
+            {"a": [1, 2], "b": {"c": [2, 3]}, "d": CustomRandint(0, 10)})
         np.testing.assert_array_equal(n_possib, np.array([2, np.inf, 10]))
+
 
 class FakeClf(monoview_utils.BaseMonoviewClassifier):
 

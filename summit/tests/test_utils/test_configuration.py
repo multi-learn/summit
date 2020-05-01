@@ -12,17 +12,17 @@ class Test_get_the_args(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         rm_tmp()
-        cls.path_to_config_file = tmp_path+"config_temp.yml"
+        cls.path_to_config_file = tmp_path + "config_temp.yml"
         path_file = os.path.dirname(os.path.abspath(__file__))
         make_tmp_dir = os.path.join(path_file, "../tmp_tests")
         os.mkdir(make_tmp_dir)
-        data = {"log": 10, "name":[12.5, 1e-06], "type":True}
+        data = {"log": 10, "name": [12.5, 1e-06], "type": True}
         with open(cls.path_to_config_file, "w") as config_file:
             yaml.dump(data, config_file)
 
     @classmethod
     def tearDownClass(cls):
-        os.remove(tmp_path+"config_temp.yml")
+        os.remove(tmp_path + "config_temp.yml")
         os.rmdir(tmp_path)
 
     def test_file_loading(self):
@@ -40,6 +40,7 @@ class Test_get_the_args(unittest.TestCase):
         self.assertEqual(config_dict["name"], [12.5, 1e-06])
         self.assertEqual(config_dict["type"], True)
 
+
 class Test_save_config(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -49,10 +50,10 @@ class Test_save_config(unittest.TestCase):
         os.mkdir(make_tmp_dir)
 
     def test_simple(self):
-        configuration.save_config(tmp_path, {"test":10})
-        with open(os.path.join(tmp_path,"config_file.yml" ), 'r') as stream:
+        configuration.save_config(tmp_path, {"test": 10})
+        with open(os.path.join(tmp_path, "config_file.yml"), 'r') as stream:
             yaml_config = yaml.safe_load(stream)
-        self.assertEqual(yaml_config,{"test":10} )
+        self.assertEqual(yaml_config, {"test": 10})
 
     @classmethod
     def tearDownClass(cls):

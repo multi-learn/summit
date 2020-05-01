@@ -1,11 +1,12 @@
-import numpy as np
-from sklearn.base import BaseEstimator
 from abc import abstractmethod
 from datetime import timedelta as hms
-from tabulate import tabulate
+
+import numpy as np
+from sklearn.base import BaseEstimator
+from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
 from sklearn.metrics import confusion_matrix as confusion
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
+from tabulate import tabulate
 
 from summit.multiview_platform import metrics
 
@@ -32,13 +33,13 @@ class BaseClassifier(BaseEstimator, ):
         if self.classed_params:
             classed_dict = dict((classed_param, get_names(
                 detector.cv_results_["param_" + classed_param]))
-                                for classed_param in self.classed_params)
+                for classed_param in self.classed_params)
         if self.param_names:
             return [(param_name,
                      np.array(detector.cv_results_["param_" + param_name]))
                     if param_name not in self.classed_params else (
                 param_name, classed_dict[param_name])
-                    for param_name in self.param_names]
+                for param_name in self.param_names]
         else:
             return [()]
 
@@ -77,12 +78,15 @@ class BaseClassifier(BaseEstimator, ):
             elif base_estimator == "RandomForestClassifier":
                 return RandomForestClassifier(**estimator_config)
             else:
-                raise ValueError('Base estimator string {} does not match an available classifier.'.format(base_estimator))
+                raise ValueError(
+                    'Base estimator string {} does not match an available classifier.'.format(
+                        base_estimator))
         elif isinstance(base_estimator, BaseEstimator):
             return base_estimator.set_params(**estimator_config)
         else:
-            raise ValueError('base_estimator must be either a string or a BaseEstimator child class, it is {}'.format(type(base_estimator)))
-
+            raise ValueError(
+                'base_estimator must be either a string or a BaseEstimator child class, it is {}'.format(
+                    type(base_estimator)))
 
     def to_str(self, param_name):
         """
@@ -122,7 +126,7 @@ class BaseClassifier(BaseEstimator, ):
         # if hasattr(self, "accepts_mutli_class"):
         #     return self.accepts_multi_class
         fake_mc_X = random_state.randint(low=0, high=101,
-                                                 size=(n_samples, dim))
+                                         size=(n_samples, dim))
         fake_mc_y = [class_index
                      for _ in range(int(n_samples / n_classes))
                      for class_index in range(n_classes)]
@@ -220,7 +224,7 @@ class ResultAnalyser():
         -------
         """
         for metric, metric_args in self.metrics_dict.items():
-            class_train_scores, class_test_scores, train_score, test_score\
+            class_train_scores, class_test_scores, train_score, test_score \
                 = self.get_metric_score(metric, metric_args)
             self.class_metric_scores[metric] = (class_train_scores,
                                                 class_test_scores)
@@ -248,23 +252,28 @@ class ResultAnalyser():
         class_train_scores = []
         class_test_scores = []
         for label_value in np.unique(self.labels):
-            train_example_indices = self.train_indices[np.where(self.labels[self.train_indices]==label_value)[0]]
-            test_example_indices = self.test_indices[np.where(self.labels[self.test_indices] == label_value)[0]]
-            class_train_scores.append(metric_module.score(y_true=self.labels[train_example_indices],
-                                              y_pred=self.pred[train_example_indices],
-                                              **metric_kwargs))
-            class_test_scores.append(metric_module.score(y_true=self.labels[test_example_indices],
-                                             y_pred=self.pred[test_example_indices],
-                                             **metric_kwargs))
-        train_score = metric_module.score(y_true=self.labels[self.train_indices],
-                                              y_pred=self.pred[self.train_indices],
-                                              **metric_kwargs)
+            train_sample_indices = self.train_indices[
+                np.where(self.labels[self.train_indices] == label_value)[0]]
+            test_sample_indices = self.test_indices[
+                np.where(self.labels[self.test_indices] == label_value)[0]]
+            class_train_scores.append(
+                metric_module.score(y_true=self.labels[train_sample_indices],
+                                    y_pred=self.pred[train_sample_indices],
+                                    **metric_kwargs))
+            class_test_scores.append(
+                metric_module.score(y_true=self.labels[test_sample_indices],
+                                    y_pred=self.pred[test_sample_indices],
+                                    **metric_kwargs))
+        train_score = metric_module.score(
+            y_true=self.labels[self.train_indices],
+            y_pred=self.pred[self.train_indices],
+            **metric_kwargs)
         test_score = metric_module.score(y_true=self.labels[self.test_indices],
-                                              y_pred=self.pred[self.test_indices],
-                                              **metric_kwargs)
+                                         y_pred=self.pred[self.test_indices],
+                                         **metric_kwargs)
         return class_train_scores, class_test_scores, train_score, test_score
 
-    def print_metric_score(self,):
+    def print_metric_score(self, ):
         """
         Generates a string, formatting the metrics configuration and scores
 
@@ -284,27 +293,34 @@ class ResultAnalyser():
                 metric_module = getattr(metrics, metric[:-1])
             else:
                 metric_module = getattr(metrics, metric)
-            metric_score_string += "\tFor {} : ".format(metric_module.get_config(
-                **metric_kwargs))
-            metric_score_string += "\n\t\t- Score on train : {}".format(self.metric_scores[metric][0])
-            metric_score_string += "\n\t\t- Score on test : {}".format(self.metric_scores[metric][1])
+            metric_score_string += "\tFor {} : ".format(
+                metric_module.get_config(
+                    **metric_kwargs))
+            metric_score_string += "\n\t\t- Score on train : {}".format(
+                self.metric_scores[metric][0])
+            metric_score_string += "\n\t\t- Score on test : {}".format(
+                self.metric_scores[metric][1])
             metric_score_string += "\n\n"
         metric_score_string += "Test set confusion matrix : \n\n"
-        self.confusion_matrix = confusion(y_true=self.labels[self.test_indices], y_pred=self.pred[self.test_indices])
-        formatted_conf = [[label_name]+list(row) for label_name, row in zip(self.class_label_names, self.confusion_matrix)]
-        metric_score_string+=tabulate(formatted_conf, headers= ['']+self.class_label_names, tablefmt='fancy_grid')
+        self.confusion_matrix = confusion(y_true=self.labels[self.test_indices],
+                                          y_pred=self.pred[self.test_indices])
+        formatted_conf = [[label_name] + list(row) for label_name, row in
+                          zip(self.class_label_names, self.confusion_matrix)]
+        metric_score_string += tabulate(formatted_conf,
+                                        headers=[''] + self.class_label_names,
+                                        tablefmt='fancy_grid')
         metric_score_string += "\n\n"
         return metric_score_string
 
     @abstractmethod
-    def get_view_specific_info(self): # pragma: no cover
+    def get_view_specific_info(self):  # pragma: no cover
         pass
 
     @abstractmethod
-    def get_base_string(self): # pragma: no cover
+    def get_base_string(self):  # pragma: no cover
         pass
 
-    def get_db_config_string(self,):
+    def get_db_config_string(self, ):
         """
         Generates a string, formatting all the information on the database
 
@@ -316,14 +332,16 @@ class ResultAnalyser():
         db_config_string string, formatting all the information on the database
         """
         learning_ratio = len(self.train_indices) / (
-                len(self.train_indices) + len(self.test_indices))
+            len(self.train_indices) + len(self.test_indices))
         db_config_string = "Database configuration : \n"
-        db_config_string += "\t- Database name : {}\n".format(self.database_name)
+        db_config_string += "\t- Database name : {}\n".format(
+            self.database_name)
         db_config_string += self.get_view_specific_info()
         db_config_string += "\t- Learning Rate : {}\n".format(learning_ratio)
         db_config_string += "\t- Labels used : " + ", ".join(
             self.class_label_names) + "\n"
-        db_config_string += "\t- Number of cross validation folds : {}\n\n".format(self.k_folds.n_splits)
+        db_config_string += "\t- Number of cross validation folds : {}\n\n".format(
+            self.k_folds.n_splits)
         return db_config_string
 
     def get_classifier_config_string(self, ):
@@ -335,12 +353,13 @@ class ResultAnalyser():
         A string explaining the classifier's configuration
         """
         classifier_config_string = "Classifier configuration : \n"
-        classifier_config_string += "\t- " + self.classifier.get_config()+ "\n"
+        classifier_config_string += "\t- " + self.classifier.get_config() + "\n"
         classifier_config_string += "\t- Executed on {} core(s) \n".format(
             self.nb_cores)
 
         if self.hps_method.startswith('randomized_search'):
-            classifier_config_string += "\t- Got configuration using randomized search with {}  iterations \n" .format(self.n_iter)
+            classifier_config_string += "\t- Got configuration using randomized search with {}  iterations \n".format(
+                self.n_iter)
         return classifier_config_string
 
     def analyze(self, ):
@@ -360,14 +379,15 @@ class ResultAnalyser():
         string_analysis += self.get_classifier_config_string()
         self.get_all_metrics_scores()
         string_analysis += self.print_metric_score()
-        string_analysis += "\n\n Classification took {}".format(hms(seconds=int(self.duration)))
+        string_analysis += "\n\n Classification took {}".format(
+            hms(seconds=int(self.duration)))
         string_analysis += "\n\n Classifier Interpretation : \n"
         string_analysis += self.classifier.get_interpretation(
             self.directory, self.base_file_name,
             self.labels[self.test_indices])
         image_analysis = {}
         return string_analysis, image_analysis, self.metric_scores, \
-               self.class_metric_scores, self.confusion_matrix
+            self.class_metric_scores, self.confusion_matrix
 
 
 base_boosting_estimators = [DecisionTreeClassifier(max_depth=1),

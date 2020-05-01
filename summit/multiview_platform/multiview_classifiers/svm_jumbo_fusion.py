@@ -1,7 +1,7 @@
 from sklearn.svm import SVC
 
 from .additions.jumbo_fusion_utils import BaseJumboFusion
-from ..monoview.monoview_utils import CustomUniform, CustomRandint
+from ..utils.hyper_parameter_search import CustomUniform, CustomRandint
 
 classifier_class_name = "SVMJumboFusion"
 
@@ -32,5 +32,6 @@ class SVMJumboFusion(BaseJumboFusion):
         self.C = C
         self.degree = degree
         self.kernel = kernel
-        self.aggregation_estimator.set_params(C=C, kernel=kernel, degree=degree)
+        self.aggregation_estimator.set_params(
+            C=C, kernel=kernel, degree=degree)
         return self

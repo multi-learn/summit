@@ -1,6 +1,7 @@
 import importlib
 import inspect
 
+
 class ConfigurationMaker():
     """
     Find the name of the classifier from the dict classier to report

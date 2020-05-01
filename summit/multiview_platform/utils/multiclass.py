@@ -7,7 +7,7 @@ from sklearn.multiclass import OneVsOneClassifier, OneVsRestClassifier
 from sklearn.multiclass import _ovr_decision_function
 from sklearn.preprocessing import LabelBinarizer
 
-from .dataset import get_examples_views_indices
+from .dataset import get_samples_views_indices
 
 
 def get_mc_estim(estimator, random_state, y=None, multiview=False,
@@ -68,7 +68,8 @@ class MultiClassWrapper:
         return self
 
     def get_config(self):
-        return "multiclass_adaptation : "+self.__class__.__name__+ ", " +self.estimator.get_config()
+        return "multiclass_adaptation : " + self.__class__.__name__ + \
+            ", " + self.estimator.get_config()
 
     def format_params(self, params, deep=True):
         if hasattr(self, 'estimators_'):
@@ -79,8 +80,6 @@ class MultiClassWrapper:
                     params[key] = estim_params[estim_param_key]
             params.pop("estimator")
         return params
-
-
 
     def get_interpretation(self, directory, base_file_name, y_test=None):
         # TODO : Multiclass interpretation
@@ -133,15 +132,15 @@ def _multiview_fit_binary(estimator, X, y, train_indices,
     return estimator
 
 
-def _multiview_predict_binary(estimator, X, example_indices, view_indices):
+def _multiview_predict_binary(estimator, X, sample_indices, view_indices):
     if is_regressor(estimator):
-        return estimator.predict(X, example_indices=example_indices,
+        return estimator.predict(X, sample_indices=sample_indices,
                                  view_indices=view_indices)
     try:
         score = np.ravel(estimator.decision_function(X))
     except (AttributeError, NotImplementedError):
         # probabilities of the positive class
-        score = estimator.predict_proba(X, example_indices=example_indices,
+        score = estimator.predict_proba(X, sample_indices=sample_indices,
                                         view_indices=view_indices)[:, 1]
     return score
 
@@ -173,22 +172,22 @@ class MultiviewOVRWrapper(MultiviewWrapper, OneVsRestClassifier):
             enumerate(columns)]
         return self
 
-    def predict(self, X, example_indices=None, view_indices=None):
-        example_indices, view_indices = get_examples_views_indices(X,
-                                                                   example_indices,
-                                                                   view_indices)
-        n_samples = len(example_indices)
+    def predict(self, X, sample_indices=None, view_indices=None):
+        sample_indices, view_indices = get_samples_views_indices(X,
+                                                                 sample_indices,
+                                                                 view_indices)
+        n_samples = len(sample_indices)
         if self.label_binarizer_.y_type_ == "multiclass":
             maxima = np.empty(n_samples, dtype=float)
             maxima.fill(-np.inf)
             argmaxima = np.zeros(n_samples, dtype=int)
             for i, e in enumerate(self.estimators_):
-                pred = _multiview_predict_binary(e, X, example_indices,
+                pred = _multiview_predict_binary(e, X, sample_indices,
                                                  view_indices)
                 np.maximum(maxima, pred, out=maxima)
                 argmaxima[maxima == pred] = i
             return self.classes_[argmaxima]
-        else: # pragma: no cover
+        else:  # pragma: no cover
             if (hasattr(self.estimators_[0], "decision_function") and
                     is_classifier(self.estimators_[0])):
                 thresh = 0
@@ -199,7 +198,7 @@ class MultiviewOVRWrapper(MultiviewWrapper, OneVsRestClassifier):
             for e in self.estimators_:
                 indices.extend(
                     np.where(_multiview_predict_binary(e, X,
-                                                       example_indices,
+                                                       sample_indices,
                                                        view_indices) > thresh)[
                         0])
                 indptr.append(len(indices))
@@ -221,7 +220,7 @@ def _multiview_fit_ovo_binary(estimator, X, y, i, j, train_indices,
     y_binary = np.empty(y.shape, np.int)
     y_binary[y == i] = 0
     y_binary[y == j] = 1
-    indcond = np.arange(X.get_nb_examples())[cond]
+    indcond = np.arange(X.get_nb_samples())[cond]
     train_indices = np.intersect1d(train_indices, indcond)
     return _multiview_fit_binary(estimator,
                                  X,
@@ -248,9 +247,9 @@ class MultiviewOVOWrapper(MultiviewWrapper, OneVsOneClassifier):
         """
         # X, y = check_X_y(X, y, accept_sparse=['csr', 'csc'])
         # check_classification_targets(y)
-        train_indices, view_indices = get_examples_views_indices(X,
-                                                                 train_indices,
-                                                                 view_indices)
+        train_indices, view_indices = get_samples_views_indices(X,
+                                                                train_indices,
+                                                                view_indices)
         self.classes_ = np.unique(y)
         if len(self.classes_) == 1:
             raise ValueError("OneVsOneClassifier can not be fit when only one"
@@ -270,7 +269,7 @@ class MultiviewOVOWrapper(MultiviewWrapper, OneVsOneClassifier):
 
         return self
 
-    def predict(self, X, example_indices=None, view_indices=None):
+    def predict(self, X, sample_indices=None, view_indices=None):
         """Estimate the best class label for each sample in X.
 
         This is implemented as ``argmax(decision_function(X), axis=1)`` which
@@ -287,16 +286,17 @@ class MultiviewOVOWrapper(MultiviewWrapper, OneVsOneClassifier):
         y : numpy array of shape [n_samples]
             Predicted multi-class targets.
         """
-        example_indices, view_indices = get_examples_views_indices(X,
-                                                                   example_indices,
-                                                                   view_indices)
-        Y = self.multiview_decision_function(X, example_indices=example_indices,
+        sample_indices, view_indices = get_samples_views_indices(X,
+                                                                 sample_indices,
+                                                                 view_indices)
+        Y = self.multiview_decision_function(X, sample_indices=sample_indices,
                                              view_indices=view_indices)
         if self.n_classes_ == 2:
             return self.classes_[(Y > 0).astype(np.int)]
         return self.classes_[Y.argmax(axis=1)]
 
-    def multiview_decision_function(self, X, example_indices, view_indices): # pragma: no cover
+    def multiview_decision_function(self, X, sample_indices,
+                                    view_indices):  # pragma: no cover
         # check_is_fitted(self)
 
         indices = self.pairwise_indices_
@@ -306,7 +306,7 @@ class MultiviewOVOWrapper(MultiviewWrapper, OneVsOneClassifier):
             # TODO Gram matrix compatibility
             Xs = [X[:, idx] for idx in indices]
         predictions = np.vstack(
-            [est.predict(Xi, example_indices=example_indices,
+            [est.predict(Xi, sample_indices=sample_indices,
                          view_indices=view_indices)
              for est, Xi in zip(self.estimators_, Xs)]).T
         confidences = np.ones(predictions.shape)

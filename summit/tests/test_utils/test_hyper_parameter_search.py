@@ -15,9 +15,6 @@ from summit.multiview_platform.utils import hyper_parameter_search
 from summit.multiview_platform.multiview_classifiers import weighted_linear_early_fusion
 
 
-
-
-
 class FakeEstim(BaseEstimator):
     def __init__(self, param1=None, param2=None, random_state=None):
         self.param1 = param1
@@ -32,42 +29,42 @@ class FakeEstim(BaseEstimator):
     def predict(self, X):
         return np.zeros(X.shape[0])
 
+
 class FakeEstimMV(BaseEstimator):
     def __init__(self, param1=None, param2=None):
         self.param1 = param1
         self.param2 = param2
 
-    def fit(self, X, y,train_indices=None, view_indices=None):
+    def fit(self, X, y, train_indices=None, view_indices=None):
         self.y = y
         return self
 
-    def predict(self, X, example_indices=None, view_indices=None):
-        if self.param1=="return exact":
-            return self.y[example_indices]
+    def predict(self, X, sample_indices=None, view_indices=None):
+        if self.param1 == "return exact":
+            return self.y[sample_indices]
         else:
-            return np.zeros(example_indices.shape[0])
-
+            return np.zeros(sample_indices.shape[0])
 
 
 class Test_Random(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        n_splits=2
+        n_splits = 2
         cls.estimator = FakeEstim()
-        cls.param_distributions = {"param1":[10,100], "param2":[11, 101]}
+        cls.param_distributions = {"param1": [10, 100], "param2": [11, 101]}
         cls.n_iter = 4
         cls.refit = True
         cls.n_jobs = 1
         cls.scoring = make_scorer(accuracy_score, )
         cls.cv = StratifiedKFold(n_splits=n_splits, )
         cls.random_state = np.random.RandomState(42)
-        cls.learning_indices = np.array([0,1,2, 3, 4,])
+        cls.learning_indices = np.array([0, 1, 2, 3, 4, ])
         cls.view_indices = None
         cls.framework = "monoview"
         cls.equivalent_draws = False
-        cls.X = cls.random_state.randint(0,100, (10,11))
-        cls.y = cls.random_state.randint(0,2, 10)
+        cls.X = cls.random_state.randint(0, 100, (10, 11))
+        cls.y = cls.random_state.randint(0, 2, 10)
 
     def test_simple(self):
         hyper_parameter_search.Random(
@@ -91,8 +88,8 @@ class Test_Random(unittest.TestCase):
             equivalent_draws=self.equivalent_draws
         )
         RSCV.fit(self.X, self.y, )
-        tested_param1 = np.ma.masked_array(data=[10,10,100,100],
-                     mask=[False, False, False, False])
+        tested_param1 = np.ma.masked_array(data=[10, 10, 100, 100],
+                                           mask=[False, False, False, False])
         np.testing.assert_array_equal(RSCV.cv_results_['param_param1'],
                                       tested_param1)
 
@@ -111,7 +108,7 @@ class Test_Random(unittest.TestCase):
         self.assertEqual(RSCV.n_iter, self.n_iter)
 
     def test_fit_multiview_equiv(self):
-        self.n_iter=1
+        self.n_iter = 1
         RSCV = hyper_parameter_search.Random(
             FakeEstimMV(), self.param_distributions, n_iter=self.n_iter,
             refit=self.refit, n_jobs=self.n_jobs, scoring=self.scoring,
@@ -123,11 +120,11 @@ class Test_Random(unittest.TestCase):
             equivalent_draws=True
         )
         RSCV.fit(test_dataset, self.y, )
-        self.assertEqual(RSCV.n_iter, self.n_iter*test_dataset.nb_view)
+        self.assertEqual(RSCV.n_iter, self.n_iter * test_dataset.nb_view)
 
     def test_gets_good_params(self):
         self.param_distributions["param1"].append('return exact')
-        self.n_iter=6
+        self.n_iter = 6
         RSCV = hyper_parameter_search.Random(
             FakeEstimMV(), self.param_distributions, n_iter=self.n_iter,
             refit=self.refit, n_jobs=self.n_jobs, scoring=self.scoring,
@@ -146,7 +143,7 @@ class Test_Grid(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.parameter_grid = {"param1":[5,6], "param2":[7,8]}
+        cls.parameter_grid = {"param1": [5, 6], "param2": [7, 8]}
         cls.estimator = FakeEstim()
 
     def test_simple(self):

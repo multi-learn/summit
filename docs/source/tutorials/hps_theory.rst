@@ -30,9 +30,9 @@ model's generalization capacity.
 This split ratio is controlled by the config file's argument ``split:``. It uses a float to pass the ratio between the size of the testing set and the training set  :
 :math:`\text{split} = \frac{\text{test size}}{\text{dataset size}}`. In order to be as fair as possible, this split is made by keeping the ratio between each class in the training set and in the testing set.
 
-So if a dataset has 100 examples with 60% of them in class A, and 40% of them in class B, using ``split: 0.2``
-will generate a training set with 48 examples of class A and 32 examples of class B and a testing set
-with 12 examples of class A and 8 examples of class B.
+So if a dataset has 100 samples with 60% of them in class A, and 40% of them in class B, using ``split: 0.2``
+will generate a training set with 48 samples of class A and 32 samples of class B and a testing set
+with 12 samples of class A and 8 samples of class B.
 
 Ths process uses sklearn's StratifiedShuffleSplit_ to split the dataset at random while being reproductible thanks to the random_state.
 
@@ -102,9 +102,9 @@ testing it on the last one, evaluating it's predictive performance on unseen dat
 This learning-and-testing process is repeated :math:`k` times and the estimated performance is the mean of the
 performance on each testing set.
 
-In the platform, the training set (the 48 examples of class A and 32 examples of class B from last example) will be
-divided in k folds for the cross-validation process and the testing set (the 12 examples of class A and 8 examples of
-class B for last examples) will in no way be involved in the training process of the classifier.
+In the platform, the training set (the 48 samples of class A and 32 samples of class B from last example) will be
+divided in k folds for the cross-validation process and the testing set (the 12 samples of class A and 8 samples of
+class B for last samples) will in no way be involved in the training process of the classifier.
 
 The cross-validation process can be controlled with the ``nb_folds:`` line of the configuration file in which the number
 of folds is specified.

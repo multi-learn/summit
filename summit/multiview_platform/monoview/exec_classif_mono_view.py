@@ -20,7 +20,7 @@ from ..utils.multiclass import get_mc_estim
 from ..utils.organization import secure_file_path
 
 # Author-Info
-__author__ = "Nikolas Huelsmann, Baptiste BAUVIN"
+__author__ = "Baptiste BAUVIN"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
@@ -33,10 +33,9 @@ def exec_monoview_multicore(directory, name, labels_names,
                             path, random_state, labels,
                             hyper_param_search="randomized_search",
                             metrics=[["accuracy_score", None]], n_iter=30,
-                            **args): # pragma: no cover
+                            **args):  # pragma: no cover
     dataset_var = HDF5Dataset(
-        hdf5_file=h5py.File(path + name + str(dataset_file_index) + ".hdf5",
-                            "r"))
+        hdf5_file=h5py.File(path + name + str(dataset_file_index) + ".hdf5", "r"))
     neededViewIndex = args["view_index"]
     X = dataset_var.get_v(neededViewIndex)
     Y = labels
@@ -50,28 +49,30 @@ def exec_monoview_multicore(directory, name, labels_names,
                          **args)
 
 
-def exec_monoview(directory, X, Y, database_name, labels_names, classification_indices,
+def exec_monoview(directory, X, Y, database_name, labels_names,
+                  classification_indices,
                   k_folds, nb_cores, databaseType, path,
                   random_state, hyper_param_search="Random",
-                  metrics={"accuracy_score*":{}}, n_iter=30, view_name="",
+                  metrics={"accuracy_score*": {}}, n_iter=30, view_name="",
                   hps_kwargs={}, **args):
     logging.debug("Start:\t Loading data")
     kwargs, \
-    t_start, \
-    view_name, \
-    classifier_name, \
-    X, \
-    learningRate, \
-    labelsString, \
-    output_file_name,\
-    directory,\
-    base_file_name = init_constants(args, X, classification_indices,
-                                      labels_names,
-                                      database_name, directory, view_name, )
+        t_start, \
+        view_name, \
+        classifier_name, \
+        X, \
+        learningRate, \
+        labelsString, \
+        output_file_name, \
+        directory, \
+        base_file_name = init_constants(args, X, classification_indices,
+                                        labels_names,
+                                        database_name, directory, view_name, )
     logging.debug("Done:\t Loading data")
 
     logging.debug(
-        "Info:\t Classification - Database:" + str(database_name) + " View:" + str(
+        "Info:\t Classification - Database:" + str(
+            database_name) + " View:" + str(
             view_name) + " train ratio:"
         + str(learningRate) + ", CrossValidation k-folds: " + str(
             k_folds.n_splits) + ", cores:"
@@ -92,11 +93,11 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
     classifier_class_name = classifier_module.classifier_class_name
     hyper_param_beg = time.monotonic()
     cl_kwargs = get_hyper_params(classifier_module, hyper_param_search,
-                                                   classifier_name,
-                                                   classifier_class_name,
-                                                   X_train, y_train,
-                                                   random_state, output_file_name,
-                                                   k_folds, nb_cores, metrics, kwargs,
+                                 classifier_name,
+                                 classifier_class_name,
+                                 X_train, y_train,
+                                 random_state, output_file_name,
+                                 k_folds, nb_cores, metrics, kwargs,
                                  **hps_kwargs)
     hyper_param_duration = time.monotonic() - hyper_param_beg
     logging.debug("Done:\t Generate classifier args")
@@ -130,7 +131,8 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
 
     whole_duration = time.monotonic() - t_start
     logging.debug(
-        "Info:\t Duration for training and predicting: " + str(whole_duration) + "[s]")
+        "Info:\t Duration for training and predicting: " + str(
+            whole_duration) + "[s]")
 
     logging.debug("Start:\t Getting results")
     result_analyzer = MonoviewResultAnalyzer(view_name=view_name,
@@ -151,7 +153,7 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
                                              nb_cores=nb_cores,
                                              duration=whole_duration)
     string_analysis, images_analysis, metrics_scores, class_metrics_scores, \
-    confusion_matrix = result_analyzer.analyze()
+        confusion_matrix = result_analyzer.analyze()
     logging.debug("Done:\t Getting results")
 
     logging.debug("Start:\t Saving preds")
@@ -163,7 +165,8 @@ def exec_monoview(directory, X, Y, database_name, labels_names, classification_i
     return MonoviewResult(view_index, classifier_name, view_name,
                           metrics_scores, full_pred, cl_kwargs,
                           classifier, X_train.shape[1],
-                          hyper_param_duration, fit_duration, pred_duration, class_metrics_scores)
+                          hyper_param_duration, fit_duration, pred_duration,
+                          class_metrics_scores)
 
 
 def init_constants(args, X, classification_indices, labels_names,
@@ -175,10 +178,10 @@ def init_constants(args, X, classification_indices, labels_names,
     t_start = time.monotonic()
     cl_type = kwargs["classifier_name"]
     learning_rate = float(len(classification_indices[0])) / (
-            len(classification_indices[0]) + len(classification_indices[1]))
+        len(classification_indices[0]) + len(classification_indices[1]))
     labels_string = "-".join(labels_names)
     cl_type_string = cl_type
-    directory = os.path.join(directory, cl_type_string, view_name,)
+    directory = os.path.join(directory, cl_type_string, view_name, )
     base_file_name = cl_type_string + '-' + name + "-" + view_name + "-"
     output_file_name = os.path.join(directory, base_file_name)
     secure_file_path(output_file_name)
@@ -204,8 +207,8 @@ def get_hyper_params(classifier_module, search_method, classifier_module_name,
             "Start:\t " + search_method + " best settings for " + classifier_module_name)
         classifier_hp_search = getattr(hyper_parameter_search, search_method)
         estimator = getattr(classifier_module, classifier_class_name)(
-                    random_state=random_state,
-                    **kwargs[classifier_module_name])
+            random_state=random_state,
+            **kwargs[classifier_module_name])
         estimator = get_mc_estim(estimator, random_state,
                                  multiview=False, y=y_train)
         hps = classifier_hp_search(estimator, scoring=metrics, cv=k_folds,
@@ -223,12 +226,14 @@ def get_hyper_params(classifier_module, search_method, classifier_module_name,
 
 def save_results(string_analysis, output_file_name, full_labels_pred,
                  y_train_pred,
-                 y_train, images_analysis, y_test, confusion_matrix): # pragma: no cover
+                 y_train, images_analysis, y_test,
+                 confusion_matrix):  # pragma: no cover
     logging.info(string_analysis)
-    output_text_file = open(output_file_name + 'summary.txt', 'w', encoding="utf-8")
+    output_text_file = open(output_file_name + 'summary.txt', 'w',
+                            encoding="utf-8")
     output_text_file.write(string_analysis)
     output_text_file.close()
-    np.savetxt(output_file_name+"confusion_matrix.csv", confusion_matrix,
+    np.savetxt(output_file_name + "confusion_matrix.csv", confusion_matrix,
                delimiter=', ')
     np.savetxt(output_file_name + "full_pred.csv",
                full_labels_pred.astype(np.int16), delimiter=",")

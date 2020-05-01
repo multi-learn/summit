@@ -14,13 +14,13 @@ For all the following tutorials, we will use the same dataset.
 A generated dataset to rule them all
 ------------------------------------
 
-The :base_source:`dataset <multiview_platform/examples/data/doc_summit.hdf5>` that will be used in the examples consists in
+The :base_source:`dataset <multiview_platform/examples/data/doc_summit.hdf5>` that will be used in the samples consists in
 
-+ 500 examples that are either
++ 500 samples that are either
     + mis-described by all the views (labelled ``Mutual_error_*``),
     + well-described by all the views (labelled ``Redundant_*``),
     + well-described by the majority of the views (labelled ``Complementary_*``),
-    + randomly well- or mis-described by the views (labelled ``example_*``).
+    + randomly well- or mis-described by the views (labelled ``sample_*``).
 
 + 8 balanced classes named ``'label_1'``, ..., ``'label_8'``,
 
@@ -143,13 +143,13 @@ Here, for each classifier, 8 bars are plotted, one for each class. It is clear t
 ``*-error_analysis_2D.png`` and ``*-error_analysis_2D.html``
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-In these files, one can visualize the success or failure of each classifier on each example.
+In these files, one can visualize the success or failure of each classifier on each sample.
 
 Below, ``*-error_analysis_2D.html`` is displayed.
 
-It is the representation of a matrix, where the rows are the examples, and the columns are the classifiers.
+It is the representation of a matrix, where the rows are the samples, and the columns are the classifiers.
 
-The examples labelled as ``Mutual_error_*`` are mis-classified by most of the algorithms, the redundant ones are well-classified, and the complementary ones are mixly classified.
+The samples labelled as ``Mutual_error_*`` are mis-classified by most of the algorithms, the redundant ones are well-classified, and the complementary ones are mixly classified.
 
 .. note::
     It is highly recommended to zoom in the html figure to see each row.
@@ -160,16 +160,16 @@ The examples labelled as ``Mutual_error_*`` are mis-classified by most of the al
 
 
 This figure is the html version of the classifiers errors' visualization. It is interactive, so, by hovering it, the information on
-each classifier and example is printed. The classifiers are ordered as follows:
+each classifier and sample is printed. The classifiers are ordered as follows:
 
 From left to right : all the monoview classifiers on the first view, all the ones on the second one, ..., then at the far right, the multiview classifiers
 
 This html image is also available in ``.png`` format, but is then not interactive, so harder to analyze.
 
-In terms of information, this is useful to detect possible outlier examples in the dataset and failing classifers.
+In terms of information, this is useful to detect possible outlier samples in the dataset and failing classifers.
 
-For example, a mainly black horizontal line for an example means that it has been missclassified by most of the classifiers.
-It could mean that the example is incorrectly labeled in the dataset or is very hard to classify.
+For example, a mainly black horizontal line for an sample means that it has been missclassified by most of the classifiers.
+It could mean that the sample is incorrectly labeled in the dataset or is very hard to classify.
 
 Symmetrically, a mainly-black column means that a classifier spectacularly failed.
 
@@ -178,12 +178,12 @@ The data used to generate this matrix is available in ``*-2D_plot_data.csv``
 ``*-error_analysis_bar.png`` and ``*-error_analysis_bar.html``
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-This file is a different way to visualize the same information as the two previous ones. Indeed, it is a bar plot, with a bar for each example, counting the ratio of classifiers that failed to classify this particular example.
+This file is a different way to visualize the same information as the two previous ones. Indeed, it is a bar plot, with a bar for each sample, counting the ratio of classifiers that failed to classify this particular sample.
 
 .. raw:: html
     :file: ./images/example_1/bar.html
 
-All the spikes are the mutual error examples, the complementary ones are the 0.33 bars and the redundant are the empty spaces.
+All the spikes are the mutual error samples, the complementary ones are the 0.33 bars and the redundant are the empty spaces.
 
 The data used to generate this graph is available in ``*-bar_plot_data.csv``
 

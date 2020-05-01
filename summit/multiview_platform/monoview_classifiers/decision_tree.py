@@ -1,6 +1,7 @@
 from sklearn.tree import DecisionTreeClassifier
 
-from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier
+from ..monoview.monoview_utils import BaseMonoviewClassifier
+from summit.multiview_platform.utils.hyper_parameter_search import CustomRandint
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -32,5 +33,6 @@ class DecisionTree(DecisionTreeClassifier, BaseMonoviewClassifier):
         interpretString = "First featrue : \n\t{} <= {}\n".format(
             self.tree_.feature[0],
             self.tree_.threshold[0])
-        interpretString += self.get_feature_importance(directory, base_file_name)
+        interpretString += self.get_feature_importance(directory,
+                                                       base_file_name)
         return interpretString

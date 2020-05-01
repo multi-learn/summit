@@ -3,13 +3,8 @@
  get_scorer: returns a sklearn scorer for grid search
 """
 
-import warnings
-
 from sklearn.metrics import accuracy_score as metric
 from sklearn.metrics import make_scorer
-
-warnings.warn("the accuracy_score module  is deprecated", DeprecationWarning,
-              stacklevel=2)
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -41,5 +36,6 @@ def get_scorer(**kwargs):
 
 
 def get_config(**kwargs):
-    config_string = "Accuracy score using {}, (higher is better)".format(kwargs)
+    config_string = "Accuracy score using {}, (higher is better)".format(
+        kwargs)
     return config_string
