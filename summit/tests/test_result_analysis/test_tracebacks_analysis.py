@@ -31,6 +31,7 @@ class Test_funcs(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir(tmp_path)
         cls.res_file = open(os.path.join(tmp_path, "tmp.txt"), "w")
 

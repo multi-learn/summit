@@ -13,9 +13,7 @@ class Test_get_the_args(unittest.TestCase):
     def setUpClass(cls):
         rm_tmp()
         cls.path_to_config_file = tmp_path + "config_temp.yml"
-        path_file = os.path.dirname(os.path.abspath(__file__))
-        make_tmp_dir = os.path.join(path_file, "../tmp_tests")
-        os.mkdir(make_tmp_dir)
+        os.mkdir(tmp_path)
         data = {"log": 10, "name": [12.5, 1e-06], "type": True}
         with open(cls.path_to_config_file, "w") as config_file:
             yaml.dump(data, config_file)

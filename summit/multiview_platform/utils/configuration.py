@@ -2,8 +2,10 @@ import os
 
 import yaml
 
+package_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+print(package_path)
 
-def get_the_args(path_to_config_file="../config_files/config.yml"):
+def get_the_args(path_to_config_file=os.path.join(os.path.dirname(package_path), "config_files", "config.yml")):
     """
     The function for extracting the args for a '.yml' file.
 
@@ -27,7 +29,7 @@ def pass_default_config(log=True,
                         label="_",
                         file_type=".hdf5",
                         views=None,
-                        pathf="../data/",
+                        pathf=os.path.join(os.path.dirname(package_path), "data", ""),
                         nice=0,
                         random_state=42,
                         nb_cores=1,
@@ -35,7 +37,7 @@ def pass_default_config(log=True,
                         debug=False,
                         add_noise=False,
                         noise_std=0.0,
-                        res_dir="../results/",
+                        res_dir=os.path.join(os.path.dirname(package_path),"results", ""),
                         track_tracebacks=True,
                         split=0.49,
                         nb_folds=5,

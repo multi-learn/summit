@@ -21,11 +21,13 @@
 import os
 import sys
 
+repo_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('../../summit'))
-sys.path.insert(0, os.path.abspath('../..'))
-file_loc = os.path.split(__file__)[0]
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(file_loc), '.')))
+sys.path.insert(0, os.path.join(repo_path, "summit'"))
+sys.path.insert(0, repo_path)
+
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(file_loc), '.')))
 # import summit
 # -- General configuration ------------------------------------------------
 
@@ -121,7 +123,7 @@ html_theme = 'classic'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static/"]
+html_static_path = ["_static"]
 
 # -- Options for HTMLHelp output ------------------------------------------
 

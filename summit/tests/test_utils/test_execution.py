@@ -21,6 +21,7 @@ class Test_init_log_file(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir(tmp_path)
 
     @classmethod
@@ -135,6 +136,7 @@ class Test_find_dataset_names(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir(tmp_path)
         with open(os.path.join(tmp_path, "test.txt"), "w") as file_stream:
             file_stream.write("test")
@@ -154,7 +156,7 @@ class Test_find_dataset_names(unittest.TestCase):
         self.assertEqual(path, tmp_path)
         self.assertIn("test1", names)
         path, names = execution.find_dataset_names(
-            "examples/data", ".hdf5", ["all"])
+            os.path.join("examples","data"), ".hdf5", ["all"])
         self.assertIn("doc_summit", names)
         self.assertRaises(ValueError, execution.find_dataset_names, tmp_path + "test", ".txt",
                           ["test"])

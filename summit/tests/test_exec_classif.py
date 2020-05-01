@@ -85,6 +85,7 @@ class Test_Functs(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        rm_tmp()
         os.mkdir(tmp_path)
 
     @classmethod
