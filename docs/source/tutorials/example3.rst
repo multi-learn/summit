@@ -70,7 +70,7 @@ Similarly for the f1-score :
 
 The main difference between this plot an the one from :base_doc:`Example 1 <tutorials/example1.html>` is that here, the scores are means over all the statistical iterations, and the standard deviations are plotted as vertical lines on top of the bars and printed after each score under the bars as "± <std>".
 
-This has also an impact on the display of error analysis. Indeed, now it has multiple shades of gray depending on the number of iterations that succeeded or failed on the example :
+This has also an impact on the display of error analysis. Indeed, now it has multiple shades of gray depending on the number of iterations that succeeded or failed on the sample :
 
 .. raw:: html
     :file: ./images/example_3/err.html

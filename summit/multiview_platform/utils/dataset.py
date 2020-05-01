@@ -6,87 +6,102 @@ from abc import abstractmethod
 
 import h5py
 import numpy as np
-from scipy import sparse
 
 from .organization import secure_file_path
 
+'''This is the multiview dataset module. It garthers all the method to interact
+ with  the dataset objects passed as arguments in hte multiview classifiers
+ of SuMMIT'''
+
+
 class Dataset():
+    """
+    This is the base class for all the type of multiview datasets of SuMMIT.
+    """
 
     @abstractmethod
-    def get_nb_examples(self): # pragma: no cover
+    def get_nb_samples(self):  # pragma: no cover
         pass
 
     @abstractmethod
-    def get_v(self, view_index, example_indices=None): # pragma: no cover
+    def get_v(self, view_index, sample_indices=None):  # pragma: no cover
         pass
 
     @abstractmethod
-    def get_label_names(self, example_indices=None): # pragma: no cover
+    def get_label_names(self, sample_indices=None):  # pragma: no cover
         pass
 
     @abstractmethod
-    def get_labels(self, example_indices=None): # pragma: no cover
+    def get_labels(self, sample_indices=None):  # pragma: no cover
         pass
 
     @abstractmethod
-    def filter(self, labels, label_names, example_indices, view_names,
-               path=None): # pragma: no cover
+    def filter(self, labels, label_names, sample_indices, view_names,
+               path=None):  # pragma: no cover
         pass
 
-    def init_example_indices(self, example_indices=None):
-        """If no example indices are provided, selects all the examples."""
-        if example_indices is None:
-            return range(self.get_nb_examples())
-        else:
-            return example_indices
-
-    def get_shape(self, view_index=0, example_indices=None):
+    def init_sample_indices(self, sample_indices=None):
         """
-        Gets the shape of the needed view on the asked examples
+        If no sample indices are provided, selects all the available samples.
+
+        Parameters
+        ----------
+        sample_indices: np.array,
+            An array-like containing the indices of the samples.
+
+        """
+        if sample_indices is None:
+            return range(self.get_nb_samples())
+        else:
+            return sample_indices
+
+    def get_shape(self, view_index=0, sample_indices=None):
+        """
+        Gets the shape of the needed view on the asked samples
 
         Parameters
         ----------
         view_index : int
             The index of the view to extract
-        example_indices : numpy.ndarray
-            The array containing the indices of the examples to extract.
+        sample_indices : numpy.ndarray
+            The array containing the indices of the samples to extract.
 
         Returns
         -------
         Tuple containing the shape
 
         """
-        return self.get_v(view_index, example_indices=example_indices).shape
+        return self.get_v(view_index, sample_indices=sample_indices).shape
 
-    def to_numpy_array(self, example_indices=None, view_indices=None):
+    def to_numpy_array(self, sample_indices=None, view_indices=None):
         """
         To concatenate the needed views in one big numpy array while saving the
         limits of each view in a list, to be able to retrieve them later.
 
         Parameters
         ----------
-        example_indices : array like,
-        The indices of the examples to extract from the dataset
+        sample_indices : array like
+            The indices of the samples to extract from the dataset
 
-        view_indices : array like,
-        The indices of the view to concatenate in the numpy array
+        view_indices : array like
+            The indices of the view to concatenate in the numpy array
 
         Returns
         -------
         concat_views : numpy array,
-        The numpy array containing all the needed views.
+            The numpy array containing all the needed views.
 
         view_limits : list of int
-        The limits of each slice used to extract the views.
+            The limits of each slice used to extract the views.
 
         """
         view_limits = [0]
         for view_index in view_indices:
-            view_data = self.get_v(view_index, example_indices=example_indices)
+            view_data = self.get_v(view_index, sample_indices=sample_indices)
             nb_features = view_data.shape[1]
             view_limits.append(view_limits[-1] + nb_features)
         concat_views = np.concatenate([self.get_v(view_index,
-                                                  example_indices=example_indices)
+                                                  sample_indices=sample_indices)
                                        for view_index in view_indices], axis=1)
         return concat_views, view_limits
 
@@ -106,15 +121,15 @@ class Dataset():
     def select_views_and_labels(self, nb_labels=None,
                                 selected_label_names=None, random_state=None,
                                 view_names=None, path_for_new="../data/"):
-        if view_names is None and selected_label_names is None and nb_labels is None: # pragma: no cover
+        if view_names is None and selected_label_names is None and nb_labels is None:  # pragma: no cover
             pass
         else:
             selected_label_names = self.check_selected_label_names(nb_labels,
                                                                    selected_label_names,
                                                                    random_state)
-            labels, label_names, example_indices = self.select_labels(
+            labels, label_names, sample_indices = self.select_labels(
                 selected_label_names)
-            self.filter(labels, label_names, example_indices, view_names,
+            self.filter(labels, label_names, sample_indices, view_names,
                         path_for_new)
         labels_dictionary = dict(
             (labelIndex, labelName) for labelIndex, labelName in
@@ -154,18 +169,18 @@ class Dataset():
 class RAMDataset(Dataset):
 
     def __init__(self, views=None, labels=None, are_sparse=False,
-                 view_names=None, labels_names=None, example_ids=None,
+                 view_names=None, labels_names=None, sample_ids=None,
                  name=None):
         self.saved_on_disk = False
         self.views = views
         self.labels = np.asarray(labels)
-        if isinstance(are_sparse, bool): # pragma: no cover
+        if isinstance(are_sparse, bool):  # pragma: no cover
             self.are_sparse = [are_sparse for _ in range(len(views))]
         else:
             self.are_sparse = are_sparse
         self.view_names = view_names
         self.labels_names = labels_names
-        self.example_ids = example_ids
+        self.sample_ids = sample_ids
         self.view_dict = dict((view_name, view_ind)
                               for view_name, view_ind
                               in zip(view_names, range(len(views))))
@@ -190,11 +205,11 @@ class RAMDataset(Dataset):
         self.view_dict = dict((view_ind, self.view_names[view_ind])
                               for view_ind in range(self.nb_view))
 
-    def get_nb_examples(self):
+    def get_nb_samples(self):
         return self.views[0].shape[0]
 
-    def get_label_names(self, example_indices=None, decode=True):
-        selected_labels = self.get_labels(example_indices)
+    def get_label_names(self, sample_indices=None, decode=True):
+        selected_labels = self.get_labels(sample_indices)
         if decode:
             return [label_name.encode("utf-8")
                     for label, label_name in enumerate(self.labels_names)
@@ -204,35 +219,38 @@ class RAMDataset(Dataset):
                     for label, label_name in enumerate(self.labels_names)
                     if label in selected_labels]
 
-    def get_labels(self, example_indices=None):
-        example_indices = self.init_example_indices(example_indices)
-        return self.labels[example_indices]
+    def get_labels(self, sample_indices=None):
+        sample_indices = self.init_sample_indices(sample_indices)
+        return self.labels[sample_indices]
 
-    def get_v(self, view_index, example_indices=None):
-        example_indices = self.init_example_indices(example_indices)
-        if type(example_indices) is int:
-            return self.views[view_index][example_indices, :]
+    def get_v(self, view_index, sample_indices=None):
+        sample_indices = self.init_sample_indices(sample_indices)
+        if isinstance(sample_indices, int):
+            return self.views[view_index][sample_indices, :]
         else:
-            example_indices = np.asarray(example_indices)
-            # sorted_indices = np.argsort(example_indices)
-            # example_indices = example_indices[sorted_indices]
+            sample_indices = np.asarray(sample_indices)
+            # sorted_indices = np.argsort(sample_indices)
+            # sample_indices = sample_indices[sorted_indices]
             if not self.are_sparse[view_index]:
                 return self.views[view_index][
-                       example_indices, :]
-            else: # pragma: no cover
+                    sample_indices, :]
+            else:  # pragma: no cover
                 # TODO Sparse support
                 pass
 
-    def get_nb_class(self, example_indices=None):
-        """Gets the number of class of the dataset"""
-        example_indices = self.init_example_indices(example_indices)
-        return len(np.unique(self.labels[example_indices]))
+    def get_nb_class(self, sample_indices=None):
+        """
+        Gets the number of class of the dataset
 
-    def filter(self, labels, label_names, example_indices, view_names,
+        """
+        sample_indices = self.init_sample_indices(sample_indices)
+        return len(np.unique(self.labels[sample_indices]))
+
+    def filter(self, labels, label_names, sample_indices, view_names,
                path=None):
-        if self.example_ids is not None:
-            self.example_ids = self.example_ids[example_indices]
-        self.labels = self.labels[example_indices]
+        if self.sample_ids is not None:
+            self.sample_ids = self.sample_ids[sample_indices]
+        self.labels = self.labels[sample_indices]
         self.labels_names = [name for lab_index, name
                              in enumerate(self.labels_names)
                              if lab_index in np.unique(self.labels)]
@@ -243,7 +261,7 @@ class RAMDataset(Dataset):
         new_views = []
         for new_view_ind, view_name in enumerate(self.view_names):
             new_views.append(
-                self.views[self.view_dict[view_name]][example_indices, :])
+                self.views[self.view_dict[view_name]][sample_indices, :])
         self.views = new_views
         self.view_dict = dict((view_name, view_ind)
                               for view_ind, view_name
@@ -268,10 +286,10 @@ class HDF5Dataset(Dataset):
     ----------
     views : list of numpy arrays or None
         The list containing each view of the dataset as a numpy array of shape
-        (nb examples, nb features).
+        (nb samples, nb features).
 
     labels : numpy array or None
-        The labels for the multiview dataset, of shape (nb examples, ).
+        The labels for the multiview dataset, of shape (nb samples, ).
 
     are_sparse : list of bool, or None
         The list of boolean telling if each view is sparse or not.
@@ -306,6 +324,7 @@ class HDF5Dataset(Dataset):
     view_dict : dict
         The dictionnary with the name of each view as the keys and their indices
          as values
+
     """
 
     # The following methods use hdf5
@@ -313,7 +332,7 @@ class HDF5Dataset(Dataset):
     def __init__(self, views=None, labels=None, are_sparse=False,
                  file_name="dataset.hdf5", view_names=None, path="",
                  hdf5_file=None, labels_names=None, is_temp=False,
-                 example_ids=None, ):
+                 sample_ids=None, ):
         self.is_temp = False
         if hdf5_file is not None:
             self.dataset = hdf5_file
@@ -324,7 +343,7 @@ class HDF5Dataset(Dataset):
             if view_names is None:
                 view_names = ["View" + str(index) for index in
                               range(len(views))]
-            if isinstance(are_sparse, bool): # pragma: no cover
+            if isinstance(are_sparse, bool):  # pragma: no cover
                 are_sparse = [are_sparse for _ in views]
             for view_index, (view_name, view, is_sparse) in enumerate(
                     zip(view_names, views, are_sparse)):
@@ -350,42 +369,43 @@ class HDF5Dataset(Dataset):
             meta_data_grp.attrs["datasetLength"] = len(labels)
             dataset_file.close()
             self.update_hdf5_dataset(os.path.join(path, file_name))
-            if example_ids is not None:
-                example_ids = [example_id if not is_just_number(example_id)
-                               else "ID_" + example_id for example_id in
-                               example_ids]
-                self.example_ids = example_ids
+            if sample_ids is not None:
+                sample_ids = [sample_id if not is_just_number(sample_id)
+                              else "ID_" + sample_id for sample_id in
+                              sample_ids]
+                self.sample_ids = sample_ids
             else:
-                self.example_ids = ["ID_" + str(i)
-                                    for i in range(labels.shape[0])]
+                self.sample_ids = ["ID_" + str(i)
+                                   for i in range(labels.shape[0])]
 
-    def get_v(self, view_index, example_indices=None):
+    def get_v(self, view_index, sample_indices=None):
         r""" Extract the view and returns a numpy.ndarray containing the description
-        of the examples specified in example_indices
+        of the samples specified in sample_indices
 
         Parameters
         ----------
         view_index : int
             The index of the view to extract
-        example_indices : numpy.ndarray
-            The array containing the indices of the examples to extract.
+        sample_indices : numpy.ndarray
+            The array containing the indices of the samples to extract.
 
         Returns
         -------
-        A numpy.ndarray containing the view data for the needed examples
+        A numpy.ndarray containing the view data for the needed samples
+
         """
-        example_indices = self.init_example_indices(example_indices)
-        if type(example_indices) is int:
-            return self.dataset["View" + str(view_index)][example_indices, :]
+        sample_indices = self.init_sample_indices(sample_indices)
+        if isinstance(sample_indices, int):
+            return self.dataset["View" + str(view_index)][sample_indices, :]
         else:
-            example_indices = np.array(example_indices)
-            # sorted_indices = np.argsort(example_indices)
-            # example_indices = example_indices[sorted_indices]
+            sample_indices = np.array(sample_indices)
+            # sorted_indices = np.argsort(sample_indices)
+            # sample_indices = sample_indices[sorted_indices]
 
             if not self.dataset["View" + str(view_index)].attrs["sparse"]:
                 return self.dataset["View" + str(view_index)][()][
-                       example_indices, :]  # [np.argsort(sorted_indices), :]
-            else: # pragma: no cover
+                    sample_indices, :]  # [np.argsort(sorted_indices), :]
+            else:  # pragma: no cover
                 # Work in progress
                 pass
 
@@ -416,19 +436,19 @@ class HDF5Dataset(Dataset):
         """
         self.nb_view = self.dataset["Metadata"].attrs["nbView"]
         self.view_dict = self.get_view_dict()
-        if "example_ids" in self.dataset["Metadata"].keys():
-            self.example_ids = [example_id.decode()
-                                if not is_just_number(example_id.decode())
-                                else "ID_" + example_id.decode()
-                                for example_id in
-                                self.dataset["Metadata"]["example_ids"]]
+        if "sample_ids" in self.dataset["Metadata"].keys():
+            self.sample_ids = [sample_id.decode()
+                               if not is_just_number(sample_id.decode())
+                               else "ID_" + sample_id.decode()
+                               for sample_id in
+                               self.dataset["Metadata"]["sample_ids"]]
         else:
-            self.example_ids = ["ID_"+str(i) for i in
-                                range(self.dataset["Labels"].shape[0])]
+            self.sample_ids = ["ID_" + str(i) for i in
+                               range(self.dataset["Labels"].shape[0])]
 
-    def get_nb_examples(self):
+    def get_nb_samples(self):
         """
-        Used to get the number of examples available in hte dataset
+        Used to get the number of samples available in hte dataset
 
         Returns
         -------
@@ -447,23 +467,23 @@ class HDF5Dataset(Dataset):
                 "name"]] = view_index
         return view_dict
 
-    def get_label_names(self, decode=True, example_indices=None):
+    def get_label_names(self, decode=True, sample_indices=None):
         """
-        Used to get the list of the label names for the given set of examples
+        Used to get the list of the label names for the given set of samples
 
         Parameters
         ----------
         decode : bool
             If True, will decode the label names before listing them
 
-        example_indices : numpy.ndarray
-            The array containing the indices of the needed examples
+        sample_indices : numpy.ndarray
+            The array containing the indices of the needed samples
 
         Returns
         -------
 
         """
-        selected_labels = self.get_labels(example_indices)
+        selected_labels = self.get_labels(sample_indices)
         if decode:
             return [label_name.decode("utf-8")
                     for label, label_name in
@@ -475,38 +495,38 @@ class HDF5Dataset(Dataset):
                     enumerate(self.dataset["Labels"].attrs["names"])
                     if label in selected_labels]
 
-    def get_nb_class(self, example_indices=None):
+    def get_nb_class(self, sample_indices=None):
         """
-        Gets the number of classes of the dataset for the asked examples
+        Gets the number of classes of the dataset for the asked samples
 
-         Parameters
+        Parameters
         ----------
-        example_indices : numpy.ndarray
-            The array containing the indices of the examples to extract.
+        sample_indices : numpy.ndarray
+            The array containing the indices of the samples to extract.
 
         Returns
         -------
         int : The number of classes
 
         """
-        example_indices = self.init_example_indices(example_indices)
-        return len(np.unique(self.dataset["Labels"][()][example_indices]))
+        sample_indices = self.init_sample_indices(sample_indices)
+        return len(np.unique(self.dataset["Labels"][()][sample_indices]))
 
-    def get_labels(self, example_indices=None):
-        """Gets the label array for the asked examples
+    def get_labels(self, sample_indices=None):
+        """Gets the label array for the asked samples
 
-         Parameters
+        Parameters
         ----------
-        example_indices : numpy.ndarray
-            The array containing the indices of the examples to extract.
+        sample_indices : numpy.ndarray
+            The array containing the indices of the samples to extract.
 
         Returns
         -------
-        numpy.ndarray containing the labels of the asked examples"""
-        example_indices = self.init_example_indices(example_indices)
-        return self.dataset["Labels"][()][example_indices]
+        numpy.ndarray containing the labels of the asked samples"""
+        sample_indices = self.init_sample_indices(sample_indices)
+        return self.dataset["Labels"][()][sample_indices]
 
-    def rm(self): # pragma: no cover
+    def rm(self):  # pragma: no cover
         """
         Method used to delete the dataset file on the disk if the dataset is
         temporary.
@@ -520,16 +540,15 @@ class HDF5Dataset(Dataset):
         if self.is_temp:
             os.remove(filename)
 
-
     def copy_view(self, target_dataset=None, source_view_name=None,
-                  target_view_index=None, example_indices=None):
-        example_indices = self.init_example_indices(example_indices)
+                  target_view_index=None, sample_indices=None):
+        sample_indices = self.init_sample_indices(sample_indices)
         new_d_set = target_dataset.create_dataset(
             "View" + str(target_view_index),
             data=self.get_v(self.view_dict[source_view_name],
-                            example_indices=example_indices))
+                            sample_indices=sample_indices))
         for key, value in self.dataset[
-            "View" + str(self.view_dict[source_view_name])].attrs.items():
+                "View" + str(self.view_dict[source_view_name])].attrs.items():
             new_d_set.attrs[key] = value
 
     def init_view_names(self, view_names=None):
@@ -545,45 +564,46 @@ class HDF5Dataset(Dataset):
         self.is_temp = True
         self.init_attrs()
 
-    def filter(self, labels, label_names, example_indices, view_names,
+    def filter(self, labels, label_names, sample_indices, view_names,
                path=None):
         dataset_file_path = os.path.join(path,
                                          self.get_name() + "_temp_filter.hdf5")
         new_dataset_file = h5py.File(dataset_file_path, "w")
         self.dataset.copy("Metadata", new_dataset_file)
-        if "example_ids" in self.dataset["Metadata"].keys():
-            del new_dataset_file["Metadata"]["example_ids"]
-            ex_ids = new_dataset_file["Metadata"].create_dataset("example_ids",
+        if "sample_ids" in self.dataset["Metadata"].keys():
+            del new_dataset_file["Metadata"]["sample_ids"]
+            ex_ids = new_dataset_file["Metadata"].create_dataset("sample_ids",
                                                                  data=np.array(
-                                                                     self.example_ids)[
-                                                                     example_indices].astype(
+                                                                     self.sample_ids)[
+                                                                     sample_indices].astype(
                                                                      np.dtype(
                                                                          "S100")))
         else:
-            new_dataset_file["Metadata"].create_dataset("example_ids",
+            new_dataset_file["Metadata"].create_dataset("sample_ids",
                                                         (
-                                                        len(self.example_ids),),
+                                                            len(
+                                                                self.sample_ids),),
                                                         data=np.array(
-                                                            self.example_ids).astype(
+                                                            self.sample_ids).astype(
                                                             np.dtype("S100")),
                                                         dtype=np.dtype("S100"))
         new_dataset_file["Metadata"].attrs["datasetLength"] = len(
-            example_indices)
+            sample_indices)
         new_dataset_file["Metadata"].attrs["nbClass"] = np.unique(labels)
         new_dataset_file.create_dataset("Labels", data=labels)
         new_dataset_file["Labels"].attrs["names"] = [label_name.encode()
                                                      if not isinstance(
             label_name, bytes)
-                                                     else label_name
-                                                     for label_name in
-                                                     label_names]
+            else label_name
+            for label_name in
+            label_names]
         view_names = self.init_view_names(view_names)
         new_dataset_file["Metadata"].attrs["nbView"] = len(view_names)
         for new_index, view_name in enumerate(view_names):
             self.copy_view(target_dataset=new_dataset_file,
                            source_view_name=view_name,
                            target_view_index=new_index,
-                           example_indices=example_indices)
+                           sample_indices=sample_indices)
         new_dataset_file.close()
         self.update_hdf5_dataset(dataset_file_path)
 
@@ -605,9 +625,10 @@ class HDF5Dataset(Dataset):
             view_key = "View" + str(view_index)
             view_dset = noisy_dataset[view_key]
             view_limits = self.dataset[
-                    "Metadata/View" + str(view_index) + "_limits"][()]
+                "Metadata/View" + str(view_index) + "_limits"][()]
             view_ranges = view_limits[:, 1] - view_limits[:, 0]
-            normal_dist = random_state.normal(0, noise_std, view_dset[()].shape)
+            normal_dist = random_state.normal(
+                0, noise_std, view_dset[()].shape)
             noise = normal_dist * view_ranges
             noised_data = view_dset[()] + noise
             noised_data = np.where(noised_data < view_limits[:, 0],
@@ -648,27 +669,27 @@ def extract_subset(matrix, used_indices):
     # if sparse.issparse(matrix):
     #     new_indptr = np.zeros(len(used_indices) + 1, dtype=int)
     #     oldindptr = matrix.indptr
-    #     for exampleIndexIndex, exampleIndex in enumerate(used_indices):
-    #         new_indptr[exampleIndexIndex + 1] = new_indptr[
-    #                                                 exampleIndexIndex] + (
+    #     for sampleIndexIndex, sampleIndex in enumerate(used_indices):
+    #         new_indptr[sampleIndexIndex + 1] = new_indptr[
+    #                                                 sampleIndexIndex] + (
     #                                                     oldindptr[
-    #                                                         exampleIndex + 1] -
-    #                                                     oldindptr[exampleIndex])
+    #                                                         sampleIndex + 1] -
+    #                                                     oldindptr[sampleIndex])
     #     new_data = np.ones(new_indptr[-1], dtype=bool)
     #     new_indices = np.zeros(new_indptr[-1], dtype=int)
     #     old_indices = matrix.indices
-    #     for exampleIndexIndex, exampleIndex in enumerate(used_indices):
-    #         new_indices[new_indptr[exampleIndexIndex]:new_indptr[
-    #             exampleIndexIndex + 1]] = old_indices[
-    #                                       oldindptr[exampleIndex]:
-    #                                       oldindptr[exampleIndex + 1]]
+    #     for sampleIndexIndex, sampleIndex in enumerate(used_indices):
+    #         new_indices[new_indptr[sampleIndexIndex]:new_indptr[
+    #             sampleIndexIndex + 1]] = old_indices[
+    #                                       oldindptr[sampleIndex]:
+    #                                       oldindptr[sampleIndex + 1]]
     #     return sparse.csr_matrix((new_data, new_indices, new_indptr),
     #                              shape=(len(used_indices), matrix.shape[1]))
     # else:
     return matrix[used_indices]
 
 
-def init_multiple_datasets(path_f, name, nb_cores): # pragma: no cover
+def init_multiple_datasets(path_f, name, nb_cores):  # pragma: no cover
     r"""Used to create copies of the dataset if multicore computation is used.
 
     This is a temporary solution to fix the sharing memory issue with HDF5 datasets.
@@ -693,12 +714,15 @@ def init_multiple_datasets(path_f, name, nb_cores): # pragma: no cover
                 "Info:\t Enough copies of the dataset are already available")
             pass
         else:
-            if os.path.getsize(os.path.join(path_f, name + ".hdf5")) * nb_cores / float(1024) / 1000 / 1000 > 0.1:
+            if os.path.getsize(
+                    os.path.join(path_f, name + ".hdf5")) * nb_cores / float(
+                    1024) / 1000 / 1000 > 0.1:
                 logging.debug("Start:\t Creating " + str(
                     nb_cores) + " temporary datasets for multiprocessing")
                 logging.warning(
-                    " WARNING : /!\ This may use a lot of HDD storage space : " +
-                    str(os.path.getsize(os.path.join(path_f, name + ".hdf5")) * nb_cores / float(
+                    r" WARNING : /!\ This may use a lot of HDD storage space : " +
+                    str(os.path.getsize(os.path.join(path_f,
+                                                     name + ".hdf5")) * nb_cores / float(
                         1024) / 1000 / 1000) + " Gbytes /!\ ")
                 confirmation = confirm()
                 if not confirmation:
@@ -736,7 +760,7 @@ def delete_HDF5(benchmarkArgumentsDictionaries, nbCores, dataset):
         dataset.rm()
 
 
-def confirm(resp=True, timeout=15): # pragma: no cover
+def confirm(resp=True, timeout=15):  # pragma: no cover
     """Used to process answer"""
     ans = input_(timeout)
     if not ans:
@@ -749,7 +773,7 @@ def confirm(resp=True, timeout=15): # pragma: no cover
         return False
 
 
-def input_(timeout=15): # pragma: no cover
+def input_(timeout=15):  # pragma: no cover
     """used as a UI to stop if too much HDD space will be used"""
     logging.warning("You have " + str(
         timeout) + " seconds to stop the dataset copy by typing n")
@@ -760,10 +784,10 @@ def input_(timeout=15): # pragma: no cover
         return "y"
 
 
-def get_examples_views_indices(dataset, examples_indices, view_indices, ):
-    """This function  is used to get all the examples indices and view indices if needed"""
+def get_samples_views_indices(dataset, samples_indices, view_indices, ):
+    """This function  is used to get all the samples indices and view indices if needed"""
     if view_indices is None:
         view_indices = np.arange(dataset.nb_view)
-    if examples_indices is None:
-        examples_indices = np.arange(dataset.get_nb_examples())
-    return examples_indices, view_indices
+    if samples_indices is None:
+        samples_indices = np.arange(dataset.get_nb_samples())
+    return samples_indices, view_indices

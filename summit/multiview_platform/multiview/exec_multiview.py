@@ -47,7 +47,7 @@ def init_constants(kwargs, classification_indices, metrics,
     views = kwargs["view_names"]
     views_indices = kwargs["view_indices"]
     if metrics is None:
-        metrics = {"f1_score*":{}}
+        metrics = {"f1_score*": {}}
     classifier_name = kwargs["classifier_name"]
     classifier_config = kwargs[classifier_name]
     learning_rate = len(classification_indices[0]) / float(
@@ -55,24 +55,24 @@ def init_constants(kwargs, classification_indices, metrics,
     t_start = time.time()
     logging.info("Info\t: Classification - Database : " + str(
         name) + " ; Views : " + ", ".join(views) +
-                 " ; Algorithm : " + classifier_name + " ; Cores : " + str(
+        " ; Algorithm : " + classifier_name + " ; Cores : " + str(
         nb_cores) + ", Train ratio : " + str(learning_rate) +
-                 ", CV on " + str(k_folds.n_splits) + " folds")
+        ", CV on " + str(k_folds.n_splits) + " folds")
 
     for view_index, view_name in zip(views_indices, views):
         logging.info("Info:\t Shape of " + str(view_name) + " :" + str(
             dataset_var.get_shape()))
     labels = dataset_var.get_labels()
     directory = os.path.join(directory, classifier_name)
-    base_file_name = classifier_name+"-"+dataset_var.get_name()+"-"
+    base_file_name = classifier_name + "-" + dataset_var.get_name() + "-"
     output_file_name = os.path.join(directory, base_file_name)
     return classifier_name, t_start, views_indices, \
-           classifier_config, views, learning_rate, labels, output_file_name,\
-           directory, base_file_name, metrics
+        classifier_config, views, learning_rate, labels, output_file_name, \
+        directory, base_file_name, metrics
 
 
 def save_results(string_analysis, images_analysis, output_file_name,
-                 confusion_matrix): # pragma: no cover
+                 confusion_matrix):  # pragma: no cover
     """
     Save results in derectory
 
@@ -102,10 +102,11 @@ def save_results(string_analysis, images_analysis, output_file_name,
     """
     logging.info(string_analysis)
     secure_file_path(output_file_name)
-    output_text_file = open(output_file_name + 'summary.txt', 'w', encoding="utf-8")
+    output_text_file = open(output_file_name + 'summary.txt', 'w',
+                            encoding="utf-8")
     output_text_file.write(string_analysis)
     output_text_file.close()
-    np.savetxt(output_file_name+"confusion_matrix.csv", confusion_matrix,
+    np.savetxt(output_file_name + "confusion_matrix.csv", confusion_matrix,
                delimiter=',')
 
     if images_analysis is not None:
@@ -128,7 +129,7 @@ def exec_multiview_multicore(directory, core_index, name, learning_rate,
                              database_type, path, labels_dictionary,
                              random_state, labels,
                              hyper_param_search=False, nb_cores=1, metrics=None,
-                             n_iter=30, **arguments): # pragma: no cover
+                             n_iter=30, **arguments):  # pragma: no cover
     """
     execute multiview process on
 
@@ -238,17 +239,17 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
 
     logging.debug("Start:\t Initialize constants")
     cl_type, \
-    t_start, \
-    views_indices, \
-    classifier_config, \
-    views, \
-    learning_rate, \
-    labels, \
-    output_file_name,\
-    directory,\
-    base_file_name, \
-    metrics = init_constants(kwargs, classification_indices, metrics, name,
-                            nb_cores, k_folds, dataset_var, directory)
+        t_start, \
+        views_indices, \
+        classifier_config, \
+        views, \
+        learning_rate, \
+        labels, \
+        output_file_name, \
+        directory, \
+        base_file_name, \
+        metrics = init_constants(kwargs, classification_indices, metrics, name,
+                                 nb_cores, k_folds, dataset_var, directory)
     logging.debug("Done:\t Initialize constants")
 
     extraction_time = time.time() - t_start
@@ -260,7 +261,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
 
     logging.debug("Start:\t Getting classifiers modules")
     # classifierPackage = getattr(multiview_classifiers,
-    #                             CL_type)  # Permet d'appeler un module avec une string
+    # CL_type)  # Permet d'appeler un module avec une string
     classifier_module = getattr(multiview_classifiers, cl_type)
     classifier_name = classifier_module.classifier_class_name
     # classifierClass = getattr(classifierModule, CL_type + "Class")
@@ -271,11 +272,11 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     if hps_method != "None":
         hps_method_class = getattr(hyper_parameter_search, hps_method)
         estimator = getattr(classifier_module, classifier_name)(
-                    random_state=random_state,
-                    **classifier_config)
+            random_state=random_state,
+            **classifier_config)
         estimator = get_mc_estim(estimator, random_state,
-                                         multiview=True,
-                                         y=dataset_var.get_labels()[learning_indices])
+                                 multiview=True,
+                                 y=dataset_var.get_labels()[learning_indices])
         hps = hps_method_class(estimator, scoring=metrics, cv=k_folds,
                                random_state=random_state, framework="multiview",
                                n_jobs=nb_cores,
@@ -308,12 +309,12 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
 
     logging.debug("Start:\t Predicting")
     train_pred = classifier.predict(dataset_var,
-                                           example_indices=learning_indices,
-                                           view_indices=views_indices)
+                                    sample_indices=learning_indices,
+                                    view_indices=views_indices)
     pred_beg = time.monotonic()
     test_pred = classifier.predict(dataset_var,
-                                          example_indices=validation_indices,
-                                          view_indices=views_indices)
+                                   sample_indices=validation_indices,
+                                   view_indices=views_indices)
     pred_duration = time.monotonic() - pred_beg
     full_pred = np.zeros(dataset_var.get_labels().shape, dtype=int) - 100
     full_pred[learning_indices] = train_pred
@@ -335,7 +336,8 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
                                               hps_method=hps_method,
                                               metrics_dict=metrics,
                                               n_iter=n_iter,
-                                              class_label_names=list(labels_dictionary.values()),
+                                              class_label_names=list(
+                                                  labels_dictionary.values()),
                                               pred=full_pred,
                                               directory=directory,
                                               base_file_name=base_file_name,
@@ -344,11 +346,12 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
                                               nb_cores=nb_cores,
                                               duration=whole_duration)
     string_analysis, images_analysis, metrics_scores, class_metrics_scores, \
-    confusion_matrix = result_analyzer.analyze()
+        confusion_matrix = result_analyzer.analyze()
     logging.info("Done:\t Result Analysis for " + cl_type)
 
     logging.debug("Start:\t Saving preds")
-    save_results(string_analysis, images_analysis, output_file_name, confusion_matrix)
+    save_results(string_analysis, images_analysis, output_file_name,
+                 confusion_matrix)
     logging.debug("Start:\t Saving preds")
 
     return MultiviewResult(cl_type, classifier_config, metrics_scores,

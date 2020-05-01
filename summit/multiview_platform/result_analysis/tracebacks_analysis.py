@@ -5,8 +5,8 @@ def publish_tracebacks(directory, database_name, labels_names, tracebacks,
                        iter_index):
     if tracebacks:
         with open(os.path.join(directory, database_name +
-                                          "-iter" + str(iter_index) +
-                                          "-tacebacks.txt"),
+                               "-iter" + str(iter_index) +
+                               "-tacebacks.txt"),
                   "w") as traceback_file:
             failed_list = save_dict_to_text(tracebacks, traceback_file)
         flagged_list = [_ + "-iter" + str(iter_index) for _ in failed_list]

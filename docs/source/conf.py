@@ -199,8 +199,8 @@ rst_prolog = """
 """
 
 
-extlinks = {'base_source': ('https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/', "base_source"),
-            'base_doc': ('http://baptiste.bauvin.pages.lis-lab.fr/summit/', 'base_doc')}
+extlinks = {'base_source': ('https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/%s', "_"),
+            'base_doc': ('http://baptiste.bauvin.pages.lis-lab.fr/summit/%s', '_')}
 
 
 

@@ -10,16 +10,16 @@ The bare necessities
 
 At the moment, in order for the platform to work, the dataset must satisfy the following minimum requirements :
 
-- Each example must be described in each view, with no missing data (you can use external tools to fill the gaps, or use only the fully-described examples of your dataset)
+- Each sample must be described in each view, with no missing data (you can use external tools to fill the gaps, or use only the fully-described samples of your dataset)
 
 The dataset structure
 ---------------------
 
-Let's suppose that one has a multiview dataset consisting of 3 views describing 200 examples:
+Let's suppose that one has a multiview dataset consisting of 3 views describing 200 samples:
 
-1. A sound recoding of each example, described by 100 features,
-2. An image of each example, described by 40 features,
-3. A written commentary for each example, described by 55 features.
+1. A sound recoding of each sample, described by 100 features,
+2. An image of each sample, described by 40 features,
+3. A written commentary for each sample, described by 55 features.
 
 So three matrices (200x100 ; 200x40 ; 200x55) make up the dataset. The most usual way to save matrices are `.csv` files. So let us suppose that one has
 
@@ -27,7 +27,7 @@ So three matrices (200x100 ; 200x40 ; 200x55) make up the dataset. The most usua
 2. ``image.csv``
 3. ``commentary.csv``.
 
-Let us suppose that all this data should be used to classify the examples in three classes : "Human", "Animal" or "Object"  and that on has a ``labels.csv`` file with one value for each example, 0 if the example is a human, 1 if it is an animal an 2 if it is an object.
+Let us suppose that all this data should be used to classify the examples in three classes : "Human", "Animal" or "Object"  and that on has a ``labels.csv`` file with one value for each sample, 0 if the sample is a human, 1 if it is an animal an 2 if it is an object.
 
 In order to run a benchmark on this dataset, one has to format it using HDF5.
 
@@ -49,7 +49,7 @@ Let's define the variables that will be used to load the csv matrices :
     view_names = ["sound", "image", "commentary", ]
     data_file_paths = ["path/to/sound.csv", "path/to/image.csv", "path/to/commentary.csv",]
     labels_file_path = "path/to/labels/file.csv"
-    example_ids_path = "path/to/example_ids/file.csv"
+    sample_ids_path = "path/to/sample_ids/file.csv"
     labels_names = ["Human", "Animal", "Object"]
 
 Let's create the HDF5 file :
@@ -119,7 +119,7 @@ Let's now store the metadata :
     # do not modify the attribute's key
     metadata_group.attrs["nbClass"] = np.unique(labels_data)
 
-    # Store the number of examples in the dataset,
+    # Store the number of samples in the dataset,
     # do not modify the attribute's key
     metadata_group.attrs["datasetLength"] = labels_data.shape[0]
 
@@ -127,35 +127,35 @@ Here, we store
 
 - The number of views in the :python:`"nbView"` attribute,
 - The number of different labels in the :python:`"nbClass"` attribute,
-- The number of examples in the :python:`"datasetLength"` attribute.
+- The number of samples in the :python:`"datasetLength"` attribute.
 
 Now, the dataset is ready to be used in the platform.
 Let's suppose it is stored in ``path/to/file.hdf5``, then by setting the ``pathf:`` line of the config file to
 ``pathf: path/to/`` and the ``name:`` line to ``name: ["file.hdf5"]``, the benchmark will run on the created dataset.
 
 
-Adding additional information on the examples
+Adding additional information on the samples
 ---------------------------------------------
 
-In order to be able to analyze the results with more clarity, one can add the examples IDs to the dataset, by adding a dataset to the metadata group.
+In order to be able to analyze the results with more clarity, one can add the samples IDs to the dataset, by adding a dataset to the metadata group.
 
 Let's suppose that the objects we are trying to classify between "Human", "Animal" and "Object" are all people, bears, cars, planes, and birds. And that one has a ``.csv`` file with an ID for each of them (:python:`"john_115", "doe_562", "bear_112", "plane_452", "bird_785", "car_369", ...` for example)
 
-Then as long as the IDs order corresponds to the example order in the lines of the previous matrices, to add the IDs in the hdf5 file, just add :
+Then as long as the IDs order corresponds to the sample order in the lines of the previous matrices, to add the IDs in the hdf5 file, just add :
 
 .. code-block:: python
 
-    # Let us suppose that the examples have string ids, available in a csv file,
+    # Let us suppose that the samples have string ids, available in a csv file,
     # they can be stored in the HDF5 and will be used in the result analysis.
-    example_ids = np.genfromtxt(example_ids_path, delimiter=',')
+    sample_ids = np.genfromtxt(sample_ids_path, delimiter=',')
 
     # To sore the strings in an HDF5 dataset, be sure to use the S<max_length> type,
     # do not modify the name of the dataset.
-    metadata_group.create_dataset("example_ids",
-                                  data=np.array(example_ids).astype(np.dtype("S100")),
+    metadata_group.create_dataset("sample_ids",
+                                  data=np.array(sample_ids).astype(np.dtype("S100")),
                                   dtype=np.dtype("S100"))
 
 
-Be sure to keep the name :python:`"example_ids"`, as it is mandatory for the platform to find the dataset in the file.
+Be sure to keep the name :python:`"sample_ids"`, as it is mandatory for the platform to find the dataset in the file.
 
 

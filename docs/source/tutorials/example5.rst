@@ -127,12 +127,12 @@ Moreover, one has to add a variable called :python:`classifier_class_name` that 
                 self.param_names = ["param_1", "random_state", "param_2"]
                 self.distribs = [CustomRandint(5,200), [random_state], ["val_1", "val_2"]]
 
-In |platf| the input of the :python:`fit()` method is `X`, a dataset object that provide access to each view with a method : :python:`dataset_var.get_v(view_index, example_indices)`.
+In |platf| the input of the :python:`fit()` method is `X`, a dataset object that provide access to each view with a method : :python:`dataset_var.get_v(view_index, sample_indices)`.
 So in order to add a mutliview classifier to |platf|, one will probably have to add a data-transformation step before using the class's :python:`fit()` method.
 
-Moreover, to get restrain the examples and descriptors used in the method, |platf| provides two supplementary arguments :
+Moreover, to get restrain the samples and descriptors used in the method, |platf| provides two supplementary arguments :
 
-- ``train_indices`` is an array of examples indices that compose the training set,
+- ``train_indices`` is an array of samples indices that compose the training set,
 - ``view_indices`` is an array of view indices to restrain the number of views on which the algorithm will train.
 
 These two arguments are useful to reduce memory usage. Indeed, `X`, the dataset object is just a wrapper for an HDF5 file object, so the data will only be loaded once the `get_v` method is called, so the train and test set are not loaded at the same time.
@@ -142,18 +142,18 @@ These two arguments are useful to reduce memory usage. Indeed, `X`, the dataset 
 .. code-block:: python
 
     def fit(self, X, y, train_indices=None, view_indices=None):
-        # This function is used to initialize the example and view indices, in case they are None, it transforms them in the correct values
-        train_indices, view_indices = get_examples_views_indices(X,
+        # This function is used to initialize the sample and view indices, in case they are None, it transforms them in the correct values
+        train_indices, view_indices = get_samples_views_indices(X,
                                                                  train_indices,
                                                                  view_indices)
         needed_input = transform_data_if_needed(X, train_indices, view_indices)
         return NewMVAlgo.fit(self, needed_input, y[train_indices])
 
-    def predict(self, X, example_indices=None, view_indices=None):
-        example_indices, view_indices = get_examples_views_indices(X,
-                                                                 example_indices,
+    def predict(self, X, sample_indices=None, view_indices=None):
+        sample_indices, view_indices = get_samples_views_indices(X,
+                                                                 sample_indices,
                                                                  view_indices)
-        needed_input = transform_data_if_needed(X, example_indices, view_indices)
+        needed_input = transform_data_if_needed(X, sample_indices, view_indices)
         return NewMVAlgo.predict(self, needed_input)
 
 Similarly to monoview algorithms, it is possible to add an interpretation method.
@@ -177,16 +177,16 @@ Example : build a list of all the views arrays
 
 Let us suppose that the mutliview algorithm that one wants to add to |platf| takes as input a list :python:`list_X` of all the views.
 
-Then an example of :python:`self.transform_data_if_needed(X, example_indices, view_indices)` could be :
+Then an example of :python:`self.transform_data_if_needed(X, sample_indices, view_indices)` could be :
 
 .. code-block:: python
 
-    def transform_data_if_needed(self, X, example_indices, view_indices):
+    def transform_data_if_needed(self, X, sample_indices, view_indices):
         views_list = []
         # Browse the asked views indices
         for view_index in view_indices:
-            # Get the data from the dataset object, for the asked examples
-            view_data = X.get_v(view_index, example_indices=example_indices)
+            # Get the data from the dataset object, for the asked samples
+            view_data = X.get_v(view_index, sample_indices=sample_indices)
             # Store it in the list
             views_list.append(view_data)
         return views_list

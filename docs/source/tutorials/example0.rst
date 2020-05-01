@@ -66,14 +66,14 @@ With these results, we are able to assess which classifier perfroms the best, he
 Getting more information on the classification
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-Once one knows the scores of each classifier, an interesting analysis could be to verify on which examples each classifier failed, to detect potential outliers.
+Once one knows the scores of each classifier, an interesting analysis could be to verify on which samples each classifier failed, to detect potential outliers.
 
 This is possible with another result analysis, available in :base_source:`png <multiview_platform/examples/results/example_0/digits/result_example/digits-error_analysis_2D.png>`, :base_source:`csv <multiview_platform/examples/results/example_0/digits/result_example/digits_2D_plot_data.csv>` and :base_source:`html <multiview_platform/examples/results/example_0/digits/result_example/digits-error_analysis_2D.html>` :
 
 .. raw:: html
     :file: images/example_0/err.html
 
-This figure represents a matrix, with the examples in rows and classifiers in columns, with a white rectangle on row i, column j if classifier j succeerecded to classify example i.
+This figure represents a matrix, with the samples in rows and classifiers in columns, with a white rectangle on row i, column j if classifier j succeerecded to classify sample i.
 
 .. note::
     To zoom on the image use your mouse to either draw a rectangle or drag it in a unique direction to zoom on an axis :
@@ -83,9 +83,9 @@ This figure represents a matrix, with the examples in rows and classifiers in co
         :align: center
 
 
-A quick analysis of it shows that a decision tree (DT) on the view ``digit_col_grad_0`` is unable to classify any example of labels 1, 2, 3 or 4. That both the other DTs have a similar behavior with other labels.
+A quick analysis of it shows that a decision tree (DT) on the view ``digit_col_grad_0`` is unable to classify any sample of labels 1, 2, 3 or 4. That both the other DTs have a similar behavior with other labels.
 
-Concerning the fusions, if you zoom in on the examples labelled "2"", you may see that some errors made by the early fusion classifier are on examples that were mis-classified by the three DTs :
+Concerning the fusions, if you zoom in on the samples labelled "2"", you may see that some errors made by the early fusion classifier are on samples that were mis-classified by the three DTs :
 
 .. image:: images/example_0/lab_2.png
     :scale: 100
@@ -96,4 +96,4 @@ Conclusion
 ----------
 
 Thanks to |platf| we were able to get a benchmark of mono- and multiview algorithms on a classification task.
-In the following tutorials, we will develop the features of |platf| on several examples.
+In the following tutorials, we will develop the features of |platf| on several samples.

@@ -1,10 +1,8 @@
 import numpy as np
-from sklearn.base import BaseEstimator, ClassifierMixin
 
 
 def get_names(classed_list):
     return np.array([object_.__class__.__name__ for object_ in classed_list])
-
 
 # class BaseMultiviewClassifier(BaseEstimator, ClassifierMixin):
 #
@@ -56,9 +54,9 @@ def get_names(classed_list):
 
 #
 # def get_train_views_indices(dataset, train_indices, view_indices, ):
-#     """This function  is used to get all the examples indices and view indices if needed"""
+#     """This function  is used to get all the samples indices and view indices if needed"""
 #     if view_indices is None:
 #         view_indices = np.arange(dataset.nb_view)
 #     if train_indices is None:
-#         train_indices = range(dataset.get_nb_examples())
+#         train_indices = range(dataset.get_nb_samples())
 #     return train_indices, view_indices

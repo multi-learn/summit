@@ -1,16 +1,17 @@
+from .. import multiview_classifiers
 from abc import abstractmethod
 
 import numpy as np
 
 from .. import monoview_classifiers
 from ..utils.base import BaseClassifier, ResultAnalyser
-from ..utils.dataset import RAMDataset, get_examples_views_indices
+from ..utils.dataset import RAMDataset
 
 
 # class FakeEstimator():
 #
-#     def predict(self, X, example_indices=None, view_indices=None):
-#         return np.zeros(example_indices.shape[0])
+#     def predict(self, X, sample_indices=None, view_indices=None):
+#         return np.zeros(sample_indices.shape[0])
 
 
 class BaseMultiviewClassifier(BaseClassifier):
@@ -32,16 +33,21 @@ class BaseMultiviewClassifier(BaseClassifier):
         self.used_views = None
 
     @abstractmethod
-    def fit(self, X, y, train_indices=None, view_indices=None): # pragma: no cover
+    def fit(self, X, y, train_indices=None,
+            view_indices=None):  # pragma: no cover
         pass
 
     @abstractmethod
-    def predict(self, X, example_indices=None, view_indices=None): # pragma: no cover
+    def predict(self, X, sample_indices=None,
+                view_indices=None):  # pragma: no cover
         pass
 
-    def _check_views(self, view_indices): # pragma: no cover
-        if self.used_views is not None and not np.array_equal(np.sort(self.used_views), np.sort(view_indices)):
-            raise ValueError('Used {} views to fit, and trying to predict on {}'.format(self.used_views, view_indices))
+    def _check_views(self, view_indices):  # pragma: no cover
+        if self.used_views is not None and not np.array_equal(
+                np.sort(self.used_views), np.sort(view_indices)):
+            raise ValueError(
+                'Used {} views to fit, and trying to predict on {}'.format(
+                    self.used_views, view_indices))
 
     # def to_str(self, param_name):
     #     if param_name in self.weird_strings:
@@ -67,16 +73,17 @@ class BaseMultiviewClassifier(BaseClassifier):
                     n_classes))
         fake_mc_X = RAMDataset(
             views=[random_state.randint(low=0, high=101,
-                                                size=(n_samples, dim))
+                                        size=(n_samples, dim))
                    for i in range(n_views)],
             labels=[class_index
                     for _ in range(int(n_samples / n_classes))
                     for class_index in range(n_classes)],
             are_sparse=False,
             name="mc_dset",
-            labels_names=[str(class_index) for class_index in range(n_classes)],
+            labels_names=[str(class_index)
+                          for class_index in range(n_classes)],
             view_names=["V0", "V1"],
-            )
+        )
 
         fake_mc_y = [class_index
                      for _ in range(int(n_samples / n_classes))
@@ -125,7 +132,7 @@ def get_available_monoview_classifiers(need_probas=False):
     available_classifiers = [module_name
                              for module_name in dir(monoview_classifiers)
                              if not (
-                    module_name.startswith("__") or module_name == "additions")]
+                                 module_name.startswith("__") or module_name == "additions")]
     if need_probas:
         proba_classifiers = []
         for module_name in available_classifiers:
@@ -143,9 +150,6 @@ def get_monoview_classifier(classifier_name, multiclass=False):
     classifier_class = getattr(classifier_module,
                                classifier_module.classifier_class_name)
     return classifier_class
-
-
-from .. import multiview_classifiers
 
 
 class MultiviewResult(object):
@@ -169,7 +173,7 @@ class MultiviewResult(object):
                                            multiview_classifier_module.classifier_class_name)(
                 42, **self.classifier_config)
             return multiview_classifier.short_name
-        except:
+        except BaseException:
             return self.classifier_name
 
 
@@ -180,9 +184,11 @@ class MultiviewResultAnalyzer(ResultAnalyser):
                  pred, directory, base_file_name, labels,
                  database_name, nb_cores, duration):
         if hps_method.endswith("equiv"):
-            n_iter = n_iter*len(view_names)
-        ResultAnalyser.__init__(self, classifier, classification_indices, k_folds,
-                                hps_method, metrics_dict, n_iter, class_label_names,
+            n_iter = n_iter * len(view_names)
+        ResultAnalyser.__init__(self, classifier, classification_indices,
+                                k_folds,
+                                hps_method, metrics_dict, n_iter,
+                                class_label_names,
                                 pred, directory,
                                 base_file_name, labels, database_name,
                                 nb_cores, duration)
@@ -190,8 +196,9 @@ class MultiviewResultAnalyzer(ResultAnalyser):
         self.view_names = view_names
 
     def get_base_string(self, ):
-        return "Multiview classification on {}  with {}\n\n".format(self.database_name,
-                                                                self.classifier_name)
+        return "Multiview classification on {}  with {}\n\n".format(
+            self.database_name,
+            self.classifier_name)
 
     def get_view_specific_info(self):
         return "\t- Views : " + ', '.join(self.view_names) + "\n"

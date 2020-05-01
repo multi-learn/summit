@@ -166,7 +166,7 @@ def init_log_file(name, views, cl_type, log, debug, label,
                                             "%Y_%m_%d-%H_%M") + "_" + label)
     log_file_name = time.strftime("%Y_%m_%d-%H_%M") + "-" + ''.join(
         cl_type) + "-" + "_".join(views) + "-" + name + "-LOG.log"
-    if os.path.exists(result_directory): # pragma: no cover
+    if os.path.exists(result_directory):  # pragma: no cover
         raise NameError("The result dir already exists, wait 1 min and retry")
     log_file_path = os.path.join(result_directory, log_file_name)
     os.makedirs(os.path.dirname(log_file_path))
@@ -187,7 +187,7 @@ def gen_splits(labels, split_ratio, stats_iter_random_states):
     labels : numpy.ndarray
         Name of the database.
     split_ratio : float
-        The ratio of examples between train and test set.
+        The ratio of samples between train and test set.
     stats_iter_random_states : list of numpy.random.RandomState
         The random states for each statistical iteration.
 
@@ -270,21 +270,21 @@ def init_views(dataset_var, arg_views):
     if arg_views is not None:
         allowed_views = arg_views
         all_views = [str(dataset_var.get_view_name(view_index))
-                     if type(dataset_var.get_view_name(view_index)) != bytes
+                     if not isinstance(dataset_var.get_view_name(view_index), bytes)
                      else dataset_var.get_view_name(view_index).decode("utf-8")
                      for view_index in range(nb_view)]
         views = []
         views_indices = []
         for view_index in range(nb_view):
             view_name = dataset_var.get_view_name(view_index)
-            if type(view_name) == bytes:
+            if isinstance(view_name, bytes):
                 view_name = view_name.decode("utf-8")
             if view_name in allowed_views:
                 views.append(view_name)
                 views_indices.append(view_index)
     else:
         views = [str(dataset_var.get_view_name(view_index))
-                 if type(dataset_var.get_view_name(view_index)) != bytes
+                 if not isinstance(dataset_var.get_view_name(view_index), bytes)
                  else dataset_var.get_view_name(view_index).decode("utf-8")
                  for view_index in range(nb_view)]
         views_indices = range(nb_view)
@@ -321,7 +321,8 @@ def find_dataset_names(path, type, names):
      the needed dataset names."""
     package_path = os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-    print(package_path, os.path.isdir(path), os.path.isdir(os.path.join(package_path,path )),)
+    print(package_path, os.path.isdir(path),
+          os.path.isdir(os.path.join(package_path, path)), )
     if os.path.isdir(path):
         pass
     elif os.path.isdir(os.path.join(package_path, path)):
@@ -339,7 +340,8 @@ def find_dataset_names(path, type, names):
     if names == ["all"]:
         return path, available_file_names
     elif isinstance(names, str):
-        return path, [used_name for used_name in available_file_names if names == used_name]
+        return path, [used_name for used_name in available_file_names if
+                      names == used_name]
     elif len(names) > 1:
         selected_names = [used_name for used_name in available_file_names if
                           used_name in names]
@@ -348,11 +350,13 @@ def find_dataset_names(path, type, names):
                 "None of the provided dataset names are available. Available datasets are {}".format(
                     available_file_names))
         return path, [used_name for used_name in available_file_names if
-                used_name in names]
+                      used_name in names]
     elif names[0] in available_file_names:
         return path, names
     else:
-        raise ValueError("The asked dataset ({}) is not available in {}. \n The available ones are {}".format(names[0], path, available_file_names))
+        raise ValueError(
+            "The asked dataset ({}) is not available in {}. \n The available ones are {}".format(
+                names[0], path, available_file_names))
 
 
 def gen_argument_dictionaries(labels_dictionary, directories,
@@ -360,7 +364,8 @@ def gen_argument_dictionaries(labels_dictionary, directories,
                               hyper_param_search, args, k_folds,
                               stats_iter_random_states, metrics,
                               argument_dictionaries,
-                              benchmark, views, views_indices,): # pragma: no cover
+                              benchmark, views,
+                              views_indices, ):  # pragma: no cover
     r"""Used to generate a dictionary for each benchmark.
 
     One for each label combination (if multiclass), for each statistical iteration, generates an dictionary with

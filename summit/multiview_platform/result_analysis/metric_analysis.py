@@ -1,9 +1,10 @@
+import logging
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
-import os
 import pandas as pd
 import plotly
-import logging
 
 from ..utils.organization import secure_file_path
 
@@ -37,37 +38,42 @@ def get_metrics_scores(metrics, results, label_names):
                         if classifier_result.get_classifier_name()
                         not in classifier_names]
     metrics_scores = dict((metric, pd.DataFrame(data=np.zeros((2,
-                                                                  len(
-                                                                      classifier_names))),
-                                                   index=["train", "test"],
-                                                   columns=classifier_names))
+                                                               len(
+                                                                   classifier_names))),
+                                                index=["train", "test"],
+                                                columns=classifier_names))
                           for metric in metrics.keys())
     class_metric_scores = dict((metric, pd.DataFrame(
         index=pd.MultiIndex.from_product([["train", "test"], label_names]),
         columns=classifier_names, dtype=float))
-                               for metric in metrics)
+        for metric in metrics)
 
     for metric in metrics.keys():
         for classifier_result in results:
             metrics_scores[metric].loc[
                 "train", classifier_result.get_classifier_name()] = \
-            classifier_result.metrics_scores[metric][0]
+                classifier_result.metrics_scores[metric][0]
             metrics_scores[metric].loc[
                 "test", classifier_result.get_classifier_name()] = \
                 classifier_result.metrics_scores[metric][1]
             for label_index, label_name in enumerate(label_names):
                 class_metric_scores[metric].loc[(
-                    "train", label_name),classifier_result.get_classifier_name()] = \
-                classifier_result.class_metric_scores[metric][0][label_index]
+                    "train",
+                    label_name), classifier_result.get_classifier_name()] = \
+                    classifier_result.class_metric_scores[metric][0][
+                        label_index]
                 class_metric_scores[metric].loc[(
-                    "test", label_name), classifier_result.get_classifier_name()] = \
-                    classifier_result.class_metric_scores[metric][1][label_index]
+                    "test",
+                    label_name), classifier_result.get_classifier_name()] = \
+                    classifier_result.class_metric_scores[metric][1][
+                        label_index]
 
     return metrics_scores, class_metric_scores
 
 
 def publish_metrics_graphs(metrics_scores, directory, database_name,
-                           labels_names, class_metric_scores):  # pragma: no cover
+                           labels_names,
+                           class_metric_scores):  # pragma: no cover
     r"""Used to sort the results (names and both scores) in descending test
     score order.
 
@@ -92,19 +98,19 @@ def publish_metrics_graphs(metrics_scores, directory, database_name,
         logging.debug(
             "Start:\t Score graph generation for " + metric_name)
         train_scores, test_scores, classifier_names, \
-        file_name, nb_results, results,\
-        class_test_scores = init_plot(results, metric_name,
-                                      metrics_scores[metric_name],
-                                      directory,
-                                      database_name,
-                                      class_metric_scores[metric_name])
+            file_name, nb_results, results, \
+            class_test_scores = init_plot(results, metric_name,
+                                          metrics_scores[metric_name],
+                                          directory,
+                                          database_name,
+                                          class_metric_scores[metric_name])
 
         plot_metric_scores(train_scores, test_scores, classifier_names,
                            nb_results, metric_name, file_name,
                            tag=" " + " vs ".join(labels_names))
 
         class_file_name = os.path.join(directory, database_name + "-"
-                             + metric_name+"-class")
+                                       + metric_name + "-class")
         plot_class_metric_scores(class_test_scores, class_file_name,
                                  labels_names, classifier_names, metric_name)
         logging.debug(
@@ -114,7 +120,7 @@ def publish_metrics_graphs(metrics_scores, directory, database_name,
 
 def publish_all_metrics_scores(iter_results, class_iter_results, directory,
                                data_base_name, stats_iter, label_names,
-                               min_size=10): # pragma: no cover
+                               min_size=10):  # pragma: no cover
     results = []
     secure_file_path(os.path.join(directory, "a"))
 
@@ -137,15 +143,21 @@ def publish_all_metrics_scores(iter_results, class_iter_results, directory,
                     in zip(classifier_names, test, test_std)]
 
     for metric_name, scores in class_iter_results.items():
-        test = np.array([np.array(scores["mean"].iloc[i, :]) for i in range(scores["mean"].shape[0]) if scores["mean"].iloc[i, :].name[0]=='test'])
+        test = np.array([np.array(scores["mean"].iloc[i, :]) for i in
+                         range(scores["mean"].shape[0]) if
+                         scores["mean"].iloc[i, :].name[0] == 'test'])
         classifier_names = np.array(scores["mean"].columns)
-        test_std = np.array([np.array(scores["std"].iloc[i, :]) for i in range(scores["std"].shape[0]) if scores["std"].iloc[i, :].name[0]=='test'])
+        test_std = np.array([np.array(scores["std"].iloc[i, :]) for i in
+                             range(scores["std"].shape[0]) if
+                             scores["std"].iloc[i, :].name[0] == 'test'])
 
         file_name = os.path.join(directory, data_base_name + "-mean_on_" + str(
-            stats_iter) + "_iter-" + metric_name+"-class")
+            stats_iter) + "_iter-" + metric_name + "-class")
 
-        plot_class_metric_scores(test, file_name, label_names, classifier_names, metric_name, stds=test_std, tag="averaged")
+        plot_class_metric_scores(test, file_name, label_names, classifier_names,
+                                 metric_name, stds=test_std, tag="averaged")
     return results
+
 
 def init_plot(results, metric_name, metric_dataframe,
               directory, database_name, class_metric_scores):
@@ -163,14 +175,14 @@ def init_plot(results, metric_name, metric_dataframe,
                 zip(classifier_names, test, np.transpose(class_test),
                     np.zeros(len(test)))]
     return train, test, classifier_names, file_name, nb_results, results, \
-           class_test
+        class_test
 
 
 def plot_metric_scores(train_scores, test_scores, names, nb_results,
                        metric_name,
                        file_name,
                        tag="", train_STDs=None, test_STDs=None,
-                       use_plotly=True): # pragma: no cover
+                       use_plotly=True):  # pragma: no cover
     r"""Used to plot and save the score barplot for a specific metric.
 
     Parameters
@@ -220,7 +232,7 @@ def plot_metric_scores(train_scores, test_scores, names, nb_results,
 
     try:
         plt.tight_layout()
-    except:
+    except BaseException:
         pass
     f.savefig(file_name + '.png', transparent=True)
     plt.close()
@@ -263,7 +275,7 @@ def plot_metric_scores(train_scores, test_scores, names, nb_results,
 
 def plot_class_metric_scores(class_test_scores, class_file_name,
                              labels_names, classifier_names, metric_name,
-                             stds=None, tag=""): # pragma: no cover
+                             stds=None, tag=""):  # pragma: no cover
     fig = plotly.graph_objs.Figure()
     for lab_index, scores in enumerate(class_test_scores):
         if stds is None:
@@ -274,12 +286,13 @@ def plot_class_metric_scores(class_test_scores, class_file_name,
             name=labels_names[lab_index],
             x=classifier_names, y=scores,
             error_y=dict(type='data', array=std),
-            ))
+        ))
     fig.update_layout(
         title=metric_name + "<br>" + tag + " scores for each classifier")
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                       plot_bgcolor='rgba(0,0,0,0)')
-    plotly.offline.plot(fig, filename=class_file_name + ".html", auto_open=False)
+    plotly.offline.plot(fig, filename=class_file_name + ".html",
+                        auto_open=False)
     del fig
 
 
@@ -312,7 +325,7 @@ def get_fig_size(nb_results, min_size=15, multiplier=1.0, bar_width=0.35):
     return fig_kwargs, bar_width
 
 
-def autolabel(rects, ax, set=1, std=None): # pragma: no cover
+def autolabel(rects, ax, set=1, std=None):  # pragma: no cover
     r"""Used to print the score below the bars.
 
     Parameters

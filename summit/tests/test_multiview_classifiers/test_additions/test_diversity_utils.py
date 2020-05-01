@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-import  summit.multiview_platform.multiview_classifiers.additions.diversity_utils  as du
+import summit.multiview_platform.multiview_classifiers.additions.diversity_utils as du
 
 
 class FakeDataset():
@@ -12,11 +12,11 @@ class FakeDataset():
         self.views = views
         self.labels = labels
 
-    def get_v(self, view_index, example_indices):
-        return self.views[view_index, example_indices]
+    def get_v(self, view_index, sample_indices):
+        return self.views[view_index, sample_indices]
 
-    def get_nb_class(self, example_indices):
-        return np.unique(self.labels[example_indices])
+    def get_nb_class(self, sample_indices):
+        return np.unique(self.labels[sample_indices])
 
 
 class FakeDivCoupleClf(du.CoupleDiversityFusionClassifier):
@@ -30,7 +30,7 @@ class FakeDivCoupleClf(du.CoupleDiversityFusionClassifier):
         self.rs = rs
 
     def diversity_measure(self, a, b, c):
-        return self.rs.randint(0,100)
+        return self.rs.randint(0, 100)
 
 
 class FakeDivGlobalClf(du.GlobalDiversityFusionClassifier):
@@ -44,23 +44,24 @@ class FakeDivGlobalClf(du.GlobalDiversityFusionClassifier):
         self.rs = rs
 
     def diversity_measure(self, a, b, c):
-        return self.rs.randint(0,100)
+        return self.rs.randint(0, 100)
+
 
 class Test_DiversityFusion(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         cls.classifier_names = ["adaboost", "decision_tree"]
-        cls.classifiers_config = {"adaboost":{"n_estimators":5,}}
+        cls.classifiers_config = {"adaboost": {"n_estimators": 5, }}
         cls.random_state = np.random.RandomState(42)
-        cls.y = cls.random_state.randint(0,2,6)
-        cls.X = FakeDataset(cls.random_state.randint(0,100,(2,5,6)), cls.y)
-        cls.train_indices = [0,1,2,4]
-        cls.views_indices = [0,1]
+        cls.y = cls.random_state.randint(0, 2, 6)
+        cls.X = FakeDataset(cls.random_state.randint(0, 100, (2, 5, 6)), cls.y)
+        cls.train_indices = [0, 1, 2, 4]
+        cls.views_indices = [0, 1]
 
     def test_simple_couple(self):
         clf = FakeDivCoupleClf(self.random_state, classifier_names=self.classifier_names,
-                                              classifiers_config=self.classifiers_config)
+                               classifiers_config=self.classifiers_config)
         clf.fit(self.X, self.y, self.train_indices, self.views_indices)
 
     def test_simple_global(self):

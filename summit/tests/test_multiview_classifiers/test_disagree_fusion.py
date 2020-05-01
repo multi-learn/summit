@@ -17,7 +17,7 @@ class Test_disagree(unittest.TestCase):
 
     def test_simple(cls):
         disagreement = cls.clf.diversity_measure(cls.monoview_decision_1,
-                                                    cls.monoview_decision_2,
-                                                    cls.ground_truth)
+                                                 cls.monoview_decision_2,
+                                                 cls.ground_truth)
         np.testing.assert_array_equal(disagreement,
                                       np.array([False, True, True, False]))

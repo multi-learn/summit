@@ -3,13 +3,9 @@
  get_scorer: returns a sklearn scorer for grid search
 """
 
-import warnings
-
 from sklearn.metrics import f1_score as metric
 from sklearn.metrics import make_scorer
 
-warnings.warn("the f1_score module  is deprecated", DeprecationWarning,
-              stacklevel=2)
 # Author-Info
 __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype

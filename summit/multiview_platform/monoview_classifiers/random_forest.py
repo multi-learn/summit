@@ -1,6 +1,7 @@
 from sklearn.ensemble import RandomForestClassifier
 
-from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier
+from ..monoview.monoview_utils import BaseMonoviewClassifier
+from summit.multiview_platform.utils.hyper_parameter_search import CustomRandint
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -65,7 +66,8 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
                          ["gini", "entropy"], [random_state]]
         self.weird_strings = {}
 
-    def get_interpretation(self, directory, base_file_name, y_test, multiclass=False):
+    def get_interpretation(self, directory, base_file_name, y_test,
+                           multiclass=False):
         """
 
         Parameters
@@ -78,5 +80,6 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
         string for interpretation interpret_string
         """
         interpret_string = ""
-        interpret_string += self.get_feature_importance(directory, base_file_name)
+        interpret_string += self.get_feature_importance(directory,
+                                                        base_file_name)
         return interpret_string

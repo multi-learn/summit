@@ -1,7 +1,8 @@
 import os
-import plotly
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+import plotly
 
 from ..monoview.monoview_utils import MonoviewResult
 
@@ -37,6 +38,7 @@ def get_feature_importances(result, feature_names=None):
                     classifier_result.n_features)
     return feature_importances
 
+
 def publish_feature_importances(feature_importances, directory, database_name,
                                 feature_stds=None):  # pragma: no cover
     for view_name, feature_importance in feature_importances.items():
@@ -55,16 +57,17 @@ def publish_feature_importances(feature_importances, directory, database_name,
         plot_feature_importances(file_name, feature_importance, feature_std)
 
 
-def plot_feature_importances(file_name, feature_importance, feature_std): # pragma: no cover
+def plot_feature_importances(file_name, feature_importance,
+                             feature_std):  # pragma: no cover
     feature_importance.to_csv(file_name + "_dataframe.csv")
     hover_text = [["-Feature :" + str(feature_name) +
                    "<br>-Classifier : " + classifier_name +
                    "<br>-Importance : " + str(
         feature_importance.loc[feature_name][classifier_name]) +
-                   "<br>-STD : " + str(
+        "<br>-STD : " + str(
         feature_std.loc[feature_name][classifier_name])
-                   for classifier_name in list(feature_importance.columns)]
-                  for feature_name in list(feature_importance.index)]
+        for classifier_name in list(feature_importance.columns)]
+        for feature_name in list(feature_importance.index)]
     fig = plotly.graph_objs.Figure(data=plotly.graph_objs.Heatmap(
         x=list(feature_importance.columns),
         y=list(feature_importance.index),
@@ -81,4 +84,3 @@ def plot_feature_importances(file_name, feature_importance, feature_std): # prag
     plotly.offline.plot(fig, filename=file_name + ".html", auto_open=False)
 
     del fig
-

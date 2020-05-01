@@ -1,6 +1,7 @@
 import os
-import plotly
+
 import pandas as pd
+import plotly
 
 
 def get_duration(results):
@@ -14,31 +15,36 @@ def get_duration(results):
               "pred"] = classifier_result.pred_duration
     return df
 
-def plot_durations(durations, directory, database_name, durations_stds=None): # pragma: no cover
+
+def plot_durations(durations, directory, database_name,
+                   durations_stds=None):  # pragma: no cover
     file_name = os.path.join(directory, database_name + "-durations")
-    durations.to_csv(file_name+"_dataframe.csv")
+    durations.to_csv(file_name + "_dataframe.csv")
     fig = plotly.graph_objs.Figure()
     if durations_stds is None:
         durations_stds = pd.DataFrame(0, durations.index, durations.columns)
     else:
-        durations_stds.to_csv(file_name+"_stds_dataframe.csv")
+        durations_stds.to_csv(file_name + "_stds_dataframe.csv")
     fig.add_trace(plotly.graph_objs.Bar(name='Hyper-parameter Optimization',
                                         x=durations.index,
                                         y=durations['hps'],
                                         error_y=dict(type='data',
-                                                     array=durations_stds["hps"]),
+                                                     array=durations_stds[
+                                                         "hps"]),
                                         marker_color="grey"))
     fig.add_trace(plotly.graph_objs.Bar(name='Fit (on train set)',
                                         x=durations.index,
                                         y=durations['fit'],
                                         error_y=dict(type='data',
-                                                     array=durations_stds["fit"]),
+                                                     array=durations_stds[
+                                                         "fit"]),
                                         marker_color="black"))
     fig.add_trace(plotly.graph_objs.Bar(name='Prediction (on test set)',
                                         x=durations.index,
                                         y=durations['pred'],
                                         error_y=dict(type='data',
-                                                     array=durations_stds["pred"]),
+                                                     array=durations_stds[
+                                                         "pred"]),
                                         marker_color="lightgrey"))
     fig.update_layout(title="Durations for each classfier",
                       yaxis_title="Duration (s)")

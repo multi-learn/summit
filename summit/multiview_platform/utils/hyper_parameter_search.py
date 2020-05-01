@@ -1,10 +1,7 @@
-import itertools
-import sys
 import traceback
 import yaml
 from abc import abstractmethod
 
-import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import randint, uniform
 from sklearn.model_selection import RandomizedSearchCV, GridSearchCV, \
@@ -14,7 +11,19 @@ from sklearn.base import clone, BaseEstimator
 from .multiclass import MultiClassWrapper
 from .organization import secure_file_path
 from .base import get_metric
-from .. import metrics
+import traceback
+from abc import abstractmethod
+
+import numpy as np
+import yaml
+from scipy.stats import randint, uniform
+from sklearn.base import clone, BaseEstimator
+from sklearn.model_selection import RandomizedSearchCV, GridSearchCV, \
+    ParameterGrid, ParameterSampler
+
+from .base import get_metric
+from .multiclass import MultiClassWrapper
+from .organization import secure_file_path
 
 
 class HPSearch:
@@ -40,10 +49,12 @@ class HPSearch:
         self.cv_results_["params"] = []
         n_failed = 0
         self.tracebacks_params = []
-        for candidate_param_idx, candidate_param in enumerate(self.candidate_params):
+        for candidate_param_idx, candidate_param in enumerate(
+                self.candidate_params):
             test_scores = np.zeros(n_splits) + 1000
             try:
-                for fold_idx, (train_indices, test_indices) in enumerate(folds):
+                for fold_idx, (train_indices,
+                               test_indices) in enumerate(folds):
                     current_estimator = clone(base_estimator)
                     current_estimator.set_params(**candidate_param)
                     current_estimator.fit(X, y,
@@ -66,9 +77,10 @@ class HPSearch:
                     cross_validation_score)
                 results[candidate_param_idx] = cross_validation_score
                 if cross_validation_score >= max(results.values()):
-                    self.best_params_ = self.candidate_params[candidate_param_idx]
+                    self.best_params_ = self.candidate_params[
+                        candidate_param_idx]
                     self.best_score_ = cross_validation_score
-            except:
+            except BaseException:
                 if self.track_tracebacks:
                     n_failed += 1
                     self.tracebacks.append(traceback.format_exc())
@@ -89,7 +101,7 @@ class HPSearch:
         return self
 
     @abstractmethod
-    def get_candidate_params(self, X): # pragma: no cover
+    def get_candidate_params(self, X):  # pragma: no cover
         raise NotImplementedError
 
     def get_best_params(self):
@@ -102,16 +114,18 @@ class HPSearch:
         scores_array = self.cv_results_['mean_test_score']
         sorted_indices = np.argsort(-scores_array)
         tested_params = [self.cv_results_["params"][score_index]
-                              for score_index in sorted_indices]
+                         for score_index in sorted_indices]
         scores_array = scores_array[sorted_indices]
         output_string = ""
         for parameters, score in zip(tested_params, scores_array):
             formatted_params = format_params(parameters)
-            output_string += "\n{}\n\t\t{}".format(yaml.dump(formatted_params), score)
+            output_string += "\n{}\n\t\t{}".format(yaml.dump(formatted_params),
+                                                   score)
         if self.tracebacks:
             output_string += "Failed : \n\n\n"
-            for traceback, params in zip(self.tracebacks, self.tracebacks_params):
-                output_string+= '{}\n\n{}\n'.format(params, traceback)
+            for traceback, params in zip(self.tracebacks,
+                                         self.tracebacks_params):
+                output_string += '{}\n\n{}\n'.format(params, traceback)
         secure_file_path(output_file_name + "hps_report.txt")
         with open(output_file_name + "hps_report.txt", "w") as output_file:
             output_file.write(output_string)
@@ -136,7 +150,7 @@ class Random(RandomizedSearchCV, HPSearch):
         self.view_indices = view_indices
         self.equivalent_draws = equivalent_draws
         self.track_tracebacks = track_tracebacks
-        self.tracebacks=[]
+        self.tracebacks = []
 
     def get_param_distribs(self, estimator):
         if isinstance(estimator, MultiClassWrapper):
@@ -144,14 +158,14 @@ class Random(RandomizedSearchCV, HPSearch):
         else:
             return estimator.gen_distribs()
 
-    def fit(self, X, y=None, groups=None, **fit_params): # pragma: no cover
+    def fit(self, X, y=None, groups=None, **fit_params):  # pragma: no cover
         if self.framework == "monoview":
             return RandomizedSearchCV.fit(self, X, y=y, groups=groups,
                                           **fit_params)
 
         elif self.framework == "multiview":
             return HPSearch.fit_multiview(self, X, y=y, groups=groups,
-                                           **fit_params)
+                                          **fit_params)
 
     def get_candidate_params(self, X):
         if self.equivalent_draws:
@@ -166,11 +180,10 @@ class Random(RandomizedSearchCV, HPSearch):
     #                                     y[self.available_indices])
 
 
-
-
 class Grid(GridSearchCV, HPSearch):
 
-    def __init__(self, estimator, param_grid={}, refit=False, n_jobs=1, scoring=None, cv=None,
+    def __init__(self, estimator, param_grid={}, refit=False, n_jobs=1,
+                 scoring=None, cv=None,
                  learning_indices=None, view_indices=None, framework="monoview",
                  random_state=None, track_tracebacks=True):
         scoring = HPSearch.get_scoring(self, scoring)
@@ -186,10 +199,10 @@ class Grid(GridSearchCV, HPSearch):
     def fit(self, X, y=None, groups=None, **fit_params):
         if self.framework == "monoview":
             return GridSearchCV.fit(self, X, y=y, groups=groups,
-                                          **fit_params)
+                                    **fit_params)
         elif self.framework == "multiview":
             return HPSearch.fit_multiview(self, X, y=y, groups=groups,
-                                           **fit_params)
+                                          **fit_params)
 
     def get_candidate_params(self, X):
         self.candidate_params = list(ParameterGrid(self.param_grid))
@@ -211,9 +224,7 @@ class Grid(GridSearchCV, HPSearch):
 #                     index_step = floor(len(distribution)/n_points_per_param-2)
 #                     selected_params[param_name] = distribution[0]+[distribution[index*index_step+1]
 #                                                    for index
-#                                                    in range(n_points_per_param)]
-
-
+# in range(n_points_per_param)]
 
 
 #
@@ -231,7 +242,6 @@ class Grid(GridSearchCV, HPSearch):
 #     pass
 
 
-
 # class RS(HPSSearch):
 #
 #     def __init__(self, X, y, framework, random_state, output_file_name,
@@ -242,7 +252,6 @@ class Grid(GridSearchCV, HPSearch):
 #                       view_indices=None,
 #                       equivalent_draws=True):
 #         HPSSearch.__init__()
-
 
 
 # def randomized_search(X, y, framework, random_state, output_file_name,
@@ -287,13 +296,6 @@ class Grid(GridSearchCV, HPSearch):
 #         test_folds_preds = np.zeros(10)#get_test_folds_preds(X, y, folds, best_estimator,
 #                                           # framework, learning_indices)
 #         return best_params, scores_array, params
-
-
-
-
-
-
-
 
 
 #
@@ -352,7 +354,6 @@ class Grid(GridSearchCV, HPSearch):
 #
 
 
-
 class CustomRandint:
     """Used as a distribution returning a integer between low and high-1.
     It can be used with a multiplier agrument to be able to perform more complex generation
@@ -360,8 +361,8 @@ class CustomRandint:
 
     def __init__(self, low=0, high=0, multiplier=""):
         self.randint = randint(low, high)
-        self.low=low
-        self.high=high
+        self.low = low
+        self.high = high
         self.multiplier = multiplier
 
     def rvs(self, random_state=None):
@@ -403,8 +404,9 @@ def format_params(params, pref=""):
                 pass
             elif isinstance(value, BaseEstimator):
                 dictionary[key] = value.__class__.__name__
-                for second_key, second_value in format_params(value.get_params()).items():
-                    dictionary[str(key)+"__"+second_key] = second_value
+                for second_key, second_value in format_params(
+                        value.get_params()).items():
+                    dictionary[str(key) + "__" + second_key] = second_value
             else:
                 dictionary[str(key)] = format_params(value)
         return dictionary
@@ -420,7 +422,6 @@ def format_params(params, pref=""):
         return str(params)
     else:
         return params
-
 
 # def randomized_search_(dataset_var, labels, classifier_package, classifier_name,
 #                       metrics_list, learning_indices, k_folds, random_state,

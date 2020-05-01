@@ -14,7 +14,7 @@ import h5py
 view_names = ["sound", "image", "commentary", ]
 data_file_paths = ["path/to/sound.csv", "path/to/image.csv", "path/to/commentary.csv",]
 labels_file_path = "path/to/labels/file.csv"
-example_ids_path = "path/to/example_ids/file.csv"
+sample_ids_path = "path/to/sample_ids/file.csv"
 labels_names = ["Human", "Animal", "Object"]
 
 
@@ -69,18 +69,18 @@ metadata_group.attrs["nbView"] = len(view_names)
 # do not modify the attribute's key
 metadata_group.attrs["nbClass"] = np.unique(labels_data)
 
-# Store the number of examples in the dataset,
+# Store the number of samples in the dataset,
 # do not modify the attribute's key
 metadata_group.attrs["datasetLength"] = labels_data.shape[0]
 
-# Let us suppose that the examples have string ids, available in a csv file,
+# Let us suppose that the samples have string ids, available in a csv file,
 # they can be stored in the HDF5 and will be used in the result analysis.
-example_ids = np.genfromtxt(example_ids_path, delimiter=',')
+sample_ids = np.genfromtxt(sample_ids_path, delimiter=',')
 
 # To sore the strings in an HDF5 dataset, be sure to use the S<max_length> type,
 # do not modify the name of the dataset.
-metadata_group.create_dataset("example_ids",
-                              data=np.array(example_ids).astype(np.dtype("S100")),
+metadata_group.create_dataset("sample_ids",
+                              data=np.array(sample_ids).astype(np.dtype("S100")),
                               dtype=np.dtype("S100"))
 
 hdf5_file.close()

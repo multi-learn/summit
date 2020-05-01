@@ -1,6 +1,7 @@
 from sklearn.neighbors import KNeighborsClassifier
 
-from ..monoview.monoview_utils import CustomRandint, BaseMonoviewClassifier
+from ..monoview.monoview_utils import BaseMonoviewClassifier
+from summit.multiview_platform.utils.hyper_parameter_search import CustomRandint
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

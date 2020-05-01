@@ -1,10 +1,9 @@
 import numpy as np
 
-from summit.multiview_platform import monoview_classifiers
 from .additions.fusion_utils import BaseFusionClassifier
 from ..multiview.multiview_utils import get_available_monoview_classifiers, \
     BaseMultiviewClassifier, ConfigGenerator
-from ..utils.dataset import get_examples_views_indices
+from ..utils.dataset import get_samples_views_indices
 from ..utils.multiclass import get_mc_estim, MultiClassWrapper
 
 # from ..utils.dataset import get_v
@@ -42,7 +41,8 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         #                                      self.monoview_classifier_name)
         # monoview_classifier_class = getattr(monoview_classifier_module,
         #                                     monoview_classifier_module.classifier_class_name)
-        self.monoview_classifier = self.init_monoview_estimator(monoview_classifier_name, monoview_classifier_config)
+        self.monoview_classifier = self.init_monoview_estimator(
+            monoview_classifier_name, monoview_classifier_config)
         self.param_names = ["monoview_classifier_name",
                             "monoview_classifier_config"]
         self.distribs = [get_available_monoview_classifiers(),
@@ -80,35 +80,34 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
         self.monoview_classifier_config = self.monoview_classifier.get_params()
         return self
 
-    def predict(self, X, example_indices=None, view_indices=None):
-        _, X = self.transform_data_to_monoview(X, example_indices, view_indices)
+    def predict(self, X, sample_indices=None, view_indices=None):
+        _, X = self.transform_data_to_monoview(X, sample_indices, view_indices)
         self._check_views(self.view_indices)
         predicted_labels = self.monoview_classifier.predict(X)
         return predicted_labels
 
-    def transform_data_to_monoview(self, dataset, example_indices,
+    def transform_data_to_monoview(self, dataset, sample_indices,
                                    view_indices):
         """Here, we extract the data from the HDF5 dataset file and store all
         the concatenated views in one variable"""
-        example_indices, self.view_indices = get_examples_views_indices(dataset,
-                                                                        example_indices,
-                                                                        view_indices)
+        sample_indices, self.view_indices = get_samples_views_indices(dataset,
+                                                                      sample_indices,
+                                                                      view_indices)
         if self.view_weights is None:
             self.view_weights = np.ones(len(self.view_indices), dtype=float)
         else:
             self.view_weights = np.array(self.view_weights)
         self.view_weights /= float(np.sum(self.view_weights))
 
-        X = self.hdf5_to_monoview(dataset, example_indices)
-        return example_indices, X
+        X = self.hdf5_to_monoview(dataset, sample_indices)
+        return sample_indices, X
 
-    def hdf5_to_monoview(self, dataset, examples):
-        """Here, we concatenate the views for the asked examples """
+    def hdf5_to_monoview(self, dataset, samples):
+        """Here, we concatenate the views for the asked samples """
         monoview_data = np.concatenate(
-            [dataset.get_v(view_idx, examples)
+            [dataset.get_v(view_idx, samples)
              for view_weight, (index, view_idx)
-             in zip(self.view_weights, enumerate(self.view_indices))]
-            , axis=1)
+             in zip(self.view_weights, enumerate(self.view_indices))], axis=1)
         return monoview_data
 
     # def set_monoview_classifier_config(self, monoview_classifier_name, monoview_classifier_config):

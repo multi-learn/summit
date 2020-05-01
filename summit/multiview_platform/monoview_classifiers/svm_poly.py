@@ -1,7 +1,8 @@
 from summit.multiview_platform.monoview_classifiers.additions.SVCClassifier import \
     SVCClassifier
-from ..monoview.monoview_utils import CustomUniform, CustomRandint, \
-    BaseMonoviewClassifier
+from ..monoview.monoview_utils import BaseMonoviewClassifier
+from summit.multiview_platform.utils.hyper_parameter_search import \
+    CustomUniform, CustomRandint
 
 # Author-Info
 __author__ = "Baptiste Bauvin"

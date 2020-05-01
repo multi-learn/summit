@@ -13,7 +13,7 @@ from summit.multiview_platform.multiview import multiview_utils
 class FakeMVClassif(multiview_utils.BaseMultiviewClassifier):
 
     def __init__(self, mc=True):
-        self.mc=mc
+        self.mc = mc
         pass
 
     def fit(self, X, y):
@@ -21,7 +21,6 @@ class FakeMVClassif(multiview_utils.BaseMultiviewClassifier):
             raise ValueError
         else:
             pass
-
 
 
 class TestBaseMultiviewClassifier(unittest.TestCase):
@@ -40,7 +39,9 @@ class TestBaseMultiviewClassifier(unittest.TestCase):
         self.assertEqual(accepts, True)
         accepts = FakeMVClassif(mc=False).accepts_multi_class(rs)
         self.assertEqual(accepts, False)
-        self.assertRaises(ValueError, FakeMVClassif(mc=False).accepts_multi_class, rs,**{"n_samples":2, "n_classes":3})
+        self.assertRaises(ValueError, FakeMVClassif(
+            mc=False).accepts_multi_class, rs, **{"n_samples": 2, "n_classes": 3})
+
 
 class TestConfigGenerator(unittest.TestCase):
 
@@ -49,11 +50,13 @@ class TestConfigGenerator(unittest.TestCase):
         cls.rs = np.random.RandomState(42)
 
     def test_simple(self):
-        cfg_gen = multiview_utils.ConfigGenerator(["decision_tree", "decision_tree"])
+        cfg_gen = multiview_utils.ConfigGenerator(
+            ["decision_tree", "decision_tree"])
         sample = cfg_gen.rvs(self.rs)
         self.assertEqual(sample, {'decision_tree': {'criterion': 'entropy',
-                   'max_depth': 103,
-                   'splitter': 'best'}})
+                                                    'max_depth': 103,
+                                                    'splitter': 'best'}})
+
 
 class TestFunctions(unittest.TestCase):
 
@@ -78,7 +81,8 @@ class TestFunctions(unittest.TestCase):
                                  'svm_linear',
                                  'svm_poly',
                                  'svm_rbf'])
-        avail = multiview_utils.get_available_monoview_classifiers(need_probas=True)
+        avail = multiview_utils.get_available_monoview_classifiers(
+            need_probas=True)
         self.assertEqual(avail, ['adaboost',
                                  'decision_tree',
                                  'gradient_boosting',

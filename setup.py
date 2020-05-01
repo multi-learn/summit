@@ -38,7 +38,7 @@ def setup_package():
 
     # Une description longue, sera affichée pour présenter la lib
     # Généralement on dump le README ici
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
 
     # Vous pouvez rajouter une liste de dépendances pour votre lib
     # et même préciser une version. A l'installation, Python essayera de
@@ -58,7 +58,7 @@ def setup_package():
     install_requires=requirements,
     extras_requires={
             'dev': ['pytest', 'pytest-cov'],
-            'doc': ['sphinx', 'numpydoc', 'sphinx_gallery', 'matplotlib']},
+            'doc': ['sphinx', 'numpydoc', 'docutils']},
 
     # Il est d'usage de mettre quelques metadata à propos de sa lib
     # Pour que les robots puissent facilement la classer.
@@ -83,11 +83,11 @@ def setup_package():
     # va faire pointer ce nom vers la fonction proclamer(). La commande sera
     # créé automatiquement.
     # La syntaxe est "nom-de-commande-a-creer = package.module:fonction".
-    entry_points={
-        'console_scripts': [
-            'exec_multiview = summit.execute:exec',
-        ],
-    },
+    # entry_points={
+    #     'console_scripts': [
+    #         'exec_multiview = summit.execute:exec',
+    #     ],
+    # },
 
     # A fournir uniquement si votre licence n'est pas listée dans "classifiers"
     # ce qui est notre cas

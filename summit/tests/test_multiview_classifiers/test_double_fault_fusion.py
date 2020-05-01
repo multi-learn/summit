@@ -16,7 +16,7 @@ class Test_disagree(unittest.TestCase):
 
     def test_simple(cls):
         double_fault = cls.clf.diversity_measure(cls.monoview_decision_1,
-                                                    cls.monoview_decision_2,
-                                                    cls.ground_truth)
+                                                 cls.monoview_decision_2,
+                                                 cls.ground_truth)
         np.testing.assert_array_equal(double_fault,
                                       np.array([False, True, False, False, False, False, True, False]))

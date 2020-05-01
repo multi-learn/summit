@@ -5,9 +5,19 @@ import h5py
 from ..multiview_platform.utils.dataset import HDF5Dataset
 
 
-tmp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tmp_tests/")
+tmp_path = os.path.join(
+    os.path.dirname(
+        os.path.abspath(__file__)),
+    "tmp_tests/")
 # TODO Convert to ram dataset
-test_dataset = HDF5Dataset(hdf5_file=h5py.File(os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_database.hdf5"), "r"))
+test_dataset = HDF5Dataset(
+    hdf5_file=h5py.File(
+        os.path.join(
+            os.path.dirname(
+                os.path.abspath(__file__)),
+            "test_database.hdf5"),
+        "r"))
+
 
 def rm_tmp(path=tmp_path):
     try:
@@ -17,16 +27,16 @@ def rm_tmp(path=tmp_path):
             else:
                 os.remove(os.path.join(path, file_name))
         os.rmdir(path)
-    except:
+    except BaseException:
         pass
 
 
 def gen_test_dataset(random_state=np.random.RandomState(42)):
-    dataset_file = h5py.File("test_database.hdf5",  "w")
+    dataset_file = h5py.File("test_database.hdf5", "w")
     view_names = ["ViewN0", "ViewN1", "ViewN2"]
-    views = [random_state.randint(0,100,(5,6))
+    views = [random_state.randint(0, 100, (5, 6))
              for _ in range(len(view_names))]
-    labels = random_state.randint(0,2, 5)
+    labels = random_state.randint(0, 2, 5)
     label_names = ["yes", "no"]
     for view_index, (view_name, view) in enumerate(
             zip(view_names, views)):

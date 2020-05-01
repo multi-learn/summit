@@ -1,12 +1,12 @@
-import pickle
 import os
+import pickle
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import FuncFormatter
-from scipy.stats import uniform, randint
 
 from ..utils.base import BaseClassifier, ResultAnalyser
-from ..utils.hyper_parameter_search import CustomRandint, CustomUniform
+from ..utils.hyper_parameter_search import CustomRandint
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
@@ -53,7 +53,7 @@ def change_label_to_zero(y):
 def compute_possible_combinations(params_dict):
     n_possibs = np.ones(len(params_dict)) * np.inf
     for value_index, value in enumerate(params_dict.values()):
-        if type(value) == list:
+        if isinstance(value, list):
             n_possibs[value_index] = len(value)
         elif isinstance(value, CustomRandint):
             n_possibs[value_index] = value.get_nb_possibilities()
@@ -115,13 +115,14 @@ def gen_test_folds_preds(X_train, y_train, KFolds, estimator):
 
 class BaseMonoviewClassifier(BaseClassifier):
 
-    def get_feature_importance(self, directory, base_file_name, nb_considered_feats=50):
+    def get_feature_importance(self, directory, base_file_name,
+                               nb_considered_feats=50):
         """Used to generate a graph and a pickle dictionary representing
         feature importances"""
         feature_importances = self.feature_importances_
         sorted_args = np.argsort(-feature_importances)
         feature_importances_sorted = feature_importances[sorted_args][
-                                     :nb_considered_feats]
+            :nb_considered_feats]
         feature_indices_sorted = sorted_args[:nb_considered_feats]
         fig, ax = plt.subplots()
         x = np.arange(len(feature_indices_sorted))
@@ -129,8 +130,8 @@ class BaseMonoviewClassifier(BaseClassifier):
         ax.yaxis.set_major_formatter(formatter)
         plt.bar(x, feature_importances_sorted)
         plt.title("Importance depending on feature")
-        fig.savefig(os.path.join(directory, base_file_name + "feature_importances.png")
-                                 , transparent=True)
+        fig.savefig(
+            os.path.join(directory, base_file_name + "feature_importances.png"), transparent=True)
         plt.close()
         features_importances_dict = dict((featureIndex, featureImportance)
                                          for featureIndex, featureImportance in
@@ -180,8 +181,9 @@ class MonoviewResult(object):
 
 def get_accuracy_graph(plotted_data, classifier_name, file_name,
                        name="Accuracies", bounds=None, bound_name=None,
-                       boosting_bound=None, set="train", zero_to_one=True): # pragma: no cover
-    if type(name) is not str:
+                       boosting_bound=None, set="train",
+                       zero_to_one=True):  # pragma: no cover
+    if not isinstance(name, str):
         name = " ".join(name.getConfig().strip().split(" ")[:2])
     f, ax = plt.subplots(nrows=1, ncols=1)
     if zero_to_one:
@@ -211,7 +213,8 @@ class MonoviewResultAnalyzer(ResultAnalyser):
     def __init__(self, view_name, classifier_name, shape, classifier,
                  classification_indices, k_folds, hps_method, metrics_dict,
                  n_iter, class_label_names, pred,
-                 directory, base_file_name, labels, database_name, nb_cores, duration):
+                 directory, base_file_name, labels, database_name, nb_cores,
+                 duration):
         ResultAnalyser.__init__(self, classifier, classification_indices,
                                 k_folds, hps_method, metrics_dict, n_iter,
                                 class_label_names, pred,

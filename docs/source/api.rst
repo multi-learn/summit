@@ -1,10 +1,9 @@
-Multiview Platform
-==================
+API Documentation
+=================
 
-.. toctree::
-   :maxdepth: 3
-   :caption: Contents:
+Multiview dataset management module
+-----------------------------------
 
-   execution
-   monomultidoc
-   analyzeresult
+.. automodule:: summit.multiview_platform.utils.dataset
+   :members:
+   :inherited-members:

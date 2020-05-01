@@ -1,6 +1,7 @@
 from sklearn.linear_model import SGDClassifier
 
-from ..monoview.monoview_utils import CustomUniform, BaseMonoviewClassifier
+from ..monoview.monoview_utils import BaseMonoviewClassifier
+from summit.multiview_platform.utils.hyper_parameter_search import CustomUniform
 
 # Author-Info
 __author__ = "Baptiste Bauvin"
