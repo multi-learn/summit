@@ -78,9 +78,23 @@ To run the test suite of SuMMIT, run :
 .. code:: bash
 
     cd path/to/summit
+    pip install -e .[dev]
     pytest
 
 The coverage report is automatically generated and stored in the ``htmlcov/`` directory
+
+Building the documentation
+<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+To locally build the `documentation <http://baptiste.bauvin.pages.lis-lab.fr/summit/index.html>`_ run :
+
+.. code:: bash
+
+    cd path/to/summit
+    pip install -e .[doc]
+    python setup.py build_sphinx
+
+The built html files will be stored in ``path/to/summit/build/sphinx/html``
 
 Running on simulated data
 <<<<<<<<<<<<<<<<<<<<<<<<<
