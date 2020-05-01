@@ -4,10 +4,9 @@ API Documentation
 
 
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 1
 
     api_files/dataset
-    autoapi/summit/multiview_platform/monoview_classifiers/index
-    autoapi/summit/multiview_platform/multiview_classifiers/index
+
 
 

@@ -1,5 +1,5 @@
-Multiview dataset management module
------------------------------------
+Multiview dataset management
+----------------------------
 
 .. automodule:: summit.multiview_platform.utils.dataset
    :members:
