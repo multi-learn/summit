@@ -714,7 +714,9 @@ def exec_classif(arguments):  # pragma: no cover
     start = time.time()
     args = execution.parse_the_args(arguments)
     args = configuration.get_the_args(args.config_path)
-    os.nice(args["nice"])
+    import sys
+    if not sys.platform in ["win32", "cygwin"]:
+        os.nice(args["nice"])
     nb_cores = args["nb_cores"]
     if nb_cores == 1:
         os.environ['OPENBLAS_NUM_THREADS'] = '1'
