@@ -1,4 +1,5 @@
-.. image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0
+.. image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg
+    :target: http://www.gnu.org/licenses/gpl-3.0
     :alt: License: GPL v3
 
 .. |pipeline| image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/pipeline.svg
@@ -122,7 +123,8 @@ Once you have formatted your dataset, to run SuMMIT on it you need to modify the
 It is however highly recommended to follow the documentation's `tutorials <http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/index.html>`_ to learn the use of each parameter.
  
 
-## Author
+Authors
+-------
 
 * **Baptiste BAUVIN**
 * **Dominique BENIELLI**
