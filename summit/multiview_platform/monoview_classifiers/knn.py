@@ -12,18 +12,10 @@ classifier_class_name = "KNN"
 
 class KNN(KNeighborsClassifier, BaseMonoviewClassifier):
     """
-    Implement extention of KNeighborsClassifier of sklearn
-    for the usage of the summit.
+     This class is an adaptation of scikit-learn's `KNeighborsClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html>`_
 
-    Parameters
-    ----------
-    random_state
-    n_neighbors
-    weights
-    algorithm
-    p
-    kwargs
-    """
+
+     """
 
     def __init__(self, random_state=None, n_neighbors=5,
                  weights='uniform', algorithm='auto', p=2, **kwargs):

@@ -1,4 +1,3 @@
-""" Ada"""
 import os
 import time
 
@@ -19,38 +18,7 @@ classifier_class_name = "Adaboost"
 
 class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
     """
-    This class implement a Classifier with adaboost algorithm inherit from sklearn
-    AdaBoostClassifier
-
-    Parameters
-    ----------
-
-    random_state : int seed, RandomState instance, or None (default=None)
-        The seed of the pseudo random number multiview_generator to use when
-        shuffling the data.
-
-    n_estimators : int number of estimators
-
-    base_estimator :
-
-    kwargs : others arguments
-
-
-    Attributes
-    ----------
-    param_name :
-
-    classed_params :
-
-    distribs :
-
-    weird_strings :
-
-    plotted_metric : selection of metric to plot
-
-    plotted_metric_name : name of the metric to plot
-
-    step_predictions :
+    This class is an adaptation of scikit-learn's `AdaBoostClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier>`_
 
     """
 
@@ -75,23 +43,6 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         self.step_predictions = None
 
     def fit(self, X, y, sample_weight=None):
-        """
-        Fit adaboost model
-
-        Parameters
-        ----------
-        X : {array-like, sparse matrix}, shape (n_samples, n_features)
-
-        y :  { array-like, shape (n_samples,)
-            Target values class labels in classification
-
-        sample_weight :
-
-        Returns
-        -------
-        self : object
-            Returns self.
-        """
         begin = time.time()
         AdaBoostClassifier.fit(self, X, y, sample_weight=sample_weight)
         end = time.time()
@@ -104,21 +55,6 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         return self
 
     def predict(self, X):
-        """
-
-        Parameters
-        ----------
-        X : {array-like, sparse matrix}, shape (n_samples, n_features)
-            Training vectors, where n_samples is the number of samples
-            and n_features is the number of features.
-            For kernel="precomputed", the expected shape of X is
-            (n_samples, n_samples).
-
-        Returns
-        -------
-        predictions : ndarray of shape (n_samples, )
-            The estimated labels.
-        """
         begin = time.time()
         pred = AdaBoostClassifier.predict(self, X)
         end = time.time()

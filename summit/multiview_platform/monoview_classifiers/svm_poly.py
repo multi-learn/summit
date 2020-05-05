@@ -13,30 +13,9 @@ classifier_class_name = "SVMPoly"
 
 class SVMPoly(SVCClassifier, BaseMonoviewClassifier):
     """
-    Class of SVMPoly for SVC Classifier
+    This class is an adaptation of scikit-learn's `SVC <https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_
 
-    Parameters
-    ----------
-    random_state : int seed, RandomState instance, or None (default=None)
-        The seed of the pseudo random number multiview_generator to use when
-        shuffling the data.
-
-
-    C : float, optional (default=1.0)
-        Penalty parameter C of the error term.
-
-
-    degree :
-
-    kwargs : others arguments
-
-
-    Attributes
-    ----------
-
-    param_names : list of parameters names
-
-    distribs :  list of random_state distribution
+    Here, it is the polynomial kernel version
     """
 
     def __init__(self, random_state=None, C=1.0, degree=3, **kwargs):

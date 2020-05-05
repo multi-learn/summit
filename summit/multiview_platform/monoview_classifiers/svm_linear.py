@@ -11,20 +11,10 @@ classifier_class_name = "SVMLinear"
 
 
 class SVMLinear(SVCClassifier, BaseMonoviewClassifier):
-    """SVMLinear
+    """
+    This class is an adaptation of scikit-learn's `SVC <https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_
 
-    Parameters
-    ----------
-    random_state : int seed, RandomState instance, or None (default=None)
-        The seed of the pseudo random number multiview_generator to use when
-        shuffling the data.
-
-
-    C : float, optional (default=1.0)
-        Penalty parameter C of the error term.
-
-    kwargs : others arguments
-
+    Here, it is the linear kernel version
     """
 
     def __init__(self, random_state=None, C=1.0, **kwargs):

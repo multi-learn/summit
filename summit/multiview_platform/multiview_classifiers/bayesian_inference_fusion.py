@@ -8,6 +8,11 @@ classifier_class_name = "BayesianInferenceClassifier"
 
 
 class BayesianInferenceClassifier(LateFusionClassifier):
+
+    """
+
+    """
+
     def __init__(self, random_state, classifiers_names=None,
                  classifier_configs=None, nb_cores=1, weights=None,
                  rs=None):

@@ -12,6 +12,11 @@ class VotingIndecision(Exception):
 
 
 class MajorityVoting(LateFusionClassifier):
+
+    """
+    This classifier is a late fusion that builds a majority vote between the views
+    """
+
     def __init__(self, random_state, classifiers_names=None,
                  classifier_configs=None, weights=None, nb_cores=1, rs=None):
         self.need_probas = False
