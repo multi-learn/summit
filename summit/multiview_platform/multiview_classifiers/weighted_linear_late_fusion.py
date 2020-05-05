@@ -8,6 +8,10 @@ classifier_class_name = "WeightedLinearLateFusion"
 
 
 class WeightedLinearLateFusion(LateFusionClassifier):
+
+    """
+    Similar to the majority voting fusion.
+    """
     def __init__(self, random_state, classifiers_names=None,
                  classifier_configs=None, weights=None, nb_cores=1, rs=None):
         self.need_probas = True

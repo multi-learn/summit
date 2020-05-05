@@ -8,6 +8,11 @@ classifier_class_name = "EntropyFusion"
 
 class EntropyFusion(GlobalDiversityFusionClassifier):
 
+    """
+    This classifier is inspired by Kuncheva, Ludmila & Whitaker, Chris. (2000). Measures of Diversity in Classifier Ensembles.
+    It find the subset of monoview classifiers with the best entropy
+    """
+
     def diversity_measure(self, classifiers_decisions, combination, y):
         _, nb_view, nb_samples = classifiers_decisions.shape
         scores = np.zeros((nb_view, nb_samples), dtype=int)

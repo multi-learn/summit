@@ -24,6 +24,11 @@ class CustomDecisionTreeGB(DecisionTreeClassifier):
 
 
 class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
+    """
+     This class is an adaptation of scikit-learn's `GradientBoostingClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html>`_
+
+
+     """
 
     def __init__(self, random_state=None, loss="exponential", max_depth=1.0,
                  n_estimators=100,

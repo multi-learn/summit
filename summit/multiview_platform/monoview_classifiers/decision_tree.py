@@ -11,9 +11,15 @@ classifier_class_name = "DecisionTree"
 
 
 class DecisionTree(DecisionTreeClassifier, BaseMonoviewClassifier):
+    """
+    This class is an adaptation of scikit-learn's `DecisionTreeClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html>`_
+
+
+    """
 
     def __init__(self, random_state=None, max_depth=None,
                  criterion='gini', splitter='best', **kwargs):
+
         DecisionTreeClassifier.__init__(self,
                                         max_depth=max_depth,
                                         criterion=criterion,

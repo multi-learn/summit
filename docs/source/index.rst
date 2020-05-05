@@ -20,7 +20,8 @@ This documentation consists in a short read me, with instructions to install and
 .. toctree::
    :maxdepth: 2
 
-   classifiers
+   autoapi/summit/multiview_platform/monoview_classifiers/index
+   autoapi/summit/multiview_platform/multiview_classifiers/index
 
 
 Read me

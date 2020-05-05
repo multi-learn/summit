@@ -12,30 +12,8 @@ classifier_class_name = "SGD"
 
 class SGD(SGDClassifier, BaseMonoviewClassifier):
     """
+    This class is an adaptation of scikit-learn's `SGDClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html>`_
 
-    Parameters
-    ----------
-    random_state : int seed, RandomState instance, or None (default=None)
-        The seed of the pseudo random number multiview_generator to use when
-        shuffling the data.
-
-    loss : str , (default = "hinge")
-    penalty : str, (default = "l2")
-
-    alpha : float, (default = 0.0001)
-
-    kwargs : other arguments
-
-
-    Attributes
-    ----------
-    param_names :
-
-    distribs :
-
-    classed_params :
-
-    weird_strings :
 
     """
 

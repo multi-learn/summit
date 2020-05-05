@@ -1,15 +1,17 @@
 .. |pipeline| image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/pipeline.svg
     :alt: Pipeline status
 
-.. image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg
+.. |license| image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg
     :target: http://www.gnu.org/licenses/gpl-3.0
     :alt: License: GPL v3
 
-|pipeline|
-
-.. image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/coverage.svg
+.. |coverage| image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/coverage.svg
     :target: http://baptiste.bauvin.pages.lis-lab.fr/summit/coverage/index.html
     :alt: Coverage
+
+|pipeline| |license| |coverage|
+
+
 
 
 Supervised MultiModal Integration Tool's Readme
@@ -109,7 +111,7 @@ For your first go with SuMMIT, you can run it on simulated data with
 
 This will run the benchmark of `documentation's Example 1 <http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/example1.html>`_.
 
-For more information about the examples, see the `documentation <http://baptiste.bauvin.pages.lis-lab.fr/summit/>`_.
+For more information about the examples, see the `documentation <http://baptiste.bauvin.pages.lis-lab.fr/summit/index.html>`_.
 Results will, by default, be stored in the results directory of the installation path :
 ``path/to/summit/multiview_platform/examples/results``.
 

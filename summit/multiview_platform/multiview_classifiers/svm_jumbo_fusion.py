@@ -8,6 +8,11 @@ classifier_class_name = "SVMJumboFusion"
 
 class SVMJumboFusion(BaseJumboFusion):
 
+    """
+    This classifier learns monoview classifiers on each view and then uses an
+    SVM on their decisions to aggregate them.
+    """
+
     def __init__(self, random_state=None, classifiers_names=None,
                  classifier_configs=None, nb_cores=1, weights=None,
                  nb_monoview_per_view=1, C=1.0, kernel="rbf", degree=2,

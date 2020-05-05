@@ -13,17 +13,8 @@ classifier_class_name = "WeightedLinearEarlyFusion"
 
 class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
     """
-    WeightedLinearEarlyFusion
-
-    Parameters
-    ----------
-    random_state
-    view_weights
-    monoview_classifier_name
-    monoview_classifier_config
-
-    Attributes
-    ----------
+    Builds a monoview dataset by concatenating the views (with a weight if
+    needed) and learns a monoview classifier on the concatenation
     """
 
     def __init__(self, random_state=None, view_weights=None,
@@ -37,10 +28,6 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
             self.monoview_classifier_config = monoview_classifier_config[
                 monoview_classifier_name]
         self.monoview_classifier_config = monoview_classifier_config
-        # monoview_classifier_module = getattr(monoview_classifiers,
-        #                                      self.monoview_classifier_name)
-        # monoview_classifier_class = getattr(monoview_classifier_module,
-        #                                     monoview_classifier_module.classifier_class_name)
         self.monoview_classifier = self.init_monoview_estimator(
             monoview_classifier_name, monoview_classifier_config)
         self.param_names = ["monoview_classifier_name",
