@@ -99,6 +99,8 @@ class BaseClassifier(BaseEstimator, ):
             if "config" in self.weird_strings[param_name]:
                 string += "( with " + self.get_params()[
                     param_name].params_to_string() + ")"
+        elif self.get_params()[param_name] is None:
+            return "None"
         else:
             return str(self.get_params()[param_name])
 
