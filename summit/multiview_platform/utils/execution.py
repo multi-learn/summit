@@ -171,7 +171,7 @@ def init_log_file(name, views, cl_type, log, debug, label,
     log_file_path = os.path.join(result_directory, log_file_name)
     os.makedirs(os.path.dirname(log_file_path))
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
-                        filename=log_file_path, level=logging.DEBUG,
+                        filename=log_file_path, level=logging.INFO,
                         filemode='w')
     if log:
         logging.getLogger().addHandler(logging.StreamHandler())

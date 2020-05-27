@@ -300,7 +300,7 @@ def init_kwargs(args, classifiers_names, framework="monoview"):
 
         For example, for Adaboost, the KWARGS will be `{"n_estimators":<value>, "base_estimator":<value>}`"""
 
-    logging.debug("Start:\t Initializing monoview classifiers arguments")
+    logging.info("Start:\t Initializing monoview classifiers arguments")
     kwargs = {}
     for classifiers_name in classifiers_names:
         try:
@@ -316,7 +316,7 @@ def init_kwargs(args, classifiers_names, framework="monoview"):
             kwargs[classifiers_name] = args[classifiers_name]
         else:
             kwargs[classifiers_name] = {}
-    logging.debug("Done:\t Initializing monoview classifiers arguments")
+    logging.info("Done:\t Initializing monoview classifiers arguments")
 
     return kwargs
 
@@ -402,7 +402,7 @@ def benchmark_init(directory, classification_indices, labels, labels_dictionary,
     -------
 
     """
-    logging.debug("Start:\t Benchmark initialization")
+    logging.info("Start:\t Benchmark initialization")
     secure_file_path(os.path.join(directory, "train_labels.csv"))
     train_indices = classification_indices[0]
     train_labels = dataset_var.get_labels(sample_indices=train_indices)
@@ -421,7 +421,7 @@ def benchmark_init(directory, classification_indices, labels, labels_dictionary,
         np.savetxt(file_name, train_labels[test_cv_indices[:min_fold_len]],
                    delimiter=",")
     labels_names = list(labels_dictionary.values())
-    logging.debug("Done:\t Benchmark initialization")
+    logging.info("Done:\t Benchmark initialization")
     return results_monoview, labels_names
 
 
@@ -550,7 +550,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                                                     labels_dictionary, k_folds,
                                                     dataset_var)
     logging.getLogger('matplotlib.font_manager').disabled = True
-    logging.debug("Start:\t monoview benchmark")
+    logging.info("Start:\t monoview benchmark")
     traceback_outputs = {}
     for arguments in argument_dictionaries["monoview"]:
         try:
@@ -571,9 +571,9 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
             else:
                 raise
 
-    logging.debug("Done:\t monoview benchmark")
+    logging.info("Done:\t monoview benchmark")
 
-    logging.debug("Start:\t multiview arguments initialization")
+    logging.info("Start:\t multiview arguments initialization")
 
     # argument_dictionaries = initMultiviewArguments(args, benchmark, views,
     #                                               views_indices,
@@ -581,9 +581,9 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
     #                                               random_state, directory,
     #                                               resultsMonoview,
     #                                               classification_indices)
-    logging.debug("Done:\t multiview arguments initialization")
+    logging.info("Done:\t multiview arguments initialization")
 
-    logging.debug("Start:\t multiview benchmark")
+    logging.info("Start:\t multiview benchmark")
     results_multiview = []
     for arguments in argument_dictionaries["multiview"]:
         try:
@@ -602,7 +602,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                     arguments["classifier_name"]] = traceback.format_exc()
             else:
                 raise
-    logging.debug("Done:\t multiview benchmark")
+    logging.info("Done:\t multiview benchmark")
 
     return [flag, results_monoview + results_multiview, traceback_outputs]
 
@@ -653,7 +653,7 @@ def exec_benchmark(nb_cores, stats_iter,
     results : list of lists
         The results of the benchmark.
     """
-    logging.debug("Start:\t Executing all the needed benchmarks")
+    logging.info("Start:\t Executing all the needed benchmarks")
     results = []
     # if nb_cores > 1:
     #     if stats_iter > 1 or nb_multiclass > 1:
@@ -681,17 +681,17 @@ def exec_benchmark(nb_cores, stats_iter,
                            metrics, sample_ids=dataset_var.sample_ids,
                            labels=dataset_var.get_labels())
         results += [benchmark_results]
-    logging.debug("Done:\t Executing all the needed benchmarks")
+    logging.info("Done:\t Executing all the needed benchmarks")
 
     # Do everything with flagging
-    logging.debug("Start:\t Analyzing predictions")
+    logging.info("Start:\t Analyzing predictions")
     results_mean_stds = analyze(results, stats_iter,
                                 benchmark_arguments_dictionaries,
                                 metrics,
                                 directory,
                                 dataset_var.sample_ids,
                                 dataset_var.get_labels())
-    logging.debug("Done:\t Analyzing predictions")
+    logging.info("Done:\t Analyzing predictions")
     delete(benchmark_arguments_dictionaries, nb_cores, dataset_var)
     return results_mean_stds
 

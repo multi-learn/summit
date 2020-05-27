@@ -95,7 +95,7 @@ def publish_metrics_graphs(metrics_scores, directory, database_name,
     """
     results = []
     for metric_name in metrics_scores.keys():
-        logging.debug(
+        logging.info(
             "Start:\t Score graph generation for " + metric_name)
         train_scores, test_scores, classifier_names, \
             file_name, nb_results, results, \
@@ -112,7 +112,7 @@ def publish_metrics_graphs(metrics_scores, directory, database_name,
         class_file_name = file_name+"-class"
         plot_class_metric_scores(class_test_scores, class_file_name,
                                  labels_names, classifier_names, metric_name)
-        logging.debug(
+        logging.info(
             "Done:\t Score graph generation for " + metric_name)
     return results
 

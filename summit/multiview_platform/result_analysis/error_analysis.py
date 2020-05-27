@@ -47,7 +47,7 @@ def get_sample_errors(groud_truth, results):
 
 def publish_sample_errors(sample_errors, directory, databaseName,
                           labels_names, sample_ids, labels):  # pragma: no cover
-    logging.debug("Start:\t Label analysis figure generation")
+    logging.info("Start:\t Label analysis figure generation")
 
     base_file_name = os.path.join(directory, databaseName + "-")
 
@@ -64,13 +64,13 @@ def publish_sample_errors(sample_errors, directory, databaseName,
     plot_errors_bar(error_on_samples, nb_samples,
                     base_file_name, sample_ids=sample_ids)
 
-    logging.debug("Done:\t Label analysis figures generation")
+    logging.info("Done:\t Label analysis figures generation")
 
 
 def publish_all_sample_errors(iter_results, directory,
                               stats_iter,
                               sample_ids, labels):  # pragma: no cover
-    logging.debug(
+    logging.info(
         "Start:\t Global label analysis figure generation")
 
     nb_samples, nb_classifiers, data, \
@@ -87,7 +87,7 @@ def publish_all_sample_errors(iter_results, directory,
     plot_errors_bar(error_on_samples, nb_samples, os.path.join(directory, ""),
                     sample_ids=sample_ids)
 
-    logging.debug(
+    logging.info(
         "Done:\t Global label analysis figures generation")
 
 

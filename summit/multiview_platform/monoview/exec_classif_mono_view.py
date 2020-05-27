@@ -55,7 +55,7 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
                   random_state, hyper_param_search="Random",
                   metrics={"accuracy_score*": {}}, n_iter=30, view_name="",
                   hps_kwargs={}, **args):
-    logging.debug("Start:\t Loading data")
+    logging.info("Start:\t Loading data")
     kwargs, \
         t_start, \
         view_name, \
@@ -68,9 +68,9 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
         base_file_name = init_constants(args, X, classification_indices,
                                         labels_names,
                                         database_name, directory, view_name, )
-    logging.debug("Done:\t Loading data")
+    logging.info("Done:\t Loading data")
 
-    logging.debug(
+    logging.info(
         "Info:\t Classification - Database:" + str(
             database_name) + " View:" + str(
             view_name) + " train ratio:"
@@ -78,17 +78,17 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
             k_folds.n_splits) + ", cores:"
         + str(nb_cores) + ", algorithm : " + classifier_name)
 
-    logging.debug("Start:\t Determine Train/Test split")
+    logging.info("Start:\t Determine Train/Test split")
     X_train, y_train, X_test, y_test = init_train_test(X, Y,
                                                        classification_indices)
 
-    logging.debug("Info:\t Shape X_train:" + str(
+    logging.info("Info:\t Shape X_train:" + str(
         X_train.shape) + ", Length of y_train:" + str(len(y_train)))
-    logging.debug("Info:\t Shape X_test:" + str(
+    logging.info("Info:\t Shape X_test:" + str(
         X_test.shape) + ", Length of y_test:" + str(len(y_test)))
-    logging.debug("Done:\t Determine Train/Test split")
+    logging.info("Done:\t Determine Train/Test split")
 
-    logging.debug("Start:\t Generate classifier args")
+    logging.info("Start:\t Generate classifier args")
     classifier_module = getattr(monoview_classifiers, classifier_name)
     classifier_class_name = classifier_module.classifier_class_name
     hyper_param_beg = time.monotonic()
@@ -100,9 +100,9 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
                                  k_folds, nb_cores, metrics, kwargs,
                                  **hps_kwargs)
     hyper_param_duration = time.monotonic() - hyper_param_beg
-    logging.debug("Done:\t Generate classifier args")
+    logging.info("Done:\t Generate classifier args")
 
-    logging.debug("Start:\t Training")
+    logging.info("Start:\t Training")
 
     classifier = get_mc_estim(getattr(classifier_module,
                                       classifier_class_name)
@@ -112,9 +112,9 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
     fit_beg = time.monotonic()
     classifier.fit(X_train, y_train)  # NB_CORES=nbCores,
     fit_duration = time.monotonic() - fit_beg
-    logging.debug("Done:\t Training")
+    logging.info("Done:\t Training")
 
-    logging.debug("Start:\t Predicting")
+    logging.info("Start:\t Predicting")
     train_pred = classifier.predict(X_train)
     pred_beg = time.monotonic()
     test_pred = classifier.predict(X_test)
@@ -127,14 +127,14 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
     for testIndex, index in enumerate(classification_indices[1]):
         full_pred[index] = test_pred[testIndex]
 
-    logging.debug("Done:\t Predicting")
+    logging.info("Done:\t Predicting")
 
     whole_duration = time.monotonic() - t_start
-    logging.debug(
+    logging.info(
         "Info:\t Duration for training and predicting: " + str(
             whole_duration) + "[s]")
 
-    logging.debug("Start:\t Getting results")
+    logging.info("Start:\t Getting results")
     result_analyzer = MonoviewResultAnalyzer(view_name=view_name,
                                              classifier_name=classifier_name,
                                              shape=X.shape,
@@ -154,9 +154,9 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
                                              duration=whole_duration)
     string_analysis, images_analysis, metrics_scores, class_metrics_scores, \
         confusion_matrix = result_analyzer.analyze()
-    logging.debug("Done:\t Getting results")
+    logging.info("Done:\t Getting results")
 
-    logging.debug("Start:\t Saving preds")
+    logging.info("Start:\t Saving preds")
     save_results(string_analysis, output_file_name, full_pred, train_pred,
                  y_train, images_analysis, y_test, confusion_matrix)
     logging.info("Done:\t Saving results")
@@ -203,7 +203,7 @@ def get_hyper_params(classifier_module, search_method, classifier_module_name,
                      output_file_name, k_folds, nb_cores, metrics, kwargs,
                      **hps_kwargs):
     if search_method != "None":
-        logging.debug(
+        logging.info(
             "Start:\t " + search_method + " best settings for " + classifier_module_name)
         classifier_hp_search = getattr(hyper_parameter_search, search_method)
         estimator = getattr(classifier_module, classifier_class_name)(
@@ -218,7 +218,7 @@ def get_hyper_params(classifier_module, search_method, classifier_module_name,
         hps.fit(X_train, y_train, **kwargs[classifier_module_name])
         cl_kwargs = hps.get_best_params()
         hps.gen_report(output_file_name)
-        logging.debug("Done:\t " + search_method + " best settings")
+        logging.info("Done:\t " + search_method + " best settings")
     else:
         cl_kwargs = kwargs[classifier_module_name]
     return cl_kwargs

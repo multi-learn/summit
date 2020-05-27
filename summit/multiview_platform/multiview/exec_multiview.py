@@ -237,7 +237,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     ``MultiviewResult``
     """
 
-    logging.debug("Start:\t Initialize constants")
+    logging.info("Start:\t Initialize constants")
     cl_type, \
         t_start, \
         views_indices, \
@@ -250,16 +250,16 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
         base_file_name, \
         metrics = init_constants(kwargs, classification_indices, metrics, name,
                                  nb_cores, k_folds, dataset_var, directory)
-    logging.debug("Done:\t Initialize constants")
+    logging.info("Done:\t Initialize constants")
 
     extraction_time = time.time() - t_start
     logging.info("Info:\t Extraction duration " + str(extraction_time) + "s")
 
-    logging.debug("Start:\t Getting train/test split")
+    logging.info("Start:\t Getting train/test split")
     learning_indices, validation_indices = classification_indices
-    logging.debug("Done:\t Getting train/test split")
+    logging.info("Done:\t Getting train/test split")
 
-    logging.debug("Start:\t Getting classifiers modules")
+    logging.info("Start:\t Getting classifiers modules")
     # classifierPackage = getattr(multiview_classifiers,
     # CL_type)  # Permet d'appeler un module avec une string
     classifier_module = getattr(multiview_classifiers, cl_type)

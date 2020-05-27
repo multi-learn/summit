@@ -693,14 +693,14 @@ def init_multiple_datasets(path_f, name, nb_cores):  # pragma: no cover
     """
     if nb_cores > 1:
         if datasets_already_exist(path_f, name, nb_cores):
-            logging.debug(
+            logging.info(
                 "Info:\t Enough copies of the dataset are already available")
             pass
         else:
             if os.path.getsize(
                     os.path.join(path_f, name + ".hdf5")) * nb_cores / float(
                     1024) / 1000 / 1000 > 0.1:
-                logging.debug("Start:\t Creating " + str(
+                logging.info("Start:\t Creating " + str(
                     nb_cores) + " temporary datasets for multiprocessing")
                 logging.warning(
                     r" WARNING : /!\ This may use a lot of HDD storage space : " +
@@ -715,7 +715,7 @@ def init_multiple_datasets(path_f, name, nb_cores):  # pragma: no cover
             else:
                 pass
             dataset_files = copy_hdf5(path_f, name, nb_cores)
-            logging.debug("Start:\t Creating datasets for multiprocessing")
+            logging.info("Start:\t Creating datasets for multiprocessing")
             return dataset_files
 
 
@@ -732,10 +732,10 @@ def copy_hdf5(pathF, name, nbCores):
 def delete_HDF5(benchmarkArgumentsDictionaries, nbCores, dataset):
     """Used to delete temporary copies at the end of the benchmark"""
     if nbCores > 1:
-        logging.debug("Start:\t Deleting " + str(
+        logging.info("Start:\t Deleting " + str(
             nbCores) + " temporary datasets for multiprocessing")
         args = benchmarkArgumentsDictionaries[0]["args"]
-        logging.debug("Start:\t Deleting datasets for multiprocessing")
+        logging.info("Start:\t Deleting datasets for multiprocessing")
 
         for coreIndex in range(nbCores):
             os.remove(args["pathf"] + args["name"] + str(coreIndex) + ".hdf5")

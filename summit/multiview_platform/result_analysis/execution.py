@@ -65,7 +65,7 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
         label combination, regrouping the scores for each metrics and the
         information useful to plot errors on samples.
     """
-    logging.debug("Start:\t Analyzing all results")
+    logging.info("Start:\t Analyzing all results")
     iter_results = {"metrics_scores": [i for i in range(stats_iter)],
                     "class_metrics_scores": [i for i in range(stats_iter)],
                     "sample_errors": [i for i in range(stats_iter)],
@@ -105,7 +105,7 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
         iter_results["labels"] = labels
         iter_results["durations"][iter_index] = durations
 
-    logging.debug("Done:\t Analyzing all results")
+    logging.info("Done:\t Analyzing all results")
 
     return res, iter_results, flagged_tracebacks_list, labels_names
 
