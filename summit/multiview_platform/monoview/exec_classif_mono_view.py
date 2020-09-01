@@ -215,7 +215,7 @@ def get_hyper_params(classifier_module, search_method, classifier_module_name,
                                    random_state=random_state,
                                    framework="monoview", n_jobs=nb_cores,
                                    **hps_kwargs)
-        hps.fit(X_train, y_train, **kwargs[classifier_module_name])
+        hps.fit(X_train, y_train)
         cl_kwargs = hps.get_best_params()
         hps.gen_report(output_file_name)
         logging.info("Done:\t " + search_method + " best settings")
