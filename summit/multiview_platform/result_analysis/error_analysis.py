@@ -62,7 +62,7 @@ def publish_sample_errors(sample_errors, directory, database_name,
             sample_ids=sample_ids, labels=labels)
 
     plot_errors_bar(error_on_samples, nb_samples,
-                    base_file_name, sample_ids=sample_ids)
+                    base_file_name, database_name, sample_ids=sample_ids)
 
     logging.info("Done:\t Label analysis figures generation")
 
@@ -84,7 +84,7 @@ def publish_all_sample_errors(iter_results, directory,
     plot_2d(data, classifier_names, nb_classifiers,
             os.path.join(directory, ""), data_base_name, stats_iter=stats_iter,
             sample_ids=sample_ids, labels=labels)
-    plot_errors_bar(error_on_samples, nb_samples, os.path.join(directory, ""),
+    plot_errors_bar(error_on_samples, nb_samples, os.path.join(directory, ""), data_base_name,
                     sample_ids=sample_ids)
 
     logging.info(
@@ -229,7 +229,7 @@ def plot_2d(data, classifiers_names, nb_classifiers, file_name, dataset_name, la
         del fig
 
 
-def plot_errors_bar(error_on_samples, nb_samples, file_name,
+def plot_errors_bar(error_on_samples, nb_samples, file_name, dataset_name,
                     use_plotly=True, sample_ids=None):  # pragma: no cover
     r"""Used to generate a barplot of the muber of classifiers that failed to classify each samples
 
@@ -260,6 +260,8 @@ def plot_errors_bar(error_on_samples, nb_samples, file_name,
             [plotly.graph_objs.Bar(x=sample_ids, y=1 - error_on_samples)])
         fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                           plot_bgcolor='rgba(0,0,0,0)')
+        title = "Dataset : {} <br> Error % for each sample <br> Generated on <a href='https://baptiste.bauvin.pages.lis-lab.fr/summit'>SuMMIT</a>.".format(
+            dataset_name)
         plotly.offline.plot(fig, filename=file_name + "error_analysis_bar.html",
                             auto_open=False)
 
