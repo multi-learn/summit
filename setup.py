@@ -58,7 +58,7 @@ def setup_package():
     install_requires=requirements,
     extras_require={
             'dev': ['pytest', 'pytest-cov'],
-            'doc': ['sphinx', 'numpydoc', 'docutils', 'sphinx-autoapi']},
+            'doc': ['sphinx >= 3.0.2', 'numpydoc', 'docutils', 'sphinx-autoapi']},
 
     # Il est d'usage de mettre quelques metadata à propos de sa lib
     # Pour que les robots puissent facilement la classer.
