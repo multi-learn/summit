@@ -1,0 +1,40 @@
+add_noise: false
+algos_monoview: [decision_tree]
+algos_multiview: [weighted_linear_early_fusion, weighted_linear_late_fusion]
+classes: null
+debug: false
+decision_tree: {max_depth: 3}
+file_type: .hdf5
+full: true
+hps_args: {}
+hps_iter: 1
+hps_kwargs: {equivalent_draws: true, n_iter: 10}
+hps_type: None
+label: example_0
+log: true
+metric_princ: accuracy_score
+metrics:
+  accuracy_score: {}
+  f1_score: {average: micro}
+name: multiview_mnist
+nb_class: null
+nb_cores: 1
+nb_folds: 2
+nice: 0
+noise_std: 0.0
+pathf: examples/data/
+random_state: 42
+res_dir: examples/results/example_0/
+split: 0.25
+stats_iter: 1
+track_tracebacks: true
+type: [monoview, multiview]
+views: null
+weighted_linear_early_fusion:
+  monoview_classifier_config:
+    decision_tree: {max_depth: 6}
+  monoview_classifier_name: decision_tree
+weighted_linear_late_fusion:
+  classifier_configs:
+    decision_tree: {max_depth: 3}
+  classifiers_names: decision_tree

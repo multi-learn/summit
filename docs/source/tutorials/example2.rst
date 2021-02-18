@@ -30,9 +30,9 @@ and the multivew classifier is a late fusion majority vote.
 
 In order to use only a subset of the available classifiers, three lines in the configuration file are useful :
 
-- :yaml:`type:` (:base_source:`l45 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L45>`) in which one has to specify which type of algorithms are needed, here we used  ``type: ["monoview","multiview"]``,
-- :yaml:`algos_monoview:` (:base_source:`l47 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L45>`) in which one specifies the names of the monoview algorithms to run, here we used : :yaml:`algos_monoview: ["decision_tree", "adaboost", ]`
-- :yaml:`algos_multiview:` (:base_source:`l49 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L45>`) is the same but with multiview algorithms, here we used : :yaml:`algos_multiview: ["weighted_linear_late_fusion", ]`
+- :yaml:`type:` (:base_source:`l45 <summit/examples/config_files/config_example_2_1_1.yml#L45>`) in which one has to specify which type of algorithms are needed, here we used  ``type: ["monoview","multiview"]``,
+- :yaml:`algos_monoview:` (:base_source:`l47 <summit/examples/config_files/config_example_2_1_1.yml#L45>`) in which one specifies the names of the monoview algorithms to run, here we used : :yaml:`algos_monoview: ["decision_tree", "adaboost", ]`
+- :yaml:`algos_multiview:` (:base_source:`l49 <summit/examples/config_files/config_example_2_1_1.yml#L45>`) is the same but with multiview algorithms, here we used : :yaml:`algos_multiview: ["weighted_linear_late_fusion", ]`
 
 .. note::
     For the platform to understand the names, the user has to give the **name of the python module** in which the classifier is implemented in the platform.
@@ -77,23 +77,23 @@ Learning on a few samples
 
 This example focuses on one line of the config file :
 
-* :yaml:`split: 0.80` (:base_source:`l37 <multiview_platform/examples/config_files/config_example_2_1_1.yml#L37>`).
+* :yaml:`split: 0.80` (:base_source:`l37 <summit/examples/config_files/config_example_2_1_1.yml#L37>`).
 
 
 To run the first part of this example, run :
 
 .. code-block:: python
 
-   >>> from multiview_platform.execute import execute
+   >>> from summit.execute import execute
    >>> execute("example 2.1.1")
 
-The results for accuracy metric are stored in ``multiview_platform/examples/results/example_2_1_1/doc_summit/``
+The results for accuracy metric are stored in ``summit/examples/results/example_2_1_1/doc_summit/``
 
 .. raw:: html
     .. :file: images/fake.html
     :file: ./images/example_2/2_1/low_train_acc.html
 
-These results were generated learning on 20% of the dataset and testing on 80% (see the :base_source:`config file <multiview_platform/examples/config_files/config_example_2_1_1.yml#L37>`).
+These results were generated learning on 20% of the dataset and testing on 80% (see the :base_source:`config file <summit/examples/config_files/config_example_2_1_1.yml#L37>`).
 
 .. _learning-on-more-samples:
 
@@ -104,18 +104,18 @@ Now, if you run :
 
 .. code-block:: python
 
-   >>> from multiview_platform.execute import execute
+   >>> from summit.execute import execute
    >>> execute("example 2.1.2")
 
 
-You should obtain these scores in ``multiview_platform/examples/results/example_2_1_2/doc_summit/`` :
+You should obtain these scores in ``summit/examples/results/example_2_1_2/doc_summit/`` :
 
 .. raw:: html
     .. :file: images/fake.html
     :file: ./images/example_2/2_1/high_train_accs.html
 
 
-Here we learned on 80% of the dataset and tested on 20%, so the line in the  :base_source:`config file <multiview_platform/examples/config_files/config_example_2_1_2.yml#L37>` has become :yaml:`split: 0.2`.
+Here we learned on 80% of the dataset and tested on 20%, so the line in the  :base_source:`config file <summit/examples/config_files/config_example_2_1_2.yml#L37>` has become :yaml:`split: 0.2`.
 
 The difference between these two examples is noticeable as even if, while learning on more examples, the performance of the decision trees and the late fusion improved, the performance of Adaboost did not improve as it was already over-fitting on the small train set.
 
@@ -154,10 +154,10 @@ So if you run |platf| with :
 
 .. code-block:: python
 
-   >>> from multiview_platform.execute import execute
+   >>> from summit.execute import execute
    >>> execute("example 2.2")
 
-you run |platf| with this combination of arguments (:base_source:`l54-65 <multiview_platform/examples/config_files/config_example_2_1.yml#L54>`) :
+you run |platf| with this combination of arguments (:base_source:`l54-65 <summit/examples/config_files/config_example_2_1.yml#L54>`) :
 
 .. code-block:: yaml
 
@@ -246,8 +246,28 @@ with different fold/draws settings :
     The durations are for reference only as they highly depend on hardware.
 
 
+Going further with randomized search
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+|platf| also allows to pass customized distributions for the randomized hyper-parameter search through the config file. For example :
 
+.. code-block:: yaml
+
+    metric_princ: 'accuracy_score'
+    nb_folds: 5
+    hps_type: 'Random'
+    hps_args:
+      n_iter: 5
+      equivalent_draws: True
+      decision_tree:
+        max_depth:
+          Randint:
+            low : 1
+            high: 10
+
+Will start a usual randomized search, except for the :yaml:`max_depth` hyper parameter on the decision tree that will be drawn according to a uniform distribution of integers between 1 and 9. This is a useful tool for the user that has prior knowledge on the relevant hyper-parameter space for a specific task.
+
+For the moment, the availabale distributions are :python:`Randint(low, high)` that draws integers between :python:`low` and :python:`high-1` and :python:`Uniform(loc, state)` that draws real numbers between :python:`loc` and :python:`state`. it is also possible to specify an array of values from which to draw.
 
 Example 2.3 : Usage of grid search :
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -293,10 +313,10 @@ To run a grid search with this configuration, run :
 
 .. code-block:: python
 
-   >>> from multiview_platform.execute import execute
+   >>> from summit.execute import execute
    >>> execute("example 2.3")
 
-It will use :base_source:`this config file <multiview_platform/examples/config_files/config_example_2_3.yml>`.
+It will use :base_source:`this config file <summit/examples/config_files/config_example_2_3.yml>`.
 
 
 Hyper-parameter report
