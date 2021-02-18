@@ -23,7 +23,7 @@ To run |platf| on several train/test splits, run :
 
 .. code-block:: python
 
-   >>> from multiview_platform.execute import execute
+   >>> from summit.execute import execute
    >>> execute("example 3")
 
 While |platf| computes, let us explore the new pseudo-code ::

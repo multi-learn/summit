@@ -9,6 +9,7 @@
     <title>Example 2 : Understanding the hyper-parameter optimization &#8212; SuMMIT 0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -67,9 +68,9 @@
 and the multivew classifier is a late fusion majority vote.</p>
 <p>In order to use only a subset of the available classifiers, three lines in the configuration file are useful :</p>
 <ul class="simple">
-<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">type</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L45">l45</a>) in which one has to specify which type of algorithms are needed, here we used  <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">[&quot;monoview&quot;,&quot;multiview&quot;]</span></code>,</li>
-<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L45">l47</a>) in which one specifies the names of the monoview algorithms to run, here we used : <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“decision_tree”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="literal string"><span class="pre">“adaboost”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="punctuation indicator"><span class="pre">]</span></span></code></li>
-<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L45">l49</a>) is the same but with multiview algorithms, here we used : <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“weighted_linear_late_fusion”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="punctuation indicator"><span class="pre">]</span></span></code></li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">type</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_1.yml#L45">l45</a>) in which one has to specify which type of algorithms are needed, here we used  <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">[&quot;monoview&quot;,&quot;multiview&quot;]</span></code>,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_1.yml#L45">l47</a>) in which one specifies the names of the monoview algorithms to run, here we used : <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“decision_tree”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="literal string"><span class="pre">“adaboost”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="punctuation indicator"><span class="pre">]</span></span></code></li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_1.yml#L45">l49</a>) is the same but with multiview algorithms, here we used : <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“weighted_linear_late_fusion”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="punctuation indicator"><span class="pre">]</span></span></code></li>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -101,18 +102,18 @@ and the multivew classifier is a late fusion majority vote.</p>
 </pre></div>
 </div>
 <p>(It will build a vote with one decision tree on each view, with the specified configuration for the decision trees)</p>
-<div class="section" id="learning-on-a-few-examples">
-<h4>Learning on a few examples<a class="headerlink" href="#learning-on-a-few-examples" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="learning-on-a-few-samples">
+<h4>Learning on a few samples<a class="headerlink" href="#learning-on-a-few-samples" title="Permalink to this headline">¶</a></h4>
 <p>This example focuses on one line of the config file :</p>
 <ul class="simple">
-<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.80</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L37">l37</a>).</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.80</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_1.yml#L37">l37</a>).</li>
 </ul>
 <p>To run the first part of this example, run :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">summit.execute</span> <span class="kn">import</span> <span class="n">execute</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example 2.1.1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The results for accuracy metric are stored in <code class="docutils literal notranslate"><span class="pre">multiview_platform/examples/results/example_2_1_1/doc_summit/</span></code></p>
+<p>The results for accuracy metric are stored in <code class="docutils literal notranslate"><span class="pre">summit/examples/results/example_2_1_1/doc_summit/</span></code></p>
 <html>
 <head><meta charset="utf-8" /></head>
 <body>
@@ -137,16 +138,16 @@ and the multivew classifier is a late fusion majority vote.</p>
             </script>
         </div>
 </body>
-</html><p>These results were generated learning on 20% of the dataset and testing on 80% (see the <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L37">config file</a>).</p>
+</html><p>These results were generated learning on 20% of the dataset and testing on 80% (see the <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_1.yml#L37">config file</a>).</p>
 </div>
-<div class="section" id="id1">
-<h4>Learning on more examples<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="learning-on-more-samples">
+<span id="id1"></span><h4>Learning on more samples<a class="headerlink" href="#learning-on-more-samples" title="Permalink to this headline">¶</a></h4>
 <p>Now, if you run :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">summit.execute</span> <span class="kn">import</span> <span class="n">execute</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example 2.1.2&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You should obtain these scores in <code class="docutils literal notranslate"><span class="pre">multiview_platform/examples/results/example_2_1_2/doc_summit/</span></code> :</p>
+<p>You should obtain these scores in <code class="docutils literal notranslate"><span class="pre">summit/examples/results/example_2_1_2/doc_summit/</span></code> :</p>
 <html>
 <head><meta charset="utf-8" /></head>
 <body>
@@ -171,7 +172,7 @@ and the multivew classifier is a late fusion majority vote.</p>
             </script>
         </div>
 </body>
-</html><p>Here we learned on 80% of the dataset and tested on 20%, so the line in the  <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_2.yml#L37">config file</a> has become <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.2</span></span></code>.</p>
+</html><p>Here we learned on 80% of the dataset and tested on 20%, so the line in the  <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_2.yml#L37">config file</a> has become <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.2</span></span></code>.</p>
 <p>The difference between these two examples is noticeable as even if, while learning on more examples, the performance of the decision trees and the late fusion improved, the performance of Adaboost did not improve as it was already over-fitting on the small train set.</p>
 </div>
 <div class="section" id="conclusion">
@@ -184,7 +185,7 @@ and the multivew classifier is a late fusion majority vote.</p>
 </div>
 </div>
 <div class="section" id="example-2-2-usage-of-randomized-hyper-parameter-optimization">
-<h3>Example 2.2 : Usage of randomized hyper-parameter optimization :<a class="headerlink" href="#example-2-2-usage-of-randomized-hyper-parameter-optimization" title="Permalink to this headline">¶</a></h3>
+<span id="random"></span><h3>Example 2.2 : Usage of randomized hyper-parameter optimization :<a class="headerlink" href="#example-2-2-usage-of-randomized-hyper-parameter-optimization" title="Permalink to this headline">¶</a></h3>
 <p>In the previous example, we have seen that the split ratio has an impact on the train duration and performance of the algorithms, but the most impacting option of SuMMIT on these two factors is optimizing the algorithms hyper parameters.</p>
 <p>For all the previous examples, the platform used the hyper-parameters values given in the config file.
 This is only useful if one knows the optimal combination of hyper-parameter for the given task.</p>
@@ -199,11 +200,11 @@ This is only useful if one knows the optimal combination of hyper-parameter for 
 <li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">metric_princ</span></span><span class="punctuation"><span class="pre">:</span></span></code>, controlling which metric will be used in the cross-validation.</li>
 </ul>
 <p>So if you run SuMMIT with :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">summit.execute</span> <span class="kn">import</span> <span class="n">execute</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example 2.2&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>you run SuMMIT with this combination of arguments (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1.yml#L54">l54-65</a>) :</p>
+<p>you run SuMMIT with this combination of arguments (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1.yml#L54">l54-65</a>) :</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">metric_princ</span><span class="p">:</span> <span class="s">&#39;accuracy_score&#39;</span>
 <span class="nt">nb_folds</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
 <span class="nt">hps_type</span><span class="p">:</span> <span class="s">&#39;Random&#39;</span>
@@ -316,6 +317,25 @@ with different fold/draws settings :</p>
 </div>
 </div>
 </div>
+<div class="section" id="going-further-with-randomized-search">
+<h3>Going further with randomized search<a class="headerlink" href="#going-further-with-randomized-search" title="Permalink to this headline">¶</a></h3>
+<p>SuMMIT also allows to pass customized distributions for the randomized hyper-parameter search through the config file. For example :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">metric_princ</span><span class="p">:</span> <span class="s">&#39;accuracy_score&#39;</span>
+<span class="nt">nb_folds</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="nt">hps_type</span><span class="p">:</span> <span class="s">&#39;Random&#39;</span>
+<span class="nt">hps_args</span><span class="p">:</span>
+  <span class="nt">n_iter</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+  <span class="nt">equivalent_draws</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">True</span>
+  <span class="nt">decision_tree</span><span class="p">:</span>
+    <span class="nt">max_depth</span><span class="p">:</span>
+      <span class="nt">Randint</span><span class="p">:</span>
+        <span class="nt">low </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+        <span class="nt">high</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+</pre></div>
+</div>
+<p>Will start a usual randomized search, except for the <code class="code yaml docutils literal notranslate"><span class="literal scalar plain"><span class="pre">max_depth</span></span></code> hyper parameter on the decision tree that will be drawn according to a uniform distribution of integers between 1 and 9. This is a useful tool for the user that has prior knowledge on the relevant hyper-parameter space for a specific task.</p>
+<p>For the moment, the availabale distributions are <code class="code python docutils literal notranslate"><span class="name"><span class="pre">Randint</span></span><span class="punctuation"><span class="pre">(</span></span><span class="name"><span class="pre">low</span></span><span class="punctuation"><span class="pre">,</span></span> <span class="name"><span class="pre">high</span></span><span class="punctuation"><span class="pre">)</span></span></code> that draws integers between <code class="code python docutils literal notranslate"><span class="name"><span class="pre">low</span></span></code> and <code class="code python docutils literal notranslate"><span class="name"><span class="pre">high</span></span><span class="operator"><span class="pre">-</span></span><span class="literal number integer"><span class="pre">1</span></span></code> and <code class="code python docutils literal notranslate"><span class="name"><span class="pre">Uniform</span></span><span class="punctuation"><span class="pre">(</span></span><span class="name"><span class="pre">loc</span></span><span class="punctuation"><span class="pre">,</span></span> <span class="name"><span class="pre">state</span></span><span class="punctuation"><span class="pre">)</span></span></code> that draws real numbers between <code class="code python docutils literal notranslate"><span class="name"><span class="pre">loc</span></span></code> and <code class="code python docutils literal notranslate"><span class="name"><span class="pre">state</span></span></code>. it is also possible to specify an array of values from which to draw.</p>
+</div>
 <div class="section" id="example-2-3-usage-of-grid-search">
 <h3>Example 2.3 : Usage of grid search :<a class="headerlink" href="#example-2-3-usage-of-grid-search" title="Permalink to this headline">¶</a></h3>
 <p>In SuMMIT, it is possible to use a grid search if one has several possible
@@ -350,11 +370,11 @@ several depths for a decision tree, and several <code class="code yaml docutils 
 <li>one Adaboost per view with 10 base estimators.</li>
 </ul>
 <p>To run a grid search with this configuration, run :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">summit.execute</span> <span class="kn">import</span> <span class="n">execute</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example 2.3&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>It will use <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_3.yml">this config file</a>.</p>
+<p>It will use <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_3.yml">this config file</a>.</p>
 </div>
 <div class="section" id="hyper-parameter-report">
 <h3>Hyper-parameter report<a class="headerlink" href="#hyper-parameter-report" title="Permalink to this headline">¶</a></h3>
@@ -422,8 +442,8 @@ splitter: best
 <li><a class="reference internal" href="#">Example 2 : Understanding the hyper-parameter optimization</a><ul>
 <li><a class="reference internal" href="#hands-on-experience">Hands-on experience</a><ul>
 <li><a class="reference internal" href="#example-2-1-no-hyper-parameter-optimization-impact-of-split-size">Example 2.1 : No hyper-parameter optimization, impact of split size</a><ul>
-<li><a class="reference internal" href="#learning-on-a-few-examples">Learning on a few examples</a></li>
-<li><a class="reference internal" href="#id1">Learning on more examples</a></li>
+<li><a class="reference internal" href="#learning-on-a-few-samples">Learning on a few samples</a></li>
+<li><a class="reference internal" href="#learning-on-more-samples">Learning on more samples</a></li>
 <li><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
@@ -432,6 +452,7 @@ splitter: best
 <li><a class="reference internal" href="#id2">Conclusion</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#going-further-with-randomized-search">Going further with randomized search</a></li>
 <li><a class="reference internal" href="#example-2-3-usage-of-grid-search">Example 2.3 : Usage of grid search :</a></li>
 <li><a class="reference internal" href="#hyper-parameter-report">Hyper-parameter report</a></li>
 </ul>

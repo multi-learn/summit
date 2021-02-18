@@ -1,0 +1,53 @@
+Multiview classification on multiview_mnist  with early_fusion
+
+Database configuration : 
+	- Database name : multiview_mnist
+	- Views : NIMST_data_hog0, NIMST_data_hog1, NIMST_data_hog2, NIMST_data_hog3
+	- Learning Rate : 0.75
+	- Labels used : 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- WeightedLinearEarlyFusion with monoview_classifier_name : decision_tree, monoview_classifier_config : {'criterion': 'gini', 'max_depth': 6, 'random_state': RandomState(MT19937) at 0x7FC54655FDB0, 'splitter': 'best'}
+	- Executed on 1 core(s) 
+
+
+	For Accuracy score using {}, (higher is better) : 
+		- Score on train : 0.7474666666666666
+		- Score on test : 0.6824
+
+	For F1 score using average: micro, {} (higher is better) : 
+		- Score on train : 0.7474666666666667
+		- Score on test : 0.6824
+
+Test set confusion matrix : 
+
+╒════╤═════╤═════╤═════╤═════╤═════╤═════╤═════╤═════╤═════╤═════╕
+│    │   0 │   1 │   2 │   3 │   4 │   5 │   6 │   7 │   8 │   9 │
+╞════╪═════╪═════╪═════╪═════╪═════╪═════╪═════╪═════╪═════╪═════╡
+│  0 │  93 │   1 │   3 │  12 │   2 │   3 │   5 │   0 │   6 │   0 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  1 │   0 │  99 │   1 │   3 │   1 │   0 │  18 │   0 │   2 │   1 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  2 │   8 │   2 │  65 │  15 │   1 │   1 │  11 │   1 │  17 │   4 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  3 │   5 │   0 │   6 │  90 │   1 │   7 │   5 │   2 │   9 │   0 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  4 │   0 │   4 │   5 │   7 │  96 │   0 │   2 │   0 │   4 │   7 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  5 │   3 │   1 │   1 │  34 │   4 │  62 │   2 │   2 │  13 │   3 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  6 │   8 │   1 │   5 │  21 │   0 │   5 │  82 │   0 │   3 │   0 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  7 │   0 │   0 │   1 │   5 │   4 │   1 │   1 │  98 │   4 │  11 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  8 │   2 │   0 │   3 │  16 │   5 │   6 │   8 │   1 │  75 │   9 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  9 │   0 │   1 │   1 │  12 │   9 │   1 │   0 │   3 │   5 │  93 │
+╘════╧═════╧═════╧═════╧═════╧═════╧═════╧═════╧═════╧═════╧═════╛
+
+
+
+ Classification took 0:00:01
+
+ Classifier Interpretation : 

@@ -1,0 +1,3 @@
+,decision_tree-NIMST_data_hog0,decision_tree-NIMST_data_hog3,decision_tree-NIMST_data_hog1,decision_tree-NIMST_data_hog2,early_fusion,weighted_linear_late_fusion
+Train,0.3504,0.3354666666666667,0.38693333333333335,0.5138666666666667,0.7474666666666667,0.9392
+Test,0.324,0.324,0.38160000000000005,0.5008,0.6824,0.8688

@@ -9,6 +9,7 @@
     <title>Example 1 : First big step with SuMMIT &#8212; SuMMIT 0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -57,14 +58,14 @@
 </div>
 <div class="section" id="a-generated-dataset-to-rule-them-all">
 <h2>A generated dataset to rule them all<a class="headerlink" href="#a-generated-dataset-to-rule-them-all" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/data/doc_summit.hdf5">dataset</a> that will be used in the examples consists in</p>
+<p>The <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/data/doc_summit.hdf5">dataset</a> that will be used in the samples consists in</p>
 <ul>
 <li><dl class="first docutils">
-<dt>500 examples that are either</dt><dd><ul class="simple">
+<dt>500 samples that are either</dt><dd><ul class="simple">
 <li>mis-described by all the views (labelled <code class="docutils literal notranslate"><span class="pre">Mutual_error_*</span></code>),</li>
 <li>well-described by all the views (labelled <code class="docutils literal notranslate"><span class="pre">Redundant_*</span></code>),</li>
 <li>well-described by the majority of the views (labelled <code class="docutils literal notranslate"><span class="pre">Complementary_*</span></code>),</li>
-<li>randomly well- or mis-described by the views (labelled <code class="docutils literal notranslate"><span class="pre">example_*</span></code>).</li>
+<li>randomly well- or mis-described by the views (labelled <code class="docutils literal notranslate"><span class="pre">sample_*</span></code>).</li>
 </ul>
 </dd>
 </dl>
@@ -139,7 +140,7 @@
 <td>0.40</td>
 <td>0.40</td>
 </tr>
-<tr class="row-odd"><td>label_7</td>
+<tr class="row-odd"><td>label_8</td>
 <td>0.40</td>
 <td>0.40</td>
 <td>0.40</td>
@@ -152,35 +153,35 @@
 <div class="section" id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
 <p><strong>Importing the platform’s execution function</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multiview_platform.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">summit.execute</span> <span class="kn">import</span> <span class="n">execute</span>
 </pre></div>
 </div>
 <p><strong>Understanding the config file</strong></p>
-<p>The config file that will be used in this example is available <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml">here</a>, let us decrypt the main arguments :</p>
+<p>The config file that will be used in this example is available <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_1.yml">here</a>, let us decrypt the main arguments :</p>
 <ul>
 <li><p class="first">The first part regroups the basics :</p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">log</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L4">l4</a>) allows to print the log in the terminal,</li>
-<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">name</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“summit_doc”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L6">l6</a>) uses the plausible simulated dataset,</li>
-<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">random_state</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">42</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L18">l18</a>) fixes the seed of the random state for this benchmark, it is useful for reproductibility,</li>
-<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">full</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code>  (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L22">l22</a>) means the benchmark will use the full dataset,</li>
-<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">res_dir</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal string"><span class="pre">“examples/results/example_1/”</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L26">l26</a>) saves the results in <code class="docutils literal notranslate"><span class="pre">summit/multiview_platform/examples/results/example_1</span></code></li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">log</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_1.yml#L4">l4</a>) allows to print the log in the terminal,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">name</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“summit_doc”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_1.yml#L6">l6</a>) uses the plausible simulated dataset,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">random_state</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">42</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_1.yml#L18">l18</a>) fixes the seed of the random state for this benchmark, it is useful for reproductibility,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">full</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">True</span></span></code>  (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_1.yml#L22">l22</a>) means the benchmark will use the full dataset,</li>
+<li><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">res_dir</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal string"><span class="pre">“examples/results/example_1/”</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_1.yml#L26">l26</a>) saves the results in <code class="docutils literal notranslate"><span class="pre">summit/summit/examples/results/example_1</span></code></li>
 </ul>
 </div></blockquote>
 </li>
 <li><p class="first">Then the classification-related arguments :</p>
 <blockquote>
 <div><ul>
-<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.25</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L35">l35</a>) means that 75% of the dataset will be used to test the different classifiers and 25% to train them,</p>
+<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">split</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="literal scalar plain"><span class="pre">0.25</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_1.yml#L35">l35</a>) means that 75% of the dataset will be used to test the different classifiers and 25% to train them,</p>
 </li>
-<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">type</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“monoview”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="literal string"><span class="pre">“multiview”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L43">l43</a>) allows for monoview and multiview algorithms to be used in the benchmark,</p>
+<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">type</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“monoview”</span></span><span class="punctuation indicator"><span class="pre">,</span></span> <span class="literal string"><span class="pre">“multiview”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_1.yml#L43">l43</a>) allows for monoview and multiview algorithms to be used in the benchmark,</p>
 </li>
-<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“decision_tree”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L45">l45</a>) runs a Decision tree on each view,</p>
+<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_monoview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“decision_tree”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_1.yml#L45">l45</a>) runs a Decision tree on each view,</p>
 </li>
-<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“weighted_linear_late_fusion”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L47">l47</a>) runs a late fusion,</p>
+<li><p class="first"><code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">algos_multiview</span></span><span class="punctuation"><span class="pre">:</span></span> <span class="punctuation indicator"><span class="pre">[</span></span><span class="literal string"><span class="pre">“weighted_linear_late_fusion”</span></span><span class="punctuation indicator"><span class="pre">]</span></span></code> (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_1.yml#L47">l47</a>) runs a late fusion,</p>
 </li>
-<li><p class="first">The metrics configuration (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_1.yml#L52">l52-55</a>)</p>
+<li><p class="first">The metrics configuration (<a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_1.yml#L52">l52-55</a>)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metrics</span><span class="p">:</span>
   <span class="n">accuracy_score</span><span class="p">:{}</span>
   <span class="n">f1_score</span><span class="p">:</span>
@@ -201,7 +202,7 @@
 <p>The execution should take less than one minute. We will first analyze the results and parse through the information the platform outputs.</p>
 <p><strong>Understanding the results</strong></p>
 <p>The result structure can be startling at first, but, as the platform provides a lot of information, it has to be organized.</p>
-<p>The results are stored in <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/results/example_1/">a directory</a>. Here, you will find a directory with the name of the database used for the benchmark, here : <code class="docutils literal notranslate"><span class="pre">summit_doc/</span></code></p>
+<p>The results are stored in <a class="reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/results/example_1/">a directory</a>. Here, you will find a directory with the name of the database used for the benchmark, here : <code class="docutils literal notranslate"><span class="pre">summit_doc/</span></code></p>
 <p>Finally, a directory with the date and time of the beginning of the experiment. Let’s say you started the benchmark on the 25th of December 1560, at 03:42 PM, the directory’s name should be <code class="docutils literal notranslate"><span class="pre">started_1560_12_25-15_42/</span></code>.</p>
 <p>From here the result directory has the structure that follows  :</p>
 <html>
@@ -430,10 +431,10 @@ The html version is as follows :</p>
 </div>
 <div class="section" id="error-analysis-2d-png-and-error-analysis-2d-html">
 <h3><code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.html</span></code><a class="headerlink" href="#error-analysis-2d-png-and-error-analysis-2d-html" title="Permalink to this headline">¶</a></h3>
-<p>In these files, one can visualize the success or failure of each classifier on each example.</p>
+<p>In these files, one can visualize the success or failure of each classifier on each sample.</p>
 <p>Below, <code class="docutils literal notranslate"><span class="pre">*-error_analysis_2D.html</span></code> is displayed.</p>
-<p>It is the representation of a matrix, where the rows are the examples, and the columns are the classifiers.</p>
-<p>The examples labelled as <code class="docutils literal notranslate"><span class="pre">Mutual_error_*</span></code> are mis-classified by most of the algorithms, the redundant ones are well-classified, and the complementary ones are mixly classified.</p>
+<p>It is the representation of a matrix, where the rows are the samples, and the columns are the classifiers.</p>
+<p>The samples labelled as <code class="docutils literal notranslate"><span class="pre">Mutual_error_*</span></code> are mis-classified by most of the algorithms, the redundant ones are well-classified, and the complementary ones are mixly classified.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">It is highly recommended to zoom in the html figure to see each row.</p>
@@ -463,18 +464,18 @@ The html version is as follows :</p>
         </div>
 </body>
 </html><p>This figure is the html version of the classifiers errors’ visualization. It is interactive, so, by hovering it, the information on
-each classifier and example is printed. The classifiers are ordered as follows:</p>
+each classifier and sample is printed. The classifiers are ordered as follows:</p>
 <p>From left to right : all the monoview classifiers on the first view, all the ones on the second one, …, then at the far right, the multiview classifiers</p>
 <p>This html image is also available in <code class="docutils literal notranslate"><span class="pre">.png</span></code> format, but is then not interactive, so harder to analyze.</p>
-<p>In terms of information, this is useful to detect possible outlier examples in the dataset and failing classifers.</p>
-<p>For example, a mainly black horizontal line for an example means that it has been missclassified by most of the classifiers.
-It could mean that the example is incorrectly labeled in the dataset or is very hard to classify.</p>
+<p>In terms of information, this is useful to detect possible outlier samples in the dataset and failing classifers.</p>
+<p>For example, a mainly black horizontal line for an sample means that it has been missclassified by most of the classifiers.
+It could mean that the sample is incorrectly labeled in the dataset or is very hard to classify.</p>
 <p>Symmetrically, a mainly-black column means that a classifier spectacularly failed.</p>
 <p>The data used to generate this matrix is available in <code class="docutils literal notranslate"><span class="pre">*-2D_plot_data.csv</span></code></p>
 </div>
 <div class="section" id="error-analysis-bar-png-and-error-analysis-bar-html">
 <h3><code class="docutils literal notranslate"><span class="pre">*-error_analysis_bar.png</span></code> and <code class="docutils literal notranslate"><span class="pre">*-error_analysis_bar.html</span></code><a class="headerlink" href="#error-analysis-bar-png-and-error-analysis-bar-html" title="Permalink to this headline">¶</a></h3>
-<p>This file is a different way to visualize the same information as the two previous ones. Indeed, it is a bar plot, with a bar for each example, counting the ratio of classifiers that failed to classify this particular example.</p>
+<p>This file is a different way to visualize the same information as the two previous ones. Indeed, it is a bar plot, with a bar for each sample, counting the ratio of classifiers that failed to classify this particular sample.</p>
 <html>
 <head><meta charset="utf-8" /></head>
 <body>
@@ -499,7 +500,7 @@ It could mean that the example is incorrectly labeled in the dataset or is very 
             </script>
         </div>
 </body>
-</html><p>All the spikes are the mutual error examples, the complementary ones are the 0.33 bars and the redundant are the empty spaces.</p>
+</html><p>All the spikes are the mutual error samples, the complementary ones are the 0.33 bars and the redundant are the empty spaces.</p>
 <p>The data used to generate this graph is available in <code class="docutils literal notranslate"><span class="pre">*-bar_plot_data.csv</span></code></p>
 </div>
 <div class="section" id="config-file-yml">

@@ -14,7 +14,7 @@ For all the following tutorials, we will use the same dataset.
 A generated dataset to rule them all
 ------------------------------------
 
-The :base_source:`dataset <multiview_platform/examples/data/doc_summit.hdf5>` that will be used in the samples consists in
+The :base_source:`dataset <summit/examples/data/doc_summit.hdf5>` that will be used in the samples consists in
 
 + 500 samples that are either
     + mis-described by all the views (labelled ``Mutual_error_*``),
@@ -46,7 +46,7 @@ It has been parametrized with the following error matrix that encapsulates the q
 +---------+--------+--------+--------+--------+
 | label_7 |  0.40  |  0.40  |  0.40  |  0.40  |
 +---------+--------+--------+--------+--------+
-| label_7 |  0.40  |  0.40  |  0.40  |  0.40  |
+| label_8 |  0.40  |  0.40  |  0.40  |  0.40  |
 +---------+--------+--------+--------+--------+
 
 So this means that the View 1 should make at least 40% error on label 1 and 65% on label 2.
@@ -58,27 +58,27 @@ Getting started
 
 .. code-block:: python
 
-   >>> from multiview_platform.execute import execute
+   >>> from summit.execute import execute
 
 **Understanding the config file**
 
-The config file that will be used in this example is available :base_source:`here <multiview_platform/examples/config_files/config_example_1.yml>`, let us decrypt the main arguments :
+The config file that will be used in this example is available :base_source:`here <summit/examples/config_files/config_example_1.yml>`, let us decrypt the main arguments :
 
 + The first part regroups the basics :
 
-    - :yaml:`log: True` (:base_source:`l4 <multiview_platform/examples/config_files/config_example_1.yml#L4>`) allows to print the log in the terminal,
-    - :yaml:`name: ["summit_doc"]` (:base_source:`l6 <multiview_platform/examples/config_files/config_example_1.yml#L6>`) uses the plausible simulated dataset,
-    - :yaml:`random_state: 42` (:base_source:`l18 <multiview_platform/examples/config_files/config_example_1.yml#L18>`) fixes the seed of the random state for this benchmark, it is useful for reproductibility,
-    - :yaml:`full: True`  (:base_source:`l22 <multiview_platform/examples/config_files/config_example_1.yml#L22>`) means the benchmark will use the full dataset,
-    - :yaml:`res_dir: "examples/results/example_1/"` (:base_source:`l26 <multiview_platform/examples/config_files/config_example_1.yml#L26>`) saves the results in ``summit/multiview_platform/examples/results/example_1``
+    - :yaml:`log: True` (:base_source:`l4 <summit/examples/config_files/config_example_1.yml#L4>`) allows to print the log in the terminal,
+    - :yaml:`name: ["summit_doc"]` (:base_source:`l6 <summit/examples/config_files/config_example_1.yml#L6>`) uses the plausible simulated dataset,
+    - :yaml:`random_state: 42` (:base_source:`l18 <summit/examples/config_files/config_example_1.yml#L18>`) fixes the seed of the random state for this benchmark, it is useful for reproductibility,
+    - :yaml:`full: True`  (:base_source:`l22 <summit/examples/config_files/config_example_1.yml#L22>`) means the benchmark will use the full dataset,
+    - :yaml:`res_dir: "examples/results/example_1/"` (:base_source:`l26 <summit/examples/config_files/config_example_1.yml#L26>`) saves the results in ``summit/summit/examples/results/example_1``
 
 + Then the classification-related arguments :
 
-    - :yaml:`split: 0.25` (:base_source:`l35 <multiview_platform/examples/config_files/config_example_1.yml#L35>`) means that 75% of the dataset will be used to test the different classifiers and 25% to train them,
-    - :yaml:`type: ["monoview", "multiview"]` (:base_source:`l43 <multiview_platform/examples/config_files/config_example_1.yml#L43>`) allows for monoview and multiview algorithms to be used in the benchmark,
-    - :yaml:`algos_monoview: ["decision_tree"]` (:base_source:`l45 <multiview_platform/examples/config_files/config_example_1.yml#L45>`) runs a Decision tree on each view,
-    - :yaml:`algos_multiview: ["weighted_linear_late_fusion"]` (:base_source:`l47 <multiview_platform/examples/config_files/config_example_1.yml#L47>`) runs a late fusion,
-    - The metrics configuration (:base_source:`l52-55 <multiview_platform/examples/config_files/config_example_1.yml#L52>`) ::
+    - :yaml:`split: 0.25` (:base_source:`l35 <summit/examples/config_files/config_example_1.yml#L35>`) means that 75% of the dataset will be used to test the different classifiers and 25% to train them,
+    - :yaml:`type: ["monoview", "multiview"]` (:base_source:`l43 <summit/examples/config_files/config_example_1.yml#L43>`) allows for monoview and multiview algorithms to be used in the benchmark,
+    - :yaml:`algos_monoview: ["decision_tree"]` (:base_source:`l45 <summit/examples/config_files/config_example_1.yml#L45>`) runs a Decision tree on each view,
+    - :yaml:`algos_multiview: ["weighted_linear_late_fusion"]` (:base_source:`l47 <summit/examples/config_files/config_example_1.yml#L47>`) runs a late fusion,
+    - The metrics configuration (:base_source:`l52-55 <summit/examples/config_files/config_example_1.yml#L52>`) ::
 
                         metrics:
                           accuracy_score:{}
@@ -102,7 +102,7 @@ The execution should take less than one minute. We will first analyze the result
 
 The result structure can be startling at first, but, as the platform provides a lot of information, it has to be organized.
 
-The results are stored in :base_source:`a directory <multiview_platform/examples/results/example_1/>`. Here, you will find a directory with the name of the database used for the benchmark, here : ``summit_doc/``
+The results are stored in :base_source:`a directory <summit/examples/results/example_1/>`. Here, you will find a directory with the name of the database used for the benchmark, here : ``summit_doc/``
 
 Finally, a directory with the date and time of the beginning of the experiment. Let's say you started the benchmark on the 25th of December 1560, at 03:42 PM, the directory's name should be ``started_1560_12_25-15_42/``.
 

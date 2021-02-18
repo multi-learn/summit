@@ -1,0 +1,62 @@
+Classification on multiview_mnist for NIMST_data_hog2 with decision_tree.
+
+Database configuration : 
+	- Database name : multiview_mnist
+	- View name : NIMST_data_hog2	 View shape : (5000, 192)
+	- Learning Rate : 0.75
+	- Labels used : 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+	- Number of cross validation folds : 2
+
+Classifier configuration : 
+	- DecisionTree with max_depth : 3, criterion : gini, splitter : best, random_state : RandomState(MT19937)
+	- Executed on 1 core(s) 
+
+
+	For Accuracy score using {}, (higher is better) : 
+		- Score on train : 0.5138666666666667
+		- Score on test : 0.5008
+
+	For F1 score using average: micro, {} (higher is better) : 
+		- Score on train : 0.5138666666666667
+		- Score on test : 0.5008
+
+Test set confusion matrix : 
+
+╒════╤═════╤═════╤═════╤═════╤═════╤═════╤═════╤═════╤═════╤═════╕
+│    │   0 │   1 │   2 │   3 │   4 │   5 │   6 │   7 │   8 │   9 │
+╞════╪═════╪═════╪═════╪═════╪═════╪═════╪═════╪═════╪═════╪═════╡
+│  0 │   0 │   1 │   3 │   0 │   0 │  99 │  20 │   2 │   0 │   0 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  1 │   0 │  98 │   1 │   0 │   1 │   3 │  20 │   2 │   0 │   0 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  2 │   0 │   0 │  60 │   0 │   3 │  29 │  26 │   4 │   0 │   3 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  3 │   0 │   0 │   0 │   0 │   2 │  82 │  38 │   0 │   0 │   3 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  4 │   0 │   6 │   3 │   0 │  83 │   5 │  12 │   2 │   0 │  14 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  5 │   0 │   1 │   1 │   0 │   1 │ 104 │  10 │   4 │   0 │   4 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  6 │   0 │   1 │   3 │   0 │   0 │  16 │ 105 │   0 │   0 │   0 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  7 │   0 │   1 │   1 │   0 │   1 │   9 │   1 │  99 │   0 │  13 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  8 │   0 │   3 │   1 │   0 │   2 │  74 │  19 │  15 │   0 │  11 │
+├────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│  9 │   0 │   0 │   0 │   0 │  24 │  12 │   3 │   9 │   0 │  77 │
+╘════╧═════╧═════╧═════╧═════╧═════╧═════╧═════╧═════╧═════╧═════╛
+
+
+
+ Classification took 0:00:00
+
+ Classifier Interpretation : 
+First featrue : 
+	138 <= 0.0037625515833497047
+Feature importances : 
+- Feature index : 138, feature importance : 0.22629675133655527
+- Feature index : 21, feature importance : 0.22098226566262857
+- Feature index : 102, feature importance : 0.21493335956179213
+- Feature index : 171, feature importance : 0.2021033652086815
+- Feature index : 93, feature importance : 0.10528259874536891
+- Feature index : 81, feature importance : 0.030401659484973576
