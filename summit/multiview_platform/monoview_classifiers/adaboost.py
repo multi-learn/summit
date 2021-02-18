@@ -40,6 +40,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         self.weird_strings = {"base_estimator": "class_name"}
         self.plotted_metric = metrics.zero_one_loss
         self.plotted_metric_name = "zero_one_loss"
+        self.base_estimator_config = base_estimator_config
         self.step_predictions = None
 
     def fit(self, X, y, sample_weight=None):

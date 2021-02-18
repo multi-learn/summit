@@ -3,7 +3,6 @@ import os
 import yaml
 
 package_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-print(package_path)
 
 def get_the_args(path_to_config_file=os.path.join(os.path.dirname(package_path), "config_files", "config.yml")):
     """

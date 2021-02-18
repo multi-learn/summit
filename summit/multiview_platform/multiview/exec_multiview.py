@@ -237,7 +237,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     ``MultiviewResult``
     """
 
-    logging.debug("Start:\t Initialize constants")
+    logging.info("Start:\t Initialize constants")
     cl_type, \
         t_start, \
         views_indices, \
@@ -250,24 +250,24 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
         base_file_name, \
         metrics = init_constants(kwargs, classification_indices, metrics, name,
                                  nb_cores, k_folds, dataset_var, directory)
-    logging.debug("Done:\t Initialize constants")
+    logging.info("Done:\t Initialize constants")
 
     extraction_time = time.time() - t_start
     logging.info("Info:\t Extraction duration " + str(extraction_time) + "s")
 
-    logging.debug("Start:\t Getting train/test split")
+    logging.info("Start:\t Getting train/test split")
     learning_indices, validation_indices = classification_indices
-    logging.debug("Done:\t Getting train/test split")
+    logging.info("Done:\t Getting train/test split")
 
-    logging.debug("Start:\t Getting classifiers modules")
+    logging.info("Start:\t Getting classifiers modules")
     # classifierPackage = getattr(multiview_classifiers,
     # CL_type)  # Permet d'appeler un module avec une string
     classifier_module = getattr(multiview_classifiers, cl_type)
     classifier_name = classifier_module.classifier_class_name
     # classifierClass = getattr(classifierModule, CL_type + "Class")
-    logging.debug("Done:\t Getting classifiers modules")
+    logging.info("Done:\t Getting classifiers modules")
 
-    logging.debug("Start:\t Optimizing hyperparameters")
+    logging.info("Start:\t Optimizing hyperparameters")
     hps_beg = time.monotonic()
     if hps_method != "None":
         hps_method_class = getattr(hyper_parameter_search, hps_method)
@@ -298,16 +298,16 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
                                                     **classifier_config),
         random_state, multiview=True,
         y=dataset_var.get_labels())
-    logging.debug("Done:\t Optimizing hyperparameters")
-    logging.debug("Start:\t Fitting classifier")
+    logging.info("Done:\t Optimizing hyperparameters")
+    logging.info("Start:\t Fitting classifier")
     fit_beg = time.monotonic()
     classifier.fit(dataset_var, dataset_var.get_labels(),
                    train_indices=learning_indices,
                    view_indices=views_indices)
     fit_duration = time.monotonic() - fit_beg
-    logging.debug("Done:\t Fitting classifier")
+    logging.info("Done:\t Fitting classifier")
 
-    logging.debug("Start:\t Predicting")
+    logging.info("Start:\t Predicting")
     train_pred = classifier.predict(dataset_var,
                                     sample_indices=learning_indices,
                                     view_indices=views_indices)
@@ -349,10 +349,10 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
         confusion_matrix = result_analyzer.analyze()
     logging.info("Done:\t Result Analysis for " + cl_type)
 
-    logging.debug("Start:\t Saving preds")
+    logging.info("Start:\t Saving preds")
     save_results(string_analysis, images_analysis, output_file_name,
                  confusion_matrix)
-    logging.debug("Start:\t Saving preds")
+    logging.info("Start:\t Saving preds")
 
     return MultiviewResult(cl_type, classifier_config, metrics_scores,
                            full_pred, hps_duration, fit_duration,

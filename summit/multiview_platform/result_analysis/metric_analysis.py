@@ -95,7 +95,7 @@ def publish_metrics_graphs(metrics_scores, directory, database_name,
     """
     results = []
     for metric_name in metrics_scores.keys():
-        logging.debug(
+        logging.info(
             "Start:\t Score graph generation for " + metric_name)
         train_scores, test_scores, classifier_names, \
             file_name, nb_results, results, \
@@ -106,13 +106,13 @@ def publish_metrics_graphs(metrics_scores, directory, database_name,
                                           class_metric_scores[metric_name])
 
         plot_metric_scores(train_scores, test_scores, classifier_names,
-                           nb_results, metric_name, file_name,
-                           tag=" " + " vs ".join(labels_names))
+                           nb_results, metric_name, file_name, database_name,
+                           tag=" vs ".join(labels_names))
 
         class_file_name = file_name+"-class"
         plot_class_metric_scores(class_test_scores, class_file_name,
                                  labels_names, classifier_names, metric_name)
-        logging.debug(
+        logging.info(
             "Done:\t Score graph generation for " + metric_name)
     return results
 
@@ -137,7 +137,7 @@ def publish_all_metrics_scores(iter_results, class_iter_results, directory,
         nb_results = classifier_names.shape[0]
 
         plot_metric_scores(train, test, classifier_names, nb_results,
-                           metric_name, file_name, tag=" averaged",
+                           metric_name, file_name, data_base_name, tag="Averaged",
                            train_STDs=train_std, test_STDs=test_std)
         results += [[classifier_name, metric_name, test_mean, test_std]
                     for classifier_name, test_mean, test_std
@@ -186,7 +186,7 @@ def init_plot(results, metric_name, metric_dataframe,
 
 def plot_metric_scores(train_scores, test_scores, names, nb_results,
                        metric_name,
-                       file_name,
+                       file_name, dataset_name,
                        tag="", train_STDs=None, test_STDs=None,
                        use_plotly=True):  # pragma: no cover
     r"""Used to plot and save the score barplot for a specific metric.
@@ -272,7 +272,7 @@ def plot_metric_scores(train_scores, test_scores, names, nb_results,
         ))
 
         fig.update_layout(
-            title=metric_name + "<br>" + tag + " scores for each classifier")
+            title="Dataset : {}, metric : {}, task : {} <br> Scores for each classifier <br> Generated on <a href='https://baptiste.bauvin.pages.lis-lab.fr/summit'>SuMMIT</a>.".format(dataset_name, metric_name, tag))
         fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                           plot_bgcolor='rgba(0,0,0,0)')
         plotly.offline.plot(fig, filename=file_name + ".html", auto_open=False)

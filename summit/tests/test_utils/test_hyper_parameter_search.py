@@ -29,6 +29,9 @@ class FakeEstim(BaseEstimator):
     def predict(self, X):
         return np.zeros(X.shape[0])
 
+    def gen_distribs(self):
+        return {"param1":"", "param2":""}
+
 
 class FakeEstimMV(BaseEstimator):
     def __init__(self, param1=None, param2=None):
@@ -44,6 +47,9 @@ class FakeEstimMV(BaseEstimator):
             return self.y[sample_indices]
         else:
             return np.zeros(sample_indices.shape[0])
+
+    def gen_distribs(self):
+        return {"param1":"", "param2":""}
 
 
 class Test_Random(unittest.TestCase):

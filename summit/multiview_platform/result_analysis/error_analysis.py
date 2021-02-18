@@ -45,11 +45,11 @@ def get_sample_errors(groud_truth, results):
     return sample_errors
 
 
-def publish_sample_errors(sample_errors, directory, databaseName,
+def publish_sample_errors(sample_errors, directory, database_name,
                           labels_names, sample_ids, labels):  # pragma: no cover
-    logging.debug("Start:\t Label analysis figure generation")
+    logging.info("Start:\t Label analysis figure generation")
 
-    base_file_name = os.path.join(directory, databaseName + "-")
+    base_file_name = os.path.join(directory, database_name + "-")
 
     nb_classifiers, nb_samples, classifiers_names, \
         data_2d, error_on_samples = gen_error_data(sample_errors)
@@ -58,19 +58,19 @@ def publish_sample_errors(sample_errors, directory, databaseName,
     np.savetxt(base_file_name + "bar_plot_data.csv", error_on_samples,
                delimiter=",")
 
-    plot_2d(data_2d, classifiers_names, nb_classifiers, base_file_name,
+    plot_2d(data_2d, classifiers_names, nb_classifiers, base_file_name, database_name,
             sample_ids=sample_ids, labels=labels)
 
     plot_errors_bar(error_on_samples, nb_samples,
-                    base_file_name, sample_ids=sample_ids)
+                    base_file_name, database_name, sample_ids=sample_ids)
 
-    logging.debug("Done:\t Label analysis figures generation")
+    logging.info("Done:\t Label analysis figures generation")
 
 
 def publish_all_sample_errors(iter_results, directory,
                               stats_iter,
-                              sample_ids, labels):  # pragma: no cover
-    logging.debug(
+                              sample_ids, labels, data_base_name):  # pragma: no cover
+    logging.info(
         "Start:\t Global label analysis figure generation")
 
     nb_samples, nb_classifiers, data, \
@@ -82,12 +82,12 @@ def publish_all_sample_errors(iter_results, directory,
                delimiter=",")
 
     plot_2d(data, classifier_names, nb_classifiers,
-            os.path.join(directory, ""), stats_iter=stats_iter,
+            os.path.join(directory, ""), data_base_name, stats_iter=stats_iter,
             sample_ids=sample_ids, labels=labels)
-    plot_errors_bar(error_on_samples, nb_samples, os.path.join(directory, ""),
+    plot_errors_bar(error_on_samples, nb_samples, os.path.join(directory, ""), data_base_name,
                     sample_ids=sample_ids)
 
-    logging.debug(
+    logging.info(
         "Done:\t Global label analysis figures generation")
 
 
@@ -151,7 +151,7 @@ def gen_error_data_glob(iter_results, stats_iter):
         classifier_names
 
 
-def plot_2d(data, classifiers_names, nb_classifiers, file_name, labels=None,
+def plot_2d(data, classifiers_names, nb_classifiers, file_name, dataset_name, labels=None,
             stats_iter=1, use_plotly=True, sample_ids=None):  # pragma: no cover
     r"""Used to generate a 2D plot of the errors.
 
@@ -218,6 +218,9 @@ def plot_2d(data, classifiers_names, nb_classifiers, file_name, labels=None,
                           ticktext=["Always Wrong", "Always Right"]),
             reversescale=True), )
         fig.update_yaxes(title_text="Examples", showticklabels=True)
+        fig.update_layout(
+            title="Dataset : {} <br> Errors for each classifier <br> Generated on <a href='https://baptiste.bauvin.pages.lis-lab.fr/summit'>SuMMIT</a>.".format(
+                dataset_name))
         fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                           plot_bgcolor='rgba(0,0,0,0)')
         fig.update_xaxes(showticklabels=True, )
@@ -226,7 +229,7 @@ def plot_2d(data, classifiers_names, nb_classifiers, file_name, labels=None,
         del fig
 
 
-def plot_errors_bar(error_on_samples, nb_samples, file_name,
+def plot_errors_bar(error_on_samples, nb_samples, file_name, dataset_name,
                     use_plotly=True, sample_ids=None):  # pragma: no cover
     r"""Used to generate a barplot of the muber of classifiers that failed to classify each samples
 
@@ -257,6 +260,8 @@ def plot_errors_bar(error_on_samples, nb_samples, file_name,
             [plotly.graph_objs.Bar(x=sample_ids, y=1 - error_on_samples)])
         fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                           plot_bgcolor='rgba(0,0,0,0)')
+        title = "Dataset : {} <br> Error % for each sample <br> Generated on <a href='https://baptiste.bauvin.pages.lis-lab.fr/summit'>SuMMIT</a>.".format(
+            dataset_name)
         plotly.offline.plot(fig, filename=file_name + "error_analysis_bar.html",
                             auto_open=False)
 
