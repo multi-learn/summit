@@ -21,8 +21,8 @@ split: 0.8
 nb_folds: 2
 nb_class: 3
 classes:
-type: [ "multiview"]
-algos_monoview: ["decision_tree", "adaboost", ]
+type: [ "monoview"]
+algos_monoview: ["decision_tree", ]
 algos_multiview: ["weighted_linear_late_fusion"]
 stats_iter: 3
 metrics:
@@ -33,6 +33,11 @@ hps_type: "Random"
 hps_args:
   n_iter: 4
   equivalent_draws: False
+  decision_tree:
+    max_depth:
+      Randint:
+        low: 1
+        high: 10
 
 
 weighted_linear_early_fusion:

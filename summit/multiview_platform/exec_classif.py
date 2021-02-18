@@ -107,9 +107,7 @@ def init_multiview_exps(classifier_names, views_dictionary, nb_class,
                                                         classifier_name]},
                                                     views_dictionary=views_dictionary)]
         elif hps_method == "Random":
-            hps_kwargs = dict((key, value)
-                              for key, value in hps_kwargs.items()
-                              if key in ["n_iter", "equivalent_draws"])
+            hps_kwargs = get_random_hps_args(hps_kwargs, classifier_name)
             multiview_arguments += [
                 gen_single_multiview_arg_dictionary(classifier_name,
                                                     arguments,
@@ -171,9 +169,7 @@ def init_monoview_exps(classifier_names,
                                                                 hps_kwargs[
                                                                     classifier_name]})
             elif hps_method == "Random":
-                hps_kwargs = dict((key, value)
-                                  for key, value in hps_kwargs.items()
-                                  if key in ["n_iter", "equivalent_draws"])
+                hps_kwargs = get_random_hps_args(hps_kwargs, classifier_name)
                 arguments = gen_single_monoview_arg_dictionary(classifier_name,
                                                                kwargs_init,
                                                                nb_class,
@@ -197,6 +193,15 @@ def init_monoview_exps(classifier_names,
             monoview_arguments.append(arguments)
     return monoview_arguments
 
+
+def get_random_hps_args(hps_args, classifier_name):
+    hps_dict = {}
+    for key, value in hps_args.items():
+        if key in ["n_iter", "equivalent_draws"]:
+            hps_dict[key] = value
+        if key==classifier_name:
+            hps_dict["param_distributions"] = value
+    return hps_dict
 
 def gen_single_monoview_arg_dictionary(classifier_name, arguments, nb_class,
                                        view_index, view_name, hps_kwargs):

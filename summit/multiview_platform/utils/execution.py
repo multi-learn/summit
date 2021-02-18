@@ -321,8 +321,6 @@ def find_dataset_names(path, type, names):
      the needed dataset names."""
     package_path = os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-    print(package_path, os.path.isdir(path),
-          os.path.isdir(os.path.join(package_path, path)), )
     if os.path.isdir(path):
         pass
     elif os.path.isdir(os.path.join(package_path, path)):

@@ -28,6 +28,25 @@ from .organization import secure_file_path
 
 class HPSearch:
 
+    def translate_param_distribs(self, param_distribs):
+        translated_params = {}
+        if param_distribs is None:
+            return translated_params
+        for param_name, value in param_distribs.items():
+            if type(value) == list:
+                translated_params[param_name] = value
+            elif type(value)==dict:
+                if "Uniform" in value.keys():
+                    distrib = self.translate_uniform(value["Uniform"])
+                elif "Randint" in value.keys():
+                    distrib = self.translate_randint(value["Randint"])
+                else:
+                    distrib=value
+                translated_params[param_name] = distrib
+            else:
+                translated_params[param_name] = value
+        return translated_params
+
     def get_scoring(self, metric):
         if isinstance(metric, dict):
             metric_module, metric_kwargs = get_metric(metric)
@@ -138,13 +157,15 @@ class Random(RandomizedSearchCV, HPSearch):
                  random_state=None, learning_indices=None, view_indices=None,
                  framework="monoview",
                  equivalent_draws=True, track_tracebacks=True):
-        if param_distributions is None:
-            param_distributions = self.get_param_distribs(estimator)
+        param_distributions = self.get_param_distribs(estimator, param_distributions)
+
+
         scoring = HPSearch.get_scoring(self, scoring)
         RandomizedSearchCV.__init__(self, estimator, n_iter=n_iter,
                                     param_distributions=param_distributions,
                                     refit=refit, n_jobs=n_jobs, scoring=scoring,
                                     cv=cv, random_state=random_state)
+
         self.framework = framework
         self.available_indices = learning_indices
         self.view_indices = view_indices
@@ -152,11 +173,22 @@ class Random(RandomizedSearchCV, HPSearch):
         self.track_tracebacks = track_tracebacks
         self.tracebacks = []
 
-    def get_param_distribs(self, estimator):
+    def translate_uniform(self, args):
+        return CustomUniform(**args)
+
+    def translate_randint(self, args):
+        return CustomRandint(**args)
+
+
+    def get_param_distribs(self, estimator, user_distribs):
+        user_distribs = self.translate_param_distribs(user_distribs)
         if isinstance(estimator, MultiClassWrapper):
-            return estimator.estimator.gen_distribs()
+            base_distribs = estimator.estimator.gen_distribs()
         else:
-            return estimator.gen_distribs()
+            base_distribs = estimator.gen_distribs()
+        for key, value in user_distribs.items():
+            base_distribs[key] = value
+        return base_distribs
 
     def fit(self, X, y=None, groups=None, **fit_params):  # pragma: no cover
         if self.framework == "monoview":
@@ -174,10 +206,6 @@ class Random(RandomizedSearchCV, HPSearch):
             ParameterSampler(self.param_distributions, self.n_iter,
                              random_state=self.random_state))
 
-    # def fit_multiview(self, X, y=None, groups=None, track_tracebacks=True,
-    #                   **fit_params):
-    #     n_splits = self.cv.get_n_splits(self.available_indices,
-    #                                     y[self.available_indices])
 
 
 class Grid(GridSearchCV, HPSearch):
@@ -208,153 +236,19 @@ class Grid(GridSearchCV, HPSearch):
         self.candidate_params = list(ParameterGrid(self.param_grid))
         self.n_iter = len(self.candidate_params)
 
+class CustomDist:
 
-# class ParameterSamplerGrid:
-#
-#     def __init__(self, param_distributions, n_iter):
-#         from math import floor
-#         n_points_per_param = int(n_iter **(1/len(param_distributions)))
-#         selected_params = dict((param_name, [])
-#                                for param_name in param_distributions.keys())
-#         for param_name, distribution in param_distributions.items():
-#             if isinstance(distribution, list):
-#                 if len(distribution)<n_points_per_param:
-#                     selected_params[param_name] = distribution
-#                 else:
-#                     index_step = floor(len(distribution)/n_points_per_param-2)
-#                     selected_params[param_name] = distribution[0]+[distribution[index*index_step+1]
-#                                                    for index
-# in range(n_points_per_param)]
+    def multiply(self, random_number):
+        if self.multiplier == "e-":
+            return 10 ** -random_number
+        elif self.multiplier =="e":
+            return 10**random_number
+        elif type(self.multiplier) in [int, float]:
+            return self.multiplier*random_number
+        else:
+            return random_number
 
-
-#
-# def hps_search():
-#     pass
-#
-# def grid_search(X, y, framework, random_state, output_file_name,
-#                   classifier_module,
-#                   classifier_name, folds=4, nb_cores=1,
-#                   metric=["accuracy_score", None],
-#                   n_iter=30, classifier_kwargs={}, learning_indices=None,
-#                   view_indices=None,
-#                   equivalent_draws=True, grid_search_config=None):
-#     """Used to perfom gridsearch on the classifiers"""
-#     pass
-
-
-# class RS(HPSSearch):
-#
-#     def __init__(self, X, y, framework, random_state, output_file_name,
-#                       classifier_module,
-#                       classifier_name, folds=4, nb_cores=1,
-#                       metric=["accuracy_score", None],
-#                       n_iter=30, classifier_kwargs={}, learning_indices=None,
-#                       view_indices=None,
-#                       equivalent_draws=True):
-#         HPSSearch.__init__()
-
-
-# def randomized_search(X, y, framework, random_state, output_file_name,
-#                       classifier_module,
-#                       classifier_name, folds=4, nb_cores=1,
-#                       metric=["accuracy_score", None],
-#                       n_iter=30, classifier_kwargs={}, learning_indices=None,
-#                       view_indices=None,
-#                       equivalent_draws=True):
-#     estimator = getattr(classifier_module, classifier_name)(
-#         random_state=random_state,
-#         **classifier_kwargs)
-#     params_dict = estimator.gen_distribs()
-#     estimator = get_mc_estim(estimator, random_state,
-#                              multiview=(framework == "multiview"),
-#                              y=y)
-#     if params_dict:
-#         metric_module, metric_kwargs = get_metric(metric)
-#         scorer = metric_module.get_scorer(**metric_kwargs)
-#         # nb_possible_combinations = compute_possible_combinations(params_dict)
-#         # n_iter_real = min(n_iter, nb_possible_combinations)
-#
-#         random_search = MultiviewCompatibleRandomizedSearchCV(estimator,
-#                                                               n_iter=n_iter,
-#                                                               param_distributions=params_dict,
-#                                                               refit=True,
-#                                                               n_jobs=nb_cores,
-#                                                               scoring=scorer,
-#                                                               cv=folds,
-#                                                               random_state=random_state,
-#                                                               learning_indices=learning_indices,
-#                                                               view_indices=view_indices,
-#                                                               framework=framework,
-#                                                               equivalent_draws=equivalent_draws)
-#         random_search.fit(X, y)
-#         return random_search.transform_results()
-#     else:
-#         best_estimator = estimator
-#         best_params = {}
-#         scores_array = {}
-#         params = {}
-#         test_folds_preds = np.zeros(10)#get_test_folds_preds(X, y, folds, best_estimator,
-#                                           # framework, learning_indices)
-#         return best_params, scores_array, params
-
-
-#
-# def spear_mint(dataset, classifier_name, views_indices=None, k_folds=None,
-#                n_iter=1,
-#                **kwargs):
-#     """Used to perform spearmint on the classifiers to optimize hyper parameters,
-#     longer than randomsearch (can't be parallelized)"""
-#     pass
-#
-#
-# def gen_heat_maps(params, scores_array, output_file_name):
-#     """Used to generate a heat map for each doublet of hyperparms
-#     optimized on the previous function"""
-#     nb_params = len(params)
-#     if nb_params > 2:
-#         combinations = itertools.combinations(range(nb_params), 2)
-#     elif nb_params == 2:
-#         combinations = [(0, 1)]
-#     else:
-#         combinations = [()]
-#     for combination in combinations:
-#         if combination:
-#             param_name1, param_array1 = params[combination[0]]
-#             param_name2, param_array2 = params[combination[1]]
-#         else:
-#             param_name1, param_array1 = params[0]
-#             param_name2, param_array2 = ("Control", np.array([0]))
-#
-#         param_array1_set = np.sort(np.array(list(set(param_array1))))
-#         param_array2_set = np.sort(np.array(list(set(param_array2))))
-#
-#         scores_matrix = np.zeros(
-#             (len(param_array2_set), len(param_array1_set))) - 0.1
-#         for param1, param2, score in zip(param_array1, param_array2,
-#                                          scores_array):
-#             param1_index, = np.where(param_array1_set == param1)
-#             param2_index, = np.where(param_array2_set == param2)
-#             scores_matrix[int(param2_index), int(param1_index)] = score
-#
-#         plt.figure(figsize=(8, 6))
-#         plt.subplots_adjust(left=.2, right=0.95, bottom=0.15, top=0.95)
-#         plt.imshow(scores_matrix, interpolation='nearest', cmap=plt.cm.hot,
-#                    )
-#         plt.xlabel(param_name1)
-#         plt.ylabel(param_name2)
-#         plt.colorbar()
-#         plt.xticks(np.arange(len(param_array1_set)), param_array1_set)
-#         plt.yticks(np.arange(len(param_array2_set)), param_array2_set,
-#                    rotation=45)
-#         plt.title('Validation metric')
-#         plt.savefig(
-#             output_file_name + "heat_map-" + param_name1 + "-" + param_name2 + ".png",
-#             transparent=True)
-#         plt.close()
-#
-
-
-class CustomRandint:
+class CustomRandint(CustomDist):
     """Used as a distribution returning a integer between low and high-1.
     It can be used with a multiplier agrument to be able to perform more complex generation
     for example 10 e -(randint)"""
@@ -366,20 +260,14 @@ class CustomRandint:
         self.multiplier = multiplier
 
     def rvs(self, random_state=None):
-        randinteger = self.randint.rvs(random_state=random_state)
-        if self.multiplier == "e-":
-            return 10 ** -randinteger
-        else:
-            return randinteger
+        rand_integer = self.randint.rvs(random_state=random_state)
+        return self.multiply(rand_integer)
 
     def get_nb_possibilities(self):
-        if self.multiplier == "e-":
-            return abs(10 ** -self.low - 10 ** -self.high)
-        else:
-            return self.high - self.low
+        return self.high - self.low
 
 
-class CustomUniform:
+class CustomUniform(CustomDist):
     """Used as a distribution returning a float between loc and loc + scale..
         It can be used with a multiplier agrument to be able to perform more complex generation
         for example 10 e -(float)"""
@@ -390,10 +278,9 @@ class CustomUniform:
 
     def rvs(self, random_state=None):
         unif = self.uniform.rvs(random_state=random_state)
-        if self.multiplier == 'e-':
-            return 10 ** -unif
-        else:
-            return unif
+        return self.multiply(unif)
+
+
 
 
 def format_params(params, pref=""):
