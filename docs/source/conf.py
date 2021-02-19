@@ -20,6 +20,7 @@
 #
 import os
 import sys
+import sphinx_rtd_theme
 
 repo_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -44,6 +45,7 @@ add_module_names = False
 # ones.
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.extlinks',
+                'sphinx_rtd_theme',
 #              'sphinx.ext.doctest',
 #              'sphinx.ext.intersphinx',
 #              'sphinx.ext.todo',
@@ -82,6 +84,8 @@ source_suffix = {'.rst': 'restructuredtext', '.md': 'markdown'}
 
 # The master toctree document.
 master_doc = 'index'
+html_logo = "logo_summit.png"
+
 
 # General information about the project.
 project = u'SuMMIT'
@@ -120,8 +124,9 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-# html_theme = 'sphinx_rtd_theme'
-html_theme = 'classic'
+html_theme = 'sphinx_rtd_theme'
+# html_theme = 'classic'
+# html_theme = 'groundwork'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
