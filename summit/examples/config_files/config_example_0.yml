@@ -42,9 +42,9 @@ classes:
 # The type of algorithms to run during the benchmark (monoview and/or multiview)
 type: ["monoview","multiview"]
 # The name of the monoview algorithms to run, ["all"] to run all the available classifiers
-algos_monoview: ["decision_tree"]
+algos_monoview: ["decision_tree", "adaboost"]
 # The names of the multiview algorithms to run, ["all"] to run all the available classifiers
-algos_multiview: ["weighted_linear_early_fusion", "weighted_linear_late_fusion",]
+algos_multiview: ["early_fusion_decision_tree", "early_fusion_adaboost", "weighted_linear_late_fusion",]
 # The number of times the benchamrk is repeated with different train/test
 # split, to have more statistically significant results
 stats_iter: 1
