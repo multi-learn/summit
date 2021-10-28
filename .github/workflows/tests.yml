@@ -5,5 +5,6 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     steps:
+        - run: cd ..
         - run: pip3 install -e . --no-deps
         - run: pytest-3
