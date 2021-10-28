@@ -1,0 +1,10 @@
+jobs:
+  tests:
+      runs-on: ubuntu-latest
+      steps:
+          - run: pip3 install -e . --no-deps
+          - run: pytest-3
+      coverage: '/^TOTAL.+?(\d+\%)$/'
+      artifacts:
+          paths:
+              - htmlcov/
