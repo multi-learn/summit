@@ -1,5 +1,6 @@
 jobs:
   tests:
+      on: push
       runs-on: ubuntu-latest
       steps:
           - run: pip3 install -e . --no-deps
