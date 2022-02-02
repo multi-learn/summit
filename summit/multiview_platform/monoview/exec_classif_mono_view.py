@@ -36,8 +36,8 @@ def exec_monoview_multicore(directory, name, labels_names,
                             **args):  # pragma: no cover
     dataset_var = HDF5Dataset(
         hdf5_file=h5py.File(path + name + str(dataset_file_index) + ".hdf5", "r"))
-    neededViewIndex = args["view_index"]
-    X = dataset_var.get_v(neededViewIndex)
+    needed_view_index = args["view_index"]
+    X = dataset_var.get_v(needed_view_index)
     Y = labels
     return exec_monoview(directory, X, Y, name, labels_names,
                          classification_indices, k_folds, 1, database_type,
@@ -61,8 +61,8 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
         view_name, \
         classifier_name, \
         X, \
-        learningRate, \
-        labelsString, \
+        learning_rate, \
+        labels_string, \
         output_file_name, \
         directory, \
         base_file_name = init_constants(args, X, classification_indices,
@@ -74,7 +74,7 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
         "Info:\t Classification - Database:" + str(
             database_name) + " View:" + str(
             view_name) + " train ratio:"
-        + str(learningRate) + ", CrossValidation k-folds: " + str(
+        + str(learning_rate) + ", CrossValidation k-folds: " + str(
             k_folds.n_splits) + ", cores:"
         + str(nb_cores) + ", algorithm : " + classifier_name)
 
@@ -110,7 +110,7 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
                               random_state,
                               y=Y)
     fit_beg = time.monotonic()
-    classifier.fit(X_train, y_train)  # NB_CORES=nbCores,
+    classifier.fit(X_train, y_train)
     fit_duration = time.monotonic() - fit_beg
     logging.info("Done:\t Training")
 
@@ -122,10 +122,10 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
 
     # Filling the full prediction in the right order
     full_pred = np.zeros(Y.shape, dtype=int) - 100
-    for trainIndex, index in enumerate(classification_indices[0]):
-        full_pred[index] = train_pred[trainIndex]
-    for testIndex, index in enumerate(classification_indices[1]):
-        full_pred[index] = test_pred[testIndex]
+    for train_index, index in enumerate(classification_indices[0]):
+        full_pred[index] = train_pred[train_index]
+    for test_index, index in enumerate(classification_indices[1]):
+        full_pred[index] = test_pred[test_index]
 
     logging.info("Done:\t Predicting")
 
@@ -185,7 +185,8 @@ def init_constants(args, X, classification_indices, labels_names,
     base_file_name = cl_type_string + '-' + name + "-" + view_name + "-"
     output_file_name = os.path.join(directory, base_file_name)
     secure_file_path(output_file_name)
-    return kwargs, t_start, view_name, cl_type, X, learning_rate, labels_string, output_file_name, directory, base_file_name
+    return kwargs, t_start, view_name, cl_type, X, learning_rate, labels_string,\
+           output_file_name, directory, base_file_name
 
 
 def init_train_test(X, Y, classification_indices):

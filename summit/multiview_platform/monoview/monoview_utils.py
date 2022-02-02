@@ -13,8 +13,6 @@ __author__ = "Baptiste Bauvin"
 __status__ = "Prototype"  # Production, Development, Prototype
 
 
-# __date__ = 2016 - 03 - 25
-
 def change_label_to_minus(y):
     """
     Change the label 0 to minus one
@@ -74,43 +72,6 @@ def gen_test_folds_preds(X_train, y_train, KFolds, estimator):
         [test_fold_preds[:min_fold_length] for test_fold_preds in
          test_folds_preds])
     return test_folds_preds
-
-
-# class CustomRandint:
-#     """Used as a distribution returning a integer between low and high-1.
-#     It can be used with a multiplier agrument to be able to perform more complex generation
-#     for example 10 e -(randint)"""
-#
-#     def __init__(self, low=0, high=0, multiplier=""):
-#         self.randint = randint(low, high)
-#         self.multiplier = multiplier
-#
-#     def rvs(self, random_state=None):
-#         randinteger = self.randint.rvs(random_state=random_state)
-#         if self.multiplier == "e-":
-#             return 10 ** -randinteger
-#         else:
-#             return randinteger
-#
-#     def get_nb_possibilities(self):
-#         return self.randint.b - self.randint.a
-#
-#
-# class CustomUniform:
-#     """Used as a distribution returning a float between loc and loc + scale..
-#         It can be used with a multiplier agrument to be able to perform more complex generation
-#         for example 10 e -(float)"""
-#
-#     def __init__(self, loc=0, state=1, multiplier=""):
-#         self.uniform = uniform(loc, state)
-#         self.multiplier = multiplier
-#
-#     def rvs(self, random_state=None):
-#         unif = self.uniform.rvs(random_state=random_state)
-#         if self.multiplier == 'e-':
-#             return 10 ** -unif
-#         else:
-#             return unif
 
 
 class BaseMonoviewClassifier(BaseClassifier):

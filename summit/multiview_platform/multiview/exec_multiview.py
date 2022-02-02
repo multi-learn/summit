@@ -260,11 +260,8 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     logging.info("Done:\t Getting train/test split")
 
     logging.info("Start:\t Getting classifiers modules")
-    # classifierPackage = getattr(multiview_classifiers,
-    # CL_type)  # Permet d'appeler un module avec une string
     classifier_module = getattr(multiview_classifiers, cl_type)
     classifier_name = classifier_module.classifier_class_name
-    # classifierClass = getattr(classifierModule, CL_type + "Class")
     logging.info("Done:\t Getting classifiers modules")
 
     logging.info("Start:\t Optimizing hyperparameters")
@@ -285,13 +282,6 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
         hps.fit(dataset_var, dataset_var.get_labels(), )
         classifier_config = hps.get_best_params()
         hps.gen_report(output_file_name)
-        # classifier_config = hyper_parameter_search.search_best_settings(
-        #     dataset_var, dataset_var.get_labels(), classifier_module,
-        #     classifier_name,
-        #     metrics[0], learning_indices, k_folds, random_state,
-        #     output_file_name, nb_cores=nb_cores, views_indices=views_indices,
-        #     searching_tool=hps_method, n_iter=n_iter,
-        #     classifier_config=classifier_config)
     hps_duration = time.monotonic() - hps_beg
     classifier = get_mc_estim(
         getattr(classifier_module, classifier_name)(random_state=random_state,
@@ -324,8 +314,6 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     whole_duration = time.time() - t_start
     logging.info(
         "Info:\t Classification duration " + str(extraction_time) + "s")
-
-    # TODO: get better cltype
 
     logging.info("Start:\t Result Analysis for " + cl_type)
     times = (extraction_time, whole_duration)

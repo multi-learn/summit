@@ -199,7 +199,6 @@ def plot_2d(data, classifiers_names, nb_classifiers, file_name, dataset_name, la
     plt.close()
     # The following part is used to generate an interactive graph.
     if use_plotly:
-        # [np.where(labels==i)[0] for i in np.unique(labels)]
         hover_text = [[sample_ids[sample_index] + " failed " + str(
             stats_iter - data[
                 sample_index, classifier_index]) + " time(s), labelled " + str(
