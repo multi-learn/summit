@@ -23,8 +23,8 @@ class SGD(SGDClassifier, BaseMonoviewClassifier):
                                loss=loss,
                                penalty=penalty,
                                alpha=alpha,
-                               max_iter=5,
-                               tol=None,
+                               max_iter=max_iter,
+                               tol=tol,
                                random_state=random_state
                                )
         self.param_names = ["loss", "penalty", "alpha", "random_state"]

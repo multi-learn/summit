@@ -7,13 +7,6 @@ from .. import monoview_classifiers
 from ..utils.base import BaseClassifier, ResultAnalyser
 from ..utils.dataset import RAMDataset
 
-
-# class FakeEstimator():
-#
-#     def predict(self, X, sample_indices=None, view_indices=None):
-#         return np.zeros(sample_indices.shape[0])
-
-
 class BaseMultiviewClassifier(BaseClassifier):
     """
     BaseMultiviewClassifier base of Multiview classifiers
@@ -48,21 +41,6 @@ class BaseMultiviewClassifier(BaseClassifier):
             raise ValueError(
                 'Used {} views to fit, and trying to predict on {}'.format(
                     self.used_views, view_indices))
-
-    # def to_str(self, param_name):
-    #     if param_name in self.weird_strings:
-    #         string = ""
-    #         if "class_name" in self.weird_strings[param_name]:
-    #             string += self.get_params()[param_name].__class__.__name__
-    #         if "config" in self.weird_strings[param_name]:
-    #             string += "( with " + self.get_params()[
-    #                 param_name].params_to_string() + ")"
-    #         else:
-    #             string += self.weird_strings[param_name](
-    #                 self.get_params()[param_name])
-    #         return string
-    #     else:
-    #         return str(self.get_params()[param_name])
 
     def accepts_multi_class(self, random_state, n_samples=10, dim=2,
                             n_classes=3, n_views=2):

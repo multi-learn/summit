@@ -203,6 +203,7 @@ def get_random_hps_args(hps_args, classifier_name):
             hps_dict["param_distributions"] = value
     return hps_dict
 
+
 def gen_single_monoview_arg_dictionary(classifier_name, arguments, nb_class,
                                        view_index, view_name, hps_kwargs):
     if classifier_name in arguments:
@@ -430,116 +431,6 @@ def benchmark_init(directory, classification_indices, labels, labels_dictionary,
     return results_monoview, labels_names
 
 
-# def exec_one_benchmark(core_index=-1, labels_dictionary=None, directory=None,
-#                      classification_indices=None, args=None,
-#                      k_folds=None, random_state=None, hyper_param_search=None,
-#                      metrics=None, argument_dictionaries=None,
-#                      benchmark=None, views=None, views_indices=None, flag=None,
-#                      labels=None,
-#                      exec_monoview_multicore=exec_monoview_multicore,
-#                      exec_multiview_multicore=exec_multiview_multicore,):
-#     """Used to run a benchmark using one core. ExecMonoview_multicore, initMultiviewArguments and
-#      exec_multiview_multicore args are only used for tests"""
-#
-#     results_monoview, labels_names = benchmark_init(directory,
-#                                                     classification_indices, labels,
-#                                                     labels_dictionary, k_folds)
-#
-#     logging.debug("Start:\t monoview benchmark")
-#     results_monoview += [
-#         exec_monoview_multicore(directory, args["name"], labels_names,
-#                                classification_indices, k_folds,
-#                                core_index, args["file_type"], args["pathf"], random_state,
-#                                labels,
-#                                hyper_param_search=hyper_param_search,
-#                                metrics=metrics,
-#                                n_iter=args["hps_iter"], **argument)
-#         for argument in argument_dictionaries["Monoview"]]
-#     logging.debug("Done:\t monoview benchmark")
-#
-#
-#     logging.debug("Start:\t multiview benchmark")
-#     results_multiview = [
-#         exec_multiview_multicore(directory, core_index, args["name"],
-#                                 classification_indices, k_folds, args["file_type"],
-#                                 args["pathf"], labels_dictionary, random_state,
-#                                 labels, hyper_param_search=hyper_param_search,
-#                                 metrics=metrics, n_iter=args["hps_iter"],
-#                                 **arguments)
-#         for arguments in argument_dictionaries["multiview"]]
-#     logging.debug("Done:\t multiview benchmark")
-#
-#     return [flag, results_monoview + results_multiview]
-#
-#
-# def exec_one_benchmark_multicore(nb_cores=-1, labels_dictionary=None,
-#                                  directory=None, classification_indices=None,
-#                                  args=None,
-#                                  k_folds=None, random_state=None,
-#                                  hyper_param_search=None, metrics=None,
-#                                  argument_dictionaries=None,
-#                                  benchmark=None, views=None, views_indices=None,
-#                                  flag=None, labels=None,
-#                                  exec_monoview_multicore=exec_monoview_multicore,
-#                                  exec_multiview_multicore=exec_multiview_multicore,):
-#     """Used to run a benchmark using multiple cores. ExecMonoview_multicore, initMultiviewArguments and
-#      exec_multiview_multicore args are only used for tests"""
-#
-#     results_monoview, labels_names = benchmark_init(directory,
-#                                                     classification_indices, labels,
-#                                                     labels_dictionary, k_folds)
-#
-#     logging.debug("Start:\t monoview benchmark")
-#     nb_experiments = len(argument_dictionaries["monoview"])
-#     nb_multicore_to_do = int(math.ceil(float(nb_experiments) / nb_cores))
-#     for step_index in range(nb_multicore_to_do):
-#         results_monoview += (Parallel(n_jobs=nb_cores)(
-#             delayed(exec_monoview_multicore)(directory, args["name"], labels_names,
-#                                             classification_indices, k_folds,
-#                                             core_index, args["file_type"], args["pathf"],
-#                                             random_state, labels,
-#                                             hyper_param_search=hyper_param_search,
-#                                             metrics=metrics,
-#                                             n_iter=args["hps_iter"],
-#                                             **argument_dictionaries["monoview"][
-#                                             core_index + step_index * nb_cores])
-#             for core_index in
-#             range(min(nb_cores, nb_experiments - step_index * nb_cores))))
-#     logging.debug("Done:\t monoview benchmark")
-#
-#     logging.debug("Start:\t multiview arguments initialization")
-#     # argument_dictionaries = initMultiviewArguments(args, benchmark, views,
-#     #                                               views_indices,
-#     #                                               argument_dictionaries,
-#     #                                               random_state, directory,
-#     #                                               resultsMonoview,
-#     #                                               classification_indices)
-#     logging.debug("Done:\t multiview arguments initialization")
-#
-#     logging.debug("Start:\t multiview benchmark")
-#     results_multiview = []
-#     nb_experiments = len(argument_dictionaries["multiview"])
-#     nb_multicore_to_do = int(math.ceil(float(nb_experiments) / nb_cores))
-#     for step_index in range(nb_multicore_to_do):
-#         results_multiview += Parallel(n_jobs=nb_cores)(
-#             delayed(exec_multiview_multicore)(directory, core_index, args["name"],
-#                                               classification_indices, k_folds,
-#                                               args["file_type"], args["Base"]["pathf"],
-#                                               labels_dictionary, random_state,
-#                                               labels,
-#                                               hyper_param_search=hyper_param_search,
-#                                               metrics=metrics,
-#                                               n_iter=args["hps_iter"],
-#                                               **
-#                                              argument_dictionaries["multiview"][
-#                                                  step_index * nb_cores + core_index])
-#             for core_index in
-#             range(min(nb_cores, nb_experiments - step_index * nb_cores)))
-#     logging.debug("Done:\t multiview benchmark")
-#
-#     return [flag, results_monoview + results_multiview]
-
-
 def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                                  directory=None, classification_indices=None,
                                  args=None,
@@ -548,7 +439,11 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                                  argument_dictionaries=None,
                                  benchmark=None, views=None, views_indices=None,
                                  flag=None, labels=None,
+<<<<<<< HEAD
                                  track_tracebacks=False, n_jobs=1):  # pragma: no cover
+=======
+                                 track_tracebacks=False, nb_cores=1):  # pragma: no cover
+>>>>>>> develop
     results_monoview, labels_names = benchmark_init(directory,
                                                     classification_indices,
                                                     labels,
@@ -564,7 +459,11 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
             results_monoview += [
                 exec_monoview(directory, X, Y, args["name"], labels_names,
                               classification_indices, k_folds,
+<<<<<<< HEAD
                               n_jobs, args["file_type"], args["pathf"], random_state,
+=======
+                              nb_cores, args["file_type"], args["pathf"], random_state,
+>>>>>>> develop
                               hyper_param_search=hyper_param_search,
                               metrics=metrics,
                               **arguments)]
@@ -575,18 +474,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                         "view_name"]] = traceback.format_exc()
             else:
                 raise
-
     logging.info("Done:\t monoview benchmark")
-
-    logging.info("Start:\t multiview arguments initialization")
-
-    # argument_dictionaries = initMultiviewArguments(args, benchmark, views,
-    #                                               views_indices,
-    #                                               argument_dictionaries,
-    #                                               random_state, directory,
-    #                                               resultsMonoview,
-    #                                               classification_indices)
-    logging.info("Done:\t multiview arguments initialization")
 
     logging.info("Start:\t multiview benchmark")
     results_multiview = []
@@ -595,7 +483,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
             results_multiview += [
                 exec_multiview(directory, dataset_var, args["name"],
                                classification_indices,
-                               k_folds, 1, args["file_type"],
+                               k_folds, nb_cores, args["file_type"],
                                args["pathf"], labels_dictionary, random_state,
                                labels,
                                hps_method=hyper_param_search,
@@ -663,7 +551,11 @@ def exec_benchmark(nb_cores, stats_iter,
     for arguments in benchmark_arguments_dictionaries:
         benchmark_results = exec_one_benchmark_mono_core(
             dataset_var=dataset_var,
+<<<<<<< HEAD
             track_tracebacks=track_tracebacks, n_jobs=nb_cores,
+=======
+            track_tracebacks=track_tracebacks, nb_cores=nb_cores,
+>>>>>>> develop
             **arguments)
         analyze_iterations([benchmark_results],
                            benchmark_arguments_dictionaries, stats_iter,
@@ -793,11 +685,5 @@ def exec_classif(arguments):  # pragma: no cover
             stats_iter_random_states, metrics,
             argument_dictionaries, benchmark,
             views, views_indices)
-        results_mean_stds = exec_benchmark(
-            nb_cores, stats_iter,
-            benchmark_argument_dictionaries, directory, metrics,
-            dataset_var,
-            args["track_tracebacks"])
-        # noise_results.append([noise_std, results_mean_stds])
-        # plot_results_noise(directory, noise_results, metrics[0][0],
-        #                    dataset_name)
+        exec_benchmark(nb_cores, stats_iter, benchmark_argument_dictionaries,
+                       directory, metrics, dataset_var, args["track_tracebacks"])
