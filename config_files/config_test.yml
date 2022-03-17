@@ -7,7 +7,7 @@ views:
 pathf: "examples/data/"
 nice: 0
 random_state: 42
-nb_cores: 1
+nb_cores: 4
 full: False
 debug: True
 add_noise: False
@@ -22,7 +22,7 @@ nb_folds: 2
 nb_class: 3
 classes:
 type: [ "monoview"]
-algos_monoview: ["decision_tree", ]
+algos_monoview: ["decision_tree", "adaboost" ]
 algos_multiview: ["weighted_linear_late_fusion"]
 stats_iter: 3
 metrics:
@@ -31,7 +31,7 @@ metrics:
 metric_princ: "accuracy_score"
 hps_type: "Random"
 hps_args:
-  n_iter: 4
+  n_iter: 10
   equivalent_draws: False
   decision_tree:
     max_depth:

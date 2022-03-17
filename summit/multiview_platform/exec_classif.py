@@ -548,7 +548,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                                  argument_dictionaries=None,
                                  benchmark=None, views=None, views_indices=None,
                                  flag=None, labels=None,
-                                 track_tracebacks=False):  # pragma: no cover
+                                 track_tracebacks=False, n_jobs=1):  # pragma: no cover
     results_monoview, labels_names = benchmark_init(directory,
                                                     classification_indices,
                                                     labels,
@@ -564,7 +564,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
             results_monoview += [
                 exec_monoview(directory, X, Y, args["name"], labels_names,
                               classification_indices, k_folds,
-                              1, args["file_type"], args["pathf"], random_state,
+                              n_jobs, args["file_type"], args["pathf"], random_state,
                               hyper_param_search=hyper_param_search,
                               metrics=metrics,
                               **arguments)]
@@ -660,26 +660,10 @@ def exec_benchmark(nb_cores, stats_iter,
     """
     logging.info("Start:\t Executing all the needed benchmarks")
     results = []
-    # if nb_cores > 1:
-    #     if stats_iter > 1 or nb_multiclass > 1:
-    #         nb_exps_to_do = len(benchmark_arguments_dictionaries)
-    #         nb_multicore_to_do = range(int(math.ceil(float(nb_exps_to_do) / nb_cores)))
-    #         for step_index in nb_multicore_to_do:
-    #             results += (Parallel(n_jobs=nb_cores)(delayed(exec_one_benchmark)
-    #                                                  (core_index=core_index,
-    #                                                   **
-    #                                                   benchmark_arguments_dictionaries[
-    #                                                       core_index + step_index * nb_cores])
-    #                                                  for core_index in range(
-    #                 min(nb_cores, nb_exps_to_do - step_index * nb_cores))))
-    #     else:
-    #         results += [exec_one_benchmark_multicore(nb_cores=nb_cores, **
-    #         benchmark_arguments_dictionaries[0])]
-    # else:
     for arguments in benchmark_arguments_dictionaries:
         benchmark_results = exec_one_benchmark_mono_core(
             dataset_var=dataset_var,
-            track_tracebacks=track_tracebacks,
+            track_tracebacks=track_tracebacks, n_jobs=nb_cores,
             **arguments)
         analyze_iterations([benchmark_results],
                            benchmark_arguments_dictionaries, stats_iter,
@@ -697,7 +681,6 @@ def exec_benchmark(nb_cores, stats_iter,
                                 dataset_var.sample_ids,
                                 dataset_var.get_labels())
     logging.info("Done:\t Analyzing predictions")
-    delete(benchmark_arguments_dictionaries, nb_cores, dataset_var)
     return results_mean_stds
 
 
@@ -768,15 +751,9 @@ def exec_classif(arguments):  # pragma: no cover
                                       args["split"],
                                       stats_iter_random_states)
 
-        # multiclass_labels, labels_combinations, indices_multiclass = multiclass.gen_multiclass_labels(
-        #     dataset_var.get_labels(), multiclass_method, splits)
-
         k_folds = execution.gen_k_folds(stats_iter, args["nb_folds"],
                                         stats_iter_random_states)
 
-        dataset_files = dataset.init_multiple_datasets(args["pathf"],
-                                                       args["name"],
-                                                       nb_cores)
 
         views, views_indices, all_views = execution.init_views(dataset_var,
                                                                args[
