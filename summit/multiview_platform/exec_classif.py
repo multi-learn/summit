@@ -439,11 +439,8 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                                  argument_dictionaries=None,
                                  benchmark=None, views=None, views_indices=None,
                                  flag=None, labels=None,
-<<<<<<< HEAD
-                                 track_tracebacks=False, n_jobs=1):  # pragma: no cover
-=======
                                  track_tracebacks=False, nb_cores=1):  # pragma: no cover
->>>>>>> develop
+
     results_monoview, labels_names = benchmark_init(directory,
                                                     classification_indices,
                                                     labels,
@@ -459,11 +456,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
             results_monoview += [
                 exec_monoview(directory, X, Y, args["name"], labels_names,
                               classification_indices, k_folds,
-<<<<<<< HEAD
-                              n_jobs, args["file_type"], args["pathf"], random_state,
-=======
                               nb_cores, args["file_type"], args["pathf"], random_state,
->>>>>>> develop
                               hyper_param_search=hyper_param_search,
                               metrics=metrics, feature_ids=dataset_var.feature_ids[arguments["view_index"]],
                               **arguments)]
@@ -551,11 +544,7 @@ def exec_benchmark(nb_cores, stats_iter,
     for arguments in benchmark_arguments_dictionaries:
         benchmark_results = exec_one_benchmark_mono_core(
             dataset_var=dataset_var,
-<<<<<<< HEAD
-            track_tracebacks=track_tracebacks, n_jobs=nb_cores,
-=======
             track_tracebacks=track_tracebacks, nb_cores=nb_cores,
->>>>>>> develop
             **arguments)
         analyze_iterations([benchmark_results],
                            benchmark_arguments_dictionaries, stats_iter,
