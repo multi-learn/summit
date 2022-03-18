@@ -57,28 +57,6 @@ class Test_initBenchmark(unittest.TestCase):
         self.assertEqual(benchmark_output,
                          {'monoview': ['decision_tree'],
                           'multiview': ['weighted_linear_late_fusion']})
-        benchmark_output = exec_classif.init_benchmark(
-            cl_type=["monoview", "multiview"], monoview_algos=["all"],
-            multiview_algos=["all"])
-        self.assertEqual(benchmark_output, {'monoview': ['adaboost',
-                                                         'decision_tree',
-                                                         'gradient_boosting',
-                                                         'knn',
-                                                         'lasso',
-                                                         'random_forest',
-                                                         'sgd',
-                                                         'svm_linear',
-                                                         'svm_poly',
-                                                         'svm_rbf'],
-                                            'multiview': ['bayesian_inference_fusion',
-                                                          'difficulty_fusion',
-                                                          'disagree_fusion',
-                                                          'double_fault_fusion',
-                                                          'entropy_fusion',
-                                                          'majority_voting_fusion',
-                                                          'svm_jumbo_fusion',
-                                                          'weighted_linear_early_fusion',
-                                                          'weighted_linear_late_fusion']})
 
 
 class Test_Functs(unittest.TestCase):
@@ -250,13 +228,13 @@ def fakeBenchmarkExec_mutlicore(nb_cores=-1, a=6, args=1):
 
 
 def fakeBenchmarkExec_monocore(
-        dataset_var=1, a=4, args=1, track_tracebacks=False):
+        dataset_var=1, a=4, args=1, track_tracebacks=False, nb_cores=1):
     return [a]
 
 
 def fakegetResults(results, stats_iter,
                    benchmark_arguments_dictionaries, metrics, directory,
-                   sample_ids, labels):
+                   sample_ids, labels, feat_ids, view_names):
     return 3
 
 
@@ -264,7 +242,8 @@ def fakeDelete(a, b, c):
     return 9
 
 
-def fake_analyze(a, b, c, d, sample_ids=None, labels=None):
+def fake_analyze(a, b, c, d, sample_ids=None, labels=None, feature_ids=None,
+                 view_names=None):
     pass
 
 

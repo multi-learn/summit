@@ -9,6 +9,11 @@ from summit.multiview_platform.multiview.multiview_utils import MultiviewResult
 from summit.multiview_platform.result_analysis.execution import format_previous_results, get_arguments, analyze_iterations
 from summit.tests.utils import rm_tmp, tmp_path, test_dataset
 
+class FakeClf():
+
+    def __init__(self):
+        self.feature_importances_ = [0.01,0.99]
+
 
 class FakeClassifierResult:
 
@@ -18,6 +23,7 @@ class FakeClassifierResult:
         self.hps_duration = i
         self.fit_duration = i
         self.pred_duration = i
+        self.clf=FakeClf()
 
     def get_classifier_name(self):
         return self.classifier_name
@@ -84,16 +90,16 @@ class Test_format_previous_results(unittest.TestCase):
                               columns=["ada-1", "mvm"])
 
         # Testing
-        np.testing.assert_array_equal(metric_analysis["acc"]["mean"].loc["train"],
+        np.testing.assert_array_almost_equal(metric_analysis["acc"]["mean"].loc["train"],
                                       mean_df.loc["train"])
-        np.testing.assert_array_equal(metric_analysis["acc"]["mean"].loc["test"],
+        np.testing.assert_array_almost_equal(metric_analysis["acc"]["mean"].loc["test"],
                                       mean_df.loc["test"])
-        np.testing.assert_array_equal(metric_analysis["acc"]["std"].loc["train"],
+        np.testing.assert_array_almost_equal(metric_analysis["acc"]["std"].loc["train"],
                                       std_df.loc["train"])
-        np.testing.assert_array_equal(metric_analysis["acc"]["std"].loc["test"],
+        np.testing.assert_array_almost_equal(metric_analysis["acc"]["std"].loc["test"],
                                       std_df.loc["test"])
-        np.testing.assert_array_equal(ada_sum, error_analysis["ada-1"])
-        np.testing.assert_array_equal(mv_sum, error_analysis["mv"])
+        np.testing.assert_array_almost_equal(ada_sum, error_analysis["ada-1"])
+        np.testing.assert_array_almost_equal(mv_sum, error_analysis["mv"])
         self.assertEqual(durations_mean.at["ada-1", 'plif'], 0.5)
 
 
@@ -129,6 +135,8 @@ class Test_analyze_iterations(unittest.TestCase):
         cls.metrics = {}
         cls.sample_ids = ['ex1', 'ex5', 'ex4', 'ex3', 'ex2', ]
         cls.labels = np.array([0, 1, 2, 1, 1])
+        cls.feature_ids = [["a", "b"]]
+        cls.view_names = [""]
 
     @classmethod
     def tearDownClass(cls):
@@ -140,7 +148,9 @@ class Test_analyze_iterations(unittest.TestCase):
                                       self.stats_iter,
                                       self.metrics,
                                       self.sample_ids,
-                                      self.labels)
+                                      self.labels,
+                                      self.feature_ids,
+                                      self.view_names)
         res, iter_res, tracebacks, labels_names = analysis
         self.assertEqual(labels_names, ['zero', 'one', 'two'])
 
@@ -152,7 +162,6 @@ class Test_analyze_iterations(unittest.TestCase):
                                                                              data=np.array([1, 1, 1, 2, 2, 2]).reshape((2, 3)), dtype=object))
         np.testing.assert_array_equal(
             iter_res['sample_errors'][0]['test1'], np.array([1, 1, 0, 0, 1]))
-        self.assertEqual(iter_res["feature_importances"], [{}, {}])
         np.testing.assert_array_equal(
             iter_res['labels'], np.array([0, 1, 2, 1, 1]))
         self.assertEqual(iter_res['metrics_scores'], [{}, {}])
