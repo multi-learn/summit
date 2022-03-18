@@ -46,7 +46,7 @@ def get_sample_errors(groud_truth, results):
 
 
 def publish_sample_errors(sample_errors, directory, database_name,
-                          labels_names, sample_ids, labels):  # pragma: no cover
+                          label_names, sample_ids, labels):  # pragma: no cover
     logging.info("Start:\t Label analysis figure generation")
 
     base_file_name = os.path.join(directory, database_name + "-")
@@ -59,7 +59,7 @@ def publish_sample_errors(sample_errors, directory, database_name,
                delimiter=",")
 
     plot_2d(data_2d, classifiers_names, nb_classifiers, base_file_name, database_name,
-            sample_ids=sample_ids, labels=labels)
+            sample_ids=sample_ids, labels=labels, label_names=label_names)
 
     plot_errors_bar(error_on_samples, nb_samples,
                     base_file_name, database_name, sample_ids=sample_ids)
@@ -69,7 +69,7 @@ def publish_sample_errors(sample_errors, directory, database_name,
 
 def publish_all_sample_errors(iter_results, directory,
                               stats_iter,
-                              sample_ids, labels, data_base_name):  # pragma: no cover
+                              sample_ids, labels, data_base_name, label_names):  # pragma: no cover
     logging.info(
         "Start:\t Global label analysis figure generation")
 
@@ -83,7 +83,7 @@ def publish_all_sample_errors(iter_results, directory,
 
     plot_2d(data, classifier_names, nb_classifiers,
             os.path.join(directory, ""), data_base_name, stats_iter=stats_iter,
-            sample_ids=sample_ids, labels=labels)
+            sample_ids=sample_ids, labels=labels, label_names=label_names)
     plot_errors_bar(error_on_samples, nb_samples, os.path.join(directory, ""), data_base_name,
                     sample_ids=sample_ids)
 
@@ -152,7 +152,7 @@ def gen_error_data_glob(iter_results, stats_iter):
 
 
 def plot_2d(data, classifiers_names, nb_classifiers, file_name, dataset_name, labels=None,
-            stats_iter=1, use_plotly=True, sample_ids=None):  # pragma: no cover
+            stats_iter=1, use_plotly=True, sample_ids=None, label_names=None):  # pragma: no cover
     r"""Used to generate a 2D plot of the errors.
 
     Parameters
@@ -178,6 +178,8 @@ def plot_2d(data, classifiers_names, nb_classifiers, file_name, dataset_name, la
     Returns
     -------
     """
+    if label_names is None:
+        label_names = [str(lab) for lab in np.sort(np.unique(labels))]
     fig, ax = plt.subplots(nrows=1, ncols=1, )
     label_index_list = np.concatenate([np.where(labels == i)[0] for i in
                                        np.unique(
@@ -202,7 +204,7 @@ def plot_2d(data, classifiers_names, nb_classifiers, file_name, dataset_name, la
         hover_text = [[sample_ids[sample_index] + " failed " + str(
             stats_iter - data[
                 sample_index, classifier_index]) + " time(s), labelled " + str(
-            labels[sample_index])
+            label_names[int(labels[sample_index])])
             for classifier_index in range(data.shape[1])]
             for sample_index in range(data.shape[0])]
         fig = plotly.graph_objs.Figure()
@@ -258,9 +260,11 @@ def plot_errors_bar(error_on_samples, nb_samples, file_name, dataset_name,
         fig = plotly.graph_objs.Figure(
             [plotly.graph_objs.Bar(x=sample_ids, y=1 - error_on_samples)])
         fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
-                          plot_bgcolor='rgba(0,0,0,0)')
-        title = "Dataset : {} <br> Error % for each sample <br> Generated on <a href='https://baptiste.bauvin.pages.lis-lab.fr/summit'>SuMMIT</a>.".format(
-            dataset_name)
+                          plot_bgcolor='rgba(0,0,0,0)',
+                          title="Dataset : {} <br> Error % for each sample <br> Generated on <a href='https://baptiste.bauvin.pages.lis-lab.fr/summit'>SuMMIT</a>.".format(
+                              dataset_name)
+                          )
+
         plotly.offline.plot(fig, filename=file_name + "error_analysis_bar.html",
                             auto_open=False)
 

@@ -105,7 +105,7 @@ class BaseClassifier(BaseEstimator, ):
         else:
             return str(self.get_params()[param_name])
 
-    def get_interpretation(self, directory, base_file_name, y_test,
+    def get_interpretation(self, directory, base_file_name, y_test, feature_ids,
                            multi_class=False):
         """
         Base method that returns an empty string if there is not interpretation
@@ -169,7 +169,7 @@ class ResultAnalyser():
     def __init__(self, classifier, classification_indices, k_folds,
                  hps_method, metrics_dict, n_iter, class_label_names,
                  pred, directory, base_file_name, labels,
-                 database_name, nb_cores, duration):
+                 database_name, nb_cores, duration, feature_ids):
         """
 
         Parameters
@@ -219,6 +219,7 @@ class ResultAnalyser():
         self.duration = duration
         self.metric_scores = {}
         self.class_metric_scores = {}
+        self.feature_ids=feature_ids
 
     def get_all_metrics_scores(self, ):
         """
@@ -387,7 +388,7 @@ class ResultAnalyser():
         string_analysis += "\n\n Classifier Interpretation : \n"
         string_analysis += self.classifier.get_interpretation(
             self.directory, self.base_file_name,
-            self.labels[self.test_indices])
+            self.labels[self.test_indices], self.feature_ids)
         image_analysis = {}
         return string_analysis, image_analysis, self.metric_scores, \
             self.class_metric_scores, self.confusion_matrix

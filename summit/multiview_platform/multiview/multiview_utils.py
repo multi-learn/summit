@@ -133,7 +133,7 @@ def get_monoview_classifier(classifier_name, multiclass=False):
 class MultiviewResult(object):
     def __init__(self, classifier_name, classifier_config,
                  metrics_scores, full_labels, hps_duration, fit_duration,
-                 pred_duration, class_metric_scores):
+                 pred_duration, class_metric_scores, clf):
         self.classifier_name = classifier_name
         self.classifier_config = classifier_config
         self.metrics_scores = metrics_scores
@@ -142,6 +142,7 @@ class MultiviewResult(object):
         self.fit_duration = fit_duration
         self.pred_duration = pred_duration
         self.class_metric_scores = class_metric_scores
+        self.clf=clf
 
     def get_classifier_name(self):
         try:
@@ -160,7 +161,7 @@ class MultiviewResultAnalyzer(ResultAnalyser):
     def __init__(self, view_names, classifier, classification_indices, k_folds,
                  hps_method, metrics_dict, n_iter, class_label_names,
                  pred, directory, base_file_name, labels,
-                 database_name, nb_cores, duration):
+                 database_name, nb_cores, duration, feature_ids):
         if hps_method.endswith("equiv"):
             n_iter = n_iter * len(view_names)
         ResultAnalyser.__init__(self, classifier, classification_indices,
@@ -169,7 +170,7 @@ class MultiviewResultAnalyzer(ResultAnalyser):
                                 class_label_names,
                                 pred, directory,
                                 base_file_name, labels, database_name,
-                                nb_cores, duration)
+                                nb_cores, duration, feature_ids)
         self.classifier_name = classifier.short_name
         self.view_names = view_names
 

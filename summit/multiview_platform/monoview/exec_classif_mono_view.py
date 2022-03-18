@@ -54,7 +54,7 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
                   k_folds, nb_cores, databaseType, path,
                   random_state, hyper_param_search="Random",
                   metrics={"accuracy_score*": {}}, n_iter=30, view_name="",
-                  hps_kwargs={}, **args):
+                  hps_kwargs={}, feature_ids=[], **args):
     logging.info("Start:\t Loading data")
     kwargs, \
         t_start, \
@@ -151,7 +151,8 @@ def exec_monoview(directory, X, Y, database_name, labels_names,
                                              labels=Y,
                                              database_name=database_name,
                                              nb_cores=nb_cores,
-                                             duration=whole_duration)
+                                             duration=whole_duration,
+                                             feature_ids=feature_ids)
     string_analysis, images_analysis, metrics_scores, class_metrics_scores, \
         confusion_matrix = result_analyzer.analyze()
     logging.info("Done:\t Getting results")

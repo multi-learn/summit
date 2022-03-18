@@ -7,8 +7,8 @@ views:
 pathf: "examples/data/"
 nice: 0
 random_state: 42
-nb_cores: 4
-full: False
+nb_cores: 1
+full: True
 debug: True
 add_noise: False
 noise_std: 0.0
@@ -21,7 +21,7 @@ split: 0.8
 nb_folds: 2
 nb_class: 3
 classes:
-type: ["multiview"]
+type: ["monoview", "multiview"]
 algos_monoview: ["decision_tree", ]
 algos_multiview: ["early_fusion_adaboost"]
 stats_iter: 3
@@ -29,7 +29,7 @@ metrics:
   accuracy_score: {}
   f1_score: {}
 metric_princ: "accuracy_score"
-hps_type: "Random"
+hps_type: "None"
 hps_args:
   n_iter: 10
   equivalent_draws: False
@@ -39,6 +39,8 @@ hps_args:
         low: 1
         high: 10
 
+decision_tree:
+  max_depth: 1
 
 weighted_linear_early_fusion:
   view_weights: null

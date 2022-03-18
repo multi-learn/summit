@@ -76,7 +76,20 @@ def gen_test_folds_preds(X_train, y_train, KFolds, estimator):
 
 class BaseMonoviewClassifier(BaseClassifier):
 
-    def get_feature_importance(self, directory, base_file_name,
+    def get_interpretation(self, directory, base_file_name, y_test, feature_ids,
+                           multi_class=False):
+        """
+        Base method that returns an empty string if there is not interpretation
+        method in the classifier's module
+        """
+        if hasattr(self, "feature_importances_"):
+            return self.get_feature_importance(directory, base_file_name,
+                                               feature_ids,)
+        else:
+            return ""
+
+
+    def get_feature_importance(self, directory, base_file_name, feature_ids,
                                nb_considered_feats=50):
         """Used to generate a graph and a pickle dictionary representing
         feature importances"""
@@ -85,28 +98,19 @@ class BaseMonoviewClassifier(BaseClassifier):
         feature_importances_sorted = feature_importances[sorted_args][
             :nb_considered_feats]
         feature_indices_sorted = sorted_args[:nb_considered_feats]
-        fig, ax = plt.subplots()
-        x = np.arange(len(feature_indices_sorted))
-        formatter = FuncFormatter(percent)
-        ax.yaxis.set_major_formatter(formatter)
-        plt.bar(x, feature_importances_sorted)
-        plt.title("Importance depending on feature")
-        fig.savefig(
-            os.path.join(directory, base_file_name + "feature_importances.png"), transparent=True)
-        plt.close()
-        features_importances_dict = dict((featureIndex, featureImportance)
-                                         for featureIndex, featureImportance in
+        features_importances_dict = dict((feature_ids[feature_index], feature_importance)
+                                         for feature_index, feature_importance in
                                          enumerate(feature_importances)
-                                         if featureImportance != 0)
+                                         if feature_importance != 0)
         with open(directory + 'feature_importances.pickle', 'wb') as handle:
             pickle.dump(features_importances_dict, handle)
         interpret_string = "Feature importances : \n"
-        for featureIndex, featureImportance in zip(feature_indices_sorted,
+        for feature_index, feature_importance in zip(feature_indices_sorted,
                                                    feature_importances_sorted):
-            if featureImportance > 0:
-                interpret_string += "- Feature index : " + str(featureIndex) + \
+            if feature_importance > 0:
+                interpret_string += "- Feature : " + feature_ids[feature_index] + \
                                     ", feature importance : " + str(
-                    featureImportance) + "\n"
+                    feature_importance) + "\n"
         return interpret_string
 
     def get_name_for_fusion(self):
@@ -175,12 +179,12 @@ class MonoviewResultAnalyzer(ResultAnalyser):
                  classification_indices, k_folds, hps_method, metrics_dict,
                  n_iter, class_label_names, pred,
                  directory, base_file_name, labels, database_name, nb_cores,
-                 duration):
+                 duration, feature_ids):
         ResultAnalyser.__init__(self, classifier, classification_indices,
                                 k_folds, hps_method, metrics_dict, n_iter,
                                 class_label_names, pred,
                                 directory, base_file_name, labels,
-                                database_name, nb_cores, duration)
+                                database_name, nb_cores, duration, feature_ids)
         self.view_name = view_name
         self.classifier_name = classifier_name
         self.shape = shape

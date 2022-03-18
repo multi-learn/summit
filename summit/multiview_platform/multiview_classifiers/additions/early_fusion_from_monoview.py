@@ -30,8 +30,11 @@ class BaseEarlyFusion(BaseMultiviewClassifier):
         return monoview_params
 
     def fit(self, X, y, train_indices=None, view_indices=None):
-        train_indices, X = self.transform_data_to_monoview(X, train_indices,
-                                                           view_indices)
+        self.view_dict = X.view_dict
+        train_indices, self.view_indices = get_samples_views_indices(X,
+                                                                      train_indices,
+                                                                      view_indices)
+        train_indices, X = self.transform_data_to_monoview(X, train_indices,)
         self.used_views = view_indices
         if np.unique(y[train_indices]).shape[0] > 2 and \
                 not (isinstance(self.monoview_classifier, MultiClassWrapper)):
@@ -40,22 +43,22 @@ class BaseEarlyFusion(BaseMultiviewClassifier):
                                                     multiview=False,
                                                     y=y[train_indices])
         self.monoview_classifier.fit(X, y[train_indices])
+        if hasattr(self.monoview_classifier, "feature_importances_"):
+            self.get_feature_importances()
         return self
 
     def predict(self, X, sample_indices=None, view_indices=None):
-        _, X = self.transform_data_to_monoview(X, sample_indices, view_indices)
+        _, X = self.transform_data_to_monoview(X, sample_indices)
         self._check_views(self.view_indices)
         predicted_labels = self.monoview_classifier.predict(X)
         return predicted_labels
 
-    def transform_data_to_monoview(self, dataset, sample_indices,
-                                   view_indices):
+    def get_feature_importances(self):
+        self.feature_importances_ = self.monoview_classifier.feature_importances_
+
+    def transform_data_to_monoview(self, dataset, sample_indices):
         """Here, we extract the data from the HDF5 dataset file and store all
         the concatenated views in one variable"""
-        sample_indices, self.view_indices = get_samples_views_indices(dataset,
-                                                                      sample_indices,
-                                                                      view_indices)
-
         X = self.hdf5_to_monoview(dataset, sample_indices)
         return sample_indices, X
 
@@ -65,4 +68,8 @@ class BaseEarlyFusion(BaseMultiviewClassifier):
             [dataset.get_v(view_idx, samples)
              for index, view_idx
              in enumerate(self.view_indices)], axis=1)
+        self.feature_ids = []
+        for view_idx in self.view_indices:
+            view_name = dataset.view_names[view_idx]
+            self.feature_ids += [view_name+"-"+feat_id for feat_id in dataset.feature_ids[view_idx]]
         return monoview_data
