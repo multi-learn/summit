@@ -1,9 +1,9 @@
 .. |pipeline| image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/pipeline.svg
     :alt: Pipeline status
 
-.. |license| image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg
-    :target: http://www.gnu.org/licenses/gpl-3.0
-    :alt: License: GPL v3
+.. |license| image:: https://img.shields.io/badge/License-New%20BSD-blue.svg
+    :target: https://opensource.org/licenses/BSD-3-Clause
+    :alt: License: New BSD
 
 .. |coverage| image:: https://gitlab.lis-lab.fr/baptiste.bauvin/summit/badges/master/coverage.svg
     :target: http://baptiste.bauvin.pages.lis-lab.fr/summit/coverage/index.html
