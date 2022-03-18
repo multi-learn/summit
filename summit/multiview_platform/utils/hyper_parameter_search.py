@@ -216,7 +216,7 @@ class Grid(GridSearchCV, HPSearch):
                  random_state=None, track_tracebacks=True):
         scoring = HPSearch.get_scoring(self, scoring)
         GridSearchCV.__init__(self, estimator, param_grid, scoring=scoring,
-                              n_jobs=n_jobs, iid='deprecated', refit=refit,
+                              n_jobs=n_jobs, refit=refit,
                               cv=cv)
         self.framework = framework
         self.available_indices = learning_indices

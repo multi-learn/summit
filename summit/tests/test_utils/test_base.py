@@ -97,7 +97,7 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                  self.pred, self.directory,
                                  self.base_file_name, self.labels,
                                  self.database_name, self.nb_cores,
-                                 self.duration)
+                                 self.duration, [""])
 
     def test_get_metric_scores(self):
         RA = base.ResultAnalyser(self.classifier, self.classification_indices,
@@ -107,7 +107,7 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                  self.pred,
                                  self.directory, self.base_file_name,
                                  self.labels, self.database_name,
-                                 self.nb_cores, self.duration)
+                                 self.nb_cores, self.duration, [""])
         cl_train, cl_test, train_score, test_score = RA.get_metric_score(
             "accuracy_score", {})
         np.testing.assert_array_equal(train_score, self.train_accuracy)
@@ -121,7 +121,7 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                  self.pred,
                                  self.directory, self.base_file_name,
                                  self.labels, self.database_name,
-                                 self.nb_cores, self.duration)
+                                 self.nb_cores, self.duration, [""])
         RA.get_all_metrics_scores()
         self.assertEqual(RA.metric_scores["accuracy_score"][0],
                          self.train_accuracy)
@@ -140,7 +140,7 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                  self.pred,
                                  self.directory, self.base_file_name,
                                  self.labels, self.database_name,
-                                 self.nb_cores, self.duration)
+                                 self.nb_cores, self.duration, [''])
         RA.get_all_metrics_scores()
         string = RA.print_metric_score()
         self.assertEqual(string, '\n\n\tFor Accuracy score using {}, (higher is better) : \n\t\t- Score on train : 0.25\n\t\t- Score on test : 0.2692307692307692\n\n\tFor F1 score using average: micro, {} (higher is better) : \n\t\t- Score on train : 0.25\n\t\t- Score on test : 0.2692307692307692\n\nTest set confusion matrix : \n\n╒════════╤══════════╤══════════╤══════════╕\n│        │   class1 │   class2 │   class3 │\n╞════════╪══════════╪══════════╪══════════╡\n│ class1 │        3 │        1 │        2 │\n├────────┼──────────┼──────────┼──────────┤\n│ class2 │        3 │        2 │        2 │\n├────────┼──────────┼──────────┼──────────┤\n│ class3 │        3 │        8 │        2 │\n╘════════╧══════════╧══════════╧══════════╛\n\n')
@@ -153,7 +153,7 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                 self.pred,
                                 self.directory, self.base_file_name,
                                 self.labels, self.database_name,
-                                self.nb_cores, self.duration)
+                                self.nb_cores, self.duration, [''])
         self.assertEqual(
             RA.get_db_config_string(),
             'Database configuration : \n\t- Database name : test_database\ntest\t- Learning Rate : 0.48\n\t- Labels used : class1, class2, class3\n\t- Number of cross validation folds : 5\n\n')
@@ -166,7 +166,7 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                  self.pred,
                                  self.directory, self.base_file_name,
                                  self.labels, self.database_name,
-                                 self.nb_cores, self.duration)
+                                 self.nb_cores, self.duration, [''])
         self.assertEqual(
             RA.get_classifier_config_string(),
             'Classifier configuration : \n\t- FakeClassifier with test1 : 10, test2 : test\n\t- Executed on 0.5 core(s) \n\t- Got configuration using randomized search with 6  iterations \n')
@@ -179,7 +179,7 @@ class Test_ResultAnalyzer(unittest.TestCase):
                                 self.pred,
                                 self.directory, self.base_file_name,
                                 self.labels, self.database_name,
-                                self.nb_cores, self.duration)
+                                self.nb_cores, self.duration, [""])
         str_analysis, img_analysis, metric_scores, class_metric_scores, conf_mat = RA.analyze()
         self.assertEqual(str_analysis, 'test2Database configuration : \n\t- Database name : test_database\ntest\t- Learning Rate : 0.48\n\t- Labels used : class1, class2, class3\n\t- Number of cross validation folds : 5\n\nClassifier configuration : \n\t- FakeClassifier with test1 : 10, test2 : test\n\t- Executed on 0.5 core(s) \n\t- Got configuration using randomized search with 6  iterations \n\n\n\tFor Accuracy score using {}, (higher is better) : \n\t\t- Score on train : 0.25\n\t\t- Score on test : 0.2692307692307692\n\n\tFor F1 score using average: micro, {} (higher is better) : \n\t\t- Score on train : 0.25\n\t\t- Score on test : 0.2692307692307692\n\nTest set confusion matrix : \n\n╒════════╤══════════╤══════════╤══════════╕\n│        │   class1 │   class2 │   class3 │\n╞════════╪══════════╪══════════╪══════════╡\n│ class1 │        3 │        1 │        2 │\n├────────┼──────────┼──────────┼──────────┤\n│ class2 │        3 │        2 │        2 │\n├────────┼──────────┼──────────┼──────────┤\n│ class3 │        3 │        8 │        2 │\n╘════════╧══════════╧══════════╧══════════╛\n\n\n\n Classification took -1 day, 23:59:56\n\n Classifier Interpretation : \n')
 
@@ -223,7 +223,7 @@ class Test_BaseClassifier(unittest.TestCase):
 
     def test_get_iterpret(self):
         fake_class = FakeClassifier()
-        self.assertEqual("", fake_class.get_interpretation("", "", "",))
+        self.assertEqual("", fake_class.get_interpretation("", "", "",""))
 
     def test_accepts_mutliclass(self):
         accepts = FakeClassifier().accepts_multi_class(self.rs)

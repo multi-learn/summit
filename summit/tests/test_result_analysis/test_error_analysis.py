@@ -14,7 +14,7 @@ class Test_get_sample_errors(unittest.TestCase):
         results = [MultiviewResult("mv", "", {"accuracy_score": [0.7, 0.75],
                                               "f1_score": [0.71, 0.76]},
                                    np.array([0, 0, 0, 0, 1, 1, 1, 1, 1]),
-                                   0, 0, 0, {}),
+                                   0, 0, 0, {}, "clf"),
                    MonoviewResult(0,
                                   "dt",
                                   "1",

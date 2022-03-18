@@ -66,7 +66,7 @@ class Test_get_metrics_scores(unittest.TestCase):
                                   hps_duration=0,
                                   fit_duration=0,
                                   pred_duration=0,
-                                  class_metric_scores={})
+                                  class_metric_scores={},)
                    ]
         metrics_scores, class_met = get_metrics_scores(metrics,
                                                        results, [])
@@ -91,7 +91,7 @@ class Test_get_metrics_scores(unittest.TestCase):
     def test_mutiview_result(self):
         metrics = {"accuracy_score*": {}, "f1_score": {}}
         results = [MultiviewResult("mv", "", {"accuracy_score*": [0.7, 0.75],
-                                              "f1_score": [0.71, 0.76]}, "", 0, 0, 0, {}),
+                                              "f1_score": [0.71, 0.76]}, "", 0, 0, 0, {}, ""),
                    MonoviewResult(view_index=0,
                                   classifier_name="dt",
                                   view_name="1",

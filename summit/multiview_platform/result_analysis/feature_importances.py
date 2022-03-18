@@ -78,20 +78,22 @@ def publish_feature_importances(feature_importances, directory, database_name,
                                                columns=feature_std.columns,
                                                data=np.zeros((1, len(
                                                    feature_std.columns)))))
-    feature_importances_df = pd.concat(importance_dfs[:-1])
-    feature_importances_df = feature_importances_df/feature_importances_df.sum(axis=0)
-    feature_std_df = pd.concat(std_dfs[:-1])
-    if "mv" in feature_importances:
-        feature_importances_df = pd.concat([feature_importances_df,feature_importances["mv"].loc[(feature_importances["mv"] != 0).any(axis=1), :]], axis=1).fillna(0)
-        if feature_stds is not None:
-            feature_std_df = pd.concat([feature_std_df, feature_stds["mv"]], axis=1,).fillna(0)
-        else:
-            fake = pd.DataFrame(data=np.zeros((feature_importances_df.shape[0], feature_importances["mv"].shape[1])),
-                                           index=feature_importances_df.index,
-                                           columns=feature_importances["mv"].columns).fillna(0)
-            feature_std_df = pd.concat([feature_std_df, fake], axis=1,).fillna(0)
-    plot_feature_importances(os.path.join(directory, "feature_importances",
-                                 database_name), feature_importances_df, feature_std_df)
+    if len(importance_dfs)>0:
+        feature_importances_df = pd.concat(importance_dfs[:-1])
+        feature_importances_df = feature_importances_df/feature_importances_df.sum(axis=0)
+
+        feature_std_df = pd.concat(std_dfs[:-1])
+        if "mv" in feature_importances:
+            feature_importances_df = pd.concat([feature_importances_df,feature_importances["mv"].loc[(feature_importances["mv"] != 0).any(axis=1), :]], axis=1).fillna(0)
+            if feature_stds is not None:
+                feature_std_df = pd.concat([feature_std_df, feature_stds["mv"]], axis=1,).fillna(0)
+            else:
+                fake = pd.DataFrame(data=np.zeros((feature_importances_df.shape[0], feature_importances["mv"].shape[1])),
+                                               index=feature_importances_df.index,
+                                               columns=feature_importances["mv"].columns).fillna(0)
+                feature_std_df = pd.concat([feature_std_df, fake], axis=1,).fillna(0)
+        plot_feature_importances(os.path.join(directory, "feature_importances",
+                                     database_name), feature_importances_df, feature_std_df)
 
 
 def plot_feature_importances(file_name, feature_importance,

@@ -19,6 +19,7 @@ class FakeEstim(BaseEstimator):
     def __init__(self, param1=None, param2=None, random_state=None):
         self.param1 = param1
         self.param2 = param2
+        self.random_state="1"
 
     def fit(self, X, y,):
         return self
