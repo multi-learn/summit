@@ -457,7 +457,7 @@ def exec_one_benchmark_mono_core(dataset_var=None, labels_dictionary=None,
                               classification_indices, k_folds,
                               nb_cores, args["file_type"], args["pathf"], random_state,
                               hyper_param_search=hyper_param_search,
-                              metrics=metrics,
+                              metrics=metrics, feature_ids=dataset_var.feature_ids[arguments["view_index"]],
                               **arguments)]
         except BaseException:
             if track_tracebacks:
@@ -548,7 +548,9 @@ def exec_benchmark(nb_cores, stats_iter,
         analyze_iterations([benchmark_results],
                            benchmark_arguments_dictionaries, stats_iter,
                            metrics, sample_ids=dataset_var.sample_ids,
-                           labels=dataset_var.get_labels())
+                           labels=dataset_var.get_labels(),
+                           feature_ids=dataset_var.feature_ids,
+                           view_names=dataset_var.view_names)
         results += [benchmark_results]
     logging.info("Done:\t Executing all the needed benchmarks")
 
@@ -559,7 +561,8 @@ def exec_benchmark(nb_cores, stats_iter,
                                 metrics,
                                 directory,
                                 dataset_var.sample_ids,
-                                dataset_var.get_labels())
+                                dataset_var.get_labels(),dataset_var.feature_ids,
+                                dataset_var.view_names)
     logging.info("Done:\t Analyzing predictions")
     return results_mean_stds
 

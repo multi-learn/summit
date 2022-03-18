@@ -13,13 +13,14 @@ from .tracebacks_analysis import save_failed, publish_tracebacks
 
 
 def analyze(results, stats_iter, benchmark_argument_dictionaries,
-            metrics, directory, sample_ids, labels):  # pragma: no cover
+            metrics, directory, sample_ids, labels, feature_ids,
+            view_names):  # pragma: no cover
     """Used to analyze the results of the previous benchmarks"""
     data_base_name = benchmark_argument_dictionaries[0]["args"]["name"]
 
     results_means_std, iter_results, flagged_failed, label_names = analyze_iterations(
         results, benchmark_argument_dictionaries,
-        stats_iter, metrics, sample_ids, labels)
+        stats_iter, metrics, sample_ids, labels, feature_ids, view_names)
     if flagged_failed:
         save_failed(flagged_failed, directory)
 
@@ -31,7 +32,7 @@ def analyze(results, stats_iter, benchmark_argument_dictionaries,
 
 
 def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
-                       metrics, sample_ids, labels):
+                       metrics, sample_ids, labels, feature_ids, view_names):
     r"""Used to extract and format the results of the different
     experimentations performed.
 
@@ -81,7 +82,9 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
                                                                  result,
                                                                  labels_names)
         sample_errors = get_sample_errors(labels, result)
-        feature_importances = get_feature_importances(result)
+        feature_importances = get_feature_importances(result,
+                                                      feature_ids=feature_ids,
+                                                      view_names=view_names)
         durations = get_duration(result)
         directory = arguments["directory"]
 
@@ -124,7 +127,7 @@ def analyze_all(iter_results, stats_iter, directory, data_base_name,
                                          data_base_name, stats_iter,
                                          label_names)
     publish_all_sample_errors(error_analysis, directory, stats_iter,
-                              sample_ids, labels, data_base_name)
+                              sample_ids, labels, data_base_name, label_names)
     publish_feature_importances(feature_importances, directory,
                                 data_base_name, feature_importances_stds)
     plot_durations(duration_means, directory, data_base_name, duration_stds)

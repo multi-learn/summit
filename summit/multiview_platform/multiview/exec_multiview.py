@@ -61,7 +61,7 @@ def init_constants(kwargs, classification_indices, metrics,
 
     for view_index, view_name in zip(views_indices, views):
         logging.info("Info:\t Shape of " + str(view_name) + " :" + str(
-            dataset_var.get_shape()))
+            dataset_var.get_shape(view_index)))
     labels = dataset_var.get_labels()
     directory = os.path.join(directory, classifier_name)
     base_file_name = classifier_name + "-" + dataset_var.get_name() + "-"
@@ -266,6 +266,8 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
 
     logging.info("Start:\t Optimizing hyperparameters")
     hps_beg = time.monotonic()
+
+    print(dataset_var.view_dict)
     if hps_method != "None":
         hps_method_class = getattr(hyper_parameter_search, hps_method)
         estimator = getattr(classifier_module, classifier_name)(
@@ -294,6 +296,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     classifier.fit(dataset_var, dataset_var.get_labels(),
                    train_indices=learning_indices,
                    view_indices=views_indices)
+    print("pou")
     fit_duration = time.monotonic() - fit_beg
     logging.info("Done:\t Fitting classifier")
 
@@ -332,7 +335,8 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
                                               labels=labels,
                                               database_name=dataset_var.get_name(),
                                               nb_cores=nb_cores,
-                                              duration=whole_duration)
+                                              duration=whole_duration,
+                                              feature_ids=dataset_var.feature_ids)
     string_analysis, images_analysis, metrics_scores, class_metrics_scores, \
         confusion_matrix = result_analyzer.analyze()
     logging.info("Done:\t Result Analysis for " + cl_type)
@@ -344,4 +348,4 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
 
     return MultiviewResult(cl_type, classifier_config, metrics_scores,
                            full_pred, hps_duration, fit_duration,
-                           pred_duration, class_metrics_scores)
+                           pred_duration, class_metrics_scores, classifier)

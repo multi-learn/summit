@@ -165,12 +165,18 @@ class Dataset():
 
         return selected_label_names
 
+    def gen_feat_id(self):
+        self.feature_ids =  [["ID_" + str(i) for i in
+                                 range(self.get_v(view_ind).shape[1])]
+                                for view_ind in self.view_dict.values()]
+
+
 
 class RAMDataset(Dataset):
 
     def __init__(self, views=None, labels=None, are_sparse=False,
                  view_names=None, labels_names=None, sample_ids=None,
-                 name=None):
+                 name=None, feature_ids=None):
         self.saved_on_disk = False
         self.views = views
         self.labels = np.asarray(labels)
@@ -187,6 +193,13 @@ class RAMDataset(Dataset):
         self.name = name
         self.nb_view = len(self.views)
         self.is_temp = False
+        if feature_ids is not None:
+            feature_ids = [[feature_id if not is_just_number(feature_id)
+                            else "ID_" + feature_id for feature_id in
+                            feat_ids] for feat_ids in feature_ids]
+            self.feature_ids = feature_ids
+        else:
+            self.gen_feat_id()
 
     def get_view_name(self, view_idx):
         return self.view_names[view_idx]
@@ -319,7 +332,7 @@ class HDF5Dataset(Dataset):
     def __init__(self, views=None, labels=None, are_sparse=False,
                  file_name="dataset.hdf5", view_names=None, path="",
                  hdf5_file=None, labels_names=None, is_temp=False,
-                 sample_ids=None, ):
+                 sample_ids=None, feature_ids=None):
         self.is_temp = False
         if hdf5_file is not None:
             self.dataset = hdf5_file
@@ -364,6 +377,14 @@ class HDF5Dataset(Dataset):
             else:
                 self.sample_ids = ["ID_" + str(i)
                                    for i in range(labels.shape[0])]
+            if feature_ids is not None:
+                feature_ids = [[feature_id if not is_just_number(feature_id)
+                              else "ID_" + feature_id for feature_id in
+                              feat_ids] for feat_ids in feature_ids]
+                self.feature_ids = feature_ids
+            else:
+                self.gen_feat_id()
+
 
     def get_v(self, view_index, sample_indices=None):
         """ Extract the view and returns a numpy.ndarray containing the description
@@ -423,6 +444,7 @@ class HDF5Dataset(Dataset):
         """
         self.nb_view = self.dataset["Metadata"].attrs["nbView"]
         self.view_dict = self.get_view_dict()
+        self.view_names = [self.dataset["View{}".format(ind)].attrs['name'] for ind in range(self.nb_view)]
         if "sample_ids" in self.dataset["Metadata"].keys():
             self.sample_ids = [sample_id.decode()
                                if not is_just_number(sample_id.decode())
@@ -432,6 +454,14 @@ class HDF5Dataset(Dataset):
         else:
             self.sample_ids = ["ID_" + str(i) for i in
                                range(self.dataset["Labels"].shape[0])]
+        if "feature_ids" in self.dataset["Metadata"].keys():
+            self.feature_ids = [[feature_id.decode()
+                               if not is_just_number(feature_id.decode())
+                               else "ID_" + feature_id.decode()
+                               for feature_id in feature_ids] for feature_ids in
+                               self.dataset["Metadata"]["feature_ids"]]
+        else:
+           self.gen_feat_id()
 
     def get_nb_samples(self):
         """

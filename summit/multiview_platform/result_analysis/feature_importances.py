@@ -7,7 +7,7 @@ import plotly
 from ..monoview.monoview_utils import MonoviewResult
 
 
-def get_feature_importances(result, feature_names=None):
+def get_feature_importances(result, feature_ids=None, view_names=None):
     r"""Extracts the feature importance from the monoview results and stores
     them in a dictionnary :
     feature_importance[view_name] is a pandas.DataFrame of size n_feature*n_clf
@@ -28,7 +28,7 @@ def get_feature_importances(result, feature_names=None):
         if isinstance(classifier_result, MonoviewResult):
             if classifier_result.view_name not in feature_importances:
                 feature_importances[classifier_result.view_name] = pd.DataFrame(
-                    index=feature_names)
+                    index=feature_ids[classifier_result.view_index])
             if hasattr(classifier_result.clf, 'feature_importances_'):
                 feature_importances[classifier_result.view_name][
                     classifier_result.classifier_name] = classifier_result.clf.feature_importances_
@@ -36,25 +36,62 @@ def get_feature_importances(result, feature_names=None):
                 feature_importances[classifier_result.view_name][
                     classifier_result.classifier_name] = np.zeros(
                     classifier_result.n_features)
+        else:
+            if "mv" not in feature_importances:
+                feat_ids = []
+                for view_ind, v_feature_id in enumerate(feature_ids):
+                    feat_ids += [view_names[view_ind] + "-" + ind for ind in
+                                 v_feature_id]
+                feature_importances["mv"] = pd.DataFrame(index=feat_ids)
+            if hasattr(classifier_result.clf, 'feature_importances_'):
+                feature_importances["mv"][classifier_result.classifier_name] = classifier_result.clf.feature_importances_
     return feature_importances
 
 
 def publish_feature_importances(feature_importances, directory, database_name,
                                 feature_stds=None):  # pragma: no cover
+    importance_dfs = []
+    std_dfs = []
+    if not os.path.exists(os.path.join(directory, "feature_importances")):
+        os.mkdir(os.path.join(directory, "feature_importances"))
     for view_name, feature_importance in feature_importances.items():
-        if not os.path.exists(os.path.join(directory, "feature_importances")):
-            os.mkdir(os.path.join(directory, "feature_importances"))
-        file_name = os.path.join(directory, "feature_importances",
-                                 database_name + "-" + view_name
-                                 + "-feature_importances")
+        if view_name!="mv":
+
+            if feature_stds is not None:
+                feature_std = feature_stds[view_name]
+            else:
+                feature_std = pd.DataFrame(data=np.zeros(feature_importance.shape),
+                                           index=feature_importance.index,
+                                           columns=feature_importance.columns)
+            feature_std = feature_std.loc[feature_importance.index]
+
+
+            importance_dfs.append(feature_importance.set_index(pd.Index([view_name+"-"+ind for ind in list(feature_importance.index)])))
+            importance_dfs.append(pd.DataFrame(index=[view_name+"-br"],
+                                               columns=feature_importance.columns,
+                                               data=np.zeros((1, len(
+                                                   feature_importance.columns)))))
+            std_dfs.append(feature_std.set_index(pd.Index([view_name+"-"+ind
+                                                           for ind
+                                                           in list(feature_std.index)])))
+            std_dfs.append(pd.DataFrame(index=[view_name + "-br"],
+                                               columns=feature_std.columns,
+                                               data=np.zeros((1, len(
+                                                   feature_std.columns)))))
+    feature_importances_df = pd.concat(importance_dfs[:-1])
+    feature_importances_df = feature_importances_df/feature_importances_df.sum(axis=0)
+    feature_std_df = pd.concat(std_dfs[:-1])
+    if "mv" in feature_importances:
+        feature_importances_df = pd.concat([feature_importances_df,feature_importances["mv"].loc[(feature_importances["mv"] != 0).any(axis=1), :]], axis=1).fillna(0)
         if feature_stds is not None:
-            feature_std = feature_stds[view_name]
-            feature_std.to_csv(file_name + "_dataframe_stds.csv")
+            feature_std_df = pd.concat([feature_std_df, feature_stds["mv"]], axis=1,).fillna(0)
         else:
-            feature_std = pd.DataFrame(data=np.zeros(feature_importance.shape),
-                                       index=feature_importance.index,
-                                       columns=feature_importance.columns)
-        plot_feature_importances(file_name, feature_importance, feature_std)
+            fake = pd.DataFrame(data=np.zeros((feature_importances_df.shape[0], feature_importances["mv"].shape[1])),
+                                           index=feature_importances_df.index,
+                                           columns=feature_importances["mv"].columns).fillna(0)
+            feature_std_df = pd.concat([feature_std_df, fake], axis=1,).fillna(0)
+    plot_feature_importances(os.path.join(directory, "feature_importances",
+                                 database_name), feature_importances_df, feature_std_df)
 
 
 def plot_feature_importances(file_name, feature_importance,
