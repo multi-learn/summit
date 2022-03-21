@@ -82,7 +82,7 @@ def publish_feature_importances(feature_importances, directory, database_name,
         feature_importances_df = pd.concat(importance_dfs)
         feature_importances_df = feature_importances_df/feature_importances_df.sum(axis=0)
 
-        feature_std_df = pd.concat(std_dfs[:-1])
+        feature_std_df = pd.concat(std_dfs)
         if "mv" in feature_importances:
             feature_importances_df = pd.concat([feature_importances_df,feature_importances["mv"].loc[(feature_importances["mv"] != 0).any(axis=1), :]], axis=1).fillna(0)
             if feature_stds is not None:
