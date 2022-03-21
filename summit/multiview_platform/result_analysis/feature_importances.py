@@ -67,17 +67,17 @@ def publish_feature_importances(feature_importances, directory, database_name,
 
 
             importance_dfs.append(feature_importance.set_index(pd.Index([view_name+"-"+ind for ind in list(feature_importance.index)])))
-            importance_dfs.append(pd.DataFrame(index=[view_name+"-br"],
-                                               columns=feature_importance.columns,
-                                               data=np.zeros((1, len(
-                                                   feature_importance.columns)))))
+            # importance_dfs.append(pd.DataFrame(index=[view_name+"-br"],
+            #                                    columns=feature_importance.columns,
+            #                                    data=np.zeros((1, len(
+            #                                        feature_importance.columns)))))
             std_dfs.append(feature_std.set_index(pd.Index([view_name+"-"+ind
                                                            for ind
                                                            in list(feature_std.index)])))
-            std_dfs.append(pd.DataFrame(index=[view_name + "-br"],
-                                               columns=feature_std.columns,
-                                               data=np.zeros((1, len(
-                                                   feature_std.columns)))))
+            # std_dfs.append(pd.DataFrame(index=[view_name + "-br"],
+            #                                    columns=feature_std.columns,
+            #                                    data=np.zeros((1, len(
+            #                                        feature_std.columns)))))
     if len(importance_dfs)>0:
         feature_importances_df = pd.concat(importance_dfs[:-1])
         feature_importances_df = feature_importances_df/feature_importances_df.sum(axis=0)
@@ -98,6 +98,8 @@ def publish_feature_importances(feature_importances, directory, database_name,
 
 def plot_feature_importances(file_name, feature_importance,
                              feature_std):  # pragma: no cover
+    s = feature_importance.sum(axis=1)
+    feature_importance = feature_importance.loc[s.sort_values(ascending=False).index]
     feature_importance.to_csv(file_name + "_dataframe.csv")
     hover_text = [["-Feature :" + str(feature_name) +
                    "<br>-Classifier : " + classifier_name +
