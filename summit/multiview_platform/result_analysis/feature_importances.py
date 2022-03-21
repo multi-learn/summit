@@ -79,7 +79,7 @@ def publish_feature_importances(feature_importances, directory, database_name,
             #                                    data=np.zeros((1, len(
             #                                        feature_std.columns)))))
     if len(importance_dfs)>0:
-        feature_importances_df = pd.concat(importance_dfs[:-1])
+        feature_importances_df = pd.concat(importance_dfs)
         feature_importances_df = feature_importances_df/feature_importances_df.sum(axis=0)
 
         feature_std_df = pd.concat(std_dfs[:-1])
