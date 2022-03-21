@@ -115,8 +115,8 @@ def plot_feature_importances(file_name, feature_importance,
         z=feature_importance.values,
         text=hover_text,
         hoverinfo=["text"],
-        colorscale="Greys",
-        reversescale=False))
+        colorscale="Hot",
+        reversescale=True))
     fig.update_layout(
         xaxis={"showgrid": False, "showticklabels": False, "ticks": ''},
         yaxis={"showgrid": False, "showticklabels": False, "ticks": ''})
