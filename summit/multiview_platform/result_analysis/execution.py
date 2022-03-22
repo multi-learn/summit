@@ -84,7 +84,7 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
         sample_errors = get_sample_errors(labels, result)
         feature_importances = get_feature_importances(result,
                                                       feature_ids=feature_ids,
-                                                      view_names=view_names)
+                                                      view_names=view_names,)
         durations = get_duration(result)
         directory = arguments["directory"]
 
@@ -98,7 +98,7 @@ def analyze_iterations(results, benchmark_argument_dictionaries, stats_iter,
         publish_sample_errors(sample_errors, directory, database_name,
                               labels_names, sample_ids, labels)
         publish_feature_importances(feature_importances, directory,
-                                    database_name)
+                                    database_name, metric_scores=metrics_scores)
         plot_durations(durations, directory, database_name)
 
         iter_results["metrics_scores"][iter_index] = metrics_scores
