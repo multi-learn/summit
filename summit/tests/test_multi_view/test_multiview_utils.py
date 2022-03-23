@@ -79,6 +79,7 @@ class TestFunctions(unittest.TestCase):
                                  'knn',
                                  'lasso',
                                  'random_forest',
+                                 'scm',
                                  'sgd',
                                  'svm_linear',
                                  'svm_poly',
@@ -90,6 +91,7 @@ class TestFunctions(unittest.TestCase):
                                  'gradient_boosting',
                                  'knn',
                                  'random_forest',
+                                 'scm',
                                  'svm_linear',
                                  'svm_poly',
                                  'svm_rbf'])
