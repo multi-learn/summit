@@ -4,7 +4,7 @@ tests:
     tags:
         - docker
     script:
-        - pip3 install -e . --no-deps
+        - pip3 install -e .
         - pytest-3
     coverage: '/^TOTAL.+?(\d+\%)$/'
     artifacts:
