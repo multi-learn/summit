@@ -129,7 +129,8 @@ def analyze_all(iter_results, stats_iter, directory, data_base_name,
     publish_all_sample_errors(error_analysis, directory, stats_iter,
                               sample_ids, labels, data_base_name, label_names)
     publish_feature_importances(feature_importances, directory,
-                                data_base_name, feature_importances_stds)
+                                data_base_name, feature_importances_stds,
+                                metric_scores=metrics_analysis)
     plot_durations(duration_means, directory, data_base_name, duration_stds)
     return results
 

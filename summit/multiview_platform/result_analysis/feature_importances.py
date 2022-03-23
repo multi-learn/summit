@@ -102,6 +102,7 @@ def publish_feature_importances(feature_importances, directory, database_name,
 def plot_feature_importances(file_name, feature_importance,
                              feature_std):  # pragma: no cover
     s = feature_importance.sum(axis=1)
+    s = s[s!=0]
     feature_importance = feature_importance.loc[s.sort_values(ascending=False).index]
     feature_importance.to_csv(file_name + "_dataframe.csv")
     hover_text = [["-Feature :" + str(feature_name) +
@@ -134,6 +135,8 @@ def plot_feature_relevance(file_name, feature_importance,
                              feature_std, metric_scores): # pragma: no cover
     for metric, score_df in metric_scores.items():
         if metric.endswith("*"):
+            if isinstance(score_df, dict):
+                score_df = score_df["mean"]
             for score in score_df.columns:
                 if len(score.split("-"))>1:
                     algo, view = score.split("-")
