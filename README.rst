@@ -57,6 +57,7 @@ And the following python modules will be automatically installed  :
 * `pyyaml <https://pypi.org/project/PyYAML/>`_ - Used to read the config files,
 * `plotly <https://plot.ly/>`_ - Used to generate interactive HTML visuals,
 * `tabulate <https://pypi.org/project/tabulate/>`_ - Used to generated the confusion matrix.
+* `pyscm-ml <https://pypi.org/project/pyscm-ml/>`_ - 
 
 
 Installing
