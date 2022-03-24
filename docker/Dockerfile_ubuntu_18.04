@@ -29,6 +29,7 @@ RUN apt-get install -y --no-install-recommends locales && \
     update-locale en_US.UTF-8 && \
     echo "export LC_ALL=$(locale -a | grep en_US)" >> /root/.bashrc && \
     echo "export LANG=$(locale -a | grep en_US)" >>  /root/.bashrc
+ENV LANGUAGE'en_US:en'
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 

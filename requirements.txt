@@ -11,5 +11,5 @@ pyyaml>=3.12
 plotly>=4.2.1
 matplotlib>=3.1.1
 tabulate>=0.8.6
-pyscm-ml>=1.0.0
+pyscm git+https://github.com/babau1/pyscm@master#egg=pyscm
 
