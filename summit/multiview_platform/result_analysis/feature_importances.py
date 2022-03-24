@@ -7,7 +7,7 @@ import plotly
 from ..monoview.monoview_utils import MonoviewResult
 
 
-def get_feature_importances(result, feature_ids=None, view_names=None):
+def get_feature_importances(result, feature_ids=None, view_names=None,):
     r"""Extracts the feature importance from the monoview results and stores
     them in a dictionnary :
     feature_importance[view_name] is a pandas.DataFrame of size n_feature*n_clf
@@ -49,7 +49,7 @@ def get_feature_importances(result, feature_ids=None, view_names=None):
 
 
 def publish_feature_importances(feature_importances, directory, database_name,
-                                feature_stds=None):  # pragma: no cover
+                                feature_stds=None, metric_scores=None):  # pragma: no cover
     importance_dfs = []
     std_dfs = []
     if not os.path.exists(os.path.join(directory, "feature_importances")):
@@ -67,22 +67,22 @@ def publish_feature_importances(feature_importances, directory, database_name,
 
 
             importance_dfs.append(feature_importance.set_index(pd.Index([view_name+"-"+ind for ind in list(feature_importance.index)])))
-            importance_dfs.append(pd.DataFrame(index=[view_name+"-br"],
-                                               columns=feature_importance.columns,
-                                               data=np.zeros((1, len(
-                                                   feature_importance.columns)))))
+            # importance_dfs.append(pd.DataFrame(index=[view_name+"-br"],
+            #                                    columns=feature_importance.columns,
+            #                                    data=np.zeros((1, len(
+            #                                        feature_importance.columns)))))
             std_dfs.append(feature_std.set_index(pd.Index([view_name+"-"+ind
                                                            for ind
                                                            in list(feature_std.index)])))
-            std_dfs.append(pd.DataFrame(index=[view_name + "-br"],
-                                               columns=feature_std.columns,
-                                               data=np.zeros((1, len(
-                                                   feature_std.columns)))))
+            # std_dfs.append(pd.DataFrame(index=[view_name + "-br"],
+            #                                    columns=feature_std.columns,
+            #                                    data=np.zeros((1, len(
+            #                                        feature_std.columns)))))
     if len(importance_dfs)>0:
-        feature_importances_df = pd.concat(importance_dfs[:-1])
+        feature_importances_df = pd.concat(importance_dfs)
         feature_importances_df = feature_importances_df/feature_importances_df.sum(axis=0)
 
-        feature_std_df = pd.concat(std_dfs[:-1])
+        feature_std_df = pd.concat(std_dfs)
         if "mv" in feature_importances:
             feature_importances_df = pd.concat([feature_importances_df,feature_importances["mv"].loc[(feature_importances["mv"] != 0).any(axis=1), :]], axis=1).fillna(0)
             if feature_stds is not None:
@@ -94,10 +94,16 @@ def publish_feature_importances(feature_importances, directory, database_name,
                 feature_std_df = pd.concat([feature_std_df, fake], axis=1,).fillna(0)
         plot_feature_importances(os.path.join(directory, "feature_importances",
                                      database_name), feature_importances_df, feature_std_df)
+        if metric_scores is not None:
+            plot_feature_relevance(os.path.join(directory, "feature_importances",
+                                     database_name), feature_importances_df, feature_std_df, metric_scores)
 
 
 def plot_feature_importances(file_name, feature_importance,
                              feature_std):  # pragma: no cover
+    s = feature_importance.sum(axis=1)
+    s = s[s!=0]
+    feature_importance = feature_importance.loc[s.sort_values(ascending=False).index]
     feature_importance.to_csv(file_name + "_dataframe.csv")
     hover_text = [["-Feature :" + str(feature_name) +
                    "<br>-Classifier : " + classifier_name +
@@ -113,8 +119,8 @@ def plot_feature_importances(file_name, feature_importance,
         z=feature_importance.values,
         text=hover_text,
         hoverinfo=["text"],
-        colorscale="Greys",
-        reversescale=False))
+        colorscale="Hot",
+        reversescale=True))
     fig.update_layout(
         xaxis={"showgrid": False, "showticklabels": False, "ticks": ''},
         yaxis={"showgrid": False, "showticklabels": False, "ticks": ''})
@@ -123,3 +129,20 @@ def plot_feature_importances(file_name, feature_importance,
     plotly.offline.plot(fig, filename=file_name + ".html", auto_open=False)
 
     del fig
+    
+
+def plot_feature_relevance(file_name, feature_importance,
+                             feature_std, metric_scores): # pragma: no cover
+    for metric, score_df in metric_scores.items():
+        if metric.endswith("*"):
+            if isinstance(score_df, dict):
+                score_df = score_df["mean"]
+            for score in score_df.columns:
+                if len(score.split("-"))>1:
+                    algo, view = score.split("-")
+                    feature_importance[algo].loc[[ind for ind in feature_importance.index if ind.startswith(view)]]*=score_df[score]['test']
+                else:
+                    feature_importance[score] *= score_df[score]['test']
+    file_name+="_relevance"
+    plot_feature_importances(file_name, feature_importance,
+                             feature_std)

@@ -34,10 +34,11 @@ class RandomForest(RandomForestClassifier, BaseMonoviewClassifier):
                          ["gini", "entropy"], [random_state]]
         self.weird_strings = {}
 
-    def get_interpretation(self, directory, base_file_name, y_test,
+    def get_interpretation(self, directory, base_file_name, y_test, feature_ids,
                            multiclass=False):
 
         interpret_string = ""
         interpret_string += self.get_feature_importance(directory,
-                                                        base_file_name)
+                                                        base_file_name,
+                                                        feature_ids)
         return interpret_string

@@ -76,14 +76,15 @@ class GradientBoosting(GradientBoostingClassifier, BaseMonoviewClassifier):
                 [step_pred for step_pred in self.staged_predict(X)])
         return pred
 
-    def get_interpretation(self, directory, base_file_name, y_test,
+    def get_interpretation(self, directory, base_file_name, y_test, feature_ids,
                            multi_class=False):
         interpretString = ""
         if multi_class:
             return interpretString
         else:
             interpretString += self.get_feature_importance(directory,
-                                                           base_file_name)
+                                                           base_file_name,
+                                                           feature_ids)
             step_test_metrics = np.array(
                 [self.plotted_metric.score(y_test, step_pred) for step_pred in
                  self.step_predictions])

@@ -64,11 +64,12 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
             [step_pred for step_pred in self.staged_predict(X)])
         return pred
 
-    def get_interpretation(self, directory, base_file_name, y_test,
+    def get_interpretation(self, directory, base_file_name, y_test, feature_ids,
                            multi_class=False):  # pragma: no cover
         interpretString = ""
         interpretString += self.get_feature_importance(directory,
-                                                       base_file_name)
+                                                       base_file_name,
+                                                       feature_ids)
         interpretString += "\n\n Estimator error | Estimator weight\n"
         interpretString += "\n".join(
             [str(error) + " | " + str(weight / sum(self.estimator_weights_)) for
