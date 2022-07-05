@@ -1,0 +1,44 @@
+:mod:`summit.multiview_platform.monoview_classifiers.gradient_boosting`
+=======================================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.gradient_boosting
+
+
+gradient_boosting
+-----------------
+
+
+.. data:: classifier_class_name
+   :annotation: = GradientBoosting
+
+   
+
+.. py:class:: CustomDecisionTreeGB(criterion='gini', splitter='best', max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, class_weight=None, presort='deprecated', ccp_alpha=0.0)
+
+
+
+   .. method:: predict(self, X, check_input=True)
+
+
+
+
+.. py:class:: GradientBoosting(random_state=None, loss='exponential', max_depth=1.0, n_estimators=100, init=CustomDecisionTreeGB(max_depth=1), **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `GradientBoostingClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html>`_
+
+
+   .. method:: fit(self, X, y, sample_weight=None, monitor=None)
+
+
+
+   .. method:: predict(self, X)
+
+
+
+   .. method:: get_interpretation(self, directory, base_file_name, y_test, multi_class=False)
+
+
+
+

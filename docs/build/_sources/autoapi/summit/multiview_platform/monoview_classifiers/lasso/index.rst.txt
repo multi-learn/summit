@@ -1,0 +1,31 @@
+:mod:`summit.multiview_platform.monoview_classifiers.lasso`
+===========================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.lasso
+
+
+lasso
+-----
+
+
+.. data:: classifier_class_name
+   :annotation: = Lasso
+
+   
+
+.. py:class:: Lasso(random_state=None, alpha=1.0, max_iter=10, warm_start=False, **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `Lasso <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html>`_
+
+
+   .. method:: fit(self, X, y, check_input=True)
+
+
+
+   .. method:: predict(self, X)
+
+
+
+

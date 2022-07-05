@@ -1,0 +1,817 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Multiview dataset management &mdash; SuMMIT 0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/plotly_js.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Available monoview classifiers" href="../autoapi/summit/multiview_platform/monoview_classifiers/index.html" />
+    <link rel="prev" title="API Documentation" href="../api.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SuMMIT
+          
+
+          
+            
+            <img src="../_static/logo_summit.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">SuMMIT Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Multiview dataset management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.Dataset">Dataset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.Dataset.get_shape">get_shape</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.Dataset.init_sample_indices">init_sample_indices</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.Dataset.to_numpy_array">to_numpy_array</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset">HDF5Dataset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.dataset">dataset</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.nb_view">nb_view</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.view_dict">view_dict</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_label_names">get_label_names</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_labels">get_labels</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_name">get_name</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_nb_class">get_nb_class</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_nb_samples">get_nb_samples</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_shape">get_shape</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_v">get_v</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_view_dict">get_view_dict</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_view_name">get_view_name</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.init_attrs">init_attrs</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.init_sample_indices">init_sample_indices</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.rm">rm</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.to_numpy_array">to_numpy_array</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.RAMDataset">RAMDataset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.RAMDataset.get_shape">get_shape</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.RAMDataset.init_sample_indices">init_sample_indices</a></li>
+</ul>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.RAMDataset.to_numpy_array">to_numpy_array</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.confirm">confirm</a></li>
+</ul>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.copy_hdf5">copy_hdf5</a></li>
+</ul>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.datasets_already_exist">datasets_already_exist</a></li>
+</ul>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.delete_HDF5">delete_HDF5</a></li>
+</ul>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.extract_subset">extract_subset</a></li>
+</ul>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.get_samples_views_indices">get_samples_views_indices</a></li>
+</ul>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.init_multiple_datasets">init_multiple_datasets</a></li>
+</ul>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.utils.dataset.input_">input_</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/monoview_classifiers/index.html">Available monoview classifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/multiview_classifiers/index.html">Available multiview classifiers</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SuMMIT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+      <li>Multiview dataset management</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/api_files/dataset.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-summit.multiview_platform.utils.dataset">
+<span id="multiview-dataset-management"></span><h1>Multiview dataset management<a class="headerlink" href="#module-summit.multiview_platform.utils.dataset" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="summit.multiview_platform.utils.dataset.Dataset">
+<em class="property">class </em><code class="descname">Dataset</code><a class="headerlink" href="#summit.multiview_platform.utils.dataset.Dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the base class for all the type of multiview datasets of SuMMIT.</p>
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.Dataset.get_shape">
+<code class="descname">get_shape</code><span class="sig-paren">(</span><em><span class="n">view_index</span><span class="o">=</span><span class="default_value">0</span></em>, <em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.Dataset.get_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the shape of the needed view on the asked samples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>view_index</strong> (<em>int</em>) – The index of the view to extract</li>
+<li><strong>sample_indices</strong> (<em>numpy.ndarray</em>) – The array containing the indices of the samples to extract.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tuple containing the shape</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.Dataset.init_sample_indices">
+<code class="descname">init_sample_indices</code><span class="sig-paren">(</span><em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.Dataset.init_sample_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>If no sample indices are provided, selects all the available samples.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sample_indices</strong> (<em>np.array</em><em>,</em>) – An array-like containing the indices of the samples.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.Dataset.to_numpy_array">
+<code class="descname">to_numpy_array</code><span class="sig-paren">(</span><em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">view_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.Dataset.to_numpy_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenates the needed views in one big numpy array while saving the
+limits of each view in a list, to be able to retrieve them later.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sample_indices</strong> (<em>array like</em>) – The indices of the samples to extract from the dataset</li>
+<li><strong>view_indices</strong> (<em>array like</em>) – The indices of the view to concatenate in the numpy array</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>concat_views</strong> (<em>numpy array,</em>) – The numpy array containing all the needed views.</li>
+<li><strong>view_limits</strong> (<em>list of int</em>) – The limits of each slice used to extract the views.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset">
+<em class="property">class </em><code class="descname">HDF5Dataset</code><span class="sig-paren">(</span><em><span class="n">views</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">are_sparse</span><span class="o">=</span><span class="default_value">False</span></em>, <em><span class="n">file_name</span><span class="o">=</span><span class="default_value">'dataset.hdf5'</span></em>, <em><span class="n">view_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">path</span><span class="o">=</span><span class="default_value">''</span></em>, <em><span class="n">hdf5_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">labels_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">is_temp</span><span class="o">=</span><span class="default_value">False</span></em>, <em><span class="n">sample_ids</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dataset class</p>
+<p>This is used to encapsulate the multiview dataset while keeping it stored on the disk instead of in RAM.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>views</strong> (<em>list of numpy arrays</em><em> or </em><em>None</em>) – The list containing each view of the dataset as a numpy array of shape
+(nb samples, nb features).</li>
+<li><strong>labels</strong> (<em>numpy array</em><em> or </em><em>None</em>) – The labels for the multiview dataset, of shape (nb samples, ).</li>
+<li><strong>are_sparse</strong> (<em>list of bool</em><em>, or </em><em>None</em>) – The list of boolean telling if each view is sparse or not.</li>
+<li><strong>file_name</strong> (<em>str</em><em>, or </em><em>None</em>) – The name of the hdf5 file that will be created to store the multiview
+dataset.</li>
+<li><strong>view_names</strong> (<em>list of str</em><em>, or </em><em>None</em>) – The name of each view.</li>
+<li><strong>path</strong> (<em>str</em><em>, or </em><em>None</em>) – The path where the hdf5 dataset file will be stored</li>
+<li><strong>hdf5_file</strong> (<em>h5py.File object</em><em>, or </em><em>None</em>) – If not None, the dataset will be imported directly from this file.</li>
+<li><strong>labels_names</strong> (<em>list of str</em><em>, or </em><em>None</em>) – The name for each unique value of the labels given in labels.</li>
+<li><strong>is_temp</strong> (<em>bool</em>) – Used if a temporary dataset has to be stored by the benchmark.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.dataset">
+<code class="descname">dataset</code><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>The h5py file pbject that points to the hdf5 dataset on the disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">h5py.File object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.nb_view">
+<code class="descname">nb_view</code><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.nb_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of views in the dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.view_dict">
+<code class="descname">view_dict</code><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.view_dict" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>The dictionnary with the name of each view as the keys and their indices</dt><dd>as values</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.get_label_names">
+<code class="descname">get_label_names</code><span class="sig-paren">(</span><em><span class="n">decode</span><span class="o">=</span><span class="default_value">True</span></em>, <em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_label_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to get the list of the label names for the given set of samples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>decode</strong> (<em>bool</em>) – If True, will decode the label names before listing them</li>
+<li><strong>sample_indices</strong> (<em>numpy.ndarray</em>) – The array containing the indices of the needed samples</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>list</em></li>
+<li><em>seleted labels’ names</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.get_labels">
+<code class="descname">get_labels</code><span class="sig-paren">(</span><em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the label array for the asked samples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sample_indices</strong> (<em>numpy.ndarray</em>) – The array containing the indices of the samples to extract.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray containing the labels of the asked samples</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.get_name">
+<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the name of the dataset hdf5 file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.get_nb_class">
+<code class="descname">get_nb_class</code><span class="sig-paren">(</span><em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_nb_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of classes of the dataset for the asked samples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sample_indices</strong> (<em>numpy.ndarray</em>) – The array containing the indices of the samples to extract.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>int</strong></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">The number of classes</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.get_nb_samples">
+<code class="descname">get_nb_samples</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_nb_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to get the number of samples available in hte dataset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.get_shape">
+<code class="descname">get_shape</code><span class="sig-paren">(</span><em><span class="n">view_index</span><span class="o">=</span><span class="default_value">0</span></em>, <em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the shape of the needed view on the asked samples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>view_index</strong> (<em>int</em>) – The index of the view to extract</li>
+<li><strong>sample_indices</strong> (<em>numpy.ndarray</em>) – The array containing the indices of the samples to extract.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tuple containing the shape</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.get_v">
+<code class="descname">get_v</code><span class="sig-paren">(</span><em><span class="n">view_index</span></em>, <em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_v" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the view and returns a numpy.ndarray containing the description
+of the samples specified in sample_indices</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>view_index</strong> (<em>int</em>) – The index of the view to extract</li>
+<li><strong>sample_indices</strong> (<em>numpy.ndarray</em>) – The array containing the indices of the samples to extract.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A numpy.ndarray containing the view data for the needed samples</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.get_view_dict">
+<code class="descname">get_view_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_view_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the dictionary containing view indices as keys and their
+corresponding names as values</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.get_view_name">
+<code class="descname">get_view_name</code><span class="sig-paren">(</span><em><span class="n">view_idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.get_view_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get a view’s name from its index.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>view_idx</strong> (<em>int</em>) – The index of the view in the dataset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">The view’s name.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.init_attrs">
+<code class="descname">init_attrs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.init_attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to init the attributes that are modified when self.dataset
+changes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.init_sample_indices">
+<code class="descname">init_sample_indices</code><span class="sig-paren">(</span><em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.init_sample_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>If no sample indices are provided, selects all the available samples.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sample_indices</strong> (<em>np.array</em><em>,</em>) – An array-like containing the indices of the samples.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.rm">
+<code class="descname">rm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.rm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to delete the dataset file on the disk if the dataset is
+temporary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.HDF5Dataset.to_numpy_array">
+<code class="descname">to_numpy_array</code><span class="sig-paren">(</span><em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">view_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.HDF5Dataset.to_numpy_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenates the needed views in one big numpy array while saving the
+limits of each view in a list, to be able to retrieve them later.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sample_indices</strong> (<em>array like</em>) – The indices of the samples to extract from the dataset</li>
+<li><strong>view_indices</strong> (<em>array like</em>) – The indices of the view to concatenate in the numpy array</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>concat_views</strong> (<em>numpy array,</em>) – The numpy array containing all the needed views.</li>
+<li><strong>view_limits</strong> (<em>list of int</em>) – The limits of each slice used to extract the views.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="summit.multiview_platform.utils.dataset.RAMDataset">
+<em class="property">class </em><code class="descname">RAMDataset</code><span class="sig-paren">(</span><em><span class="n">views</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">are_sparse</span><span class="o">=</span><span class="default_value">False</span></em>, <em><span class="n">view_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">labels_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">sample_ids</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.RAMDataset" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.RAMDataset.get_shape">
+<code class="descname">get_shape</code><span class="sig-paren">(</span><em><span class="n">view_index</span><span class="o">=</span><span class="default_value">0</span></em>, <em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.RAMDataset.get_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the shape of the needed view on the asked samples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>view_index</strong> (<em>int</em>) – The index of the view to extract</li>
+<li><strong>sample_indices</strong> (<em>numpy.ndarray</em>) – The array containing the indices of the samples to extract.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tuple containing the shape</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.RAMDataset.init_sample_indices">
+<code class="descname">init_sample_indices</code><span class="sig-paren">(</span><em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.RAMDataset.init_sample_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>If no sample indices are provided, selects all the available samples.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sample_indices</strong> (<em>np.array</em><em>,</em>) – An array-like containing the indices of the samples.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="summit.multiview_platform.utils.dataset.RAMDataset.to_numpy_array">
+<code class="descname">to_numpy_array</code><span class="sig-paren">(</span><em><span class="n">sample_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em><span class="n">view_indices</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.RAMDataset.to_numpy_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenates the needed views in one big numpy array while saving the
+limits of each view in a list, to be able to retrieve them later.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sample_indices</strong> (<em>array like</em>) – The indices of the samples to extract from the dataset</li>
+<li><strong>view_indices</strong> (<em>array like</em>) – The indices of the view to concatenate in the numpy array</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>concat_views</strong> (<em>numpy array,</em>) – The numpy array containing all the needed views.</li>
+<li><strong>view_limits</strong> (<em>list of int</em>) – The limits of each slice used to extract the views.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="summit.multiview_platform.utils.dataset.confirm">
+<code class="descname">confirm</code><span class="sig-paren">(</span><em><span class="n">resp</span><span class="o">=</span><span class="default_value">True</span></em>, <em><span class="n">timeout</span><span class="o">=</span><span class="default_value">15</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.confirm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to process answer</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="summit.multiview_platform.utils.dataset.copy_hdf5">
+<code class="descname">copy_hdf5</code><span class="sig-paren">(</span><em><span class="n">pathF</span></em>, <em><span class="n">name</span></em>, <em><span class="n">nbCores</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.copy_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to copy a HDF5 database in case of multicore computing</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="summit.multiview_platform.utils.dataset.datasets_already_exist">
+<code class="descname">datasets_already_exist</code><span class="sig-paren">(</span><em><span class="n">pathF</span></em>, <em><span class="n">name</span></em>, <em><span class="n">nbCores</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.datasets_already_exist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to check if it’s necessary to copy datasets</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="summit.multiview_platform.utils.dataset.delete_HDF5">
+<code class="descname">delete_HDF5</code><span class="sig-paren">(</span><em><span class="n">benchmarkArgumentsDictionaries</span></em>, <em><span class="n">nbCores</span></em>, <em><span class="n">dataset</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.delete_HDF5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to delete temporary copies at the end of the benchmark</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="summit.multiview_platform.utils.dataset.extract_subset">
+<code class="descname">extract_subset</code><span class="sig-paren">(</span><em><span class="n">matrix</span></em>, <em><span class="n">used_indices</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.extract_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to extract a subset of a matrix even if it’s sparse WIP</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="summit.multiview_platform.utils.dataset.get_samples_views_indices">
+<code class="descname">get_samples_views_indices</code><span class="sig-paren">(</span><em><span class="n">dataset</span></em>, <em><span class="n">samples_indices</span></em>, <em><span class="n">view_indices</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.get_samples_views_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function  is used to get all the samples indices and view indices if needed</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="summit.multiview_platform.utils.dataset.init_multiple_datasets">
+<code class="descname">init_multiple_datasets</code><span class="sig-paren">(</span><em><span class="n">path_f</span></em>, <em><span class="n">name</span></em>, <em><span class="n">nb_cores</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.init_multiple_datasets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to create copies of the dataset if multicore computation is used.</p>
+<p>This is a temporary solution to fix the sharing memory issue with HDF5 datasets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path_f</strong> (<em>string</em>) – Path to the original dataset directory</li>
+<li><strong>name</strong> (<em>string</em>) – Name of the dataset</li>
+<li><strong>nb_cores</strong> (<em>int</em>) – The number of threads that the benchmark can use</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>datasetFiles</strong> – Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py function">
+<dt id="summit.multiview_platform.utils.dataset.input_">
+<code class="descname">input_</code><span class="sig-paren">(</span><em><span class="n">timeout</span><span class="o">=</span><span class="default_value">15</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.utils.dataset.input_" title="Permalink to this definition">¶</a></dt>
+<dd><p>used as a UI to stop if too much HDD space will be used</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../autoapi/summit/multiview_platform/monoview_classifiers/index.html" class="btn btn-neutral float-right" title="Available monoview classifiers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../api.html" class="btn btn-neutral float-left" title="API Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Baptiste BAUVIN.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

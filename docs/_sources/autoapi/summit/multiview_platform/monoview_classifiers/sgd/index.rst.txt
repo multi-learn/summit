@@ -1,0 +1,24 @@
+:mod:`summit.multiview_platform.monoview_classifiers.sgd`
+=========================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.sgd
+
+
+sgd
+---
+
+
+.. py:data:: classifier_class_name
+   :annotation: = SGD
+
+   
+
+.. py:class:: SGD(random_state=None, loss='hinge', penalty='l2', alpha=0.0001, max_iter=5, tol=None, **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `SGDClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html>`_
+
+
+
+

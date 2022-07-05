@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>random_scm &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/plotly_js.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="scm" href="../scm/index.html" />
+    <link rel="prev" title="random_forest" href="../random_forest/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> SuMMIT
+            <img src="../../../../../_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/index.html">SuMMIT Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api.html">API Documentation</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Available monoview classifiers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../adaboost/index.html">adaboost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../decision_tree/index.html">decision_tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gradient_boosting/index.html">gradient_boosting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../imbalance_bagging/index.html">imbalance_bagging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../knn/index.html">knn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lasso/index.html">lasso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../random_forest/index.html">random_forest</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">random_scm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.random_scm.classifier_class_name">classifier_class_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.random_scm.MAX_INT">MAX_INT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging">ScmBagging</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.n_features_">n_features_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.estimators_">estimators_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.estim_features">estim_features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.set_params">set_params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.get_interpretation">get_interpretation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../scm/index.html">scm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sgd/index.html">sgd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../svm_linear/index.html">svm_linear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../svm_poly/index.html">svm_poly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../svm_rbf/index.html">svm_rbf</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../multiview_classifiers/index.html">Available multiview classifiers</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Available monoview classifiers</a> &raquo;</li>
+      <li>random_scm</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/autoapi/summit/multiview_platform/monoview_classifiers/random_scm/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p><a class="reference internal" href="#module-summit.multiview_platform.monoview_classifiers.random_scm" title="summit.multiview_platform.monoview_classifiers.random_scm"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.random_scm</span></code></a></p>
+<hr class="docutils" />
+<span class="target" id="module-summit.multiview_platform.monoview_classifiers.random_scm"></span><section id="random-scm">
+<h1>random_scm<a class="headerlink" href="#random-scm" title="Permalink to this heading"></a></h1>
+<dl class="py data">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.random_scm.classifier_class_name">
+<span class="sig-name descname"><span class="pre">classifier_class_name</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">ScmBagging</span></em><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.random_scm.classifier_class_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.random_scm.MAX_INT">
+<span class="sig-name descname"><span class="pre">MAX_INT</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.random_scm.MAX_INT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ScmBagging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'conjunction'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging" title="Permalink to this definition"></a></dt>
+<dd><p>A Bagging classifier. for SetCoveringMachineClassifier()
+The base estimators are built on subsets of both samples
+and features.
+:param n_estimators: The number of base estimators in the ensemble.
+:type n_estimators: int, default=10
+:param max_samples: The number of samples to draw from X to train each base estimator with</p>
+<blockquote>
+<div><p>replacement.
+- If int, then draw <cite>max_samples</cite> samples.
+- If float, then draw <cite>max_samples * X.shape[0]</cite> samples.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_features</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>default=1.0</em>) – The number of features to draw from X to train each base estimator (
+without replacement.
+- If int, then draw <cite>max_features</cite> features.
+- If float, then draw <cite>max_features * X.shape[1]</cite> features.</p></li>
+<li><p><strong>p_options</strong> (<em>list of float with len =&lt; n_estimators</em><em>, </em><em>default=</em><em>[</em><em>1.0</em><em>]</em>) – The estimators will be fitted with values of p found in p_options
+let k be k = n_estimators/len(p_options),
+the k first estimators will have p=p_options[0],
+the next k estimators will have p=p_options[1] and so on…</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em> or </em><em>RandomState</em><em>, </em><em>default=None</em>) – Controls the random resampling of the original dataset
+(sample wise and feature wise).
+If the base estimator accepts a <cite>random_state</cite> attribute, a different
+seed is generated for each instance in the ensemble.
+Pass an int for reproducible output across multiple function calls.
+See <span class="xref std std-term">Glossary</span>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.n_features_">
+<span class="sig-name descname"><span class="pre">n_features_</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.n_features_" title="Permalink to this definition"></a></dt>
+<dd><p>The number of features when <code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code> is performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.estimators_">
+<span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.estimators_" title="Permalink to this definition"></a></dt>
+<dd><p>The collection of fitted base estimators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of estimators</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.estim_features">
+<span class="sig-name descname"><span class="pre">estim_features</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.estim_features" title="Permalink to this definition"></a></dt>
+<dd><p>The subset of drawn features for each base estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of arrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@TODO</span>
+</pre></div>
+</div>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id1"><span class="brackets">1</span></dt>
+<dd><p>L. Breiman, “Pasting small votes for classification in large
+databases and on-line”, Machine Learning, 36(1), 85-103, 1999.</p>
+</dd>
+<dt class="label" id="id2"><span class="brackets">2</span></dt>
+<dd><p>G. Louppe and P. Geurts, “Ensembles on Random Patches”, Machine
+Learning and Knowledge Discovery in Databases, 346-361, 2012.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.316]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.set_params" title="Permalink to this definition"></a></dt>
+<dd><p>Set the parameters of this estimator.</p>
+<p>The method works on simple estimators as well as on nested objects
+(such as <code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>). The latter have
+parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code> so that it’s
+possible to update each component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>**params</strong> (<em>dict</em>) – Estimator parameters.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>self</strong> – Estimator instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>estimator instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.get_interpretation">
+<span class="sig-name descname"><span class="pre">get_interpretation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.get_interpretation" title="Permalink to this definition"></a></dt>
+<dd><p>Base method that returns an empty string if there is not interpretation
+method in the classifier’s module</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../random_forest/index.html" class="btn btn-neutral float-left" title="random_forest" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../scm/index.html" class="btn btn-neutral float-right" title="scm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

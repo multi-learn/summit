@@ -1,0 +1,27 @@
+:mod:`summit.multiview_platform.monoview_classifiers.decision_tree`
+===================================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.decision_tree
+
+
+decision_tree
+-------------
+
+
+.. data:: classifier_class_name
+   :annotation: = DecisionTree
+
+   
+
+.. py:class:: DecisionTree(random_state=None, max_depth=None, criterion='gini', splitter='best', **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `DecisionTreeClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html>`_
+
+
+   .. method:: get_interpretation(self, directory, base_file_name, y_test, multiclass=False)
+
+
+
+

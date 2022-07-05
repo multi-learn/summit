@@ -1,0 +1,34 @@
+:mod:`summit.multiview_platform.monoview_classifiers.adaboost`
+==============================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.adaboost
+
+
+adaboost
+--------
+
+
+.. data:: classifier_class_name
+   :annotation: = Adaboost
+
+   
+
+.. py:class:: Adaboost(random_state=None, n_estimators=50, base_estimator=None, base_estimator_config=None, **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `AdaBoostClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier>`_
+
+   .. method:: fit(self, X, y, sample_weight=None)
+
+
+
+   .. method:: predict(self, X)
+
+
+
+   .. method:: get_interpretation(self, directory, base_file_name, y_test, multi_class=False)
+
+
+
+

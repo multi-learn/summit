@@ -1,0 +1,28 @@
+:mod:`summit.multiview_platform.monoview_classifiers.imbalance_bagging`
+=======================================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.imbalance_bagging
+
+
+imbalance_bagging
+-----------------
+
+
+.. py:data:: classifier_class_name
+   :annotation: = ImbalanceBagging
+
+   
+
+.. py:class:: ImbalanceBagging(random_state=None, base_estimator='DecisionTreeClassifier', n_estimators=10, sampling_strategy='auto', replacement=False, base_estimator_config=None)
+
+
+
+   Base class for all estimators in scikit-learn.
+
+   .. rubric:: Notes
+
+   All estimators should specify all the parameters that can be set
+   at the class level in their ``__init__`` as explicit keyword
+   arguments (no ``*args`` or ``**kwargs``).
+
+

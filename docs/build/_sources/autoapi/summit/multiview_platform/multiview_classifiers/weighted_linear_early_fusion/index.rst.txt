@@ -1,0 +1,52 @@
+:mod:`summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion`
+===================================================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion
+
+
+weighted_linear_early_fusion
+----------------------------
+
+
+.. data:: classifier_class_name
+   :annotation: = WeightedLinearEarlyFusion
+
+   
+
+.. py:class:: WeightedLinearEarlyFusion(random_state=None, view_weights=None, monoview_classifier_name='decision_tree', monoview_classifier_config={})
+
+
+
+   Builds a monoview dataset by concatenating the views (with a weight if
+   needed) and learns a monoview classifier on the concatenation
+
+   .. method:: set_params(self, monoview_classifier_name='decision_tree', monoview_classifier_config={}, **params)
+
+
+
+   .. method:: get_params(self, deep=True)
+
+
+
+   .. method:: fit(self, X, y, train_indices=None, view_indices=None)
+
+
+
+   .. method:: predict(self, X, sample_indices=None, view_indices=None)
+
+
+
+   .. method:: transform_data_to_monoview(self, dataset, sample_indices, view_indices)
+
+
+      Here, we extract the data from the HDF5 dataset file and store all
+      the concatenated views in one variable
+
+
+   .. method:: hdf5_to_monoview(self, dataset, samples)
+
+
+      Here, we concatenate the views for the asked samples
+
+
+

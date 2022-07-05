@@ -1,0 +1,27 @@
+:mod:`summit.multiview_platform.multiview_classifiers.svm_jumbo_fusion`
+=======================================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers.svm_jumbo_fusion
+
+
+svm_jumbo_fusion
+----------------
+
+
+.. data:: classifier_class_name
+   :annotation: = SVMJumboFusion
+
+   
+
+.. py:class:: SVMJumboFusion(random_state=None, classifiers_names=None, classifier_configs=None, nb_cores=1, weights=None, nb_monoview_per_view=1, C=1.0, kernel='rbf', degree=2, rs=None)
+
+
+
+   This classifier learns monoview classifiers on each view and then uses an
+   SVM on their decisions to aggregate them.
+
+   .. method:: set_params(self, C=1.0, kernel='rbf', degree=1, **params)
+
+
+
+

@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gradient_boosting &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/plotly_js.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="imbalance_bagging" href="../imbalance_bagging/index.html" />
+    <link rel="prev" title="decision_tree" href="../decision_tree/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> SuMMIT
+            <img src="../../../../../_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/index.html">SuMMIT Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api.html">API Documentation</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Available monoview classifiers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../adaboost/index.html">adaboost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../decision_tree/index.html">decision_tree</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gradient_boosting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.classifier_class_name">classifier_class_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB">CustomDecisionTreeGB</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.classes_">classes_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.feature_importances_">feature_importances_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.max_features_">max_features_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_classes_">n_classes_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_features_">n_features_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_features_in_">n_features_in_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.feature_names_in_">feature_names_in_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_outputs_">n_outputs_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.tree_">tree_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.predict">predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting">GradientBoosting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.fit">fit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.predict">predict</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.get_interpretation">get_interpretation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../imbalance_bagging/index.html">imbalance_bagging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../knn/index.html">knn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lasso/index.html">lasso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../random_forest/index.html">random_forest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../random_scm/index.html">random_scm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scm/index.html">scm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sgd/index.html">sgd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../svm_linear/index.html">svm_linear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../svm_poly/index.html">svm_poly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../svm_rbf/index.html">svm_rbf</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../multiview_classifiers/index.html">Available multiview classifiers</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Available monoview classifiers</a> &raquo;</li>
+      <li>gradient_boosting</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/autoapi/summit/multiview_platform/monoview_classifiers/gradient_boosting/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p><a class="reference internal" href="#module-summit.multiview_platform.monoview_classifiers.gradient_boosting" title="summit.multiview_platform.monoview_classifiers.gradient_boosting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.gradient_boosting</span></code></a></p>
+<hr class="docutils" />
+<span class="target" id="module-summit.multiview_platform.monoview_classifiers.gradient_boosting"></span><section id="gradient-boosting">
+<h1>gradient_boosting<a class="headerlink" href="#gradient-boosting" title="Permalink to this heading"></a></h1>
+<dl class="py data">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.classifier_class_name">
+<span class="sig-name descname"><span class="pre">classifier_class_name</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">GradientBoosting</span></em><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.classifier_class_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CustomDecisionTreeGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gini'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">splitter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'best'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_leaf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_weight_fraction_leaf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_leaf_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_impurity_decrease</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ccp_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB" title="Permalink to this definition"></a></dt>
+<dd><p>A decision tree classifier.</p>
+<p>Read more in the <span class="xref std std-ref">User Guide</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>criterion</strong> (<em>{&quot;gini&quot;</em><em>, </em><em>&quot;entropy&quot;</em><em>, </em><em>&quot;log_loss&quot;}</em><em>, </em><em>default=&quot;gini&quot;</em>) – The function to measure the quality of a split. Supported criteria are
+“gini” for the Gini impurity and “log_loss” and “entropy” both for the
+Shannon information gain, see <span class="xref std std-ref">tree_mathematical_formulation</span>.</p></li>
+<li><p><strong>splitter</strong> (<em>{&quot;best&quot;</em><em>, </em><em>&quot;random&quot;}</em><em>, </em><em>default=&quot;best&quot;</em>) – The strategy used to choose the split at each node. Supported
+strategies are “best” to choose the best split and “random” to choose
+the best random split.</p></li>
+<li><p><strong>max_depth</strong> (<em>int</em><em>, </em><em>default=None</em>) – The maximum depth of the tree. If None, then nodes are expanded until
+all leaves are pure or until all leaves contain less than
+min_samples_split samples.</p></li>
+<li><p><strong>min_samples_split</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>default=2</em>) – <p>The minimum number of samples required to split an internal node:</p>
+<ul>
+<li><p>If int, then consider <cite>min_samples_split</cite> as the minimum number.</p></li>
+<li><p>If float, then <cite>min_samples_split</cite> is a fraction and
+<cite>ceil(min_samples_split * n_samples)</cite> are the minimum
+number of samples for each split.</p></li>
+</ul>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.18: </span>Added float values for fractions.</p>
+</div>
+</p></li>
+<li><p><strong>min_samples_leaf</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>default=1</em>) – <p>The minimum number of samples required to be at a leaf node.
+A split point at any depth will only be considered if it leaves at
+least <code class="docutils literal notranslate"><span class="pre">min_samples_leaf</span></code> training samples in each of the left and
+right branches.  This may have the effect of smoothing the model,
+especially in regression.</p>
+<ul>
+<li><p>If int, then consider <cite>min_samples_leaf</cite> as the minimum number.</p></li>
+<li><p>If float, then <cite>min_samples_leaf</cite> is a fraction and
+<cite>ceil(min_samples_leaf * n_samples)</cite> are the minimum
+number of samples for each node.</p></li>
+</ul>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.18: </span>Added float values for fractions.</p>
+</div>
+</p></li>
+<li><p><strong>min_weight_fraction_leaf</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – The minimum weighted fraction of the sum total of weights (of all
+the input samples) required to be at a leaf node. Samples have
+equal weight when sample_weight is not provided.</p></li>
+<li><p><strong>max_features</strong> (<em>int</em><em>, </em><em>float</em><em> or </em><em>{&quot;auto&quot;</em><em>, </em><em>&quot;sqrt&quot;</em><em>, </em><em>&quot;log2&quot;}</em><em>, </em><em>default=None</em>) – <p>The number of features to consider when looking for the best split:</p>
+<blockquote>
+<div><ul>
+<li><p>If int, then consider <cite>max_features</cite> features at each split.</p></li>
+<li><p>If float, then <cite>max_features</cite> is a fraction and
+<cite>int(max_features * n_features)</cite> features are considered at each
+split.</p></li>
+<li><p>If “auto”, then <cite>max_features=sqrt(n_features)</cite>.</p></li>
+<li><p>If “sqrt”, then <cite>max_features=sqrt(n_features)</cite>.</p></li>
+<li><p>If “log2”, then <cite>max_features=log2(n_features)</cite>.</p></li>
+<li><p>If None, then <cite>max_features=n_features</cite>.</p></li>
+</ul>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.1: </span>The <cite>“auto”</cite> option was deprecated in 1.1 and will be removed
+in 1.3.</p>
+</div>
+</div></blockquote>
+<p>Note: the search for a split does not stop until at least one
+valid partition of the node samples is found, even if it requires to
+effectively inspect more than <code class="docutils literal notranslate"><span class="pre">max_features</span></code> features.</p>
+</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em>, </em><em>RandomState instance</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – Controls the randomness of the estimator. The features are always
+randomly permuted at each split, even if <code class="docutils literal notranslate"><span class="pre">splitter</span></code> is set to
+<code class="docutils literal notranslate"><span class="pre">&quot;best&quot;</span></code>. When <code class="docutils literal notranslate"><span class="pre">max_features</span> <span class="pre">&lt;</span> <span class="pre">n_features</span></code>, the algorithm will
+select <code class="docutils literal notranslate"><span class="pre">max_features</span></code> at random at each split before finding the best
+split among them. But the best found split may vary across different
+runs, even if <code class="docutils literal notranslate"><span class="pre">max_features=n_features</span></code>. That is the case, if the
+improvement of the criterion is identical for several splits and one
+split has to be selected at random. To obtain a deterministic behaviour
+during fitting, <code class="docutils literal notranslate"><span class="pre">random_state</span></code> has to be fixed to an integer.
+See <span class="xref std std-term">Glossary</span> for details.</p></li>
+<li><p><strong>max_leaf_nodes</strong> (<em>int</em><em>, </em><em>default=None</em>) – Grow a tree with <code class="docutils literal notranslate"><span class="pre">max_leaf_nodes</span></code> in best-first fashion.
+Best nodes are defined as relative reduction in impurity.
+If None then unlimited number of leaf nodes.</p></li>
+<li><p><strong>min_impurity_decrease</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – <p>A node will be split if this split induces a decrease of the impurity
+greater than or equal to this value.</p>
+<p>The weighted impurity decrease equation is the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">N_t</span> <span class="o">/</span> <span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">impurity</span> <span class="o">-</span> <span class="n">N_t_R</span> <span class="o">/</span> <span class="n">N_t</span> <span class="o">*</span> <span class="n">right_impurity</span>
+                    <span class="o">-</span> <span class="n">N_t_L</span> <span class="o">/</span> <span class="n">N_t</span> <span class="o">*</span> <span class="n">left_impurity</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the total number of samples, <code class="docutils literal notranslate"><span class="pre">N_t</span></code> is the number of
+samples at the current node, <code class="docutils literal notranslate"><span class="pre">N_t_L</span></code> is the number of samples in the
+left child, and <code class="docutils literal notranslate"><span class="pre">N_t_R</span></code> is the number of samples in the right child.</p>
+<p><code class="docutils literal notranslate"><span class="pre">N</span></code>, <code class="docutils literal notranslate"><span class="pre">N_t</span></code>, <code class="docutils literal notranslate"><span class="pre">N_t_R</span></code> and <code class="docutils literal notranslate"><span class="pre">N_t_L</span></code> all refer to the weighted sum,
+if <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> is passed.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.19.</span></p>
+</div>
+</p></li>
+<li><p><strong>class_weight</strong> (<em>dict</em><em>, </em><em>list of dict</em><em> or </em><em>&quot;balanced&quot;</em><em>, </em><em>default=None</em>) – <p>Weights associated with classes in the form <code class="docutils literal notranslate"><span class="pre">{class_label:</span> <span class="pre">weight}</span></code>.
+If None, all classes are supposed to have weight one. For
+multi-output problems, a list of dicts can be provided in the same
+order as the columns of y.</p>
+<p>Note that for multioutput (including multilabel) weights should be
+defined for each class of every column in its own dict. For example,
+for four-class multilabel classification weights should be
+[{0: 1, 1: 1}, {0: 1, 1: 5}, {0: 1, 1: 1}, {0: 1, 1: 1}] instead of
+[{1:1}, {2:5}, {3:1}, {4:1}].</p>
+<p>The “balanced” mode uses the values of y to automatically adjust
+weights inversely proportional to class frequencies in the input data
+as <code class="docutils literal notranslate"><span class="pre">n_samples</span> <span class="pre">/</span> <span class="pre">(n_classes</span> <span class="pre">*</span> <span class="pre">np.bincount(y))</span></code></p>
+<p>For multi-output, the weights of each column of y will be multiplied.</p>
+<p>Note that these weights will be multiplied with sample_weight (passed
+through the fit method) if sample_weight is specified.</p>
+</p></li>
+<li><p><strong>ccp_alpha</strong> (<em>non-negative float</em><em>, </em><em>default=0.0</em>) – <p>Complexity parameter used for Minimal Cost-Complexity Pruning. The
+subtree with the largest cost complexity that is smaller than
+<code class="docutils literal notranslate"><span class="pre">ccp_alpha</span></code> will be chosen. By default, no pruning is performed. See
+<span class="xref std std-ref">minimal_cost_complexity_pruning</span> for details.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.22.</span></p>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.classes_" title="Permalink to this definition"></a></dt>
+<dd><p>The classes labels (single output problem),
+or a list of arrays of class labels (multi-output problem).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ndarray of shape (n_classes,) or list of ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.feature_importances_">
+<span class="sig-name descname"><span class="pre">feature_importances_</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.feature_importances_" title="Permalink to this definition"></a></dt>
+<dd><p>The impurity-based feature importances.
+The higher, the more important the feature.
+The importance of a feature is computed as the (normalized)
+total reduction of the criterion brought by that feature.  It is also
+known as the Gini importance <a class="footnote-reference brackets" href="#id5" id="id1">4</a>.</p>
+<p>Warning: impurity-based feature importances can be misleading for
+high cardinality features (many unique values). See
+<code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.inspection.permutation_importance()</span></code> as an alternative.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ndarray of shape (n_features,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.max_features_">
+<span class="sig-name descname"><span class="pre">max_features_</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.max_features_" title="Permalink to this definition"></a></dt>
+<dd><p>The inferred value of max_features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_classes_">
+<span class="sig-name descname"><span class="pre">n_classes_</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_classes_" title="Permalink to this definition"></a></dt>
+<dd><p>The number of classes (for single output problems),
+or a list containing the number of classes for each
+output (for multi-output problems).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int or list of int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_features_">
+<span class="sig-name descname"><span class="pre">n_features_</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_features_" title="Permalink to this definition"></a></dt>
+<dd><p>The number of features when <code class="docutils literal notranslate"><span class="pre">fit</span></code> is performed.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.0: </span><cite>n_features_</cite> is deprecated in 1.0 and will be removed in
+1.2. Use <cite>n_features_in_</cite> instead.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_features_in_">
+<span class="sig-name descname"><span class="pre">n_features_in_</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_features_in_" title="Permalink to this definition"></a></dt>
+<dd><p>Number of features seen during <span class="xref std std-term">fit</span>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.24.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.feature_names_in_">
+<span class="sig-name descname"><span class="pre">feature_names_in_</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.feature_names_in_" title="Permalink to this definition"></a></dt>
+<dd><p>Names of features seen during <span class="xref std std-term">fit</span>. Defined only when <cite>X</cite>
+has feature names that are all strings.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ndarray of shape (<cite>n_features_in_</cite>,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_outputs_">
+<span class="sig-name descname"><span class="pre">n_outputs_</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.n_outputs_" title="Permalink to this definition"></a></dt>
+<dd><p>The number of outputs when <code class="docutils literal notranslate"><span class="pre">fit</span></code> is performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.tree_">
+<span class="sig-name descname"><span class="pre">tree_</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.tree_" title="Permalink to this definition"></a></dt>
+<dd><p>The underlying Tree object. Please refer to
+<code class="docutils literal notranslate"><span class="pre">help(sklearn.tree._tree.Tree)</span></code> for attributes of Tree object and
+<span class="xref std std-ref">sphx_glr_auto_examples_tree_plot_unveil_tree_structure.py</span>
+for basic usage of these attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Tree instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">DecisionTreeRegressor</span></code></dt><dd><p>A decision tree regressor.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The default values for the parameters controlling the size of the trees
+(e.g. <code class="docutils literal notranslate"><span class="pre">max_depth</span></code>, <code class="docutils literal notranslate"><span class="pre">min_samples_leaf</span></code>, etc.) lead to fully grown and
+unpruned trees which can potentially be very large on some data sets. To
+reduce memory consumption, the complexity and size of the trees should be
+controlled by setting those parameter values.</p>
+<p>The <a class="reference internal" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.predict" title="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.predict"><code class="xref py py-meth docutils literal notranslate"><span class="pre">predict()</span></code></a> method operates using the <code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.argmax()</span></code>
+function on the outputs of <code class="xref py py-meth docutils literal notranslate"><span class="pre">predict_proba()</span></code>. This means that in
+case the highest predicted probabilities are tied, the classifier will
+predict the tied class with the lowest index in <span class="xref std std-term">classes_</span>.</p>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Decision_tree_learning">https://en.wikipedia.org/wiki/Decision_tree_learning</a></p>
+</dd>
+<dt class="label" id="id3"><span class="brackets">2</span></dt>
+<dd><p>L. Breiman, J. Friedman, R. Olshen, and C. Stone, “Classification
+and Regression Trees”, Wadsworth, Belmont, CA, 1984.</p>
+</dd>
+<dt class="label" id="id4"><span class="brackets">3</span></dt>
+<dd><p>T. Hastie, R. Tibshirani and J. Friedman. “Elements of Statistical
+Learning”, Springer, 2009.</p>
+</dd>
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id1">4</a></span></dt>
+<dd><p>L. Breiman, and A. Cutler, “Random Forests”,
+<a class="reference external" href="https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm">https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iris</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">... </span>                            
+<span class="gp">...</span>
+<span class="go">array([ 1.     ,  0.93...,  0.86...,  0.93...,  0.93...,</span>
+<span class="go">        0.93...,  0.93...,  1.     ,  0.93...,  1.      ])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.predict" title="Permalink to this definition"></a></dt>
+<dd><p>Predict class or regression value for X.</p>
+<p>For a classification model, the predicted class for each sample in X is
+returned. For a regression model, the predicted value based on X is
+returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>{array-like</em><em>, </em><em>sparse matrix} of shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – The input samples. Internally, it will be converted to
+<code class="docutils literal notranslate"><span class="pre">dtype=np.float32</span></code> and if a sparse matrix is provided
+to a sparse <code class="docutils literal notranslate"><span class="pre">csr_matrix</span></code>.</p></li>
+<li><p><strong>check_input</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Allow to bypass several input checking.
+Don’t use this parameter unless you know what you do.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>y</strong> – The predicted classes, or the predict values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array-like of shape (n_samples,) or (n_samples, n_outputs)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GradientBoosting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'exponential'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">CustomDecisionTreeGB(max_depth=1)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting" title="Permalink to this definition"></a></dt>
+<dd><p>This class is an adaptation of scikit-learn’s <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html">GradientBoostingClassifier</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monitor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit the gradient boosting model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>{array-like</em><em>, </em><em>sparse matrix} of shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – The input samples. Internally, it will be converted to
+<code class="docutils literal notranslate"><span class="pre">dtype=np.float32</span></code> and if a sparse matrix is provided
+to a sparse <code class="docutils literal notranslate"><span class="pre">csr_matrix</span></code>.</p></li>
+<li><p><strong>y</strong> (<em>array-like of shape</em><em> (</em><em>n_samples</em><em>,</em><em>)</em>) – Target values (strings or integers in classification, real numbers
+in regression)
+For classification, labels must correspond to classes.</p></li>
+<li><p><strong>sample_weight</strong> (<em>array-like of shape</em><em> (</em><em>n_samples</em><em>,</em><em>)</em><em>, </em><em>default=None</em>) – Sample weights. If None, then samples are equally weighted. Splits
+that would create child nodes with net zero or negative weight are
+ignored while searching for a split in each node. In the case of
+classification, splits are also ignored if they would result in any
+single class carrying a negative weight in either child node.</p></li>
+<li><p><strong>monitor</strong> (<em>callable</em><em>, </em><em>default=None</em>) – The monitor is called after each iteration with the current
+iteration, a reference to the estimator and the local variables of
+<code class="docutils literal notranslate"><span class="pre">_fit_stages</span></code> as keyword arguments <code class="docutils literal notranslate"><span class="pre">callable(i,</span> <span class="pre">self,</span>
+<span class="pre">locals())</span></code>. If the callable returns <code class="docutils literal notranslate"><span class="pre">True</span></code> the fitting procedure
+is stopped. The monitor can be used for various things such as
+computing held-out estimates, early stopping, model introspect, and
+snapshoting.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>self</strong> – Fitted estimator.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.predict" title="Permalink to this definition"></a></dt>
+<dd><p>Predict class for X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>{array-like</em><em>, </em><em>sparse matrix} of shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – The input samples. Internally, it will be converted to
+<code class="docutils literal notranslate"><span class="pre">dtype=np.float32</span></code> and if a sparse matrix is provided
+to a sparse <code class="docutils literal notranslate"><span class="pre">csr_matrix</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>y</strong> – The predicted values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray of shape (n_samples,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.get_interpretation">
+<span class="sig-name descname"><span class="pre">get_interpretation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.get_interpretation" title="Permalink to this definition"></a></dt>
+<dd><p>Base method that returns an empty string if there is not interpretation
+method in the classifier’s module</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../decision_tree/index.html" class="btn btn-neutral float-left" title="decision_tree" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../imbalance_bagging/index.html" class="btn btn-neutral float-right" title="imbalance_bagging" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
