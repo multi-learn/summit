@@ -154,7 +154,7 @@ class Random(RandomizedSearchCV, HPSearch):
 
     def __init__(self, estimator, param_distributions=None, n_iter=10,
                  refit=False, n_jobs=1, scoring=None, cv=None,
-                 random_state=None, error_score=nan, view_indices=None,
+                 random_state=None, error_score=np.nan, view_indices=None,
                  framework="monoview",
                  equivalent_draws=True, track_tracebacks=True):
         param_distributions = self.get_param_distribs(estimator, param_distributions)
