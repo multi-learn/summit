@@ -30,7 +30,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         AdaBoostClassifier.__init__(self,
                                     random_state=random_state,
                                     n_estimators=n_estimators,
-                                    base_estimator=base_estimator,
+                                    estimator=base_estimator,
                                     algorithm="SAMME"
                                     )
         self.param_names = ["n_estimators", "base_estimator"]
