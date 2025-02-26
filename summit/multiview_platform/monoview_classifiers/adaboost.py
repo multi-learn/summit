@@ -23,18 +23,18 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
     """
 
     def __init__(self, random_state=None, n_estimators=50,
-                 base_estimator=None, base_estimator_config=None, **kwargs):
+                 estimator=None, base_estimator_config=None, **kwargs):
         base_estimator = BaseMonoviewClassifier.get_base_estimator(self,
-                                                                   base_estimator,
+                                                                   estimator,
                                                                    base_estimator_config)
         AdaBoostClassifier.__init__(self,
                                     random_state=random_state,
                                     n_estimators=n_estimators,
-                                    estimator=base_estimator,
+                                    estimator=estimator,
                                     algorithm="SAMME"
                                     )
-        self.param_names = ["n_estimators", "base_estimator"]
-        self.classed_params = ["base_estimator"]
+        self.param_names = ["n_estimators", "estimator"]
+        self.classed_params = ["estimator"]
         self.distribs = [CustomRandint(low=1, high=500),
                          base_boosting_estimators]
         self.weird_strings = {"base_estimator": "class_name"}
