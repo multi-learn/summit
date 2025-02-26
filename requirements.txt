@@ -12,4 +12,4 @@ plotly>=4.2.1
 matplotlib>=3.1.1
 tabulate>=0.8.6
 pyscm-ml>=1.0.0
-git+https://github.com/thibgo/randomscm/archive/refs/tags/v0.0.0-alpha.zip
+git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
