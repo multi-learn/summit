@@ -503,7 +503,7 @@ class HDF5Dataset(Dataset):
         """
         selected_labels = self.get_labels(sample_indices)
         if decode:
-            return [label_name.decode("utf-8")
+            return [label_name
                     for label, label_name in
                     enumerate(self.dataset["Labels"].attrs["names"])
                     if label in selected_labels]

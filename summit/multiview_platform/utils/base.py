@@ -68,7 +68,7 @@ class BaseClassifier(BaseEstimator, ):
     def get_base_estimator(self, estimator, estimator_config):
         if estimator_config is None:
             estimator_config = {}
-        if base_estimator is None:
+        if estimator is None:
             return DecisionTreeClassifier(**estimator_config)
         if isinstance(estimator, str):  # pragma: no cover
             if estimator == "DecisionTreeClassifier":
@@ -80,13 +80,13 @@ class BaseClassifier(BaseEstimator, ):
             else:
                 raise ValueError(
                     'Base estimator string {} does not match an available classifier.'.format(
-                        base_estimator))
+                        estimator))
         elif isinstance(estimator, BaseEstimator):
             return estimator.set_params(**estimator_config)
         else:
             raise ValueError(
                 'base_estimator must be either a string or a BaseEstimator child class, it is {}'.format(
-                    type(base_estimator)))
+                    type(estimator)))
 
     def to_str(self, param_name):
         """

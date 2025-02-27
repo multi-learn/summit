@@ -66,7 +66,7 @@ class Test_Random(unittest.TestCase):
         cls.scoring = make_scorer(accuracy_score, )
         cls.cv = StratifiedKFold(n_splits=n_splits, )
         cls.random_state = np.random.RandomState(42)
-        cls.learning_indices = np.array([0, 1, 2, 3, 4, ])
+        # cls.learning_indices = np.array([0, 1, 2, 3, 4, ])
         cls.view_indices = None
         cls.framework = "monoview"
         cls.equivalent_draws = False
@@ -78,7 +78,7 @@ class Test_Random(unittest.TestCase):
             self.estimator, self.param_distributions, n_iter=self.n_iter,
             refit=self.refit, n_jobs=self.n_jobs, scoring=self.scoring, cv=self.cv,
             random_state=self.random_state,
-            learning_indices=self.learning_indices, view_indices=self.view_indices,
+             view_indices=self.view_indices,
             framework=self.framework,
             equivalent_draws=self.equivalent_draws
         )
@@ -89,7 +89,6 @@ class Test_Random(unittest.TestCase):
             refit=self.refit, n_jobs=self.n_jobs, scoring=self.scoring,
             cv=self.cv,
             random_state=self.random_state,
-            learning_indices=self.learning_indices,
             view_indices=self.view_indices,
             framework=self.framework,
             equivalent_draws=self.equivalent_draws
@@ -106,7 +105,6 @@ class Test_Random(unittest.TestCase):
             refit=self.refit, n_jobs=self.n_jobs, scoring=self.scoring,
             cv=self.cv,
             random_state=self.random_state,
-            learning_indices=self.learning_indices,
             view_indices=self.view_indices,
             framework="multiview",
             equivalent_draws=self.equivalent_draws
@@ -121,7 +119,6 @@ class Test_Random(unittest.TestCase):
             refit=self.refit, n_jobs=self.n_jobs, scoring=self.scoring,
             cv=self.cv,
             random_state=self.random_state,
-            learning_indices=self.learning_indices,
             view_indices=self.view_indices,
             framework="multiview",
             equivalent_draws=True
@@ -137,7 +134,6 @@ class Test_Random(unittest.TestCase):
             refit=self.refit, n_jobs=self.n_jobs, scoring=self.scoring,
             cv=self.cv,
             random_state=self.random_state,
-            learning_indices=self.learning_indices,
             view_indices=self.view_indices,
             framework="multiview",
             equivalent_draws=False

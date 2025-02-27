@@ -153,8 +153,8 @@ class HPSearch:
 class Random(RandomizedSearchCV, HPSearch):
 
     def __init__(self, estimator, param_distributions=None, n_iter=10,
-                 refit=False, n_jobs=1, scoring=None, cv=None,
-                 random_state=None, error_score=np.nan, view_indices=None,
+                 refit=False, n_jobs=1, scoring=None, cv=None,  learning_indices=None,
+                 random_state=None, view_indices=None,
                  framework="monoview",
                  equivalent_draws=True, track_tracebacks=True):
         param_distributions = self.get_param_distribs(estimator, param_distributions)
@@ -165,9 +165,8 @@ class Random(RandomizedSearchCV, HPSearch):
                                     param_distributions=param_distributions,
                                     refit=refit, n_jobs=n_jobs, scoring=scoring,
                                     cv=cv, random_state=random_state)
-
         self.framework = framework
-        self.available_indices = error_score
+        self.available_indices = learning_indices
         self.view_indices = view_indices
         self.equivalent_draws = equivalent_draws
         self.track_tracebacks = track_tracebacks

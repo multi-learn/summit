@@ -180,7 +180,7 @@ class Test_exec_monoview(unittest.TestCase):
                                                    feature_ids=[str(i) for i in range(test_dataset.get_v(0).shape[1])],
                                                    **{"classifier_name": "decision_tree",
                                                       "view_index": 0,
-                                                      "decision_tree": {}})
+                                                      "decision_tree": {}}, )
         rm_tmp()
 
 # class Test_getKWARGS(unittest.TestCase):
