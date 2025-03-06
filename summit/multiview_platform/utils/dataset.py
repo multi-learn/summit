@@ -215,11 +215,11 @@ class RAMDataset(Dataset):
     def get_label_names(self, sample_indices=None, decode=True):
         selected_labels = self.get_labels(sample_indices)
         if decode:
-            return [label_name.encode("utf-8")
+            return [label_name.encode('utf-8')
                     for label, label_name in enumerate(self.labels_names)
                     if label in selected_labels]
         else:
-            return [label_name.encode("utf-8")
+            return [label_name
                     for label, label_name in enumerate(self.labels_names)
                     if label in selected_labels]
 
@@ -484,7 +484,7 @@ class HDF5Dataset(Dataset):
                 "name"]] = view_index
         return view_dict
 
-    def get_label_names(self, decode=True, sample_indices=None):
+    def get_label_names(self, decode=False, sample_indices=None):
         """
         Used to get the list of the label names for the given set of samples
 
@@ -502,8 +502,10 @@ class HDF5Dataset(Dataset):
             seleted labels' names
         """
         selected_labels = self.get_labels(sample_indices)
+        print("selected labels ", selected_labels)
+        print("self.dataset ", self.dataset["Labels"].attrs["names"])
         if decode:
-            return [label_name
+            return [label_name.decode("utf-8")
                     for label, label_name in
                     enumerate(self.dataset["Labels"].attrs["names"])
                     if label in selected_labels]

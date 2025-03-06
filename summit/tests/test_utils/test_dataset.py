@@ -162,7 +162,7 @@ class Test_Dataset(unittest.TestCase):
         decoded_label_names = dataset_object.get_label_names()
         restricted_label_names = dataset_object.get_label_names(
             sample_indices=[3, 4])
-        self.assertEqual(raw_label_names, [b'0', b'1', b'2'])
+        self.assertEqual(raw_label_names, ['0', '1', '2'])
         self.assertEqual(decoded_label_names, ['0', '1', '2'])
         self.assertEqual(restricted_label_names, ['2'])
 
@@ -319,7 +319,7 @@ class TestRAMDataset(unittest.TestCase):
         self.assertEqual(shape, ['0'.encode('utf-8'),
                                  '1'.encode('utf-8'),
                                  '2'.encode('utf-8')])
-        shape = dataset_object.get_label_names(decode=False)
+        shape = dataset_object.get_label_names(decode=True)
         self.assertEqual(shape, ['0'.encode('utf-8'),
                                  '1'.encode('utf-8'),
                                  '2'.encode('utf-8')])

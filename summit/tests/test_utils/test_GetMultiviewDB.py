@@ -53,6 +53,8 @@ class Test_get_classic_db_hdf5(unittest.TestCase):
         self.assertEqual(dataset.nb_view, 1)
         self.assertEqual(labels_dictionary,
                          {0: "0", 1: "2", 2: "1"})
+        print(labels_dictionary)
+        print(dataset.get_labels())
         self.assertEqual(dataset.get_nb_samples(), 5)
         self.assertEqual(len(np.unique(dataset.get_labels())), 3)
 

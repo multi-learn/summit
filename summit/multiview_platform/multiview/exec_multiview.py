@@ -5,6 +5,7 @@ import time
 
 import h5py
 import numpy as np
+from matplotlib.style.core import available
 
 from .multiview_utils import MultiviewResult, MultiviewResultAnalyzer
 from .. import multiview_classifiers
@@ -256,7 +257,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     logging.info("Info:\t Extraction duration " + str(extraction_time) + "s")
 
     logging.info("Start:\t Getting train/test split")
-    learning_indices, validation_indices = classification_indices
+    available_indices, validation_indices = classification_indices
     logging.info("Done:\t Getting train/test split")
 
     logging.info("Start:\t Getting classifiers modules")
@@ -275,11 +276,11 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
             **classifier_config)
         estimator = get_mc_estim(estimator, random_state,
                                  multiview=True,
-                                 y=dataset_var.get_labels()[learning_indices])
+                                 y=dataset_var.get_labels()[available_indices])
         hps = hps_method_class(estimator, scoring=metrics, cv=k_folds,
                                random_state=random_state, framework="multiview",
                                n_jobs=nb_cores,
-                               learning_indices=learning_indices,
+                               available_indices=available_indices,
                                view_indices=views_indices, **hps_kwargs)
         hps.fit(dataset_var, dataset_var.get_labels(), )
         classifier_config = hps.get_best_params()
@@ -294,7 +295,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     logging.info("Start:\t Fitting classifier")
     fit_beg = time.monotonic()
     classifier.fit(dataset_var, dataset_var.get_labels(),
-                   train_indices=learning_indices,
+                   train_indices=available_indices,
                    view_indices=views_indices)
     print("pou")
     fit_duration = time.monotonic() - fit_beg
@@ -302,7 +303,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
 
     logging.info("Start:\t Predicting")
     train_pred = classifier.predict(dataset_var,
-                                    sample_indices=learning_indices,
+                                    sample_indices=available_indices,
                                     view_indices=views_indices)
     pred_beg = time.monotonic()
     test_pred = classifier.predict(dataset_var,
@@ -310,7 +311,7 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
                                    view_indices=views_indices)
     pred_duration = time.monotonic() - pred_beg
     full_pred = np.zeros(dataset_var.get_labels().shape, dtype=int) - 100
-    full_pred[learning_indices] = train_pred
+    full_pred[available_indices] = train_pred
     full_pred[validation_indices] = test_pred
     logging.info("Done:\t Pertidcting")
 

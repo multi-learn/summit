@@ -55,6 +55,7 @@ class HPSearch:
             return metric
 
     def fit_multiview(self, X, y, groups=None, **fit_params):
+        print(self.available_indices)
         n_splits = self.cv.get_n_splits(self.available_indices,
                                         y[self.available_indices])
         folds = list(
@@ -153,7 +154,7 @@ class HPSearch:
 class Random(RandomizedSearchCV, HPSearch):
 
     def __init__(self, estimator, param_distributions=None, n_iter=10,
-                 refit=False, n_jobs=1, scoring=None, cv=None,  learning_indices=None,
+                 refit=False, n_jobs=1, scoring=None, cv=None,  available_indices=None,
                  random_state=None, view_indices=None,
                  framework="monoview",
                  equivalent_draws=True, track_tracebacks=True):
@@ -166,7 +167,7 @@ class Random(RandomizedSearchCV, HPSearch):
                                     refit=refit, n_jobs=n_jobs, scoring=scoring,
                                     cv=cv, random_state=random_state)
         self.framework = framework
-        self.available_indices = learning_indices
+        self.available_indices = available_indices
         self.view_indices = view_indices
         self.equivalent_draws = equivalent_draws
         self.track_tracebacks = track_tracebacks
@@ -211,14 +212,14 @@ class Grid(GridSearchCV, HPSearch):
 
     def __init__(self, estimator, param_grid={}, refit=False, n_jobs=1,
                  scoring=None, cv=None,
-                 learning_indices=None, view_indices=None, framework="monoview",
+                 available_indices=None, view_indices=None, framework="monoview",
                  random_state=None, track_tracebacks=True):
         scoring = HPSearch.get_scoring(self, scoring)
         GridSearchCV.__init__(self, estimator, param_grid, scoring=scoring,
                               n_jobs=n_jobs, refit=refit,
                               cv=cv)
         self.framework = framework
-        self.available_indices = learning_indices
+        self.available_indices = available_indices
         self.view_indices = view_indices
         self.track_tracebacks = track_tracebacks
         self.tracebacks = []

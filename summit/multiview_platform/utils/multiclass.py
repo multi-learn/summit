@@ -217,7 +217,7 @@ def _multiview_fit_ovo_binary(estimator, X, y, i, j, train_indices,
                               view_indices):
     cond = np.logical_or(y == i, y == j)
     # y = y[cond]
-    y_binary = np.empty(y.shape, np.int)
+    y_binary = np.empty(y.shape, np.int_)
     y_binary[y == i] = 0
     y_binary[y == j] = 1
     indcond = np.arange(X.get_nb_samples())[cond]
@@ -229,6 +229,12 @@ def _multiview_fit_ovo_binary(estimator, X, y, i, j, train_indices,
 
 
 class MultiviewOVOWrapper(MultiviewWrapper, OneVsOneClassifier):
+
+    def get_tags(self):
+        """Get  tags of estimateur see  sklearn > 1.6.0 _pairwise attribut  removed """
+        if hasattr(self.estimator, "get_tags"):
+            return self.estimator.get_tags()
+        return {"pairwise": False}
 
     def fit(self, X, y, train_indices=None, view_indices=None):
         """Fit underlying estimators.
@@ -265,7 +271,7 @@ class MultiviewOVOWrapper(MultiviewWrapper, OneVsOneClassifier):
 
         self.estimators_ = estimators_indices[0]
         self.pairwise_indices_ = (
-            estimators_indices[1] if self._pairwise else None)
+            estimators_indices[1] if self.get_tags()["pairwise"] else None)
 
         return self
 
