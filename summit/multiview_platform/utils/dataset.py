@@ -106,9 +106,9 @@ class Dataset():
         return concat_views, view_limits
 
     def select_labels(self, selected_label_names):
-        selected_labels = [self.get_label_names(decode=True).index(label_name.decode())
+        selected_labels = [self.get_label_names().index(label_name.decode())
                            if isinstance(label_name, bytes)
-                           else self.get_label_names(decode=True).index(label_name)
+                           else self.get_label_names().index(label_name)
                            for label_name in selected_label_names]
         selected_indices = np.array([index
                                      for index, label in

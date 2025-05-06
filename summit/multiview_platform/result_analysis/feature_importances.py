@@ -44,7 +44,7 @@ def get_feature_importances(result, feature_ids=None, view_names=None,):
                                  v_feature_id]
                 feature_importances["mv"] = pd.DataFrame(index=feat_ids)
             if hasattr(classifier_result.clf, 'feature_importances_'):
-                feature_importances["mv"][classifier_result.classifier_name] = classifier_result.clf.feature_importances_
+                feature_importances["mv"][classifier_result.classifier_name] = np.concatenate(classifier_result.clf.feature_importances_)
     return feature_importances
 
 
