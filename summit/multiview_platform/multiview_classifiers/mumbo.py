@@ -90,6 +90,9 @@ class Mumbo(BaseMultiviewClassifier, MumboClassifier):
             np.savetxt(os.path.join(directory, "feature_importances",
                                     base_file_name + view_name + "-feature_importances.csv"),
                        feature_importances, delimiter=',')
+        # CHANGE: Making self.feature_importances_ one array, so he can be easy to use in
+        # summit.multiview_platform.result_analysis.feature_importances.get_feature_importances
+        self.feature_importances_ = np.concatenate(self.feature_importances_)
         self.view_importances /= np.sum(self.view_importances)
         np.savetxt(os.path.join(directory, base_file_name + "view_importances.csv"), self.view_importances,
                    delimiter=',')

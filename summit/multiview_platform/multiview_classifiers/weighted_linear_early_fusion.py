@@ -65,6 +65,8 @@ class WeightedLinearEarlyFusion(BaseMultiviewClassifier, BaseFusionClassifier):
                                                     y=y[train_indices])
         self.monoview_classifier.fit(X, y[train_indices])
         self.monoview_classifier_config = self.monoview_classifier.get_params()
+        if hasattr(self.monoview_classifier, 'feature_importances_'):
+            self.feature_importances_ = self.monoview_classifier.feature_importances_
         return self
 
     def predict(self, X, sample_indices=None, view_indices=None):
