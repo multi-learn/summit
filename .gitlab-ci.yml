@@ -4,8 +4,8 @@ tests:
     tags:
         - docker
     script:
-        - export LC_ALL=$(locale -a | grep en_US)
-        - export LANG=$(locale -a | grep en_US)
+        - export LC_ALL=C.UTF-8
+        - export LANG=C.UTF-8
         - if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
         - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
         - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
@@ -26,8 +26,8 @@ doc:
         - master
         - develop
     script:
-        - export LC_ALL=$(locale -a | grep en_US)
-        - export LANG=$(locale -a | grep en_US)
+        - export LC_ALL=C.UTF-8
+        - export LANG=C.UTF-8
         - if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
         - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
         - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
@@ -50,8 +50,8 @@ pages:
     only:
         - master
     script:
-        - export LC_ALL=$(locale -a | grep en_US)
-        - export LANG=$(locale -a | grep en_US)
+        - export LC_ALL=C.UTF-8
+        - export LANG=C.UTF-8
         - if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
         - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
         - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
