@@ -6,7 +6,6 @@ tests:
     script:
         - export LC_ALL=$(locale -a | grep en_US)
         - export LANG=$(locale -a | grep en_US)
-        - python -m pip3 install flake8 pytest pytest-cov
         - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
         - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
@@ -28,7 +27,6 @@ doc:
     script:
         - export LC_ALL=$(locale -a | grep en_US)
         - export LANG=$(locale -a | grep en_US)
-        - python -m pip3 install flake8 
         - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
         - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
@@ -53,7 +51,6 @@ pages:
     script:
         - export LC_ALL=$(locale -a | grep en_US)
         - export LANG=$(locale -a | grep en_US)
-        - python -m pip3 install flake8 
         - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
         - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
