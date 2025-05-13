@@ -65,7 +65,7 @@ pages:
         - cp -r ./docs/build public
         - mkdir public/coverage
         - mv htmlcov/index.html public/coverage/
-        - mv htmlcov/style.css public/coverage/
+        - mv htmlcov/style_*.css public/coverage/
     artifacts:
        paths:
             - public
