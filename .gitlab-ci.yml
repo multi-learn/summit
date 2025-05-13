@@ -11,7 +11,7 @@ tests:
         - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
         - pip3 install -e .
         - pip3 install -e .[dev]
-        - python -m pytest
+        - pytest --cov=. --cov-report=html
     coverage: '/^TOTAL.+?(\d+\%)$/'
     artifacts:
         paths:
@@ -57,7 +57,7 @@ pages:
         - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
         - pip3 install -e .[dev]
         - pip3 install -e .[doc]
-        - python -m pytest
+        - pytest --cov=. --cov-report=html
         - sphinx-apidoc -o docs/source summit
         - cd docs/source
         - sphinx-build -b html . ../build
