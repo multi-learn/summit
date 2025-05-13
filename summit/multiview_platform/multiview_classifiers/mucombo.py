@@ -7,20 +7,20 @@ from ..utils.hyper_parameter_search import CustomRandint
 from ..utils.dataset import get_samples_views_indices
 from ..utils.base import base_boosting_estimators
 
-classifier_class_name = "MuCumbo"
+classifier_class_name = "MuCombo"
 
 
 class MuCombo(BaseMultiviewClassifier, MuComboClassifier):
 
-    def __init__(self, estimator=None,
+    def __init__(self, base_estimator=None,
                  n_estimators=50,
                  random_state=None,**kwargs):
         BaseMultiviewClassifier.__init__(self, random_state)
-        estimator = self.set_base_estim_from_dict(estimator, **kwargs)
-        MuComboClassifier.__init__(self, estimator=estimator,
+        base_estimator = self.set_base_estim_from_dict(base_estimator, **kwargs)
+        MuComboClassifier.__init__(self, base_estimator=base_estimator,
                                     n_estimators=n_estimators,
                                     random_state=random_state,)
-        self.param_names = ["estimator", "n_estimators", "random_state",]
+        self.param_names = ["base_estimator", "n_estimators", "random_state",]
         self.distribs = [base_boosting_estimators,
                          CustomRandint(5,200), [random_state],]
 
@@ -43,6 +43,12 @@ class MuCombo(BaseMultiviewClassifier, MuComboClassifier):
                                                 view_indices=view_indices)
         return MuComboClassifier.predict(self, numpy_X)
 
-    def get_interpretation(self, directory, base_file_name, labels,
-                           multiclass=False):
+    def get_interpretation(self, directory, base_file_name, y_test, feature_ids,
+                           multi_class=False):
         return ""
+
+    def set_base_estim_from_dict(self, dict):
+        key, args = list(dict.items())[0]
+
+        if key == "decision_tree":
+            return DecisionTreeClassifier(**args)
