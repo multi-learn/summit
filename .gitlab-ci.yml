@@ -10,7 +10,8 @@ tests:
         - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
         - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
         - pip3 install -e .
-        - pytest-3
+        - pip3 install -e .[dev]
+        - python -m pytest
     coverage: '/^TOTAL.+?(\d+\%)$/'
     artifacts:
         paths:
@@ -54,8 +55,9 @@ pages:
         - if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
         - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
         - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
+        - pip3 install -e .[dev]
         - pip3 install -e .[doc]
-        - pytest-3
+        - python -m pytest
         - sphinx-apidoc -o docs/source summit
         - cd docs/source
         - sphinx-build -b html . ../build
