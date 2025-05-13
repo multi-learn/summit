@@ -1,6 +1,6 @@
-# run the test suite
+# run the test suite registry.lis-lab.fr:5005/baptiste.bauvin/summit/ubuntu:18.04
 tests:
-    image: registry.lis-lab.fr:5005/baptiste.bauvin/summit/ubuntu:18.04
+    image: python:3.11 
     tags:
         - docker
     script:
@@ -18,7 +18,7 @@ tests:
 
 # generate the documentation
 doc:
-    image: registry.lis-lab.fr:5005/baptiste.bauvin/summit/ubuntu:18.04
+    image: python:3.11
     tags:
         - docker
     only:
@@ -43,7 +43,7 @@ doc:
 
 # project public
 pages:
-    image: registry.lis-lab.fr:5005/baptiste.bauvin/summit/ubuntu:18.04
+    image: python:3.11
     tags:
         - docker
     only:
