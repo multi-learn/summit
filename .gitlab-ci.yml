@@ -1,13 +1,17 @@
-# run the test suite
+# run the test suite registry.lis-lab.fr:5005/baptiste.bauvin/summit/ubuntu:18.04
 tests:
-    image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/summit/ubuntu:18.04
+    image: python:3.11 
     tags:
         - docker
     script:
-        - export LC_ALL=$(locale -a | grep en_US)
-        - export LANG=$(locale -a | grep en_US)
+        - export LC_ALL=C.UTF-8
+        - export LANG=C.UTF-8
+        - if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
+        - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
+        - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
         - pip3 install -e .
-        - pytest-3
+        - pip3 install -e .[dev]
+        - pytest --cov=. --cov-report=html
     coverage: '/^TOTAL.+?(\d+\%)$/'
     artifacts:
         paths:
@@ -15,15 +19,18 @@ tests:
 
 # generate the documentation
 doc:
-    image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/summit/ubuntu:18.04
+    image: python:3.11
     tags:
         - docker
     only:
         - master
         - develop
     script:
-        - export LC_ALL=$(locale -a | grep en_US)
-        - export LANG=$(locale -a | grep en_US)
+        - export LC_ALL=C.UTF-8
+        - export LANG=C.UTF-8
+        - if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
+        - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
+        - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
         - pip3 install -e .[doc]
         - sphinx-apidoc -o docs/source summit
         - cd docs/source
@@ -37,16 +44,20 @@ doc:
 
 # project public
 pages:
-    image: registry.gitlab.lis-lab.fr:5005/baptiste.bauvin/summit/ubuntu:18.04
+    image: python:3.11
     tags:
         - docker
     only:
         - master
     script:
-        - export LC_ALL=$(locale -a | grep en_US)
-        - export LANG=$(locale -a | grep en_US)
+        - export LC_ALL=C.UTF-8
+        - export LANG=C.UTF-8
+        - if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
+        - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
+        - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
+        - pip3 install -e .[dev]
         - pip3 install -e .[doc]
-        - pytest-3
+        - pytest --cov=. --cov-report=html
         - sphinx-apidoc -o docs/source summit
         - cd docs/source
         - sphinx-build -b html . ../build
@@ -54,7 +65,7 @@ pages:
         - cp -r ./docs/build public
         - mkdir public/coverage
         - mv htmlcov/index.html public/coverage/
-        - mv htmlcov/style.css public/coverage/
+        - mv htmlcov/style_*.css public/coverage/
     artifacts:
        paths:
             - public
