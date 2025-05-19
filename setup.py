@@ -150,8 +150,7 @@ def setup_package():
     extras_require = {
          'test' : ['pytest', 'pytest-cov'],
          'doc' : ['sphinx >= 3.0.2', 'numpydoc', 'docutils', 'sphinx-autoapi',
-                 'sphinx_rtd_theme'],
-        'install' : ['randomscm @ git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha']}
+                 'sphinx_rtd_theme']}
 
 
     setup(version=version,

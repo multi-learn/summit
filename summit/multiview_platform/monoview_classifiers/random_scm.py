@@ -119,7 +119,7 @@ class ScmBagging(RandomScmClassifier, BaseMonoviewClassifier):
                  max_samples=max_samples,
                  max_features=max_features,
                  max_rules=max_rules,
-                 p_options=p_options,
+                 p=p_options,
                  model_type=model_type,
                  random_state=random_state)
         self.param_names = ["n_estimators", "max_rules", "max_samples", "max_features", "model_type", "p_options", "random_state"]
