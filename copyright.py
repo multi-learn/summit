@@ -46,7 +46,7 @@ def fileStamping(filename, stamp):
             print(line, end="")
 
 
-def getStamp(date, multimodal_version):
+def getStamp(date, summit_version):
     """ Return the corrected formated stamp """
     stamp = open("copyrightstamp.txt").read()
     stamp = stamp.replace("DATE", date)
@@ -58,7 +58,7 @@ def getStamp(date, multimodal_version):
 
 
 def getVersionsAndDate():
-    """ Return (date, multimodal_version..
+    """ Return (date, summit_version..
     ) """
     v_text = open('VERSION').read().strip()
     v_text_formted = '{"' + v_text.replace('\n', '","').replace(':', '":"')

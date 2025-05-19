@@ -36,9 +36,9 @@ test = ['pytest', 'pytest-cov']
 doc = ['sphinx==5.0', 'numpydoc', 'sphinx_gallery', "sphinx_rtd_theme"]
 
 [project.urls]
-Homepage = 'https://github.com/multi-learn/summit'
+"Sources = 'https://github.com/multi-learn/summit'
 Documentation  = 'https://multi-learn.github.io/summit/'
-Issues = '"https://github.com/multi-learn/summit/issues'
+"Bug Tracker" = '"https://github.com/multi-learn/summit/issues'
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
