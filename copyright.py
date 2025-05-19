@@ -50,7 +50,7 @@ def getStamp(date, multimodal_version):
     """ Return the corrected formated stamp """
     stamp = open("copyrightstamp.txt").read()
     stamp = stamp.replace("DATE", date)
-    stamp = stamp.replace("MULTIMODAL_VERSION", multimodal_version)
+    stamp = stamp.replace("SUMMIT_VERSION", summit_version)
     stamp = stamp.replace('\n', '\n# ')
     stamp = "# " + stamp
     stamp = stamp.replace("# \n", "#\n")
@@ -64,14 +64,14 @@ def getVersionsAndDate():
     v_text_formted = '{"' + v_text.replace('\n', '","').replace(':', '":"')
     v_text_formted += '"}'
     v_dict = eval(v_text_formted)
-    return (time.strftime("%Y"), v_dict['multimodal'])
+    return (time.strftime("%Y"), v_dict['summit'])
 
 
 def writeStamp():
     """ Write a copyright stamp on all files """
     stamp = getStamp(*getVersionsAndDate())
     files = findFiles(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                   "multimodal"))
+                                   "summit"))
     for filename in files:
         fileStamping(filename, stamp)
     fileStamping("setup.py", stamp)
@@ -80,7 +80,7 @@ def writeStamp():
 def eraseStamp():
     """ Erase a copyright stamp from all files """
     files = findFiles(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                   "multimodal"))
+                                   "summit"))
     for filename in files:
         fileUnStamping(filename)
     fileUnStamping("setup.py")

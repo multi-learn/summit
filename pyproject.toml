@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "numpy"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = 'summit-multi-learn'
+dynamic = ["version", 'dependencies', "license"]
+requires-python = '>=3.6'
+readme = {file = "README.rst", content-type = "text/x-rst"}
+description = "Supervised MultiModal Integration Tool"
+authors = [
+    {name = "Baptiste Bauvin", email = "baptiste.bauvin.work@gmail.com"}
+]
+keywords = ['machine learning, supervised learning, classification, tool, multiview learning, monoview learning']
+classifiers=[
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Science/Research',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Topic :: Scientific/Engineering',
+    'Topic :: Scientific/Engineering :: Artificial Intelligence',
+    'Topic :: Machine Learning',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX :: Linux',
+    'Operating System :: MacOS :: MacOS X',
+]
+
+
+[project.optional-dependencies]
+test = ['pytest', 'pytest-cov']
+doc = ['sphinx==5.0', 'numpydoc', 'sphinx_gallery', "sphinx_rtd_theme"]
+
+[project.urls]
+Homepage = 'https://github.com/multi-learn/summit'
+Documentation  = 'https://multi-learn.github.io/summit/'
+Issues = '"https://github.com/multi-learn/summit/issues'
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools.packages.find]
+where = ["."]
+

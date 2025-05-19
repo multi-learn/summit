@@ -2,103 +2,123 @@
 #Extracting requrements from requirements.txt
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
-
-# from Cython.Build import cythonize
+import os, re
+import shutil
+from distutils.command.clean import clean as _clean
+from distutils.dir_util import remove_tree
+from distutils.command.sdist import sdist
 from setuptools import setup, find_packages
 
+USE_COPYRIGHT = True
+try:
+    from copyright import writeStamp, eraseStamp
+except ImportError:
+    USE_COPYRIGHT = False
+
+# --------------------------------------------------------------------
+# Clean target redefinition - force clean everything supprimer de la liste '^core\.*$',
+relist = ['^.*~$', '^#.*#$', '^.*\.aux$', '^.*\.pyc$', '^.*\.o$']
+reclean = []
+
+###################
+# Get Summit version
+####################
+def get_version():
+    v_text = open('VERSION').read().strip()
+    v_text_formted = '{"' + v_text.replace('\n', '","').replace(':', '":"')
+    v_text_formted += '"}'
+    v_dict = eval(v_text_formted)
+    return v_dict["summit"]
+
+########################
+# Set Summit __version__
+########################
+def set_version(summit_dir, version):
+    filename = os.path.join(summit_dir, '__init__.py')
+    buf = ""
+    for line in open(filename, "rb"):
+        if not line.decode("utf8").startswith("__version__ ="):
+            buf += line.decode("utf8")
+    f = open(filename, "wb")
+    f.write(buf.encode("utf8"))
+    f.write(('__version__ = "%s"\n' % version).encode("utf8"))
+
+for restring in relist:
+    reclean.append(re.compile(restring))
+
+
+def wselect(args, dirname, names):
+    for n in names:
+        for rev in reclean:
+            if (rev.match(n)):
+                os.remove("%s/%s" %(dirname, n))
+        break
+
+class clean(_clean):
+    def walkAndClean(self):
+        os.walk("..", wselect, [])
+        pass
+
+    def run(self):
+        clean.run(self)
+        if os.path.exists('build'):
+            shutil.rmtree('build')
+        for dirpath, dirnames, filenames in os.walk('multimodal'):
+            for filename in filenames:
+                if (filename.endswith('.so') or
+                        filename.endswith('.pyd') or
+                        filename.endswith('.dll') or
+                        filename.endswith('.pyc')):
+                    os.unlink(os.path.join(dirpath, filename))
+            for dirname in dirnames:
+                if dirname == '__pycache__':
+                    shutil.rmtree(os.path.join(dirpath, dirname))
+
+##############################
+# Custom sdist command
+##############################
+class m_sdist(sdist):
+    """ Build source package
+
+    WARNING : The stamping must be done on an default utf8 machine !
+    """
+    def run(self):
+        if USE_COPYRIGHT:
+            writeStamp()
+            sdist.run(self)
+            # eraseStamp()
+        else:
+            sdist.run(self)
 
 # Ceci n'est qu'un appel de fonction. Mais il est trèèèèèèèèèèès long
 # et il comporte beaucoup de paramètres
 def setup_package():
-    setup(
+    group = 'multi-learn'
+    name = group +'-summit'
+    version = get_version()
+    summit_dir = 'summit'
+    set_version(summit_dir, version)
+    here = os.path.abspath(os.path.dirname(__file__))
+    # Or 'README.rst', depending on your format
+    long_description_content_type = 'text/x-rst'
+    with open(os.path.join(here, 'README.rst'), encoding='utf-8') as readme:
+        long_description = readme.read()
 
-    # le nom de votre bibliothèque, tel qu'il apparaitre sur pypi
-    name='summit',
+    #url = 'https://github.com/{}/{}'.format(group, name)
+    #project_urls = {
+    #    'Documentation': 'https://{}.github.io/{}/'.format(group, name),
+    #   'Source': url,
+    #    'Tracker': '{}/issues'.format(url)}
+    packages = find_packages(exclude=['*.test'])
 
-    # la version du code
-    version=0.0,
-    python_requires = '>=3.5',
-    # Liste les packages à insérer dans la distribution
-    # plutôt que de le faire à la main, on utilise la foncton
-    # find_packages() de setuptools qui va cherche tous les packages
-    # python recursivement dans le dossier courant.
-    # C'est pour cette raison que l'on a tout mis dans un seul dossier:
-    # on peut ainsi utiliser cette fonction facilement
-    packages=find_packages(),
-
-    # votre pti nom
-    author="Baptiste Bauvin",
-
-    # Votre email, sachant qu'il sera publique visible, avec tous les risques
-    # que ça implique.
-    author_email="baptiste.bauvin@lis-lab.fr",
-
-    # Une description courte
-    description="Supervised MultiModal Integration Tool",
-
-    # Une description longue, sera affichée pour présenter la lib
-    # Généralement on dump le README ici
-    long_description=open('README.rst').read(),
-
-    # Vous pouvez rajouter une liste de dépendances pour votre lib
-    # et même préciser une version. A l'installation, Python essayera de
-    # les télécharger et les installer.
-    #
-    # Ex: ["gunicorn", "docutils >= 0.3", "lxml==0.5a7"]
-    #
-    # Dans notre cas on en a pas besoin, donc je le commente, mais je le
-    # laisse pour que vous sachiez que ça existe car c'est très utile.
-    # install_requires= ,
-
+    setup(version=version,
+    packages=packages,
+    long_description=long_description,
     # Active la prise en compte du fichier MANIFEST.in
     include_package_data=True,
-    # dependency_links=['https://github.com/aldro61/pyscm.git#egg=pyscm'],
-    # Une url qui pointe vers la page officielle de votre lib
-    url='http://gitlab.lis-lab.fr/baptiste.bauvin/summit/',
-    install_requires=requirements,
-    extras_require={
-            'dev': ['pytest', 'pytest-cov'],
-            'doc': ['sphinx >= 3.0.2', 'numpydoc', 'docutils', 'sphinx-autoapi',
-                    'sphinx_rtd_theme']},
-
-    # Il est d'usage de mettre quelques metadata à propos de sa lib
-    # Pour que les robots puissent facilement la classer.
-    # La liste des marqueurs autorisées est longue:
-    # https://pypi.python.org/pypi?%3Aaction=list_classifiers.
-    #
-    # Il n'y a pas vraiment de règle pour le contenu. Chacun fait un peu
-    # comme il le sent. Il y en a qui ne mettent rien.
-    classifiers=[
-        "Programming Language :: Python",
-        "Development Status :: 1 - Planning",
-        "License :: OSI Approved",
-        "Natural Language :: French",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python :: 2/3",
-        "Topic :: Machine Learning",
-    ],
-
-    # C'est un système de plugin, mais on s'en sert presque exclusivement
-    # Pour créer des commandes, comme "django-admin".
-    # Par exemple, si on veut créer la fabuleuse commande "proclame-sm", on
-    # va faire pointer ce nom vers la fonction proclamer(). La commande sera
-    # créé automatiquement.
-    # La syntaxe est "nom-de-commande-a-creer = package.module:fonction".
-    # entry_points={
-    #     'console_scripts': [
-    #         'exec_multiview = summit.execute:exec',
-    #     ],
-    # },
-
-    # A fournir uniquement si votre licence n'est pas listée dans "classifiers"
-    # ce qui est notre cas
-    license="GNUGPL",
-
-    # Il y a encore une chiée de paramètres possibles, mais avec ça vous
-    # couvrez 90% des besoins
-    # ext_modules=cythonize(
-    #     "summit/multiview_platform/monoview/additions/_custom_criterion.pyx"),
-)
+    license="BSD-3-Clause",
+    license_files="LICENSE"
+    )
 
 if __name__ == "__main__":
     setup_package()
