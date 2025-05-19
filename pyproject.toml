@@ -33,7 +33,8 @@ classifiers=[
 
 [project.optional-dependencies]
 test = ['pytest', 'pytest-cov']
-doc = ['sphinx==5.0', 'numpydoc', 'sphinx_gallery', "sphinx_rtd_theme"]
+doc = ['sphinx >= 3.0.2', 'numpydoc', 'docutils', 'sphinx-autoapi',
+       'sphinx_rtd_theme']
 
 [project.urls]
 "Sources" = 'https://github.com/multi-learn/summit'

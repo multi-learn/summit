@@ -131,7 +131,7 @@ class m_sdist(sdist):
 # et il comporte beaucoup de paramètres
 def setup_package():
     group = 'multi-learn'
-    name = group +'-summit'
+    name = 'summit' + group
     version = get_version()
     summit_dir = 'summit'
     set_version(summit_dir, version)
@@ -147,6 +147,10 @@ def setup_package():
     #   'Source': url,
     #    'Tracker': '{}/issues'.format(url)}
     packages = find_packages(exclude=['*.test'])
+    extras_require = {
+         'test': ['pytest', 'pytest-cov'],
+         'doc': ['sphinx >= 3.0.2', 'numpydoc', 'docutils', 'sphinx-autoapi',
+            'sphinx_rtd_theme']},
 
     setup(version=version,
     packages=packages,
@@ -154,7 +158,8 @@ def setup_package():
     # Active la prise en compte du fichier MANIFEST.in
     include_package_data=True,
     license="BSD-3-Clause",
-    license_files="LICENSE"
+    license_files="LICENSE",
+    extras_require=extras_require
     )
 
 if __name__ == "__main__":
