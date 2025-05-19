@@ -7,10 +7,8 @@ tests:
         - export LC_ALL=C.UTF-8
         - export LANG=C.UTF-8
         - if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
-        - pip3 install git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
-        - pip3 install git+https://github.com/multi-learn/scikit-multimodallearn.git
         - pip3 install -e .
-        - pip3 install -e .[dev]
+        - pip3 install -e .[test]
         - pytest --cov=. --cov-report=html
     coverage: '/^TOTAL.+?(\d+\%)$/'
     artifacts:

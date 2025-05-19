@@ -148,9 +148,9 @@ def setup_package():
     #    'Tracker': '{}/issues'.format(url)}
     packages = find_packages(exclude=['*.test'])
     extras_require = {
-         'test': ['pytest', 'pytest-cov'],
-         'doc': ['sphinx >= 3.0.2', 'numpydoc', 'docutils', 'sphinx-autoapi',
-            'sphinx_rtd_theme']},
+         'test' : ['pytest', 'pytest-cov'],
+         'doc' : ['sphinx >= 3.0.2', 'numpydoc', 'docutils', 'sphinx-autoapi',
+                 'sphinx_rtd_theme']}
 
     setup(version=version,
     packages=packages,
