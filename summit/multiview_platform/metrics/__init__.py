@@ -1,4 +1,4 @@
-__version__ = "0.0.0.0"
+__version__ = "0.0.1"
 """
 To be able to add another metric to the benchmark you must :
 

@@ -75,6 +75,7 @@ def writeStamp():
     for filename in files:
         fileStamping(filename, stamp)
     fileStamping("setup.py", stamp)
+    fileStamping("format_dataset.py", stamp)
 
 
 def eraseStamp():
@@ -84,6 +85,7 @@ def eraseStamp():
     for filename in files:
         fileUnStamping(filename)
     fileUnStamping("setup.py")
+    fileUnStamping("format_dataset.py")
 
 
 def usage(arg):
