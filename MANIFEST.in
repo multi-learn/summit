@@ -1,3 +1,4 @@
 include *.md
 include multiview_platform/examples*
+include VERSION
 include LICENSE

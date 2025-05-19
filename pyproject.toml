@@ -24,7 +24,6 @@ classifiers=[
     'Programming Language :: Python :: 3.11',
     'Topic :: Scientific/Engineering',
     'Topic :: Scientific/Engineering :: Artificial Intelligence',
-    'Topic :: Machine Learning',
     'Operating System :: Microsoft :: Windows',
     'Operating System :: POSIX :: Linux',
     'Operating System :: MacOS :: MacOS X',
@@ -39,7 +38,7 @@ doc = ['sphinx >= 3.0.2', 'numpydoc', 'docutils', 'sphinx-autoapi',
 [project.urls]
 "Sources" = 'https://github.com/multi-learn/summit'
 Documentation  = 'https://multi-learn.github.io/summit/'
-"Bug Tracker" = '"https://github.com/multi-learn/summit/issues'
+"Bug Tracker" = 'https://github.com/multi-learn/summit/issues'
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}

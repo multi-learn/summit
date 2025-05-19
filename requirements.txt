@@ -15,4 +15,4 @@ pyscm-ml>=1.0.0
 imbalanced-learn>=0.10.1
 scikit-multimodallearn==0.0.3
 # Dépendances depuis des dépôts Git
-randomscm @ git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
+# randomscm @ git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha # pip install -e .[install]
