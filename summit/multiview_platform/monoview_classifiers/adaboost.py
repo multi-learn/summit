@@ -61,7 +61,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
 
     def __init__(self, random_state=None, n_estimators=50, 
                  estimator=None, estimator_config=None,   **kwargs):
-        base_estimator = BaseMonoviewClassifier.get_base_estimator(self,
+        estimator = BaseMonoviewClassifier.get_base_estimator(self,
                                                                    estimator, estimator_config)
         AdaBoostClassifier.__init__(self,
                                     random_state=random_state,
@@ -73,7 +73,7 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         self.classed_params = ["estimator"]
         self.distribs = [CustomRandint(low=1, high=500),
                          base_boosting_estimators]
-        self.weird_strings = {"base_estimator": "class_name"}
+        self.weird_strings = {"estimator": "class_name"}
         self.plotted_metric = metrics.zero_one_loss
         self.plotted_metric_name = "zero_one_loss"
         self.step_predictions = None

@@ -49,15 +49,15 @@ classifier_class_name = "MuCombo"
 
 class MuCombo(BaseMultiviewClassifier, MuComboClassifier):
 
-    def __init__(self, base_estimator=None,
+    def __init__(self, estimator=None,
                  n_estimators=50,
                  random_state=None,**kwargs):
         BaseMultiviewClassifier.__init__(self, random_state)
-        base_estimator = self.set_base_estim_from_dict(base_estimator, **kwargs)
-        MuComboClassifier.__init__(self, base_estimator=base_estimator,
+        estimator = self.set_base_estim_from_dict(estimator, **kwargs)
+        MuComboClassifier.__init__(self, estimator=estimator,
                                     n_estimators=n_estimators,
                                     random_state=random_state,)
-        self.param_names = ["base_estimator", "n_estimators", "random_state",]
+        self.param_names = ["estimator", "n_estimators", "random_state",]
         self.distribs = [base_boosting_estimators,
                          CustomRandint(5,200), [random_state],]
 

@@ -61,7 +61,7 @@ class ImbalanceBagging(BaseMonoviewClassifier, BalancedBaggingClassifier):
         self.distribs = [CustomRandint(low=1, high=50),
                          base_boosting_estimators,
                          ["auto"]]
-        self.weird_strings = {"base_estimator": "class_name"}
+        self.weird_strings = {"estimator": "class_name"}
         self.base_estimator_config = base_estimator_config
 
 

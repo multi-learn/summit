@@ -122,7 +122,7 @@ class BaseClassifier(BaseEstimator, ):
             return estimator.set_params(**estimator_config)
         else:
             raise ValueError(
-                'base_estimator must be either a string or a BaseEstimator child class, it is {}'.format(
+                'estimator must be either a string or a BaseEstimator child class, it is {}'.format(
                     type(estimator)))
 
     def to_str(self, param_name):

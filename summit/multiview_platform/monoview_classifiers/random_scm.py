@@ -55,19 +55,19 @@ MAX_INT = np.iinfo(np.int32).max
 
 class ScmBagging(RandomScmClassifier, BaseMonoviewClassifier):
     """A Bagging classifier. for SetCoveringMachineClassifier()
-    The base estimators are built on subsets of both samples
+    The estimators are built on subsets of both samples
     and features.
     Parameters
     ----------
     n_estimators : int, default=10
-        The number of base estimators in the ensemble.
+        The number of estimators in the ensemble.
     max_samples : int or float, default=1.0
-        The number of samples to draw from X to train each base estimator with
+        The number of samples to draw from X to train each estimator with
         replacement.
         - If int, then draw `max_samples` samples.
         - If float, then draw `max_samples * X.shape[0]` samples.
     max_features : int or float, default=1.0
-        The number of features to draw from X to train each base estimator (
+        The number of features to draw from X to train each estimator (
         without replacement.
         - If int, then draw `max_features` features.
         - If float, then draw `max_features * X.shape[1]` features.
@@ -79,7 +79,7 @@ class ScmBagging(RandomScmClassifier, BaseMonoviewClassifier):
     random_state : int or RandomState, default=None
         Controls the random resampling of the original dataset
         (sample wise and feature wise).
-        If the base estimator accepts a `random_state` attribute, a different
+        If the  estimator accepts a `random_state` attribute, a different
         seed is generated for each instance in the ensemble.
         Pass an int for reproducible output across multiple function calls.
         See :term:`Glossary <random_state>`.
@@ -89,9 +89,9 @@ class ScmBagging(RandomScmClassifier, BaseMonoviewClassifier):
     n_features_ : int
         The number of features when :meth:`fit` is performed.
     estimators_ : list of estimators
-        The collection of fitted base estimators.
+        The collection of fitted  estimators.
     estim_features : list of arrays
-        The subset of drawn features for each base estimator.
+        The subset of drawn features for each  estimator.
 
     Examples
     --------

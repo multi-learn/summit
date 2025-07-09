@@ -53,34 +53,34 @@ classifier_class_name = "Mumbo"
 
 class Mumbo(BaseMultiviewClassifier, MumboClassifier):
 
-    def __init__(self, base_estimator=None,
+    def __init__(self, estimator=None,
                  n_estimators=50,
                  random_state=None,
                  best_view_mode="edge", **kwargs):
         BaseMultiviewClassifier.__init__(self, random_state)
-        base_estimator = self.set_base_estim_from_dict(base_estimator)
-        MumboClassifier.__init__(self, base_estimator=base_estimator,
+        estimator = self.set_base_estim_from_dict(estimator)
+        MumboClassifier.__init__(self, estimator=estimator,
                                  n_estimators=n_estimators,
                                  random_state=random_state,
                                  best_view_mode=best_view_mode)
-        self.param_names = ["base_estimator", "n_estimators", "random_state", "best_view_mode"]
+        self.param_names = ["estimator", "n_estimators", "random_state", "best_view_mode"]
         self.distribs = [base_boosting_estimators,
                          CustomRandint(5, 200), [random_state], ["edge", "error"]]
 
     def set_params(self, estimator=None, **params):
         """
-        Sets the base estimator from a dict.
-        :param base_estimator:
+        Sets the estimator from a dict.
+        :param estimator:
         :param params:
         :return:
         """
         if estimator is None:
             self.estimator = DecisionTreeClassifier()
         elif isinstance(estimator, dict):
-            self.base_estimator = self.set_base_estim_from_dict(estimator)
+            self.estimator = self.set_base_estim_from_dict(estimator)
             MumboClassifier.set_params(self, **params)
         else:
-            MumboClassifier.set_params(self, base_estimator=estimator, **params)
+            MumboClassifier.set_params(self, estimator=estimator, **params)
 
     def fit(self, X, y, train_indices=None, view_indices=None):
         train_indices, view_indices = get_samples_views_indices(X,

@@ -55,7 +55,7 @@ weighted_linear_late_fusion:
     - svm_linear:
         C: 0.9534901260357467
     - adaboost:
-        base_estimator: DecisionTreeClassifier
+        estimator: DecisionTreeClassifier
         base_estimator__ccp_alpha: 0.0
         base_estimator__class_weight: null
         base_estimator__criterion: gini

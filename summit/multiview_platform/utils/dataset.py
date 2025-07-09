@@ -775,7 +775,7 @@ def init_multiple_datasets(path_f, name, nb_cores):  # pragma: no cover
                     r" WARNING : /!\ This may use a lot of HDD storage space : " +
                     str(os.path.getsize(os.path.join(path_f,
                                                      name + ".hdf5")) * nb_cores / float(
-                        1024) / 1000 / 1000) + " Gbytes /!\ ")
+                        1024) / 1000 / 1000) + " Gbytes /!\\ ")
                 confirmation = confirm()
                 if not confirmation:
                     sys.exit(0)

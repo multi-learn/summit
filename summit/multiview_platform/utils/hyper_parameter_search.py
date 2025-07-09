@@ -98,7 +98,7 @@ class HPSearch:
         folds = list(
             self.cv.split(self.available_indices, y[self.available_indices]))
         self.get_candidate_params(X)
-        base_estimator = clone(self.estimator)
+        estimator = clone(self.estimator)
         results = {}
         self.cv_results_ = dict(("param_" + param_name, []) for param_name in
                                 self.candidate_params[0].keys())
@@ -112,7 +112,7 @@ class HPSearch:
             try:
                 for fold_idx, (train_indices,
                                test_indices) in enumerate(folds):
-                    current_estimator = clone(base_estimator)
+                    current_estimator = clone(estimator)
                     current_estimator.set_params(**candidate_param)
                     current_estimator.fit(X, y,
                                           train_indices=self.available_indices[
@@ -151,7 +151,7 @@ class HPSearch:
         self.cv_results_["mean_test_score"] = np.array(
             self.cv_results_["mean_test_score"])
         if self.refit:
-            self.best_estimator_ = clone(base_estimator).set_params(
+            self.best_estimator_ = clone(estimator).set_params(
                 **self.best_params_)
             self.best_estimator_.fit(X, y, **fit_params)
         self.n_splits_ = n_splits

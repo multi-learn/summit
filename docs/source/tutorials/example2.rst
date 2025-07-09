@@ -43,7 +43,7 @@ In the config file, the default values for Adaboost's hyper-parameters are :
 
     adaboost:
       n_estimators: 50
-      base_estimator: "DecisionTreeClassifier"
+      estimator: "DecisionTreeClassifier"
 
 (see `adaboost's sklearn's page <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier>`_ for more information)
 

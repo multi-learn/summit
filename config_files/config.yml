@@ -95,11 +95,11 @@ svm_poly:
 
 adaboost:
   n_estimators: [50]
-  base_estimator: ["DecisionTreeClassifier"]
+  estimator: ["DecisionTreeClassifier"]
 
 adaboost_pregen:
   n_estimators: [50]
-  base_estimator: ["DecisionTreeClassifier"]
+  estimator: ["DecisionTreeClassifier"]
   n_stumps: [1]
 
 adaboost_graalpy:
@@ -242,6 +242,6 @@ weighted_linear_late_fusion:
       splitter: ["best"]
 
 mumbo:
-  base_estimator: [null]
+  estimator: [null]
   n_estimators: [10]
   best_view_mode: ["edge"]

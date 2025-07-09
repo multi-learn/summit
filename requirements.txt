@@ -1,6 +1,6 @@
 h5py>=2.9.0
 joblib>=0.13.2
-numpy>=1.16.4
+numpy>=1.24.0
 pyparsing>=2.4.0
 python-dateutil>=2.8.0
 scikit-learn>=1.2.1
@@ -13,7 +13,6 @@ matplotlib>=3.1.1
 tabulate>=0.8.6
 pyscm-ml>=1.0.0
 imbalanced-learn>=0.10.1
-scikit-multimodallearn==0.0.3
+scikit-multimodallearn>=0.1.0
 randomscm==0.1.2
-# Dépendances depuis des dépôts Git
 # randomscm @ git+https://github.com/thibgo/randomscm.git@v0.0.0-alpha
