@@ -8,18 +8,22 @@ bayesian_inference_fusion
 -------------------------
 
 
-.. data:: classifier_class_name
-   :annotation: = BayesianInferenceClassifier
+.. py:data:: classifier_class_name
+   :value: 'BayesianInferenceClassifier'
 
-   
 
 .. py:class:: BayesianInferenceClassifier(random_state, classifiers_names=None, classifier_configs=None, nb_cores=1, weights=None, rs=None)
 
 
 
    
-   .. method:: predict(self, X, sample_indices=None, view_indices=None)
 
 
+   .. py:attribute:: need_probas
+      :value: True
+
+
+
+   .. py:method:: predict(X, sample_indices=None, view_indices=None)
 
 

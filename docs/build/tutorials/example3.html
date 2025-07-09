@@ -1,99 +1,50 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Example 3 : Understanding the statistical iterations &mdash; SuMMIT 0 documentation</title>
-  
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script src="../_static/plotly_js.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8dde47fa"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/plotly_js.js?v=c3b947fd"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Taking control : Use your own dataset" href="example4.html" />
     <link rel="prev" title="Example 2 : Understanding the hyper-parameter optimization" href="example2.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../index.html" class="icon icon-home"> SuMMIT
           
-
-          
-            
-            <img src="../_static/logo_summit.png" class="logo" alt="Logo"/>
-          
+          <a href="../index.html" class="icon icon-home">
+            SuMMIT
+              <img src="../_static/logo_summit.png" class="logo" alt="Logo"/>
           </a>
-
-          
-            
-            
-              <div class="version">
-                0.0.0
-              </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">SuMMIT Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="installation.html">Install SuMMIT</a></li>
@@ -115,92 +66,50 @@
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/monoview_classifiers/index.html">Available monoview classifiers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/multiview_classifiers/index.html">Available multiview classifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/monoview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/multiview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.multiview_classifiers</span></code></a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">SuMMIT</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="index.html">SuMMIT Tutorials</a> &raquo;</li>
-        
-      <li>Example 3 : Understanding the statistical iterations</li>
-    
-    
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">SuMMIT Tutorials</a></li>
+      <li class="breadcrumb-item active">Example 3 : Understanding the statistical iterations</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/tutorials/example3.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="example-3-understanding-the-statistical-iterations">
-<h1>Example 3 : Understanding the statistical iterations<a class="headerlink" href="#example-3-understanding-the-statistical-iterations" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="context">
-<h2>Context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h2>
+             
+  <section id="example-3-understanding-the-statistical-iterations">
+<h1>Example 3 : Understanding the statistical iterations<a class="headerlink" href="#example-3-understanding-the-statistical-iterations" title="Link to this heading"></a></h1>
+<section id="context">
+<h2>Context<a class="headerlink" href="#context" title="Link to this heading"></a></h2>
 <p>In the previous example, we have seen that in order to output meaningful results, the platform splits the input dataset in a training and a testing set.</p>
 <p>However, even if the split is done at random, one can draw a lucky (or unlucky) split and have great (or poor) performance on this specific split.</p>
 <p>To settle this issue, the platform can run on multiple splits and return the mean scores.</p>
-</div>
-<div class="section" id="how-to-use-it">
-<h2>How to use it<a class="headerlink" href="#how-to-use-it" title="Permalink to this headline">¶</a></h2>
-<p>This feature is controlled by a single argument : <code class="code yaml docutils literal notranslate"><span class="name tag"><span class="pre">stats_iter</span></span><span class="punctuation"><span class="pre">:</span></span></code> in the config file.
+</section>
+<section id="how-to-use-it">
+<h2>How to use it<a class="headerlink" href="#how-to-use-it" title="Link to this heading"></a></h2>
+<p>This feature is controlled by a single argument : <code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">stats_iter</span><span class="p">:</span></code> in the config file.
 Modifying this argument and setting more than one <code class="docutils literal notranslate"><span class="pre">stats_iter</span></code> will slightly modify the result directory’s structure.
 Indeed, as the platform will perform a benchmark on multiple train/test split, the result directory will be larger in order to keep all the individual results.</p>
 <p>To run SuMMIT on several train/test splits, run :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">summit.execute</span> <span class="kn">import</span> <span class="n">execute</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">summit.execute</span><span class="w"> </span><span class="kn">import</span> <span class="n">execute</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example 3&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -977,7 +886,7 @@ for (i = 0; i < toggler.length; i++) {
 </script>
 
 </body>
-</html><p>If you look closely, nearly all the files from <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/example1.html">Example 1</a> are in each <code class="docutils literal notranslate"><span class="pre">iter_</span></code> directories, and some files have appeared, in which the main figures are saved.
+</html><p>If you look closely, nearly all the files from <a class="extlink-base_doc reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/example1.html">Example 1</a> are in each <code class="docutils literal notranslate"><span class="pre">iter_</span></code> directories, and some files have appeared, in which the main figures are saved.
 Indeed, the files stored in <code class="docutils literal notranslate"><span class="pre">started_1560_12_25-15_42/</span></code> are the ones that show the mean results on all the statistical iterations.
 For example, <code class="docutils literal notranslate"><span class="pre">started_1560_12_25-15_42/*-accuracy_score.html</span></code> looks like :</p>
 <html>
@@ -1029,7 +938,7 @@ For example, <code class="docutils literal notranslate"><span class="pre">starte
             </script>
         </div>
 </body>
-</html><p>The main difference between this plot an the one from <a class="reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/example1.html">Example 1</a> is that here, the scores are means over all the statistical iterations, and the standard deviations are plotted as vertical lines on top of the bars and printed after each score under the bars as “± &lt;std&gt;”.</p>
+</html><p>The main difference between this plot an the one from <a class="extlink-base_doc reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/example1.html">Example 1</a> is that here, the scores are means over all the statistical iterations, and the standard deviations are plotted as vertical lines on top of the bars and printed after each score under the bars as “± &lt;std&gt;”.</p>
 <p>This has also an impact on the display of error analysis. Indeed, now it has multiple shades of gray depending on the number of iterations that succeeded or failed on the sample :</p>
 <html>
 <head><meta charset="utf-8" /></head>
@@ -1056,64 +965,48 @@ For example, <code class="docutils literal notranslate"><span class="pre">starte
         </div>
 </body>
 </html><p>Indeed, if we zoom in, we can distinguish them better :</p>
-<a class="reference internal image-reference" href="../_images/gray.png"><img alt="../_images/gray.png" class="align-center" src="../_images/gray.png" style="width: 700.0px; height: 450.0px;" /></a>
-<div class="section" id="duration">
-<h3>Duration<a class="headerlink" href="#duration" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="../_images/gray.png"><img alt="../_images/gray.png" class="align-center" src="../_images/gray.png" style="width: 700.0px; height: 450.0px;" />
+</a>
+<section id="duration">
+<h3>Duration<a class="headerlink" href="#duration" title="Link to this heading"></a></h3>
 <p>Increasing the number of statistical iterations can be costly in terms of computational resources, indeed it is nearly a straight multiplication of the computation time .</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Parallelizing SuMMIT’s statistical iterations can improve its efficiency when using multiple iterations, it is currently work in progress.</p>
+<p class="admonition-title">Note</p>
+<p>Parallelizing SuMMIT’s statistical iterations can improve its efficiency when using multiple iterations, it is currently work in progress.</p>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="example4.html" class="btn btn-neutral float-right" title="Taking control : Use your own dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="example2.html" class="btn btn-neutral float-left" title="Example 2 : Understanding the hyper-parameter optimization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="example4.html" class="btn btn-neutral float-right" title="Taking control : Use your own dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2019, Baptiste BAUVIN.
-
-    </p>
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

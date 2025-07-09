@@ -8,10 +8,9 @@ svm_rbf
 -------
 
 
-.. data:: classifier_class_name
-   :annotation: = SVMRBF
+.. py:data:: classifier_class_name
+   :value: 'SVMRBF'
 
-   
 
 .. py:class:: SVMRBF(random_state=None, C=1.0, **kwargs)
 
@@ -20,5 +19,13 @@ svm_rbf
    This class is an adaptation of scikit-learn's `SVC <https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_
 
    Here, it is the RBF kernel version
+
+
+   .. py:attribute:: param_names
+      :value: ['C', 'random_state']
+
+
+
+   .. py:attribute:: distribs
 
 

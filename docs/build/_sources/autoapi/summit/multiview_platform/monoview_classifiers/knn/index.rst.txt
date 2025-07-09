@@ -8,16 +8,37 @@ knn
 ---
 
 
-.. data:: classifier_class_name
-   :annotation: = KNN
+.. py:data:: classifier_class_name
+   :value: 'KNN'
 
-   
 
 .. py:class:: KNN(random_state=None, n_neighbors=5, weights='uniform', algorithm='auto', p=2, **kwargs)
 
 
 
    This class is an adaptation of scikit-learn's `KNeighborsClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html>`_
+
+
+
+
+   .. py:attribute:: param_names
+      :value: ['n_neighbors', 'weights', 'algorithm', 'p', 'random_state']
+
+
+
+   .. py:attribute:: classed_params
+      :value: []
+
+
+
+   .. py:attribute:: distribs
+
+
+   .. py:attribute:: weird_strings
+
+
+   .. py:attribute:: random_state
+      :value: None
 
 
 

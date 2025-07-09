@@ -8,10 +8,9 @@ weighted_linear_late_fusion
 ---------------------------
 
 
-.. data:: classifier_class_name
-   :annotation: = WeightedLinearLateFusion
+.. py:data:: classifier_class_name
+   :value: 'WeightedLinearLateFusion'
 
-   
 
 .. py:class:: WeightedLinearLateFusion(random_state, classifiers_names=None, classifier_configs=None, weights=None, nb_cores=1, rs=None)
 
@@ -19,8 +18,12 @@ weighted_linear_late_fusion
 
    Similar to the majority voting fusion.
 
-   .. method:: predict(self, X, sample_indices=None, view_indices=None)
+
+   .. py:attribute:: need_probas
+      :value: True
 
 
+
+   .. py:method:: predict(X, sample_indices=None, view_indices=None)
 
 

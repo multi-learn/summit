@@ -17,11 +17,17 @@ Available monoview classifiers
 
    gradient_boosting/index.rst
 
+   imbalance_bagging/index.rst
+
    knn/index.rst
 
    lasso/index.rst
 
    random_forest/index.rst
+
+   random_scm/index.rst
+
+   scm/index.rst
 
    sgd/index.rst
 

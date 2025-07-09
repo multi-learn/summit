@@ -8,10 +8,9 @@ disagree_fusion
 ---------------
 
 
-.. data:: classifier_class_name
-   :annotation: = DisagreeFusion
+.. py:data:: classifier_class_name
+   :value: 'DisagreeFusion'
 
-   
 
 .. py:class:: DisagreeFusion(random_state=None, classifier_names=None, monoview_estimators=None, classifier_configs=None)
 
@@ -20,8 +19,7 @@ disagree_fusion
    This classifier is inspired by Kuncheva, Ludmila & Whitaker, Chris. (2000). Measures of Diversity in Classifier Ensembles.
    It find the subset of monoview classifiers with the best disagreement
 
-   .. method:: diversity_measure(self, first_classifier_decision, second_classifier_decision, _)
 
-
+   .. py:method:: diversity_measure(first_classifier_decision, second_classifier_decision, _)
 
 

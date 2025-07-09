@@ -8,10 +8,9 @@ entropy_fusion
 --------------
 
 
-.. data:: classifier_class_name
-   :annotation: = EntropyFusion
+.. py:data:: classifier_class_name
+   :value: 'EntropyFusion'
 
-   
 
 .. py:class:: EntropyFusion(random_state=None, classifier_names=None, monoview_estimators=None, classifier_configs=None)
 
@@ -20,8 +19,7 @@ entropy_fusion
    This classifier is inspired by Kuncheva, Ludmila & Whitaker, Chris. (2000). Measures of Diversity in Classifier Ensembles.
    It find the subset of monoview classifiers with the best entropy
 
-   .. method:: diversity_measure(self, classifiers_decisions, combination, y)
 
-
+   .. py:method:: diversity_measure(classifiers_decisions, combination, y)
 
 

@@ -8,10 +8,9 @@ double_fault_fusion
 -------------------
 
 
-.. data:: classifier_class_name
-   :annotation: = DoubleFaultFusion
+.. py:data:: classifier_class_name
+   :value: 'DoubleFaultFusion'
 
-   
 
 .. py:class:: DoubleFaultFusion(random_state=None, classifier_names=None, monoview_estimators=None, classifier_configs=None)
 
@@ -22,8 +21,7 @@ double_fault_fusion
    Classifier Ensembles.
    It find the subset of monoview classifiers with the best double fault
 
-   .. method:: diversity_measure(self, first_classifier_decision, second_classifier_decision, y)
 
-
+   .. py:method:: diversity_measure(first_classifier_decision, second_classifier_decision, y)
 
 
