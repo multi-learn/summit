@@ -1,0 +1,41 @@
+:mod:`summit.multiview_platform.multiview_classifiers.early_fusion_adaboost`
+============================================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers.early_fusion_adaboost
+
+
+early_fusion_adaboost
+---------------------
+
+
+.. py:data:: classifier_class_name
+   :value: 'EarlyFusionAdaboost'
+
+
+.. py:class:: EarlyFusionAdaboost(random_state=None, n_estimators=50, estimator=None, base_estimator_config=None, **kwargs)
+
+
+
+   BaseMultiviewClassifier base of Multiview classifiers
+
+   :param random_state: The seed of the pseudo random number multiview_generator to use when
+                        shuffling the data.
+   :type random_state: int seed, RandomState instance, or None (default=None)
+
+
+   .. py:attribute:: param_names
+      :value: ['n_estimators', 'estimator']
+
+
+
+   .. py:attribute:: classed_params
+      :value: ['estimator']
+
+
+
+   .. py:attribute:: distribs
+
+
+   .. py:attribute:: weird_strings
+
+

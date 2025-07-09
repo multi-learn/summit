@@ -1,0 +1,102 @@
+:mod:`summit.multiview_platform.monoview_classifiers.scm`
+=========================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.scm
+
+
+scm
+---
+
+
+.. py:data:: classifier_class_name
+   :value: 'SCM'
+
+
+.. py:class:: SCM(random_state=None, model_type='conjunction', max_rules=10, p=0.1, **kwargs)
+
+
+
+   SCM  Classifier
+   :param random_state (default:
+   :type random_state (default: None)
+   :param model_type:
+   :type model_type: string (default: "conjunction")
+   :param max_rules:
+   :type max_rules: int number maximum of rules (default : 10)
+   :param p:
+   :type p: float value(default : 0.1 )
+   :param kwarg:
+   :type kwarg: others arguments
+
+   .. attribute:: param_names
+
+
+
+   .. attribute:: distribs
+
+
+
+   .. attribute:: classed_params
+
+
+
+   .. attribute:: weird_strings
+
+
+
+
+   .. py:attribute:: param_names
+      :value: ['model_type', 'max_rules', 'p', 'random_state']
+
+
+
+   .. py:attribute:: distribs
+
+
+   .. py:attribute:: classed_params
+      :value: []
+
+
+
+   .. py:attribute:: weird_strings
+
+
+   .. py:method:: fit(X, y, tiebreaker=None, iteration_callback=None, **fit_params)
+
+      Fit a SCM model.
+
+      Parameters:
+      -----------
+      X: array-like, shape=[n_examples, n_features]
+          The feature of the input examples.
+      y : array-like, shape = [n_samples]
+          The labels of the input examples.
+      tiebreaker: function(model_type, feature_idx, thresholds, rule_type)
+          A function that takes in the model type and information about the
+          equivalent rules and outputs the index of the rule to use. The lists
+          respectively contain the feature indices, thresholds and type
+          corresponding of the equivalent rules. If None, the rule that most
+          decreases the training error is selected. Note: the model type is
+          provided because the rules that are added to disjunction models
+          correspond to the inverse of the rules that are handled during
+          training. Handle this case with care.
+      iteration_callback: function(model)
+          A function that is called each time a rule is added to the model.
+
+      Returns:
+      --------
+      self: object
+          Returns self.
+
+
+
+
+   .. py:method:: get_interpretation(directory, base_file_name, y_test, feature_ids, multi_class=False)
+
+      Base method that returns an empty string if there is not interpretation
+      method in the classifier's module
+
+
+
+.. py:function:: paramsToSet(nIter, random_state)
+

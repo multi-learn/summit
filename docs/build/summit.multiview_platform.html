@@ -1,0 +1,1152 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>summit.multiview_platform package &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8dde47fa"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/plotly_js.js?v=c3b947fd"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SuMMIT
+              <img src="_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">SuMMIT Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/summit/multiview_platform/monoview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/summit/multiview_platform/multiview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.multiview_classifiers</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">summit.multiview_platform package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/summit.multiview_platform.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="summit-multiview-platform-package">
+<h1>summit.multiview_platform package<a class="headerlink" href="#summit-multiview-platform-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="summit.multiview_platform.metrics.html">summit.multiview_platform.metrics package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics.accuracy_score">summit.multiview_platform.metrics.accuracy_score module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.accuracy_score.get_config"><code class="docutils literal notranslate"><span class="pre">get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.accuracy_score.get_scorer"><code class="docutils literal notranslate"><span class="pre">get_scorer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.accuracy_score.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics.f1_score">summit.multiview_platform.metrics.f1_score module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.f1_score.get_config"><code class="docutils literal notranslate"><span class="pre">get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.f1_score.get_scorer"><code class="docutils literal notranslate"><span class="pre">get_scorer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.f1_score.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics.fbeta_score">summit.multiview_platform.metrics.fbeta_score module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.fbeta_score.get_config"><code class="docutils literal notranslate"><span class="pre">get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.fbeta_score.get_scorer"><code class="docutils literal notranslate"><span class="pre">get_scorer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.fbeta_score.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics.hamming_loss">summit.multiview_platform.metrics.hamming_loss module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.hamming_loss.get_config"><code class="docutils literal notranslate"><span class="pre">get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.hamming_loss.get_scorer"><code class="docutils literal notranslate"><span class="pre">get_scorer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.hamming_loss.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics.jaccard_score">summit.multiview_platform.metrics.jaccard_score module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.jaccard_score.get_config"><code class="docutils literal notranslate"><span class="pre">get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.jaccard_score.get_scorer"><code class="docutils literal notranslate"><span class="pre">get_scorer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.jaccard_score.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics.log_loss">summit.multiview_platform.metrics.log_loss module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.log_loss.get_config"><code class="docutils literal notranslate"><span class="pre">get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.log_loss.get_scorer"><code class="docutils literal notranslate"><span class="pre">get_scorer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.log_loss.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics.matthews_corrcoef">summit.multiview_platform.metrics.matthews_corrcoef module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.matthews_corrcoef.get_config"><code class="docutils literal notranslate"><span class="pre">get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.matthews_corrcoef.get_scorer"><code class="docutils literal notranslate"><span class="pre">get_scorer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.matthews_corrcoef.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics.precision_score">summit.multiview_platform.metrics.precision_score module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.precision_score.get_config"><code class="docutils literal notranslate"><span class="pre">get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.precision_score.get_scorer"><code class="docutils literal notranslate"><span class="pre">get_scorer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.precision_score.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics.recall_score">summit.multiview_platform.metrics.recall_score module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.recall_score.get_config"><code class="docutils literal notranslate"><span class="pre">get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.recall_score.get_scorer"><code class="docutils literal notranslate"><span class="pre">get_scorer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.recall_score.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics.roc_auc_score">summit.multiview_platform.metrics.roc_auc_score module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.roc_auc_score.get_config"><code class="docutils literal notranslate"><span class="pre">get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.roc_auc_score.get_scorer"><code class="docutils literal notranslate"><span class="pre">get_scorer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.roc_auc_score.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics.zero_one_loss">summit.multiview_platform.metrics.zero_one_loss module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.zero_one_loss.get_config"><code class="docutils literal notranslate"><span class="pre">get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.zero_one_loss.get_scorer"><code class="docutils literal notranslate"><span class="pre">get_scorer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.metrics.html#summit.multiview_platform.metrics.zero_one_loss.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.metrics.html#module-summit.multiview_platform.metrics">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="summit.multiview_platform.monoview.html">summit.multiview_platform.monoview package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview.html#module-summit.multiview_platform.monoview.exec_classif_mono_view">summit.multiview_platform.monoview.exec_classif_mono_view module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.exec_classif_mono_view.exec_monoview"><code class="docutils literal notranslate"><span class="pre">exec_monoview()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.exec_classif_mono_view.exec_monoview_multicore"><code class="docutils literal notranslate"><span class="pre">exec_monoview_multicore()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.exec_classif_mono_view.get_hyper_params"><code class="docutils literal notranslate"><span class="pre">get_hyper_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.exec_classif_mono_view.init_constants"><code class="docutils literal notranslate"><span class="pre">init_constants()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.exec_classif_mono_view.init_train_test"><code class="docutils literal notranslate"><span class="pre">init_train_test()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.exec_classif_mono_view.save_results"><code class="docutils literal notranslate"><span class="pre">save_results()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview.html#module-summit.multiview_platform.monoview.monoview_utils">summit.multiview_platform.monoview.monoview_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier"><code class="docutils literal notranslate"><span class="pre">BaseMonoviewClassifier</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier.get_feature_importance"><code class="docutils literal notranslate"><span class="pre">BaseMonoviewClassifier.get_feature_importance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier.get_interpretation"><code class="docutils literal notranslate"><span class="pre">BaseMonoviewClassifier.get_interpretation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier.get_name_for_fusion"><code class="docutils literal notranslate"><span class="pre">BaseMonoviewClassifier.get_name_for_fusion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.MonoviewResult"><code class="docutils literal notranslate"><span class="pre">MonoviewResult</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.MonoviewResult.get_classifier_name"><code class="docutils literal notranslate"><span class="pre">MonoviewResult.get_classifier_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.MonoviewResultAnalyzer"><code class="docutils literal notranslate"><span class="pre">MonoviewResultAnalyzer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.MonoviewResultAnalyzer.get_base_string"><code class="docutils literal notranslate"><span class="pre">MonoviewResultAnalyzer.get_base_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.MonoviewResultAnalyzer.get_view_specific_info"><code class="docutils literal notranslate"><span class="pre">MonoviewResultAnalyzer.get_view_specific_info()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.change_label_to_minus"><code class="docutils literal notranslate"><span class="pre">change_label_to_minus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.change_label_to_zero"><code class="docutils literal notranslate"><span class="pre">change_label_to_zero()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.compute_possible_combinations"><code class="docutils literal notranslate"><span class="pre">compute_possible_combinations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.gen_test_folds_preds"><code class="docutils literal notranslate"><span class="pre">gen_test_folds_preds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.get_accuracy_graph"><code class="docutils literal notranslate"><span class="pre">get_accuracy_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview.html#summit.multiview_platform.monoview.monoview_utils.percent"><code class="docutils literal notranslate"><span class="pre">percent()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview.html#module-summit.multiview_platform.monoview">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html">summit.multiview_platform.monoview_classifiers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.additions.html">summit.multiview_platform.monoview_classifiers.additions package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.additions.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.additions.html#module-summit.multiview_platform.monoview_classifiers.additions.SVCClassifier">summit.multiview_platform.monoview_classifiers.additions.SVCClassifier module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.additions.html#module-summit.multiview_platform.monoview_classifiers.additions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.adaboost">summit.multiview_platform.monoview_classifiers.adaboost module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.adaboost.Adaboost"><code class="docutils literal notranslate"><span class="pre">Adaboost</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.adaboost.Adaboost.fit"><code class="docutils literal notranslate"><span class="pre">Adaboost.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.adaboost.Adaboost.get_interpretation"><code class="docutils literal notranslate"><span class="pre">Adaboost.get_interpretation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.adaboost.Adaboost.predict"><code class="docutils literal notranslate"><span class="pre">Adaboost.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.adaboost.Adaboost.set_fit_request"><code class="docutils literal notranslate"><span class="pre">Adaboost.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.adaboost.Adaboost.set_score_request"><code class="docutils literal notranslate"><span class="pre">Adaboost.set_score_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.decision_tree">summit.multiview_platform.monoview_classifiers.decision_tree module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.decision_tree.DecisionTree"><code class="docutils literal notranslate"><span class="pre">DecisionTree</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.decision_tree.DecisionTree.get_interpretation"><code class="docutils literal notranslate"><span class="pre">DecisionTree.get_interpretation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.decision_tree.DecisionTree.set_fit_request"><code class="docutils literal notranslate"><span class="pre">DecisionTree.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.decision_tree.DecisionTree.set_score_request"><code class="docutils literal notranslate"><span class="pre">DecisionTree.set_score_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.gradient_boosting">summit.multiview_platform.monoview_classifiers.gradient_boosting module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB"><code class="docutils literal notranslate"><span class="pre">CustomDecisionTreeGB</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.predict"><code class="docutils literal notranslate"><span class="pre">CustomDecisionTreeGB.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.set_fit_request"><code class="docutils literal notranslate"><span class="pre">CustomDecisionTreeGB.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.gradient_boosting.CustomDecisionTreeGB.set_score_request"><code class="docutils literal notranslate"><span class="pre">CustomDecisionTreeGB.set_score_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting"><code class="docutils literal notranslate"><span class="pre">GradientBoosting</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.fit"><code class="docutils literal notranslate"><span class="pre">GradientBoosting.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.get_interpretation"><code class="docutils literal notranslate"><span class="pre">GradientBoosting.get_interpretation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.predict"><code class="docutils literal notranslate"><span class="pre">GradientBoosting.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.set_fit_request"><code class="docutils literal notranslate"><span class="pre">GradientBoosting.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.gradient_boosting.GradientBoosting.set_score_request"><code class="docutils literal notranslate"><span class="pre">GradientBoosting.set_score_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.imbalance_bagging">summit.multiview_platform.monoview_classifiers.imbalance_bagging module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.imbalance_bagging.ImbalanceBagging"><code class="docutils literal notranslate"><span class="pre">ImbalanceBagging</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.imbalance_bagging.ImbalanceBagging.set_score_request"><code class="docutils literal notranslate"><span class="pre">ImbalanceBagging.set_score_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.knn">summit.multiview_platform.monoview_classifiers.knn module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.knn.KNN"><code class="docutils literal notranslate"><span class="pre">KNN</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.knn.KNN.set_score_request"><code class="docutils literal notranslate"><span class="pre">KNN.set_score_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.lasso">summit.multiview_platform.monoview_classifiers.lasso module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.lasso.Lasso"><code class="docutils literal notranslate"><span class="pre">Lasso</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.lasso.Lasso.fit"><code class="docutils literal notranslate"><span class="pre">Lasso.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.lasso.Lasso.predict"><code class="docutils literal notranslate"><span class="pre">Lasso.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.lasso.Lasso.set_score_request"><code class="docutils literal notranslate"><span class="pre">Lasso.set_score_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.random_forest">summit.multiview_platform.monoview_classifiers.random_forest module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.random_forest.RandomForest"><code class="docutils literal notranslate"><span class="pre">RandomForest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.random_forest.RandomForest.get_interpretation"><code class="docutils literal notranslate"><span class="pre">RandomForest.get_interpretation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.random_forest.RandomForest.set_fit_request"><code class="docutils literal notranslate"><span class="pre">RandomForest.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.random_forest.RandomForest.set_score_request"><code class="docutils literal notranslate"><span class="pre">RandomForest.set_score_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.random_scm">summit.multiview_platform.monoview_classifiers.random_scm module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging"><code class="docutils literal notranslate"><span class="pre">ScmBagging</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.n_features_"><code class="docutils literal notranslate"><span class="pre">ScmBagging.n_features_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.estimators_"><code class="docutils literal notranslate"><span class="pre">ScmBagging.estimators_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.estim_features"><code class="docutils literal notranslate"><span class="pre">ScmBagging.estim_features</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.get_interpretation"><code class="docutils literal notranslate"><span class="pre">ScmBagging.get_interpretation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.set_fit_request"><code class="docutils literal notranslate"><span class="pre">ScmBagging.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.random_scm.ScmBagging.set_params"><code class="docutils literal notranslate"><span class="pre">ScmBagging.set_params()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.scm">summit.multiview_platform.monoview_classifiers.scm module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.scm.SCM"><code class="docutils literal notranslate"><span class="pre">SCM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.scm.SCM.param_names"><code class="docutils literal notranslate"><span class="pre">SCM.param_names</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.scm.SCM.distribs"><code class="docutils literal notranslate"><span class="pre">SCM.distribs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.scm.SCM.classed_params"><code class="docutils literal notranslate"><span class="pre">SCM.classed_params</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.scm.SCM.weird_strings"><code class="docutils literal notranslate"><span class="pre">SCM.weird_strings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.scm.SCM.fit"><code class="docutils literal notranslate"><span class="pre">SCM.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.scm.SCM.get_interpretation"><code class="docutils literal notranslate"><span class="pre">SCM.get_interpretation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.scm.SCM.set_fit_request"><code class="docutils literal notranslate"><span class="pre">SCM.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.scm.paramsToSet"><code class="docutils literal notranslate"><span class="pre">paramsToSet()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.sgd">summit.multiview_platform.monoview_classifiers.sgd module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.sgd.SGD"><code class="docutils literal notranslate"><span class="pre">SGD</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.sgd.SGD.set_fit_request"><code class="docutils literal notranslate"><span class="pre">SGD.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.sgd.SGD.set_partial_fit_request"><code class="docutils literal notranslate"><span class="pre">SGD.set_partial_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.sgd.SGD.set_score_request"><code class="docutils literal notranslate"><span class="pre">SGD.set_score_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.svm_linear">summit.multiview_platform.monoview_classifiers.svm_linear module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.svm_linear.SVMLinear"><code class="docutils literal notranslate"><span class="pre">SVMLinear</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.svm_linear.SVMLinear.set_fit_request"><code class="docutils literal notranslate"><span class="pre">SVMLinear.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.svm_linear.SVMLinear.set_score_request"><code class="docutils literal notranslate"><span class="pre">SVMLinear.set_score_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.svm_poly">summit.multiview_platform.monoview_classifiers.svm_poly module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.svm_poly.SVMPoly"><code class="docutils literal notranslate"><span class="pre">SVMPoly</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.svm_poly.SVMPoly.set_fit_request"><code class="docutils literal notranslate"><span class="pre">SVMPoly.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.svm_poly.SVMPoly.set_score_request"><code class="docutils literal notranslate"><span class="pre">SVMPoly.set_score_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers.svm_rbf">summit.multiview_platform.monoview_classifiers.svm_rbf module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.svm_rbf.SVMRBF"><code class="docutils literal notranslate"><span class="pre">SVMRBF</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.svm_rbf.SVMRBF.set_fit_request"><code class="docutils literal notranslate"><span class="pre">SVMRBF.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#summit.multiview_platform.monoview_classifiers.svm_rbf.SVMRBF.set_score_request"><code class="docutils literal notranslate"><span class="pre">SVMRBF.set_score_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.monoview_classifiers.html#module-summit.multiview_platform.monoview_classifiers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="summit.multiview_platform.multiview.html">summit.multiview_platform.multiview package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview.html#module-summit.multiview_platform.multiview.exec_multiview">summit.multiview_platform.multiview.exec_multiview module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.exec_multiview.exec_multiview"><code class="docutils literal notranslate"><span class="pre">exec_multiview()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.exec_multiview.exec_multiview_multicore"><code class="docutils literal notranslate"><span class="pre">exec_multiview_multicore()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.exec_multiview.init_constants"><code class="docutils literal notranslate"><span class="pre">init_constants()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.exec_multiview.save_results"><code class="docutils literal notranslate"><span class="pre">save_results()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview.html#module-summit.multiview_platform.multiview.multiview_utils">summit.multiview_platform.multiview.multiview_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.BaseMultiviewClassifier"><code class="docutils literal notranslate"><span class="pre">BaseMultiviewClassifier</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.BaseMultiviewClassifier.accepts_multi_class"><code class="docutils literal notranslate"><span class="pre">BaseMultiviewClassifier.accepts_multi_class()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.BaseMultiviewClassifier.fit"><code class="docutils literal notranslate"><span class="pre">BaseMultiviewClassifier.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.BaseMultiviewClassifier.predict"><code class="docutils literal notranslate"><span class="pre">BaseMultiviewClassifier.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.BaseMultiviewClassifier.set_fit_request"><code class="docutils literal notranslate"><span class="pre">BaseMultiviewClassifier.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.BaseMultiviewClassifier.set_predict_request"><code class="docutils literal notranslate"><span class="pre">BaseMultiviewClassifier.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.ConfigGenerator"><code class="docutils literal notranslate"><span class="pre">ConfigGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.ConfigGenerator.rvs"><code class="docutils literal notranslate"><span class="pre">ConfigGenerator.rvs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.MultiviewResult"><code class="docutils literal notranslate"><span class="pre">MultiviewResult</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.MultiviewResult.get_classifier_name"><code class="docutils literal notranslate"><span class="pre">MultiviewResult.get_classifier_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.MultiviewResultAnalyzer"><code class="docutils literal notranslate"><span class="pre">MultiviewResultAnalyzer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.MultiviewResultAnalyzer.get_base_string"><code class="docutils literal notranslate"><span class="pre">MultiviewResultAnalyzer.get_base_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.MultiviewResultAnalyzer.get_view_specific_info"><code class="docutils literal notranslate"><span class="pre">MultiviewResultAnalyzer.get_view_specific_info()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.get_available_monoview_classifiers"><code class="docutils literal notranslate"><span class="pre">get_available_monoview_classifiers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview.html#summit.multiview_platform.multiview.multiview_utils.get_monoview_classifier"><code class="docutils literal notranslate"><span class="pre">get_monoview_classifier()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview.html#module-summit.multiview_platform.multiview">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html">summit.multiview_platform.multiview_classifiers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.additions.html">summit.multiview_platform.multiview_classifiers.additions package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.additions.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.additions.html#module-summit.multiview_platform.multiview_classifiers.additions.diversity_utils">summit.multiview_platform.multiview_classifiers.additions.diversity_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.additions.html#module-summit.multiview_platform.multiview_classifiers.additions.early_fusion_from_monoview">summit.multiview_platform.multiview_classifiers.additions.early_fusion_from_monoview module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.additions.html#module-summit.multiview_platform.multiview_classifiers.additions.fusion_utils">summit.multiview_platform.multiview_classifiers.additions.fusion_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.additions.html#module-summit.multiview_platform.multiview_classifiers.additions.jumbo_fusion_utils">summit.multiview_platform.multiview_classifiers.additions.jumbo_fusion_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.additions.html#module-summit.multiview_platform.multiview_classifiers.additions.kernel_learning">summit.multiview_platform.multiview_classifiers.additions.kernel_learning module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.additions.html#module-summit.multiview_platform.multiview_classifiers.additions.late_fusion_utils">summit.multiview_platform.multiview_classifiers.additions.late_fusion_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.additions.html#module-summit.multiview_platform.multiview_classifiers.additions.utils">summit.multiview_platform.multiview_classifiers.additions.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.additions.html#module-summit.multiview_platform.multiview_classifiers.additions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.bayesian_inference_fusion">summit.multiview_platform.multiview_classifiers.bayesian_inference_fusion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.bayesian_inference_fusion.BayesianInferenceClassifier"><code class="docutils literal notranslate"><span class="pre">BayesianInferenceClassifier</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.bayesian_inference_fusion.BayesianInferenceClassifier.predict"><code class="docutils literal notranslate"><span class="pre">BayesianInferenceClassifier.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.bayesian_inference_fusion.BayesianInferenceClassifier.set_fit_request"><code class="docutils literal notranslate"><span class="pre">BayesianInferenceClassifier.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.bayesian_inference_fusion.BayesianInferenceClassifier.set_predict_request"><code class="docutils literal notranslate"><span class="pre">BayesianInferenceClassifier.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.difficulty_fusion">summit.multiview_platform.multiview_classifiers.difficulty_fusion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.difficulty_fusion.DifficultyFusion"><code class="docutils literal notranslate"><span class="pre">DifficultyFusion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.difficulty_fusion.DifficultyFusion.diversity_measure"><code class="docutils literal notranslate"><span class="pre">DifficultyFusion.diversity_measure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.difficulty_fusion.DifficultyFusion.set_fit_request"><code class="docutils literal notranslate"><span class="pre">DifficultyFusion.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.difficulty_fusion.DifficultyFusion.set_predict_request"><code class="docutils literal notranslate"><span class="pre">DifficultyFusion.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.disagree_fusion">summit.multiview_platform.multiview_classifiers.disagree_fusion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.disagree_fusion.DisagreeFusion"><code class="docutils literal notranslate"><span class="pre">DisagreeFusion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.disagree_fusion.DisagreeFusion.diversity_measure"><code class="docutils literal notranslate"><span class="pre">DisagreeFusion.diversity_measure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.disagree_fusion.DisagreeFusion.set_fit_request"><code class="docutils literal notranslate"><span class="pre">DisagreeFusion.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.disagree_fusion.DisagreeFusion.set_predict_request"><code class="docutils literal notranslate"><span class="pre">DisagreeFusion.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.double_fault_fusion">summit.multiview_platform.multiview_classifiers.double_fault_fusion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.double_fault_fusion.DoubleFaultFusion"><code class="docutils literal notranslate"><span class="pre">DoubleFaultFusion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.double_fault_fusion.DoubleFaultFusion.diversity_measure"><code class="docutils literal notranslate"><span class="pre">DoubleFaultFusion.diversity_measure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.double_fault_fusion.DoubleFaultFusion.set_fit_request"><code class="docutils literal notranslate"><span class="pre">DoubleFaultFusion.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.double_fault_fusion.DoubleFaultFusion.set_predict_request"><code class="docutils literal notranslate"><span class="pre">DoubleFaultFusion.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.early_fusion_adaboost">summit.multiview_platform.multiview_classifiers.early_fusion_adaboost module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_adaboost.EarlyFusionAdaboost"><code class="docutils literal notranslate"><span class="pre">EarlyFusionAdaboost</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_adaboost.EarlyFusionAdaboost.set_fit_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionAdaboost.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_adaboost.EarlyFusionAdaboost.set_predict_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionAdaboost.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.early_fusion_decision_tree">summit.multiview_platform.multiview_classifiers.early_fusion_decision_tree module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_decision_tree.EarlyFusionDT"><code class="docutils literal notranslate"><span class="pre">EarlyFusionDT</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_decision_tree.EarlyFusionDT.set_fit_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionDT.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_decision_tree.EarlyFusionDT.set_predict_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionDT.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.early_fusion_gradient_boosting">summit.multiview_platform.multiview_classifiers.early_fusion_gradient_boosting module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_gradient_boosting.EarlyFusionGB"><code class="docutils literal notranslate"><span class="pre">EarlyFusionGB</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_gradient_boosting.EarlyFusionGB.set_fit_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionGB.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_gradient_boosting.EarlyFusionGB.set_predict_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionGB.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.early_fusion_lasso">summit.multiview_platform.multiview_classifiers.early_fusion_lasso module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_lasso.EarlyFusionLasso"><code class="docutils literal notranslate"><span class="pre">EarlyFusionLasso</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_lasso.EarlyFusionLasso.set_fit_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionLasso.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_lasso.EarlyFusionLasso.set_predict_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionLasso.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.early_fusion_random_forest">summit.multiview_platform.multiview_classifiers.early_fusion_random_forest module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_random_forest.EarlyFusionRF"><code class="docutils literal notranslate"><span class="pre">EarlyFusionRF</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_random_forest.EarlyFusionRF.set_fit_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionRF.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_random_forest.EarlyFusionRF.set_predict_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionRF.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.early_fusion_sgd">summit.multiview_platform.multiview_classifiers.early_fusion_sgd module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_sgd.EarlyFusionSGD"><code class="docutils literal notranslate"><span class="pre">EarlyFusionSGD</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_sgd.EarlyFusionSGD.set_fit_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionSGD.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_sgd.EarlyFusionSGD.set_predict_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionSGD.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.early_fusion_svm_rbf">summit.multiview_platform.multiview_classifiers.early_fusion_svm_rbf module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_svm_rbf.EarlyFusionSVMRBF"><code class="docutils literal notranslate"><span class="pre">EarlyFusionSVMRBF</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_svm_rbf.EarlyFusionSVMRBF.set_fit_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionSVMRBF.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.early_fusion_svm_rbf.EarlyFusionSVMRBF.set_predict_request"><code class="docutils literal notranslate"><span class="pre">EarlyFusionSVMRBF.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.entropy_fusion">summit.multiview_platform.multiview_classifiers.entropy_fusion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.entropy_fusion.EntropyFusion"><code class="docutils literal notranslate"><span class="pre">EntropyFusion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.entropy_fusion.EntropyFusion.diversity_measure"><code class="docutils literal notranslate"><span class="pre">EntropyFusion.diversity_measure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.entropy_fusion.EntropyFusion.set_fit_request"><code class="docutils literal notranslate"><span class="pre">EntropyFusion.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.entropy_fusion.EntropyFusion.set_predict_request"><code class="docutils literal notranslate"><span class="pre">EntropyFusion.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.lp_norm_mkl">summit.multiview_platform.multiview_classifiers.lp_norm_mkl module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.lp_norm_mkl.LPNormMKL"><code class="docutils literal notranslate"><span class="pre">LPNormMKL</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.lp_norm_mkl.LPNormMKL.fit"><code class="docutils literal notranslate"><span class="pre">LPNormMKL.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.lp_norm_mkl.LPNormMKL.predict"><code class="docutils literal notranslate"><span class="pre">LPNormMKL.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.lp_norm_mkl.LPNormMKL.set_fit_request"><code class="docutils literal notranslate"><span class="pre">LPNormMKL.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.lp_norm_mkl.LPNormMKL.set_predict_request"><code class="docutils literal notranslate"><span class="pre">LPNormMKL.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.majority_voting_fusion">summit.multiview_platform.multiview_classifiers.majority_voting_fusion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.majority_voting_fusion.MajorityVoting"><code class="docutils literal notranslate"><span class="pre">MajorityVoting</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.majority_voting_fusion.MajorityVoting.predict"><code class="docutils literal notranslate"><span class="pre">MajorityVoting.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.majority_voting_fusion.MajorityVoting.set_fit_request"><code class="docutils literal notranslate"><span class="pre">MajorityVoting.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.majority_voting_fusion.MajorityVoting.set_predict_request"><code class="docutils literal notranslate"><span class="pre">MajorityVoting.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.majority_voting_fusion.VotingIndecision"><code class="docutils literal notranslate"><span class="pre">VotingIndecision</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.mucombo">summit.multiview_platform.multiview_classifiers.mucombo module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mucombo.MuCombo"><code class="docutils literal notranslate"><span class="pre">MuCombo</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mucombo.MuCombo.fit"><code class="docutils literal notranslate"><span class="pre">MuCombo.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mucombo.MuCombo.get_interpretation"><code class="docutils literal notranslate"><span class="pre">MuCombo.get_interpretation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mucombo.MuCombo.predict"><code class="docutils literal notranslate"><span class="pre">MuCombo.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mucombo.MuCombo.set_base_estim_from_dict"><code class="docutils literal notranslate"><span class="pre">MuCombo.set_base_estim_from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mucombo.MuCombo.set_fit_request"><code class="docutils literal notranslate"><span class="pre">MuCombo.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mucombo.MuCombo.set_predict_request"><code class="docutils literal notranslate"><span class="pre">MuCombo.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.mumbo">summit.multiview_platform.multiview_classifiers.mumbo module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mumbo.Mumbo"><code class="docutils literal notranslate"><span class="pre">Mumbo</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mumbo.Mumbo.fit"><code class="docutils literal notranslate"><span class="pre">Mumbo.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mumbo.Mumbo.get_interpretation"><code class="docutils literal notranslate"><span class="pre">Mumbo.get_interpretation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mumbo.Mumbo.predict"><code class="docutils literal notranslate"><span class="pre">Mumbo.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mumbo.Mumbo.set_base_estim_from_dict"><code class="docutils literal notranslate"><span class="pre">Mumbo.set_base_estim_from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mumbo.Mumbo.set_fit_request"><code class="docutils literal notranslate"><span class="pre">Mumbo.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mumbo.Mumbo.set_params"><code class="docutils literal notranslate"><span class="pre">Mumbo.set_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mumbo.Mumbo.set_predict_request"><code class="docutils literal notranslate"><span class="pre">Mumbo.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.mvml">summit.multiview_platform.multiview_classifiers.mvml module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mvml.MVMLClassifier"><code class="docutils literal notranslate"><span class="pre">MVMLClassifier</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mvml.MVMLClassifier.fit"><code class="docutils literal notranslate"><span class="pre">MVMLClassifier.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mvml.MVMLClassifier.predict"><code class="docutils literal notranslate"><span class="pre">MVMLClassifier.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mvml.MVMLClassifier.set_fit_request"><code class="docutils literal notranslate"><span class="pre">MVMLClassifier.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.mvml.MVMLClassifier.set_predict_request"><code class="docutils literal notranslate"><span class="pre">MVMLClassifier.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.svm_jumbo_fusion">summit.multiview_platform.multiview_classifiers.svm_jumbo_fusion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.svm_jumbo_fusion.SVMJumboFusion"><code class="docutils literal notranslate"><span class="pre">SVMJumboFusion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.svm_jumbo_fusion.SVMJumboFusion.set_fit_request"><code class="docutils literal notranslate"><span class="pre">SVMJumboFusion.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.svm_jumbo_fusion.SVMJumboFusion.set_params"><code class="docutils literal notranslate"><span class="pre">SVMJumboFusion.set_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.svm_jumbo_fusion.SVMJumboFusion.set_predict_request"><code class="docutils literal notranslate"><span class="pre">SVMJumboFusion.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion">summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion.WeightedLinearEarlyFusion"><code class="docutils literal notranslate"><span class="pre">WeightedLinearEarlyFusion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion.WeightedLinearEarlyFusion.fit"><code class="docutils literal notranslate"><span class="pre">WeightedLinearEarlyFusion.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion.WeightedLinearEarlyFusion.get_params"><code class="docutils literal notranslate"><span class="pre">WeightedLinearEarlyFusion.get_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion.WeightedLinearEarlyFusion.hdf5_to_monoview"><code class="docutils literal notranslate"><span class="pre">WeightedLinearEarlyFusion.hdf5_to_monoview()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion.WeightedLinearEarlyFusion.predict"><code class="docutils literal notranslate"><span class="pre">WeightedLinearEarlyFusion.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion.WeightedLinearEarlyFusion.set_fit_request"><code class="docutils literal notranslate"><span class="pre">WeightedLinearEarlyFusion.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion.WeightedLinearEarlyFusion.set_params"><code class="docutils literal notranslate"><span class="pre">WeightedLinearEarlyFusion.set_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion.WeightedLinearEarlyFusion.set_predict_request"><code class="docutils literal notranslate"><span class="pre">WeightedLinearEarlyFusion.set_predict_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion.WeightedLinearEarlyFusion.transform_data_to_monoview"><code class="docutils literal notranslate"><span class="pre">WeightedLinearEarlyFusion.transform_data_to_monoview()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers.weighted_linear_late_fusion">summit.multiview_platform.multiview_classifiers.weighted_linear_late_fusion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_late_fusion.WeightedLinearLateFusion"><code class="docutils literal notranslate"><span class="pre">WeightedLinearLateFusion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_late_fusion.WeightedLinearLateFusion.predict"><code class="docutils literal notranslate"><span class="pre">WeightedLinearLateFusion.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_late_fusion.WeightedLinearLateFusion.set_fit_request"><code class="docutils literal notranslate"><span class="pre">WeightedLinearLateFusion.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#summit.multiview_platform.multiview_classifiers.weighted_linear_late_fusion.WeightedLinearLateFusion.set_predict_request"><code class="docutils literal notranslate"><span class="pre">WeightedLinearLateFusion.set_predict_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.multiview_classifiers.html#module-summit.multiview_platform.multiview_classifiers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="summit.multiview_platform.result_analysis.html">summit.multiview_platform.result_analysis package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#module-summit.multiview_platform.result_analysis.duration_analysis">summit.multiview_platform.result_analysis.duration_analysis module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.duration_analysis.get_duration"><code class="docutils literal notranslate"><span class="pre">get_duration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.duration_analysis.plot_durations"><code class="docutils literal notranslate"><span class="pre">plot_durations()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#module-summit.multiview_platform.result_analysis.error_analysis">summit.multiview_platform.result_analysis.error_analysis module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.error_analysis.gen_error_data"><code class="docutils literal notranslate"><span class="pre">gen_error_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.error_analysis.gen_error_data_glob"><code class="docutils literal notranslate"><span class="pre">gen_error_data_glob()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.error_analysis.get_sample_errors"><code class="docutils literal notranslate"><span class="pre">get_sample_errors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.error_analysis.iter_cmap"><code class="docutils literal notranslate"><span class="pre">iter_cmap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.error_analysis.plot_2d"><code class="docutils literal notranslate"><span class="pre">plot_2d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.error_analysis.plot_errors_bar"><code class="docutils literal notranslate"><span class="pre">plot_errors_bar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.error_analysis.publish_all_sample_errors"><code class="docutils literal notranslate"><span class="pre">publish_all_sample_errors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.error_analysis.publish_sample_errors"><code class="docutils literal notranslate"><span class="pre">publish_sample_errors()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#module-summit.multiview_platform.result_analysis.execution">summit.multiview_platform.result_analysis.execution module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.execution.analyze"><code class="docutils literal notranslate"><span class="pre">analyze()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.execution.analyze_all"><code class="docutils literal notranslate"><span class="pre">analyze_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.execution.analyze_iterations"><code class="docutils literal notranslate"><span class="pre">analyze_iterations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.execution.format_previous_results"><code class="docutils literal notranslate"><span class="pre">format_previous_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.execution.get_arguments"><code class="docutils literal notranslate"><span class="pre">get_arguments()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#module-summit.multiview_platform.result_analysis.feature_importances">summit.multiview_platform.result_analysis.feature_importances module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.feature_importances.get_feature_importances"><code class="docutils literal notranslate"><span class="pre">get_feature_importances()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.feature_importances.plot_feature_importances"><code class="docutils literal notranslate"><span class="pre">plot_feature_importances()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.feature_importances.plot_feature_relevance"><code class="docutils literal notranslate"><span class="pre">plot_feature_relevance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.feature_importances.publish_feature_importances"><code class="docutils literal notranslate"><span class="pre">publish_feature_importances()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#module-summit.multiview_platform.result_analysis.metric_analysis">summit.multiview_platform.result_analysis.metric_analysis module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.metric_analysis.autolabel"><code class="docutils literal notranslate"><span class="pre">autolabel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.metric_analysis.get_fig_size"><code class="docutils literal notranslate"><span class="pre">get_fig_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.metric_analysis.get_metrics_scores"><code class="docutils literal notranslate"><span class="pre">get_metrics_scores()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.metric_analysis.init_plot"><code class="docutils literal notranslate"><span class="pre">init_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.metric_analysis.plot_class_metric_scores"><code class="docutils literal notranslate"><span class="pre">plot_class_metric_scores()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.metric_analysis.plot_metric_scores"><code class="docutils literal notranslate"><span class="pre">plot_metric_scores()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.metric_analysis.publish_all_metrics_scores"><code class="docutils literal notranslate"><span class="pre">publish_all_metrics_scores()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.metric_analysis.publish_metrics_graphs"><code class="docutils literal notranslate"><span class="pre">publish_metrics_graphs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.metric_analysis.sort_by_test_score"><code class="docutils literal notranslate"><span class="pre">sort_by_test_score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#module-summit.multiview_platform.result_analysis.noise_analysis">summit.multiview_platform.result_analysis.noise_analysis module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#module-summit.multiview_platform.result_analysis.tracebacks_analysis">summit.multiview_platform.result_analysis.tracebacks_analysis module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.tracebacks_analysis.publish_tracebacks"><code class="docutils literal notranslate"><span class="pre">publish_tracebacks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.tracebacks_analysis.save_dict_to_text"><code class="docutils literal notranslate"><span class="pre">save_dict_to_text()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#summit.multiview_platform.result_analysis.tracebacks_analysis.save_failed"><code class="docutils literal notranslate"><span class="pre">save_failed()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.result_analysis.html#module-summit.multiview_platform.result_analysis">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="summit.multiview_platform.utils.html">summit.multiview_platform.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils.base">summit.multiview_platform.utils.base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier"><code class="docutils literal notranslate"><span class="pre">BaseClassifier</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier.accepts_multi_class"><code class="docutils literal notranslate"><span class="pre">BaseClassifier.accepts_multi_class()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier.gen_best_params"><code class="docutils literal notranslate"><span class="pre">BaseClassifier.gen_best_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier.gen_distribs"><code class="docutils literal notranslate"><span class="pre">BaseClassifier.gen_distribs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier.gen_params_from_detector"><code class="docutils literal notranslate"><span class="pre">BaseClassifier.gen_params_from_detector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier.get_base_estimator"><code class="docutils literal notranslate"><span class="pre">BaseClassifier.get_base_estimator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier.get_config"><code class="docutils literal notranslate"><span class="pre">BaseClassifier.get_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier.get_interpretation"><code class="docutils literal notranslate"><span class="pre">BaseClassifier.get_interpretation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier.params_to_string"><code class="docutils literal notranslate"><span class="pre">BaseClassifier.params_to_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier.to_str"><code class="docutils literal notranslate"><span class="pre">BaseClassifier.to_str()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.ResultAnalyser"><code class="docutils literal notranslate"><span class="pre">ResultAnalyser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.ResultAnalyser.analyze"><code class="docutils literal notranslate"><span class="pre">ResultAnalyser.analyze()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.ResultAnalyser.get_all_metrics_scores"><code class="docutils literal notranslate"><span class="pre">ResultAnalyser.get_all_metrics_scores()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.ResultAnalyser.get_base_string"><code class="docutils literal notranslate"><span class="pre">ResultAnalyser.get_base_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.ResultAnalyser.get_classifier_config_string"><code class="docutils literal notranslate"><span class="pre">ResultAnalyser.get_classifier_config_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.ResultAnalyser.get_db_config_string"><code class="docutils literal notranslate"><span class="pre">ResultAnalyser.get_db_config_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.ResultAnalyser.get_metric_score"><code class="docutils literal notranslate"><span class="pre">ResultAnalyser.get_metric_score()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.ResultAnalyser.get_view_specific_info"><code class="docutils literal notranslate"><span class="pre">ResultAnalyser.get_view_specific_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.ResultAnalyser.print_metric_score"><code class="docutils literal notranslate"><span class="pre">ResultAnalyser.print_metric_score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.get_metric"><code class="docutils literal notranslate"><span class="pre">get_metric()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.get_names"><code class="docutils literal notranslate"><span class="pre">get_names()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils.configuration">summit.multiview_platform.utils.configuration module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.configuration.get_the_args"><code class="docutils literal notranslate"><span class="pre">get_the_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.configuration.pass_default_config"><code class="docutils literal notranslate"><span class="pre">pass_default_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.configuration.save_config"><code class="docutils literal notranslate"><span class="pre">save_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils.dataset">summit.multiview_platform.utils.dataset module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset"><code class="docutils literal notranslate"><span class="pre">Dataset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.check_selected_label_names"><code class="docutils literal notranslate"><span class="pre">Dataset.check_selected_label_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.filter"><code class="docutils literal notranslate"><span class="pre">Dataset.filter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.gen_feat_id"><code class="docutils literal notranslate"><span class="pre">Dataset.gen_feat_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.get_label_names"><code class="docutils literal notranslate"><span class="pre">Dataset.get_label_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.get_labels"><code class="docutils literal notranslate"><span class="pre">Dataset.get_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.get_nb_samples"><code class="docutils literal notranslate"><span class="pre">Dataset.get_nb_samples()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.get_shape"><code class="docutils literal notranslate"><span class="pre">Dataset.get_shape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.get_v"><code class="docutils literal notranslate"><span class="pre">Dataset.get_v()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.init_sample_indices"><code class="docutils literal notranslate"><span class="pre">Dataset.init_sample_indices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.select_labels"><code class="docutils literal notranslate"><span class="pre">Dataset.select_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.select_views_and_labels"><code class="docutils literal notranslate"><span class="pre">Dataset.select_views_and_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.Dataset.to_numpy_array"><code class="docutils literal notranslate"><span class="pre">Dataset.to_numpy_array()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.dataset"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.dataset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.nb_view"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.nb_view</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.view_dict"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.view_dict</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.add_gaussian_noise"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.add_gaussian_noise()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.copy_view"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.copy_view()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.filter"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.filter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.get_label_names"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.get_label_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.get_labels"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.get_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.get_name"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.get_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.get_nb_class"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.get_nb_class()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.get_nb_samples"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.get_nb_samples()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.get_v"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.get_v()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.get_view_dict"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.get_view_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.get_view_name"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.get_view_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.init_attrs"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.init_attrs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.init_view_names"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.init_view_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.rm"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.rm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.HDF5Dataset.update_hdf5_dataset"><code class="docutils literal notranslate"><span class="pre">HDF5Dataset.update_hdf5_dataset()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.RAMDataset"><code class="docutils literal notranslate"><span class="pre">RAMDataset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.RAMDataset.filter"><code class="docutils literal notranslate"><span class="pre">RAMDataset.filter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.RAMDataset.get_label_names"><code class="docutils literal notranslate"><span class="pre">RAMDataset.get_label_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.RAMDataset.get_labels"><code class="docutils literal notranslate"><span class="pre">RAMDataset.get_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.RAMDataset.get_name"><code class="docutils literal notranslate"><span class="pre">RAMDataset.get_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.RAMDataset.get_nb_class"><code class="docutils literal notranslate"><span class="pre">RAMDataset.get_nb_class()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.RAMDataset.get_nb_samples"><code class="docutils literal notranslate"><span class="pre">RAMDataset.get_nb_samples()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.RAMDataset.get_v"><code class="docutils literal notranslate"><span class="pre">RAMDataset.get_v()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.RAMDataset.get_view_dict"><code class="docutils literal notranslate"><span class="pre">RAMDataset.get_view_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.RAMDataset.get_view_name"><code class="docutils literal notranslate"><span class="pre">RAMDataset.get_view_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.RAMDataset.init_attrs"><code class="docutils literal notranslate"><span class="pre">RAMDataset.init_attrs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.confirm"><code class="docutils literal notranslate"><span class="pre">confirm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.copy_hdf5"><code class="docutils literal notranslate"><span class="pre">copy_hdf5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.datasets_already_exist"><code class="docutils literal notranslate"><span class="pre">datasets_already_exist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.delete_HDF5"><code class="docutils literal notranslate"><span class="pre">delete_HDF5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.extract_subset"><code class="docutils literal notranslate"><span class="pre">extract_subset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.get_samples_views_indices"><code class="docutils literal notranslate"><span class="pre">get_samples_views_indices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.init_multiple_datasets"><code class="docutils literal notranslate"><span class="pre">init_multiple_datasets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.input_"><code class="docutils literal notranslate"><span class="pre">input_()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.dataset.is_just_number"><code class="docutils literal notranslate"><span class="pre">is_just_number()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils.execution">summit.multiview_platform.utils.execution module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.execution.find_dataset_names"><code class="docutils literal notranslate"><span class="pre">find_dataset_names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.execution.gen_argument_dictionaries"><code class="docutils literal notranslate"><span class="pre">gen_argument_dictionaries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.execution.gen_direcorties_names"><code class="docutils literal notranslate"><span class="pre">gen_direcorties_names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.execution.gen_k_folds"><code class="docutils literal notranslate"><span class="pre">gen_k_folds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.execution.gen_splits"><code class="docutils literal notranslate"><span class="pre">gen_splits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.execution.get_database_function"><code class="docutils literal notranslate"><span class="pre">get_database_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.execution.init_log_file"><code class="docutils literal notranslate"><span class="pre">init_log_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.execution.init_random_state"><code class="docutils literal notranslate"><span class="pre">init_random_state()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.execution.init_stats_iter_random_states"><code class="docutils literal notranslate"><span class="pre">init_stats_iter_random_states()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.execution.init_views"><code class="docutils literal notranslate"><span class="pre">init_views()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.execution.parse_the_args"><code class="docutils literal notranslate"><span class="pre">parse_the_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils.get_multiview_db">summit.multiview_platform.utils.get_multiview_db module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.get_multiview_db.DatasetError"><code class="docutils literal notranslate"><span class="pre">DatasetError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.get_multiview_db.get_classic_db_csv"><code class="docutils literal notranslate"><span class="pre">get_classic_db_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.get_multiview_db.get_classic_db_hdf5"><code class="docutils literal notranslate"><span class="pre">get_classic_db_hdf5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.get_multiview_db.get_plausible_db_hdf5"><code class="docutils literal notranslate"><span class="pre">get_plausible_db_hdf5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.get_multiview_db.make_me_noisy"><code class="docutils literal notranslate"><span class="pre">make_me_noisy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils.hyper_parameter_search">summit.multiview_platform.utils.hyper_parameter_search module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.CustomDist"><code class="docutils literal notranslate"><span class="pre">CustomDist</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.CustomDist.multiply"><code class="docutils literal notranslate"><span class="pre">CustomDist.multiply()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.CustomRandint"><code class="docutils literal notranslate"><span class="pre">CustomRandint</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.CustomRandint.get_nb_possibilities"><code class="docutils literal notranslate"><span class="pre">CustomRandint.get_nb_possibilities()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.CustomRandint.rvs"><code class="docutils literal notranslate"><span class="pre">CustomRandint.rvs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.CustomUniform"><code class="docutils literal notranslate"><span class="pre">CustomUniform</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.CustomUniform.rvs"><code class="docutils literal notranslate"><span class="pre">CustomUniform.rvs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.Grid.fit"><code class="docutils literal notranslate"><span class="pre">Grid.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.Grid.get_candidate_params"><code class="docutils literal notranslate"><span class="pre">Grid.get_candidate_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.Grid.set_fit_request"><code class="docutils literal notranslate"><span class="pre">Grid.set_fit_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.HPSearch"><code class="docutils literal notranslate"><span class="pre">HPSearch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.HPSearch.fit_multiview"><code class="docutils literal notranslate"><span class="pre">HPSearch.fit_multiview()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.HPSearch.gen_report"><code class="docutils literal notranslate"><span class="pre">HPSearch.gen_report()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.HPSearch.get_best_params"><code class="docutils literal notranslate"><span class="pre">HPSearch.get_best_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.HPSearch.get_candidate_params"><code class="docutils literal notranslate"><span class="pre">HPSearch.get_candidate_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.HPSearch.get_scoring"><code class="docutils literal notranslate"><span class="pre">HPSearch.get_scoring()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.HPSearch.translate_param_distribs"><code class="docutils literal notranslate"><span class="pre">HPSearch.translate_param_distribs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.Random"><code class="docutils literal notranslate"><span class="pre">Random</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.Random.fit"><code class="docutils literal notranslate"><span class="pre">Random.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.Random.get_candidate_params"><code class="docutils literal notranslate"><span class="pre">Random.get_candidate_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.Random.get_param_distribs"><code class="docutils literal notranslate"><span class="pre">Random.get_param_distribs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.Random.set_fit_request"><code class="docutils literal notranslate"><span class="pre">Random.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.Random.translate_randint"><code class="docutils literal notranslate"><span class="pre">Random.translate_randint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.Random.translate_uniform"><code class="docutils literal notranslate"><span class="pre">Random.translate_uniform()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.hyper_parameter_search.format_params"><code class="docutils literal notranslate"><span class="pre">format_params()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils.make_file_config">summit.multiview_platform.utils.make_file_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.make_file_config.ConfigurationMaker"><code class="docutils literal notranslate"><span class="pre">ConfigurationMaker</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils.multiclass">summit.multiview_platform.utils.multiclass module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MonoviewWrapper"><code class="docutils literal notranslate"><span class="pre">MonoviewWrapper</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiClassWrapper"><code class="docutils literal notranslate"><span class="pre">MultiClassWrapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiClassWrapper.format_params"><code class="docutils literal notranslate"><span class="pre">MultiClassWrapper.format_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiClassWrapper.get_config"><code class="docutils literal notranslate"><span class="pre">MultiClassWrapper.get_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiClassWrapper.get_interpretation"><code class="docutils literal notranslate"><span class="pre">MultiClassWrapper.get_interpretation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiClassWrapper.set_params"><code class="docutils literal notranslate"><span class="pre">MultiClassWrapper.set_params()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVOWrapper"><code class="docutils literal notranslate"><span class="pre">MultiviewOVOWrapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVOWrapper.fit"><code class="docutils literal notranslate"><span class="pre">MultiviewOVOWrapper.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVOWrapper.get_params"><code class="docutils literal notranslate"><span class="pre">MultiviewOVOWrapper.get_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVOWrapper.get_tags"><code class="docutils literal notranslate"><span class="pre">MultiviewOVOWrapper.get_tags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVOWrapper.multiview_decision_function"><code class="docutils literal notranslate"><span class="pre">MultiviewOVOWrapper.multiview_decision_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVOWrapper.predict"><code class="docutils literal notranslate"><span class="pre">MultiviewOVOWrapper.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVOWrapper.set_fit_request"><code class="docutils literal notranslate"><span class="pre">MultiviewOVOWrapper.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVOWrapper.set_partial_fit_request"><code class="docutils literal notranslate"><span class="pre">MultiviewOVOWrapper.set_partial_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVOWrapper.set_predict_request"><code class="docutils literal notranslate"><span class="pre">MultiviewOVOWrapper.set_predict_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVOWrapper.set_score_request"><code class="docutils literal notranslate"><span class="pre">MultiviewOVOWrapper.set_score_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVRWrapper"><code class="docutils literal notranslate"><span class="pre">MultiviewOVRWrapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVRWrapper.fit"><code class="docutils literal notranslate"><span class="pre">MultiviewOVRWrapper.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVRWrapper.get_params"><code class="docutils literal notranslate"><span class="pre">MultiviewOVRWrapper.get_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVRWrapper.predict"><code class="docutils literal notranslate"><span class="pre">MultiviewOVRWrapper.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVRWrapper.set_fit_request"><code class="docutils literal notranslate"><span class="pre">MultiviewOVRWrapper.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVRWrapper.set_partial_fit_request"><code class="docutils literal notranslate"><span class="pre">MultiviewOVRWrapper.set_partial_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVRWrapper.set_predict_request"><code class="docutils literal notranslate"><span class="pre">MultiviewOVRWrapper.set_predict_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewOVRWrapper.set_score_request"><code class="docutils literal notranslate"><span class="pre">MultiviewOVRWrapper.set_score_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.MultiviewWrapper"><code class="docutils literal notranslate"><span class="pre">MultiviewWrapper</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.OVOWrapper"><code class="docutils literal notranslate"><span class="pre">OVOWrapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.OVOWrapper.decision_function"><code class="docutils literal notranslate"><span class="pre">OVOWrapper.decision_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.OVOWrapper.get_params"><code class="docutils literal notranslate"><span class="pre">OVOWrapper.get_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.OVOWrapper.set_partial_fit_request"><code class="docutils literal notranslate"><span class="pre">OVOWrapper.set_partial_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.OVOWrapper.set_score_request"><code class="docutils literal notranslate"><span class="pre">OVOWrapper.set_score_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.OVRWrapper"><code class="docutils literal notranslate"><span class="pre">OVRWrapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.OVRWrapper.get_params"><code class="docutils literal notranslate"><span class="pre">OVRWrapper.get_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.OVRWrapper.set_partial_fit_request"><code class="docutils literal notranslate"><span class="pre">OVRWrapper.set_partial_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.OVRWrapper.set_score_request"><code class="docutils literal notranslate"><span class="pre">OVRWrapper.set_score_request()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.multiclass.get_mc_estim"><code class="docutils literal notranslate"><span class="pre">get_mc_estim()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils.multiview_result_analysis">summit.multiview_platform.utils.multiview_result_analysis module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils.organization">summit.multiview_platform.utils.organization module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.organization.secure_file_path"><code class="docutils literal notranslate"><span class="pre">secure_file_path()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils.transformations">summit.multiview_platform.utils.transformations module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.transformations.sign_labels"><code class="docutils literal notranslate"><span class="pre">sign_labels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.transformations.unsign_labels"><code class="docutils literal notranslate"><span class="pre">unsign_labels()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="summit.multiview_platform.utils.html#module-summit.multiview_platform.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-summit.multiview_platform.exec_classif">
+<span id="summit-multiview-platform-exec-classif-module"></span><h2>summit.multiview_platform.exec_classif module<a class="headerlink" href="#module-summit.multiview_platform.exec_classif" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.arange_metrics">
+<span class="sig-name descname"><span class="pre">arange_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_princ</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.arange_metrics" title="Link to this definition"></a></dt>
+<dd><p>Used to get the metrics list in the right order so that
+the first one is the principal metric specified in args</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metrics</strong> (<em>dict</em>) – The metrics that will be used in the benchmark</p></li>
+<li><p><strong>metric_princ</strong> (<em>str</em>) – The name of the metric that need to be used for the hyper-parameter
+optimization process</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>metrics</strong> – The metrics list, but arranged  so the first one is the principal one.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of lists</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.benchmark_init">
+<span class="sig-name descname"><span class="pre">benchmark_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_folds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_var</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.benchmark_init" title="Link to this definition"></a></dt>
+<dd><p>Initializes the benchmark, by saving the indices of the train
+samples and the cross validation folds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – The benchmark’s result directory</p></li>
+<li><p><strong>classification_indices</strong> (<em>numpy array</em>) – The indices of the samples, splitted for the train/test split</p></li>
+<li><p><strong>labels</strong> (<em>numpy array</em>) – The labels of the dataset</p></li>
+<li><p><strong>labels_dictionary</strong> (<em>dict</em>) – The dictionary with labels as keys and their names as values</p></li>
+<li><p><strong>k_folds</strong> (<em>sklearn.model_selection.Folds object</em>) – The folds for the cross validation process</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.exec_benchmark">
+<span class="sig-name descname"><span class="pre">exec_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_cores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_arguments_dictionaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_tracebacks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exec_one_benchmark_mono_core=&lt;function</span> <span class="pre">exec_one_benchmark_mono_core&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analyze=&lt;function</span> <span class="pre">analyze&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete=&lt;function</span> <span class="pre">delete_HDF5&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analyze_iterations=&lt;function</span> <span class="pre">analyze_iterations&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.exec_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Used to execute the needed benchmark(s) on multicore or mono-core functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nb_cores</strong> (<em>int</em>) – Number of threads that the benchmarks can use.</p></li>
+<li><p><strong>stats_iter</strong> (<em>int</em>) – Number of statistical iterations that have to be done.</p></li>
+<li><p><strong>benchmark_arguments_dictionaries</strong> (<em>list</em><em> of </em><em>dictionaries</em>) – All the needed arguments for the benchmarks.</p></li>
+<li><p><strong>classification_indices</strong> (<em>list</em><em> of </em><em>lists</em><em> of </em><em>numpy.ndarray</em>) – For each statistical iteration a couple of numpy.ndarrays is stored with the indices for the training set and
+the ones of the testing set.</p></li>
+<li><p><strong>directories</strong> (<em>list</em><em> of </em><em>strings</em>) – List of the paths to the result directories for each statistical iteration.</p></li>
+<li><p><strong>directory</strong> (<em>string</em>) – Path to the main results directory.</p></li>
+<li><p><strong>multi_class_labels</strong> (<em>ist</em><em> of </em><em>lists</em><em> of </em><em>numpy.ndarray</em>) – For each label couple, for each statistical iteration a triplet of numpy.ndarrays is stored with the
+indices for the biclass training set, the ones for the biclass testing set and the ones for the
+multiclass testing set.</p></li>
+<li><p><strong>metrics</strong> (<em>list</em><em> of </em><em>lists</em>) – metrics that will be used to evaluate the algorithms performance.</p></li>
+<li><p><strong>labels_dictionary</strong> (<em>dictionary</em>) – Dictionary mapping labels indices to labels names.</p></li>
+<li><p><strong>nb_labels</strong> (<em>int</em>) – Total number of different labels in the dataset.</p></li>
+<li><p><strong>dataset_var</strong> (<em>HDF5 dataset file</em>) – The full dataset that wil be used by the benchmark.</p></li>
+<li><p><strong>classifiers_names</strong> (<em>list</em><em> of </em><em>strings</em>) – List of the benchmarks’s monoview classifiers names.</p></li>
+<li><p><strong>rest_of_the_args</strong> – Just used for testing purposes</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>results</strong> – The results of the benchmark.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of lists</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.exec_classif">
+<span class="sig-name descname"><span class="pre">exec_classif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.exec_classif" title="Link to this definition"></a></dt>
+<dd><p>Runs the benchmark with the given arguments</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arguments</strong></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>&gt;&gt;&gt; exec_classif([–config_path, /path/to/config/files/])</em></p></li>
+<li><p><em>&gt;&gt;&gt;</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.exec_one_benchmark_mono_core">
+<span class="sig-name descname"><span class="pre">exec_one_benchmark_mono_core</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_dictionary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_folds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hyper_param_search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argument_dictionaries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_tracebacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_cores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.exec_one_benchmark_mono_core" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.extract_dict">
+<span class="sig-name descname"><span class="pre">extract_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifier_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.extract_dict" title="Link to this definition"></a></dt>
+<dd><p>Reverse function of get_path_dict</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.gen_single_monoview_arg_dictionary">
+<span class="sig-name descname"><span class="pre">gen_single_monoview_arg_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifier_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.gen_single_monoview_arg_dictionary" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.gen_single_multiview_arg_dictionary">
+<span class="sig-name descname"><span class="pre">gen_single_multiview_arg_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifier_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_kwargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_dictionary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.gen_single_multiview_arg_dictionary" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.get_path_dict">
+<span class="sig-name descname"><span class="pre">get_path_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multiview_classifier_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.get_path_dict" title="Link to this definition"></a></dt>
+<dd><p>This function is used to generate a dictionary with each key being
+the path to the value.
+If given {“key1”:{“key1_1”:value1}, “key2”:value2}, it will return
+{“key1.key1_1”:value1, “key2”:value2}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.get_random_hps_args">
+<span class="sig-name descname"><span class="pre">get_random_hps_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hps_args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.get_random_hps_args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.init_argument_dictionaries">
+<span class="sig-name descname"><span class="pre">init_argument_dictionaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_kwargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.init_argument_dictionaries" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.init_benchmark">
+<span class="sig-name descname"><span class="pre">init_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cl_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monoview_algos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiview_algos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.init_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Used to create a list of all the algorithm packages names used for the benchmark.</p>
+<p>First this function will check if the benchmark need mono- or/and multiview
+algorithms and adds to the right
+dictionary the asked algorithms. If none is asked by the user, all will be added.</p>
+<p>If the keyword <cite>“Benchmark”</cite> is used, all mono- and multiview algorithms will be added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cl_type</strong> (<em>List</em><em> of </em><em>string</em>) – List of types of needed benchmark</p></li>
+<li><p><strong>multiview_algos</strong> (<em>List</em><em> of </em><em>strings</em>) – List of multiview algorithms needed for the benchmark</p></li>
+<li><p><strong>monoview_algos</strong> (<em>Listof strings</em>) – List of monoview algorithms needed for the benchmark</p></li>
+<li><p><strong>args</strong> (<em>ParsedArgumentParser args</em>) – All the input args (used to tune the algorithms)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>benchmark</strong> – Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary of dictionaries</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.init_kwargs">
+<span class="sig-name descname"><span class="pre">init_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifiers_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framework</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'monoview'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.init_kwargs" title="Link to this definition"></a></dt>
+<dd><p>Used to init kwargs thanks to a function in each monoview classifier package.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>parsed args objects</em>) – All the args passed by the user.</p></li>
+<li><p><strong>classifiers_names</strong> (<em>list</em><em> of </em><em>strings</em>) – List of the benchmarks’s monoview classifiers names.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p><strong>kwargs</strong> – Dictionary resuming all the specific arguments for the benchmark, one dictionary for each classifier.</p>
+<p>For example, for Adaboost, the KWARGS will be <cite>{“n_estimators”:&lt;value&gt;, “base_estimator”:&lt;value&gt;}</cite></p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.init_kwargs_func">
+<span class="sig-name descname"><span class="pre">init_kwargs_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.init_kwargs_func" title="Link to this definition"></a></dt>
+<dd><p>Dispached the kwargs initialization to monoview and multiview and creates
+the kwargs variable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>parsed args objects</em>) – All the args passed by the user.</p></li>
+<li><p><strong>benchmark</strong> (<em>dict</em>) – The name of the mono- and mutli-view classifiers to run in the benchmark</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>kwargs</strong> – The arguments for each mono- and multiview algorithms</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.init_monoview_exps">
+<span class="sig-name descname"><span class="pre">init_monoview_exps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifier_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs_init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.init_monoview_exps" title="Link to this definition"></a></dt>
+<dd><p>Used to add each monoview exeperience args to the list of monoview experiences args.</p>
+<p>First this function will check if the benchmark need mono- or/and multiview algorithms and adds to the right
+dictionary the asked algorithms. If none is asked by the user, all will be added.</p>
+<p>If the keyword <cite>“Benchmark”</cite> is used, all mono- and multiview algorithms will be added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>classifier_names</strong> (<em>dictionary</em>) – All types of monoview and multiview experiments that have to be benchmarked</p></li>
+<li><p><strong>argument_dictionaries</strong> (<em>dictionary</em>) – Maps monoview and multiview experiments arguments.</p></li>
+<li><p><strong>views_dictionary</strong> (<em>dictionary</em>) – Maps the view names to their index in the HDF5 dataset</p></li>
+<li><p><strong>nb_class</strong> (<em>integer</em>) – Number of different labels in the classification</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>benchmark</strong> – Dictionary resuming which mono- and multiview algorithms which will be used in the benchmark.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary of dictionaries</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.init_multiview_exps">
+<span class="sig-name descname"><span class="pre">init_multiview_exps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifier_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">views_dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs_init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.init_multiview_exps" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.is_dict_in">
+<span class="sig-name descname"><span class="pre">is_dict_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.is_dict_in" title="Link to this definition"></a></dt>
+<dd><p>Returns True if any of the dictionary value is a dictionary itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dictionary</strong></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.exec_classif.set_element">
+<span class="sig-name descname"><span class="pre">set_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.exec_classif.set_element" title="Link to this definition"></a></dt>
+<dd><p>Set value in dictionary at the location indicated by path</p>
+</dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-summit.multiview_platform" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

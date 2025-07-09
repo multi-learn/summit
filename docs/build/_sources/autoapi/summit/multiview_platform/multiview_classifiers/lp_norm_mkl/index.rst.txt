@@ -1,0 +1,94 @@
+:mod:`summit.multiview_platform.multiview_classifiers.lp_norm_mkl`
+==================================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers.lp_norm_mkl
+
+
+lp_norm_mkl
+-----------
+
+
+.. py:data:: classifier_class_name
+   :value: 'LPNormMKL'
+
+
+.. py:class:: LPNormMKL(random_state=None, lmbda=0.1, nystrom_param=1, n_loops=50, precision=0.0001, use_approx=True, kernel='rbf', kernel_params=None)
+
+
+
+   BaseMultiviewClassifier base of Multiview classifiers
+
+   :param random_state: The seed of the pseudo random number multiview_generator to use when
+                        shuffling the data.
+   :type random_state: int seed, RandomState instance, or None (default=None)
+
+
+   .. py:attribute:: param_names
+      :value: ['lmbda', 'kernel', 'kernel_params']
+
+
+
+   .. py:attribute:: distribs
+
+
+   .. py:method:: fit(X, y, train_indices=None, view_indices=None)
+
+      :param X:
+                - Metriclearn_array {array-like, sparse matrix}, shape = (n_samples, n_features)
+                  Training multi-view input samples. can be also Kernel where attibute 'kernel'
+                  is set to precompute "precomputed"
+
+                - Dictionary of {array like} with shape = (n_samples, n_features)  for multi-view
+                  for each view.
+
+                - Array of {array like} with shape = (n_samples, n_features)  for multi-view
+                  for each view.
+
+                - {array like} with (n_samples, nviews *  n_features) with 'views_ind' diferent to 'None'
+      :type X: different formats are supported
+      :param y: Target values (class labels).
+                array of length n_samples containing the classification/regression labels
+                for training data
+      :type y: array-like, shape = (n_samples,)
+      :param views_ind: Paramater specifying how to extract the data views from X:
+
+                        - views_ind is a 1-D array of sorted integers, the entries
+                          indicate the limits of the slices used to extract the views,
+                          where view ``n`` is given by
+                          ``X[:, views_ind[n]:views_ind[n+1]]``.
+
+                          With this convention each view is therefore a view (in the NumPy
+                          sense) of X and no copy of the data is done.
+      :type views_ind: array-like (default=[0, n_features//2, n_features])
+
+      :returns: **self** -- Returns self.
+      :rtype: object
+
+
+
+   .. py:method:: predict(X, sample_indices=None, view_indices=None)
+
+      :param X: for each view.
+                or
+                `MultiModalData` ,  `MultiModalArray`
+                or
+                {array-like,}, shape = (n_samples, n_features)
+                Training multi-view input samples. can be also Kernel where attibute 'kernel'
+                is set to precompute "precomputed"
+      :type X: dict dictionary with all views {array like} with shape = (n_samples, n_features)  for multi-view
+      :param views_ind: Paramater specifying how to extract the data views from X:
+
+                        - views_ind is a 1-D array of sorted integers, the entries
+                          indicate the limits of the slices used to extract the views,
+                          where view ``n`` is given by
+                          ``X[:, views_ind[n]:views_ind[n+1]]``.
+
+                          With this convention each view is therefore a view (in the NumPy
+                          sense) of X and no copy of the data is done.
+      :type views_ind: array-like (default=[0, n_features//2, n_features])
+
+      :returns: **y** -- Predicted classes.
+      :rtype: numpy.ndarray, shape = (n_samples,)
+
+
+

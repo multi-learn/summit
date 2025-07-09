@@ -1,0 +1,247 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>summit.multiview_platform.monoview_classifiers.scm &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=8dde47fa"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/plotly_js.js?v=c3b947fd"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="summit.multiview_platform.monoview_classifiers.sgd" href="../sgd/index.html" />
+    <link rel="prev" title="summit.multiview_platform.monoview_classifiers.random_scm" href="../random_scm/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            SuMMIT
+              <img src="../../../../../_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/index.html">SuMMIT Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api.html">API Documentation</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#available-monoview-classifiers">Available monoview classifiers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../adaboost/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.adaboost</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../decision_tree/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.decision_tree</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gradient_boosting/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.gradient_boosting</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../imbalance_bagging/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.imbalance_bagging</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../knn/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.knn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lasso/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.lasso</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../random_forest/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.random_forest</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../random_scm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.random_scm</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.scm</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#scm">scm</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../sgd/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.sgd</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../svm_linear/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.svm_linear</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../svm_poly/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.svm_poly</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../svm_rbf/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.svm_rbf</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../multiview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.multiview_classifiers</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.scm</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/autoapi/summit/multiview_platform/monoview_classifiers/scm/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-summit.multiview_platform.monoview_classifiers.scm">
+<span id="summit-multiview-platform-monoview-classifiers-scm"></span><h1><a class="reference internal" href="#module-summit.multiview_platform.monoview_classifiers.scm" title="summit.multiview_platform.monoview_classifiers.scm"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers.scm</span></code></a><a class="headerlink" href="#module-summit.multiview_platform.monoview_classifiers.scm" title="Link to this heading"></a></h1>
+<section id="scm">
+<h2>scm<a class="headerlink" href="#scm" title="Link to this heading"></a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.scm.classifier_class_name">
+<span class="sig-name descname"><span class="pre">classifier_class_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SCM'</span></em><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.scm.classifier_class_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.scm.SCM">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SCM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'conjunction'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.scm.SCM" title="Link to this definition"></a></dt>
+<dd><p>SCM  Classifier
+:param random_state (default:
+:type random_state (default: None)
+:param model_type:
+:type model_type: string (default: “conjunction”)
+:param max_rules:
+:type max_rules: int number maximum of rules (default : 10)
+:param p:
+:type p: float value(default : 0.1 )
+:param kwarg:
+:type kwarg: others arguments</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.scm.SCM.param_names">
+<span class="sig-name descname"><span class="pre">param_names</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.scm.SCM.param_names" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.scm.SCM.distribs">
+<span class="sig-name descname"><span class="pre">distribs</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.scm.SCM.distribs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.scm.SCM.classed_params">
+<span class="sig-name descname"><span class="pre">classed_params</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.scm.SCM.classed_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.scm.SCM.weird_strings">
+<span class="sig-name descname"><span class="pre">weird_strings</span></span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.scm.SCM.weird_strings" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">param_names</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['model_type',</span> <span class="pre">'max_rules',</span> <span class="pre">'p',</span> <span class="pre">'random_state']</span></em><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">distribs</span></span><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">classed_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">weird_strings</span></span><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.scm.SCM.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiebreaker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iteration_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.scm.SCM.fit" title="Link to this definition"></a></dt>
+<dd><p>Fit a SCM model.</p>
+<section id="parameters">
+<h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>X: array-like, shape=[n_examples, n_features]</dt><dd><p>The feature of the input examples.</p>
+</dd>
+<dt>y<span class="classifier">array-like, shape = [n_samples]</span></dt><dd><p>The labels of the input examples.</p>
+</dd>
+<dt>tiebreaker: function(model_type, feature_idx, thresholds, rule_type)</dt><dd><p>A function that takes in the model type and information about the
+equivalent rules and outputs the index of the rule to use. The lists
+respectively contain the feature indices, thresholds and type
+corresponding of the equivalent rules. If None, the rule that most
+decreases the training error is selected. Note: the model type is
+provided because the rules that are added to disjunction models
+correspond to the inverse of the rules that are handled during
+training. Handle this case with care.</p>
+</dd>
+<dt>iteration_callback: function(model)</dt><dd><p>A function that is called each time a rule is added to the model.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns:<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>self: object</dt><dd><p>Returns self.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.scm.SCM.get_interpretation">
+<span class="sig-name descname"><span class="pre">get_interpretation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.scm.SCM.get_interpretation" title="Link to this definition"></a></dt>
+<dd><p>Base method that returns an empty string if there is not interpretation
+method in the classifier’s module</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview_classifiers.scm.paramsToSet">
+<span class="sig-name descname"><span class="pre">paramsToSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nIter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview_classifiers.scm.paramsToSet" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../random_scm/index.html" class="btn btn-neutral float-left" title="summit.multiview_platform.monoview_classifiers.random_scm" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../sgd/index.html" class="btn btn-neutral float-right" title="summit.multiview_platform.monoview_classifiers.sgd" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

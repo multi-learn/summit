@@ -1,0 +1,103 @@
+:mod:`summit.multiview_platform.multiview_classifiers.mucombo`
+==============================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers.mucombo
+
+
+mucombo
+-------
+
+
+.. py:data:: classifier_class_name
+   :value: 'MuCombo'
+
+
+.. py:class:: MuCombo(estimator=None, n_estimators=50, random_state=None, **kwargs)
+
+
+
+   BaseMultiviewClassifier base of Multiview classifiers
+
+   :param random_state: The seed of the pseudo random number multiview_generator to use when
+                        shuffling the data.
+   :type random_state: int seed, RandomState instance, or None (default=None)
+
+
+   .. py:attribute:: param_names
+      :value: ['estimator', 'n_estimators', 'random_state']
+
+
+
+   .. py:attribute:: distribs
+
+
+   .. py:method:: fit(X, y, train_indices=None, view_indices=None)
+
+      Build a multimodal boosted classifier from the training set (X, y).
+
+      :param X: or
+                `MultiModalData` ,  `MultiModalArray`, `MultiModalSparseArray`
+                or
+                {array-like, sparse matrix}, shape = (n_samples, n_features)
+                Training multi-view input samples.
+                Sparse matrix can be CSC, CSR, COO, DOK, or LIL.
+                COO, DOK and LIL are converted to CSR.
+      :type X: dict dictionary with all views
+      :param y: Target values (class labels).
+      :type y: array-like, shape = (n_samples,)
+      :param views_ind: Paramater specifying how to extract the data views from X:
+
+                        - If views_ind is a 1-D array of sorted integers, the entries
+                          indicate the limits of the slices used to extract the views,
+                          where view ``n`` is given by
+                          ``X[:, views_ind[n]:views_ind[n+1]]``.
+
+                          With this convention each view is therefore a view (in the NumPy
+                          sense) of X and no copy of the data is done.
+
+                        - If views_ind is an array of arrays of integers, then each array
+                          of integers ``views_ind[n]`` specifies the indices of the view
+                          ``n``, which is then given by ``X[:, views_ind[n]]``.
+
+                          With this convention each view creates therefore a partial copy
+                          of the data in X. This convention is thus more flexible but less
+                          efficient than the previous one.
+      :type views_ind: array-like (default=[0, n_features//2, n_features])
+
+      :returns: **self** -- Returns self.
+      :rtype: object
+
+      :raises ValueError  estimator must support sample_weight:
+      :raises ValueError where `X` and `view_ind` are not compatibles:
+
+
+
+   .. py:method:: predict(X, sample_indices=None, view_indices=None)
+
+      Predict classes for X.
+
+      The predicted class of an input sample is computed as the weighted mean
+      prediction of the classifiers in the ensemble.
+
+      :param X: Multi-view input samples.
+                Sparse matrix can be CSC, CSR, COO, DOK, or LIL.
+                COO, DOK and LIL are converted to CSR.
+      :type X: {array-like, sparse matrix}, shape = (n_samples, n_features)
+
+      :returns: **y** -- Predicted classes.
+      :rtype: numpy.ndarray, shape = (n_samples,)
+
+      :raises ValueError   'X' input matrix must be have the same total number of features: of 'X' fit data
+
+
+
+   .. py:method:: get_interpretation(directory, base_file_name, y_test, feature_ids, multi_class=False)
+
+      Base method that returns an empty string if there is not interpretation
+      method in the classifier's module
+
+
+
+   .. py:method:: set_base_estim_from_dict(dict)
+
+

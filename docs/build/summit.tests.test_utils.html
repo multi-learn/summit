@@ -1,0 +1,1507 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>summit.tests.test_utils package &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8dde47fa"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/plotly_js.js?v=c3b947fd"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SuMMIT
+              <img src="_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">SuMMIT Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/summit/multiview_platform/monoview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/summit/multiview_platform/multiview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.multiview_classifiers</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">summit.tests.test_utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/summit.tests.test_utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="summit-tests-test-utils-package">
+<h1>summit.tests.test_utils package<a class="headerlink" href="#summit-tests-test-utils-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-summit.tests.test_utils.test_GetMultiviewDB">
+<span id="summit-tests-test-utils-test-getmultiviewdb-module"></span><h2>summit.tests.test_utils.test_GetMultiviewDB module<a class="headerlink" href="#module-summit.tests.test_utils.test_GetMultiviewDB" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_csv">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_get_classic_db_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_csv" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_csv.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_csv.setUp" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_csv.tearDown">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_csv.tearDown" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_csv.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_csv.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_get_classic_db_hdf5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5.setUp" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5.tearDown" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5.test_all_views_asked">
+<span class="sig-name descname"><span class="pre">test_all_views_asked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5.test_all_views_asked" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5.test_asked_the_whole_dataset">
+<span class="sig-name descname"><span class="pre">test_asked_the_whole_dataset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5.test_asked_the_whole_dataset" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_classic_db_hdf5.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_plausible_db_hdf5">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_get_plausible_db_hdf5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_plausible_db_hdf5" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_plausible_db_hdf5.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_plausible_db_hdf5.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_plausible_db_hdf5.tearDownClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_plausible_db_hdf5.tearDownClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_plausible_db_hdf5.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_plausible_db_hdf5.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_GetMultiviewDB.Test_get_plausible_db_hdf5.test_two_class">
+<span class="sig-name descname"><span class="pre">test_two_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_GetMultiviewDB.Test_get_plausible_db_hdf5.test_two_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-summit.tests.test_utils.test_base">
+<span id="summit-tests-test-utils-test-base-module"></span><h2>summit.tests.test_utils.test_base module<a class="headerlink" href="#module-summit.tests.test_utils.test_base" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.FakeClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">no_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accepts_mc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.FakeClassifier" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier" title="summit.multiview_platform.utils.base.BaseClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseClassifier</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.FakeClassifier.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.FakeClassifier.fit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.FakeClassifier.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.FakeClassifier.get_params" title="Link to this definition"></a></dt>
+<dd><p>Get parameters for this estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>deep</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>params</strong> – Parameter names mapped to their values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.FakeDetector">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeDetector</span></span><a class="headerlink" href="#summit.tests.test_utils.test_base.FakeDetector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.FakeResultAnalyzer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeResultAnalyzer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_folds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_label_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_cores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.FakeResultAnalyzer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.ResultAnalyser" title="summit.multiview_platform.utils.base.ResultAnalyser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResultAnalyser</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.FakeResultAnalyzer.get_base_string">
+<span class="sig-name descname"><span class="pre">get_base_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.FakeResultAnalyzer.get_base_string" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.FakeResultAnalyzer.get_view_specific_info">
+<span class="sig-name descname"><span class="pre">get_view_specific_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.FakeResultAnalyzer.get_view_specific_info" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_BaseClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_BaseClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_BaseClassifier" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_BaseClassifier.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_BaseClassifier.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_BaseClassifier.test_accepts_mutliclass">
+<span class="sig-name descname"><span class="pre">test_accepts_mutliclass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_BaseClassifier.test_accepts_mutliclass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_BaseClassifier.test_class">
+<span class="sig-name descname"><span class="pre">test_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_BaseClassifier.test_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_BaseClassifier.test_gen_best_params">
+<span class="sig-name descname"><span class="pre">test_gen_best_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_BaseClassifier.test_gen_best_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_BaseClassifier.test_gen_params_from_detector">
+<span class="sig-name descname"><span class="pre">test_gen_params_from_detector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_BaseClassifier.test_gen_params_from_detector" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_BaseClassifier.test_get_config">
+<span class="sig-name descname"><span class="pre">test_get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_BaseClassifier.test_get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_BaseClassifier.test_get_iterpret">
+<span class="sig-name descname"><span class="pre">test_get_iterpret</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_BaseClassifier.test_get_iterpret" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_BaseClassifier.test_params_to_string">
+<span class="sig-name descname"><span class="pre">test_params_to_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_BaseClassifier.test_params_to_string" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_BaseClassifier.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_BaseClassifier.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_BaseClassifier.test_wrong_args">
+<span class="sig-name descname"><span class="pre">test_wrong_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_BaseClassifier.test_wrong_args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_Functions">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_Functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_Functions" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_Functions.test_get_metric">
+<span class="sig-name descname"><span class="pre">test_get_metric</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_Functions.test_get_metric" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_Functions.test_get_name">
+<span class="sig-name descname"><span class="pre">test_get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_Functions.test_get_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_ResultAnalyzer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_ResultAnalyzer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_ResultAnalyzer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_ResultAnalyzer.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_ResultAnalyzer.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_analyze">
+<span class="sig-name descname"><span class="pre">test_analyze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_analyze" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_get_all_metrics_scores">
+<span class="sig-name descname"><span class="pre">test_get_all_metrics_scores</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_get_all_metrics_scores" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_get_classifier_config_string">
+<span class="sig-name descname"><span class="pre">test_get_classifier_config_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_get_classifier_config_string" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_get_db_config_string">
+<span class="sig-name descname"><span class="pre">test_get_db_config_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_get_db_config_string" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_get_metric_scores">
+<span class="sig-name descname"><span class="pre">test_get_metric_scores</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_get_metric_scores" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_print_metrics_scores">
+<span class="sig-name descname"><span class="pre">test_print_metrics_scores</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_print_metrics_scores" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_base.Test_ResultAnalyzer.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-summit.tests.test_utils.test_configuration">
+<span id="summit-tests-test-utils-test-configuration-module"></span><h2>summit.tests.test_utils.test_configuration module<a class="headerlink" href="#module-summit.tests.test_utils.test_configuration" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_configuration.Test_get_the_args">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_get_the_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_configuration.Test_get_the_args" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_configuration.Test_get_the_args.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_configuration.Test_get_the_args.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_configuration.Test_get_the_args.tearDownClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_configuration.Test_get_the_args.tearDownClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_configuration.Test_get_the_args.test_arguments">
+<span class="sig-name descname"><span class="pre">test_arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_configuration.Test_get_the_args.test_arguments" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_configuration.Test_get_the_args.test_dict_format">
+<span class="sig-name descname"><span class="pre">test_dict_format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_configuration.Test_get_the_args.test_dict_format" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_configuration.Test_get_the_args.test_file_loading">
+<span class="sig-name descname"><span class="pre">test_file_loading</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_configuration.Test_get_the_args.test_file_loading" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_configuration.Test_save_config">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_save_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_configuration.Test_save_config" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_configuration.Test_save_config.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_configuration.Test_save_config.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_configuration.Test_save_config.tearDownClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_configuration.Test_save_config.tearDownClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_configuration.Test_save_config.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_configuration.Test_save_config.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-summit.tests.test_utils.test_dataset">
+<span id="summit-tests-test-utils-test-dataset-module"></span><h2>summit.tests.test_utils.test_dataset module<a class="headerlink" href="#module-summit.tests.test_utils.test_dataset" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.TestRAMDataset">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TestRAMDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.TestRAMDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.TestRAMDataset.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.TestRAMDataset.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.TestRAMDataset.test_filter">
+<span class="sig-name descname"><span class="pre">test_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.TestRAMDataset.test_filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.TestRAMDataset.test_get_label_names">
+<span class="sig-name descname"><span class="pre">test_get_label_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.TestRAMDataset.test_get_label_names" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.TestRAMDataset.test_get_name">
+<span class="sig-name descname"><span class="pre">test_get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.TestRAMDataset.test_get_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.TestRAMDataset.test_get_v">
+<span class="sig-name descname"><span class="pre">test_get_v</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.TestRAMDataset.test_get_v" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.TestRAMDataset.test_get_view_dict">
+<span class="sig-name descname"><span class="pre">test_get_view_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.TestRAMDataset.test_get_view_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.TestRAMDataset.test_get_view_name">
+<span class="sig-name descname"><span class="pre">test_get_view_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.TestRAMDataset.test_get_view_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.TestRAMDataset.test_init_attrs">
+<span class="sig-name descname"><span class="pre">test_init_attrs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.TestRAMDataset.test_init_attrs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_Dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.tearDownClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.tearDownClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_add_gaussian_noise">
+<span class="sig-name descname"><span class="pre">test_add_gaussian_noise</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_add_gaussian_noise" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_check_selected_label_names">
+<span class="sig-name descname"><span class="pre">test_check_selected_label_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_check_selected_label_names" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_copy_view">
+<span class="sig-name descname"><span class="pre">test_copy_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_copy_view" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_filter">
+<span class="sig-name descname"><span class="pre">test_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_filter" title="Link to this definition"></a></dt>
+<dd><p>Had to create a new dataset to aviod playing with the class one</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_for_hdf5_file">
+<span class="sig-name descname"><span class="pre">test_for_hdf5_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_for_hdf5_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_from_scratch">
+<span class="sig-name descname"><span class="pre">test_from_scratch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_from_scratch" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_get_label_names">
+<span class="sig-name descname"><span class="pre">test_get_label_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_get_label_names" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_get_labels">
+<span class="sig-name descname"><span class="pre">test_get_labels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_get_labels" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_get_name">
+<span class="sig-name descname"><span class="pre">test_get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_get_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_get_nb_class">
+<span class="sig-name descname"><span class="pre">test_get_nb_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_get_nb_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_get_nb_exmaples">
+<span class="sig-name descname"><span class="pre">test_get_nb_exmaples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_get_nb_exmaples" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_get_shape">
+<span class="sig-name descname"><span class="pre">test_get_shape</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_get_shape" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_get_v">
+<span class="sig-name descname"><span class="pre">test_get_v</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_get_v" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_get_view_dict">
+<span class="sig-name descname"><span class="pre">test_get_view_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_get_view_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_init_sample_indices">
+<span class="sig-name descname"><span class="pre">test_init_sample_indices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_init_sample_indices" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_select_labels">
+<span class="sig-name descname"><span class="pre">test_select_labels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_select_labels" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_select_views_and_labels">
+<span class="sig-name descname"><span class="pre">test_select_views_and_labels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_select_views_and_labels" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Dataset.test_to_numpy_array">
+<span class="sig-name descname"><span class="pre">test_to_numpy_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Dataset.test_to_numpy_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Functions">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_Functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Functions" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Functions.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Functions.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Functions.tearDownClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Functions.tearDownClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Functions.test_datasets_already_exist">
+<span class="sig-name descname"><span class="pre">test_datasets_already_exist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Functions.test_datasets_already_exist" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_dataset.Test_Functions.test_init_multiple_datasets">
+<span class="sig-name descname"><span class="pre">test_init_multiple_datasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_dataset.Test_Functions.test_init_multiple_datasets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-summit.tests.test_utils.test_execution">
+<span id="summit-tests-test-utils-test-execution-module"></span><h2>summit.tests.test_utils.test_execution module<a class="headerlink" href="#module-summit.tests.test_utils.test_execution" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.FakeArg">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeArg</span></span><a class="headerlink" href="#summit.tests.test_utils.test_execution.FakeArg" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_find_dataset_names">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_find_dataset_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_find_dataset_names" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_find_dataset_names.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_find_dataset_names.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_find_dataset_names.tearDownClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_find_dataset_names.tearDownClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_find_dataset_names.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_find_dataset_names.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genArgumentDictionaries">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_genArgumentDictionaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genArgumentDictionaries" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genArgumentDictionaries.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genArgumentDictionaries.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genDirecortiesNames">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_genDirecortiesNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genDirecortiesNames" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genDirecortiesNames.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genDirecortiesNames.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genDirecortiesNames.test_ovo_no_iter">
+<span class="sig-name descname"><span class="pre">test_ovo_no_iter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genDirecortiesNames.test_ovo_no_iter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genDirecortiesNames.test_simple_ovo">
+<span class="sig-name descname"><span class="pre">test_simple_ovo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genDirecortiesNames.test_simple_ovo" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genKFolds">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_genKFolds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genKFolds" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genKFolds.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genKFolds.setUp" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genKFolds.test_genKFolds_iter">
+<span class="sig-name descname"><span class="pre">test_genKFolds_iter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genKFolds.test_genKFolds_iter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genSplits">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_genSplits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genSplits" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genSplits.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genSplits.setUp" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genSplits.test_genSplits_no_iter">
+<span class="sig-name descname"><span class="pre">test_genSplits_no_iter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genSplits.test_genSplits_no_iter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_genSplits.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_genSplits.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_gen_k_folds">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_gen_k_folds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_gen_k_folds" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_gen_k_folds.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_gen_k_folds.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_gen_k_folds.tearDownClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_gen_k_folds.tearDownClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_gen_k_folds.test_list_rs">
+<span class="sig-name descname"><span class="pre">test_list_rs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_gen_k_folds.test_list_rs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_gen_k_folds.test_multple_iters">
+<span class="sig-name descname"><span class="pre">test_multple_iters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_gen_k_folds.test_multple_iters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_gen_k_folds.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_gen_k_folds.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_getDatabaseFunction">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_getDatabaseFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_getDatabaseFunction" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_getDatabaseFunction.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_getDatabaseFunction.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_getDatabaseFunction.test_hdf5">
+<span class="sig-name descname"><span class="pre">test_hdf5</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_getDatabaseFunction.test_hdf5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_getDatabaseFunction.test_plausible_hdf5">
+<span class="sig-name descname"><span class="pre">test_plausible_hdf5</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_getDatabaseFunction.test_plausible_hdf5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_getDatabaseFunction.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_getDatabaseFunction.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_initRandomState">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_initRandomState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_initRandomState" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_initRandomState.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_initRandomState.setUp" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_initRandomState.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_initRandomState.tearDown" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_initRandomState.test_random_state_42">
+<span class="sig-name descname"><span class="pre">test_random_state_42</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_initRandomState.test_random_state_42" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_initRandomState.test_random_state_pickle">
+<span class="sig-name descname"><span class="pre">test_random_state_pickle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_initRandomState.test_random_state_pickle" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_initStatsIterRandomStates">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_initStatsIterRandomStates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_initStatsIterRandomStates" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_initStatsIterRandomStates.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_initStatsIterRandomStates.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_initStatsIterRandomStates.test_multiple_iter">
+<span class="sig-name descname"><span class="pre">test_multiple_iter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_initStatsIterRandomStates.test_multiple_iter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_initStatsIterRandomStates.test_one_statiter">
+<span class="sig-name descname"><span class="pre">test_one_statiter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_initStatsIterRandomStates.test_one_statiter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_init_log_file">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_init_log_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_init_log_file" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_init_log_file.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_init_log_file.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_init_log_file.tearDownClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_init_log_file.tearDownClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_init_log_file.test_debug">
+<span class="sig-name descname"><span class="pre">test_debug</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_init_log_file.test_debug" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_init_log_file.test_no_log">
+<span class="sig-name descname"><span class="pre">test_no_log</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_init_log_file.test_no_log" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_init_log_file.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_init_log_file.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_init_views">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_init_views</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_init_views" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_init_views.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_init_views.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_init_views.tearDownClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_init_views.tearDownClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_init_views.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_init_views.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_parseTheArgs">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_parseTheArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_parseTheArgs" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_parseTheArgs.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_parseTheArgs.setUp" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_execution.Test_parseTheArgs.test_empty_args">
+<span class="sig-name descname"><span class="pre">test_empty_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_execution.Test_parseTheArgs.test_empty_args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-summit.tests.test_utils.test_hyper_parameter_search">
+<span id="summit-tests-test-utils-test-hyper-parameter-search-module"></span><h2>summit.tests.test_utils.test_hyper_parameter_search module<a class="headerlink" href="#module-summit.tests.test_utils.test_hyper_parameter_search" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.FakeEstim">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeEstim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstim" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.FakeEstim.accepts_multi_class">
+<span class="sig-name descname"><span class="pre">accepts_multi_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstim.accepts_multi_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.FakeEstim.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstim.fit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.FakeEstim.gen_distribs">
+<span class="sig-name descname"><span class="pre">gen_distribs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstim.gen_distribs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.FakeEstim.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstim.predict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeEstimMV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV.fit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV.gen_distribs">
+<span class="sig-name descname"><span class="pre">gen_distribs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV.gen_distribs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV.predict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV" title="summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV"><span class="pre">FakeEstimMV</span></a></span></span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV.set_fit_request" title="Link to this definition"></a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">train_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><strong>view_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">view_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV.set_predict_request">
+<span class="sig-name descname"><span class="pre">set_predict_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV" title="summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV"><span class="pre">FakeEstimMV</span></a></span></span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.FakeEstimMV.set_predict_request" title="Link to this definition"></a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">predict</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><strong>view_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">view_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.Test_Grid">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.Test_Grid" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.Test_Grid.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.Test_Grid.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.Test_Grid.test_get_candidate_params">
+<span class="sig-name descname"><span class="pre">test_get_candidate_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.Test_Grid.test_get_candidate_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.Test_Grid.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.Test_Grid.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.Test_Random">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_Random</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.Test_Random" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.Test_Random.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.Test_Random.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.Test_Random.test_fit">
+<span class="sig-name descname"><span class="pre">test_fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.Test_Random.test_fit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.Test_Random.test_fit_multiview">
+<span class="sig-name descname"><span class="pre">test_fit_multiview</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.Test_Random.test_fit_multiview" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.Test_Random.test_fit_multiview_equiv">
+<span class="sig-name descname"><span class="pre">test_fit_multiview_equiv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.Test_Random.test_fit_multiview_equiv" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.Test_Random.test_gets_good_params">
+<span class="sig-name descname"><span class="pre">test_gets_good_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.Test_Random.test_gets_good_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_hyper_parameter_search.Test_Random.test_simple">
+<span class="sig-name descname"><span class="pre">test_simple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_hyper_parameter_search.Test_Random.test_simple" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-summit.tests.test_utils.test_multiclass">
+<span id="summit-tests-test-utils-test-multiclass-module"></span><h2>summit.tests.test_utils.test_multiclass module<a class="headerlink" href="#module-summit.tests.test_utils.test_multiclass" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeDset">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeDset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeDset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeDset.get_nb_samples">
+<span class="sig-name descname"><span class="pre">get_nb_samples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeDset.get_nb_samples" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeEstimNative">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeEstimNative</span></span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeEstimNative" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#summit.tests.test_utils.test_multiclass.FakeMCEstim" title="summit.tests.test_utils.test_multiclass.FakeMCEstim"><code class="xref py py-class docutils literal notranslate"><span class="pre">FakeMCEstim</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeEstimNative.accepts_multi_class">
+<span class="sig-name descname"><span class="pre">accepts_multi_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeEstimNative.accepts_multi_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMCEstim">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeMCEstim</span></span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMCEstim" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMCEstim.accepts_multi_class">
+<span class="sig-name descname"><span class="pre">accepts_multi_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMCEstim.accepts_multi_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMVClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeMVClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">short_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifier" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMVClassifier.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifier.fit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMVClassifier.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifier.predict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMVClassifier.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifier" title="summit.tests.test_utils.test_multiclass.FakeMVClassifier"><span class="pre">FakeMVClassifier</span></a></span></span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifier.set_fit_request" title="Link to this definition"></a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">train_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><strong>view_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">view_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMVClassifier.set_predict_request">
+<span class="sig-name descname"><span class="pre">set_predict_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifier" title="summit.tests.test_utils.test_multiclass.FakeMVClassifier"><span class="pre">FakeMVClassifier</span></a></span></span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifier.set_predict_request" title="Link to this definition"></a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">predict</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><strong>view_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">view_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMVClassifierProb">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeMVClassifierProb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">short_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifierProb" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifier" title="summit.tests.test_utils.test_multiclass.FakeMVClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">FakeMVClassifier</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMVClassifierProb.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifierProb.predict_proba" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMVClassifierProb.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifierProb" title="summit.tests.test_utils.test_multiclass.FakeMVClassifierProb"><span class="pre">FakeMVClassifierProb</span></a></span></span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifierProb.set_fit_request" title="Link to this definition"></a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">train_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><strong>view_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">view_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMVClassifierProb.set_predict_proba_request">
+<span class="sig-name descname"><span class="pre">set_predict_proba_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifierProb" title="summit.tests.test_utils.test_multiclass.FakeMVClassifierProb"><span class="pre">FakeMVClassifierProb</span></a></span></span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifierProb.set_predict_proba_request" title="Link to this definition"></a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code>.</p></li>
+<li><p><strong>view_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">view_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeMVClassifierProb.set_predict_request">
+<span class="sig-name descname"><span class="pre">set_predict_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifierProb" title="summit.tests.test_utils.test_multiclass.FakeMVClassifierProb"><span class="pre">FakeMVClassifierProb</span></a></span></span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeMVClassifierProb.set_predict_request" title="Link to this definition"></a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">predict</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><strong>view_indices</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">view_indices</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeNonProbaEstim">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeNonProbaEstim</span></span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeNonProbaEstim" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#summit.tests.test_utils.test_multiclass.FakeMCEstim" title="summit.tests.test_utils.test_multiclass.FakeMCEstim"><code class="xref py py-class docutils literal notranslate"><span class="pre">FakeMCEstim</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeProbaEstim">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FakeProbaEstim</span></span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeProbaEstim" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#summit.tests.test_utils.test_multiclass.FakeMCEstim" title="summit.tests.test_utils.test_multiclass.FakeMCEstim"><code class="xref py py-class docutils literal notranslate"><span class="pre">FakeMCEstim</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.FakeProbaEstim.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.FakeProbaEstim.predict_proba" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_MultiviewOVOWrapper_fit">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_MultiviewOVOWrapper_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_MultiviewOVOWrapper_fit" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_MultiviewOVOWrapper_fit.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_MultiviewOVOWrapper_fit.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_MultiviewOVOWrapper_fit.test_fit">
+<span class="sig-name descname"><span class="pre">test_fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_MultiviewOVOWrapper_fit.test_fit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_MultiviewOVOWrapper_fit.test_predict">
+<span class="sig-name descname"><span class="pre">test_predict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_MultiviewOVOWrapper_fit.test_predict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_MultiviewOVRWrapper_fit">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_MultiviewOVRWrapper_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_MultiviewOVRWrapper_fit" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_MultiviewOVRWrapper_fit.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_MultiviewOVRWrapper_fit.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_MultiviewOVRWrapper_fit.test_fit">
+<span class="sig-name descname"><span class="pre">test_fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_MultiviewOVRWrapper_fit.test_fit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_MultiviewOVRWrapper_fit.test_predict">
+<span class="sig-name descname"><span class="pre">test_predict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_MultiviewOVRWrapper_fit.test_predict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_get_mc_estim">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Test_get_mc_estim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_get_mc_estim" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_get_mc_estim.setUpClass">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_get_mc_estim.setUpClass" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_biclass">
+<span class="sig-name descname"><span class="pre">test_biclass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_biclass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_multiclass_native">
+<span class="sig-name descname"><span class="pre">test_multiclass_native</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_multiclass_native" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_multiclass_ovo">
+<span class="sig-name descname"><span class="pre">test_multiclass_ovo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_multiclass_ovo" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_multiclass_ovo_multiview">
+<span class="sig-name descname"><span class="pre">test_multiclass_ovo_multiview</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_multiclass_ovo_multiview" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_multiclass_ovr">
+<span class="sig-name descname"><span class="pre">test_multiclass_ovr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_multiclass_ovr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_multiclass_ovr_multiview">
+<span class="sig-name descname"><span class="pre">test_multiclass_ovr_multiview</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_multiclass.Test_get_mc_estim.test_multiclass_ovr_multiview" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-summit.tests.test_utils.test_transormations">
+<span id="summit-tests-test-utils-test-transormations-module"></span><h2>summit.tests.test_utils.test_transormations module<a class="headerlink" href="#module-summit.tests.test_utils.test_transormations" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_transormations.TestFunctions">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TestFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_transormations.TestFunctions" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_transormations.TestFunctions.test_simple_sign">
+<span class="sig-name descname"><span class="pre">test_simple_sign</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_transormations.TestFunctions.test_simple_sign" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.tests.test_utils.test_transormations.TestFunctions.test_simple_unsign">
+<span class="sig-name descname"><span class="pre">test_simple_unsign</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.tests.test_utils.test_transormations.TestFunctions.test_simple_unsign" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-summit.tests.test_utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-summit.tests.test_utils" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

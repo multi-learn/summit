@@ -1,0 +1,38 @@
+:mod:`summit.multiview_platform.multiview_classifiers.early_fusion_lasso`
+=========================================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers.early_fusion_lasso
+
+
+early_fusion_lasso
+------------------
+
+
+.. py:data:: classifier_class_name
+   :value: 'EarlyFusionLasso'
+
+
+.. py:class:: EarlyFusionLasso(random_state=None, alpha=1.0, max_iter=10, warm_start=False, **kwargs)
+
+
+
+   BaseMultiviewClassifier base of Multiview classifiers
+
+   :param random_state: The seed of the pseudo random number multiview_generator to use when
+                        shuffling the data.
+   :type random_state: int seed, RandomState instance, or None (default=None)
+
+
+   .. py:attribute:: param_names
+      :value: ['max_iter', 'alpha', 'random_state']
+
+
+
+   .. py:attribute:: classed_params
+      :value: []
+
+
+
+   .. py:attribute:: distribs
+
+
