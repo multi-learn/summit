@@ -30,11 +30,15 @@ jobs:
           cd docs/source
           sphinx-build -b html . ../build
 
+      - name: Check contents of build directory
+        run: |
+          echo "Listing docs/build:"
+          ls -l docs/build
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/build/html
+          publish_dir: docs/build
           publish_branch: gh-pages
-          force_orphan: true 
-
+          force_orphan: true
