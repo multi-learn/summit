@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # ######### COPYRIGHT #########
 #
 # Copyright(c) 2025
@@ -12,28 +13,33 @@
 # Contributors:
 # ------------
 #
+# * Baptiste Bauvin <baptiste.bauvin_AT_univ-amu.fr>
 # * Sokol Koço <sokol.koco_AT_lis-lab.fr>
 # * Cécile Capponi <cecile.capponi_AT_univ-amu.fr>
 # * Dominique Benielli <dominique.benielli_AT_univ-amu.fr>
-# * Baptiste Bauvin <baptiste.bauvin_AT_univ-amu.fr>
+#
 #
 # Description:
 # -----------
 #
-#
+# Supervised MultiModal Integration Tool's Readme
+# This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- & multi-view algorithms capacity to classify it correctly.
 #
 # Version:
 # -------
 #
-# * multiview_generator version = 0.0.1
+# * summit-multi-learn version = 0.0.2
 #
 # Licence:
 # -------
 #
-# License: New BSD License
+# License: New BSD License : BSD-3-Clause
 #
 #
 # ######### COPYRIGHT #########
+#
+#
+#
 #
 
 from multimodal.kernels.mvml import MVML
