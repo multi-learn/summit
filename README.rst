@@ -89,7 +89,7 @@ The coverage report is automatically generated and stored in the ``htmlcov/`` di
 Building the documentation
 <<<<<<<<<<<<<<<<<<<<<<<<<<
 
-To locally build the `documentation <http://baptiste.bauvin.pages.lis-lab.fr/summit/index.html>`_ run :
+To locally build the `documentation <https://multi-learn.github.io/summit/index.html>`_ run :
 
 .. code:: bash
 
