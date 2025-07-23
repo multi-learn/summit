@@ -9,14 +9,11 @@
     :target: http://baptiste.bauvin.pages.lis-lab.fr/summit/coverage/index.html
     :alt: Coverage
 
-|pipeline| |license| |coverage|
-
-
-
+|pipeline| |license| |coverage| 
 
 Supervised MultiModal Integration Tool's Readme
 ===============================================
-
+.. image :: ./docs/source/_static/Capture_du_2020-04-07_08-12-10.png
 This project aims to be an easy-to-use solution to run a prior benchmark on a dataset and evaluate mono- & multi-view algorithms capacity to classify it correctly.
 
 Getting Started
