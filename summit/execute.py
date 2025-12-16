@@ -74,6 +74,13 @@ def execute(config_path=None):  # pragma: no cover
             "examples",
             "config_files",
             "config_example_1r.yml")
+        elif config_path == "example 1i":
+             config_path = os.path.join(
+            os.path.dirname(
+                os.path.realpath(__file__)),
+            "examples",
+            "config_files",
+            "config_example_1i.yml")
         elif config_path == "example 2.1.1":
             config_path = os.path.join(
                 os.path.dirname(
