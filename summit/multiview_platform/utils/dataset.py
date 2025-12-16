@@ -545,8 +545,6 @@ class HDF5Dataset(Dataset):
             seleted labels' names
         """
         selected_labels = self.get_labels(sample_indices)
-        print("selected labels ", selected_labels)
-        print("self.dataset ", self.dataset["Labels"].attrs["names"])
         if decode:
             return [label_name.decode("utf-8")
                     for label, label_name in

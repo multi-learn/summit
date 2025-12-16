@@ -80,8 +80,8 @@ class Test_get_classic_db_hdf5(unittest.TestCase):
         labels_dataset = self.dataset_file.create_dataset("Labels",
                                                           shape=self.labels.shape,
                                                           data=self.labels)
-        self.labels_names = [str(index) for index in np.unique(self.labels)]
-        labels_dataset.attrs["names"] = [label_name.encode()
+        self.labels_names = [str(index).encode() for index in np.unique(self.labels)]
+        labels_dataset.attrs["names"] = [label_name
                                          for label_name in self.labels_names]
         meta_data_grp = self.dataset_file.create_group("Metadata")
         meta_data_grp.attrs["nbView"] = len(self.views)
@@ -96,8 +96,6 @@ class Test_get_classic_db_hdf5(unittest.TestCase):
         self.assertEqual(dataset.nb_view, 1)
         self.assertEqual(labels_dictionary,
                          {0: "0", 1: "2", 2: "1"})
-        print(labels_dictionary)
-        print(dataset.get_labels())
         self.assertEqual(dataset.get_nb_samples(), 5)
         self.assertEqual(len(np.unique(dataset.get_labels())), 3)
 

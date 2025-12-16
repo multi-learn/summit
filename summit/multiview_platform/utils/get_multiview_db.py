@@ -168,10 +168,13 @@ def get_classic_db_hdf5(views, path_f, name_DB, nb_class, asked_labels_names,
     if full:
         dataset_file = h5py.File(os.path.join(path_f, name_DB + ".hdf5"), "r")
         dataset = HDF5Dataset(hdf5_file=dataset_file)
+
         dataset_name = name_DB
-        labels_dictionary = dict((label_index, label_name)
+        labels_dictionary = dict((label_index, label_name) if not isinstance(label_name, bytes)
+                                    else (label_index, label_name.decode())
                                  for label_index, label_name
-                                 in enumerate(dataset.get_label_names()))
+                                 in enumerate(dataset.get_label_names())) #decode=True
+        print("labels_dictionary", labels_dictionary)
     else:
         dataset_file = h5py.File(os.path.join(path_f, name_DB + ".hdf5"), "r")
         dataset = HDF5Dataset(hdf5_file=dataset_file)
@@ -230,7 +233,7 @@ def get_classic_db_csv(views, pathF, nameDB, NB_CLASS, askedLabelsNames,
                                                                       random_state,
                                                                       full,
                                                                       path_for_new=path_for_new)
-
+    print("labels_dictionary", labelsDictionary)
     return datasetFile, labelsDictionary, dataset_name
 
 #

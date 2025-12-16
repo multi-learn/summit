@@ -98,7 +98,6 @@ class HPSearch:
             return metric
 
     def fit_multiview(self, X, y, groups=None, **fit_params):
-        print(self.available_indices)
         n_splits = self.cv.get_n_splits(self.available_indices,
                                         y[self.available_indices])
         folds = list(

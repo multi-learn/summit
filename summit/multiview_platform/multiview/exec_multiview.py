@@ -310,8 +310,6 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
 
     logging.info("Start:\t Optimizing hyperparameters")
     hps_beg = time.monotonic()
-
-    print(dataset_var.view_dict)
     if hps_method != "None":
         hps_method_class = getattr(hyper_parameter_search, hps_method)
         estimator = getattr(classifier_module, classifier_name)(
@@ -340,7 +338,6 @@ def exec_multiview(directory, dataset_var, name, classification_indices,
     classifier.fit(dataset_var, dataset_var.get_labels(),
                    train_indices=available_indices,
                    view_indices=views_indices)
-    print("pou")
     fit_duration = time.monotonic() - fit_beg
     logging.info("Done:\t Fitting classifier")
 

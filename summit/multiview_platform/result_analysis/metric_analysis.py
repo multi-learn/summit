@@ -148,13 +148,17 @@ def publish_metrics_graphs(metrics_scores, directory, database_name,
                                           database_name,
                                           class_metric_scores[metric_name])
 
+        labels_names_str = [label_name
+                            if not isinstance(label_name, bytes)
+                            else label_name.decode()
+                            for label_name in labels_names]
         plot_metric_scores(train_scores, test_scores, classifier_names,
                            nb_results, metric_name, file_name, database_name,
-                           tag=" vs ".join(labels_names))
+                           tag=" vs ".join(labels_names_str))
 
         class_file_name = file_name+"-class"
         plot_class_metric_scores(class_test_scores, class_file_name,
-                                 labels_names, classifier_names, metric_name)
+                                 labels_names_str, classifier_names, metric_name)
         logging.info(
             "Done:\t Score graph generation for " + metric_name)
     return results
@@ -274,7 +278,8 @@ def plot_metric_scores(train_scores, test_scores, names, nb_results,
                    color="0.8", yerr=train_STDs)
     autolabel(rects, ax, set=1, std=test_STDs)
     autolabel(rect2, ax, set=2, std=train_STDs)
-    ax.legend((rects[0], rect2[0]), ('Test', 'Train'))
+    if len(rects) > 0 and len(rect2) > 0:
+        ax.legend((rects, rect2), ('Test', 'Train'))
     ax.set_ylim(-0.1, 1.1)
     ax.set_xticks(np.arange(nb_results) + barWidth / 2)
     ax.set_xticklabels(names, rotation="vertical")

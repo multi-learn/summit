@@ -72,9 +72,9 @@ class Adaboost(AdaBoostClassifier, BaseMonoviewClassifier):
         AdaBoostClassifier.__init__(self,
                                     random_state=random_state,
                                     n_estimators=n_estimators,
-                                    estimator=estimator,
-                                    algorithm="SAMME"
+                                    estimator=estimator
                                     )
+        # algorithm="SAMME"  removed future deprecated in sklearn
         self.param_names = ["n_estimators", "estimator"]
         self.classed_params = ["estimator"]
         self.distribs = [CustomRandint(low=1, high=500),

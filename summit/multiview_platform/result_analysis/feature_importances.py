@@ -175,7 +175,7 @@ def plot_feature_relevance(file_name, feature_importance,
             for score in score_df.columns:
                 if len(score.split("-")) > 1:
                     algo, view = score.split("-")
-                    feature_importance[algo].loc[[ind for ind in feature_importance.index if ind.startswith(view)]]*=score_df[score]['test']
+                    feature_importance.loc[[ind for ind in feature_importance.index if ind.startswith(view)], algo]*=score_df[score]['test']
                 else:
                     feature_importance[score] *= score_df[score]['test']
     file_name += "_relevance"
