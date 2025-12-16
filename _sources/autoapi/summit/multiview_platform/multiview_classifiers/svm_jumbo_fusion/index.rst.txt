@@ -1,0 +1,62 @@
+:mod:`summit.multiview_platform.multiview_classifiers.svm_jumbo_fusion`
+=======================================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers.svm_jumbo_fusion
+
+
+svm_jumbo_fusion
+----------------
+
+
+.. py:data:: classifier_class_name
+   :value: 'SVMJumboFusion'
+
+
+.. py:class:: SVMJumboFusion(random_state=None, classifiers_names=None, classifier_configs=None, nb_cores=1, weights=None, nb_monoview_per_view=1, C=1.0, kernel='rbf', degree=2, rs=None)
+
+
+
+   This classifier learns monoview classifiers on each view and then uses an
+   SVM on their decisions to aggregate them.
+
+
+   .. py:attribute:: need_probas
+      :value: False
+
+
+
+   .. py:attribute:: aggregation_estimator
+
+
+   .. py:attribute:: C
+      :value: 1.0
+
+
+
+   .. py:attribute:: kernel
+      :value: 'rbf'
+
+
+
+   .. py:attribute:: degree
+      :value: 2
+
+
+
+   .. py:method:: set_params(C=1.0, kernel='rbf', degree=1, **params)
+
+      Set the parameters of this estimator.
+
+      The method works on simple estimators as well as on nested objects
+      (such as :class:`~sklearn.pipeline.Pipeline`). The latter have
+      parameters of the form ``<component>__<parameter>`` so that it's
+      possible to update each component of a nested object.
+
+      :param \*\*params: Estimator parameters.
+      :type \*\*params: dict
+
+      :returns: **self** -- Estimator instance.
+      :rtype: estimator instance
+
+
+

@@ -1,0 +1,29 @@
+:mod:`summit.multiview_platform.multiview_classifiers.bayesian_inference_fusion`
+================================================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers.bayesian_inference_fusion
+
+
+bayesian_inference_fusion
+-------------------------
+
+
+.. py:data:: classifier_class_name
+   :value: 'BayesianInferenceClassifier'
+
+
+.. py:class:: BayesianInferenceClassifier(random_state, classifiers_names=None, classifier_configs=None, nb_cores=1, weights=None, rs=None)
+
+
+
+   
+
+
+   .. py:attribute:: need_probas
+      :value: True
+
+
+
+   .. py:method:: predict(X, sample_indices=None, view_indices=None)
+
+

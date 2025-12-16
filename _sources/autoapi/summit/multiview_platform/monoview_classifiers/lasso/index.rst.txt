@@ -1,0 +1,85 @@
+:mod:`summit.multiview_platform.monoview_classifiers.lasso`
+===========================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.lasso
+
+
+lasso
+-----
+
+
+.. py:data:: classifier_class_name
+   :value: 'Lasso'
+
+
+.. py:class:: Lasso(random_state=None, alpha=1.0, max_iter=10, warm_start=False, **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `Lasso <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html>`_
+
+
+
+
+   .. py:attribute:: param_names
+      :value: ['max_iter', 'alpha', 'random_state']
+
+
+
+   .. py:attribute:: classed_params
+      :value: []
+
+
+
+   .. py:attribute:: distribs
+
+
+   .. py:attribute:: weird_strings
+
+
+   .. py:method:: fit(X, y, check_input=True)
+
+      Fit model with coordinate descent.
+
+      :param X: Data.
+
+                Note that large sparse matrices and arrays requiring `int64`
+                indices are not accepted.
+      :type X: {ndarray, sparse matrix, sparse array} of (n_samples, n_features)
+      :param y: Target. Will be cast to X's dtype if necessary.
+      :type y: ndarray of shape (n_samples,) or (n_samples, n_targets)
+      :param sample_weight: Sample weights. Internally, the `sample_weight` vector will be
+                            rescaled to sum to `n_samples`.
+
+                            .. versionadded:: 0.23
+      :type sample_weight: float or array-like of shape (n_samples,), default=None
+      :param check_input: Allow to bypass several input checking.
+                          Don't use this parameter unless you know what you do.
+      :type check_input: bool, default=True
+
+      :returns: **self** -- Fitted estimator.
+      :rtype: object
+
+      .. rubric:: Notes
+
+      Coordinate descent is an algorithm that considers each column of
+      data at a time hence it will automatically convert the X input
+      as a Fortran-contiguous numpy array if necessary.
+
+      To avoid memory re-allocation it is advised to allocate the
+      initial data in memory directly using that format.
+
+
+
+   .. py:method:: predict(X)
+
+      Predict using the linear model.
+
+      :param X: Samples.
+      :type X: array-like or sparse matrix, shape (n_samples, n_features)
+
+      :returns: **C** -- Returns predicted values.
+      :rtype: array, shape (n_samples,)
+
+
+

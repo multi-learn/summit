@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>summit.multiview_platform.monoview package &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8dde47fa"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/plotly_js.js?v=c3b947fd"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SuMMIT
+              <img src="_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">SuMMIT Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/summit/multiview_platform/monoview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/summit/multiview_platform/multiview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.multiview_classifiers</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">summit.multiview_platform.monoview package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/summit.multiview_platform.monoview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="summit-multiview-platform-monoview-package">
+<h1>summit.multiview_platform.monoview package<a class="headerlink" href="#summit-multiview-platform-monoview-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-summit.multiview_platform.monoview.exec_classif_mono_view">
+<span id="summit-multiview-platform-monoview-exec-classif-mono-view-module"></span><h2>summit.multiview_platform.monoview.exec_classif_mono_view module<a class="headerlink" href="#module-summit.multiview_platform.monoview.exec_classif_mono_view" title="Link to this heading"></a></h2>
+<p>Execution: Script to perform a MonoView classification</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.exec_classif_mono_view.exec_monoview">
+<span class="sig-name descname"><span class="pre">exec_monoview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_folds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_cores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databaseType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hyper_param_search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'accuracy_score*':</span> <span class="pre">{}}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.exec_classif_mono_view.exec_monoview" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.exec_classif_mono_view.exec_monoview_multicore">
+<span class="sig-name descname"><span class="pre">exec_monoview_multicore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_folds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_file_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hyper_param_search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'randomized_search'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[['accuracy_score',</span> <span class="pre">None]]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.exec_classif_mono_view.exec_monoview_multicore" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.exec_classif_mono_view.get_hyper_params">
+<span class="sig-name descname"><span class="pre">get_hyper_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifier_module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_class_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_folds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_cores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">hps_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.exec_classif_mono_view.get_hyper_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.exec_classif_mono_view.init_constants">
+<span class="sig-name descname"><span class="pre">init_constants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.exec_classif_mono_view.init_constants" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.exec_classif_mono_view.init_train_test">
+<span class="sig-name descname"><span class="pre">init_train_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification_indices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.exec_classif_mono_view.init_train_test" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.exec_classif_mono_view.save_results">
+<span class="sig-name descname"><span class="pre">save_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_analysis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_labels_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">images_analysis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confusion_matrix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.exec_classif_mono_view.save_results" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.monoview.monoview_utils">
+<span id="summit-multiview-platform-monoview-monoview-utils-module"></span><h2>summit.multiview_platform.monoview.monoview_utils module<a class="headerlink" href="#module-summit.multiview_platform.monoview.monoview_utils" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseMonoviewClassifier</span></span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.BaseClassifier" title="summit.multiview_platform.utils.base.BaseClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseClassifier</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier.get_feature_importance">
+<span class="sig-name descname"><span class="pre">get_feature_importance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_considered_feats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier.get_feature_importance" title="Link to this definition"></a></dt>
+<dd><p>Used to generate a graph and a pickle dictionary representing
+feature importances</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier.get_interpretation">
+<span class="sig-name descname"><span class="pre">get_interpretation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier.get_interpretation" title="Link to this definition"></a></dt>
+<dd><p>Base method that returns an empty string if there is not interpretation
+method in the classifier’s module</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier.get_name_for_fusion">
+<span class="sig-name descname"><span class="pre">get_name_for_fusion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.BaseMonoviewClassifier.get_name_for_fusion" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.MonoviewResult">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MonoviewResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_labels_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_duration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_duration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_duration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_metric_scores</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.MonoviewResult" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.MonoviewResult.get_classifier_name">
+<span class="sig-name descname"><span class="pre">get_classifier_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.MonoviewResult.get_classifier_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.MonoviewResultAnalyzer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MonoviewResultAnalyzer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_folds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_label_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_cores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.MonoviewResultAnalyzer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="summit.multiview_platform.utils.html#summit.multiview_platform.utils.base.ResultAnalyser" title="summit.multiview_platform.utils.base.ResultAnalyser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResultAnalyser</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.MonoviewResultAnalyzer.get_base_string">
+<span class="sig-name descname"><span class="pre">get_base_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.MonoviewResultAnalyzer.get_base_string" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.MonoviewResultAnalyzer.get_view_specific_info">
+<span class="sig-name descname"><span class="pre">get_view_specific_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.MonoviewResultAnalyzer.get_view_specific_info" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.change_label_to_minus">
+<span class="sig-name descname"><span class="pre">change_label_to_minus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.change_label_to_minus" title="Link to this definition"></a></dt>
+<dd><p>Change the label 0 to minus one</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>y</strong></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>label y with -1 instead of 0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.change_label_to_zero">
+<span class="sig-name descname"><span class="pre">change_label_to_zero</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.change_label_to_zero" title="Link to this definition"></a></dt>
+<dd><p>Change the label -1 to 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>y</strong></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.compute_possible_combinations">
+<span class="sig-name descname"><span class="pre">compute_possible_combinations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.compute_possible_combinations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.gen_test_folds_preds">
+<span class="sig-name descname"><span class="pre">gen_test_folds_preds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">KFolds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.gen_test_folds_preds" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.get_accuracy_graph">
+<span class="sig-name descname"><span class="pre">get_accuracy_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plotted_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Accuracies'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boosting_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_to_one</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.get_accuracy_graph" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.monoview.monoview_utils.percent">
+<span class="sig-name descname"><span class="pre">percent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.monoview.monoview_utils.percent" title="Link to this definition"></a></dt>
+<dd><p>Used to print percentage of importance on the y axis</p>
+</dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.monoview">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-summit.multiview_platform.monoview" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

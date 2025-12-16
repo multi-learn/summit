@@ -1,0 +1,97 @@
+:mod:`summit.multiview_platform.monoview_classifiers.adaboost`
+==============================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.adaboost
+
+
+adaboost
+--------
+
+
+.. py:data:: classifier_class_name
+   :value: 'Adaboost'
+
+
+.. py:class:: Adaboost(random_state=None, n_estimators=50, estimator=None, estimator_config=None, **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `AdaBoostClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier>`_
+
+
+
+   .. py:attribute:: param_names
+      :value: ['n_estimators', 'estimator']
+
+
+
+   .. py:attribute:: classed_params
+      :value: ['estimator']
+
+
+
+   .. py:attribute:: distribs
+
+
+   .. py:attribute:: weird_strings
+
+
+   .. py:attribute:: plotted_metric
+
+
+   .. py:attribute:: plotted_metric_name
+      :value: 'zero_one_loss'
+
+
+
+   .. py:attribute:: step_predictions
+      :value: None
+
+
+
+   .. py:attribute:: estimator_config
+      :value: None
+
+
+
+   .. py:method:: fit(X, y, sample_weight=None)
+
+      Build a boosted classifier/regressor from the training set (X, y).
+
+      :param X: The training input samples. Sparse matrix can be CSC, CSR, COO,
+                DOK, or LIL. COO, DOK, and LIL are converted to CSR.
+      :type X: {array-like, sparse matrix} of shape (n_samples, n_features)
+      :param y: The target values.
+      :type y: array-like of shape (n_samples,)
+      :param sample_weight: Sample weights. If None, the sample weights are initialized to
+                            1 / n_samples.
+      :type sample_weight: array-like of shape (n_samples,), default=None
+
+      :returns: **self** -- Fitted estimator.
+      :rtype: object
+
+
+
+   .. py:method:: predict(X)
+
+      Predict classes for X.
+
+      The predicted class of an input sample is computed as the weighted mean
+      prediction of the classifiers in the ensemble.
+
+      :param X: The training input samples. Sparse matrix can be CSC, CSR, COO,
+                DOK, or LIL. COO, DOK, and LIL are converted to CSR.
+      :type X: {array-like, sparse matrix} of shape (n_samples, n_features)
+
+      :returns: **y** -- The predicted classes.
+      :rtype: ndarray of shape (n_samples,)
+
+
+
+   .. py:method:: get_interpretation(directory, base_file_name, y_test, feature_ids, multi_class=False)
+
+      Base method that returns an empty string if there is not interpretation
+      method in the classifier's module
+
+
+

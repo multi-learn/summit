@@ -1,0 +1,55 @@
+:mod:`summit.multiview_platform.multiview_classifiers`
+======================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers
+
+
+Available multiview classifiers
+-------------------------------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   bayesian_inference_fusion/index.rst
+
+   difficulty_fusion/index.rst
+
+   disagree_fusion/index.rst
+
+   double_fault_fusion/index.rst
+
+   early_fusion_adaboost/index.rst
+
+   early_fusion_decision_tree/index.rst
+
+   early_fusion_gradient_boosting/index.rst
+
+   early_fusion_lasso/index.rst
+
+   early_fusion_random_forest/index.rst
+
+   early_fusion_sgd/index.rst
+
+   early_fusion_svm_rbf/index.rst
+
+   entropy_fusion/index.rst
+
+   lp_norm_mkl/index.rst
+
+   majority_voting_fusion/index.rst
+
+   mucombo/index.rst
+
+   mumbo/index.rst
+
+   mvml/index.rst
+
+   svm_jumbo_fusion/index.rst
+
+   weighted_linear_early_fusion/index.rst
+
+   weighted_linear_late_fusion/index.rst
+
+
+

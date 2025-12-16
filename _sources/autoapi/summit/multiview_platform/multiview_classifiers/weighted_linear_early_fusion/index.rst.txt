@@ -1,0 +1,108 @@
+:mod:`summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion`
+===================================================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers.weighted_linear_early_fusion
+
+
+weighted_linear_early_fusion
+----------------------------
+
+
+.. py:data:: classifier_class_name
+   :value: 'WeightedLinearEarlyFusion'
+
+
+.. py:class:: WeightedLinearEarlyFusion(random_state=None, view_weights=None, monoview_classifier_name='decision_tree', monoview_classifier_config={})
+
+
+
+   Builds a monoview dataset by concatenating the views (with a weight if
+   needed) and learns a monoview classifier on the concatenation
+
+
+   .. py:attribute:: view_weights
+      :value: None
+
+
+
+   .. py:attribute:: monoview_classifier_name
+      :value: 'decision_tree'
+
+
+
+   .. py:attribute:: short_name
+      :value: 'early_fusion'
+
+
+
+   .. py:attribute:: monoview_classifier_config
+
+
+   .. py:attribute:: monoview_classifier
+
+
+   .. py:attribute:: param_names
+      :value: ['monoview_classifier_name', 'monoview_classifier_config']
+
+
+
+   .. py:attribute:: distribs
+
+
+   .. py:attribute:: classed_params
+      :value: []
+
+
+
+   .. py:attribute:: weird_strings
+
+
+   .. py:method:: set_params(monoview_classifier_name='decision_tree', monoview_classifier_config={}, **params)
+
+      Set the parameters of this estimator.
+
+      The method works on simple estimators as well as on nested objects
+      (such as :class:`~sklearn.pipeline.Pipeline`). The latter have
+      parameters of the form ``<component>__<parameter>`` so that it's
+      possible to update each component of a nested object.
+
+      :param \*\*params: Estimator parameters.
+      :type \*\*params: dict
+
+      :returns: **self** -- Estimator instance.
+      :rtype: estimator instance
+
+
+
+   .. py:method:: get_params(deep=True)
+
+      Get parameters for this estimator.
+
+      :param deep: If True, will return the parameters for this estimator and
+                   contained subobjects that are estimators.
+      :type deep: bool, default=True
+
+      :returns: **params** -- Parameter names mapped to their values.
+      :rtype: dict
+
+
+
+   .. py:method:: fit(X, y, train_indices=None, view_indices=None)
+
+
+   .. py:method:: predict(X, sample_indices=None, view_indices=None)
+
+
+   .. py:method:: transform_data_to_monoview(dataset, sample_indices, view_indices)
+
+      Here, we extract the data from the HDF5 dataset file and store all
+      the concatenated views in one variable
+
+
+
+   .. py:method:: hdf5_to_monoview(dataset, samples)
+
+      Here, we concatenate the views for the asked samples
+
+
+

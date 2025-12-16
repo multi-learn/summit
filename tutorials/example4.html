@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taking control : Use your own dataset &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8dde47fa"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/plotly_js.js?v=c3b947fd"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Taking control : Use your own algorithms" href="example5.html" />
+    <link rel="prev" title="Example 3 : Understanding the statistical iterations" href="example3.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SuMMIT
+              <img src="../_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">SuMMIT Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Install SuMMIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example0.html">Example 0 : Getting started with SuMMIT on MNist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example1.html">Example 1 : First big step with SuMMIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example2.html">Example 2 : Understanding the hyper-parameter optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example3.html">Example 3 : Understanding the statistical iterations</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Taking control : Use your own dataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-bare-necessities">The bare necessities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-dataset-structure">The dataset structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hdf5-conversion">HDF5 conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-additional-information-on-the-samples">Adding additional information on the samples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example5.html">Taking control : Use your own algorithms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/monoview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/multiview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.multiview_classifiers</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">SuMMIT Tutorials</a></li>
+      <li class="breadcrumb-item active">Taking control : Use your own dataset</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/example4.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="taking-control-use-your-own-dataset">
+<h1>Taking control : Use your own dataset<a class="headerlink" href="#taking-control-use-your-own-dataset" title="Link to this heading"></a></h1>
+<p>While developing this platform, the goal has been to be able to use it relatively easily on different datasets.
+In order to do so, a fixed input format is used, and we chose HDF5 as it allows to store a multiview dataset and its metadata in a single file, while being able to load it partially.</p>
+<section id="the-bare-necessities">
+<h2>The bare necessities<a class="headerlink" href="#the-bare-necessities" title="Link to this heading"></a></h2>
+<p>At the moment, in order for the platform to work, the dataset must satisfy the following minimum requirements :</p>
+<ul class="simple">
+<li><p>Each sample must be described in each view, with no missing data (you can use external tools to fill the gaps, or use only the fully-described samples of your dataset)</p></li>
+</ul>
+</section>
+<section id="the-dataset-structure">
+<h2>The dataset structure<a class="headerlink" href="#the-dataset-structure" title="Link to this heading"></a></h2>
+<p>Let’s suppose that one has a multiview dataset consisting of 3 views describing 200 samples:</p>
+<ol class="arabic simple">
+<li><p>A sound recoding of each sample, described by 100 features,</p></li>
+<li><p>An image of each sample, described by 40 features,</p></li>
+<li><p>A written commentary for each sample, described by 55 features.</p></li>
+</ol>
+<p>So three matrices (200x100 ; 200x40 ; 200x55) make up the dataset. The most usual way to save matrices are <cite>.csv</cite> files. So let us suppose that one has</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sound.csv</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">image.csv</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">commentary.csv</span></code>.</p></li>
+</ol>
+<p>Let us suppose that all this data should be used to classify the examples in three classes : “Human”, “Animal” or “Object”  and that on has a <code class="docutils literal notranslate"><span class="pre">labels.csv</span></code> file with one value for each sample, 0 if the sample is a human, 1 if it is an animal an 2 if it is an object.</p>
+<p>In order to run a benchmark on this dataset, one has to format it using HDF5.</p>
+</section>
+<section id="hdf5-conversion">
+<h2>HDF5 conversion<a class="headerlink" href="#hdf5-conversion" title="Link to this heading"></a></h2>
+<p>We will use here a <a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/format_dataset.py">python script</a>, provided with the platform to convert the dataset in the right format :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</pre></div>
+</div>
+<p>Let’s define the variables that will be used to load the csv matrices :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The following variables are defined as an example, you should modify them to fit your dataset files.</span>
+<span class="n">view_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sound&quot;</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;commentary&quot;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">data_file_paths</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;path/to/sound.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;path/to/image.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;path/to/commentary.csv&quot;</span><span class="p">,]</span>
+<span class="n">labels_file_path</span> <span class="o">=</span> <span class="s2">&quot;path/to/labels/file.csv&quot;</span>
+<span class="n">sample_ids_path</span> <span class="o">=</span> <span class="s2">&quot;path/to/sample_ids/file.csv&quot;</span>
+<span class="n">labels_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Human&quot;</span><span class="p">,</span> <span class="s2">&quot;Animal&quot;</span><span class="p">,</span> <span class="s2">&quot;Object&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Let’s create the HDF5 file :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># HDF5 dataset initialization :</span>
+<span class="n">hdf5_file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s2">&quot;path/to/file.hdf5&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, for each view, create an HDF5 dataset :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">view_index</span><span class="p">,</span> <span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">view_name</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">data_file_paths</span><span class="p">,</span> <span class="n">view_names</span><span class="p">)):</span>
+    <span class="c1"># Get the view&#39;s data from the csv file</span>
+    <span class="n">view_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Store it in a dataset in the hdf5 file,</span>
+    <span class="c1"># do not modify the name of the dataset</span>
+    <span class="n">view_dataset</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;View</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">view_index</span><span class="p">),</span>
+                                            <span class="n">shape</span><span class="o">=</span><span class="n">view_data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+                                            <span class="n">data</span><span class="o">=</span><span class="n">view_data</span><span class="p">)</span>
+    <span class="c1"># Store the name of the view in an attribute,</span>
+    <span class="c1"># do not modify the attribute&#39;s key</span>
+    <span class="n">view_dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">view_name</span>
+
+    <span class="c1"># This is an artifact of work in progress for sparse support, not available ATM,</span>
+    <span class="c1"># do not modify the attribute&#39;s key</span>
+    <span class="n">view_dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;sparse&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+<p>Let’s now create the labels dataset (here also, be sure that the labels are correctly ordered).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get le labels data from a csv file</span>
+<span class="n">labels_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">labels_file_path</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+<span class="c1"># Here, we supposed that the labels file contained numerical labels (0,1,2)</span>
+<span class="c1"># that refer to the label names of label_names.</span>
+<span class="c1"># The Labels HDF5 dataset must contain only integers that represent the</span>
+<span class="c1"># different classes, the names of each class are saved in an attribute</span>
+
+<span class="c1"># Store the integer labels in the HDF5 dataset,</span>
+<span class="c1"># do not modify the name of the dataset</span>
+<span class="n">labels_dset</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Labels&quot;</span><span class="p">,</span>
+                                       <span class="n">shape</span><span class="o">=</span><span class="n">labels_data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+                                       <span class="n">data</span><span class="o">=</span><span class="n">labels_data</span><span class="p">)</span>
+<span class="c1"># Save the labels names in an attribute as encoded strings,</span>
+<span class="c1"># do not modify the attribute&#39;s key</span>
+<span class="n">labels_dset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">label_name</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span> <span class="k">for</span> <span class="n">label_name</span> <span class="ow">in</span> <span class="n">labels_names</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Be sure to sort the label names in the right order (the label must be the same as the list’s index, here 0 is “Human”, and also <code class="code highlight python docutils literal highlight-python"><span class="n">labels_dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></code>)</p>
+<p>Let’s now store the metadata :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a Metadata HDF5 group to store the metadata,</span>
+<span class="c1"># do not modify the name of the group</span>
+<span class="n">metadata_group</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Metadata&quot;</span><span class="p">)</span>
+
+<span class="c1"># Store the number of views in the dataset,</span>
+<span class="c1"># do not modify the attribute&#39;s key</span>
+<span class="n">metadata_group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;nbView&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">view_names</span><span class="p">)</span>
+
+<span class="c1"># Store the number of classes in the dataset,</span>
+<span class="c1"># do not modify the attribute&#39;s key</span>
+<span class="n">metadata_group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;nbClass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels_data</span><span class="p">)</span>
+
+<span class="c1"># Store the number of samples in the dataset,</span>
+<span class="c1"># do not modify the attribute&#39;s key</span>
+<span class="n">metadata_group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;datasetLength&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Here, we store</p>
+<ul class="simple">
+<li><p>The number of views in the <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;nbView&quot;</span></code> attribute,</p></li>
+<li><p>The number of different labels in the <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;nbClass&quot;</span></code> attribute,</p></li>
+<li><p>The number of samples in the <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;datasetLength&quot;</span></code> attribute.</p></li>
+</ul>
+<p>Now, the dataset is ready to be used in the platform.
+Let’s suppose it is stored in <code class="docutils literal notranslate"><span class="pre">path/to/file.hdf5</span></code>, then by setting the <code class="docutils literal notranslate"><span class="pre">pathf:</span></code> line of the config file to
+<code class="docutils literal notranslate"><span class="pre">pathf:</span> <span class="pre">path/to/</span></code> and the <code class="docutils literal notranslate"><span class="pre">name:</span></code> line to <code class="docutils literal notranslate"><span class="pre">name:</span> <span class="pre">[&quot;file.hdf5&quot;]</span></code>, the benchmark will run on the created dataset.</p>
+</section>
+<section id="adding-additional-information-on-the-samples">
+<h2>Adding additional information on the samples<a class="headerlink" href="#adding-additional-information-on-the-samples" title="Link to this heading"></a></h2>
+<p>In order to be able to analyze the results with more clarity, one can add the samples IDs to the dataset, by adding a dataset to the metadata group.</p>
+<p>Let’s suppose that the objects we are trying to classify between “Human”, “Animal” and “Object” are all people, bears, cars, planes, and birds. And that one has a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file with an ID for each of them (<code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;john_115&quot;</span><span class="p">,</span> <span class="s2">&quot;doe_562&quot;</span><span class="p">,</span> <span class="s2">&quot;bear_112&quot;</span><span class="p">,</span> <span class="s2">&quot;plane_452&quot;</span><span class="p">,</span> <span class="s2">&quot;bird_785&quot;</span><span class="p">,</span> <span class="s2">&quot;car_369&quot;</span><span class="p">,</span> <span class="o">...</span></code> for example)</p>
+<p>Then as long as the IDs order corresponds to the sample order in the lines of the previous matrices, to add the IDs in the hdf5 file, just add :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let us suppose that the samples have string ids, available in a csv file,</span>
+<span class="c1"># they can be stored in the HDF5 and will be used in the result analysis.</span>
+<span class="n">sample_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">sample_ids_path</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+<span class="c1"># To sore the strings in an HDF5 dataset, be sure to use the S&lt;max_length&gt; type,</span>
+<span class="c1"># do not modify the name of the dataset.</span>
+<span class="n">metadata_group</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;sample_ids&quot;</span><span class="p">,</span>
+                              <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_ids</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s2">&quot;S100&quot;</span><span class="p">)),</span>
+                              <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s2">&quot;S100&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Be sure to keep the name <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;sample_ids&quot;</span></code>, as it is mandatory for the platform to find the dataset in the file.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="example3.html" class="btn btn-neutral float-left" title="Example 3 : Understanding the statistical iterations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="example5.html" class="btn btn-neutral float-right" title="Taking control : Use your own algorithms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

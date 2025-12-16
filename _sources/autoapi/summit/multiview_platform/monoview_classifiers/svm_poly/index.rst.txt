@@ -1,0 +1,31 @@
+:mod:`summit.multiview_platform.monoview_classifiers.svm_poly`
+==============================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.svm_poly
+
+
+svm_poly
+--------
+
+
+.. py:data:: classifier_class_name
+   :value: 'SVMPoly'
+
+
+.. py:class:: SVMPoly(random_state=None, C=1.0, degree=3, **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `SVC <https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_
+
+   Here, it is the polynomial kernel version
+
+
+   .. py:attribute:: param_names
+      :value: ['C', 'degree', 'random_state']
+
+
+
+   .. py:attribute:: distribs
+
+

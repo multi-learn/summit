@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>summit.multiview_platform.metrics package &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8dde47fa"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/plotly_js.js?v=c3b947fd"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SuMMIT
+              <img src="_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">SuMMIT Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/summit/multiview_platform/monoview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/summit/multiview_platform/multiview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.multiview_classifiers</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">summit.multiview_platform.metrics package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/summit.multiview_platform.metrics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="summit-multiview-platform-metrics-package">
+<h1>summit.multiview_platform.metrics package<a class="headerlink" href="#summit-multiview-platform-metrics-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-summit.multiview_platform.metrics.accuracy_score">
+<span id="summit-multiview-platform-metrics-accuracy-score-module"></span><h2>summit.multiview_platform.metrics.accuracy_score module<a class="headerlink" href="#module-summit.multiview_platform.metrics.accuracy_score" title="Link to this heading"></a></h2>
+<p>Functions :
+score: to get the accuracy score
+get_scorer: returns a sklearn scorer for grid search</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.accuracy_score.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.accuracy_score.get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.accuracy_score.get_scorer">
+<span class="sig-name descname"><span class="pre">get_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.accuracy_score.get_scorer" title="Link to this definition"></a></dt>
+<dd><p>Keyword Arguments:
+“0”: weights to compute accuracy</p>
+<p>Returns:
+A weighted sklearn scorer for accuracy</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.accuracy_score.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.accuracy_score.score" title="Link to this definition"></a></dt>
+<dd><p>Arguments:
+y_true: real labels
+y_pred: predicted labels</p>
+<p>Keyword Arguments:
+“0”: weights to compute accuracy</p>
+<p>Returns:
+Weighted accuracy score for y_true, y_pred</p>
+</dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.metrics.f1_score">
+<span id="summit-multiview-platform-metrics-f1-score-module"></span><h2>summit.multiview_platform.metrics.f1_score module<a class="headerlink" href="#module-summit.multiview_platform.metrics.f1_score" title="Link to this heading"></a></h2>
+<p>Functions :
+score: to get the f1 score
+get_scorer: returns a sklearn scorer for grid search</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.f1_score.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.f1_score.get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.f1_score.get_scorer">
+<span class="sig-name descname"><span class="pre">get_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.f1_score.get_scorer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.f1_score.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.f1_score.score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.metrics.fbeta_score">
+<span id="summit-multiview-platform-metrics-fbeta-score-module"></span><h2>summit.multiview_platform.metrics.fbeta_score module<a class="headerlink" href="#module-summit.multiview_platform.metrics.fbeta_score" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.fbeta_score.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.fbeta_score.get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.fbeta_score.get_scorer">
+<span class="sig-name descname"><span class="pre">get_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.fbeta_score.get_scorer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.fbeta_score.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.fbeta_score.score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.metrics.hamming_loss">
+<span id="summit-multiview-platform-metrics-hamming-loss-module"></span><h2>summit.multiview_platform.metrics.hamming_loss module<a class="headerlink" href="#module-summit.multiview_platform.metrics.hamming_loss" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.hamming_loss.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.hamming_loss.get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.hamming_loss.get_scorer">
+<span class="sig-name descname"><span class="pre">get_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.hamming_loss.get_scorer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.hamming_loss.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.hamming_loss.score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.metrics.jaccard_score">
+<span id="summit-multiview-platform-metrics-jaccard-score-module"></span><h2>summit.multiview_platform.metrics.jaccard_score module<a class="headerlink" href="#module-summit.multiview_platform.metrics.jaccard_score" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.jaccard_score.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.jaccard_score.get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.jaccard_score.get_scorer">
+<span class="sig-name descname"><span class="pre">get_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.jaccard_score.get_scorer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.jaccard_score.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.jaccard_score.score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.metrics.log_loss">
+<span id="summit-multiview-platform-metrics-log-loss-module"></span><h2>summit.multiview_platform.metrics.log_loss module<a class="headerlink" href="#module-summit.multiview_platform.metrics.log_loss" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.log_loss.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.log_loss.get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.log_loss.get_scorer">
+<span class="sig-name descname"><span class="pre">get_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.log_loss.get_scorer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.log_loss.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.log_loss.score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.metrics.matthews_corrcoef">
+<span id="summit-multiview-platform-metrics-matthews-corrcoef-module"></span><h2>summit.multiview_platform.metrics.matthews_corrcoef module<a class="headerlink" href="#module-summit.multiview_platform.metrics.matthews_corrcoef" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.matthews_corrcoef.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.matthews_corrcoef.get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.matthews_corrcoef.get_scorer">
+<span class="sig-name descname"><span class="pre">get_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.matthews_corrcoef.get_scorer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.matthews_corrcoef.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.matthews_corrcoef.score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.metrics.precision_score">
+<span id="summit-multiview-platform-metrics-precision-score-module"></span><h2>summit.multiview_platform.metrics.precision_score module<a class="headerlink" href="#module-summit.multiview_platform.metrics.precision_score" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.precision_score.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.precision_score.get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.precision_score.get_scorer">
+<span class="sig-name descname"><span class="pre">get_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.precision_score.get_scorer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.precision_score.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.precision_score.score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.metrics.recall_score">
+<span id="summit-multiview-platform-metrics-recall-score-module"></span><h2>summit.multiview_platform.metrics.recall_score module<a class="headerlink" href="#module-summit.multiview_platform.metrics.recall_score" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.recall_score.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.recall_score.get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.recall_score.get_scorer">
+<span class="sig-name descname"><span class="pre">get_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.recall_score.get_scorer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.recall_score.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.recall_score.score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.metrics.roc_auc_score">
+<span id="summit-multiview-platform-metrics-roc-auc-score-module"></span><h2>summit.multiview_platform.metrics.roc_auc_score module<a class="headerlink" href="#module-summit.multiview_platform.metrics.roc_auc_score" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.roc_auc_score.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.roc_auc_score.get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.roc_auc_score.get_scorer">
+<span class="sig-name descname"><span class="pre">get_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.roc_auc_score.get_scorer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.roc_auc_score.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.roc_auc_score.score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.metrics.zero_one_loss">
+<span id="summit-multiview-platform-metrics-zero-one-loss-module"></span><h2>summit.multiview_platform.metrics.zero_one_loss module<a class="headerlink" href="#module-summit.multiview_platform.metrics.zero_one_loss" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.zero_one_loss.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.zero_one_loss.get_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.zero_one_loss.get_scorer">
+<span class="sig-name descname"><span class="pre">get_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.zero_one_loss.get_scorer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.metrics.zero_one_loss.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.metrics.zero_one_loss.score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.metrics">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-summit.multiview_platform.metrics" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

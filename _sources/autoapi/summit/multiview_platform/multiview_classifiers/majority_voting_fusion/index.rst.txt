@@ -1,0 +1,36 @@
+:mod:`summit.multiview_platform.multiview_classifiers.majority_voting_fusion`
+=============================================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers.majority_voting_fusion
+
+
+majority_voting_fusion
+----------------------
+
+
+.. py:data:: classifier_class_name
+   :value: 'MajorityVoting'
+
+
+.. py:exception:: VotingIndecision
+
+
+
+   Common base class for all non-exit exceptions.
+
+
+.. py:class:: MajorityVoting(random_state, classifiers_names=None, classifier_configs=None, weights=None, nb_cores=1, rs=None)
+
+
+
+   This classifier is a late fusion that builds a majority vote between the views
+
+
+   .. py:attribute:: need_probas
+      :value: False
+
+
+
+   .. py:method:: predict(X, sample_indices=None, view_indices=None)
+
+

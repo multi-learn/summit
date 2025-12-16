@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taking control : Use your own algorithms &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8dde47fa"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/plotly_js.js?v=c3b947fd"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Documentation" href="../api.html" />
+    <link rel="prev" title="Taking control : Use your own dataset" href="example4.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SuMMIT
+              <img src="../_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">SuMMIT Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Install SuMMIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example0.html">Example 0 : Getting started with SuMMIT on MNist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example1.html">Example 1 : First big step with SuMMIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example2.html">Example 2 : Understanding the hyper-parameter optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example3.html">Example 3 : Understanding the statistical iterations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example4.html">Taking control : Use your own dataset</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Taking control : Use your own algorithms</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simple-task-adding-a-monoview-classifier">Simple task : Adding a monoview classifier</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#make-it-work">Make it work</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interpretation">Interpretation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#more-complex-task-adding-a-multiview-classifier">More complex task : Adding a multiview classifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#manipulate-the-dataset-object">Manipulate the dataset object</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#get-v">get_v</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/monoview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/multiview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.multiview_classifiers</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">SuMMIT Tutorials</a></li>
+      <li class="breadcrumb-item active">Taking control : Use your own algorithms</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/example5.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="taking-control-use-your-own-algorithms">
+<h1>Taking control : Use your own algorithms<a class="headerlink" href="#taking-control-use-your-own-algorithms" title="Link to this heading"></a></h1>
+<p>One of the main goals of this platform is to be able to add a classifier to it without modifying the main code.</p>
+<section id="simple-task-adding-a-monoview-classifier">
+<h2>Simple task : Adding a monoview classifier<a class="headerlink" href="#simple-task-adding-a-monoview-classifier" title="Link to this heading"></a></h2>
+<section id="make-it-work">
+<h3>Make it work<a class="headerlink" href="#make-it-work" title="Link to this heading"></a></h3>
+<p>Let’s say we want to add a monoview classifier called “name_me” to the platform in order to compare it to the other available ones.
+Let’s suppose that we have a python module <code class="docutils literal notranslate"><span class="pre">algo_module.py</span></code> in which name_me is defined in the class <code class="code highlight python docutils literal highlight-python"><span class="n">Algo</span></code> following <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code>’s <a class="reference external" href="https://scikit-learn.org/stable/developers/index.html">guidelines</a> .</p>
+<p>To add “algo” to the platform, let’s create a file called <code class="docutils literal notranslate"><span class="pre">algo.py</span></code> in <code class="docutils literal notranslate"><span class="pre">summit/multiview_platform/monoview_classifiers/</span></code></p>
+<p>In this file let’s define the class <code class="code highlight python docutils literal highlight-python"><span class="n">AlgoClassifier</span></code>, inheriting from <code class="code highlight python docutils literal highlight-python"><span class="n">Algo</span></code> and <a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/multiview_platform/monoview/monoview_utils.py#L115">BaseMonoviewClassifier</a> that contains the required methods for SuMMIT.</p>
+<p>Moreover, one has to add a variable called <code class="code highlight python docutils literal highlight-python"><span class="n">classifier_class_name</span></code> that contains the class name (here <code class="docutils literal notranslate"><span class="pre">'AlgoClassifier'</span></code>)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">Algo</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..monoview.monoview_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseMonoviewClassifier</span>
+
+<span class="n">classifier_class_name</span> <span class="o">=</span> <span class="s2">&quot;AlgoClassifier&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AlgoClassifier</span><span class="p">(</span><span class="n">Algo</span><span class="p">,</span> <span class="n">BaseMonoviewClassifier</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>To be able to use the randomized hyper-parameter optimization, we need to provide some information in the <code class="code highlight python docutils literal highlight-python"><span class="fm">__init__</span><span class="p">()</span></code> method.
+Indeed, all the algorithms included in the platform must provide two hyper-parameter-related attributes :</p>
+<ul class="simple">
+<li><p><code class="code highlight python docutils literal highlight-python"><span class="bp">self</span><span class="o">.</span><span class="n">param_names</span></code> that contain the name of the hyper-parameters that have to be optimized (they must correspond to the name of the attributes of the class <code class="code highlight python docutils literal highlight-python"><span class="n">Algo</span></code>)</p></li>
+<li><p><code class="code highlight python docutils literal highlight-python"><span class="bp">self</span><span class="o">.</span><span class="n">distribs</span></code> that contain the distributions for each of these hyper-parameters.</p></li>
+</ul>
+<p>For example, let’s suppose that name_me need three hyper-parameters and a random state parameter allowing reproducibility :</p>
+<ul class="simple">
+<li><p><code class="code highlight python docutils literal highlight-python"><span class="n">trade_off</span></code> that is a float between 0 and 1,</p></li>
+<li><p><code class="code highlight python docutils literal highlight-python"><span class="n">norm_type</span></code> that is a string in <code class="code highlight python docutils literal highlight-python"><span class="p">[</span><span class="s2">&quot;l1&quot;</span><span class="p">,</span> <span class="s2">&quot;l2&quot;</span><span class="p">]</span></code>,</p></li>
+<li><p><code class="code highlight python docutils literal highlight-python"><span class="n">max_depth</span></code> that is an integer between 0 and 100.</p></li>
+</ul>
+<p>Then, the <code class="code highlight python docutils literal highlight-python"><span class="fm">__init__</span><span class="p">()</span></code> method of the <code class="code highlight python docutils literal highlight-python"><span class="n">AlgoClassifier</span></code> class wil be :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">Algo</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..monoview.monoview_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseMonoviewClassifier</span><span class="p">,</span> <span class="n">CustomUniform</span><span class="p">,</span> <span class="n">CustomRandint</span>
+
+<span class="n">classifier_class_name</span> <span class="o">=</span> <span class="s2">&quot;AlgoClassifier&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AlgoClassifier</span><span class="p">(</span><span class="n">Algo</span><span class="p">,</span> <span class="n">BaseMonoviewClassifier</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_sate</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">trade_off</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">norm_type</span><span class="o">=</span><span class="s1">&#39;l1&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">AlgoClassifier</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">random_sate</span><span class="o">=</span><span class="n">random_sate</span><span class="p">,</span>
+                                             <span class="n">trade_off</span><span class="o">=</span><span class="n">trade_off</span><span class="p">,</span>
+                                             <span class="n">norm_type</span><span class="o">=</span><span class="n">norm_type</span><span class="p">,</span>
+                                             <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;trade_off&quot;</span><span class="p">,</span> <span class="s2">&quot;norm_type&quot;</span><span class="p">,</span> <span class="s2">&quot;max_depth&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distribs</span> <span class="o">=</span> <span class="p">[</span><span class="n">CustomUniform</span><span class="p">(),</span>
+                         <span class="p">[</span><span class="s2">&quot;l1&quot;</span><span class="p">,</span> <span class="s2">&quot;l2&quot;</span><span class="p">],</span>
+                         <span class="n">CustomRandint</span><span class="p">()]</span>
+</pre></div>
+</div>
+<p>In this method, we added the needed attributes. See REF TO DOC OF DISTRIBS for the documentation on the used distributions.</p>
+<p>If “algo” is implemented in a sklearn fashion, it is now usable in the platform.</p>
+</section>
+<section id="interpretation">
+<h3>Interpretation<a class="headerlink" href="#interpretation" title="Link to this heading"></a></h3>
+<p>It is possible to provide some information about the decision process of the algorithm in the <code class="code highlight python docutils literal highlight-python"><span class="n">get_interpretation</span></code> method.</p>
+<p>It inputs four arguments :</p>
+<ul class="simple">
+<li><p><code class="code highlight python docutils literal highlight-python"><span class="n">directory</span></code>, a string containing the directory where figures should be sotred</p></li>
+<li><p><code class="code highlight python docutils literal highlight-python"><span class="n">base_file_name</span></code>, a string containing the file name prefix that should be used to store figures</p></li>
+<li><p><code class="code highlight python docutils literal highlight-python"><span class="n">y_test</span></code>, an array containing the labels of the test set</p></li>
+<li><p><code class="code highlight python docutils literal highlight-python"><span class="n">multiclass</span></code> a boolean that is True if the target is multiclass</p></li>
+</ul>
+<p>This method must return a string that will be appended to the summary file.</p>
+<p>An example of method can be :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_interpretation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">base_file_name</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span>
+                       <span class="n">multiclass</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">interpret_string</span> <span class="o">=</span> <span class="s2">&quot;Algo is a very relevant algorithm that used all the features to classify&quot;</span>
+    <span class="c1"># Save a figure in os.path.join(directory, base_file_name+figure_name.png&quot;)</span>
+    <span class="k">return</span> <span class="n">interpretString</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="more-complex-task-adding-a-multiview-classifier">
+<h2>More complex task : Adding a multiview classifier<a class="headerlink" href="#more-complex-task-adding-a-multiview-classifier" title="Link to this heading"></a></h2>
+<p>This part is a bit more complex as to the best of our knowledge, there is no consensus regarding a multiview input for a classifier.</p>
+<p>The first step of the integration of a multiview classifier is very similar to the monoview one let us suppose one wants to add “new mv algo”, that is implemented in the class <cite>NewMVAlgo</cite>. To do so, create a “new_mv_algo.py” file in <code class="docutils literal notranslate"><span class="pre">summit/multiview_platform/multiview_classifiers/</span></code>.</p>
+<p>In this file let’s define the class <code class="code highlight python docutils literal highlight-python"><span class="n">NewMVAlgoClassifier</span></code>, inheriting from <code class="code highlight python docutils literal highlight-python"><span class="n">NewMVAlgo</span></code> and <a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/multiview_platform/multiview/multiview_utils.py#L16">BaseMultiviewClassifier</a> that contains the required methods for the platform.</p>
+<p>Moreover, one has to add a variable called <code class="code highlight python docutils literal highlight-python"><span class="n">classifier_class_name</span></code> that contains the class name (here <code class="docutils literal notranslate"><span class="pre">'NewMVAlgoClassifier'</span></code>)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">new_mv_algo_module</span><span class="w"> </span><span class="kn">import</span> <span class="n">NewMVAlgo</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..multiview.multiview_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseMultiviewClassifier</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.hyper_parameter_search</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomRandint</span>
+
+<span class="n">classifier_class_name</span> <span class="o">=</span> <span class="s2">&quot;NewMVAlgoClassifier&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NewMVAlgoClassifier</span><span class="p">(</span><span class="n">BaseMultiviewClassifier</span><span class="p">,</span> <span class="n">NewMVAlgo</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_1</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                     <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">param_2</span><span class="o">=</span><span class="s2">&quot;edge&quot;</span><span class="p">):</span>
+            <span class="n">BaseMultiviewClassifier</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_state</span><span class="p">)</span>
+            <span class="n">NewMVAlgo</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_1</span><span class="o">=</span><span class="n">param_1</span><span class="p">,</span>
+                                        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+                                        <span class="n">param_2</span><span class="o">=</span><span class="n">param_2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;param_1&quot;</span><span class="p">,</span> <span class="s2">&quot;random_state&quot;</span><span class="p">,</span> <span class="s2">&quot;param_2&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distribs</span> <span class="o">=</span> <span class="p">[</span><span class="n">CustomRandint</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">200</span><span class="p">),</span> <span class="p">[</span><span class="n">random_state</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;val_1&quot;</span><span class="p">,</span> <span class="s2">&quot;val_2&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>In SuMMIT the input of the <code class="code highlight python docutils literal highlight-python"><span class="n">fit</span><span class="p">()</span></code> method is <cite>X</cite>, a dataset object that provide access to each view with a method : <code class="code highlight python docutils literal highlight-python"><span class="n">dataset_var</span><span class="o">.</span><span class="n">get_v</span><span class="p">(</span><span class="n">view_index</span><span class="p">,</span> <span class="n">sample_indices</span><span class="p">)</span></code>.
+So in order to add a mutliview classifier to SuMMIT, one will probably have to add a data-transformation step before using the class’s <code class="code highlight python docutils literal highlight-python"><span class="n">fit</span><span class="p">()</span></code> method.</p>
+<p>Moreover, to get restrain the samples and descriptors used in the method, SuMMIT provides two supplementary arguments :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">train_indices</span></code> is an array of samples indices that compose the training set,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">view_indices</span></code> is an array of view indices to restrain the number of views on which the algorithm will train.</p></li>
+</ul>
+<p>These two arguments are useful to reduce memory usage. Indeed, <cite>X</cite>, the dataset object is just a wrapper for an HDF5 file object, so the data will only be loaded once the <cite>get_v</cite> method is called, so the train and test set are not loaded at the same time.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_indices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">view_indices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># This function is used to initialize the sample and view indices, in case they are None, it transforms them in the correct values</span>
+    <span class="n">train_indices</span><span class="p">,</span> <span class="n">view_indices</span> <span class="o">=</span> <span class="n">get_samples_views_indices</span><span class="p">(</span><span class="n">X</span><span class="p">,</span>
+                                                             <span class="n">train_indices</span><span class="p">,</span>
+                                                             <span class="n">view_indices</span><span class="p">)</span>
+    <span class="n">needed_input</span> <span class="o">=</span> <span class="n">transform_data_if_needed</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">train_indices</span><span class="p">,</span> <span class="n">view_indices</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">NewMVAlgo</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needed_input</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">train_indices</span><span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">sample_indices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">view_indices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">sample_indices</span><span class="p">,</span> <span class="n">view_indices</span> <span class="o">=</span> <span class="n">get_samples_views_indices</span><span class="p">(</span><span class="n">X</span><span class="p">,</span>
+                                                             <span class="n">sample_indices</span><span class="p">,</span>
+                                                             <span class="n">view_indices</span><span class="p">)</span>
+    <span class="n">needed_input</span> <span class="o">=</span> <span class="n">transform_data_if_needed</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sample_indices</span><span class="p">,</span> <span class="n">view_indices</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">NewMVAlgo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needed_input</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Similarly to monoview algorithms, it is possible to add an interpretation method.</p>
+</section>
+<section id="manipulate-the-dataset-object">
+<h2>Manipulate the dataset object<a class="headerlink" href="#manipulate-the-dataset-object" title="Link to this heading"></a></h2>
+<p>The input of the fit and predict method is a <a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/multiview_platform/utils/dataset.py#L13">Dataset object</a>.</p>
+<p>The useful methods of this object are</p>
+<section id="get-v">
+<h3><a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/multiview_platform/utils/dataset.py#L360">get_v</a><a class="headerlink" href="#get-v" title="Link to this heading"></a></h3>
+<p>The <a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/multiview_platform/utils/dataset.py#L360">get_v</a> method is <strong>the</strong> way to access the view data in the dataset object.</p>
+<p>As explained earlier, SuMMIT communicates the <strong>full</strong> dataset object and two arrays through the <code class="code highlight python docutils literal highlight-python"><span class="n">fit</span><span class="p">()</span></code> and <code class="code highlight python docutils literal highlight-python"><span class="n">predict</span><span class="p">()</span></code> methods to avoid loading the views if it is not mandatory.</p>
+<section id="example-build-a-list-of-all-the-views-arrays">
+<h4>Example : build a list of all the views arrays<a class="headerlink" href="#example-build-a-list-of-all-the-views-arrays" title="Link to this heading"></a></h4>
+<p>Let us suppose that the mutliview algorithm that one wants to add to SuMMIT takes as input a list <code class="code highlight python docutils literal highlight-python"><span class="n">list_X</span></code> of all the views.</p>
+<p>Then an example of <code class="code highlight python docutils literal highlight-python"><span class="bp">self</span><span class="o">.</span><span class="n">transform_data_if_needed</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sample_indices</span><span class="p">,</span> <span class="n">view_indices</span><span class="p">)</span></code> could be :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">transform_data_if_needed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">sample_indices</span><span class="p">,</span> <span class="n">view_indices</span><span class="p">):</span>
+    <span class="n">views_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Browse the asked views indices</span>
+    <span class="k">for</span> <span class="n">view_index</span> <span class="ow">in</span> <span class="n">view_indices</span><span class="p">:</span>
+        <span class="c1"># Get the data from the dataset object, for the asked samples</span>
+        <span class="n">view_data</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">get_v</span><span class="p">(</span><span class="n">view_index</span><span class="p">,</span> <span class="n">sample_indices</span><span class="o">=</span><span class="n">sample_indices</span><span class="p">)</span>
+        <span class="c1"># Store it in the list</span>
+        <span class="n">views_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">view_data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">views_list</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="example4.html" class="btn btn-neutral float-left" title="Taking control : Use your own dataset" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api.html" class="btn btn-neutral float-right" title="API Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

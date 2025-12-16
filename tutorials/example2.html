@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Example 2 : Understanding the hyper-parameter optimization &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8dde47fa"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/plotly_js.js?v=c3b947fd"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Example 3 : Understanding the statistical iterations" href="example3.html" />
+    <link rel="prev" title="Example 1 : First big step with SuMMIT" href="example1.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SuMMIT
+              <img src="../_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">SuMMIT Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Install SuMMIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example0.html">Example 0 : Getting started with SuMMIT on MNist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example1.html">Example 1 : First big step with SuMMIT</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Example 2 : Understanding the hyper-parameter optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hands-on-experience">Hands-on experience</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-2-1-no-hyper-parameter-optimization-impact-of-split-size">Example 2.1 : No hyper-parameter optimization, impact of split size</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-2-2-usage-of-randomized-hyper-parameter-optimization">Example 2.2 : Usage of randomized hyper-parameter optimization :</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#going-further-with-randomized-search">Going further with randomized search</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-2-3-usage-of-grid-search">Example 2.3 : Usage of grid search :</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hyper-parameter-report">Hyper-parameter report</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example3.html">Example 3 : Understanding the statistical iterations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example4.html">Taking control : Use your own dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example5.html">Taking control : Use your own algorithms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/monoview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/multiview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.multiview_classifiers</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">SuMMIT Tutorials</a></li>
+      <li class="breadcrumb-item active">Example 2 : Understanding the hyper-parameter optimization</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/example2.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="example-2-understanding-the-hyper-parameter-optimization">
+<h1>Example 2 : Understanding the hyper-parameter optimization<a class="headerlink" href="#example-2-understanding-the-hyper-parameter-optimization" title="Link to this heading"></a></h1>
+<p>If you are not familiar with hyper-parameter optimization, see <a class="extlink-base_doc reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/hps_theory.html">Hyper-parameters 101</a></p>
+<section id="hands-on-experience">
+<h2>Hands-on experience<a class="headerlink" href="#hands-on-experience" title="Link to this heading"></a></h2>
+<p>In order to understand the process and it’s usefulness, let’s run some configurations and analyze the results.</p>
+<p>This example will focus only on some lines of the configuration file :</p>
+<ul class="simple">
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">split</span><span class="p">:</span></code>, controlling the ratio between the testing set and the training set,</p></li>
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">hps_type</span><span class="p">:</span></code>, controlling the type of hyper-parameter search,</p></li>
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">hps_args</span><span class="p">:</span></code>, controlling the parameters of the hyper-parameters search method,</p></li>
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">nb_folds</span><span class="p">:</span></code>, controlling the number of folds in the cross-validation process.</p></li>
+</ul>
+<section id="example-2-1-no-hyper-parameter-optimization-impact-of-split-size">
+<h3>Example 2.1 : No hyper-parameter optimization, impact of split size<a class="headerlink" href="#example-2-1-no-hyper-parameter-optimization-impact-of-split-size" title="Link to this heading"></a></h3>
+<p>For this example, we only used a subset of the available classifiers in SuMMIT, to reduce the computation time and the complexity of the results. Here, we will learn how to define the train/test ratio and its impact on the benchmark.</p>
+<p>The monoview classifiers used are <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier">Adaboost</a> and a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html">decision tree</a>,
+and the multivew classifier is a late fusion majority vote.</p>
+<p>In order to use only a subset of the available classifiers, three lines in the configuration file are useful :</p>
+<ul class="simple">
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">type</span><span class="p">:</span></code> (<a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_1.yml#L45">l45</a>) in which one has to specify which type of algorithms are needed, here we used  <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">[&quot;monoview&quot;,&quot;multiview&quot;]</span></code>,</p></li>
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">algos_monoview</span><span class="p">:</span></code> (<a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_1.yml#L45">l47</a>) in which one specifies the names of the monoview algorithms to run, here we used : <code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">algos_monoview</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;adaboost&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="p p-Indicator">]</span></code></p></li>
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">algos_multiview</span><span class="p">:</span></code> (<a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_1.yml#L45">l49</a>) is the same but with multiview algorithms, here we used : <code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">algos_multiview</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;weighted_linear_late_fusion&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="p p-Indicator">]</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the platform to understand the names, the user has to give the <strong>name of the python module</strong> in which the classifier is implemented in the platform.</p>
+</div>
+<p>In the config file, the default values for Adaboost’s hyper-parameters are :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">adaboost</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">n_estimators</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">  </span><span class="nt">estimator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;DecisionTreeClassifier&quot;</span>
+</pre></div>
+</div>
+<p>(see <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier">adaboost’s sklearn’s page</a> for more information)</p>
+<p>For the decision tree :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">decision_tree</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">max_depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">criterion</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gini&quot;</span>
+<span class="w">  </span><span class="nt">splitter</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;best&quot;</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html">sklearn’s decision tree</a>)</p>
+<p>And for the late fusion :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">weighted_linear_late_fusion</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">classifier_names</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">classifier_configs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">decision_tree</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">max_depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">            </span><span class="nt">criterion</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gini&quot;</span>
+<span class="w">            </span><span class="nt">splitter</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;best&quot;</span>
+</pre></div>
+</div>
+<p>(It will build a vote with one decision tree on each view, with the specified configuration for the decision trees)</p>
+<section id="learning-on-a-few-samples">
+<h4>Learning on a few samples<a class="headerlink" href="#learning-on-a-few-samples" title="Link to this heading"></a></h4>
+<p>This example focuses on one line of the config file :</p>
+<ul class="simple">
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">split</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.80</span></code> (<a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_1.yml#L37">l37</a>).</p></li>
+</ul>
+<p>To run the first part of this example, run :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">summit.execute</span><span class="w"> </span><span class="kn">import</span> <span class="n">execute</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example 2.1.1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The results for accuracy metric are stored in <code class="docutils literal notranslate"><span class="pre">summit/examples/results/example_2_1_1/doc_summit/</span></code></p>
+<html>
+<head><meta charset="utf-8" /></head>
+<body>
+    <div>
+        
+                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script src="../_static/plotly_js.js"></script>
+            <div id="41eb1282-2ba8-4b87-86b3-a7a33aa25fde" class="plotly-graph-div" style="height:100%; width:100%;"></div>
+            <script type="text/javascript">
+
+                    window.PLOTLYENV=window.PLOTLYENV || {};
+
+                if (document.getElementById("41eb1282-2ba8-4b87-86b3-a7a33aa25fde")) {
+                    Plotly.newPlot(
+                        '41eb1282-2ba8-4b87-86b3-a7a33aa25fde',
+                        [{"error_y": {"type": "data"}, "marker": {"color": "lightgrey"}, "name": "Train", "type": "bar", "x": ["decision_tree-generated_view_3", "adaboost-generated_view_3", "decision_tree-generated_view_1", "adaboost-generated_view_1", "adaboost-generated_view_2", "adaboost-generated_view_4", "decision_tree-generated_view_2", "decision_tree-generated_view_4", "weighted_linear_late_fusion"], "y": [0.4406779661016949, 1.0, 0.559322033898305, 1.0, 1.0, 1.0, 0.6101694915254238, 0.5423728813559322, 0.9661016949152542]}, {"error_y": {"type": "data"}, "marker": {"color": "black"}, "name": "Test", "type": "bar", "x": ["decision_tree-generated_view_3", "adaboost-generated_view_3", "decision_tree-generated_view_1", "adaboost-generated_view_1", "adaboost-generated_view_2", "adaboost-generated_view_4", "decision_tree-generated_view_2", "decision_tree-generated_view_4", "weighted_linear_late_fusion"], "y": [0.1940928270042194, 0.2616033755274262, 0.31645569620253167, 0.3206751054852321, 0.33755274261603374, 0.3628691983122363, 0.39662447257383965, 0.39662447257383965, 0.45569620253164556]}],
+                        {"paper_bgcolor": "rgba(0,0,0,0)", "plot_bgcolor": "rgba(0,0,0,0)", "template": {"data": {"bar": [{"error_x": {"color": "#2a3f5f"}, "error_y": {"color": "#2a3f5f"}, "marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "bar"}], "barpolar": [{"marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "barpolar"}], "carpet": [{"aaxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "baxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "type": "carpet"}], "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}], "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "contour"}], "contourcarpet": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "contourcarpet"}], "heatmap": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmap"}], "heatmapgl": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmapgl"}], "histogram": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "histogram"}], "histogram2d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2d"}], "histogram2dcontour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2dcontour"}], "mesh3d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "mesh3d"}], "parcoords": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "parcoords"}], "scatter": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter"}], "scatter3d": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter3d"}], "scattercarpet": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattercarpet"}], "scattergeo": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergeo"}], "scattergl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergl"}], "scattermapbox": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermapbox"}], "scatterpolar": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolar"}], "scatterpolargl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolargl"}], "scatterternary": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterternary"}], "surface": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "surface"}], "table": [{"cells": {"fill": {"color": "#EBF0F8"}, "line": {"color": "white"}}, "header": {"fill": {"color": "#C8D4E3"}, "line": {"color": "white"}}, "type": "table"}]}, "layout": {"annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1}, "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "sequentialminus": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]]}, "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"], "font": {"color": "#2a3f5f"}, "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"}, "hoverlabel": {"align": "left"}, "hovermode": "closest", "mapbox": {"style": "light"}, "paper_bgcolor": "white", "plot_bgcolor": "#E5ECF6", "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}}, "shapedefaults": {"line": {"color": "#2a3f5f"}}, "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "title": {"x": 0.05}, "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}, "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}}}, "title": {"text": "accuracy_score*<br> label_1 vs label_2 vs label_3 vs label_4 vs label_5 vs label_6 vs label_7 vs label_8 scores for each classifier"}},
+                        {"responsive": true}
+                    )
+                };
+                
+            </script>
+        </div>
+</body>
+</html><p>These results were generated learning on 20% of the dataset and testing on 80% (see the <a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_1.yml#L37">config file</a>).</p>
+</section>
+<section id="learning-on-more-samples">
+<span id="id1"></span><h4>Learning on more samples<a class="headerlink" href="#learning-on-more-samples" title="Link to this heading"></a></h4>
+<p>Now, if you run :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">summit.execute</span><span class="w"> </span><span class="kn">import</span> <span class="n">execute</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example 2.1.2&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You should obtain these scores in <code class="docutils literal notranslate"><span class="pre">summit/examples/results/example_2_1_2/doc_summit/</span></code> :</p>
+<html>
+<head><meta charset="utf-8" /></head>
+<body>
+    <div>
+        
+                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script src="../_static/plotly_js.js"></script>
+            <div id="19dafc73-09d1-4ec3-9b5e-233739be4475" class="plotly-graph-div" style="height:100%; width:100%;"></div>
+            <script type="text/javascript">
+
+                    window.PLOTLYENV=window.PLOTLYENV || {};
+
+                if (document.getElementById("19dafc73-09d1-4ec3-9b5e-233739be4475")) {
+                    Plotly.newPlot(
+                        '19dafc73-09d1-4ec3-9b5e-233739be4475',
+                        [{"error_y": {"type": "data"}, "marker": {"color": "lightgrey"}, "name": "Train", "type": "bar", "x": ["adaboost-generated_view_2", "adaboost-generated_view_1", "adaboost-generated_view_3", "adaboost-generated_view_4", "decision_tree-generated_view_3", "decision_tree-generated_view_1", "decision_tree-generated_view_4", "weighted_linear_late_fusion", "decision_tree-generated_view_2"], "y": [1.0, 1.0, 1.0, 1.0, 0.5932203389830508, 0.5847457627118644, 0.576271186440678, 0.788135593220339, 0.5720338983050848]}, {"error_y": {"type": "data"}, "marker": {"color": "black"}, "name": "Test", "type": "bar", "x": ["adaboost-generated_view_2", "adaboost-generated_view_1", "adaboost-generated_view_3", "adaboost-generated_view_4", "decision_tree-generated_view_3", "decision_tree-generated_view_1", "decision_tree-generated_view_4", "weighted_linear_late_fusion", "decision_tree-generated_view_2"], "y": [0.23333333333333334, 0.3, 0.3, 0.3333333333333333, 0.48333333333333334, 0.5166666666666667, 0.5333333333333333, 0.5333333333333333, 0.5666666666666667]}],
+                        {"paper_bgcolor": "rgba(0,0,0,0)", "plot_bgcolor": "rgba(0,0,0,0)", "template": {"data": {"bar": [{"error_x": {"color": "#2a3f5f"}, "error_y": {"color": "#2a3f5f"}, "marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "bar"}], "barpolar": [{"marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "barpolar"}], "carpet": [{"aaxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "baxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "type": "carpet"}], "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}], "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "contour"}], "contourcarpet": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "contourcarpet"}], "heatmap": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmap"}], "heatmapgl": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmapgl"}], "histogram": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "histogram"}], "histogram2d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2d"}], "histogram2dcontour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2dcontour"}], "mesh3d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "mesh3d"}], "parcoords": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "parcoords"}], "scatter": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter"}], "scatter3d": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter3d"}], "scattercarpet": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattercarpet"}], "scattergeo": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergeo"}], "scattergl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergl"}], "scattermapbox": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermapbox"}], "scatterpolar": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolar"}], "scatterpolargl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolargl"}], "scatterternary": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterternary"}], "surface": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "surface"}], "table": [{"cells": {"fill": {"color": "#EBF0F8"}, "line": {"color": "white"}}, "header": {"fill": {"color": "#C8D4E3"}, "line": {"color": "white"}}, "type": "table"}]}, "layout": {"annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1}, "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "sequentialminus": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]]}, "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"], "font": {"color": "#2a3f5f"}, "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"}, "hoverlabel": {"align": "left"}, "hovermode": "closest", "mapbox": {"style": "light"}, "paper_bgcolor": "white", "plot_bgcolor": "#E5ECF6", "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}}, "shapedefaults": {"line": {"color": "#2a3f5f"}}, "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "title": {"x": 0.05}, "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}, "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}}}, "title": {"text": "accuracy_score*<br> label_1 vs label_2 vs label_3 vs label_4 vs label_5 vs label_6 vs label_7 vs label_8 scores for each classifier"}},
+                        {"responsive": true}
+                    )
+                };
+                
+            </script>
+        </div>
+</body>
+</html><p>Here we learned on 80% of the dataset and tested on 20%, so the line in the  <a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1_2.yml#L37">config file</a> has become <code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">split</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span></code>.</p>
+<p>The difference between these two examples is noticeable as even if, while learning on more examples, the performance of the decision trees and the late fusion improved, the performance of Adaboost did not improve as it was already over-fitting on the small train set.</p>
+</section>
+<section id="conclusion">
+<h4>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h4>
+<p>The split ratio has two consequences :</p>
+<ul class="simple">
+<li><p>Increasing the test set size decreases the information available in the train set size so either it helps to avoid overfitting (Adaboost) or it can hide useful information to the classifier and therefor decrease its performance (decision tree),</p></li>
+<li><p>The second consequence is that increasing train size will increase the benchmark duration as the classifiers will have to learn  on more examples, this duration modification is higher if the dataset has high dimensionality and if the algorithms are complex.</p></li>
+</ul>
+</section>
+</section>
+<section id="example-2-2-usage-of-randomized-hyper-parameter-optimization">
+<span id="random"></span><h3>Example 2.2 : Usage of randomized hyper-parameter optimization :<a class="headerlink" href="#example-2-2-usage-of-randomized-hyper-parameter-optimization" title="Link to this heading"></a></h3>
+<p>In the previous example, we have seen that the split ratio has an impact on the train duration and performance of the algorithms, but the most impacting option of SuMMIT on these two factors is optimizing the algorithms hyper parameters.</p>
+<p>For all the previous examples, the platform used the hyper-parameters values given in the config file.
+This is only useful if one knows the optimal combination of hyper-parameter for the given task.</p>
+<p>However, most of the time, they are unknown to the user, and then have to be optimized by the platform.</p>
+<p>In this example, we will use a randomized search, one of the two hyper-parameter optimization methods implemented in SuMMIT.</p>
+<p>To do so we will go through five lines of the config file :</p>
+<ul class="simple">
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">hps_type</span><span class="p">:</span></code>, controlling the type of hyper-parameter search,</p></li>
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">n_iter</span><span class="p">:</span></code>, controlling the number of random draws during the hyper-parameter search,</p></li>
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">equivalent_draws</span><span class="p">:</span></code>, controlling the number fo draws for multiview algorithms,</p></li>
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">nb_folds</span><span class="p">:</span></code>, controlling the number of folds in the cross-validation process,</p></li>
+<li><p><code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">metric_princ</span><span class="p">:</span></code>, controlling which metric will be used in the cross-validation.</p></li>
+</ul>
+<p>So if you run SuMMIT with :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">summit.execute</span><span class="w"> </span><span class="kn">import</span> <span class="n">execute</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example 2.2&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>you run SuMMIT with this combination of arguments (<a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_1.yml#L54">l54-65</a>) :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">metric_princ</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;accuracy_score&#39;</span>
+<span class="nt">nb_folds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="nt">hps_type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Random&#39;</span>
+<span class="nt">hps_args</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">n_iter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">  </span><span class="nt">equivalent_draws</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+</pre></div>
+</div>
+<p>This means that SuMMIT will use a modded multiview-compatible version of sklearn’s  <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html">RandomisedSearchCV</a>  with 5 draws and 5 folds of cross validation to optimize the hyper-parameters, according to the accuracy.</p>
+<p>Moreover, the <code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">equivalent_draws</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span></code> argument means that the multiview classifiers will be granted <code class="docutils literal notranslate"><span class="pre">n_iter</span></code> x <code class="docutils literal notranslate"><span class="pre">n_views</span></code> draws so, here 5 x 4 = 20 draws, to compensate the fact that they have a much more complex problem to solve.</p>
+<p>The computing time of this run should be longer than the previous examples (approximately 3 mins). While SuMMIT computes, let’s see the pseudo code of the benchmark, while using the hyper-parameter optimization:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>for each monoview classifier:
+    for each view:
+        ┌
+        |for each draw (here 5):
+        |    for each fold (here 5):
+        |        learn the classifier on 4 folds and test it on 1
+        |    get the mean metric_princ
+        |get the best hyper-parameter set
+        └
+        learn on the whole training set
+and
+for each multiview classifier:
+    ┌
+    |for each draw (here 5*4):
+    |    for each fold (here 5):
+    |        learn the classifier on 4 folds and test it on 1
+    |    get the mean metric_princ
+    |get the best hyper-parameter set
+    └
+    learn on the whole training set
+</pre></div>
+</div>
+<p>The instructions inside the brackets are the one that the hyper-parameter
+optimization adds.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As the randomized search has independent steps, it profits a lot from multi-threading, however, it is not available at the moment, but is one of our priorities.</p>
+</div>
+<section id="the-results">
+<h4>The results<a class="headerlink" href="#the-results" title="Link to this heading"></a></h4>
+<p>Here, we used <code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">split</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.8</span></code> and the results are far better than <a class="extlink-base_doc reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/example2.html#learning-on-more-examples">earlier</a>, as the classifiers are able to fit the task (the multiview classifier improved its accuracy from 0.46 in Example 2.1.1 to 0.59).</p>
+<html>
+<head><meta charset="utf-8" /></head>
+<body>
+    <div>
+        
+                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script src="../_static/plotly_js.js"></script>
+            <div id="7e5cd33c-981f-4a13-9b39-34e7a403b662" class="plotly-graph-div" style="height:100%; width:100%;"></div>
+            <script type="text/javascript">
+                
+                    window.PLOTLYENV=window.PLOTLYENV || {};
+                    
+                if (document.getElementById("7e5cd33c-981f-4a13-9b39-34e7a403b662")) {
+                    Plotly.newPlot(
+                        '7e5cd33c-981f-4a13-9b39-34e7a403b662',
+                        [{"error_y": {"type": "data"}, "marker": {"color": "lightgrey"}, "name": "Train", "type": "bar", "x": ["decision_tree-generated_view_4", "adaboost-generated_view_4", "decision_tree-generated_view_2", "decision_tree-generated_view_3", "adaboost-generated_view_3", "decision_tree-generated_view_1", "adaboost-generated_view_1", "adaboost-generated_view_2", "weighted_linear_late_fusion"], "y": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.9491525423728814, 1.0, 1.0]}, {"error_y": {"type": "data"}, "marker": {"color": "black"}, "name": "Test", "type": "bar", "x": ["decision_tree-generated_view_4", "adaboost-generated_view_4", "decision_tree-generated_view_2", "decision_tree-generated_view_3", "adaboost-generated_view_3", "decision_tree-generated_view_1", "adaboost-generated_view_1", "adaboost-generated_view_2", "weighted_linear_late_fusion"], "y": [0.25316455696202533, 0.3080168776371308, 0.31223628691983124, 0.3206751054852321, 0.34177215189873417, 0.350210970464135, 0.379746835443038, 0.4092827004219409, 0.5949367088607594]}],
+                        {"paper_bgcolor": "rgba(0,0,0,0)", "plot_bgcolor": "rgba(0,0,0,0)", "template": {"data": {"bar": [{"error_x": {"color": "#2a3f5f"}, "error_y": {"color": "#2a3f5f"}, "marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "bar"}], "barpolar": [{"marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "barpolar"}], "carpet": [{"aaxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "baxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "type": "carpet"}], "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}], "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "contour"}], "contourcarpet": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "contourcarpet"}], "heatmap": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmap"}], "heatmapgl": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmapgl"}], "histogram": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "histogram"}], "histogram2d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2d"}], "histogram2dcontour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2dcontour"}], "mesh3d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "mesh3d"}], "parcoords": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "parcoords"}], "scatter": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter"}], "scatter3d": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter3d"}], "scattercarpet": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattercarpet"}], "scattergeo": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergeo"}], "scattergl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergl"}], "scattermapbox": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermapbox"}], "scatterpolar": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolar"}], "scatterpolargl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolargl"}], "scatterternary": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterternary"}], "surface": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "surface"}], "table": [{"cells": {"fill": {"color": "#EBF0F8"}, "line": {"color": "white"}}, "header": {"fill": {"color": "#C8D4E3"}, "line": {"color": "white"}}, "type": "table"}]}, "layout": {"annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1}, "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "sequentialminus": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]]}, "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"], "font": {"color": "#2a3f5f"}, "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"}, "hoverlabel": {"align": "left"}, "hovermode": "closest", "mapbox": {"style": "light"}, "paper_bgcolor": "white", "plot_bgcolor": "#E5ECF6", "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}}, "shapedefaults": {"line": {"color": "#2a3f5f"}}, "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "title": {"x": 0.05}, "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}, "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}}}, "title": {"text": "accuracy_score*<br> label_1 vs label_2 vs label_3 vs label_4 vs label_5 vs label_6 vs label_7 vs label_8 scores for each classifier"}},
+                        {"responsive": true}
+                    )
+                };
+                
+            </script>
+        </div>
+</body>
+</html><p>The choice made here is to allow a different amount of draws for mono and multiview classifiers. However, allowing the same number of draws to both is also available by setting <code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">equivalent_draws</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The mutliview algorithm used here is late fusion, which means it learns a monoview classifier on each view and then build a naive majority vote. In terms of hyper parameters, the late fusion classifier has to choose one monoview classifier and its hyper-parameter <strong>for each view</strong>. This is why the <code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">equivalent_draws</span><span class="p">:</span></code> parameter is implemented, as with only 5 draws, the late fusion classifier is not able to remotely cover its hyper-parameter space, while the monoview algorithms have a much easier problem to solve.</p>
+</div>
+</section>
+<section id="id2">
+<h4>Conclusion<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p>Even if it adds a lot of computing, for most of the tasks, using the hyper-parameters optimization is a necessity to be able to get the most of each classifier in terms of performance.</p>
+<p>The hyper-parameters optimization is a matter of trade-off between classifier performance and computational demand.
+For most algorithms the more draws you allow, the closer to ideal the outputted
+hyper-parameter set one will be, however, many draws mean much longer computational time.</p>
+<p>Similarly, the number of folds has a great importance in estimating the
+performance of a specific hyper-parameter set, but more folds take also more time, as one has to train more times and on bigger parts of the dataset.</p>
+<p>The figure below represents the duration of the execution on a personal computer
+with different fold/draws settings :</p>
+<html>
+<head><meta charset="utf-8" /></head>
+<body>
+    <div>
+        
+                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+       <script src="../_static/plotly_js.js"></script>
+            <div id="a34ab35c-7722-424b-b26f-05ce9018d050" class="plotly-graph-div" style="height:100%; width:100%;"></div>
+            <script type="text/javascript">
+                
+                    window.PLOTLYENV=window.PLOTLYENV || {};
+                    
+                if (document.getElementById("a34ab35c-7722-424b-b26f-05ce9018d050")) {
+                    Plotly.newPlot(
+                        'a34ab35c-7722-424b-b26f-05ce9018d050',
+                        [{"contours": {"z": {"highlightcolor": "limegreen", "project": {"z": true}, "show": true, "usecolormap": true}}, "type": "surface", "x": [2, 5, 10, 20, 30, 50, 100], "y": [2, 5, 10, 15, 20], "z": [[12.30792236328125, 14.539308309555054, 25.204104900360107, 40.63256311416626, 57.830570936203, 94.06869697570801, 177.3781054019928], [23.060000896453857, 38.69007134437561, 55.38164758682251, 112.99745631217957, 154.44376754760742, 249.8409869670868, 444.60806703567505], [31.165709257125854, 75.43783736228943, 112.19536924362183, 184.5037076473236, 290.94096207618713, 461.04882979393005, 932.619647026062], [73.37707662582397, 100.57551407814026, 183.70872330665588, 331.44516921043396, 433.04977560043335, 637.6133468151093, 1335.7918057441711], [79.04550528526306, 153.53510761260986, 199.00436758995056, 341.0050745010376, 608.0813648700714, 918.9630422592163, 1716.7227251529694]]}],
+                        {"scene": {"xaxis": {"title": {"text": "n_draws"}}, "yaxis": {"title": {"text": "n_folds"}}, "zaxis": {"title": {"text": "Duration (s)"}}}, "template": {"data": {"bar": [{"error_x": {"color": "#2a3f5f"}, "error_y": {"color": "#2a3f5f"}, "marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "bar"}], "barpolar": [{"marker": {"line": {"color": "#E5ECF6", "width": 0.5}}, "type": "barpolar"}], "carpet": [{"aaxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "baxis": {"endlinecolor": "#2a3f5f", "gridcolor": "white", "linecolor": "white", "minorgridcolor": "white", "startlinecolor": "#2a3f5f"}, "type": "carpet"}], "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}], "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "contour"}], "contourcarpet": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "contourcarpet"}], "heatmap": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmap"}], "heatmapgl": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "heatmapgl"}], "histogram": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "histogram"}], "histogram2d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2d"}], "histogram2dcontour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "histogram2dcontour"}], "mesh3d": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "mesh3d"}], "parcoords": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "parcoords"}], "scatter": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter"}], "scatter3d": [{"line": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter3d"}], "scattercarpet": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattercarpet"}], "scattergeo": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergeo"}], "scattergl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattergl"}], "scattermapbox": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scattermapbox"}], "scatterpolar": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolar"}], "scatterpolargl": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterpolargl"}], "scatterternary": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatterternary"}], "surface": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "type": "surface"}], "table": [{"cells": {"fill": {"color": "#EBF0F8"}, "line": {"color": "white"}}, "header": {"fill": {"color": "#C8D4E3"}, "line": {"color": "white"}}, "type": "table"}]}, "layout": {"annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1}, "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]], "sequentialminus": [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]]}, "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"], "font": {"color": "#2a3f5f"}, "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"}, "hoverlabel": {"align": "left"}, "hovermode": "closest", "mapbox": {"style": "light"}, "paper_bgcolor": "white", "plot_bgcolor": "#E5ECF6", "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}, "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}}, "shapedefaults": {"line": {"color": "#2a3f5f"}}, "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}}, "title": {"x": 0.05}, "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}, "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "zerolinecolor": "white", "zerolinewidth": 2}}}, "title": {"text": "Benchmark durations for multiple HPO settings"}},
+                        {"responsive": true}
+                    )
+                };
+                
+            </script>
+        </div>
+</body>
+</html><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The durations are for reference only as they highly depend on hardware.</p>
+</div>
+</section>
+</section>
+<section id="going-further-with-randomized-search">
+<h3>Going further with randomized search<a class="headerlink" href="#going-further-with-randomized-search" title="Link to this heading"></a></h3>
+<p>SuMMIT also allows to pass customized distributions for the randomized hyper-parameter search through the config file. For example :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">metric_princ</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;accuracy_score&#39;</span>
+<span class="nt">nb_folds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="nt">hps_type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Random&#39;</span>
+<span class="nt">hps_args</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">n_iter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">  </span><span class="nt">equivalent_draws</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">  </span><span class="nt">decision_tree</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">max_depth</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">Randint</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">low </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">high</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</pre></div>
+</div>
+<p>Will start a usual randomized search, except for the <code class="code highlight yaml docutils literal highlight-yaml"><span class="l l-Scalar l-Scalar-Plain">max_depth</span></code> hyper parameter on the decision tree that will be drawn according to a uniform distribution of integers between 1 and 9. This is a useful tool for the user that has prior knowledge on the relevant hyper-parameter space for a specific task.</p>
+<p>For the moment, the availabale distributions are <code class="code highlight python docutils literal highlight-python"><span class="n">Randint</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span></code> that draws integers between <code class="code highlight python docutils literal highlight-python"><span class="n">low</span></code> and <code class="code highlight python docutils literal highlight-python"><span class="n">high</span><span class="o">-</span><span class="mi">1</span></code> and <code class="code highlight python docutils literal highlight-python"><span class="n">Uniform</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span></code> that draws real numbers between <code class="code highlight python docutils literal highlight-python"><span class="n">loc</span></code> and <code class="code highlight python docutils literal highlight-python"><span class="n">state</span></code>. it is also possible to specify an array of values from which to draw.</p>
+</section>
+<section id="example-2-3-usage-of-grid-search">
+<h3>Example 2.3 : Usage of grid search :<a class="headerlink" href="#example-2-3-usage-of-grid-search" title="Link to this heading"></a></h3>
+<p>In SuMMIT, it is possible to use a grid search if one has several possible
+hyper-parameter values in mind to test.</p>
+<p>In order to set up the grid search we have to provide the
+arguments names and values to test in in the <code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">hps_args</span><span class="p">:</span></code> argument. If we want to try
+several depths for a decision tree, and several <code class="code highlight yaml docutils literal highlight-yaml"><span class="l l-Scalar l-Scalar-Plain">n_estimators</span></code> values for Adaboost,</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">hps_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Grid&quot;</span>
+<span class="nt">hps_args</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">decision_tree</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">max_depth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="nv">5</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">adaboost</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">n_estimators</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">10</span><span class="p p-Indicator">,</span><span class="nv">15</span><span class="p p-Indicator">,</span><span class="nv">20</span><span class="p p-Indicator">,</span><span class="nv">25</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>Moreover, for the multiview algorithms, we would like to try two configurations for the late fusion classifier :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">weighted_linear_late_fusion</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">classifiers_names</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;decision_tree&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;adaboost&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;adaboost&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;adaboost&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;adaboost&quot;</span><span class="p p-Indicator">,]</span>
+
+<span class="w">  </span><span class="nt">classifier_configs</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">decision_tree</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">max_depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">      </span><span class="nt">adaboost</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">n_estimators</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</pre></div>
+</div>
+<p>This will run the late fusion classifier with either</p>
+<ul class="simple">
+<li><p>one decision tree per view, with a maximum depth of 3,</p></li>
+<li><p>one Adaboost per view with 10 base estimators.</p></li>
+</ul>
+<p>To run a grid search with this configuration, run :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">summit.execute</span><span class="w"> </span><span class="kn">import</span> <span class="n">execute</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example 2.3&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It will use <a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/summit/examples/config_files/config_example_2_3.yml">this config file</a>.</p>
+</section>
+<section id="hyper-parameter-report">
+<h3>Hyper-parameter report<a class="headerlink" href="#hyper-parameter-report" title="Link to this heading"></a></h3>
+<p>The hyper-parameter optimization process generates a report for each
+classifier, providing each set of parameters and its cross-validation score,
+to be able to extract the relevant parameters for a future benchmark on the
+same dataset.</p>
+<p>For most of the algorithms, it is possible to paste the report in the config fie,
+for example for the decision tree on the first view the <code class="docutils literal notranslate"><span class="pre">*-hps_report.txt</span></code> file generated by the randomized search of <a class="extlink-base_doc reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/example2.html#example-2-2-usage-of-randomized-hyper-parameter-optimization">example 2.2</a> looks like :</p>
+<pre class="literal-block">
+criterion: gini
+max_depth: 202
+splitter: random
+
+                0.28787878787878785
+criterion: gini
+max_depth: 217
+splitter: best
+
+                0.23939393939393935
+criterion: entropy
+max_depth: 292
+splitter: random
+
+                0.21818181818181817
+criterion: entropy
+max_depth: 275
+splitter: best
+
+                0.20454545454545453
+criterion: entropy
+max_depth: 182
+splitter: best
+
+                0.20454545454545453</pre>
+<p>Meaning that the cross validation score of the decision tree on the first view when using the following hyper-parameters is 0.2879.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">criterion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gini</span>
+<span class="nt">max_depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">202</span>
+<span class="nt">splitter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">random</span>
+</pre></div>
+</div>
+<p>So to run a decision tree with these exact parameters, one just has to follow the method of <a class="extlink-base_doc reference external" href="http://baptiste.bauvin.pages.lis-lab.fr/summit/tutorials/example2.html#example-2-1-no-hyper-parameter-optimization-impact-of-split-size">example 2.1</a> and run SuMMIT with the following hyper-parameter configuration :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">hps_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;None&quot;</span>
+<span class="nt">hps_args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="nt">decision_tree</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">criterion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gini</span>
+<span class="w">    </span><span class="nt">max_depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">202</span>
+<span class="w">    </span><span class="nt">splitter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">random</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="example1.html" class="btn btn-neutral float-left" title="Example 1 : First big step with SuMMIT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="example3.html" class="btn btn-neutral float-right" title="Example 3 : Understanding the statistical iterations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

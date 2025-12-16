@@ -1,0 +1,383 @@
+:mod:`summit.multiview_platform.monoview_classifiers.gradient_boosting`
+=======================================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.gradient_boosting
+
+
+gradient_boosting
+-----------------
+
+
+.. py:data:: classifier_class_name
+   :value: 'GradientBoosting'
+
+
+.. py:class:: CustomDecisionTreeGB(*, criterion='gini', splitter='best', max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None, min_impurity_decrease=0.0, class_weight=None, ccp_alpha=0.0, monotonic_cst=None)
+
+
+
+   A decision tree classifier.
+
+   Read more in the :ref:`User Guide <tree>`.
+
+   :param criterion: The function to measure the quality of a split. Supported criteria are
+                     "gini" for the Gini impurity and "log_loss" and "entropy" both for the
+                     Shannon information gain, see :ref:`tree_mathematical_formulation`.
+   :type criterion: {"gini", "entropy", "log_loss"}, default="gini"
+   :param splitter: The strategy used to choose the split at each node. Supported
+                    strategies are "best" to choose the best split and "random" to choose
+                    the best random split.
+   :type splitter: {"best", "random"}, default="best"
+   :param max_depth: The maximum depth of the tree. If None, then nodes are expanded until
+                     all leaves are pure or until all leaves contain less than
+                     min_samples_split samples.
+   :type max_depth: int, default=None
+   :param min_samples_split: The minimum number of samples required to split an internal node:
+
+                             - If int, then consider `min_samples_split` as the minimum number.
+                             - If float, then `min_samples_split` is a fraction and
+                               `ceil(min_samples_split * n_samples)` are the minimum
+                               number of samples for each split.
+
+                             .. versionchanged:: 0.18
+                                Added float values for fractions.
+   :type min_samples_split: int or float, default=2
+   :param min_samples_leaf: The minimum number of samples required to be at a leaf node.
+                            A split point at any depth will only be considered if it leaves at
+                            least ``min_samples_leaf`` training samples in each of the left and
+                            right branches.  This may have the effect of smoothing the model,
+                            especially in regression.
+
+                            - If int, then consider `min_samples_leaf` as the minimum number.
+                            - If float, then `min_samples_leaf` is a fraction and
+                              `ceil(min_samples_leaf * n_samples)` are the minimum
+                              number of samples for each node.
+
+                            .. versionchanged:: 0.18
+                               Added float values for fractions.
+   :type min_samples_leaf: int or float, default=1
+   :param min_weight_fraction_leaf: The minimum weighted fraction of the sum total of weights (of all
+                                    the input samples) required to be at a leaf node. Samples have
+                                    equal weight when sample_weight is not provided.
+   :type min_weight_fraction_leaf: float, default=0.0
+   :param max_features: The number of features to consider when looking for the best split:
+
+                        - If int, then consider `max_features` features at each split.
+                        - If float, then `max_features` is a fraction and
+                          `max(1, int(max_features * n_features_in_))` features are considered at
+                          each split.
+                        - If "sqrt", then `max_features=sqrt(n_features)`.
+                        - If "log2", then `max_features=log2(n_features)`.
+                        - If None, then `max_features=n_features`.
+
+                        .. note::
+
+                            The search for a split does not stop until at least one
+                            valid partition of the node samples is found, even if it requires to
+                            effectively inspect more than ``max_features`` features.
+   :type max_features: int, float or {"sqrt", "log2"}, default=None
+   :param random_state: Controls the randomness of the estimator. The features are always
+                        randomly permuted at each split, even if ``splitter`` is set to
+                        ``"best"``. When ``max_features < n_features``, the algorithm will
+                        select ``max_features`` at random at each split before finding the best
+                        split among them. But the best found split may vary across different
+                        runs, even if ``max_features=n_features``. That is the case, if the
+                        improvement of the criterion is identical for several splits and one
+                        split has to be selected at random. To obtain a deterministic behaviour
+                        during fitting, ``random_state`` has to be fixed to an integer.
+                        See :term:`Glossary <random_state>` for details.
+   :type random_state: int, RandomState instance or None, default=None
+   :param max_leaf_nodes: Grow a tree with ``max_leaf_nodes`` in best-first fashion.
+                          Best nodes are defined as relative reduction in impurity.
+                          If None then unlimited number of leaf nodes.
+   :type max_leaf_nodes: int, default=None
+   :param min_impurity_decrease: A node will be split if this split induces a decrease of the impurity
+                                 greater than or equal to this value.
+
+                                 The weighted impurity decrease equation is the following::
+
+                                     N_t / N * (impurity - N_t_R / N_t * right_impurity
+                                                         - N_t_L / N_t * left_impurity)
+
+                                 where ``N`` is the total number of samples, ``N_t`` is the number of
+                                 samples at the current node, ``N_t_L`` is the number of samples in the
+                                 left child, and ``N_t_R`` is the number of samples in the right child.
+
+                                 ``N``, ``N_t``, ``N_t_R`` and ``N_t_L`` all refer to the weighted sum,
+                                 if ``sample_weight`` is passed.
+
+                                 .. versionadded:: 0.19
+   :type min_impurity_decrease: float, default=0.0
+   :param class_weight: Weights associated with classes in the form ``{class_label: weight}``.
+                        If None, all classes are supposed to have weight one. For
+                        multi-output problems, a list of dicts can be provided in the same
+                        order as the columns of y.
+
+                        Note that for multioutput (including multilabel) weights should be
+                        defined for each class of every column in its own dict. For example,
+                        for four-class multilabel classification weights should be
+                        [{0: 1, 1: 1}, {0: 1, 1: 5}, {0: 1, 1: 1}, {0: 1, 1: 1}] instead of
+                        [{1:1}, {2:5}, {3:1}, {4:1}].
+
+                        The "balanced" mode uses the values of y to automatically adjust
+                        weights inversely proportional to class frequencies in the input data
+                        as ``n_samples / (n_classes * np.bincount(y))``
+
+                        For multi-output, the weights of each column of y will be multiplied.
+
+                        Note that these weights will be multiplied with sample_weight (passed
+                        through the fit method) if sample_weight is specified.
+   :type class_weight: dict, list of dict or "balanced", default=None
+   :param ccp_alpha: Complexity parameter used for Minimal Cost-Complexity Pruning. The
+                     subtree with the largest cost complexity that is smaller than
+                     ``ccp_alpha`` will be chosen. By default, no pruning is performed. See
+                     :ref:`minimal_cost_complexity_pruning` for details. See
+                     :ref:`sphx_glr_auto_examples_tree_plot_cost_complexity_pruning.py`
+                     for an example of such pruning.
+
+                     .. versionadded:: 0.22
+   :type ccp_alpha: non-negative float, default=0.0
+   :param monotonic_cst:
+                         Indicates the monotonicity constraint to enforce on each feature.
+                           - 1: monotonic increase
+                           - 0: no constraint
+                           - -1: monotonic decrease
+
+                         If monotonic_cst is None, no constraints are applied.
+
+                         Monotonicity constraints are not supported for:
+                           - multiclass classifications (i.e. when `n_classes > 2`),
+                           - multioutput classifications (i.e. when `n_outputs_ > 1`),
+                           - classifications trained on data with missing values.
+
+                         The constraints hold over the probability of the positive class.
+
+                         Read more in the :ref:`User Guide <monotonic_cst_gbdt>`.
+
+                         .. versionadded:: 1.4
+   :type monotonic_cst: array-like of int of shape (n_features), default=None
+
+   .. attribute:: classes_
+
+      The classes labels (single output problem),
+      or a list of arrays of class labels (multi-output problem).
+
+      :type: ndarray of shape (n_classes,) or list of ndarray
+
+   .. attribute:: feature_importances_
+
+      The impurity-based feature importances.
+      The higher, the more important the feature.
+      The importance of a feature is computed as the (normalized)
+      total reduction of the criterion brought by that feature.  It is also
+      known as the Gini importance [4]_.
+
+      Warning: impurity-based feature importances can be misleading for
+      high cardinality features (many unique values). See
+      :func:`sklearn.inspection.permutation_importance` as an alternative.
+
+      :type: ndarray of shape (n_features,)
+
+   .. attribute:: max_features_
+
+      The inferred value of max_features.
+
+      :type: int
+
+   .. attribute:: n_classes_
+
+      The number of classes (for single output problems),
+      or a list containing the number of classes for each
+      output (for multi-output problems).
+
+      :type: int or list of int
+
+   .. attribute:: n_features_in_
+
+      Number of features seen during :term:`fit`.
+
+      .. versionadded:: 0.24
+
+      :type: int
+
+   .. attribute:: feature_names_in_
+
+      Names of features seen during :term:`fit`. Defined only when `X`
+      has feature names that are all strings.
+
+      .. versionadded:: 1.0
+
+      :type: ndarray of shape (`n_features_in_`,)
+
+   .. attribute:: n_outputs_
+
+      The number of outputs when ``fit`` is performed.
+
+      :type: int
+
+   .. attribute:: tree_
+
+      The underlying Tree object. Please refer to
+      ``help(sklearn.tree._tree.Tree)`` for attributes of Tree object and
+      :ref:`sphx_glr_auto_examples_tree_plot_unveil_tree_structure.py`
+      for basic usage of these attributes.
+
+      :type: Tree instance
+
+   .. seealso::
+
+      :py:obj:`DecisionTreeRegressor`
+          A decision tree regressor.
+
+   .. rubric:: Notes
+
+   The default values for the parameters controlling the size of the trees
+   (e.g. ``max_depth``, ``min_samples_leaf``, etc.) lead to fully grown and
+   unpruned trees which can potentially be very large on some data sets. To
+   reduce memory consumption, the complexity and size of the trees should be
+   controlled by setting those parameter values.
+
+   The :meth:`predict` method operates using the :func:`numpy.argmax`
+   function on the outputs of :meth:`predict_proba`. This means that in
+   case the highest predicted probabilities are tied, the classifier will
+   predict the tied class with the lowest index in :term:`classes_`.
+
+   .. rubric:: References
+
+   .. [1] https://en.wikipedia.org/wiki/Decision_tree_learning
+
+   .. [2] L. Breiman, J. Friedman, R. Olshen, and C. Stone, "Classification
+          and Regression Trees", Wadsworth, Belmont, CA, 1984.
+
+   .. [3] T. Hastie, R. Tibshirani and J. Friedman. "Elements of Statistical
+          Learning", Springer, 2009.
+
+   .. [4] L. Breiman, and A. Cutler, "Random Forests",
+          https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm
+
+   .. rubric:: Examples
+
+   >>> from sklearn.datasets import load_iris
+   >>> from sklearn.model_selection import cross_val_score
+   >>> from sklearn.tree import DecisionTreeClassifier
+   >>> clf = DecisionTreeClassifier(random_state=0)
+   >>> iris = load_iris()
+   >>> cross_val_score(clf, iris.data, iris.target, cv=10)
+   ...                             # doctest: +SKIP
+   ...
+   array([ 1.     ,  0.93...,  0.86...,  0.93...,  0.93...,
+           0.93...,  0.93...,  1.     ,  0.93...,  1.      ])
+
+
+   .. py:method:: predict(X, check_input=True)
+
+      Predict class or regression value for X.
+
+      For a classification model, the predicted class for each sample in X is
+      returned. For a regression model, the predicted value based on X is
+      returned.
+
+      :param X: The input samples. Internally, it will be converted to
+                ``dtype=np.float32`` and if a sparse matrix is provided
+                to a sparse ``csr_matrix``.
+      :type X: {array-like, sparse matrix} of shape (n_samples, n_features)
+      :param check_input: Allow to bypass several input checking.
+                          Don't use this parameter unless you know what you're doing.
+      :type check_input: bool, default=True
+
+      :returns: **y** -- The predicted classes, or the predict values.
+      :rtype: array-like of shape (n_samples,) or (n_samples, n_outputs)
+
+
+
+.. py:class:: GradientBoosting(random_state=None, loss='exponential', max_depth=1.0, n_estimators=100, init=CustomDecisionTreeGB(max_depth=1), **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `GradientBoostingClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html>`_
+
+
+
+
+   .. py:attribute:: param_names
+      :value: ['n_estimators', 'max_depth']
+
+
+
+   .. py:attribute:: classed_params
+      :value: []
+
+
+
+   .. py:attribute:: distribs
+
+
+   .. py:attribute:: weird_strings
+
+
+   .. py:attribute:: plotted_metric
+
+
+   .. py:attribute:: plotted_metric_name
+      :value: 'zero_one_loss'
+
+
+
+   .. py:attribute:: step_predictions
+      :value: None
+
+
+
+   .. py:method:: fit(X, y, sample_weight=None, monitor=None)
+
+      Fit the gradient boosting model.
+
+      :param X: The input samples. Internally, it will be converted to
+                ``dtype=np.float32`` and if a sparse matrix is provided
+                to a sparse ``csr_matrix``.
+      :type X: {array-like, sparse matrix} of shape (n_samples, n_features)
+      :param y: Target values (strings or integers in classification, real numbers
+                in regression)
+                For classification, labels must correspond to classes.
+      :type y: array-like of shape (n_samples,)
+      :param sample_weight: Sample weights. If None, then samples are equally weighted. Splits
+                            that would create child nodes with net zero or negative weight are
+                            ignored while searching for a split in each node. In the case of
+                            classification, splits are also ignored if they would result in any
+                            single class carrying a negative weight in either child node.
+      :type sample_weight: array-like of shape (n_samples,), default=None
+      :param monitor: The monitor is called after each iteration with the current
+                      iteration, a reference to the estimator and the local variables of
+                      ``_fit_stages`` as keyword arguments ``callable(i, self,
+                      locals())``. If the callable returns ``True`` the fitting procedure
+                      is stopped. The monitor can be used for various things such as
+                      computing held-out estimates, early stopping, model introspect, and
+                      snapshotting.
+      :type monitor: callable, default=None
+
+      :returns: **self** -- Fitted estimator.
+      :rtype: object
+
+
+
+   .. py:method:: predict(X)
+
+      Predict class for X.
+
+      :param X: The input samples. Internally, it will be converted to
+                ``dtype=np.float32`` and if a sparse matrix is provided
+                to a sparse ``csr_matrix``.
+      :type X: {array-like, sparse matrix} of shape (n_samples, n_features)
+
+      :returns: **y** -- The predicted values.
+      :rtype: ndarray of shape (n_samples,)
+
+
+
+   .. py:method:: get_interpretation(directory, base_file_name, y_test, feature_ids, multi_class=False)
+
+      Base method that returns an empty string if there is not interpretation
+      method in the classifier's module
+
+
+

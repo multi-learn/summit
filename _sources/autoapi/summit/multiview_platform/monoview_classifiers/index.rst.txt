@@ -1,0 +1,41 @@
+:mod:`summit.multiview_platform.monoview_classifiers`
+=====================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers
+
+
+Available monoview classifiers
+------------------------------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   adaboost/index.rst
+
+   decision_tree/index.rst
+
+   gradient_boosting/index.rst
+
+   imbalance_bagging/index.rst
+
+   knn/index.rst
+
+   lasso/index.rst
+
+   random_forest/index.rst
+
+   random_scm/index.rst
+
+   scm/index.rst
+
+   sgd/index.rst
+
+   svm_linear/index.rst
+
+   svm_poly/index.rst
+
+   svm_rbf/index.rst
+
+
+

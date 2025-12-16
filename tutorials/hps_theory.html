@@ -1,0 +1,200 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hyper-parameter 101 &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8dde47fa"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/plotly_js.js?v=c3b947fd"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SuMMIT
+              <img src="../_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">SuMMIT Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/monoview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/summit/multiview_platform/multiview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.multiview_classifiers</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Hyper-parameter 101</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/hps_theory.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hyper-parameter-101">
+<h1>Hyper-parameter 101<a class="headerlink" href="#hyper-parameter-101" title="Link to this heading"></a></h1>
+<section id="hyper-parameters-intuition">
+<h2>Hyper-parameters intuition<a class="headerlink" href="#hyper-parameters-intuition" title="Link to this heading"></a></h2>
+<p>Hyper-parameters are parameters of a classifier (monoview or multiview) that are
+task-dependant and have a huge part in the performance of the algorithm for a given task.</p>
+<p>The simplest example is the decision tree. One of it’s hyper-parameter is the
+depth of the tree. The deeper the tree is, the most it will fit on the learning data. However, a tree too deep will most likely overfit and won’t have any relevance on
+unseen testing data.</p>
+<p>This platform proposes a randomized search and a grid search to optimize
+hyper-parameters. In this example, we first will analyze the theory and
+then how to use it.</p>
+</section>
+<section id="understanding-train-test-split">
+<h2>Understanding train/test split<a class="headerlink" href="#understanding-train-test-split" title="Link to this heading"></a></h2>
+<p>In order to provide robust results, this platform splits the dataset in a
+training set, that will be used by the classifier to optimize their
+hyper-parameter and learn a relevant model, and a testing set that will take
+no part in the learning process and serve as unseen data to estimate each
+model’s generalization capacity.</p>
+<p>This split ratio is controlled by the config file’s argument <code class="docutils literal notranslate"><span class="pre">split:</span></code>. It uses a float to pass the ratio between the size of the testing set and the training set  :
+<img class="math" src="../_images/math/659bfe3f90519d7056a049bc446da14286cad455.png" alt="\text{split} = \frac{\text{test size}}{\text{dataset size}}"/>. In order to be as fair as possible, this split is made by keeping the ratio between each class in the training set and in the testing set.</p>
+<p>So if a dataset has 100 samples with 60% of them in class A, and 40% of them in class B, using <code class="docutils literal notranslate"><span class="pre">split:</span> <span class="pre">0.2</span></code>
+will generate a training set with 48 samples of class A and 32 samples of class B and a testing set
+with 12 samples of class A and 8 samples of class B.</p>
+<p>Ths process uses sklearn’s <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedShuffleSplit.html">StratifiedShuffleSplit</a> to split the dataset at random while being reproductible thanks to the random_state.</p>
+</section>
+<section id="understanding-hyper-parameter-optimization">
+<h2>Understanding hyper-parameter optimization<a class="headerlink" href="#understanding-hyper-parameter-optimization" title="Link to this heading"></a></h2>
+<p>As hyper-parameters are task dependant, there are three ways in the platform to set their value :</p>
+<ul class="simple">
+<li><p>If you know the value (or a set of values), specify them at the end of the config file for each algorithm you want to test, and use <code class="code highlight yaml docutils literal highlight-yaml"><span class="nt">hps_type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;None&#39;</span></code> in the <a class="extlink-base_source reference external" href="https://gitlab.lis-lab.fr/baptiste.bauvin/summit/-/tree/master/multiview_platform/examples/config_files/config_example_2_1_1.yml#L61">config file</a>. This will bypass the optimization process to run the algorithm on the specified values.</p></li>
+<li><p>If you have several possible values in mind, specify them in the config file and use <code class="docutils literal notranslate"><span class="pre">hps_type:</span> <span class="pre">'Grid'</span></code> to run a grid search on the possible values.</p></li>
+<li><p>If you have no ideas on the values, the platform proposes a random search for hyper-parameter optimization.</p></li>
+</ul>
+<section id="grid-search">
+<h3>Grid search<a class="headerlink" href="#grid-search" title="Link to this heading"></a></h3>
+<p>The grid search is useful when one has several possible sets of hyper-parameters to test, as it is faster thant random-search but requires a relevant prior on the classification task.</p>
+<p>In order to use grid search in SuMMIT, one has to specify <code class="docutils literal notranslate"><span class="pre">hps_type:</span> <span class="pre">&quot;Grid&quot;</span></code> in the config file and provide the values for each parameter of each algorithm in <code class="docutils literal notranslate"><span class="pre">hps_args:</span></code>.
+For example, let us suppose that one wants to run a decision tree but wants to try several depth values (1,5,10), then one has to specify in the config file :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">hps_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Grid&quot;</span>
+<span class="nt">hps_args</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">decision_tree</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">max_depth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="nv">10</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>For more complex classifiers this process can be quite long, but it allows a shorter computational time.</p>
+</section>
+<section id="random-search">
+<h3>Random search<a class="headerlink" href="#random-search" title="Link to this heading"></a></h3>
+<p>The random search is one of the most efficient while fairest method to optimize hyper-parameter without any prior knowledge on the dataset.
+Thus, for each algorithm in the platform, each of its hyper-parameter is provided with a distribution of possible values,
+(for example, the decision tree’s max depth parameter is provided with a uniform distribution between 1 and 300).
+The random search method will randomly select hyper-parameters within this distribution and evaluate the performance of
+the classifier with this configuration. It will repeat that process with different randomly selected sets of
+hyper-parameter and keep the best configuration performance-wise.</p>
+<p>In the config file, to enable random search, set the <code class="docutils literal notranslate"><span class="pre">hps_type:</span></code> line to <code class="docutils literal notranslate"><span class="pre">hps_type:</span> <span class="pre">&quot;Random&quot;</span></code>.
+The the randomized search can be configured with two arguments :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">hps_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Random&quot;</span>
+<span class="nt">hps_args</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">n_iter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">  </span><span class="nt">equivalent_draws</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">n_iter</span></code> parameter controls the number of random draws for each classifier
+and if <code class="docutils literal notranslate"><span class="pre">equivalent_draws</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the multiview classifiers
+will be allowed <img class="math" src="../_images/math/9ba961d482e056873050710dd0bf57349e95aa67.png" alt="\text{n\_iter} \times \text{n\_views}"/> iterations,
+to compensate the fact that they have to solve a musch more complex problem than the monoview ones.</p>
+</section>
+<section id="k-folds-cross-validation">
+<h3>K-folds cross-validation<a class="headerlink" href="#k-folds-cross-validation" title="Link to this heading"></a></h3>
+<p>During the process of optimizing the hyper-parameters, the random search has to estimate the performance of each classifier.</p>
+<p>To do so, the platform uses k-folds cross-validation. This method consists in splitting the training set in
+<img class="math" src="../_images/math/9630132210b904754c9ab272b61cb527d12263ca.png" alt="k"/> equal sub-sets, training the classifier (with the hyper-parameters to evaluate) on <img class="math" src="../_images/math/80f9cec39846018c61106a1156a7b875d277a88c.png" alt="k-1"/> subsets an
+testing it on the last one, evaluating it’s predictive performance on unseen data.</p>
+<p>This learning-and-testing process is repeated <img class="math" src="../_images/math/9630132210b904754c9ab272b61cb527d12263ca.png" alt="k"/> times and the estimated performance is the mean of the
+performance on each testing set.</p>
+<p>In the platform, the training set (the 48 samples of class A and 32 samples of class B from last example) will be
+divided in k folds for the cross-validation process and the testing set (the 12 samples of class A and 8 samples of
+class B for last samples) will in no way be involved in the training process of the classifier.</p>
+<p>The cross-validation process can be controlled with the <code class="docutils literal notranslate"><span class="pre">nb_folds:</span></code> line of the configuration file in which the number
+of folds is specified.</p>
+</section>
+<section id="metric-choice">
+<h3>Metric choice<a class="headerlink" href="#metric-choice" title="Link to this heading"></a></h3>
+<p>This hyper-parameter optimization can be strongly metric-dependant. For example, for an unbalanced dataset, evaluating
+the accuracy is not relevant and will not provide a good estimation of the performance of the classifier.
+In the platform, it is possible to specify the metric that will be used for the hyper-parameter optimization process
+thanks to the <code class="docutils literal notranslate"><span class="pre">metric_princ:</span></code> line in the configuration file.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

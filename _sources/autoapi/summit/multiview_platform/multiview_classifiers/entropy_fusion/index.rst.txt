@@ -1,0 +1,25 @@
+:mod:`summit.multiview_platform.multiview_classifiers.entropy_fusion`
+=====================================================================
+
+.. py:module:: summit.multiview_platform.multiview_classifiers.entropy_fusion
+
+
+entropy_fusion
+--------------
+
+
+.. py:data:: classifier_class_name
+   :value: 'EntropyFusion'
+
+
+.. py:class:: EntropyFusion(random_state=None, classifier_names=None, monoview_estimators=None, classifier_configs=None)
+
+
+
+   This classifier is inspired by Kuncheva, Ludmila & Whitaker, Chris. (2000). Measures of Diversity in Classifier Ensembles.
+   It find the subset of monoview classifiers with the best entropy
+
+
+   .. py:method:: diversity_measure(classifiers_decisions, combination, y)
+
+

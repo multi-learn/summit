@@ -1,0 +1,46 @@
+:mod:`summit.multiview_platform.monoview_classifiers.decision_tree`
+===================================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.decision_tree
+
+
+decision_tree
+-------------
+
+
+.. py:data:: classifier_class_name
+   :value: 'DecisionTree'
+
+
+.. py:class:: DecisionTree(random_state=None, max_depth=None, criterion='gini', splitter='best', **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `DecisionTreeClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html>`_
+
+
+
+
+   .. py:attribute:: param_names
+      :value: ['max_depth', 'criterion', 'splitter', 'random_state']
+
+
+
+   .. py:attribute:: classed_params
+      :value: []
+
+
+
+   .. py:attribute:: distribs
+
+
+   .. py:attribute:: weird_strings
+
+
+   .. py:method:: get_interpretation(directory, base_file_name, y_test, feature_ids, multiclass=False)
+
+      Base method that returns an empty string if there is not interpretation
+      method in the classifier's module
+
+
+

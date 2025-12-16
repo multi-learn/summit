@@ -1,0 +1,593 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>summit.multiview_platform.result_analysis package &mdash; SuMMIT 0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8dde47fa"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/plotly_js.js?v=c3b947fd"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SuMMIT
+              <img src="_static/logo_summit.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">SuMMIT Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/summit/multiview_platform/monoview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.monoview_classifiers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/summit/multiview_platform/multiview_classifiers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">summit.multiview_platform.multiview_classifiers</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SuMMIT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">summit.multiview_platform.result_analysis package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/summit.multiview_platform.result_analysis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="summit-multiview-platform-result-analysis-package">
+<h1>summit.multiview_platform.result_analysis package<a class="headerlink" href="#summit-multiview-platform-result-analysis-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-summit.multiview_platform.result_analysis.duration_analysis">
+<span id="summit-multiview-platform-result-analysis-duration-analysis-module"></span><h2>summit.multiview_platform.result_analysis.duration_analysis module<a class="headerlink" href="#module-summit.multiview_platform.result_analysis.duration_analysis" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.duration_analysis.get_duration">
+<span class="sig-name descname"><span class="pre">get_duration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.duration_analysis.get_duration" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.duration_analysis.plot_durations">
+<span class="sig-name descname"><span class="pre">plot_durations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">durations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">durations_stds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.duration_analysis.plot_durations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.result_analysis.error_analysis">
+<span id="summit-multiview-platform-result-analysis-error-analysis-module"></span><h2>summit.multiview_platform.result_analysis.error_analysis module<a class="headerlink" href="#module-summit.multiview_platform.result_analysis.error_analysis" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.error_analysis.gen_error_data">
+<span class="sig-name descname"><span class="pre">gen_error_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_errors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.error_analysis.gen_error_data" title="Link to this definition"></a></dt>
+<dd><p>Used to format the error data in order to plot it efficiently. The
+data is saves in a <cite>.csv</cite> file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sample_errors</strong> (<em>dict</em><em> of </em><em>dicts</em><em> of </em><em>np.arrays</em>) – A dictionary conatining all the useful data. Organized as :
+<cite>sample_errors[&lt;classifier_name&gt;][“error_on_samples”]</cite> is a np.array
+of ints with a
+- 1 if the classifier <cite>&lt;classifier_name&gt;</cite> classifier well the sample,
+- 0 if it fail to classify the sample,
+- -100 if it did not classify the sample (multiclass one versus one).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>nbClassifiers</strong> (<em>int</em>) – Number of different classifiers.</p></li>
+<li><p><strong>nbExamples</strong> (<em>int</em>) – NUmber of samples.</p></li>
+<li><p><strong>nbCopies</strong> (<em>int</em>) – The number of times the data is copied (classifier wise) in order for
+the figure to be more readable.</p></li>
+<li><p><strong>classifiers_names</strong> (<em>list of strs</em>) – The names fo the classifiers.</p></li>
+<li><p><strong>data</strong> (np.array of shape <cite>(nbClassifiers, nbExamples)</cite>) – A matrix with zeros where the classifier failed to classifiy the
+sample, ones where it classified it well
+and -100 if the sample was not classified.</p></li>
+<li><p><strong>error_on_samples</strong> (np.array of shape <cite>(nbExamples,)</cite>) – An array counting how many classifiers failed to classifiy each
+samples.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.error_analysis.gen_error_data_glob">
+<span class="sig-name descname"><span class="pre">gen_error_data_glob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iter_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_iter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.error_analysis.gen_error_data_glob" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.error_analysis.get_sample_errors">
+<span class="sig-name descname"><span class="pre">get_sample_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">groud_truth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.error_analysis.get_sample_errors" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Used to get for each classifier and each sample whether the classifier</dt><dd><p>has misclassified the sample or not.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ground_truth</strong> (<em>numpy array</em><em> of </em><em>0</em><em>, </em><em>1 and -100</em><em> (</em><em>if multiclass</em><em>)</em>) – The array with the real labels of the samples</p></li>
+<li><p><strong>results</strong> (<em>list</em><em> of </em><em>MonoviewResult and MultiviewResults objects</em>) – A list containing all the resluts for all the mono- &amp; multi-view
+experimentations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p><strong>sample_errors</strong> –</p>
+<dl class="simple">
+<dt>For each classifier, has an entry with a <cite>np.array</cite> over the samples,</dt><dd><p>with a 1 if the samples was</p>
+</dd>
+<dt>well-classified, a 0 if not and if it’s multiclass classification, a</dt><dd><p>-100 if the samples was not seen during</p>
+</dd>
+</dl>
+<p>the one versus one classification.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict of np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.error_analysis.iter_cmap">
+<span class="sig-name descname"><span class="pre">iter_cmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statsIter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.error_analysis.iter_cmap" title="Link to this definition"></a></dt>
+<dd><p>Used to generate a colormap that will have a tick for each iteration : the whiter the better.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>statsIter</strong> (<em>int</em>) – The number of statistical iterations.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>cmap</strong> (<em>matplotlib.colors.ListedColorMap object</em>) – The colormap.</p></li>
+<li><p><strong>norm</strong> (<em>matplotlib.colors.BoundaryNorm object</em>) – The bounds for the colormap.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.error_analysis.plot_2d">
+<span class="sig-name descname"><span class="pre">plot_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifiers_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_classifiers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_plotly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.error_analysis.plot_2d" title="Link to this definition"></a></dt>
+<dd><p>Used to generate a 2D plot of the errors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (np.array of shape <cite>(nbClassifiers, nbExamples)</cite>) – A matrix with zeros where the classifier failed to classifiy the sample, ones where it classified it well
+and -100 if the sample was not classified.</p></li>
+<li><p><strong>classifiers_names</strong> (<em>list</em><em> of </em><em>str</em>) – The names of the classifiers.</p></li>
+<li><p><strong>nb_classifiers</strong> (<em>int</em>) – The number of classifiers.</p></li>
+<li><p><strong>file_name</strong> (<em>str</em>) – The name of the file in which the figure will be saved (“error_analysis_2D.png” will be added at the end)</p></li>
+<li><p><strong>minSize</strong> (<em>int</em><em>, </em><em>optinal</em><em>, </em><em>default: 10</em>) – The minimum width and height of the figure.</p></li>
+<li><p><strong>width_denominator</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default: 1.0</em>) – To obtain the image width, the number of classifiers will be divided by this number.</p></li>
+<li><p><strong>height_denominator</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default: 1.0</em>) – To obtain the image width, the number of samples will be divided by this number.</p></li>
+<li><p><strong>stats_iter</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – The number of statistical iterations realized.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.error_analysis.plot_errors_bar">
+<span class="sig-name descname"><span class="pre">plot_errors_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error_on_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_plotly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.error_analysis.plot_errors_bar" title="Link to this definition"></a></dt>
+<dd><p>Used to generate a barplot of the muber of classifiers that failed to classify each samples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error_on_samples</strong> (np.array of shape <cite>(nbExamples,)</cite>) – An array counting how many classifiers failed to classifiy each samples.</p></li>
+<li><p><strong>classifiers_names</strong> (<em>list</em><em> of </em><em>str</em>) – The names of the classifiers.</p></li>
+<li><p><strong>nb_classifiers</strong> (<em>int</em>) – The number of classifiers.</p></li>
+<li><p><strong>nb_samples</strong> (<em>int</em>) – The number of samples.</p></li>
+<li><p><strong>file_name</strong> (<em>str</em>) – The name of the file in which the figure will be saved (“error_analysis_2D.png” will be added at the end)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.error_analysis.publish_all_sample_errors">
+<span class="sig-name descname"><span class="pre">publish_all_sample_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iter_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_base_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.error_analysis.publish_all_sample_errors" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.error_analysis.publish_sample_errors">
+<span class="sig-name descname"><span class="pre">publish_sample_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_errors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.error_analysis.publish_sample_errors" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.result_analysis.execution">
+<span id="summit-multiview-platform-result-analysis-execution-module"></span><h2>summit.multiview_platform.result_analysis.execution module<a class="headerlink" href="#module-summit.multiview_platform.result_analysis.execution" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.execution.analyze">
+<span class="sig-name descname"><span class="pre">analyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_argument_dictionaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.execution.analyze" title="Link to this definition"></a></dt>
+<dd><p>Used to analyze the results of the previous benchmarks</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.execution.analyze_all">
+<span class="sig-name descname"><span class="pre">analyze_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iter_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_base_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.execution.analyze_all" title="Link to this definition"></a></dt>
+<dd><p>Used to format the results in order to plot the mean results on
+the iterations</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.execution.analyze_iterations">
+<span class="sig-name descname"><span class="pre">analyze_iterations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_argument_dictionaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.execution.analyze_iterations" title="Link to this definition"></a></dt>
+<dd><p>Used to extract and format the results of the different
+experimentations performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>results</strong> (<em>list</em>) – <dl class="simple">
+<dt>The result list returned by the benchmark execution function. For each</dt><dd><p>executed benchmark, contains</p>
+</dd>
+</dl>
+<p>a flag &amp; a result element.
+The flag is a way to identify to which benchmark the results belong,
+formatted this way :
+<cite>flag = iter_index, [classifierPositive, classifierNegative]</cite> with
+- <cite>iter_index</cite> the index of the statistical iteration
+- <cite>[classifierPositive, classifierNegative]</cite> the indices of the labels
+considered positive and negative
+by the classifier (mainly useful for one versus one multiclass
+classification).</p>
+</p></li>
+<li><p><strong>benchmark_argument_dictionaries</strong> (<em>list</em><em> of </em><em>dicts</em>) – The list of all the arguments passed to the benchmark executing
+functions.</p></li>
+<li><p><strong>statsIter</strong> (<em>int</em>) – The number of statistical iterations.</p></li>
+<li><p><strong>metrics</strong> (<em>list</em><em> of </em><em>lists</em>) – THe list containing the metrics and their configuration.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>results</strong> – The list contains a dictionary for each statistical iteration. This
+dictionary contains a dictionary for each
+label combination, regrouping the scores for each metrics and the
+information useful to plot errors on samples.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of dicts of dicts</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.execution.format_previous_results">
+<span class="sig-name descname"><span class="pre">format_previous_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iter_results_lists</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.execution.format_previous_results" title="Link to this definition"></a></dt>
+<dd><p>Formats each statistical iteration’s result into a mean/std analysis for
+the metrics and adds the errors of each statistical iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iter_results_lists</strong> (<em>The raw results</em><em>, </em><em>for each statistical iteration i</em>) – <dl>
+<dt>contains</dt><dd><ul class="simple">
+<li><p>biclass_results[i][“metrics_scores”] is a dictionary with a</p></li>
+</ul>
+<p>pd.dataframe for each metrics
+- biclass_results[i][“sample_errors”], a dicaitonary with a np.array
+for each classifier.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>metrics_analysis</strong> (<em>The mean and std dataframes for each metrics</em>)</p></li>
+<li><p><strong>error_analysis</strong> (<em>A dictionary containing the added errors</em>) – arrays for each classifier</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.execution.get_arguments">
+<span class="sig-name descname"><span class="pre">get_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark_argument_dictionaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.execution.get_arguments" title="Link to this definition"></a></dt>
+<dd><p>Used to get the arguments passed to the benchmark executing function
+corresponding to the flag of an
+experimentation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flag</strong> (<em>list</em>) – The needed experimentation’s flag.</p></li>
+<li><p><strong>benchmark_argument_dictionaries</strong> (<em>list</em><em> of </em><em>dicts</em>) – The list of all the arguments passed to the benchmark executing
+functions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>benchmark_argument_dictionary</strong> – All the arguments passed to the benchmark executing function for the
+needed experimentation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.result_analysis.feature_importances">
+<span id="summit-multiview-platform-result-analysis-feature-importances-module"></span><h2>summit.multiview_platform.result_analysis.feature_importances module<a class="headerlink" href="#module-summit.multiview_platform.result_analysis.feature_importances" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.feature_importances.get_feature_importances">
+<span class="sig-name descname"><span class="pre">get_feature_importances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.feature_importances.get_feature_importances" title="Link to this definition"></a></dt>
+<dd><p>Extracts the feature importance from the monoview results and stores
+them in a dictionnary :
+feature_importance[view_name] is a pandas.DataFrame of size n_feature*n_clf
+containing a score of importance for each feature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>result</strong> (<em>list</em><em> of </em><em>results</em>)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>feature_importances</strong> – The dictionary containing all the feature importance for each view as
+pandas DataFrames</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict of pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.feature_importances.plot_feature_importances">
+<span class="sig-name descname"><span class="pre">plot_feature_importances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_importance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_std</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.feature_importances.plot_feature_importances" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.feature_importances.plot_feature_relevance">
+<span class="sig-name descname"><span class="pre">plot_feature_relevance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_importance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_std</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_scores</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.feature_importances.plot_feature_relevance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.feature_importances.publish_feature_importances">
+<span class="sig-name descname"><span class="pre">publish_feature_importances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_importances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_stds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_scores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.feature_importances.publish_feature_importances" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.result_analysis.metric_analysis">
+<span id="summit-multiview-platform-result-analysis-metric-analysis-module"></span><h2>summit.multiview_platform.result_analysis.metric_analysis module<a class="headerlink" href="#module-summit.multiview_platform.result_analysis.metric_analysis" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.metric_analysis.autolabel">
+<span class="sig-name descname"><span class="pre">autolabel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.metric_analysis.autolabel" title="Link to this definition"></a></dt>
+<dd><p>Used to print the score below the bars.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rects</strong> (<em>pyplot bar object</em>) – THe bars.</p></li>
+<li><p><strong>ax</strong> (<em>pyplot ax object</em>) – The ax.</p></li>
+<li><p><strong>set</strong> (<em>integer</em>) – 1 means the test scores, anything else means the train score</p></li>
+<li><p><strong>std</strong> (<em>None</em><em> or </em><em>array</em>) – The standard deviations in the case of statsIter results.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.metric_analysis.get_fig_size">
+<span class="sig-name descname"><span class="pre">get_fig_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bar_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.35</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.metric_analysis.get_fig_size" title="Link to this definition"></a></dt>
+<dd><p>Used to get the image size to save the figure and the bar width, depending on the number of scores to plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nb_results</strong> (<em>int</em>) – The number of couple of bar to plot.</p></li>
+<li><p><strong>min_size</strong> (<em>int</em>) – The minimum size of the image, if there are few classifiers to plot.</p></li>
+<li><p><strong>multiplier</strong> (<em>float</em>) – The ratio between the image size and the number of classifiers.</p></li>
+<li><p><strong>bar_width</strong> (<em>float</em>) – The width of the bars in the figure. Mainly here to centralize bar_width.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>fig_kwargs</strong> (<em>dict of arguments</em>) – The argument restraining the size of the figure, usable directly in the <cite>subplots</cite> function of
+<cite>matplotlib.pyplot</cite>.</p></li>
+<li><p><strong>bar_width</strong> (<em>float</em>) – The width of the bars in the figure. Mainly here to centralize bar_width.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.metric_analysis.get_metrics_scores">
+<span class="sig-name descname"><span class="pre">get_metrics_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.metric_analysis.get_metrics_scores" title="Link to this definition"></a></dt>
+<dd><p>Used to extract metrics scores in case of classification</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metrics</strong> (<em>dict</em>) – The metrics names with configuration metrics[i][0] = name of metric i</p></li>
+<li><p><strong>results</strong> (<em>list</em><em> of </em><em>MonoviewResult and MultiviewResults objects</em>) – A list containing all the results for all the monoview experimentations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>metricsScores</strong> – Regroups all the scores for each metrics for each classifier and for
+the train and test sets.
+organized as :
+-<cite>metricScores[metric_name][“classifiers_names”]</cite> is a list of all the
+classifiers available for this metric,
+-<cite>metricScores[metric_name][“train_scores”]</cite> is a list of all the
+available classifiers scores on the train set,
+-<cite>metricScores[metric_name][“test_scores”]</cite> is a list of all the
+available classifiers scores on the test set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict of dict of list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.metric_analysis.init_plot">
+<span class="sig-name descname"><span class="pre">init_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_metric_scores</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.metric_analysis.init_plot" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.metric_analysis.plot_class_metric_scores">
+<span class="sig-name descname"><span class="pre">plot_class_metric_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_test_scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classifier_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.metric_analysis.plot_class_metric_scores" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.metric_analysis.plot_metric_scores">
+<span class="sig-name descname"><span class="pre">plot_metric_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_STDs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_STDs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_plotly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.metric_analysis.plot_metric_scores" title="Link to this definition"></a></dt>
+<dd><p>Used to plot and save the score barplot for a specific metric.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_scores</strong> (<em>list</em><em> or </em><em>np.array</em><em> of </em><em>floats</em>) – The scores of each classifier on the training set.</p></li>
+<li><p><strong>test_scores</strong> (<em>list</em><em> or </em><em>np.array</em><em> of </em><em>floats</em>) – The scores of each classifier on the testing set.</p></li>
+<li><p><strong>names</strong> (<em>list</em><em> or </em><em>np.array</em><em> of </em><em>strs</em>) – The names of all the classifiers.</p></li>
+<li><p><strong>nb_results</strong> (<em>int</em>) – The number of classifiers to plot.</p></li>
+<li><p><strong>metric_name</strong> (<em>str</em>) – The plotted metric’s name</p></li>
+<li><p><strong>file_name</strong> (<em>str</em>) – The name of the file where the figure will be saved.</p></li>
+<li><p><strong>tag</strong> (<em>str</em>) – Some text to personalize the title, must start with a whitespace.</p></li>
+<li><p><strong>train_STDs</strong> (<em>np.array</em><em> of </em><em>floats</em><em> or </em><em>None</em>) – The array containing the standard deviations for the averaged scores on the training set.</p></li>
+<li><p><strong>test_STDs</strong> (<em>np.array</em><em> of </em><em>floats</em><em> or </em><em>None</em>) – The array containing the standard deviations for the averaged scores on the testing set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.metric_analysis.publish_all_metrics_scores">
+<span class="sig-name descname"><span class="pre">publish_all_metrics_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iter_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_iter_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_base_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.metric_analysis.publish_all_metrics_scores" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.metric_analysis.publish_metrics_graphs">
+<span class="sig-name descname"><span class="pre">publish_metrics_graphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics_scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_metric_scores</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.metric_analysis.publish_metrics_graphs" title="Link to this definition"></a></dt>
+<dd><p>Used to sort the results (names and both scores) in descending test
+score order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metrics_scores</strong> (<em>dict</em><em> of </em><em>dicts</em><em> of </em><em>lists</em><em> or </em><em>np.arrays</em>) – Keys : The names of the metrics.
+Values : The scores and names of each classifier .</p></li>
+<li><p><strong>directory</strong> (<em>str</em>) – The path to the directory where the figures will be saved.</p></li>
+<li><p><strong>database_name</strong> (<em>str</em>) – The name of the database on which the experiments where conducted.</p></li>
+<li><p><strong>labels_names</strong> (<em>list</em><em> of </em><em>strs</em>) – The name corresponding to each numerical label.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.metric_analysis.sort_by_test_score">
+<span class="sig-name descname"><span class="pre">sort_by_test_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_STDs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_STDs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.metric_analysis.sort_by_test_score" title="Link to this definition"></a></dt>
+<dd><p>Used to sort the results (names and both scores) in descending test score order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_scores</strong> (<em>np.array</em><em> of </em><em>floats</em>) – The scores of each classifier on the training set.</p></li>
+<li><p><strong>test_scores</strong> (<em>np.array</em><em> of </em><em>floats</em>) – The scores of each classifier on the testing set.</p></li>
+<li><p><strong>names</strong> (<em>np.array</em><em> of </em><em>strs</em>) – The names of all the classifiers.</p></li>
+<li><p><strong>train_STDs</strong> (<em>np.array</em><em> of </em><em>floats</em><em> or </em><em>None</em>) – The array containing the standard deviations for the averaged scores on the training set.</p></li>
+<li><p><strong>test_STDs</strong> (<em>np.array</em><em> of </em><em>floats</em><em> or </em><em>None</em>) – The array containing the standard deviations for the averaged scores on the testing set.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>sorted_names</strong> (<em>np.array of strs</em>) – The names of all the classifiers, sorted in descending test score order.</p></li>
+<li><p><strong>sorted_train_scores</strong> (<em>np.array of floats</em>) – The scores of each classifier on the training set, sorted in descending test score order.</p></li>
+<li><p><strong>sorted_test_scores</strong> (<em>np.array of floats</em>) – The scores of each classifier on the testing set, sorted in descending test score order.</p></li>
+<li><p><strong>sorted_train_STDs</strong> (<em>np.array of floats or None</em>) – The array containing the standard deviations for the averaged scores on the training set,
+sorted in descending test score order.</p></li>
+<li><p><strong>sorted_test_STDs</strong> (<em>np.array of floats or None</em>) – The array containing the standard deviations for the averaged scores on the testing set,
+sorted in descending test score order.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.result_analysis.noise_analysis">
+<span id="summit-multiview-platform-result-analysis-noise-analysis-module"></span><h2>summit.multiview_platform.result_analysis.noise_analysis module<a class="headerlink" href="#module-summit.multiview_platform.result_analysis.noise_analysis" title="Link to this heading"></a></h2>
+</section>
+<section id="module-summit.multiview_platform.result_analysis.tracebacks_analysis">
+<span id="summit-multiview-platform-result-analysis-tracebacks-analysis-module"></span><h2>summit.multiview_platform.result_analysis.tracebacks_analysis module<a class="headerlink" href="#module-summit.multiview_platform.result_analysis.tracebacks_analysis" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.tracebacks_analysis.publish_tracebacks">
+<span class="sig-name descname"><span class="pre">publish_tracebacks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracebacks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.tracebacks_analysis.publish_tracebacks" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.tracebacks_analysis.save_dict_to_text">
+<span class="sig-name descname"><span class="pre">save_dict_to_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionnary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.tracebacks_analysis.save_dict_to_text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="summit.multiview_platform.result_analysis.tracebacks_analysis.save_failed">
+<span class="sig-name descname"><span class="pre">save_failed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failed_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#summit.multiview_platform.result_analysis.tracebacks_analysis.save_failed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-summit.multiview_platform.result_analysis">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-summit.multiview_platform.result_analysis" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Baptiste BAUVIN.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+:mod:`summit.multiview_platform.monoview_classifiers.svm_linear`
+================================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.svm_linear
+
+
+svm_linear
+----------
+
+
+.. py:data:: classifier_class_name
+   :value: 'SVMLinear'
+
+
+.. py:class:: SVMLinear(random_state=None, C=1.0, **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `SVC <https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_
+
+   Here, it is the linear kernel version
+
+
+   .. py:attribute:: param_names
+      :value: ['C', 'random_state']
+
+
+
+   .. py:attribute:: distribs
+
+

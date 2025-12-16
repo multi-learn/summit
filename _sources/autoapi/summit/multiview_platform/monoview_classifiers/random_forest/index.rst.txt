@@ -1,0 +1,46 @@
+:mod:`summit.multiview_platform.monoview_classifiers.random_forest`
+===================================================================
+
+.. py:module:: summit.multiview_platform.monoview_classifiers.random_forest
+
+
+random_forest
+-------------
+
+
+.. py:data:: classifier_class_name
+   :value: 'RandomForest'
+
+
+.. py:class:: RandomForest(random_state=None, n_estimators=10, max_depth=None, criterion='gini', **kwargs)
+
+
+
+   This class is an adaptation of scikit-learn's `RandomForestClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html>`_
+
+
+
+
+   .. py:attribute:: param_names
+      :value: ['n_estimators', 'max_depth', 'criterion', 'random_state']
+
+
+
+   .. py:attribute:: classed_params
+      :value: []
+
+
+
+   .. py:attribute:: distribs
+
+
+   .. py:attribute:: weird_strings
+
+
+   .. py:method:: get_interpretation(directory, base_file_name, y_test, feature_ids, multiclass=False)
+
+      Base method that returns an empty string if there is not interpretation
+      method in the classifier's module
+
+
+
